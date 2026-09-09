@@ -3,6 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Arlib.Probability.Median
+import Arlib.Computation.Std
 import ArlibCommunity.Algorithms.CV18.Model.Prelude
 
 /-!
@@ -78,8 +79,113 @@ inductive MembershipOracleProgram.QueryBound {n : ℕ} {Result : Type} :
       (budget : ℕ) (hnext : ∀ value, QueryBound (next value) budget) :
       QueryBound (.randomReal law hprob next) budget
 
-/-- The law of a program's estimate together with its interpreter-counted
-membership queries. -/
+/-! ## Cost derived from `Arlib.Computation`
+
+The theorem reports membership-oracle cost, not a separately asserted counter.
+An execution below is a `Charged` computation in Arlib's standard currency.
+Every oracle query performs exactly the membership operation exported by the
+sealed `Roster` carrier, namely `StdOp.roster RosterOp.mem`; resolving random
+nodes performs no charged operation because randomness is outside the resource
+being reported here.
+
+`MembershipCostChoices` resolves the random nodes only to expose an individual
+execution path.  `MembershipCostBound` quantifies over every such resolution
+and every Boolean oracle, so its bound is worst-case rather than probabilistic.
+-/
+
+/-- A resolution of all random nodes along one execution. -/
+structure MembershipOracleProgram.MembershipCostChoices (n : ℕ) where
+  randomNat : ℕ → PMF ℕ → ℕ
+  randomPoint : ℕ → Measure (AmbientSpace n) → AmbientSpace n
+  randomReal : ℕ → Measure ℝ → ℝ
+
+/-- One execution, from a specified random-draw index, interpreted in Arlib's
+charged carrier.  A membership query is the roster carrier's canonical
+membership operation. -/
+def MembershipOracleProgram.chargedMembershipRunFrom
+    {n : ℕ} {Result : Type}
+    (oracle : AmbientSpace n → Bool) (choices : MembershipCostChoices n) : ℕ →
+      MembershipOracleProgram n Result →
+      Arlib.Computation.Charged Arlib.Computation.StdOp
+        Arlib.Computation.Cell Result
+  | _, .pure result => Arlib.Computation.Charged.pure result
+  | drawIndex, .query point next =>
+      Arlib.Computation.Charged.op
+          (Arlib.Computation.StdOp.roster Arlib.Computation.RosterOp.mem)
+          (oracle point) >>= fun answer =>
+        chargedMembershipRunFrom oracle choices drawIndex (next answer)
+  | drawIndex, .randomNat law next =>
+      chargedMembershipRunFrom oracle choices (drawIndex + 1)
+        (next (choices.randomNat drawIndex law))
+  | drawIndex, .randomPoint law _ next =>
+      chargedMembershipRunFrom oracle choices (drawIndex + 1)
+        (next (choices.randomPoint drawIndex law))
+  | drawIndex, .randomReal law _ next =>
+      chargedMembershipRunFrom oracle choices (drawIndex + 1)
+        (next (choices.randomReal drawIndex law))
+
+/-- One complete execution interpreted in Arlib's charged carrier. -/
+def MembershipOracleProgram.chargedMembershipRun
+    {n : ℕ} {Result : Type} (program : MembershipOracleProgram n Result)
+    (oracle : AmbientSpace n → Bool) (choices : MembershipCostChoices n) :=
+  chargedMembershipRunFrom oracle choices 0 program
+
+/-- Worst-case membership cost computed from the program through
+`Arlib.Computation.Charged`.  Unit pricing makes one roster-membership operation
+one membership-oracle call. -/
+def MembershipOracleProgram.MembershipCostBound
+    {n : ℕ} {Result : Type} (program : MembershipOracleProgram n Result)
+    (budget : ℕ) : Prop :=
+  ∀ (oracle : AmbientSpace n → Bool) (choices : MembershipCostChoices n),
+    Arlib.Computation.Charged.steps
+      (Arlib.Computation.Rate.unit Arlib.Computation.StdOp)
+      (program.chargedMembershipRun oracle choices) ≤ budget
+
+/-- The syntax-directed bound controls the charged cost from every draw index. -/
+theorem MembershipOracleProgram.QueryBound.toMembershipCostBoundFrom
+    {n : ℕ} {Result : Type} {program : MembershipOracleProgram n Result}
+    {budget : ℕ} (h : program.QueryBound budget) :
+    ∀ (drawIndex : ℕ) (oracle : AmbientSpace n → Bool)
+      (choices : MembershipCostChoices n),
+      Arlib.Computation.Charged.steps
+        (Arlib.Computation.Rate.unit Arlib.Computation.StdOp)
+        (chargedMembershipRunFrom oracle choices drawIndex program) ≤ budget := by
+  induction h with
+  | pure result budget =>
+      intro drawIndex oracle choices
+      change 0 ≤ budget
+      exact Nat.zero_le budget
+  | query point next budget hnext ih =>
+      intro drawIndex oracle choices
+      simp only [chargedMembershipRunFrom, Arlib.Computation.Charged.steps_bind,
+        Arlib.Computation.Charged.steps_op, Arlib.Computation.Charged.val_op,
+        Arlib.Computation.Rate.unit_cost]
+      have htail := ih (oracle point) drawIndex oracle choices
+      omega
+  | randomNat law next budget hnext ih =>
+      intro drawIndex oracle choices
+      simp only [chargedMembershipRunFrom]
+      exact ih (choices.randomNat drawIndex law) (drawIndex + 1) oracle choices
+  | randomPoint law hprob next budget hnext ih =>
+      intro drawIndex oracle choices
+      simp only [chargedMembershipRunFrom]
+      exact ih (choices.randomPoint drawIndex law) (drawIndex + 1) oracle choices
+  | randomReal law hprob next budget hnext ih =>
+      intro drawIndex oracle choices
+      simp only [chargedMembershipRunFrom]
+      exact ih (choices.randomReal drawIndex law) (drawIndex + 1) oracle choices
+
+/-- The existing syntax-directed bound is a certificate for the cost derived
+from Arlib's charged roster-membership operation. -/
+theorem MembershipOracleProgram.QueryBound.toMembershipCostBound
+    {n : ℕ} {Result : Type} {program : MembershipOracleProgram n Result}
+    {budget : ℕ} (h : program.QueryBound budget) :
+    program.MembershipCostBound budget := by
+  intro oracle choices
+  exact h.toMembershipCostBoundFrom 0 oracle choices
+
+/-- The estimate law of a program.  Membership cost is exposed separately by
+`MembershipCostBound`, through `Arlib.Computation.Charged`. -/
 noncomputable def volumeAlgorithmLaw (A : VolumeAlgorithm) (q : VolumeParams)
     (I : VolumeInput q.n) (oracle : MembershipOracle I) : Measure ℝ :=
   (A q).runEstimate oracle.query

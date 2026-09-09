@@ -5,10 +5,11 @@ directory, in this order:
 
 1. `Prelude.lean` defines the parameters, convex-body input, membership
    oracle, accuracy predicate, oracle-program syntax, and headline rates.
-2. `Pseudocode.lean` defines the interpreter, worst-case query accounting,
-   Figure 1 pseudocode and the exact parameter-only query rate.  Cooling
-   schedules remain internal construction data and are not quantified by the
-   headline theorem.
+2. `Pseudocode.lean` defines the interpreter, Figure 1 pseudocode, and the exact
+   parameter-only query rate.  Its public worst-case membership cost is derived
+   with `Arlib.Computation.Charged`, using the membership operation of the
+   sealed `Roster` carrier.  Cooling schedules remain internal construction
+   data and are not quantified by the headline theorem.
 3. `Prior.lean` records imported mathematical assumptions.  It is empty: the
    headline theorem has no project-specific axioms or unproved premises.
 4. `Theorem.lean` states Theorem 1.1 and selects the verified implementation.

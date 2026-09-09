@@ -24,7 +24,9 @@ proof and is deliberately absent from the public theorem statement.
 namespace ArlibCommunity.Algorithms.CV18
 
 /-- Accuracy and worst-case membership-query guarantee for one uniform
-volume algorithm at a specified model-level rate. -/
+volume algorithm at a specified model-level rate.  The membership cost is
+computed from the program by `Arlib.Computation.Charged`, using the roster
+carrier's membership operation. -/
 def VolumeGuarantee (algorithm : VolumeAlgorithm)
     (rate : VolumeParams → ℝ) : Prop :=
   ∃ C : ℝ, 0 < C ∧
@@ -32,7 +34,7 @@ def VolumeGuarantee (algorithm : VolumeAlgorithm)
       (oracle : MembershipOracle I), WellRounded q I →
         1 - q.p ≤ outcomeProbability
           (volumeAlgorithmLaw algorithm q I oracle) (accurateOutcome q I) ∧
-        ∃ calls, (algorithm q).QueryBound calls ∧
+        ∃ calls, (algorithm q).MembershipCostBound calls ∧
           calls ≤ Nat.ceil (C * rate q)
 
 /-- Cousins--Vempala 2018, Theorem 1.1: there is a membership-oracle volume
@@ -65,7 +67,9 @@ theorem cv18TheoremOneOne :
       figureOneDependentAlpha, figureOneDependentPhaseCount,
       figureOneDependentMaxSampleCount, figureOneFixedSampleCount,
       figureOneSampleCount]
-  simpa only [algorithm, hrate] using htheorem q I oracle hrounded
+  obtain ⟨haccuracy, calls, hcalls, hle⟩ := htheorem q I oracle hrounded
+  refine ⟨haccuracy, calls, hcalls.toMembershipCostBound, ?_⟩
+  simpa only [hrate] using hle
 
 #modelClosureOfType cv18TheoremOneOne
 #print axioms cv18TheoremOneOne
