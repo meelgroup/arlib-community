@@ -1,0 +1,1820 @@
+{
+  "schema": "tex2lean.paper-proof-map/1",
+  "ledgerId": "ledger:70031a14-5348-4e85-a6d7-8c72fba060b0",
+  "paper": {
+    "id": "paper:639f024b-5618-4971-aade-56b648303f54"
+  },
+  "target": {
+    "id": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+    "paperId": "paper:639f024b-5618-4971-aade-56b648303f54",
+    "activeVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e"
+  },
+  "activeClaimSetReceiptId": "claim-set:d434c8c0-9b2b-46fe-9d60-c29d1b16f716",
+  "activeSurfaceInventoryId": "surface-inventory:a62f0eae-5a9e-4089-8636-cae9a15c9f20",
+  "targetVersions": [
+    {
+      "id": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "paperPacketDigest": "sha256-64478d26f00fcdad5a54334b26286eac618c9c1f34a97a362cb2329438f5fa91",
+      "bodyDigest": "sha256-480fc304cbd96e7cba3e920082a65a52f32396aa384215d5e28d8d44dad54449",
+      "anchor": {
+        "file": "introduction.tex",
+        "label": "theorem:main_result",
+        "environment": "restatable",
+        "from": 88,
+        "to": 95,
+        "excerptDigest": "sha256-129104b3d2d007304ff40c4c77aec2b470f35dd30285230f70f62e369be10979"
+      },
+      "status": "active"
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim:de680afd-438a-47ca-a2da-40331e944327",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:6136897f-328d-4051-a449-3993cb3fe2e3",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:bf4f8a34-9ee7-497f-b3fa-00dbe063f3d5",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:5f10a529-1f8b-4de4-9c74-c61abf8ab543",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:170e41bb-dc10-4e6a-be2a-4e4abccdd20e",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:bb131369-96d5-42da-929d-a12a82e969f6",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:c5bc7f43-8891-421a-ad32-b2b33e362d64",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:a5a6d058-dfeb-4387-8c58-88e6a55f7183",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:1e70fde3-a167-4fe0-b5d6-020ee2cd88d5",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:f9535982-ec5b-4687-81c8-91130e9163b4",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:69b031bd-f857-4965-8562-147a91bcb564",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:5a28d625-e10d-4e25-87b6-886cf5bac1bc",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:969bbbc1-49fa-4e72-8c6e-3c5f958714e7",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:7a994486-91a0-4446-84ed-54ae5b17de88",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:04552524-a1c4-47e2-8523-aa6007a78872",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:dec37195-09fd-4eab-8d1f-bae9863085cc",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:77104df6-2027-4c6a-bd55-e5b8842a364c",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:6f4f1095-9622-42fd-a340-1ade16748f3a",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:1a893526-25d0-439e-9a97-b4a7e4a04570",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:a95c0d6a-3e5b-4952-a929-64751bc193c5",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:39fc2a65-1cb6-4c94-9daa-1bec30779946",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:77833964-267c-4e41-b87a-42276487f2c6",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:0ba479ea-54c6-41e5-975d-260b36c8a9d2",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:1ba48b47-bcc8-4a03-b3e7-5ca3ee8443ac",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:96d19619-b637-4ddb-bfc1-5713b60b780e",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:1e3a43f1-d552-490d-8620-891e2ca93c79",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:90690367-3bfd-42b6-a4b7-b58fd4d7268e",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:c42c1115-ca1c-4949-9add-2bbb27f1274c",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:f534d027-6afd-43d6-ad81-32892c3f888b",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:2d7eee43-3586-4bf8-8904-5b506983b9fd",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:d4157e79-dbd7-4a21-a15a-dc738b9108e8",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:24584177-2053-460f-a90b-fa6c95094092",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:940ae85b-c240-4493-ad35-fc4e6a6ef769",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:c4a9b1c0-0545-4f1e-a19e-40d12eea018e",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:887457c9-73bc-4f68-b630-e92f0408b623",
+      "targetId": "target:359aff1f-63bd-455e-ae42-22f6cad7a80f",
+      "activeVersionId": "claim-version:408c4232-ff7f-4db3-abe8-f987fa05b81e",
+      "role": "reportable"
+    }
+  ],
+  "claimVersions": [
+    {
+      "id": "claim-version:6136897f-328d-4051-a449-3993cb3fe2e3",
+      "claimId": "claim:de680afd-438a-47ca-a2da-40331e944327",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "introduction.tex:90-93; proof analysis.tex",
+        "from": 62,
+        "to": 66,
+        "excerptDigest": "sha256-46268504ad3f022741db45a2cb9d458052a9ed7064875f7a63311dd39664f9aa"
+      },
+      "text": "Pr[est ∈ (1±ε)|L_n(A)|] ≥ 1 − δ for countNFA's output",
+      "normalizedTextDigest": "sha256-0379e4e3568d8fcc503510cdd1254d25e402fa8599f42a631dd708b79b6844d9",
+      "kind": "probability",
+      "evidence": [
+        {
+          "file": "introduction.tex:90-93; proof analysis.tex",
+          "from": 62,
+          "to": 66,
+          "excerptDigest": "sha256-46268504ad3f022741db45a2cb9d458052a9ed7064875f7a63311dd39664f9aa"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:5f10a529-1f8b-4de4-9c74-c61abf8ab543",
+      "claimId": "claim:bf4f8a34-9ee7-497f-b3fa-00dbe063f3d5",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "introduction.tex:90; proof analysis.tex:67-68 with Lemma main_result_core analysis.tex",
+        "from": 40,
+        "to": 55,
+        "excerptDigest": "sha256-e1f54a5cebd9ed5360a1ebac186febaf1bb8d7bc83b0a63a46395d4b54c15f03"
+      },
+      "text": "countNFA runs in time O(n²·MM(m)·log(nm)·ε^{-2}·log(1/δ)) with m = |Q| (worst case over outcomes; see repaired form)",
+      "normalizedTextDigest": "sha256-cfd48e5169df3b8de65f4573b82eccb87d23a1e8e08152cda6d3e3caa7025279",
+      "kind": "time",
+      "evidence": [
+        {
+          "file": "introduction.tex:90; proof analysis.tex:67-68 with Lemma main_result_core analysis.tex",
+          "from": 40,
+          "to": 55,
+          "excerptDigest": "sha256-e1f54a5cebd9ed5360a1ebac186febaf1bb8d7bc83b0a63a46395d4b54c15f03"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:bb131369-96d5-42da-929d-a12a82e969f6",
+      "claimId": "claim:170e41bb-dc10-4e6a-be2a-4e4abccdd20e",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "introduction.tex:90, 108; analysis.tex",
+        "from": 51,
+        "excerptDigest": "sha256-0c6383d8379f99ddedb777491ce4cac985ddad5b18969c150f2babfedc3d973f"
+      },
+      "text": "in particular O(n² m^{2.575} log(nm) ε^{-2} log(1/δ)) via minimum-index witnesses",
+      "normalizedTextDigest": "sha256-fb771391bcb1243388c2b2b89735eb27fe24df1a9509ddbab5c0826fc1d045f7",
+      "kind": "time",
+      "evidence": [
+        {
+          "file": "introduction.tex:90, 108; analysis.tex",
+          "from": 51,
+          "excerptDigest": "sha256-0c6383d8379f99ddedb777491ce4cac985ddad5b18969c150f2babfedc3d973f"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:a5a6d058-dfeb-4387-8c58-88e6a55f7183",
+      "claimId": "claim:c5bc7f43-8891-421a-ad32-b2b33e362d64",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "analysis.tex",
+        "from": 16,
+        "to": 39,
+        "excerptDigest": "sha256-4eef5d1a911336be962ad211da9f68dcbeba912c6a5594cb7f72ee80eb071085"
+      },
+      "text": "Lemma main_result_core (accuracy): Pr[p(q_F) ∉ (1±ε)|L(A^u)|^{-1}] ≤ 1/4 per core run (external Lean proves 3/16)",
+      "normalizedTextDigest": "sha256-a709da94618a44d11b890be9064090b8cb236eb61f0061be5f8f7e10c4641280",
+      "kind": "probability",
+      "evidence": [
+        {
+          "file": "analysis.tex",
+          "from": 16,
+          "to": 39,
+          "excerptDigest": "sha256-4eef5d1a911336be962ad211da9f68dcbeba912c6a5594cb7f72ee80eb071085"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:f9535982-ec5b-4687-81c8-91130e9163b4",
+      "claimId": "claim:1e70fde3-a167-4fe0-b5d6-020ee2cd88d5",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "introduction.tex",
+        "excerptDigest": "sha256-a4b17322826124479b049efeda5398d9115a696f4efce7ceec98f181b70630ac"
+      },
+      "text": "Lemma main_result_core (time): one core run costs O(n²·MM(m)·log(nm)·ε^{-2}), m = max_i |Q^i|",
+      "normalizedTextDigest": "sha256-50a525eca3e0417a8439b4d5722b02c404b230d242686089e891da57b5c52ad3",
+      "kind": "time",
+      "evidence": [
+        {
+          "file": "introduction.tex",
+          "excerptDigest": "sha256-a4b17322826124479b049efeda5398d9115a696f4efce7ceec98f181b70630ac"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:5a28d625-e10d-4e25-87b6-886cf5bac1bc",
+      "claimId": "claim:69b031bd-f857-4965-8562-147a91bcb564",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "introduction.tex",
+        "excerptDigest": "sha256-6664ce36c518e3a703df3dcf3bf1cf3c7aba110dbc6caba09c1910f21c9dfe19"
+      },
+      "text": "Lemma proba_p(q): in N*, Pr[∃q, p(q) ∉ (1±ε)|L(q)|^{-1}] ≤ 1/16",
+      "normalizedTextDigest": "sha256-9c63d6e1e9ef9721ff9d8bb65eb2d6aeee1aa310d6d47cfb47a3c285fb74e607",
+      "kind": "probability",
+      "evidence": [
+        {
+          "file": "introduction.tex",
+          "excerptDigest": "sha256-6664ce36c518e3a703df3dcf3bf1cf3c7aba110dbc6caba09c1910f21c9dfe19"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:7a994486-91a0-4446-84ed-54ae5b17de88",
+      "claimId": "claim:969bbbc1-49fa-4e72-8c6e-3c5f958714e7",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "introduction.tex",
+        "excerptDigest": "sha256-98eedd5747a6752b6430507981308b19cd5346c10541f32d07fe51de89ff89c4"
+      },
+      "text": "Lemma proba_S(q): in N*, Pr[Σ_{r,q}|S^r(q)| ≥ θ] ≤ 1/8",
+      "normalizedTextDigest": "sha256-f2a919b743027accc09f97c18a24ea5f24bc7205012cfa6e7561a74b478e495b",
+      "kind": "probability",
+      "evidence": [
+        {
+          "file": "introduction.tex",
+          "excerptDigest": "sha256-98eedd5747a6752b6430507981308b19cd5346c10541f32d07fe51de89ff89c4"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:dec37195-09fd-4eab-8d1f-bae9863085cc",
+      "claimId": "claim:04552524-a1c4-47e2-8523-aa6007a78872",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "introduction.tex",
+        "excerptDigest": "sha256-f0d7ef2386e23862b80f2d14fd208f302c33ea9c81e33ed701834e4097c48117"
+      },
+      "text": "Lemma bound_proba_AND_event: Pr[∩_{b∈F} |Y_{q,b} − |L(q)|| ≥ (ε/2)|L(q)|] ≤ (4(n+1)/((1−ε)ε²β))^{|F|} ≤ 6^{-|F|}",
+      "normalizedTextDigest": "sha256-3b23f32e4fda33a98ac79690a2aa4d59702d241015742044a5d6cf34f31c387f",
+      "kind": "probability",
+      "evidence": [
+        {
+          "file": "introduction.tex",
+          "excerptDigest": "sha256-f0d7ef2386e23862b80f2d14fd208f302c33ea9c81e33ed701834e4097c48117"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:6f4f1095-9622-42fd-a340-1ade16748f3a",
+      "claimId": "claim:77104df6-2027-4c6a-bd55-e5b8842a364c",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "background.tex",
+        "from": 65,
+        "to": 71,
+        "excerptDigest": "sha256-46399c0f177a783385dd442eedf5e0b39964411dc62a8ac16e44d80cfdaf28d1"
+      },
+      "text": "Proposition chernoff_intersections: Pr[Σ 1_{E_b} ≥ B/2] ≤ (4p)^{B/2} under Pr[∩_S E_b] ≤ p^{|S|}",
+      "normalizedTextDigest": "sha256-d0acfb9048cab473a42ff4c90f701bade724c75c6a2f7894d053a9e48cc38e37",
+      "kind": "probability",
+      "evidence": [
+        {
+          "file": "background.tex",
+          "from": 65,
+          "to": 71,
+          "excerptDigest": "sha256-46399c0f177a783385dd442eedf5e0b39964411dc62a8ac16e44d80cfdaf28d1"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:a95c0d6a-3e5b-4952-a929-64751bc193c5",
+      "claimId": "claim:1a893526-25d0-439e-9a97-b4a7e4a04570",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "derivationpath.tex",
+        "from": 197,
+        "to": 206,
+        "excerptDigest": "sha256-b51464303b17ae7e71581c7a59721f8af9324c94815d91b07f1623fba7278d75"
+      },
+      "text": "Lemma derivation_path: |D(w,q,ℓ)| ≤ |L(q)|/|L(q_ℓ)|",
+      "normalizedTextDigest": "sha256-a07becf75e7d641af6a502f18dbd7e25e06367be12c3ee838821100c19361139",
+      "kind": "other",
+      "evidence": [
+        {
+          "file": "derivationpath.tex",
+          "from": 197,
+          "to": 206,
+          "excerptDigest": "sha256-b51464303b17ae7e71581c7a59721f8af9324c94815d91b07f1623fba7278d75"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:77833964-267c-4e41-b87a-42276487f2c6",
+      "claimId": "claim:39fc2a65-1cb6-4c94-9daa-1bec30779946",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "introduction.tex",
+        "excerptDigest": "sha256-8f4cc97d84b3dee333e9c465017af98ed8a13f0f473c78bd2f8af805e23b648f"
+      },
+      "text": "Lemmas expectation_of_singleton / pair / C_A_terms and induction_lemma (martingale-style conditional expectations)",
+      "normalizedTextDigest": "sha256-21c480c33deb99c4b3f4edaed13de8a1646b1e9c7cdff40af61beb12c3bb00aa",
+      "kind": "probability",
+      "evidence": [
+        {
+          "file": "introduction.tex",
+          "excerptDigest": "sha256-8f4cc97d84b3dee333e9c465017af98ed8a13f0f473c78bd2f8af805e23b648f"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:1ba48b47-bcc8-4a03-b3e7-5ca3ee8443ac",
+      "claimId": "claim:0ba479ea-54c6-41e5-975d-260b36c8a9d2",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "analysis.tex",
+        "from": 76,
+        "to": 154,
+        "excerptDigest": "sha256-b53be0cde9d4fc069db5c793810ceaebf351de812d7e3c5c75d2aee476bf8522"
+      },
+      "text": "Spirit coupling: Pr_{N*}[some p(q) out of range] ≤ Σ_q Pr_{N^s}[bar p(q) out of range]",
+      "normalizedTextDigest": "sha256-422d5792cad6aaf91c8c2dc95fe527b69c652c9b711c3a8b82fe165c9ec685e1",
+      "kind": "probability",
+      "evidence": [
+        {
+          "file": "analysis.tex",
+          "from": 76,
+          "to": 154,
+          "excerptDigest": "sha256-b53be0cde9d4fc069db5c793810ceaebf351de812d7e3c5c75d2aee476bf8522"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:1e3a43f1-d552-490d-8620-891e2ca93c79",
+      "claimId": "claim:96d19619-b637-4ddb-bfc1-5713b60b780e",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "algorithm.tex",
+        "from": 25,
+        "to": 31,
+        "excerptDigest": "sha256-ad358b75b18f2257ed88bf201e420b14ed003a44b6e5e143c9800754db4ece44"
+      },
+      "text": "eq. union_sel at σ = min equals eq. union",
+      "normalizedTextDigest": "sha256-7ff53d65d63d77bd1720db8dc6692011f20ed6ac9fca22ffa46e9805940f1ca4",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "algorithm.tex",
+          "from": 25,
+          "to": 31,
+          "excerptDigest": "sha256-ad358b75b18f2257ed88bf201e420b14ed003a44b6e5e143c9800754db4ece44"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:c42c1115-ca1c-4949-9add-2bbb27f1274c",
+      "claimId": "claim:90690367-3bfd-42b6-a4b7-b58fd4d7268e",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "algorithm.tex",
+        "from": 140,
+        "to": 197,
+        "excerptDigest": "sha256-6172747c27027ea329c441d2c75a00d3acd66f7174d2c214b27ccacb075a00c2"
+      },
+      "text": "Algorithms union_1 / union_witness compute eq. union / union_sel given a correct cache; cache'_i and cache_i are correct",
+      "normalizedTextDigest": "sha256-da47ccc52c4cd9bf03729e9560bdb2ffdf2d9af1c7157aa702a94c8029014035",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "algorithm.tex",
+          "from": 140,
+          "to": 197,
+          "excerptDigest": "sha256-6172747c27027ea329c441d2c75a00d3acd66f7174d2c214b27ccacb075a00c2"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:2d7eee43-3586-4bf8-8904-5b506983b9fd",
+      "claimId": "claim:f534d027-6afd-43d6-ad81-32892c3f888b",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "introduction.tex",
+        "excerptDigest": "sha256-711f7f8fe59337e7401212faebef0b7cbfa64fda0ea294952343fb9b8f43713b"
+      },
+      "text": "Program (charged, cache-based) has the same output law as the Pseudocode transcription",
+      "normalizedTextDigest": "sha256-2f96d6353e71a5f30c3df0c9f45a397b6cd1663c9e3f4c4442e3a62ef87032e3",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "introduction.tex",
+          "excerptDigest": "sha256-711f7f8fe59337e7401212faebef0b7cbfa64fda0ea294952343fb9b8f43713b"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:24584177-2053-460f-a90b-fa6c95094092",
+      "claimId": "claim:d4157e79-dbd7-4a21-a15a-dc738b9108e8",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "analysis.tex",
+        "from": 59,
+        "to": 66,
+        "excerptDigest": "sha256-4a2a642311eb361b52649afaf31daf3a116803781f93ee0e39bb93abbea26ba3"
+      },
+      "text": "Median amplification: per-run failure ≤ 1/4 and μ = ⌈8 ln(1/δ)⌉ independent runs give failure ≤ e^{-μ/8} ≤ δ",
+      "normalizedTextDigest": "sha256-2b263b66317ac8186353a8dc5c3beb8461813a53bad8d2c4ea9f8d6feffd8237",
+      "kind": "probability",
+      "evidence": [
+        {
+          "file": "analysis.tex",
+          "from": 59,
+          "to": 66,
+          "excerptDigest": "sha256-4a2a642311eb361b52649afaf31daf3a116803781f93ee0e39bb93abbea26ba3"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:c4a9b1c0-0545-4f1e-a19e-40d12eea018e",
+      "claimId": "claim:940ae85b-c240-4493-ad35-fc4e6a6ef769",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "analysis.tex",
+        "from": 67,
+        "to": 68,
+        "excerptDigest": "sha256-e52c4c0270899e60440741e279898425ccdde2d512cc4d1f9ae9a6d5d21dff5d"
+      },
+      "text": "Total time = μ · (core time) + O(μ) median + preprocessing",
+      "normalizedTextDigest": "sha256-2b84bc0c0e7e44e6e94783c597872cd4eab98cf7bafacb1f5a95237cf98546fa",
+      "kind": "time",
+      "evidence": [
+        {
+          "file": "analysis.tex",
+          "from": 67,
+          "to": 68,
+          "excerptDigest": "sha256-e52c4c0270899e60440741e279898425ccdde2d512cc4d1f9ae9a6d5d21dff5d"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:408c4232-ff7f-4db3-abe8-f987fa05b81e",
+      "claimId": "claim:887457c9-73bc-4f68-b630-e92f0408b623",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "anchor": {
+        "file": "analysis.tex",
+        "from": 672,
+        "to": 679,
+        "excerptDigest": "sha256-b9807b221919826424dbfe4008d8d7b90995b4daf7db8857213cd5de51e13e9d"
+      },
+      "text": "Remark tightness: the (n+1) factor cannot be improved on the one-state automaton",
+      "normalizedTextDigest": "sha256-69f1de6f8b1b1db8454925596386f14b374b3e9c0159c12072e54934bbd2c670",
+      "kind": "other",
+      "evidence": [
+        {
+          "file": "analysis.tex",
+          "from": 672,
+          "to": 679,
+          "excerptDigest": "sha256-b9807b221919826424dbfe4008d8d7b90995b4daf7db8857213cd5de51e13e9d"
+        }
+      ],
+      "status": "active"
+    }
+  ],
+  "plans": [
+    {
+      "claimVersionId": "claim-version:6136897f-328d-4051-a449-3993cb3fe2e3",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:5c40a863-5391-420e-828f-d5b18e55d5b7"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-66d4adee6cb9cf0d77b9f9144d7c90a1573e92ce5fa948c1778f67b553f99a5a"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:5f10a529-1f8b-4de4-9c74-c61abf8ab543",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:4e46662a-df66-48d9-848d-867023c85a5d"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-00a51db914f7e565413a9fbe9628055d508364751f5be49cd00cfb9d482ad196"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:bb131369-96d5-42da-929d-a12a82e969f6",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:ec671351-77cb-410c-bdc3-450058609ef0"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-dc75d34be2e6801df41acdc0caa665c65e06740ba8f9b6b94332fc2935ea72b0"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Handoff."
+    },
+    {
+      "claimVersionId": "claim-version:a5a6d058-dfeb-4387-8c58-88e6a55f7183",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:54f06386-5a04-43a3-9b5b-6c7fb9519e52"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-32fe4923c9f2e551b3ad1316896e629ccfed4d8a230eacb7d5582d610924f083"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:f9535982-ec5b-4687-81c8-91130e9163b4",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:ea0d3d13-0fd8-4b78-8ce2-5998db2558d3"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-55451f6a9fc6f38ef3b499ed93a217b34c96c3cfad5fbab6acfaae89bf68ac53"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:5a28d625-e10d-4e25-87b6-886cf5bac1bc",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:036119b2-a7d4-4ae6-af61-551d228caf52"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-f911e1e877aa2578e8abb48d99973098e2ad56139144e0e94b4b81a25b69225b"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:7a994486-91a0-4446-84ed-54ae5b17de88",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:967b5df8-1a40-4db0-8ca9-f01e4913b7ec"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-3cc0593fa04dd163293cfb64c1567c43422b6aa5e6ce2714c17eaece49320abe"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:dec37195-09fd-4eab-8d1f-bae9863085cc",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:ec75113e-5791-4dac-ac0d-44d93697c5ad"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-1cb530bfbff38809c742b5ddc8f9e3d952d48237072606f21d5877468bc44452"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:6f4f1095-9622-42fd-a340-1ade16748f3a",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:e9422891-4df1-4f58-b1ba-cada7785ae6c"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-7f76dff92c58e7e0c2c6a39f8b9220b07d6cad8dc9625551a5804cdabe8279dd"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:a95c0d6a-3e5b-4952-a929-64751bc193c5",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:bfbbd697-baff-4c9c-9016-a205ffda1c48"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-8e471d6292a274447cf5ad62951810dd7815124af32cc146f203d9a13d79bf55"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:77833964-267c-4e41-b87a-42276487f2c6",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:c13096fc-e44a-48bd-b0b7-650e25fa0bb6"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-12825cc2675da85ba19748f5c69743c9cf84b3a9d20e230f42e286ea1a22da2c"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:1ba48b47-bcc8-4a03-b3e7-5ca3ee8443ac",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:bc39ac57-adbf-482c-be50-8abe30f6edbf"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-68915b0ca3032826e49b3e8546e774f72db8e8eaede052ec6d0f2236b58769b1"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:1e3a43f1-d552-490d-8620-891e2ca93c79",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:9517d466-40e3-42d9-a7d7-5cb813a65841"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-64dd3fc5234adbe2d05277f8b6fcce56bde4d68b0ad2c7396c4f4091b2dcf610"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Interface."
+    },
+    {
+      "claimVersionId": "claim-version:c42c1115-ca1c-4949-9add-2bbb27f1274c",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:7c61eb6e-fc3b-45ab-b72b-10469169d902"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-36cd7e78147689cf0b2af14c08f956f6d5c7412d38d783a804b9455908dd7d20"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Interface."
+    },
+    {
+      "claimVersionId": "claim-version:2d7eee43-3586-4bf8-8904-5b506983b9fd",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:38eac7f8-349c-455e-b80e-ded8b1ff81dd"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-e8752998f5d82d354d3b9863b822f2e8a34a98dce6b3e87aca046c772184cbb6"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Interface."
+    },
+    {
+      "claimVersionId": "claim-version:24584177-2053-460f-a90b-fa6c95094092",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:c55ad526-8f63-48b8-8923-c7d7ee1a5fb3"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-54dbd73ab19e2ff9b3d823cf19d44dd5c2cf6bde3286cc77f2ced69f710c700a"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:c4a9b1c0-0545-4f1e-a19e-40d12eea018e",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:c389e601-abed-48b7-a6d5-8436eba28ad2"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-1553c63e829ac240bd7e1196a1387723a5f4c40f82f9f16de91d8c60d1a8ecf5"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:408c4232-ff7f-4db3-abe8-f987fa05b81e",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:bd33d1a8-976a-465b-921d-78ee4929a992"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-81f56bedca395d3b9c993758db44e06edc2fc2dc4b0c903317402a065bb45576"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Handoff."
+    }
+  ],
+  "obligations": [
+    {
+      "id": "obligation:5c40a863-5391-420e-828f-d5b18e55d5b7",
+      "kind": "headline",
+      "summary": "Pr[est ∈ (1±ε)|L_n(A)|] ≥ 1 − δ for countNFA's output",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "materialized"
+    },
+    {
+      "id": "obligation:4e46662a-df66-48d9-848d-867023c85a5d",
+      "kind": "headline",
+      "summary": "countNFA runs in time O(n²·MM(m)·log(nm)·ε^{-2}·log(1/δ)) with m = |Q| (worst case over outcomes; see repaired form)",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:ec671351-77cb-410c-bdc3-450058609ef0",
+      "kind": "headline",
+      "summary": "in particular O(n² m^{2.575} log(nm) ε^{-2} log(1/δ)) via minimum-index witnesses",
+      "rationale": "The finalized blueprint assigns this paper claim to Handoff.",
+      "owner": "Handoff",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:54f06386-5a04-43a3-9b5b-6c7fb9519e52",
+      "kind": "headline",
+      "summary": "Lemma main_result_core (accuracy): Pr[p(q_F) ∉ (1±ε)|L(A^u)|^{-1}] ≤ 1/4 per core run (external Lean proves 3/16)",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:ea0d3d13-0fd8-4b78-8ce2-5998db2558d3",
+      "kind": "headline",
+      "summary": "Lemma main_result_core (time): one core run costs O(n²·MM(m)·log(nm)·ε^{-2}), m = max_i |Q^i|",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:036119b2-a7d4-4ae6-af61-551d228caf52",
+      "kind": "headline",
+      "summary": "Lemma proba_p(q): in N*, Pr[∃q, p(q) ∉ (1±ε)|L(q)|^{-1}] ≤ 1/16",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:967b5df8-1a40-4db0-8ca9-f01e4913b7ec",
+      "kind": "headline",
+      "summary": "Lemma proba_S(q): in N*, Pr[Σ_{r,q}|S^r(q)| ≥ θ] ≤ 1/8",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:ec75113e-5791-4dac-ac0d-44d93697c5ad",
+      "kind": "headline",
+      "summary": "Lemma bound_proba_AND_event: Pr[∩_{b∈F} |Y_{q,b} − |L(q)|| ≥ (ε/2)|L(q)|] ≤ (4(n+1)/((1−ε)ε²β))^{|F|} ≤ 6^{-|F|}",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:e9422891-4df1-4f58-b1ba-cada7785ae6c",
+      "kind": "headline",
+      "summary": "Proposition chernoff_intersections: Pr[Σ 1_{E_b} ≥ B/2] ≤ (4p)^{B/2} under Pr[∩_S E_b] ≤ p^{|S|}",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:bfbbd697-baff-4c9c-9016-a205ffda1c48",
+      "kind": "headline",
+      "summary": "Lemma derivation_path: |D(w,q,ℓ)| ≤ |L(q)|/|L(q_ℓ)|",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:c13096fc-e44a-48bd-b0b7-650e25fa0bb6",
+      "kind": "headline",
+      "summary": "Lemmas expectation_of_singleton / pair / C_A_terms and induction_lemma (martingale-style conditional expectations)",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:bc39ac57-adbf-482c-be50-8abe30f6edbf",
+      "kind": "headline",
+      "summary": "Spirit coupling: Pr_{N*}[some p(q) out of range] ≤ Σ_q Pr_{N^s}[bar p(q) out of range]",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:9517d466-40e3-42d9-a7d7-5cb813a65841",
+      "kind": "headline",
+      "summary": "eq. union_sel at σ = min equals eq. union",
+      "rationale": "The finalized blueprint assigns this paper claim to Interface.",
+      "owner": "Interface",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:7c61eb6e-fc3b-45ab-b72b-10469169d902",
+      "kind": "headline",
+      "summary": "Algorithms union_1 / union_witness compute eq. union / union_sel given a correct cache; cache'_i and cache_i are correct",
+      "rationale": "The finalized blueprint assigns this paper claim to Interface.",
+      "owner": "Interface",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:38eac7f8-349c-455e-b80e-ded8b1ff81dd",
+      "kind": "headline",
+      "summary": "Program (charged, cache-based) has the same output law as the Pseudocode transcription",
+      "rationale": "The finalized blueprint assigns this paper claim to Interface.",
+      "owner": "Interface",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:c55ad526-8f63-48b8-8923-c7d7ee1a5fb3",
+      "kind": "headline",
+      "summary": "Median amplification: per-run failure ≤ 1/4 and μ = ⌈8 ln(1/δ)⌉ independent runs give failure ≤ e^{-μ/8} ≤ δ",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:c389e601-abed-48b7-a6d5-8436eba28ad2",
+      "kind": "headline",
+      "summary": "Total time = μ · (core time) + O(μ) median + preprocessing",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:bd33d1a8-976a-465b-921d-78ee4929a992",
+      "kind": "headline",
+      "summary": "Remark tightness: the (n+1) factor cannot be improved on the one-state automaton",
+      "rationale": "The finalized blueprint assigns this paper claim to Handoff.",
+      "owner": "Handoff",
+      "status": "planned"
+    }
+  ],
+  "bindings": [
+    {
+      "id": "binding:0436d967-d2d1-4a91-a8d5-1c4afc7dd82d",
+      "obligationId": "obligation:5c40a863-5391-420e-828f-d5b18e55d5b7",
+      "declaration": "Nfa.countNFA_main_result",
+      "file": "Nfa/Model/Theorem.lean",
+      "module": "Nfa.Model.Theorem",
+      "role": "headline",
+      "status": "verified",
+      "semanticApprovalDecisionId": "sha256-ead5e1de39a9e01a0f18cc3cc655bdaf8161eb2097f131cfb4463c93d948eb68",
+      "receipt": {
+        "sourceSignatureDigest": "sha256-293d5c3aebc941a77fc03d7661874b2bd53c8400ace2bc8f6df9e68ada040b0e",
+        "elaboratedTypeDigest": "sha256-966c649cae1d873e5c0109359ce3c65399dc92573996f4ea39ea81a2c24018fa",
+        "semanticRootPolicyId": "project-type-closure/1",
+        "semanticRootDigests": [
+          {
+            "declaration": "Nfa.Model.Operations.addWord",
+            "valueDigest": "sha256-1033905839dac56337717a8ffe852e219eba29aaf9343006bb00e038aaf93203"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.bernoulliDigit",
+            "valueDigest": "sha256-a6eea11a2a561c974164cfb35edff4c4b2fed2114f075276398d6464ced6dcda"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.cacheEntry",
+            "valueDigest": "sha256-047ab05e20d3922137daf87c0c2f228cf8e26699e67a24dcea1e07f6a61a8ba1"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.ceilDiv",
+            "valueDigest": "sha256-74c0b179f6359c8dfe0684dbe57956b6667d004b08a140d0576f5c7f79771148"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Cell",
+            "valueDigest": "sha256-7c326caa01ad6eac086966abd96a56e507bb831e8f26ffea9d0fb8ee693ef24f"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.coin",
+            "valueDigest": "sha256-a5f1006f49d0883b684b76fa55c1ed94f44644a4ed392d02b70665929258a471"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.extend",
+            "valueDigest": "sha256-bda9ebeee0d7896c0edd6687ae66013adb366f8003521aecd55da2198e1fb6a3"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instDecidableEqOp",
+            "valueDigest": "sha256-282eeeabeaa742241a13f401aafae91763816d2c5f38a72895fe95183da24d73"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instDecidableEqOp._proof_1",
+            "valueDigest": "sha256-eab144ce2178f33e6689a06472125360147469cc989e269af989720061256c6f"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instDecidableEqOp._proof_2",
+            "valueDigest": "sha256-4abc44ff99e96dfa1d8d92f9a696acd10e89e4dac87cc1bf1c4165ce6c7b0d30"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instDecidableEqSite",
+            "valueDigest": "sha256-2358ea99b9a4b45328a757550e281bfd49f6ec07350e2f1f8420437a6de96b60"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instDecidableEqSite.decEq",
+            "valueDigest": "sha256-7c26f77a7501b1a774f3da3b7da7c21a6182b30b9e534f35e2d2426306ba14ec"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instDecidableEqSite.decEq._proof_1",
+            "valueDigest": "sha256-c3bf3a85d5fd858004e6a998699e1d021b46e11adb818c529974d4d76fa41e8f"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instDecidableEqSite.decEq._proof_2",
+            "valueDigest": "sha256-bcf3e567f997615634f63a06b91aaac4939476383bf16c5cf14c4a053d6bdaf4"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instDecidableEqSite.decEq._proof_3",
+            "valueDigest": "sha256-68d12172aaa56110a3f51dfbebe35fc09599d623dc8a54af8d98101640109851"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instDecidableEqSite.decEq._proof_4",
+            "valueDigest": "sha256-7122d7534f87c1ccca3d8d8fbf2c8b19c0699d7d23c97e10bb3b6ff1cd488446"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instDecidableEqSite.decEq._proof_5",
+            "valueDigest": "sha256-36119dc4ef39760293f355a28b6959df9054aa5e3cd264a4a4b6d5a593f8b5f5"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instDecidableEqSite.decEq._proof_6",
+            "valueDigest": "sha256-c3ba9581d27b174b0903c679be46da9f802b48e9aac6764d3f138cb5cb0655c5"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instDecidableEqSite.decEq.match_1",
+            "valueDigest": "sha256-d7c3f9d62806bfcacf13b93ad4d7e2024ed2872538942e79301da0ddf8e01f25"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instRosterOps",
+            "valueDigest": "sha256-e087189ccbadab8111f2717771b97cc4e02741abf0d1836ab8b99bd0d4c34ba6"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instRosterOps._proof_1",
+            "valueDigest": "sha256-2930d161c6a941fc2fb152618f9083cb3690dbb0b4e29c966247876603eb3310"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.instRosterOps.match_1",
+            "valueDigest": "sha256-d95ffdd5f993992d81054b7cb1a63cdcc9f89655f792954910d0182c085849cd"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.isWitness",
+            "valueDigest": "sha256-397419db5c50d06b3ce041f0ac1e87c6c38d37570a9db84b92fc4b571fb4169e"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op",
+            "valueDigest": "sha256-e60e92c5ed6d91437458a8bf3094ccd28b81f0acd009a7d7b2d67e2c834b3467"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.all",
+            "valueDigest": "sha256-a17a465c33131b27bc2193234de9707f3198bacba9644aede6785c3bbd2ab46b"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.arith",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.cacheEntry",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.casesOn",
+            "valueDigest": "sha256-dfb97cef7204c2b85c52a4eb9e5d4f5e7395e19e38552254c177f5ffdd4a1443"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.coin",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.ctorIdx",
+            "valueDigest": "sha256-148294ce4563ba224585b1fa33c5795a35930029ef68ddfea10a8934b7de778b"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.instFintype",
+            "valueDigest": "sha256-14e63da711325fb557827869416b0226fb832f1bf884e1829366bf88881e0c26"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.instFintype._proof_1",
+            "valueDigest": "sha256-b5a62470fcbccd3f33e3ee227f34d49d5ebbb48f06247ec989931b72b052a204"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.ofNat",
+            "valueDigest": "sha256-fcb82ff89d4b3c484c9ffa3e116b1bf446f0271555aa822d18f9a3401a4e0e7c"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.ofNat_ctorIdx",
+            "valueDigest": "sha256-a0a64e34b4f064b7a4339c603dd9bcd260323d995f00f8b72a2ff3d0f6af2baa"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.rec",
+            "valueDigest": "sha256-1f25e8f86f842021d8246454f7d459d636abb345596f82a76acc3b8bb35cf55c"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.rosterCardEq",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.rosterErase",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.rosterInsert",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.rosterMem",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.rosterSize",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.select",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.stateCmp",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.store",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.transition",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.witnessProduct",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.witnessRead",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Op.wordOp",
+            "valueDigest": "sha256-085e4e64471b812c1e531c929a7f60654b9e18b2379a8817aa11484b5dcca926"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.price",
+            "valueDigest": "sha256-9c2724e998950411ac675f9d1dd592fddc1888bd6e8806e595dd30c9ea515151"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.price._sparseCasesOn_1",
+            "valueDigest": "sha256-6bc87a63b08cbc20b4eb31f284f9a3fd276e19c680bbeac08f6d55f31643c4dc"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.price.match_1",
+            "valueDigest": "sha256-ecd32b5b324e591f704652e33f470252bcc90985b3e375720a8258ef11d19c21"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.rate",
+            "valueDigest": "sha256-30472d68523441417761b6f45b7b855acb1e3644a7434612e6bc3160b392fc41"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.rate._proof_1",
+            "valueDigest": "sha256-f65b99d9a090257a7091e7881bc281e4942a0b77c132b2606fe42b7d948d0ebe"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.sameState",
+            "valueDigest": "sha256-82fd22152fdc5389fcb8cec9637b1a179278be4618f9dd82789a7ed2276b88ef"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Scalar",
+            "valueDigest": "sha256-e60e92c5ed6d91437458a8bf3094ccd28b81f0acd009a7d7b2d67e2c834b3467"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Scalar.add",
+            "valueDigest": "sha256-0804b3aaa8a4146f2a0da22ea2119ecdb6044f108808b4e3885c2ee2ad959d9c"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Scalar.div",
+            "valueDigest": "sha256-47fbf8395c6400ee460ea63804c4ec2637bb66da3aeaaae61f53aca2ed5bba0d"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Scalar.get",
+            "valueDigest": "sha256-5e3fa4a31c80561c0f09f2d45a0000a9220c9919eb1bd179147d1c2843bd020d"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Scalar.le",
+            "valueDigest": "sha256-9c5b46c0a1592e1654d6c02aa52adeb270036d30f056b43cf26fa91d997a9896"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Scalar.lit",
+            "valueDigest": "sha256-79429c32138c4e94614dafd98f027d4d1e97d745b536138ffa51f2f7fef0510b"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Scalar.median",
+            "valueDigest": "sha256-8f3b3876d953026863ed2ede696657043461d79d32082f7f55987ea81f5278ba"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Scalar.min",
+            "valueDigest": "sha256-51c1d09bcfa90ae01a96bd2714e1d8ef086028e8951034deb3e99172341425be"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Scalar.mk",
+            "valueDigest": "sha256-4c26b83122cb50a8e5e68bb71978f5ee75fe0f6d5c3b6f382395e65850ff6808"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Scalar.mul",
+            "valueDigest": "sha256-2ba4373d7838657760bc7c608c1eaf18b9cb13e836aa289f6c5f2ca5fa0cfbdd"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Scalar.val",
+            "valueDigest": "sha256-3cd5f7828fbcf8126eb561bce5b63bb034f8f8037683a15e98bb4ade615e4033"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Site",
+            "valueDigest": "sha256-8526d08d7442df169c802ae32c080ccd06d849af59c1a0d87765913b29389989"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Site.casesOn",
+            "valueDigest": "sha256-c90cf909b748ddc24dfee89290c515b382edddeb6a869e91e15fa6952f30e5c2"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Site.mk",
+            "valueDigest": "sha256-74368919a4925dfe00faa76842280ffa014dabe4c8739dd23f1e5654e6585dee"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Site.mk.noConfusion",
+            "valueDigest": "sha256-9d36755896b90f0de0784f33e303a667fad63573f752ac04eaf4ba5b60819110"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Site.noConfusion",
+            "valueDigest": "sha256-f5c008c010e02e3f6b0e91e9ab00524dcfd42a277f537c458cb9267e802baf60"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Site.noConfusionType",
+            "valueDigest": "sha256-ffb622779af474359dd74c8ec48fd14ebce1441143de45a9fb98b57d19b5ef52"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Site.rec",
+            "valueDigest": "sha256-54bb21b6d83450800823ccce1b5ac46217424cbde351c303e2a379a6555d69b7"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.size",
+            "valueDigest": "sha256-0ef442403cb2e9fcf081e963614d5f05b84807a7afcf4907c9a863db8fef77c0"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.store",
+            "valueDigest": "sha256-da3bfcacbf5b1ce3eaccb5758793967b6f1af713d458aa947821d0caf6a2d757"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Tape",
+            "valueDigest": "sha256-8526d08d7442df169c802ae32c080ccd06d849af59c1a0d87765913b29389989"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Tape.draw",
+            "valueDigest": "sha256-5bd4ae800a2b0ce9e0bc9a5bdd1388cf3b5df3fe953fe1d6b68312c4914e12df"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Tape.mk",
+            "valueDigest": "sha256-99b835a3a5d0fe288201c9f16dec7901e73c090aafd3f1eea0f0e95c0bc637d6"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.Tape.ofFun",
+            "valueDigest": "sha256-24048101fd8acc0ce7d2defecf65d114015120428da3ac364aeade53d676f560"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.transition",
+            "valueDigest": "sha256-13b776d68ed912be12445ff37496dc14bbd71bc7340252023492b7442398c52d"
+          },
+          {
+            "declaration": "Nfa.Model.Operations.witnessProduct",
+            "valueDigest": "sha256-ad9edba37d3ab7110dd06d4f4acf3396755325276441bfc96708ee66b85a986c"
+          },
+          {
+            "declaration": "Nfa.PaperNFA",
+            "valueDigest": "sha256-8526d08d7442df169c802ae32c080ccd06d849af59c1a0d87765913b29389989"
+          },
+          {
+            "declaration": "Nfa.PaperNFA.delta",
+            "valueDigest": "sha256-8811f8ed59e3fde63847ca7569f9e3ae0fcea462132b90d80f5ee297184ee2ef"
+          },
+          {
+            "declaration": "Nfa.PaperNFA.layer",
+            "valueDigest": "sha256-6f0c25ef7f203040ed26a0c0799f3050638776203e29b62e8e6ac079939337d1"
+          },
+          {
+            "declaration": "Nfa.PaperNFA.qF",
+            "valueDigest": "sha256-f7370afd1abb89767a9b07a96dac51368644855401c31f5dae33c05344e66076"
+          },
+          {
+            "declaration": "Nfa.PaperNFA.qI",
+            "valueDigest": "sha256-672bdf8210601c3e0ea91883ca619c8811feed0b1e09c8b3119d03b3c5ae050a"
+          },
+          {
+            "declaration": "Nfa.PaperNFA.toNFA",
+            "valueDigest": "sha256-e27b55c554e50c7a47ce1596c893bde2d34485dd2351489b4bb232b5cac02a02"
+          },
+          {
+            "declaration": "Nfa.PaperNFA.unrolledCard",
+            "valueDigest": "sha256-79a9a2d9278a59b798eca96c63143e6e80afbcdbd7fcdc38092c565cff2e121d"
+          },
+          {
+            "declaration": "Nfa.params",
+            "valueDigest": "sha256-e98f023c11053dc9b4b2ec2c043b9ecb15bdd32e9ea9f6794baafcf3dc1ca4b9"
+          },
+          {
+            "declaration": "Nfa.Params",
+            "valueDigest": "sha256-e60e92c5ed6d91437458a8bf3094ccd28b81f0acd009a7d7b2d67e2c834b3467"
+          },
+          {
+            "declaration": "Nfa.params._proof_1",
+            "valueDigest": "sha256-9a051d35b39d698b6b49d6a36d1fa164f2bfc67b039d58faa05b9afcd80cdf07"
+          },
+          {
+            "declaration": "Nfa.params._proof_2",
+            "valueDigest": "sha256-921718df3a8d6978a2dcf282429de183f46db062a58ac92b4b67997087ec3c21"
+          },
+          {
+            "declaration": "Nfa.params._proof_3",
+            "valueDigest": "sha256-6bdab295a96775ec49538a1d799a3bed51c2414128cd72c0c9bae922f88bb8bb"
+          },
+          {
+            "declaration": "Nfa.params._proof_4",
+            "valueDigest": "sha256-5fab4f751ddbe1b319e7e17548be7b9e8e1074e0668fa0273e2494a336e3875d"
+          },
+          {
+            "declaration": "Nfa.Params.mk",
+            "valueDigest": "sha256-883e3c4e743c1d9563a6a1a717945101abb6200d7611972ef1db425d4f4d1ec8"
+          },
+          {
+            "declaration": "Nfa.Params.α",
+            "valueDigest": "sha256-ffec468b19de422d66d9f6dc68651193713812a4a69525cc653365a4faa0b0d4"
+          },
+          {
+            "declaration": "Nfa.Params.β",
+            "valueDigest": "sha256-56214823b672212f8d0949dcd511ea3bb2519bf34e38b9c50d8450161805c093"
+          },
+          {
+            "declaration": "Nfa.Params.γ",
+            "valueDigest": "sha256-eb9f527c0b7055eb8d21209f1b4c9fac0b64b44c804a733c6ebc1aa9847ed9b7"
+          },
+          {
+            "declaration": "Nfa.Params.θ",
+            "valueDigest": "sha256-397296e2de2732d07046cf57af83cd32d2e988e0a3a8e81298cd8940a06040fa"
+          },
+          {
+            "declaration": "Nfa.Params.μ",
+            "valueDigest": "sha256-13071d83e57042272bebf5f365ff1e0b12f5610bfa80913f84af806804187e8d"
+          },
+          {
+            "declaration": "Nfa.Prior",
+            "valueDigest": "sha256-c59a4e15562b4460784f82e9ec7b272cf3883eb01d63707d6608d3e587bea49b"
+          },
+          {
+            "declaration": "Nfa.Program.acceptsAtLength",
+            "valueDigest": "sha256-f2625ac5328b56f8f8dce4d4b640611ba4a38c4b55f7adb9ac77437239af26f0"
+          },
+          {
+            "declaration": "Nfa.Program.coreRun",
+            "valueDigest": "sha256-d24cf6811652c63940d0bd70a4251c61836866aa36cbf38ea180ccdf36c670b0"
+          },
+          {
+            "declaration": "Nfa.Program.CoreState",
+            "valueDigest": "sha256-8526d08d7442df169c802ae32c080ccd06d849af59c1a0d87765913b29389989"
+          },
+          {
+            "declaration": "Nfa.Program.CoreState.cache",
+            "valueDigest": "sha256-6d4e93f3c25017cc520980a8a910b27e7759094d152424e0f803cd7e1be52a28"
+          },
+          {
+            "declaration": "Nfa.Program.CoreState.curP",
+            "valueDigest": "sha256-3ecdd754d7604eac105e19f77a264bea18a6e4534f4b5a421ed50d793475da8f"
+          },
+          {
+            "declaration": "Nfa.Program.CoreState.curS",
+            "valueDigest": "sha256-1de7caea406172f5242428041453794bdc07adb70478d78eca2fbf0a1ffa7345"
+          },
+          {
+            "declaration": "Nfa.Program.CoreState.layerIdx",
+            "valueDigest": "sha256-50abfd4c0143282da6aa9409132d4712a0c8a630f20910c0cea47de09cd235da"
+          },
+          {
+            "declaration": "Nfa.Program.CoreState.mk",
+            "valueDigest": "sha256-360e063f46d90e48645d5ad32fb1badde45f41f911ffbfb978b7f5382731d271"
+          },
+          {
+            "declaration": "Nfa.Program.CoreState.prevP",
+            "valueDigest": "sha256-eb5d8e588736cdea2114cc0f47c7998ea10694f0b133baea1b25da1f1368d40d"
+          },
+          {
+            "declaration": "Nfa.Program.CoreState.prevS",
+            "valueDigest": "sha256-b8bdf2ab3ace178448425387b15ba32522900d2bc32a0103ce3e6dcb7509552a"
+          },
+          {
+            "declaration": "Nfa.Program.CoreState.stopped",
+            "valueDigest": "sha256-31621035c660575df456ef27d37aa0f6d84b982ac52ce7edbce6bba46eede968"
+          },
+          {
+            "declaration": "Nfa.Program.CoreState.total",
+            "valueDigest": "sha256-7dd9709c9dce96348b65c9960bf0592c5de6c9c4910be7a92cbc7de7e2236aa3"
+          },
+          {
+            "declaration": "Nfa.Program.countNFA",
+            "valueDigest": "sha256-262184875570fe5cc57695156dc8f170ef5837eeffe00d88e016442ccfa62083"
+          },
+          {
+            "declaration": "Nfa.Program.estimateAndSample",
+            "valueDigest": "sha256-f12b87a0a912591fbc1a220fe6101891fbbae00f9449e9e0aff227291d120c5c"
+          },
+          {
+            "declaration": "Nfa.Program.estimateAndSample.match_1",
+            "valueDigest": "sha256-6f9e00d7ca2ac654ed1886f800a3aa00e27d297d4a9dcf084ab7e1b3974c5ba3"
+          },
+          {
+            "declaration": "Nfa.Program.layerStep",
+            "valueDigest": "sha256-1054ebd372de896e2f2bfbf74e0d6d393684aa0234c55fa086b46ce2a22fd169"
+          },
+          {
+            "declaration": "Nfa.Program.predecessors",
+            "valueDigest": "sha256-7a3ddc2701236bc5ed4d8e76418b2fdca574c82c26b5165f5bbdcb2e1dcd5b03"
+          },
+          {
+            "declaration": "Nfa.Program.Samples",
+            "valueDigest": "sha256-226d8e3d8d3983ec52bfbdde2d10e90dcb5e17de46321ae66551c32b7709aa90"
+          },
+          {
+            "declaration": "Nfa.Program.unroll",
+            "valueDigest": "sha256-067ef04103111556cdd719f099849457e88d5179b61a877b8cba26d58f27ce52"
+          },
+          {
+            "declaration": "Nfa.Program.unroll._proof_1",
+            "valueDigest": "sha256-ac72ebe13b4e0310e3cf78cb5cc036a272d562b629b4fb95ecc69f3e910f549b"
+          },
+          {
+            "declaration": "Nfa.Program.unroll._proof_2",
+            "valueDigest": "sha256-3cc2b909528e08ca1b6f6440dff716e9ff458c851c5d89523e6de6f739efdb2d"
+          },
+          {
+            "declaration": "Nfa.Run.coinIndex",
+            "valueDigest": "sha256-88c9c5207ebb91058973d3189aa02e5b57ab2ddfe13dd0b679d8dc1306a6185c"
+          },
+          {
+            "declaration": "Nfa.Run.coinIndex._proof_1",
+            "valueDigest": "sha256-7bb3107c04d47e20d2a24748bcfa3b63a02fb39122be315e1c90b9a41a2eb3ce"
+          },
+          {
+            "declaration": "Nfa.Run.coinIndex._proof_2",
+            "valueDigest": "sha256-3c77303fa67d0ea29c05acb3e3713834323880bfdc846de276fde38552afaccc"
+          },
+          {
+            "declaration": "Nfa.Run.coinIndex._proof_3",
+            "valueDigest": "sha256-315b12567174e3bfbbb61fbafc215de3460c90de2ec6220940667248fe0992d7"
+          },
+          {
+            "declaration": "Nfa.Run.output",
+            "valueDigest": "sha256-700a467795da70e972451d995c775a31e8a9b91f818ed2b220b33cc35115acc4"
+          },
+          {
+            "declaration": "Nfa.Run.run",
+            "valueDigest": "sha256-c38ade834cce38a83b716e062e4a758b3516de8eb9a9de185019b601ddc9ec18"
+          },
+          {
+            "declaration": "Nfa.Run.sites",
+            "valueDigest": "sha256-a15596c57d21065c0015ec3c6ccfb459f0f6e838e1dda31655591b320e703017"
+          },
+          {
+            "declaration": "Nfa.Run.tapeLaw",
+            "valueDigest": "sha256-a4f4fd8757f300e847a0a3c3972a91e2e63d05f83041a7a53c5118cc7158a51f"
+          },
+          {
+            "declaration": "Nfa.Run.tapeLaw._f",
+            "valueDigest": "sha256-b557842350511c14c81f2259eb09c76ec212b376c194e29b292179dbf561a946"
+          },
+          {
+            "declaration": "Nfa.Run.tapeLaw.match_1",
+            "valueDigest": "sha256-b3a8ea277083413d5f519bb6f9b20a3882d7bf26adc522f180b73f959a26d3ff"
+          },
+          {
+            "declaration": "Nfa.Run.words",
+            "valueDigest": "sha256-1fdbacd43545cd7a195438a460e095cd17c3dba945c66ffdbe0207b144cb3662"
+          },
+          {
+            "declaration": "Nfa.Run.words._f",
+            "valueDigest": "sha256-43187a39c58a4248f58e409a2dc4d1d6c3e767cf7b26359a71dc568a24787ea9"
+          },
+          {
+            "declaration": "Nfa.Run.words.match_1",
+            "valueDigest": "sha256-d66fd5e6aeb28399d4798a60f81cb2d6b381e9ec022511608b97a3cc452030d9"
+          },
+          {
+            "declaration": "Nfa.Selector",
+            "valueDigest": "sha256-64fa0fb1cedef45ab5fe413993f1777087752b4ee3acb15eace7b40e3bf1ec6c"
+          },
+          {
+            "declaration": "Nfa.Selector.pick",
+            "valueDigest": "sha256-3db0d1522a4ef8bf2e2821e414f0be21c6b61456f0c024b3153f3a210f49e5d2"
+          },
+          {
+            "declaration": "Nfa.sliceCount",
+            "valueDigest": "sha256-e22206a6f01efe7278645be34e58695d73fe2ebe4115c82ea5a38183fffe9a67"
+          }
+        ],
+        "leanVersion": "4.33.0",
+        "toolchainDigest": "sha256-edce9c835ba8fd16fe32ec9b058ad81953b387a35723e2b323136c37f33fd4fa",
+        "optionsDigest": "sha256-b01d333a0ba6076a37c01762a8978eb2d2bebd220d8530e524078067d340079e"
+      },
+      "leanEvidenceSnapshotId": "sha256-f47509538bb977396d26379b6306614b2db5aa4b552d6dbc79d38c5df13ab117",
+      "verifiedByDecisionId": "sha256-8d1b956b568e41b6a71cf16f5074ff00e55fb2659ac2ffd05e02ca2394310bbd"
+    }
+  ],
+  "leanRelations": [],
+  "claimSetReceipts": [
+    {
+      "id": "claim-set:d434c8c0-9b2b-46fe-9d60-c29d1b16f716",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "paperPacketDigest": "sha256-64478d26f00fcdad5a54334b26286eac618c9c1f34a97a362cb2329438f5fa91",
+      "claimVersionIds": [
+        "claim-version:6136897f-328d-4051-a449-3993cb3fe2e3",
+        "claim-version:5f10a529-1f8b-4de4-9c74-c61abf8ab543",
+        "claim-version:bb131369-96d5-42da-929d-a12a82e969f6",
+        "claim-version:a5a6d058-dfeb-4387-8c58-88e6a55f7183",
+        "claim-version:f9535982-ec5b-4687-81c8-91130e9163b4",
+        "claim-version:5a28d625-e10d-4e25-87b6-886cf5bac1bc",
+        "claim-version:7a994486-91a0-4446-84ed-54ae5b17de88",
+        "claim-version:dec37195-09fd-4eab-8d1f-bae9863085cc",
+        "claim-version:6f4f1095-9622-42fd-a340-1ade16748f3a",
+        "claim-version:a95c0d6a-3e5b-4952-a929-64751bc193c5",
+        "claim-version:77833964-267c-4e41-b87a-42276487f2c6",
+        "claim-version:1ba48b47-bcc8-4a03-b3e7-5ca3ee8443ac",
+        "claim-version:1e3a43f1-d552-490d-8620-891e2ca93c79",
+        "claim-version:c42c1115-ca1c-4949-9add-2bbb27f1274c",
+        "claim-version:2d7eee43-3586-4bf8-8904-5b506983b9fd",
+        "claim-version:24584177-2053-460f-a90b-fa6c95094092",
+        "claim-version:c4a9b1c0-0545-4f1e-a19e-40d12eea018e",
+        "claim-version:408c4232-ff7f-4db3-abe8-f987fa05b81e"
+      ],
+      "readerProvenance": "reader-agent"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "sha256-66d4adee6cb9cf0d77b9f9144d7c90a1573e92ce5fa948c1778f67b553f99a5a",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "introduction.tex:90-93; proof analysis.tex",
+          "from": 62,
+          "to": 66,
+          "excerptDigest": "sha256-46268504ad3f022741db45a2cb9d458052a9ed7064875f7a63311dd39664f9aa"
+        }
+      ]
+    },
+    {
+      "id": "sha256-00a51db914f7e565413a9fbe9628055d508364751f5be49cd00cfb9d482ad196",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "introduction.tex:90; proof analysis.tex:67-68 with Lemma main_result_core analysis.tex",
+          "from": 40,
+          "to": 55,
+          "excerptDigest": "sha256-e1f54a5cebd9ed5360a1ebac186febaf1bb8d7bc83b0a63a46395d4b54c15f03"
+        }
+      ]
+    },
+    {
+      "id": "sha256-dc75d34be2e6801df41acdc0caa665c65e06740ba8f9b6b94332fc2935ea72b0",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "introduction.tex:90, 108; analysis.tex",
+          "from": 51,
+          "excerptDigest": "sha256-0c6383d8379f99ddedb777491ce4cac985ddad5b18969c150f2babfedc3d973f"
+        }
+      ]
+    },
+    {
+      "id": "sha256-32fe4923c9f2e551b3ad1316896e629ccfed4d8a230eacb7d5582d610924f083",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "analysis.tex",
+          "from": 16,
+          "to": 39,
+          "excerptDigest": "sha256-4eef5d1a911336be962ad211da9f68dcbeba912c6a5594cb7f72ee80eb071085"
+        }
+      ]
+    },
+    {
+      "id": "sha256-55451f6a9fc6f38ef3b499ed93a217b34c96c3cfad5fbab6acfaae89bf68ac53",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "introduction.tex",
+          "excerptDigest": "sha256-a4b17322826124479b049efeda5398d9115a696f4efce7ceec98f181b70630ac"
+        }
+      ]
+    },
+    {
+      "id": "sha256-f911e1e877aa2578e8abb48d99973098e2ad56139144e0e94b4b81a25b69225b",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "introduction.tex",
+          "excerptDigest": "sha256-6664ce36c518e3a703df3dcf3bf1cf3c7aba110dbc6caba09c1910f21c9dfe19"
+        }
+      ]
+    },
+    {
+      "id": "sha256-3cc0593fa04dd163293cfb64c1567c43422b6aa5e6ce2714c17eaece49320abe",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "introduction.tex",
+          "excerptDigest": "sha256-98eedd5747a6752b6430507981308b19cd5346c10541f32d07fe51de89ff89c4"
+        }
+      ]
+    },
+    {
+      "id": "sha256-1cb530bfbff38809c742b5ddc8f9e3d952d48237072606f21d5877468bc44452",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "introduction.tex",
+          "excerptDigest": "sha256-f0d7ef2386e23862b80f2d14fd208f302c33ea9c81e33ed701834e4097c48117"
+        }
+      ]
+    },
+    {
+      "id": "sha256-7f76dff92c58e7e0c2c6a39f8b9220b07d6cad8dc9625551a5804cdabe8279dd",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "background.tex",
+          "from": 65,
+          "to": 71,
+          "excerptDigest": "sha256-46399c0f177a783385dd442eedf5e0b39964411dc62a8ac16e44d80cfdaf28d1"
+        }
+      ]
+    },
+    {
+      "id": "sha256-8e471d6292a274447cf5ad62951810dd7815124af32cc146f203d9a13d79bf55",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "derivationpath.tex",
+          "from": 197,
+          "to": 206,
+          "excerptDigest": "sha256-b51464303b17ae7e71581c7a59721f8af9324c94815d91b07f1623fba7278d75"
+        }
+      ]
+    },
+    {
+      "id": "sha256-12825cc2675da85ba19748f5c69743c9cf84b3a9d20e230f42e286ea1a22da2c",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "introduction.tex",
+          "excerptDigest": "sha256-8f4cc97d84b3dee333e9c465017af98ed8a13f0f473c78bd2f8af805e23b648f"
+        }
+      ]
+    },
+    {
+      "id": "sha256-68915b0ca3032826e49b3e8546e774f72db8e8eaede052ec6d0f2236b58769b1",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "analysis.tex",
+          "from": 76,
+          "to": 154,
+          "excerptDigest": "sha256-b53be0cde9d4fc069db5c793810ceaebf351de812d7e3c5c75d2aee476bf8522"
+        }
+      ]
+    },
+    {
+      "id": "sha256-64dd3fc5234adbe2d05277f8b6fcce56bde4d68b0ad2c7396c4f4091b2dcf610",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "algorithm.tex",
+          "from": 25,
+          "to": 31,
+          "excerptDigest": "sha256-ad358b75b18f2257ed88bf201e420b14ed003a44b6e5e143c9800754db4ece44"
+        }
+      ]
+    },
+    {
+      "id": "sha256-36cd7e78147689cf0b2af14c08f956f6d5c7412d38d783a804b9455908dd7d20",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "algorithm.tex",
+          "from": 140,
+          "to": 197,
+          "excerptDigest": "sha256-6172747c27027ea329c441d2c75a00d3acd66f7174d2c214b27ccacb075a00c2"
+        }
+      ]
+    },
+    {
+      "id": "sha256-e8752998f5d82d354d3b9863b822f2e8a34a98dce6b3e87aca046c772184cbb6",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "introduction.tex",
+          "excerptDigest": "sha256-711f7f8fe59337e7401212faebef0b7cbfa64fda0ea294952343fb9b8f43713b"
+        }
+      ]
+    },
+    {
+      "id": "sha256-54dbd73ab19e2ff9b3d823cf19d44dd5c2cf6bde3286cc77f2ced69f710c700a",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "analysis.tex",
+          "from": 59,
+          "to": 66,
+          "excerptDigest": "sha256-4a2a642311eb361b52649afaf31daf3a116803781f93ee0e39bb93abbea26ba3"
+        }
+      ]
+    },
+    {
+      "id": "sha256-1553c63e829ac240bd7e1196a1387723a5f4c40f82f9f16de91d8c60d1a8ecf5",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "analysis.tex",
+          "from": 67,
+          "to": 68,
+          "excerptDigest": "sha256-e52c4c0270899e60440741e279898425ccdde2d512cc4d1f9ae9a6d5d21dff5d"
+        }
+      ]
+    },
+    {
+      "id": "sha256-81f56bedca395d3b9c993758db44e06edc2fc2dc4b0c903317402a065bb45576",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "analysis.tex",
+          "from": 672,
+          "to": 679,
+          "excerptDigest": "sha256-b9807b221919826424dbfe4008d8d7b90995b4daf7db8857213cd5de51e13e9d"
+        }
+      ]
+    }
+  ],
+  "surfaceInventories": [
+    {
+      "id": "surface-inventory:a62f0eae-5a9e-4089-8636-cae9a15c9f20",
+      "targetVersionId": "target-version:bb8a1eff-2a0c-4455-8577-e2e6953bab2e",
+      "source": "sealed-blueprint",
+      "blueprintDigest": "sha256-500dd968aa6832fe916aad13b56c71f8e2440f46f0ebc0d47f5578938626244c",
+      "declarations": [
+        {
+          "declaration": "Nfa.countNFA_correct",
+          "role": "headline",
+          "file": "Nfa/Model/Theorem.lean",
+          "module": "Nfa.Model.Theorem"
+        },
+        {
+          "declaration": "Nfa.countNFA_time",
+          "role": "headline",
+          "file": "Nfa/Model/Theorem.lean",
+          "module": "Nfa.Model.Theorem"
+        },
+        {
+          "declaration": "Nfa.countNFA_main_result",
+          "role": "headline",
+          "file": "Nfa/Model/Theorem.lean",
+          "module": "Nfa.Model.Theorem"
+        }
+      ]
+    }
+  ],
+  "appliedDecisionIds": [
+    "sha256-ead5e1de39a9e01a0f18cc3cc655bdaf8161eb2097f131cfb4463c93d948eb68",
+    "sha256-0db31f4c1847a846aa317907886275b168669862ea1299cea1a6f9eb89a4da25",
+    "sha256-8d1b956b568e41b6a71cf16f5074ff00e55fb2659ac2ffd05e02ca2394310bbd"
+  ]
+}
