@@ -1,0 +1,19 @@
+{
+  "id": "sha256-ead5e1de39a9e01a0f18cc3cc655bdaf8161eb2097f131cfb4463c93d948eb68",
+  "ledgerId": "ledger:70031a14-5348-4e85-a6d7-8c72fba060b0",
+  "baseLedgerDigest": "sha256-8c123c6377760bb052f9eaa8384df4e56bfc2c6c5de5efcfa7889d868b8cab2f",
+  "actor": "author",
+  "provenance": "author approved this capstone against the paper at the theorem-statement gate",
+  "mode": "automatic",
+  "kind": "put-binding",
+  "binding": {
+    "id": "binding:0436d967-d2d1-4a91-a8d5-1c4afc7dd82d",
+    "obligationId": "obligation:5c40a863-5391-420e-828f-d5b18e55d5b7",
+    "declaration": "Nfa.countNFA_main_result",
+    "file": "Nfa/Model/Theorem.lean",
+    "module": "Nfa.Model.Theorem",
+    "role": "headline",
+    "status": "proposed",
+    "semanticApprovalDecisionId": "sha256-ead5e1de39a9e01a0f18cc3cc655bdaf8161eb2097f131cfb4463c93d948eb68"
+  }
+}
