@@ -1,0 +1,7 @@
+# The headlines of this development, one per line.
+# The axiom profile of each is read from Lean whenever the checks run.
+TvDomainReduction.pc_fpras
+TvDomainReduction.pc_fpras_correct
+TvDomainReduction.pc_fpras_space
+TvDomainReduction.pc_fpras_time
+TvDomainReduction.mixture_fpras

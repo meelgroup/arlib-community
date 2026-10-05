@@ -1,0 +1,1213 @@
+{
+  "schema": "tex2lean.paper-proof-map/1",
+  "ledgerId": "ledger:f6765699-74a3-47be-b89d-50905a344012",
+  "paper": {
+    "id": "paper:5ccb0f36-f4d5-4396-840a-13b57bad47e9"
+  },
+  "target": {
+    "id": "target:46314cff-53ab-4c42-bca3-e7efceaca463",
+    "paperId": "paper:5ccb0f36-f4d5-4396-840a-13b57bad47e9",
+    "activeVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520"
+  },
+  "activeClaimSetReceiptId": "claim-set:a51ceeaa-143f-418e-b967-f7816edf14d0",
+  "activeSurfaceInventoryId": "surface-inventory:e1472754-8187-4c38-be2e-1b500196179f",
+  "targetVersions": [
+    {
+      "id": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "targetId": "target:46314cff-53ab-4c42-bca3-e7efceaca463",
+      "paperPacketDigest": "sha256-3a3c5807ce95da0142eab446b525f1e1e38a86b1fe0c69bfe2f1654b459685a8",
+      "bodyDigest": "sha256-f4766d244e3ef5468b499e6490da96920c95099f316bb068adbd0d67c29b9323",
+      "anchor": {
+        "file": "main.tex",
+        "label": "thm:main_fptas",
+        "environment": "theorem",
+        "from": 788,
+        "to": 795,
+        "excerptDigest": "sha256-801916471cd63c27a88b72cd9970f13a002301e5c7021352bcff289175ba6809"
+      },
+      "status": "active"
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim:cfed3de7-839d-47ef-853e-fe508945d588",
+      "targetId": "target:46314cff-53ab-4c42-bca3-e7efceaca463",
+      "activeVersionId": "claim-version:204a86d8-4089-419e-b08c-873656803995",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:2155948e-5617-4b7c-9aa4-e8be76611e3d",
+      "targetId": "target:46314cff-53ab-4c42-bca3-e7efceaca463",
+      "activeVersionId": "claim-version:e9639daf-ee11-4c18-8c43-654d1a6786c3",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:0dca25b9-722d-46c3-8e87-2b68af79d580",
+      "targetId": "target:46314cff-53ab-4c42-bca3-e7efceaca463",
+      "activeVersionId": "claim-version:f3dc180e-7a4b-421e-84f9-36ef7829afac",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:9363956c-8571-4f46-a854-2f329fc60a75",
+      "targetId": "target:46314cff-53ab-4c42-bca3-e7efceaca463",
+      "activeVersionId": "claim-version:1b7ef287-bc16-4d70-a9ba-5d5b22fb4a8c",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:d07552f9-5b0e-4280-89fe-34f04b55a4c1",
+      "targetId": "target:46314cff-53ab-4c42-bca3-e7efceaca463",
+      "activeVersionId": "claim-version:fe9ff7f8-5ea5-4eef-94ee-21749fdaf561",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:84c47eb4-04bc-44f3-bff7-742dc24ac1e9",
+      "targetId": "target:46314cff-53ab-4c42-bca3-e7efceaca463",
+      "activeVersionId": "claim-version:2d8231f8-4804-40ee-8cd1-f60440bb0769",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:14631791-7dc5-4f79-aca5-3802b0f853b9",
+      "targetId": "target:46314cff-53ab-4c42-bca3-e7efceaca463",
+      "activeVersionId": "claim-version:973b1631-c25d-43f7-8e63-fff1358629bd",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:a900ba37-a4e0-4f57-8f0d-66d3bf41576b",
+      "targetId": "target:46314cff-53ab-4c42-bca3-e7efceaca463",
+      "activeVersionId": "claim-version:80152eef-ad56-412c-a649-6fa3b4e8ac9b",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:0259266b-590b-4191-bda8-20d2609add8d",
+      "targetId": "target:46314cff-53ab-4c42-bca3-e7efceaca463",
+      "activeVersionId": "claim-version:8d4c7fe5-97fa-49c9-8345-3ae63694a581",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:866ad3ac-467d-4f77-bd67-37393a7f9af6",
+      "targetId": "target:46314cff-53ab-4c42-bca3-e7efceaca463",
+      "activeVersionId": "claim-version:1cba55e6-b11a-4255-a976-a3cb9f901f72",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:e2f54ae9-38b7-46c3-ab34-7ce190a5b681",
+      "targetId": "target:46314cff-53ab-4c42-bca3-e7efceaca463",
+      "activeVersionId": "claim-version:b8a73990-da38-45ba-a47c-644760312557",
+      "role": "reportable"
+    }
+  ],
+  "claimVersions": [
+    {
+      "id": "claim-version:204a86d8-4089-419e-b08c-873656803995",
+      "claimId": "claim:cfed3de7-839d-47ef-853e-fe508945d588",
+      "targetVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "anchor": {
+        "file": "main.tex",
+        "from": 790,
+        "to": 794,
+        "excerptDigest": "sha256-bb13547aabb21b102bd3487189b14874b46ddc919944d4f98a8ae5cadccf28b0"
+      },
+      "text": "(1 - epsilon) d_TV(P,Q) <= D~ <= (1 + epsilon) d_TV(P,Q) with probability at least 1 - eta.",
+      "normalizedTextDigest": "sha256-6d8e54e8c89c4a344593ee45b966d0be67d9082e724f185223be3953de344b6a",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "from": 790,
+          "to": 794,
+          "excerptDigest": "sha256-bb13547aabb21b102bd3487189b14874b46ddc919944d4f98a8ae5cadccf28b0"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:e9639daf-ee11-4c18-8c43-654d1a6786c3",
+      "claimId": "claim:2155948e-5617-4b7c-9aa4-e8be76611e3d",
+      "targetVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "anchor": {
+        "file": "main.tex",
+        "from": 794,
+        "excerptDigest": "sha256-12bb02c5681752e8e9b4eee1dcbee34d31130bb05c5926152cd5e2a46d57619f"
+      },
+      "text": "The algorithm runs in time polynomial in n, k, 1/epsilon, log(1/eta) and max_t |Omega_t|.",
+      "normalizedTextDigest": "sha256-117a311f0682caec775743018bf9ea3587ff38c8e3c699632083e00a7cfd1c20",
+      "kind": "time",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "from": 794,
+          "excerptDigest": "sha256-12bb02c5681752e8e9b4eee1dcbee34d31130bb05c5926152cd5e2a46d57619f"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:f3dc180e-7a4b-421e-84f9-36ef7829afac",
+      "claimId": "claim:0dca25b9-722d-46c3-8e87-2b68af79d580",
+      "targetVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "anchor": {
+        "file": "lem:one_step, main.tex",
+        "from": 802,
+        "to": 811,
+        "excerptDigest": "sha256-2e616e721f3835e4148fbeb795b597ffe8bc66fbfe17454fc0d927f64acb51ac"
+      },
+      "text": "Per-step: with probability at least 1 - eta', (1 - delta) E(U_t, y) <= E(C_t, y) <= (1 + delta) E(U_t, y) simultaneously for all y in R^k.",
+      "normalizedTextDigest": "sha256-5993869a24b8ffe47064ae8ae57293a7ada3f268f783fca93dd2a00e3043088f",
+      "kind": "probability",
+      "evidence": [
+        {
+          "file": "lem:one_step, main.tex",
+          "from": 802,
+          "to": 811,
+          "excerptDigest": "sha256-2e616e721f3835e4148fbeb795b597ffe8bc66fbfe17454fc0d927f64acb51ac"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:1b7ef287-bc16-4d70-a9ba-5d5b22fb4a8c",
+      "claimId": "claim:9363956c-8571-4f46-a854-2f329fc60a75",
+      "targetVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "anchor": {
+        "file": "lem:propagation, main.tex",
+        "from": 823,
+        "to": 840,
+        "excerptDigest": "sha256-08ed328f1e826f1ec8ec518bd2d010930e83b1dd4fcc9d86361957790f29d1b9"
+      },
+      "text": "Conditioned on Sparsify succeeding at step t, (1 - delta) F_{t-1} <= F_t <= (1 + delta) F_{t-1}.",
+      "normalizedTextDigest": "sha256-dc32b3d49c693e2ab4e83c8d7e1da8874a33930331da54e5f4a3da0d3bcb6e0d",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "lem:propagation, main.tex",
+          "from": 823,
+          "to": 840,
+          "excerptDigest": "sha256-08ed328f1e826f1ec8ec518bd2d010930e83b1dd4fcc9d86361957790f29d1b9"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:fe9ff7f8-5ea5-4eef-94ee-21749fdaf561",
+      "claimId": "claim:d07552f9-5b0e-4280-89fe-34f04b55a4c1",
+      "targetVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "anchor": {
+        "file": "main.tex",
+        "from": 843,
+        "excerptDigest": "sha256-1a8c530d78c6fd277090ec666312c6c5f2ce0ab3a9cec9bb7ce87d396160b794"
+      },
+      "text": "Union bound: all n steps succeed with probability at least 1 - n eta' = 1 - eta.",
+      "normalizedTextDigest": "sha256-6538da32b5dff64f38b31d3d1fd67b3c4a3af642352225ff10dbd297d0e2e7e8",
+      "kind": "probability",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "from": 843,
+          "excerptDigest": "sha256-1a8c530d78c6fd277090ec666312c6c5f2ce0ab3a9cec9bb7ce87d396160b794"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:2d8231f8-4804-40ee-8cd1-f60440bb0769",
+      "claimId": "claim:84c47eb4-04bc-44f3-bff7-742dc24ac1e9",
+      "targetVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "anchor": {
+        "file": "main.tex",
+        "from": 845,
+        "to": 847,
+        "excerptDigest": "sha256-e178b64268ef1a0a9ce9db81c6d09ca64a86d78b636b668fcfaca2af18276dfc"
+      },
+      "text": "Telescoping and calibration: (1 - delta)^n F_0 <= F_n <= (1 + delta)^n F_0 and, at delta = epsilon/(3n), (1 + epsilon/3n)^n <= e^{epsilon/3} <= 1 + epsilon and (1 - epsilon/3n)^n >= 1 - epsilon.",
+      "normalizedTextDigest": "sha256-e02408ab0516175e590db0d0534549544bb1554666e251ca0cd4506cdda50d4c",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "from": 845,
+          "to": 847,
+          "excerptDigest": "sha256-e178b64268ef1a0a9ce9db81c6d09ca64a86d78b636b668fcfaca2af18276dfc"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:973b1631-c25d-43f7-8e63-fff1358629bd",
+      "claimId": "claim:14631791-7dc5-4f79-aca5-3802b0f853b9",
+      "targetVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "anchor": {
+        "file": "main.tex",
+        "from": 821,
+        "excerptDigest": "sha256-4c05dfc6b7511de02623398a249d4f2926b516522b3e6faabb095f6b0ca5bd57"
+      },
+      "text": "F_0 = d_TV(P,Q) and F_n = D~.",
+      "normalizedTextDigest": "sha256-f6e878901650121eeefeb02d96b35b0d65e1029f66a3a0cb3d3980034b8b01dd",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "from": 821,
+          "excerptDigest": "sha256-4c05dfc6b7511de02623398a249d4f2926b516522b3e6faabb095f6b0ca5bd57"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:80152eef-ad56-412c-a649-6fa3b4e8ac9b",
+      "claimId": "claim:a900ba37-a4e0-4f57-8f0d-66d3bf41576b",
+      "targetVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-618ea67fc7296fe21bd392a72ee91ad2fff62332c05f270fc0ce80ffe2242455"
+      },
+      "text": "Each retained coreset has at most m = Theta(k log k / delta^2 log(1/eta')) rows.",
+      "normalizedTextDigest": "sha256-2df9b2b6cc7c62651165b3edd520656500594f50009302721d87ccabe8dc321b",
+      "kind": "space",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-618ea67fc7296fe21bd392a72ee91ad2fff62332c05f270fc0ce80ffe2242455"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:8d4c7fe5-97fa-49c9-8345-3ae63694a581",
+      "claimId": "claim:0259266b-590b-4191-bda8-20d2609add8d",
+      "targetVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "anchor": {
+        "file": "main.tex",
+        "from": 851,
+        "to": 855,
+        "excerptDigest": "sha256-d5223af7deacc7e8f66b014d3bd07de271696d7570d4c5163dbbc7eefb8c15eb"
+      },
+      "text": "Per-step arithmetic cost O~((|Omega_t| m) k + k^omega) = O~(|Omega_t| n^2 k^2 eps^{-2} log(n/eta) + k^omega).",
+      "normalizedTextDigest": "sha256-61dd9b0c65a3a42afb5c3e794810d8cab8fb2f75331cad2e1de2a12d06f1e622",
+      "kind": "time",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "from": 851,
+          "to": 855,
+          "excerptDigest": "sha256-d5223af7deacc7e8f66b014d3bd07de271696d7570d4c5163dbbc7eefb8c15eb"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:1cba55e6-b11a-4255-a976-a3cb9f901f72",
+      "claimId": "claim:866ad3ac-467d-4f77-bd67-37393a7f9af6",
+      "targetVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-ee820afb397dacafa5f09d072dd189efc1916d201796eda2341e190397e96b54"
+      },
+      "text": "Sparsify's own guarantee: at most m = O(d log d / delta^2 log(1/eta)) nonzeros, a (1 +- delta) ell_1 embedding with probability >= 1 - eta, in O~(Nd + d^omega) arithmetic operations for delta in (0,1/2) and omega <= 2.4.",
+      "normalizedTextDigest": "sha256-201b6b1d7b74ccc6da084f0d013cf86bc861595b309c2824e2418b93df13c7bc",
+      "kind": "other",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-ee820afb397dacafa5f09d072dd189efc1916d201796eda2341e190397e96b54"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:b8a73990-da38-45ba-a47c-644760312557",
+      "claimId": "claim:e2f54ae9-38b7-46c3-ab34-7ce190a5b681",
+      "targetVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "anchor": {
+        "file": "main.tex",
+        "from": 730,
+        "to": 733,
+        "excerptDigest": "sha256-ffe75f30a0986e219f8e7daaa53f667661948251b6ca43f199c0561e37629c2e"
+      },
+      "text": "<w, R(x)> = P(x) - Q(x) and d_TV(P,Q) = (1/2) sum_x |<w, R(x)>|.",
+      "normalizedTextDigest": "sha256-4b0900c61a95873bb9e7f4b05acae627cc27862512be29dc268e4c19d128d799",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "from": 730,
+          "to": 733,
+          "excerptDigest": "sha256-ffe75f30a0986e219f8e7daaa53f667661948251b6ca43f199c0561e37629c2e"
+        }
+      ],
+      "status": "active"
+    }
+  ],
+  "plans": [
+    {
+      "claimVersionId": "claim-version:204a86d8-4089-419e-b08c-873656803995",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:6ad3fe16-e3f2-4a13-b567-7b1ca74888bc"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-3a760eae65622b857451e0ed17c058ba5ab5662358649b3b6f6faba4c7dff1c7"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:e9639daf-ee11-4c18-8c43-654d1a6786c3",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:cbc1124f-b647-4ec3-af2b-0b341dd38daa"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-be4bda8076b95c174ce54a38d1bfee4d85bea694e287bb112b1ed01a89e1f68b"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:f3dc180e-7a4b-421e-84f9-36ef7829afac",
+      "disposition": "implement",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:bda9856f-219d-4c35-87ec-b09087f3a16a"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-3091e983eac4f7c3ca9a587cbd7442c2db7f5c1bec46c2f67f74624a1ccd7900"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Program."
+    },
+    {
+      "claimVersionId": "claim-version:1b7ef287-bc16-4d70-a9ba-5d5b22fb4a8c",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:30143039-22b8-47ac-aab6-3275d7fdc774"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-52b02257fd1126cb75512d8c76fc5ca47403cbe0a6ceda23fea83868a4a44c41"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:fe9ff7f8-5ea5-4eef-94ee-21749fdaf561",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:7863906d-a4a7-4ce7-ba60-da7a2acf89c3"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-e35c0c81773cc2a0910162bdbd40942399ac2fc98b62f264a1315871910ccfa1"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:2d8231f8-4804-40ee-8cd1-f60440bb0769",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:2e6daa3d-aa87-44f8-9779-fc9b3800c9e3"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-5d2a4e0c43ef1b15fd48202ef89cf5aaa595fd9b852a811c0af3b81ded599b04"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:973b1631-c25d-43f7-8e63-fff1358629bd",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:a75219a4-8df3-4e3a-a543-fb28c3701249"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-3a94de1358a0f4e1e437e5ef9cada9068e2f3f07ec269edb1d673d5460928dd8"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:80152eef-ad56-412c-a649-6fa3b4e8ac9b",
+      "disposition": "implement",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:b5c235d4-3ccc-41c1-b296-a5c6daeb20e0"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-5b7ddc8c98055178d7afb019064316dcebb346667f3c33a48212dcc671f054ea"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Program."
+    },
+    {
+      "claimVersionId": "claim-version:8d4c7fe5-97fa-49c9-8345-3ae63694a581",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:e7cc235d-8363-4081-9b00-470093ccdcd8"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-ffc22fa5049a85c84335acef746623b9cc8e7f46179f4197ea21224ec6ddc7b5"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Handoff."
+    },
+    {
+      "claimVersionId": "claim-version:1cba55e6-b11a-4255-a976-a3cb9f901f72",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:8294a42d-c42e-4f8f-8557-d4fa4d06a745"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-95250aee8ed6f64b60f2f25855d12203a217f25ecd7e4a20593d000ba3ca1a43"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:b8a73990-da38-45ba-a47c-644760312557",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:08dbe6ff-3960-407e-842f-b11a6571b2bf"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-1ddd7632b667afe251d2fdba16bf37b540489035b9afe3fdc1999e90bb6f3edf"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    }
+  ],
+  "obligations": [
+    {
+      "id": "obligation:6ad3fe16-e3f2-4a13-b567-7b1ca74888bc",
+      "kind": "headline",
+      "summary": "(1 - epsilon) d_TV(P,Q) <= D~ <= (1 + epsilon) d_TV(P,Q) with probability at least 1 - eta.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "materialized"
+    },
+    {
+      "id": "obligation:cbc1124f-b647-4ec3-af2b-0b341dd38daa",
+      "kind": "headline",
+      "summary": "The algorithm runs in time polynomial in n, k, 1/epsilon, log(1/eta) and max_t |Omega_t|.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:bda9856f-219d-4c35-87ec-b09087f3a16a",
+      "kind": "implementation",
+      "summary": "Per-step: with probability at least 1 - eta', (1 - delta) E(U_t, y) <= E(C_t, y) <= (1 + delta) E(U_t, y) simultaneously for all y in R^k.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Program.",
+      "owner": "Model/Program",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:30143039-22b8-47ac-aab6-3275d7fdc774",
+      "kind": "headline",
+      "summary": "Conditioned on Sparsify succeeding at step t, (1 - delta) F_{t-1} <= F_t <= (1 + delta) F_{t-1}.",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:7863906d-a4a7-4ce7-ba60-da7a2acf89c3",
+      "kind": "headline",
+      "summary": "Union bound: all n steps succeed with probability at least 1 - n eta' = 1 - eta.",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:2e6daa3d-aa87-44f8-9779-fc9b3800c9e3",
+      "kind": "headline",
+      "summary": "Telescoping and calibration: (1 - delta)^n F_0 <= F_n <= (1 + delta)^n F_0 and, at delta = epsilon/(3n), (1 + epsilon/3n)^n <= e^{epsilon/3} <= 1 + epsilon and (1 - epsilon/3n)^n >= 1 - epsilon.",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:a75219a4-8df3-4e3a-a543-fb28c3701249",
+      "kind": "headline",
+      "summary": "F_0 = d_TV(P,Q) and F_n = D~.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:b5c235d4-3ccc-41c1-b296-a5c6daeb20e0",
+      "kind": "implementation",
+      "summary": "Each retained coreset has at most m = Theta(k log k / delta^2 log(1/eta')) rows.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Program.",
+      "owner": "Model/Program",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:e7cc235d-8363-4081-9b00-470093ccdcd8",
+      "kind": "headline",
+      "summary": "Per-step arithmetic cost O~((|Omega_t| m) k + k^omega) = O~(|Omega_t| n^2 k^2 eps^{-2} log(n/eta) + k^omega).",
+      "rationale": "The finalized blueprint assigns this paper claim to Handoff.",
+      "owner": "Handoff",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:8294a42d-c42e-4f8f-8557-d4fa4d06a745",
+      "kind": "headline",
+      "summary": "Sparsify's own guarantee: at most m = O(d log d / delta^2 log(1/eta)) nonzeros, a (1 +- delta) ell_1 embedding with probability >= 1 - eta, in O~(Nd + d^omega) arithmetic operations for delta in (0,1/2) and omega <= 2.4.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:08dbe6ff-3960-407e-842f-b11a6571b2bf",
+      "kind": "headline",
+      "summary": "<w, R(x)> = P(x) - Q(x) and d_TV(P,Q) = (1/2) sum_x |<w, R(x)>|.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    }
+  ],
+  "bindings": [
+    {
+      "id": "binding:943019dc-9b40-4f91-9aca-fb24155c6780",
+      "obligationId": "obligation:6ad3fe16-e3f2-4a13-b567-7b1ca74888bc",
+      "declaration": "TvDomainReduction.mixture_fpras",
+      "file": "TvDomainReduction/Model/Theorem.lean",
+      "module": "TvDomainReduction.Model.Theorem",
+      "role": "headline",
+      "status": "verified",
+      "semanticApprovalDecisionId": "sha256-1a9eaf4604d6217183b61ef269e67006ef46d477858192fac0513bbcf1af8cfe",
+      "receipt": {
+        "sourceSignatureDigest": "sha256-b5bfb71cc1e38a72619f1baa7cf22194648097593bb24520c1128d9350563e5f",
+        "elaboratedTypeDigest": "sha256-24a491336618133f0ca0cb21408a5dba448a9525f48dd549ba4ba62e06a492c5",
+        "semanticRootPolicyId": "project-type-closure/1",
+        "semanticRootDigests": [
+          {
+            "declaration": "TvDomainReduction.catCircuit",
+            "valueDigest": "sha256-12128548ff6af2b073b796afb58ca7ed6449d364d01b034aa1d74da234575ad6"
+          },
+          {
+            "declaration": "TvDomainReduction.catCircuit._f",
+            "valueDigest": "sha256-7a0624e9c47126562b2a2fac9b90d82355b8dc5b3e8b41f173379d3b455e83b2"
+          },
+          {
+            "declaration": "TvDomainReduction.catPair",
+            "valueDigest": "sha256-7c79b86cbf396129b0fda130452f0274d7f192b1d2f22829414959c5390cf53f"
+          },
+          {
+            "declaration": "TvDomainReduction.catVtree",
+            "valueDigest": "sha256-5efdd515456da663477c91ba8e383b10c94c8d51027eef03f0383dd2c6765425"
+          },
+          {
+            "declaration": "TvDomainReduction.catVtree._f",
+            "valueDigest": "sha256-679ff42edf8710cc9045fb10490f6a3c0088a8cdba927a9270a88dabb4568ed0"
+          },
+          {
+            "declaration": "TvDomainReduction.catVtree.match_1",
+            "valueDigest": "sha256-79abd9f4c9d50b8224b2f9f0e3c5fa5979beb4ba7c694a5ea0b6d097b46d4e6b"
+          },
+          {
+            "declaration": "TvDomainReduction.Dtilde._proof_1",
+            "valueDigest": "sha256-7bb3107c04d47e20d2a24748bcfa3b63a02fb39122be315e1c90b9a41a2eb3ce"
+          },
+          {
+            "declaration": "TvDomainReduction.DtildeAt",
+            "valueDigest": "sha256-93423f61abace92972b0ba57268491d0614a506caa0f6752c0958a5a224b1d43"
+          },
+          {
+            "declaration": "TvDomainReduction.DtildeMix",
+            "valueDigest": "sha256-3c86bd2d3b25e0eedf38929a48823caa528c4d5616fa0af425610c7f1998270f"
+          },
+          {
+            "declaration": "TvDomainReduction.dTVmix",
+            "valueDigest": "sha256-9adf71e89ff6b19325fa5be0cb551d9da7572163560d6e41db3606603b1a27ab"
+          },
+          {
+            "declaration": "TvDomainReduction.mixFeatP",
+            "valueDigest": "sha256-5538cf6af3606fccd167de33d891fe6457a9ffc965806b6d695ef910b9eb9696"
+          },
+          {
+            "declaration": "TvDomainReduction.mixFeatQ",
+            "valueDigest": "sha256-7b919acac2d6f17b2dfc3b52fabee55ab911987c8036cc0a9e8b39f9ce770301"
+          },
+          {
+            "declaration": "TvDomainReduction.mixPair",
+            "valueDigest": "sha256-b9b81ce2f94e089eae2296824fd745858135fe9337dd7cb0d0102963f0d74b92"
+          },
+          {
+            "declaration": "TvDomainReduction.mixPmfP",
+            "valueDigest": "sha256-e3ed779a5de5b46921460abe3d4ff5025442efdb3ee5cdba98f3ebcd338d5bac"
+          },
+          {
+            "declaration": "TvDomainReduction.mixPmfQ",
+            "valueDigest": "sha256-a0fba1b981d40b1a254f703896513fc5d95997ca7d01c663d5be6b879def43f9"
+          },
+          {
+            "declaration": "TvDomainReduction.MixtureInstance",
+            "valueDigest": "sha256-e60e92c5ed6d91437458a8bf3094ccd28b81f0acd009a7d7b2d67e2c834b3467"
+          },
+          {
+            "declaration": "TvDomainReduction.MixtureInstance.alpha",
+            "valueDigest": "sha256-156458ca02446b4a9c03fcec09ba48d18576620944728de831840d51bba9727c"
+          },
+          {
+            "declaration": "TvDomainReduction.MixtureInstance.beta",
+            "valueDigest": "sha256-61b7aec02dd4937cdf196a7c834e371bed2867de5df46c24369e3c41da5c3729"
+          },
+          {
+            "declaration": "TvDomainReduction.MixtureInstance.dom",
+            "valueDigest": "sha256-8f447f599c85cd4d79d0725379fb039e9d583b9cd9fdf736d0c3ca3519ea315a"
+          },
+          {
+            "declaration": "TvDomainReduction.MixtureInstance.IsStochastic",
+            "valueDigest": "sha256-8d5bb0ef60276c1bcf84ed6ea94d0eeedeb6047f00819becf8b9fe604ed9a048"
+          },
+          {
+            "declaration": "TvDomainReduction.MixtureInstance.k",
+            "valueDigest": "sha256-26c74fbe8fd449c6c9d513383d8eeb277ade7e41ea5bbd8bde9b67656e8e05ae"
+          },
+          {
+            "declaration": "TvDomainReduction.MixtureInstance.k1",
+            "valueDigest": "sha256-a7b3703ef6b37989556177700ffcd76f39fe46a9fafd3a417c6afadf1d2f30cd"
+          },
+          {
+            "declaration": "TvDomainReduction.MixtureInstance.k2",
+            "valueDigest": "sha256-c17e0a9b507ae51d26c30908bbf98663ff9c06c49f6fb0be4b1b06903f840f67"
+          },
+          {
+            "declaration": "TvDomainReduction.MixtureInstance.n",
+            "valueDigest": "sha256-0566829a194a60c1786c5b73f1495ffccdba0561ea6748615d45742bbaaf4201"
+          },
+          {
+            "declaration": "TvDomainReduction.MixtureInstance.pTab",
+            "valueDigest": "sha256-ca0e097a418cef0263c573cdc5b01bb311f05bfe03975a3e3a2d9d1a803a90b7"
+          },
+          {
+            "declaration": "TvDomainReduction.MixtureInstance.q",
+            "valueDigest": "sha256-37c7f7ea3621773576615df31b1c550b787e09ae064bbfa6dfcba60f3706f18e"
+          },
+          {
+            "declaration": "TvDomainReduction.MixtureInstance.qTab",
+            "valueDigest": "sha256-72458ab7da7015c0d46dc49fcd021f5d567692dc4e0324d51f2f96c7398fca12"
+          },
+          {
+            "declaration": "TvDomainReduction.mixVtree",
+            "valueDigest": "sha256-30de221534e086bd356a3812a588d892ec7ac3b8e32b40ee7b2bcba39c9ffe48"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.abses",
+            "valueDigest": "sha256-fed86fff562761b6d4cdaa12b08fbd2437338a2dfdb1a18eb15ff4de609a0e2f"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.adds",
+            "valueDigest": "sha256-7f4eb59007e89b3e71734790a5b444fe201a0e3dad219af750ad8a4335876dec"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp",
+            "valueDigest": "sha256-e60e92c5ed6d91437458a8bf3094ccd28b81f0acd009a7d7b2d67e2c834b3467"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.abs",
+            "valueDigest": "sha256-59593d95449bf588a5c9db9bf489c26114d4033b111ce7bfab379cb99498db44"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.add",
+            "valueDigest": "sha256-59593d95449bf588a5c9db9bf489c26114d4033b111ce7bfab379cb99498db44"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.all",
+            "valueDigest": "sha256-1652ea5854404ecae8a31ea8348fe39da0df3ddd64b79cc1edd7b000896f7d23"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.casesOn",
+            "valueDigest": "sha256-ca2f5b9b9008d993ac9395753ee0abcb322981a9b93f4ecbd9fdc6ec9208d507"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.cmp",
+            "valueDigest": "sha256-59593d95449bf588a5c9db9bf489c26114d4033b111ce7bfab379cb99498db44"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.ctorIdx",
+            "valueDigest": "sha256-c60455fe5257e585819255aab90989f14674eac889a4c7471237bfdcca31409b"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.div",
+            "valueDigest": "sha256-59593d95449bf588a5c9db9bf489c26114d4033b111ce7bfab379cb99498db44"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.instFintype",
+            "valueDigest": "sha256-2b7f0d90a08395bfbe655735287f153d2345ea1e5dd39c790abddd4863675e96"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.lewis",
+            "valueDigest": "sha256-59593d95449bf588a5c9db9bf489c26114d4033b111ce7bfab379cb99498db44"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.lit",
+            "valueDigest": "sha256-59593d95449bf588a5c9db9bf489c26114d4033b111ce7bfab379cb99498db44"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.mem_all",
+            "valueDigest": "sha256-1c392dd69707e6b40de31d710cb4a7a28bc280b167f24741bcab1204a21f0525"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.mul",
+            "valueDigest": "sha256-59593d95449bf588a5c9db9bf489c26114d4033b111ce7bfab379cb99498db44"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.ofNat",
+            "valueDigest": "sha256-d1d7cc0d00725915f36ac8b646cc5433d8ff3ae1900a8e673b621364d67f3591"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.ofNat_ctorIdx",
+            "valueDigest": "sha256-ca35779cc6daa1160a50eb54d92b760e04c7b4fc8bc34686bdc92a7b091f8518"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.rec",
+            "valueDigest": "sha256-376558dc2ce43246d06e189990fd146d0abe0b7f59350ac2c95318c37ac34765"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.ArithOp.sub",
+            "valueDigest": "sha256-59593d95449bf588a5c9db9bf489c26114d4033b111ce7bfab379cb99498db44"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.Cell",
+            "valueDigest": "sha256-7c326caa01ad6eac086966abd96a56e507bb831e8f26ffea9d0fb8ee693ef24f"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.Comp",
+            "valueDigest": "sha256-457b13fc953188908503fc749deb42f941bda6895881954794b6305881b57547"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.divs",
+            "valueDigest": "sha256-3d220217a14a47ce80ecf90da39a3dbfd31fba0928c69da2d45defac7b68a64d"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.instDecidableEqArithOp",
+            "valueDigest": "sha256-aa6c1c7a2c23619987d63e97f8972278d499fa4f4960cf1ebe1d29021055bbf9"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.instDecidableEqArithOp._proof_1",
+            "valueDigest": "sha256-1ef9296b1715dc10f3213e7c8163f3d70256d835dfbc653aa8760cea1385b953"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.instDecidableEqArithOp._proof_2",
+            "valueDigest": "sha256-b6b9fc50459414c1d33adb99aca88d0e7f721e67c5ec812fca98ff64f481382e"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.lewisOps",
+            "valueDigest": "sha256-0df9a5bd95e6e70a4c9f08e2fdd49a4d5ef1e123ad3e00cad9bcaabd2bf17c3a"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.muls",
+            "valueDigest": "sha256-781312563053edf3fdd76d909850065c7925f47de1572754545793283b31e594"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.rate",
+            "valueDigest": "sha256-758455a0e01611defa2d5be2b6a69437406e8f072c3bfcbfbcd4876bd8cec61f"
+          },
+          {
+            "declaration": "TvDomainReduction.Model.Operations.reads",
+            "valueDigest": "sha256-79a4aac43a04ae631b1f37d690b0c70ddf5c186320a241164555ea9a0f1dacf4"
+          },
+          {
+            "declaration": "TvDomainReduction.perStepFail",
+            "valueDigest": "sha256-ec47ff1b36ea46b139eeab3751b95a7c7cd9be1868516d05699c6bb9fdbfd126"
+          },
+          {
+            "declaration": "TvDomainReduction.perStepTol",
+            "valueDigest": "sha256-4ac52379a426c9db18d8aaf24a68e7a85e40efb2a4bb7b04e3e41e0c135d26f8"
+          },
+          {
+            "declaration": "TvDomainReduction.perStepTol._proof_1",
+            "valueDigest": "sha256-ddf62f6966f82abe289cae42954e52faabdeeb0b2a64e5911a72119adbb9e6c6"
+          },
+          {
+            "declaration": "TvDomainReduction.Pmix",
+            "valueDigest": "sha256-82ce1bbd87321795f0cf73411978d5e7d1cb54630018d484ed7e255a274ae00d"
+          },
+          {
+            "declaration": "TvDomainReduction.prefixFeatP",
+            "valueDigest": "sha256-94f0b43e15a04332d820d0aea5d9f10d779c3a1bd5da86be40c5e2b74b8f992a"
+          },
+          {
+            "declaration": "TvDomainReduction.prefixFeatP._f",
+            "valueDigest": "sha256-b5f9f18b44ab158005b6ddc94b73be542081e6b9abedcee13c76c78075689cc4"
+          },
+          {
+            "declaration": "TvDomainReduction.prefixFeatP.match_1",
+            "valueDigest": "sha256-9ddd2365f501c49fe7c7964def8f1a422883c82997163f6d4decf0b81c785257"
+          },
+          {
+            "declaration": "TvDomainReduction.prefixFeatQ",
+            "valueDigest": "sha256-279fff09cc6e9d93dfc7e3f785df9e89dd70232ded4685992450a4b4f70a61d7"
+          },
+          {
+            "declaration": "TvDomainReduction.prefixFeatQ._f",
+            "valueDigest": "sha256-8165a63092c4af5d6a8197abf21813a35fe45fb6c9cf8eae73129604915b7f2d"
+          },
+          {
+            "declaration": "TvDomainReduction.prefixFeatQ.match_1",
+            "valueDigest": "sha256-623e40699eaeaa1c48f2454c1d251e0c2ed709b248b63c0eb9eb5d9685810a91"
+          },
+          {
+            "declaration": "TvDomainReduction.Prior",
+            "valueDigest": "sha256-c59a4e15562b4460784f82e9ec7b272cf3883eb01d63707d6608d3e587bea49b"
+          },
+          {
+            "declaration": "TvDomainReduction.Program.build",
+            "valueDigest": "sha256-3f352d0b1289703fe738b93b40aa432df404c4b29a9bdfd7a0db96a71ca24159"
+          },
+          {
+            "declaration": "TvDomainReduction.Program.build._f",
+            "valueDigest": "sha256-1c3e0ec85aa4927df7be3273ed9af57cf393023598775a68843c3f5a71000f55"
+          },
+          {
+            "declaration": "TvDomainReduction.Program.build.match_1",
+            "valueDigest": "sha256-4db33a1f59afa96aedaa052756a7f33e0cb01a767fa02f87f24337ad83178c2a"
+          },
+          {
+            "declaration": "TvDomainReduction.Program.runDense",
+            "valueDigest": "sha256-f4cb84274308fc8b0499453b830e0cc8308fe9cfad76040ddc541722292ed878"
+          },
+          {
+            "declaration": "TvDomainReduction.Program.Tape",
+            "valueDigest": "sha256-94518796154fd67979320df3dcffd2a43546de97c4fb63cd5fa210373a58bed4"
+          },
+          {
+            "declaration": "TvDomainReduction.Qmix",
+            "valueDigest": "sha256-acdeeb019061e6c5c4b9f08ebfa4510d9d9c5e883f79e6786c81f37251cbd239"
+          },
+          {
+            "declaration": "TvDomainReduction.Run.answerLawMix",
+            "valueDigest": "sha256-bca59f785472c24c405c2f63598b6998dd802a77f0753188950bd12661128e35"
+          },
+          {
+            "declaration": "TvDomainReduction.Run.graft",
+            "valueDigest": "sha256-047e3c589882a2dbb6ad12d12bf8c2983eaec85c627e81bff63534fb45b2e1d9"
+          },
+          {
+            "declaration": "TvDomainReduction.Run.graft.match_1",
+            "valueDigest": "sha256-31bf245d0ff846fcaaec12339f172f380d7a4f3cfc73a570646f583db86e5b0c"
+          },
+          {
+            "declaration": "TvDomainReduction.Run.runLawMix",
+            "valueDigest": "sha256-54e505fed1152057901b5838b2103e98d878f567458f008868091bdece4b02e9"
+          },
+          {
+            "declaration": "TvDomainReduction.Run.tapeLaw",
+            "valueDigest": "sha256-541e5c1d1855e7cd47c26b5ca22182fd932255203fbf132b8e9629e911994b41"
+          },
+          {
+            "declaration": "TvDomainReduction.Run.tapeLaw._f",
+            "valueDigest": "sha256-448f6569def03d49f8ab54a592f662c75fef3f717ed8476d184d6ac871417d56"
+          },
+          {
+            "declaration": "TvDomainReduction.Run.tapeLaw.match_1",
+            "valueDigest": "sha256-0e840470ec0ce9d65d6760f4d0f53759fddeb62d3c0bed526f3db84ab290543d"
+          },
+          {
+            "declaration": "TvDomainReduction.SparsifyFamily",
+            "valueDigest": "sha256-e60e92c5ed6d91437458a8bf3094ccd28b81f0acd009a7d7b2d67e2c834b3467"
+          },
+          {
+            "declaration": "TvDomainReduction.SparsifyFamily.Member",
+            "valueDigest": "sha256-e24f0d0580297caaa1d1dac32db3b913840b0efbc2cece5f63d6da1c93c78436"
+          },
+          {
+            "declaration": "TvDomainReduction.SparsifyPrior",
+            "valueDigest": "sha256-ee8833656db27fae9aaeae82a98a399d703abb56d35cc29126feefac8939b3dc"
+          },
+          {
+            "declaration": "TvDomainReduction.SparsifyPrior.callCost",
+            "valueDigest": "sha256-4a59590d2c5e0bbd2c53c15c6bc2f5ea6b24071bf7b8e378bc68108df2ee250d"
+          },
+          {
+            "declaration": "TvDomainReduction.SparsifyPrior.Draw",
+            "valueDigest": "sha256-7839ab0f3bd88562246cc649af9702f0d4e34c9dbc5dbc4be2fe1e5bed90578e"
+          },
+          {
+            "declaration": "TvDomainReduction.SparsifyPrior.draw₀",
+            "valueDigest": "sha256-228644d6e4e75eec9eb74ba1af8747d1b57df0235cf1d1f45ccd197a09ff89e7"
+          },
+          {
+            "declaration": "TvDomainReduction.SparsifyPrior.law",
+            "valueDigest": "sha256-9f0343fdcbf02e42312ada70ca93a683d1446b586604147cc2d460763e4603d9"
+          },
+          {
+            "declaration": "TvDomainReduction.SparsifyPrior.out",
+            "valueDigest": "sha256-0c6a48c3724b90e87f4f1754ed1c2fec5067ed8f10f6a32ab1e82ebcdf36eba2"
+          },
+          {
+            "declaration": "TvDomainReduction.SparsifyPrior.size",
+            "valueDigest": "sha256-8157bdf98123522722d39abf8e5f6289033b6c6dc6ac03df0cf65180083a6ac0"
+          },
+          {
+            "declaration": "TvDomainReduction.wVec",
+            "valueDigest": "sha256-5386e8391d1b1639cfb05eab608339cef1abb000a5540e8410b6f7be9b7579ab"
+          }
+        ],
+        "leanVersion": "4.33.0",
+        "toolchainDigest": "sha256-edce9c835ba8fd16fe32ec9b058ad81953b387a35723e2b323136c37f33fd4fa",
+        "optionsDigest": "sha256-b01d333a0ba6076a37c01762a8978eb2d2bebd220d8530e524078067d340079e"
+      },
+      "leanEvidenceSnapshotId": "sha256-91f56b86bc77ab360981d5a7bd7f54efb930a8c54e1c4a2660c318025afaa756",
+      "verifiedByDecisionId": "sha256-8f891bea7d9cf378ad8fe180726f278615ec558a1fcb3d3c52cd7f7d23447e74"
+    }
+  ],
+  "leanRelations": [],
+  "claimSetReceipts": [
+    {
+      "id": "claim-set:a51ceeaa-143f-418e-b967-f7816edf14d0",
+      "targetVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "paperPacketDigest": "sha256-3a3c5807ce95da0142eab446b525f1e1e38a86b1fe0c69bfe2f1654b459685a8",
+      "claimVersionIds": [
+        "claim-version:204a86d8-4089-419e-b08c-873656803995",
+        "claim-version:e9639daf-ee11-4c18-8c43-654d1a6786c3",
+        "claim-version:f3dc180e-7a4b-421e-84f9-36ef7829afac",
+        "claim-version:1b7ef287-bc16-4d70-a9ba-5d5b22fb4a8c",
+        "claim-version:fe9ff7f8-5ea5-4eef-94ee-21749fdaf561",
+        "claim-version:2d8231f8-4804-40ee-8cd1-f60440bb0769",
+        "claim-version:973b1631-c25d-43f7-8e63-fff1358629bd",
+        "claim-version:80152eef-ad56-412c-a649-6fa3b4e8ac9b",
+        "claim-version:8d4c7fe5-97fa-49c9-8345-3ae63694a581",
+        "claim-version:1cba55e6-b11a-4255-a976-a3cb9f901f72",
+        "claim-version:b8a73990-da38-45ba-a47c-644760312557"
+      ],
+      "readerProvenance": "reader-agent"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "sha256-3a760eae65622b857451e0ed17c058ba5ab5662358649b3b6f6faba4c7dff1c7",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "from": 790,
+          "to": 794,
+          "excerptDigest": "sha256-bb13547aabb21b102bd3487189b14874b46ddc919944d4f98a8ae5cadccf28b0"
+        }
+      ]
+    },
+    {
+      "id": "sha256-be4bda8076b95c174ce54a38d1bfee4d85bea694e287bb112b1ed01a89e1f68b",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "from": 794,
+          "excerptDigest": "sha256-12bb02c5681752e8e9b4eee1dcbee34d31130bb05c5926152cd5e2a46d57619f"
+        }
+      ]
+    },
+    {
+      "id": "sha256-3091e983eac4f7c3ca9a587cbd7442c2db7f5c1bec46c2f67f74624a1ccd7900",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "lem:one_step, main.tex",
+          "from": 802,
+          "to": 811,
+          "excerptDigest": "sha256-2e616e721f3835e4148fbeb795b597ffe8bc66fbfe17454fc0d927f64acb51ac"
+        }
+      ]
+    },
+    {
+      "id": "sha256-52b02257fd1126cb75512d8c76fc5ca47403cbe0a6ceda23fea83868a4a44c41",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "lem:propagation, main.tex",
+          "from": 823,
+          "to": 840,
+          "excerptDigest": "sha256-08ed328f1e826f1ec8ec518bd2d010930e83b1dd4fcc9d86361957790f29d1b9"
+        }
+      ]
+    },
+    {
+      "id": "sha256-e35c0c81773cc2a0910162bdbd40942399ac2fc98b62f264a1315871910ccfa1",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "from": 843,
+          "excerptDigest": "sha256-1a8c530d78c6fd277090ec666312c6c5f2ce0ab3a9cec9bb7ce87d396160b794"
+        }
+      ]
+    },
+    {
+      "id": "sha256-5d2a4e0c43ef1b15fd48202ef89cf5aaa595fd9b852a811c0af3b81ded599b04",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "from": 845,
+          "to": 847,
+          "excerptDigest": "sha256-e178b64268ef1a0a9ce9db81c6d09ca64a86d78b636b668fcfaca2af18276dfc"
+        }
+      ]
+    },
+    {
+      "id": "sha256-3a94de1358a0f4e1e437e5ef9cada9068e2f3f07ec269edb1d673d5460928dd8",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "from": 821,
+          "excerptDigest": "sha256-4c05dfc6b7511de02623398a249d4f2926b516522b3e6faabb095f6b0ca5bd57"
+        }
+      ]
+    },
+    {
+      "id": "sha256-5b7ddc8c98055178d7afb019064316dcebb346667f3c33a48212dcc671f054ea",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-618ea67fc7296fe21bd392a72ee91ad2fff62332c05f270fc0ce80ffe2242455"
+        }
+      ]
+    },
+    {
+      "id": "sha256-ffc22fa5049a85c84335acef746623b9cc8e7f46179f4197ea21224ec6ddc7b5",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "from": 851,
+          "to": 855,
+          "excerptDigest": "sha256-d5223af7deacc7e8f66b014d3bd07de271696d7570d4c5163dbbc7eefb8c15eb"
+        }
+      ]
+    },
+    {
+      "id": "sha256-95250aee8ed6f64b60f2f25855d12203a217f25ecd7e4a20593d000ba3ca1a43",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-ee820afb397dacafa5f09d072dd189efc1916d201796eda2341e190397e96b54"
+        }
+      ]
+    },
+    {
+      "id": "sha256-1ddd7632b667afe251d2fdba16bf37b540489035b9afe3fdc1999e90bb6f3edf",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "from": 730,
+          "to": 733,
+          "excerptDigest": "sha256-ffe75f30a0986e219f8e7daaa53f667661948251b6ca43f199c0561e37629c2e"
+        }
+      ]
+    }
+  ],
+  "surfaceInventories": [
+    {
+      "id": "surface-inventory:e1472754-8187-4c38-be2e-1b500196179f",
+      "targetVersionId": "target-version:5bf98b5b-cfef-47a7-b239-c471a3076520",
+      "source": "sealed-blueprint",
+      "blueprintDigest": "sha256-2c1fccd5d4b4d0902b1aa780440964be8f5a2db1b2dffbb42980112957248c38",
+      "declarations": [
+        {
+          "declaration": "TvDomainReduction.pc_fpras_correct",
+          "role": "headline",
+          "file": "TvDomainReduction/Model/Theorem.lean",
+          "module": "TvDomainReduction.Model.Theorem"
+        },
+        {
+          "declaration": "TvDomainReduction.pc_fpras_space",
+          "role": "headline",
+          "file": "TvDomainReduction/Model/Theorem.lean",
+          "module": "TvDomainReduction.Model.Theorem"
+        },
+        {
+          "declaration": "TvDomainReduction.pc_fpras_time",
+          "role": "headline",
+          "file": "TvDomainReduction/Model/Theorem.lean",
+          "module": "TvDomainReduction.Model.Theorem"
+        },
+        {
+          "declaration": "TvDomainReduction.pc_fpras",
+          "role": "headline",
+          "file": "TvDomainReduction/Model/Theorem.lean",
+          "module": "TvDomainReduction.Model.Theorem"
+        },
+        {
+          "declaration": "TvDomainReduction.mixture_fpras_correct",
+          "role": "headline",
+          "file": "TvDomainReduction/Model/Theorem.lean",
+          "module": "TvDomainReduction.Model.Theorem"
+        },
+        {
+          "declaration": "TvDomainReduction.mixture_fpras_time",
+          "role": "headline",
+          "file": "TvDomainReduction/Model/Theorem.lean",
+          "module": "TvDomainReduction.Model.Theorem"
+        },
+        {
+          "declaration": "TvDomainReduction.mixture_fpras",
+          "role": "headline",
+          "file": "TvDomainReduction/Model/Theorem.lean",
+          "module": "TvDomainReduction.Model.Theorem"
+        }
+      ]
+    }
+  ],
+  "appliedDecisionIds": [
+    "sha256-1a9eaf4604d6217183b61ef269e67006ef46d477858192fac0513bbcf1af8cfe",
+    "sha256-ff662519c44f720f463da3606a6bb2b05ffe6a3673378aaa17c89cbbbbc44433",
+    "sha256-8f891bea7d9cf378ad8fe180726f278615ec558a1fcb3d3c52cd7f7d23447e74"
+  ]
+}

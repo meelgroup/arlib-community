@@ -1,0 +1,19 @@
+{
+  "id": "sha256-1a9eaf4604d6217183b61ef269e67006ef46d477858192fac0513bbcf1af8cfe",
+  "ledgerId": "ledger:f6765699-74a3-47be-b89d-50905a344012",
+  "baseLedgerDigest": "sha256-4af2a5d621ae98586d0a5f185688c2bb304e4a0f530e6bb9d4cbb60c9eb7e3b1",
+  "actor": "author",
+  "provenance": "author approved this capstone against the paper at the theorem-statement gate",
+  "mode": "automatic",
+  "kind": "put-binding",
+  "binding": {
+    "id": "binding:943019dc-9b40-4f91-9aca-fb24155c6780",
+    "obligationId": "obligation:6ad3fe16-e3f2-4a13-b567-7b1ca74888bc",
+    "declaration": "TvDomainReduction.mixture_fpras",
+    "file": "TvDomainReduction/Model/Theorem.lean",
+    "module": "TvDomainReduction.Model.Theorem",
+    "role": "headline",
+    "status": "proposed",
+    "semanticApprovalDecisionId": "sha256-1a9eaf4604d6217183b61ef269e67006ef46d477858192fac0513bbcf1af8cfe"
+  }
+}

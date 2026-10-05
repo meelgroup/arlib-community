@@ -1,0 +1,830 @@
+{
+  "schema": "tex2lean.paper-proof-map/1",
+  "ledgerId": "ledger:cfdb9ec9-5bc6-4c24-ae24-53b6b04eefc6",
+  "paper": {
+    "id": "paper:003f6fbb-918d-4c63-9950-9aa6fc5401de"
+  },
+  "target": {
+    "id": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+    "paperId": "paper:003f6fbb-918d-4c63-9950-9aa6fc5401de",
+    "activeVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f"
+  },
+  "activeClaimSetReceiptId": "claim-set:1d70b208-8218-462a-9d86-5d7f9068efdf",
+  "activeSurfaceInventoryId": "surface-inventory:5182697a-593e-4c49-acaa-39467c4f9ed5",
+  "targetVersions": [
+    {
+      "id": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "targetId": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+      "paperPacketDigest": "sha256-a1b586c6d3c81e56a0dca5b956bdc6ec37eb8062946a7d08525f7110da14a375",
+      "bodyDigest": "sha256-5fdba76a6c750cb6f0629961a3e4427983c86751b4282df086a70eb7faa1e371",
+      "anchor": {
+        "file": "main.tex",
+        "label": "thm:pc_fpras",
+        "environment": "theorem",
+        "from": 900,
+        "to": 913,
+        "excerptDigest": "sha256-06611124c79c8d5c0a7b16a434d036f589a1cb292426eda5b85e64438ca1fa3b"
+      },
+      "status": "active"
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim:04356a4b-e852-424a-a8dd-67499e8916f2",
+      "targetId": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+      "activeVersionId": "claim-version:80a7d871-70ea-456f-951d-911fae089b49",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:bd4e1ae5-c93b-4c58-8888-183e530123ac",
+      "targetId": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+      "activeVersionId": "claim-version:5eacfce2-8aa2-41b8-b234-0670f00f5120",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:1f25ea2f-62e2-49de-8923-089f1922ac76",
+      "targetId": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+      "activeVersionId": "claim-version:8cb3a593-b55f-46c2-a778-36b925c4f5a5",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:808a7dcf-0b1c-48f7-97b1-5ae20389fc0a",
+      "targetId": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+      "activeVersionId": "claim-version:b9c0acfb-51b4-4c13-bea9-93eca0db1a08",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:4a2698ee-a454-4596-bdc9-acc4518f8f82",
+      "targetId": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+      "activeVersionId": "claim-version:6f33b194-e9db-47f8-93f6-40ab2da735d0",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:1ec5e44e-1e9a-4992-8e6b-7d3917eca5e8",
+      "targetId": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+      "activeVersionId": "claim-version:f01b4ce2-0d62-4065-9f86-09cacfcfc1ae",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:d85dbfc6-a912-4392-81d5-7db369db9566",
+      "targetId": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+      "activeVersionId": "claim-version:6bf42963-6ca5-49c8-95f4-a9dfc0a23fef",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:8d9ab7e9-1910-4ae9-9b97-f1be1fb68a1e",
+      "targetId": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+      "activeVersionId": "claim-version:f85ad484-ade0-4019-ae35-f5791a9cf97a",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:7388f216-468d-4992-842b-2317bdb18b04",
+      "targetId": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+      "activeVersionId": "claim-version:513bad9f-dc6f-463d-94aa-c82142ee3cab",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:4e08af5f-a7c2-4887-bce4-81540301481c",
+      "targetId": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+      "activeVersionId": "claim-version:4345a6f6-30ca-4ebd-9ca2-485f4c001072",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:52d1b3b5-9fd4-48a3-be13-b6755db985e6",
+      "targetId": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+      "activeVersionId": "claim-version:ee103616-c4b6-4eb7-ae4f-8ec4eb1af256",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:b773b56d-599d-423f-9f68-cea8aaad6a72",
+      "targetId": "target:7683975a-020e-494a-bf55-fcc752e2beac",
+      "activeVersionId": "claim-version:f4c17993-6b29-4e2c-b173-2073e9d15c4c",
+      "role": "reportable"
+    }
+  ],
+  "claimVersions": [
+    {
+      "id": "claim-version:80a7d871-70ea-456f-951d-911fae089b49",
+      "claimId": "claim:04356a4b-e852-424a-a8dd-67499e8916f2",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-72e69bbe56e3cb18dee9e33c805ba5492f91074f0d713b7cae5a22b421791349"
+      },
+      "text": "(1−ε) d_TV(P,Q) ≤ D̃ ≤ (1+ε) d_TV(P,Q) with probability at least 1−η.",
+      "normalizedTextDigest": "sha256-548b6146e3351a8d1a708e5a8aa8efdc4b0fa3717821858ed1ab07d6515257f1",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-72e69bbe56e3cb18dee9e33c805ba5492f91074f0d713b7cae5a22b421791349"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:5eacfce2-8aa2-41b8-b234-0670f00f5120",
+      "claimId": "claim:bd4e1ae5-c93b-4c58-8888-183e530123ac",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-f61b01b67928c332e3d2f33e9e4546ae5659c56542d97772e3df3e510750ff57"
+      },
+      "text": "Conditionally on all L sparsifications succeeding, the root coreset reproduces the exact root functional to within (1±δ)^L, and more generally the invariant holds at every constructed region with exponent ℓ(S), for all queries a simultaneously.",
+      "normalizedTextDigest": "sha256-6c40217727aba83b5cf4f2aba1a45d5497284c97809c4ca8a711fdcc8601f20f",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-f61b01b67928c332e3d2f33e9e4546ae5659c56542d97772e3df3e510750ff57"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:8cb3a593-b55f-46c2-a778-36b925c4f5a5",
+      "claimId": "claim:1f25ea2f-62e2-49de-8923-089f1922ac76",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-f878b85ac1a1cd76056d8d7353793ca4283bbfc0ed9150e7b1a43669d4f1a745"
+      },
+      "text": "Sum gates/layers introduce no error and no domain expansion (a fixed linear reparametrisation of features preserves every linear test).",
+      "normalizedTextDigest": "sha256-4cf45c603136787166ac3fed28b74ad69b973da9d390e32dbfe192bd717adc11",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-f878b85ac1a1cd76056d8d7353793ca4283bbfc0ed9150e7b1a43669d4f1a745"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:b9c0acfb-51b4-4c13-bea9-93eca0db1a08",
+      "claimId": "claim:808a7dcf-0b1c-48f7-97b1-5ae20389fc0a",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-ab071a0749cff8df9e01f2de4351e9ca5666bb87e784e4222136df8044c9b266"
+      },
+      "text": "The exact root sum ∑_x |⟨a_TV, Φ_root(x)⟩| equals 2 d_TV(P,Q), and the root coreset sum equals 2D̃.",
+      "normalizedTextDigest": "sha256-24690d92875aafcd6454bdda82f34e48f06b5a69272b6889e719a0d2c4be9c87",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-ab071a0749cff8df9e01f2de4351e9ca5666bb87e784e4222136df8044c9b266"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:6f33b194-e9db-47f8-93f6-40ab2da735d0",
+      "claimId": "claim:4a2698ee-a454-4596-bdc9-acc4518f8f82",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-5d7a6b142c0fa257859e956fb06390f46da8ab288257ffebd2bef74da17d6893"
+      },
+      "text": "All L sparsification steps succeed with probability at least 1 − Lη' = 1 − η (union bound over the L product-region steps).",
+      "normalizedTextDigest": "sha256-8d129a91aafe22d4ee860538a0c107523398f9594ec3d3f7dbe171b0682ff4e8",
+      "kind": "probability",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-5d7a6b142c0fa257859e956fb06390f46da8ab288257ffebd2bef74da17d6893"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:f01b4ce2-0d62-4065-9f86-09cacfcfc1ae",
+      "claimId": "claim:1ec5e44e-1e9a-4992-8e6b-7d3917eca5e8",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-f68a44ae40f37cbad437f5a37ab1311cf531dc64747d0a18f78a6064ea638bdf"
+      },
+      "text": "Each sparsification call retains at most m = O(W log(2W)/δ² log(1/η')) rows; hence M = O(W L² log(2W)/ε² · log(L/η)).",
+      "normalizedTextDigest": "sha256-69483c48f6bc20c5cc0c4db96b12fc6fb45ef30996707a54ab5c8b496efd0a83",
+      "kind": "space",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-f68a44ae40f37cbad437f5a37ab1311cf531dc64747d0a18f78a6064ea638bdf"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:6bf42963-6ca5-49c8-95f4-a9dfc0a23fef",
+      "claimId": "claim:d85dbfc6-a912-4392-81d5-7db369db9566",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-e2a81639348426e4a714735a25f925c5d03f02a993b580884968e348d449a6b7"
+      },
+      "text": "Every binary product region has at most (q+M)² candidate rows (children are leaves with ≤ q rows or internal with ≤ M rows).",
+      "normalizedTextDigest": "sha256-50ccc323be4e783bd5df948ee6b95b02bd2a1e16990c0d5fb6b49a2b70b953ea",
+      "kind": "resource",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-e2a81639348426e4a714735a25f925c5d03f02a993b580884968e348d449a6b7"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:f85ad484-ade0-4019-ae35-f5791a9cf97a",
+      "claimId": "claim:8d9ab7e9-1910-4ae9-9b97-f1be1fb68a1e",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-3e2834834ad61f729c391327fc8151007b7bd1239b765b459b0b43012087e57f"
+      },
+      "text": "The product-stage feature matrix has O(W) columns, so the Lewis weights of one region cost Õ((q+M)²W + W^ω) arithmetic operations.",
+      "normalizedTextDigest": "sha256-be9cdd4827556378317254a335a5acad03bd0e0ecbee77cf26dddba0adba7f1e",
+      "kind": "time",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-3e2834834ad61f729c391327fc8151007b7bd1239b765b459b0b43012087e57f"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:513bad9f-dc6f-463d-94aa-c82142ee3cab",
+      "claimId": "claim:7388f216-468d-4992-842b-2317bdb18b04",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-d7542d80255ee961e7e5c0b310cdd9e197eb4ce56eea5f38aca5d54e18eccc5f"
+      },
+      "text": "Evaluating the exact leaf tables of both circuits costs O(q|C|); applying all subsequent gates and wires to surviving rows only costs O(M|C|).",
+      "normalizedTextDigest": "sha256-4316c462b64eba228981730633909ceac83347e5aa71edf7811a17c1fffba569",
+      "kind": "time",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-d7542d80255ee961e7e5c0b310cdd9e197eb4ce56eea5f38aca5d54e18eccc5f"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:4345a6f6-30ca-4ebd-9ca2-485f4c001072",
+      "claimId": "claim:4e08af5f-a7c2-4887-bce4-81540301481c",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-2f72d72c53f38762ce53e16a850fd421dd45bc3989be43cee8cb6e09c625b711"
+      },
+      "text": "Total arithmetic running time Õ((q+M)|C| + L[W(q+M)² + W^ω]).",
+      "normalizedTextDigest": "sha256-cdd983d5ec8059bd135e0845a7ba4cae1a6958e9f4aeb7eccaed1575e10ccfc9",
+      "kind": "time",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-2f72d72c53f38762ce53e16a850fd421dd45bc3989be43cee8cb6e09c625b711"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:ee103616-c4b6-4eb7-ae4f-8ec4eb1af256",
+      "claimId": "claim:52d1b3b5-9fd4-48a3-be13-b6755db985e6",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-e3bfe5f48fc5c74379db040d813e9db7d270cef4efe7b8f1e0523370da264b70"
+      },
+      "text": "If L = 0 the TV distance is computed deterministically and exactly (Sparsify is never called).",
+      "normalizedTextDigest": "sha256-c97e08274036fbfac72561f4ce0e8b9331b7643861abe8bba37ac86bbad219e8",
+      "kind": "other",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-e3bfe5f48fc5c74379db040d813e9db7d270cef4efe7b8f1e0523370da264b70"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:f4c17993-6b29-4e2c-b173-2073e9d15c4c",
+      "claimId": "claim:b773b56d-599d-423f-9f68-cea8aaad6a72",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "anchor": {
+        "file": "main.tex",
+        "excerptDigest": "sha256-6bb348b59c5a405e211940eaa9bcbf92f13a31e26915990aa03a3c6509fc4aab"
+      },
+      "text": "Theorem thm:lewis_weights: a randomized algorithm outputs a nonnegative diagonal Y with ≤ O(d log d/δ² log(1/η)) nonzeros which is a (1±δ) ℓ_1 subspace embedding with probability ≥ 1−η, computed in Õ(Nd + d^ω) arithmetic operations.",
+      "normalizedTextDigest": "sha256-e78f8173d68c2cd902ea9190ad86f4230adcbf53f37530bab4b9ed05610dfdd1",
+      "kind": "other",
+      "evidence": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-6bb348b59c5a405e211940eaa9bcbf92f13a31e26915990aa03a3c6509fc4aab"
+        }
+      ],
+      "status": "active"
+    }
+  ],
+  "plans": [
+    {
+      "claimVersionId": "claim-version:80a7d871-70ea-456f-951d-911fae089b49",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:b06ae9b9-aab5-4087-870e-075aefdabdbd"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-9e62af516e66e983b0f897247393cce183a007926999432cd4ae8b8dd131e317"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:5eacfce2-8aa2-41b8-b234-0670f00f5120",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:e209a09f-8a49-4ad7-b0c4-d420fb599eeb"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-ec6115262f4096d39f26d6007a134ebb7686d0660410b252ff5979179d212216"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:8cb3a593-b55f-46c2-a778-36b925c4f5a5",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:e7129c62-a994-4b3d-863b-34fadf555ec7"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-e018fcbbe0f35edc88c5eb852d134e58edd566d83c9ed12c48eb27213959e409"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:b9c0acfb-51b4-4c13-bea9-93eca0db1a08",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:a500336a-aa68-4e58-95d3-b1fc99eff3f6"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-f60f10099220abfab5b091910dcf34109911523b30a6fac5b255fd9f1317fe92"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:6f33b194-e9db-47f8-93f6-40ab2da735d0",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:533953b5-12d7-4858-9b02-3914a1932762"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-073d992145feb9c1565a6d86f8ce7441cc9e7db2dbd3cd4e0f13ca2d0ce6208a"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:f01b4ce2-0d62-4065-9f86-09cacfcfc1ae",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:a71f6167-fc13-49fc-a8d6-a185c1836b1a"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-373c6ede2c24f121b2d0485bae802cc744c7842df7d150a1da9d5a6c12cda408"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:6bf42963-6ca5-49c8-95f4-a9dfc0a23fef",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:abec8d81-8e51-4651-acf3-f130579c07b4"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-4f71aeaf54cf26f674115d7834fad90753200027e5d50e2e89909ab6d63b287a"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:f85ad484-ade0-4019-ae35-f5791a9cf97a",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:4b73c0ce-ff7e-4531-b632-5d1adee8335f"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-71fc7742f777ba4cbe9f98cd058f627016963a2aa4bb163a037d5b9de2ea4934"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:513bad9f-dc6f-463d-94aa-c82142ee3cab",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:15151909-44dc-4227-a6f1-41c4259cdb84"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-eb70f6463024ad1470952e14102d5a60d55b65dc7e2fa870de5c0e8a7d529309"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:4345a6f6-30ca-4ebd-9ca2-485f4c001072",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:2f4ddf94-850d-4081-88d7-1e4618a4e7ca"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-7e15665200fa48baf61859711bb618866f534fe68e35e1422eb5c90e25065bca"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:ee103616-c4b6-4eb7-ae4f-8ec4eb1af256",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:6f38db73-ea93-4d1b-a980-e385c4917ee3"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-397f256192db2742a77f8a3721f4289d52c745fd513de3b4018ec52e459eec22"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Handoff."
+    },
+    {
+      "claimVersionId": "claim-version:f4c17993-6b29-4e2c-b173-2073e9d15c4c",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:3670c95c-ebb0-4279-866b-c9fd9c109f54"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-b8cdb25be8e483a3a0dcd2fa13b73b27c85262084ccffb0bf0dd4d7e872b9ec2"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    }
+  ],
+  "obligations": [
+    {
+      "id": "obligation:b06ae9b9-aab5-4087-870e-075aefdabdbd",
+      "kind": "headline",
+      "summary": "(1−ε) d_TV(P,Q) ≤ D̃ ≤ (1+ε) d_TV(P,Q) with probability at least 1−η.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "materialized"
+    },
+    {
+      "id": "obligation:e209a09f-8a49-4ad7-b0c4-d420fb599eeb",
+      "kind": "headline",
+      "summary": "Conditionally on all L sparsifications succeeding, the root coreset reproduces the exact root functional to within (1±δ)^L, and more generally the invariant holds at every constructed region with exponent ℓ(S), for all queries a simultaneously.",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:e7129c62-a994-4b3d-863b-34fadf555ec7",
+      "kind": "headline",
+      "summary": "Sum gates/layers introduce no error and no domain expansion (a fixed linear reparametrisation of features preserves every linear test).",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:a500336a-aa68-4e58-95d3-b1fc99eff3f6",
+      "kind": "headline",
+      "summary": "The exact root sum ∑_x |⟨a_TV, Φ_root(x)⟩| equals 2 d_TV(P,Q), and the root coreset sum equals 2D̃.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:533953b5-12d7-4858-9b02-3914a1932762",
+      "kind": "headline",
+      "summary": "All L sparsification steps succeed with probability at least 1 − Lη' = 1 − η (union bound over the L product-region steps).",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:a71f6167-fc13-49fc-a8d6-a185c1836b1a",
+      "kind": "headline",
+      "summary": "Each sparsification call retains at most m = O(W log(2W)/δ² log(1/η')) rows; hence M = O(W L² log(2W)/ε² · log(L/η)).",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:abec8d81-8e51-4651-acf3-f130579c07b4",
+      "kind": "headline",
+      "summary": "Every binary product region has at most (q+M)² candidate rows (children are leaves with ≤ q rows or internal with ≤ M rows).",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:4b73c0ce-ff7e-4531-b632-5d1adee8335f",
+      "kind": "headline",
+      "summary": "The product-stage feature matrix has O(W) columns, so the Lewis weights of one region cost Õ((q+M)²W + W^ω) arithmetic operations.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:15151909-44dc-4227-a6f1-41c4259cdb84",
+      "kind": "headline",
+      "summary": "Evaluating the exact leaf tables of both circuits costs O(q|C|); applying all subsequent gates and wires to surviving rows only costs O(M|C|).",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:2f4ddf94-850d-4081-88d7-1e4618a4e7ca",
+      "kind": "headline",
+      "summary": "Total arithmetic running time Õ((q+M)|C| + L[W(q+M)² + W^ω]).",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:6f38db73-ea93-4d1b-a980-e385c4917ee3",
+      "kind": "headline",
+      "summary": "If L = 0 the TV distance is computed deterministically and exactly (Sparsify is never called).",
+      "rationale": "The finalized blueprint assigns this paper claim to Handoff.",
+      "owner": "Handoff",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:3670c95c-ebb0-4279-866b-c9fd9c109f54",
+      "kind": "headline",
+      "summary": "Theorem thm:lewis_weights: a randomized algorithm outputs a nonnegative diagonal Y with ≤ O(d log d/δ² log(1/η)) nonzeros which is a (1±δ) ℓ_1 subspace embedding with probability ≥ 1−η, computed in Õ(Nd + d^ω) arithmetic operations.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    }
+  ],
+  "bindings": [
+    {
+      "id": "binding:e63912c1-fe96-4bb2-b811-7a609c126a30",
+      "obligationId": "obligation:b06ae9b9-aab5-4087-870e-075aefdabdbd",
+      "declaration": "TvDomainReduction.pc_fpras",
+      "file": "TvDomainReduction/Model/Theorem.lean",
+      "module": "TvDomainReduction.Model.Theorem",
+      "role": "headline",
+      "status": "proposed"
+    }
+  ],
+  "leanRelations": [],
+  "claimSetReceipts": [
+    {
+      "id": "claim-set:1d70b208-8218-462a-9d86-5d7f9068efdf",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "paperPacketDigest": "sha256-a1b586c6d3c81e56a0dca5b956bdc6ec37eb8062946a7d08525f7110da14a375",
+      "claimVersionIds": [
+        "claim-version:80a7d871-70ea-456f-951d-911fae089b49",
+        "claim-version:5eacfce2-8aa2-41b8-b234-0670f00f5120",
+        "claim-version:8cb3a593-b55f-46c2-a778-36b925c4f5a5",
+        "claim-version:b9c0acfb-51b4-4c13-bea9-93eca0db1a08",
+        "claim-version:6f33b194-e9db-47f8-93f6-40ab2da735d0",
+        "claim-version:f01b4ce2-0d62-4065-9f86-09cacfcfc1ae",
+        "claim-version:6bf42963-6ca5-49c8-95f4-a9dfc0a23fef",
+        "claim-version:f85ad484-ade0-4019-ae35-f5791a9cf97a",
+        "claim-version:513bad9f-dc6f-463d-94aa-c82142ee3cab",
+        "claim-version:4345a6f6-30ca-4ebd-9ca2-485f4c001072",
+        "claim-version:ee103616-c4b6-4eb7-ae4f-8ec4eb1af256",
+        "claim-version:f4c17993-6b29-4e2c-b173-2073e9d15c4c"
+      ],
+      "readerProvenance": "reader-agent"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "sha256-9e62af516e66e983b0f897247393cce183a007926999432cd4ae8b8dd131e317",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-72e69bbe56e3cb18dee9e33c805ba5492f91074f0d713b7cae5a22b421791349"
+        }
+      ]
+    },
+    {
+      "id": "sha256-ec6115262f4096d39f26d6007a134ebb7686d0660410b252ff5979179d212216",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-f61b01b67928c332e3d2f33e9e4546ae5659c56542d97772e3df3e510750ff57"
+        }
+      ]
+    },
+    {
+      "id": "sha256-e018fcbbe0f35edc88c5eb852d134e58edd566d83c9ed12c48eb27213959e409",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-f878b85ac1a1cd76056d8d7353793ca4283bbfc0ed9150e7b1a43669d4f1a745"
+        }
+      ]
+    },
+    {
+      "id": "sha256-f60f10099220abfab5b091910dcf34109911523b30a6fac5b255fd9f1317fe92",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-ab071a0749cff8df9e01f2de4351e9ca5666bb87e784e4222136df8044c9b266"
+        }
+      ]
+    },
+    {
+      "id": "sha256-073d992145feb9c1565a6d86f8ce7441cc9e7db2dbd3cd4e0f13ca2d0ce6208a",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-5d7a6b142c0fa257859e956fb06390f46da8ab288257ffebd2bef74da17d6893"
+        }
+      ]
+    },
+    {
+      "id": "sha256-373c6ede2c24f121b2d0485bae802cc744c7842df7d150a1da9d5a6c12cda408",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-f68a44ae40f37cbad437f5a37ab1311cf531dc64747d0a18f78a6064ea638bdf"
+        }
+      ]
+    },
+    {
+      "id": "sha256-4f71aeaf54cf26f674115d7834fad90753200027e5d50e2e89909ab6d63b287a",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-e2a81639348426e4a714735a25f925c5d03f02a993b580884968e348d449a6b7"
+        }
+      ]
+    },
+    {
+      "id": "sha256-71fc7742f777ba4cbe9f98cd058f627016963a2aa4bb163a037d5b9de2ea4934",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-3e2834834ad61f729c391327fc8151007b7bd1239b765b459b0b43012087e57f"
+        }
+      ]
+    },
+    {
+      "id": "sha256-eb70f6463024ad1470952e14102d5a60d55b65dc7e2fa870de5c0e8a7d529309",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-d7542d80255ee961e7e5c0b310cdd9e197eb4ce56eea5f38aca5d54e18eccc5f"
+        }
+      ]
+    },
+    {
+      "id": "sha256-7e15665200fa48baf61859711bb618866f534fe68e35e1422eb5c90e25065bca",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-2f72d72c53f38762ce53e16a850fd421dd45bc3989be43cee8cb6e09c625b711"
+        }
+      ]
+    },
+    {
+      "id": "sha256-397f256192db2742a77f8a3721f4289d52c745fd513de3b4018ec52e459eec22",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-e3bfe5f48fc5c74379db040d813e9db7d270cef4efe7b8f1e0523370da264b70"
+        }
+      ]
+    },
+    {
+      "id": "sha256-b8cdb25be8e483a3a0dcd2fa13b73b27c85262084ccffb0bf0dd4d7e872b9ec2",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "main.tex",
+          "excerptDigest": "sha256-6bb348b59c5a405e211940eaa9bcbf92f13a31e26915990aa03a3c6509fc4aab"
+        }
+      ]
+    }
+  ],
+  "surfaceInventories": [
+    {
+      "id": "surface-inventory:5182697a-593e-4c49-acaa-39467c4f9ed5",
+      "targetVersionId": "target-version:323bbbaf-d7f0-4120-930c-9331b3c1bc9f",
+      "source": "sealed-blueprint",
+      "blueprintDigest": "sha256-07ad6f04591256a7fb34b61d7f95171ba2b9365256f48fb539772234e9839208",
+      "declarations": [
+        {
+          "declaration": "TvDomainReduction.pc_fpras_correct",
+          "role": "headline",
+          "file": "TvDomainReduction/Model/Theorem.lean",
+          "module": "TvDomainReduction.Model.Theorem"
+        },
+        {
+          "declaration": "TvDomainReduction.pc_fpras_space",
+          "role": "headline",
+          "file": "TvDomainReduction/Model/Theorem.lean",
+          "module": "TvDomainReduction.Model.Theorem"
+        },
+        {
+          "declaration": "TvDomainReduction.pc_fpras_time",
+          "role": "headline",
+          "file": "TvDomainReduction/Model/Theorem.lean",
+          "module": "TvDomainReduction.Model.Theorem"
+        },
+        {
+          "declaration": "TvDomainReduction.pc_fpras",
+          "role": "headline",
+          "file": "TvDomainReduction/Model/Theorem.lean",
+          "module": "TvDomainReduction.Model.Theorem"
+        }
+      ]
+    }
+  ],
+  "appliedDecisionIds": []
+}
