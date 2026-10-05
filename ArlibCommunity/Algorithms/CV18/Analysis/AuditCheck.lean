@@ -1,0 +1,100 @@
+/-
+Copyright (c) 2026. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAnalyticCore
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofLazyProperProgram
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofLazyProperFailure
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofSpeedyToTarget
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofPhaseMixing
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofStrongStepMixing
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyPhaseMixing
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScaleInvariant
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofKLSCore
+import ArlibCommunity.Algorithms.CV18.Analysis.TheoremProof
+
+/-!
+# CV18 audit checks
+
+The current public frontier is conditional on the single quantitative walk
+input that remains to be formalized. These checks ensure the discharged
+algorithmic and probability-theoretic chain itself uses only standard axioms.
+-/
+
+namespace ArlibCommunity.Algorithms.CV18
+
+#print axioms figureOne_base_accuracy_of_analytic_inputs
+#print axioms figureOneSharpAcceleratedMoments
+#print axioms figureOneRadialTruncationBound
+#print axioms Arlib.MarkovChains.gaussian_rejectedMass_le_direct
+#print axioms Arlib.MarkovChains.half_mul_lintegral_gaussianWeight_le_ellGaussianMeasure_univ_direct
+#print axioms Arlib.MarkovChains.half_mul_mul_measure_properProposalTotalCost_ge_le_LVStep
+#print axioms Arlib.MarkovChains.map_state_eval_pathMeasure_lazyProperProposalGaussianLift
+#print axioms Arlib.MarkovChains.map_lazyProperProposalCostedExecution_output
+#print axioms Arlib.MarkovChains.half_mul_mul_measure_lazyProperProposalTotalCost_ge_le_LVStep
+#print axioms map_state_eval_lazyProperProposalGaussianLift_figureOne
+#print axioms truncatedMetropolisMarkedBallStep_map_snd
+#print axioms runEstimate_truncatedMetropolisMarkedBallStep_eq_lazyProperAux
+#print axioms cappedProperMetropolisBallWalk_queryBound
+#print axioms cappedProperMetropolisBallWalk_semantics
+#print axioms Arlib.MarkovChains.mul_natCast_mul_bind_cappedLazyProperMarkedLaw_none_le
+#print axioms half_mul_natCast_mul_cappedProperMetropolisBallWalk_none_le
+#print axioms Arlib.MarkovChains.TVLe.withDensity_le_one_cv18
+#print axioms Arlib.MarkovChains.TVLe.withDensity_of_one_sub_lintegral_le_cv18
+#print axioms Arlib.MarkovChains.TVLe.normalize_withDensity_of_defect_cv18
+#print axioms Arlib.MarkovChains.TVLe.condOn_ellGaussianProb_gaussian_of_coreDefect_cv18
+#print axioms Arlib.MarkovChains.TVLe.condOn_cv18
+#print axioms Arlib.MarkovChains.TVLe.condOn_target_half_cv18
+#print axioms Arlib.MarkovChains.TVLe.normalize_withDensity_target_half_cv18
+#print axioms Arlib.MarkovChains.condOn_restrict_univ_cv18
+#print axioms Arlib.MarkovChains.ell_eq_one_on_shrunken_radius_cv18
+#print axioms Arlib.MarkovChains.half_le_ellGaussianProb_standardCore_radius_cv18
+#print axioms Arlib.MarkovChains.condOn_ellGaussianProb_smul_eq_gaussian_radius_cv18
+#print axioms Arlib.MarkovChains.condOn_gaussian_scaleAcceptance_eq_target_cv18
+#print axioms Arlib.MarkovChains.TVLe.speedyToGaussian_twoStage_cv18
+#print axioms Arlib.MarkovChains.TVLe.speedyToGaussian_twoStage_of_coreDefect_cv18
+#print axioms Arlib.MarkovChains.ball_smul_subset_outer_smul_cv18
+#print axioms Arlib.MarkovChains.sub_le_infDist_smul_of_not_mem_outer_smul_cv18
+#print axioms Arlib.MarkovChains.volume_core_inter_closedBall_le_exp_cv18
+#print axioms Arlib.MarkovChains.gaussianWeighted_coreDefect_le_cv18
+#print axioms Arlib.MarkovChains.condOn_gaussian_coreDefect_le_cv18
+#print axioms Arlib.MarkovChains.seven_sixteenths_le_ellGaussianProb_standardCore_of_defect_cv18
+#print axioms Arlib.MarkovChains.standardCore_defect_and_speedyMass_cv18
+#print axioms Arlib.MarkovChains.TVLe.speedyToGaussian_of_paperStep_of_body_cv18
+#print axioms Arlib.MarkovChains.acceptance_floor_of_cv_four_cv18
+#print axioms Arlib.MarkovChains.conductance_speedyMetropolisGaussian_ge_phaseRadius_cv18
+#print axioms Arlib.MarkovChains.mixesWithin_lazy_speedyMetropolisGaussian_phaseRadius_cv18
+#print axioms mixesWithin_phaseTruncatedBody_cv18
+#print axioms phaseSampleToGaussian_of_paperStep_cv18
+#print axioms figureOneProposalRadius_le_phaseMixingStep
+#print axioms figureOneProposalRadius_le_paperCoreStep
+#print axioms Arlib.gaussianWeightReal_le_of_strongStep_cv18
+#print axioms Arlib.MarkovChains.conductance_speedyMetropolisGaussian_ge_strongStep_cv18
+#print axioms Arlib.MarkovChains.mixesWithin_lazy_speedyMetropolisGaussian_strongStep_cv18
+#print axioms figureOneProposalRadius_le_strongMixingStep
+#print axioms mixesWithin_phaseTruncatedBody_figureOne_cv18
+#print axioms phaseSampleToGaussian_figureOne_cv18
+#print axioms truncatedGaussianProbability_accuracyPhase_compl_le
+#print axioms TVLe.condOn_of_compl_le_cv18
+#print axioms TVLe.accuracyPhase_condOn_truncatedGaussian_cv18
+#print axioms mixesWithin_accuracyPhaseTruncatedBody_figureOne_cv18
+#print axioms figureOneProposalRadius_le_accuracyPhaseCoreStep
+#print axioms condOn_gaussian_accuracyPhase_eq_truncatedGaussian
+#print axioms accuracyPhaseSampleToGaussian_smallRadius_cv18
+#print axioms accuracyPhaseSampleToGaussian_largeRadius_cv18
+#print axioms Arlib.MarkovChains.ell_inv_smul_cv18
+#print axioms MeasureLeUpTo.of_tvLe
+#print axioms Arlib.MarkovChains.half_le_ellGaussianProb_standardCore_cv18
+#print axioms Arlib.MarkovChains.condOn_ellGaussianProb_smul_eq_gaussian_cv18
+#print axioms Arlib.MarkovChains.map_condOn_gaussian_smul_cv18
+#print axioms Arlib.MarkovChains.gaussianScaleAcceptance_withDensity_cv18
+#print axioms Arlib.MarkovChains.exp_neg_eight_le_gaussianScaleAcceptance_standardCore_cv18
+#print axioms Arlib.MarkovChains.half_le_condOn_gaussian_scaleAcceptance_mass_standardCore_cv18
+#print axioms half_le_truncatedBody_gaussianScaleAcceptance_mass
+#print axioms half_mul_lintegral_gaussianWeight_le_figureOne
+#print axioms figureOne_base_accuracy_of_mixing
+#print axioms figureOne_base_query_cost
+#print axioms volume_proof_amplification
+#print axioms volumeTheorem_of_postInitialMixing
+
+end ArlibCommunity.Algorithms.CV18

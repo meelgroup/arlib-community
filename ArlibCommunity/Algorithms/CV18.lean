@@ -1,0 +1,129 @@
+/-
+Copyright (c) 2026. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import ArlibCommunity.Algorithms.CV18.Analysis.AuditCheck
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofLazyProperProgram
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofLazyProperFailure
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofSpeedyToTarget
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofPhaseMixing
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofStrongStepMixing
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyPhaseMixing
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofSpeedyWarmStart
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofInitialSpeedyWarmStart
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofSubprobabilityMixing
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofSpeedySpectral
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyKLS
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyRejectionSemantics
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyAcceptance
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyImportance
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyImportanceMoments
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyTVL2
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyImportanceProgram
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyImportanceLaw
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofCappedDominance
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyImportanceConcentration
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyPairedProgram
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyPairedRatio
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyPairedPhases
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyPairedCost
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyPairedPrimitives
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependence
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependentHigherMoment
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependentThirdMoment
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependentAverageThirdMoment
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependenceMarkov
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependenceBalanced
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofDependentProduct
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofDirectWalkBridge
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBalancedRetryHistory
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofDependentSchedule
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFreshPhaseStart
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofStrongInitialWarmStart
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofGlobalQueryCap
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBalancedRejection
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBalancedRetryProgram
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBalancedRetryApproximation
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScaleInvariant
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofMarkovEmpirical
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofMarkovVariance
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofCollectSemantics
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofProperCollect
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyProperProgram
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofKLSCore
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.Convexity.SpeedyGaussianMixing
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceMomentAssembly
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceLemma717Capstone
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceSlackMoments
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceRawMeanApprox
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledAcceptedMean
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledAcceptedSupport
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTerminalAcceptedMoments
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTerminalEndpointMoments
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGaussianPhaseMean
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGaussianDeathArithmetic
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledCollectorAverageSecond
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofHistoryPreservingSampleReset
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.RecordedKernelReset
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.RecordedKernelResetIndependence
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.FiniteReferenceSequence
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.SequentialRecordedKernelReset
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.SequentialRecordedKernelPreservation
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledShadowReference
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledResetAverageSecond
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledResetEventTransfer
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFixedThirdMoment
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAcceleratedThirdMoment
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGaussianResetL3Budget
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGaussianResetJoint
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofResetReferenceProduct
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofResetReferenceFailureBudget
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofResetReferenceBaseCapstone
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofGlobalResetReferenceIndependence
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofGlobalResetReferenceFinalAssembly
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofGlobalResetReferenceWitnessConstructor
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledInitialAcceptedReference
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledOuterPhaseMarginal
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledOuterPhaseIndependence
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledLocalResetDependenceBudget
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledReferenceCoordinateExtension
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledChronologicalResetReference
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledChronologicalPreservation
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledChronologicalResetStep
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTerminalTraceReset
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGaussianChronologicalReset
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGlobalOuterStepErrorSum
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGlobalResetReferenceConstruction
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGaussianPrefixInvariantStep
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledForwardTraceEndpoint
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGlobalResetReferenceExists
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTerminalResetDeviation
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTerminalResetJoint
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTerminalTraceDeviation
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceBoundaryMoments
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledCheapAbortCap
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledTheoremAssembly
+import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledPhasewiseCapstone
+import ArlibCommunity.Algorithms.CV18.Model.Theorem
+
+/-!
+# CV18 accelerated Gaussian cooling
+
+The currently verified, problem-specific analysis of Cousins and Vempala's
+accelerated Gaussian-cooling volume algorithm [CV18]. The implementation and
+all discharged analytic infrastructure are exposed here. Radial truncation,
+stationary sharp moments, proper-step cost at the advertised Figure-1 step,
+the executable lazy proper-step clock, speedy-Gaussian mixing, and amplification
+are unconditional.  The chronological history-preserving reset construction,
+equation-(6) moments, Lemma 7.17(c) dependence recurrence, terminal phase,
+mapped-product accuracy bound, query cap, and amplification are assembled in
+the premise-free theorem `volumeTheorem_finalScheduled`, the end-to-end
+formalization of CV18 Theorem 1.1 for the executable scheduled implementation.
+The audit-facing statement is `cv18TheoremOneOne` in `Model/Theorem.lean`;
+its type is machine-checked to unfold only to declarations under `Model/`.
+The older `volumeTheorem_of_postInitialMixing` remains available as a compact
+legacy interface.
+
+See `Model/README.md` for the statement audit and `Analysis/README.md` for the
+module-level proof audit.
+-/

@@ -5,7 +5,7 @@
    "type": "git",
    "subDir": null,
    "scope": "",
-   "rev": "6304def0abf845c8ebe1b8232abb1a4c19b98052",
+   "rev": "e79fb42448f9083250776d9d708abe9965653322",
    "name": "arlib",
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",

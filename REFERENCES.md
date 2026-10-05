@@ -13,6 +13,15 @@ covers everything an entry here inherits from the dependency.
 
 ## Sources
 
+**`CV18`** — Ben Cousins, Santosh Vempala. *Gaussian Cooling and
+$O^*(n^3)$ Algorithms for Volume and Gaussian Volume.* SIAM Journal on
+Computing 47(4):1454–1484, 2018. The journal paper combines and extends the
+STOC 2015 and SODA 2014 versions.
+
+**`Lov99`** — László Lovász. *Hit-and-run mixes fast.* Mathematical
+Programming 86 (1999), 443–461.
+<https://faculty.washington.edu/harin/L1.pdf>
+
 **`Hub10`** — Mark Huber, Sarah Schott. *Using TPA for Bayesian Inference.*
 Bayesian Statistics 9, OUP, 2010, pp. 257–282. arXiv:0907.2989.
 

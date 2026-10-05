@@ -31,9 +31,9 @@ piece. Every declaration lives in the namespace matching its module path.
 
 ## Areas
 
-* `ArlibCommunity.Algorithms` — analyses of specific algorithms. Currently the
-  Tootsie Pop Algorithm: the Poisson law of its contraction counter, almost-sure
-  termination, and the two-phase run-count schedule.
+* `ArlibCommunity.Algorithms` — analyses of specific algorithms, including TPA,
+  hit-and-run, and the currently discharged portion of CV18 accelerated
+  Gaussian cooling.
 -/
 
 import ArlibCommunity.Algorithms

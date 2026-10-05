@@ -25,11 +25,13 @@ naming a problem is a sign the split has not been found yet.*
 
 ## What's inside
 
-One area so far.
+Three algorithm entries so far.
 
 | Area | Contents | Start here |
 | --- | --- | --- |
-| `Algorithms` | Analyses of specific algorithms. Currently `TPA/` — Huber's Tootsie Pop Algorithm: the closed form of its contraction-counter tail, the Poisson law that follows, almost-sure termination, and the two-phase run-count schedule. | [ArlibCommunity/Algorithms.lean](ArlibCommunity/Algorithms.lean) |
+| `Algorithms/TPA` | Huber's Tootsie Pop Algorithm: its contraction-counter tail, Poisson law, almost-sure termination, and two-phase run-count schedule. | [ArlibCommunity/Algorithms/TPA.lean](ArlibCommunity/Algorithms/TPA.lean) |
+| `Algorithms/HitAndRun` | Lovász's direction/chord sampler, finite-facet realization, stationarity, and a corrected unconditional mixing theorem. The compact statement surface is under `Model/`; proof background is under `Analysis/`. | [ArlibCommunity/Algorithms/HitAndRun.lean](ArlibCommunity/Algorithms/HitAndRun.lean) |
+| `Algorithms/CV18` | Cousins--Vempala accelerated Gaussian cooling: an executable membership-oracle program and its discharged schedule, measure, sharp accelerated-moment, advertised-step average-conductance, product, and cost analysis. The remaining dependent walk/composition input is explicit; no unconditional capstone is asserted. | [ArlibCommunity/Algorithms/CV18.lean](ArlibCommunity/Algorithms/CV18.lean) |
 
 `import ArlibCommunity` gives you everything; `import ArlibCommunity.Algorithms`
 gives you one area; importing a single module gives you one piece. Every
@@ -37,9 +39,8 @@ declaration lives in the namespace matching its module path, and each algorithm
 gets a namespace of its own (`ArlibCommunity.Algorithms.TPA`) — the entries are
 independent, and short names like `tpaTail` would otherwise collide.
 
-The area roots carry the real documentation: read
-[ArlibCommunity/Algorithms/TPA.lean](ArlibCommunity/Algorithms/TPA.lean) before
-reading any module under it.
+The area roots carry the real documentation: read the corresponding
+`ArlibCommunity/Algorithms/<Name>.lean` before reading modules under it.
 
 ## Getting started
 
