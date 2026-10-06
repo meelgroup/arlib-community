@@ -1,0 +1,210 @@
+In this section, we consider a celebrated DAC algorithm due to Stockmeyer~\cite{stockmeyer}, and analyze its audit complexity. Towards this end, we
+first consider a QBF formula that plays a significant role in Stockmeyer's algorithm.   For a given Boolean formula $F$ on $n$ variables, and for $1 \le m \le n$, consider
+  \begin{align*}
+ 	\varphi_{stock}^F(m):=  \exists h_1\ldots \exists h_m, \forall \vecbold{\vecbold{z_1}}, \forall \vecbold{\vecbold{z_2}}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\\ \bigvee_{i=1}^m \big( F(\vecbold{\vecbold{z_1}})\land (h_i(\vecbold{\vecbold{z_1}})=h_i(\vecbold{\vecbold{z_2}}))\rightarrow \neg F(\vecbold{\vecbold{z_2}})\big)
+ \end{align*}
+ 
+In the above formula, the $h_i$'s are hash functions from
+$\mathcal{H}(n, m, 2)$.  The formula says that there exist $m$ such hash
+functions such that for any two assignments
+$\vecbold{z_1}, \vecbold{z_2}\in \{0,1\}^n$, if $\vecbold{z_1}$ is a
+solution for $F$ and some hash function $h_i$ maps $\vecbold{z_1}$ and
+$\vecbold{z_2}$ to the same cell, then $\vecbold{z_2}$ cannot be a
+solution. In other words, for each solution some hash function puts it
+in a cell where it is the only solution. {Recall that $\exists h_i$ is
+shorthand for existentially quantifying over coefficients of $h$.}
+
+Now, the following claim and lemma provide necessary and sufficient conditions for $\varphi_{stock}^F(m)$ evaluating to True. 
+
+
+\begin{claim}[Necessary]
+ 	\label{cl:stockup}
+ 	If $\varphi^F_{stock}(m)=1$, then  $\sol{F}\leq m\cdot 2^m$.
+
+\end{claim}
+\fullversion{
+\begin{proof} To see this, note that if $\varphi_{stock}^F(m)=1$, there
+  	exists an injective map from $\sol{F}$ to $[m] \times \{0,1\}^m$.
+  	The solution $z$ of $F$ can be uniquely identified a pair $(i,h_i(z))$ where $h_i$ is the hash function that puts it in a bucket $h_i(z)$. Hence, we get $\sol{F}\leq m\cdot 2^m$.
+  \end{proof}
+ }
+ 
+ 
+
+The following lemma capturing sufficient conditions is inherent in Sipser's work~\cite{Sipser83}; to obtain the precise constant for our analysis, we provide an alternate simpler argument \shortversion{(proofs can be found in the full version at~\cite{audit-arxiv})}.
+\begin{lemma}[Sufficient]
+	\label{lm:stockexist}
+If $\sol{F}\leq 2^{m-2}$, then $\varphi_{stock}^F(m) =1$ 
+\end{lemma}
+
+
+
+
+
+
+\fullversion{
+\begin{proof}
+For 
+$h_i \xleftarrow{R} H(n,m,2)$ and a fixed $y \in \satisfying{F}$, let us define indicator variable $\gamma_{z,y,h_i}$ for all $z \in \satisfying{F} \setminus \{y\}$ as
+\begin{align*}
+	\gamma_{z,y,h_i} = 
+	\begin{cases}
+		1 & h_i(z) = h_i(y)\\
+		0 & \text{otherwise}
+	\end{cases}
+\end{align*} 
+
+Since $h_i$ is chosen from pairwise independent 
+hash family, we have $\Pr[\gamma_{z,y,h_i} = 1] \leq \frac{1}{2^m}$.  Let $\Gamma_{F,y,h_i} = \sum_{z\in \satisfying{F}\setminus \{y\}} \gamma_{z,y,h_i}$. We have $\expect[\Gamma_{F,y,h_i}] = \sum\limits_{z	\in \satisfying{F} \setminus \{y\}} \expect[\gamma_{z,y,h_i}] = \frac{\sol{F}-1}{2^m} \leq \frac{1}{4}$, since $\sol{F}\leq 2^{m-2}$.
+
+Now, by Markov's inequality, we have 
+\begin{align*}
+	\Pr[\Gamma_{F,y,h_i} \geq 1 ] \leq \expect[\Gamma_{F,y,h_i}] \leq \frac{1}{4}
+\end{align*}
+
+Therefore, we have 
+\begin{align*}
+	\Pr\left[ \bigwedge_{i=1}^m  \{\Gamma_{F,y,h_i} \geq 1\} \right] \leq \frac{1}{4^m}	
+\end{align*} 
+
+Now, taking union bound, we have 
+\begin{align*}
+	\Pr\left[ \exists y \in \satisfying{F},  \bigwedge_{i=1}^m  \{\Gamma_{F,y,h_i} \geq 1\} \right] \leq \frac{2^{m-2}}{4^m} \leq \frac{1}{2^m}	
+\end{align*} 
+Taking the complement of the above statement, we have 
+\begin{align*}
+	\Pr\left[ \forall y \in \satisfying{F},  \bigvee_{i=1}^m  \{\Gamma_{F,y,h_i} < 1\} \right] \geq 1- \frac{1}{2^m} > 0	
+\end{align*}
+
+Therefore, we have $\varphi_{stock}^F(m) =1$.
+\end{proof}
+}
+We can now write Stockmeyer's algorithm as follows:
+
+\begin{algorithm}
+	\caption{Stock$(F)$}
+		\label{algo:stock}
+	\begin{algorithmic}[1]
+		\State $\val \gets 0$; $\mathsf{hashassgn}_{stock}\gets \emptyset,\Cest\gets 0$;
+		\State $F' \gets \mathsf{MakeCopies}(F,\log n)$ \hfill / {$F'$ has $n\log n $ variables}
+		\For{m=1 to $n\log n$}
+		\State  $(\mathsf{ret},\mathsf{assign})\gets \twoqbfcheck (\varphi_{stock}^{F'}(m)$);\label{line:qbf-call}
+		\If{$\mathsf{ret}==1$
+		}\label{line:equalcells-check}
+		\State $\val=m$;
+		\State $\mathsf{hashassgn}_{stock}=\mathsf{assign}$;
+		\EndIf
+		\State \textbf{break}
+		\EndFor
+		\State $\Cest=2^{(\frac{\val}{\log (n)})}$;\\
+		\Return $(\val, \Cest,\hashstock)$ 
+	\end{algorithmic}
+
+\end{algorithm}
+
+
+Equipped with necessary and sufficient conditions for the satisfiability of $\sol{F}\leq 2^{m-2}$, we now describe Stockmeyer's algorithm, as presented in Algorithm~\ref{algo:stock}.
+We first invoke  
+$\mathsf{MakeCopies}(F,\log n)$ subroutine, which makes $\log(n)$ many copies of $F$, each with a fresh set of variables and conjuncts them.
+Now, the algorithm runs over $m$ from $1$ to number of variables of $F'$, i.e., $n\log n$ and checks if $\varphi_{stock}^{F'}(m)$ evaluates to 1. Each such call is a \twoqbfcheck\  as $\varphi_{stock}^{F'}$ is a $\Sigma_2^P$ formula.
+
+Now, if $\varphi_{stock}^{F'}(i)=1$, then $\varphi_{stock}^{F'}(i+1)=1$ as well, by the definition of the formula, so the above algorithm essentially searches for the first point (smallest value of $m$) where $\varphi_{stock}^{F'}(i)=1$ and returns the estimate of number of solutions at that point as $2^{\frac{\val}{\log n}}$. Thus, when algorithm breaks at line 8, we have $\varphi_{stock}^{F'}(\val)=1$ and $\varphi_{stock}^{F'}(\val-1)=0$.
+
+ 
+\begin{theorem}[Stockmeyer]
+	Algorithm~\ref{algo:stock} makes O($n \log n$) queries to $\Sigma_2^P$ oracle and solves DAC. 
+\end{theorem}
+
+\fullversion{
+\begin{proof}
+	
+From Claim~\ref{cl:stockup}, we have $\sol{F'}\leq \val\cdot 2^\val$. Taking the contrapositive of Lemma~\ref{lm:stockexist} at $\val-1$, we get $\sol{F'}>2^{(\val-1)-2}$. Combining the two, we have $2^{\val-3}\leq  \sol{F'}\leq \val \cdot 2^\val$, i.e., an $8v$-factor approximation.
+
+Now, we can see that this results in a constant-factor approximation for $\sol{F}$, due to having taken $\log(n)$ copies of $F$. First note that $\sol{F'}=(\sol{F})^{\log(n)}$. Second we note that $\val\leq n \log n\leq n^2$ and so $\frac{1}{n^2}\leq \frac{1}{v}$. Now, by above argument we have,
+
+\begin{align*}
+  2^{\val-3}\leq \sol{F'}\leq \val\cdot 2^\val\\
+  \frac{\sol{F'}}{n^2}\leq  \frac{\sol{F'}}{\val}\leq 2^\val\leq \sol{F'}\cdot 2^{3}\\
+       {\left(\frac{\sol{F}}{16}\right)}^{\log(n)}\leq (2^{\frac{\val}{\log(n)}})^{\log(n)}\leq {(\sol{F})}^{\log(n)} \cdot 2^{3}\\
+       \frac{\sol{F}}{16} \leq \Cest\leq 16\cdot \sol{F} \ \text{for $n\geq 4$}
+
+\end{align*}
+
+Thus, Algorithm~\ref{algo:stock}  computes a 16-factor approximation of $\sol{F}$ for $n \ge 4$, and makes $\bigO\big(n \log n\big)$ calls to a $\Sigma_2^P$-oracle.
+\end{proof}
+}
+\subsection{Auditing Stockmeyer's algorithm}
+
+Now to check the result/count given by the above algorithm, what can we do? In other words, what could be considered as a {\em certificate} for the answer? If we inspect the above algorithm, we can see that the crux is to identify the smallest value of $m$ for which 2QBFCheck returns True. 
+
+Thus, at $\val$, we need to check that the True answer is correct, i.e., the $\val^{th}$ call to the $\Sigma_2^P$ oracle. This is easy since we can use the certificate returned by the call, i.e., the set of hash functions $h_1, \ldots, h_\val$ that was used, i.e., $\hashstock$. Given this certificate (indeed a solver returns this) we can pass it to the verifier and hence, a query to NP oracle suffices. 
+
+However, this does not suffice. We also need to check that at $\val-1$, the False answer is correct, i.e., at $\val-1$, we need to check that $\varphi_{stock}^{F'}(\val-1)=0$, which can be answered by a query to $\Sigma_2^P$ oracle. More precisely, for $m=\val-1$, we need to check that $\neg \varphi^{F'}_{stock}(\val-1)=1$, i.e., $\forall h_1\ldots \forall h_m$, $\exists \vecbold{z_1}, \exists \vecbold{z_2} \bigwedge_{i=1}^m (F(\vecbold{z_1})\land (h_i(\vecbold{z_1})=h_i(\vecbold{z_2}))\land F(\vecbold{z_2}))$. 
+
+
+\begin{algorithm}
+	\caption{StockAudit$(F,\mathsf{Stock}(F))$}
+	\begin{algorithmic}[1]
+\State {$\mathsf{poscheck}\gets 0$; $\mathsf{negcheck}\gets 0$;}
+\State  $\mathsf{poscheck}\gets \conpcheck (\varphi_{stock}^{F'}(\val)[h_1\ldots,h_v \gets \hashstock])$; \label{line:conpcheck}
+                \State  $\mathsf{negcheck}\gets \twoqbfcheck(\neg\varphi_{stock}^{F'}(\val-1))$;\label{line:twoqbfcheck}   
+		\If{$\mathsf{poscheck}\land \mathsf{negcheck}==1$}\label{line:equalcheck}                            
+                \State \Return $\mathsf{Verified}$;
+\EndIf
+\end{algorithmic}
+        \label{algo:stock-audit}
+\end{algorithm}
+
+
+Thus, the complexity is dominated by the ``False'' check at $\val-1$. In fact combining the two checks as done in line 4, we just require a single call to 2-QBF solver. Thus the \emph{audit-complexity}, or the number of variables on which this call is made is $n^2\log^2(n)+ 2 n\log n$. 
+
+Thus we obtain:
+
+\begin{corollary}
+\label{cor:stockaudit}
+The audit complexity of Algorithm~\ref{algo:stock} is $O(n^2 \log^2 n)$.
+
+\end{corollary}
+
+
+
+
+
+\fullversion{
+\begin{proof}
+  Algorithm~\ref{algo:stock-audit} gives the audit algorithm for
+  Algorithm~\ref{algo:stock}.  The two checks in lines $2$ and $3$ of
+  Algorithm~\ref{algo:stock-audit} can be combined into one
+  check as follows.
+
+  Let $\varphi_{st\_aud}^{F'}(v)$ be defined as
+
+  \begin{align*}
+  \forall \boldsymbol{z_1} \forall \boldsymbol{z_2} \bigvee_{i=1}^v \big(F'(\boldsymbol{z_1}) \wedge (h_i(\boldsymbol{z_1}) = h_i(\boldsymbol{z_2})) \rightarrow \neg F'(\boldsymbol{z_2})\big)[h_1, \ldots h_v \gets \hashstock]\\
+  
+ \bigwedge \forall h_1 \ldots \forall h_{v-1} \exists \boldsymbol{z_1} \exists \boldsymbol{z_2} \bigwedge_{i=1}^{v-1} \big(F'(\boldsymbol{z_1}) \wedge (h_i(\boldsymbol{z_1}) = h_i(\boldsymbol{z_2})) \wedge F'(\boldsymbol{z_2})\big)~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  \end{align*}
+\normalsize
+Recalling that $\forall h_i$ is simply syntactic sugar for quantifying
+over coefficients of the hash functions, the above formula is a formula
+with quantifier prefix $\forall^* \exists^*$ and its truth can be
+decided by one invocation of a $\Sigma_2^P$ oracle.
+
+To determine the audit complexity, notice that each $\boldsymbol{z_i}$
+in the above formula represents $n \log n$ bits, since $F'$ has a
+support of size $n \log n$.  Similarly, each $h_i$ is a hash function
+from $\mathcal{H}(n\log n, v-1, 2)$, where $v \le n \log n$. Since
+$v \le n \log n$, by our discussion in Section~\ref{sec:prelim}, each
+such hash function can be represented using $\bigO(n \log n)$ bits.
+Therefore, the total number of Boolean variables in the quantifier
+prefix of $\varphi_{staud}^{F'}(v)$ is in $\bigO\big( (n \log n)^2 +
+n\log n\big) = \bigO(n^2 \log^2 n)$.
+
+
+
+
+
+
+
+\end{proof}
+}

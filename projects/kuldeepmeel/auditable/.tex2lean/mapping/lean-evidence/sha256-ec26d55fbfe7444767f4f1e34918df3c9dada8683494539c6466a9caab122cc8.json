@@ -1,0 +1,261 @@
+{
+  "schema": "tex2lean.lean-evidence/1",
+  "sourceFingerprint": "sha256:ea79c29bdc210f2b0bcacfd87193fe79a3d6aada390c149eaeb2956c27a5dab6",
+  "buildFingerprint": "sha256:ea79c29bdc210f2b0bcacfd87193fe79a3d6aada390c149eaeb2956c27a5dab6",
+  "dependencyFingerprint": "sha256:ea79c29bdc210f2b0bcacfd87193fe79a3d6aada390c149eaeb2956c27a5dab6",
+  "toolchainDigest": "sha256-edce9c835ba8fd16fe32ec9b058ad81953b387a35723e2b323136c37f33fd4fa",
+  "interfaceReceipts": [
+    {
+      "bindingId": "binding:db7fd2ed-6e8a-453a-ba12-50a0e7e66253",
+      "declaration": "Auditable.afCounterCorrect",
+      "receiptDigest": "sha256-b2bdd24475a51aa33c484e1a8fe6f6a9baf6140b042af065d272e10779df80c7",
+      "receipt": {
+        "sourceSignatureDigest": "sha256-a2c9a5167c94f3cd91e89073b2d14fc5cbdde8f3d35b824bfe8d26e833d0711e",
+        "elaboratedTypeDigest": "sha256-5f75db5928e4018ab680849327f199c347d83bfcee55dce7fbaa436adf3a8368",
+        "semanticRootPolicyId": "project-type-closure/1",
+        "semanticRootDigests": [
+          {
+            "declaration": "Auditable.AffHash",
+            "valueDigest": "sha256-2c323ff162b369e5228106993ca40f8a0ff64aa6c673b09a7b48b66915e8d355"
+          },
+          {
+            "declaration": "Auditable.AffHash.A",
+            "valueDigest": "sha256-123719db014cb73a32f57b1484fad5be3130954e4ac1a7c3a8330a833fd3ae71"
+          },
+          {
+            "declaration": "Auditable.AffHash.apply",
+            "valueDigest": "sha256-09ac0b796127e967c4bb6495c6d46700e76763d98287318f4a7d73576ec953ab"
+          },
+          {
+            "declaration": "Auditable.AffHash.b",
+            "valueDigest": "sha256-fb21d541c7a6eb7a0f1c9cf25768037a2363169f38f5216f6006fda8f2e25f2e"
+          },
+          {
+            "declaration": "Auditable.AffHash.mk",
+            "valueDigest": "sha256-f8907030f69576ffd0b576c56f4b6908a38060c9f7b06b2339b4313d526f46f2"
+          },
+          {
+            "declaration": "Auditable.Assignment",
+            "valueDigest": "sha256-801a9b076170983152ee4cafe9a7a0157d5a0de43c6f41c8a7a3ba8adeffcfd5"
+          },
+          {
+            "declaration": "Auditable.Cert",
+            "valueDigest": "sha256-8aaeb1feae00cc193e6edc0db299623628d2eb48d2ee445d328f8f375c273674"
+          },
+          {
+            "declaration": "Auditable.Cert.chigh",
+            "valueDigest": "sha256-6874c11acec6d9c37da8b9a21149e98ee32cfaad918b6db046d72c1cd8bef58f"
+          },
+          {
+            "declaration": "Auditable.Cert.mk",
+            "valueDigest": "sha256-a6208e140006c0176b6d86257f29cda1705a3cef711c4f1f10fa718a1cf53e01"
+          },
+          {
+            "declaration": "Auditable.CNF",
+            "valueDigest": "sha256-d5622bf9e571d0142ebd368c80fc33cac0f51931fccc675ab6bef9791e8368c1"
+          },
+          {
+            "declaration": "Auditable.CNF.eval",
+            "valueDigest": "sha256-ee45905970cdbe515509616428286b98a1c8bbf5f3154580b13f76492d6832c9"
+          },
+          {
+            "declaration": "Auditable.copies",
+            "valueDigest": "sha256-f177e388af8129952983f991dec6c28029aa4b33df10f3c05fa40859af5c1bd3"
+          },
+          {
+            "declaration": "Auditable.estimate",
+            "valueDigest": "sha256-569a3baae63b667d4053cd049ac415902dfc355abcb629d678f67ef0a70ef868"
+          },
+          {
+            "declaration": "Auditable.estimate._proof_1",
+            "valueDigest": "sha256-7bb3107c04d47e20d2a24748bcfa3b63a02fb39122be315e1c90b9a41a2eb3ce"
+          },
+          {
+            "declaration": "Auditable.holesWith",
+            "valueDigest": "sha256-66b116bd1a9b46fe12201174945314692a34937e77d81d04975b0da6db3f3224"
+          },
+          {
+            "declaration": "Auditable.Lit",
+            "valueDigest": "sha256-01e4016e37ebe1b5f5299e597c1d42f61eadfd082342febd0dbdadc7c683d9f2"
+          },
+          {
+            "declaration": "Auditable.Lit.mk",
+            "valueDigest": "sha256-9ecd6dac754f6115ba7b10875bd6dfa811f6ebf970727d4d6f109c00f0eaceef"
+          },
+          {
+            "declaration": "Auditable.Lit.pos",
+            "valueDigest": "sha256-3dde15a1389775ad6f0f7a0120b6a5df40059a47231f8a4108837d035116ee1b"
+          },
+          {
+            "declaration": "Auditable.Lit.var",
+            "valueDigest": "sha256-2407bc29ca909cee495be048a1cbbc3bc0f56277bbbbbb8fc6e1fc629139670b"
+          },
+          {
+            "declaration": "Auditable.makeCopies",
+            "valueDigest": "sha256-80aa5de9a6a749e7f6153f21a8dd223e185ecdf8e54eaa4608e10ff51a4492ea"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.allHashes",
+            "valueDigest": "sha256-299ee2d3ab9acad206f96603185edc80484f7560d7bdb425945ee1902cc1e33f"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.allHashTuples",
+            "valueDigest": "sha256-0bbff4f92b98a6cfb1dc88c84aff12be9960665870942923b73c45deb1e73451"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.Cell",
+            "valueDigest": "sha256-7c326caa01ad6eac086966abd96a56e507bb831e8f26ffea9d0fb8ee693ef24f"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.enumFun",
+            "valueDigest": "sha256-ae4c159f9beae14b08c4d6ac04303325825343645c19c77212da8d16bd6e4f7b"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.holesOracle",
+            "valueDigest": "sha256-9cc3b8f3877206151e71e2e3baf7aed187e2b985b25444991426c62ba183f571"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.instDecidableEqOp",
+            "valueDigest": "sha256-2b83f311850e049c1fa9c70c4314401177ac368d6e168502005d51b8f3bca682"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.instDecidableEqOp._proof_1",
+            "valueDigest": "sha256-c96b33f9fcedff0fcf211c49cb441523d7ce3238f29d3dbeee34d4fbd6b67a5c"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.instDecidableEqOp._proof_2",
+            "valueDigest": "sha256-dbf994acab21e9dadca6f5ff68d4c8793df27ffc1f972f2973088bd14b673c8f"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.instDecidableHolesWith",
+            "valueDigest": "sha256-257f275ea5e19ebb7685f1a111c2d1b428a52bbb5767fbe55381eb276056d685"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.instDecidableHolesWith._aux_1",
+            "valueDigest": "sha256-65f5000eae792a2e56cdf474a8a6ac98f4011db151d04a98e9f7422c80bda744"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.instDecidableStockWith",
+            "valueDigest": "sha256-c27f71db3153bd97fc981ca1ec15506e6d72e34a01a261c73af947e8c3759843"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.instDecidableStockWith._aux_1",
+            "valueDigest": "sha256-5086045e2712b51bf0ca0d235ddaa92371838d215369aa00cd495a06b5c4c18f"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.Op",
+            "valueDigest": "sha256-e60e92c5ed6d91437458a8bf3094ccd28b81f0acd009a7d7b2d67e2c834b3467"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.Op.casesOn",
+            "valueDigest": "sha256-a00f7f94db1a167f1e443bcc2e5fb47a91f2c02a0162ef4444612bd992ff6393"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.Op.compare",
+            "valueDigest": "sha256-5663a98245bbe390c27aa45352aea6e5b7be1c4f1ebc87b7ce99335836374505"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.Op.ctorIdx",
+            "valueDigest": "sha256-7dd9d50118127f121488caef90ec3c7573c6f93b6166693282a2df68b9314948"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.Op.holesQuery",
+            "valueDigest": "sha256-5663a98245bbe390c27aa45352aea6e5b7be1c4f1ebc87b7ce99335836374505"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.Op.ofNat",
+            "valueDigest": "sha256-9096fffc0f6b5346f43f641bcd8b39e0ffaca2a9e5cc545f26df70ee54021668"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.Op.ofNat_ctorIdx",
+            "valueDigest": "sha256-46a9ba28e2cf80648db022f0d1d905ebef1958842cfdc6e0be62e5adda9725ba"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.Op.rec",
+            "valueDigest": "sha256-f75a164aa11c17c0f7e615deaf98c1e44444fa39841675499e890223ce3f7efd"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.Op.sigma2Query",
+            "valueDigest": "sha256-5663a98245bbe390c27aa45352aea6e5b7be1c4f1ebc87b7ce99335836374505"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.Op.sigma2Var",
+            "valueDigest": "sha256-5663a98245bbe390c27aa45352aea6e5b7be1c4f1ebc87b7ce99335836374505"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.Op.stockQuery",
+            "valueDigest": "sha256-5663a98245bbe390c27aa45352aea6e5b7be1c4f1ebc87b7ce99335836374505"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.stockOracle",
+            "valueDigest": "sha256-f0e4b2d1cfd0b51f63f3d0bb24be5c7bedc9db387dfc0995393cfc4f442a54a0"
+          },
+          {
+            "declaration": "Auditable.nPrime",
+            "valueDigest": "sha256-9be145c4ddc56b031e3556b63da505e96337396335a3bf15adaf17547b888b8b"
+          },
+          {
+            "declaration": "Auditable.Prior",
+            "valueDigest": "sha256-c59a4e15562b4460784f82e9ec7b272cf3883eb01d63707d6608d3e587bea49b"
+          },
+          {
+            "declaration": "Auditable.Program.afCounter",
+            "valueDigest": "sha256-f9dd78494a14ae719bb88dbc27027bc6f08847b7f6fa08fd601e51cb029d2a81"
+          },
+          {
+            "declaration": "Auditable.Program.emptyHolesReg",
+            "valueDigest": "sha256-a49014a8e6695a635e4fa2063049d9f8268f0aebdd133b103e0793442b5dc049"
+          },
+          {
+            "declaration": "Auditable.Program.HolesReg",
+            "valueDigest": "sha256-5a1cd1674f624b23c41f284acc937a913b4067eddac076a7c30b5542eca727c8"
+          },
+          {
+            "declaration": "Auditable.Program.holesStep",
+            "valueDigest": "sha256-7c8a92ef2b5ea07bcd1284bce46a432208bfd0274f8aebdc3f7bfdbca801c5c8"
+          },
+          {
+            "declaration": "Auditable.Program.holesStep.match_1",
+            "valueDigest": "sha256-34ae1bedb8694a0cd9ccf5144bef26074b2afb3483ea7962acae27ea4305086a"
+          },
+          {
+            "declaration": "Auditable.Program.identityHash",
+            "valueDigest": "sha256-d3c8470f92eb8bb0a6716d2338c2cdf081944149bd452230c2e592442a5e324e"
+          },
+          {
+            "declaration": "Auditable.Program.StockReg",
+            "valueDigest": "sha256-950b804c58c98e549610b1a7c925558c582a6029f650a2197bbf141e992413f4"
+          },
+          {
+            "declaration": "Auditable.Program.stockStep",
+            "valueDigest": "sha256-9818b02fd106365a159a6bc2d86037089f5309038991606dafdc7be3ee275a50"
+          },
+          {
+            "declaration": "Auditable.Program.stockStep.match_1",
+            "valueDigest": "sha256-48b325e3d2c65d87d86a48e742d94a2c8cf74887b2928ba34e9fb4a787606bbe"
+          },
+          {
+            "declaration": "Auditable.Program.stockStep.match_3",
+            "valueDigest": "sha256-ca6fb427fe08c542a466cf0d52948c1f03295906bc191d7022ee33ba85b8c775"
+          },
+          {
+            "declaration": "Auditable.sol",
+            "valueDigest": "sha256-a9cece031944a7e4d2a51148d27d67b797e4e75a05c88f8525f9f2e6d0c60a94"
+          },
+          {
+            "declaration": "Auditable.solCount",
+            "valueDigest": "sha256-5e5ccd49ab0726b5f5110dbd8742aee13f1f4809015ba78a2029f096c1ea789b"
+          },
+          {
+            "declaration": "Auditable.stockWith",
+            "valueDigest": "sha256-bad2cd8ab174bf004dc32a9f8927d9cc405d9ec04841257080c40dc23fc2ff94"
+          }
+        ],
+        "leanVersion": "4.33.0",
+        "toolchainDigest": "sha256-edce9c835ba8fd16fe32ec9b058ad81953b387a35723e2b323136c37f33fd4fa",
+        "optionsDigest": "sha256-b01d333a0ba6076a37c01762a8978eb2d2bebd220d8530e524078067d340079e"
+      }
+    }
+  ],
+  "relationEvidence": []
+}

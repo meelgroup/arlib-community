@@ -1,0 +1,150 @@
+We now focus on further improving the audit complexity. We start by observing that the factor $n^2$ in the audit complexity of Algorithm~\ref{algo:smallcells} was due to the size of cell being $O(n)$ wherein every solution requires $n$ variables to represent, and therefore, contributing to the factor of $n^2$. To this end, we ask if we can have cells of constant size; achieving this goal has potential to reduce the audit complexity to $O(n)$.
+
+However, as we will see, having cells of size 1 suffices only for an $n$-factor approximation of the count. To achieve constant factor approximation, we rely on the standard technique of making multiple copies (as used in Section~\ref{sec:stock}), which will finally achieve an audit complexity of $O(n \log n)$. 
+
+Taking a step back, recall that Stockmeyer's approach too relied on cells of size 1; after all, $\varphi_{stock}^{F}(m) $ asserted that for every solution $\vecbold{z}$, there is a hash function $h$ that maps $\vecbold{z}$ to a cell where it is the only solution. But the higher audit complexity of Stockmeyer's algorithm was due to the need to certify the ``False'' answer. So, in order to achieve best of both worlds: i.e., have cells of size 1 and better audit complexity, we construct a new formula $\varphi_{holes}^{F}(m) $ that operates on $F$ and evaluates to True for sufficiently many values of $m$ for which $\varphi_{stock}^{F}(m)$ would evaluate to False, in the hope that certifying the "True" answer of $\varphi_{holes}^{F}(m)$ would be easier: it indeed turns out to be true, as we will see later. 
+
+
+\begin{align*}
+	\varphi_{holes}^{F}(m) :=  \exists &h_1, h_2, \ldots h_{m},h_{m+1} \\ 
+	&\forall \,\, \vecbold{\alpha} \,\, \exists \vecbold{z}  \left(\bigvee_{i} F(\vecbold{z}) \wedge h_i(\vecbold{z}) = \vecbold{\alpha} \right)	
+\end{align*}
+
+Essentially, the above formula is True if and only if there are $m+1$ hash functions such that for
+every cell $\vecbold{\alpha}$, there is a solution that is mapped to the cell by some hash function.  
+
+
+
+We now turn to the design of an approximate counter, called {\toolname}, with a much improved audit complexity. 
+
+Given an input formula $F$, we will first construct $F'$ by making $\log n$ copies. We can design an approximate counting algorithm that queries $\varphi_{stock}^{F'}(m)$ as well as $\varphi_{holes}^{F'}(m)$ for all values of $m$ and generate a certificate that consists of (1) smallest value of $m$ for which $\varphi_{stock}^{F'}(m)$  evaluates to True, denoted $c_{high}$, and (2) the largest value of $m$ for which $\varphi_{holes}^{F'}(m)$ evaluates to True, denoted $c_{low}$. A surprising aspect of our algorithm design is that we are able to compute the estimate of $\Cest$ without $c_{low}$, i.e., purely based on the $c_{high}$, but the certificate returned by {\toolname} uses $c_{low}$ and associated set of hash functions. 
+
+
+\begin{algorithm}[h]
+	\caption{$\toolname(F)$}
+	\label{algo:pigeons}
+	
+	\begin{algorithmic}[1]
+		\State $ \clow\gets 0 ; \chigh \gets n' ; \quad  n' \gets n \cdot \log n$; $\Cest\gets 0$;
+		\State $F' \gets \mathsf{MakeCopies}(F,\log n)$
+		\State $ \mathsf{hashassgn_{stock}} \gets \emptyset; \quad  \mathsf{hashassgn_{holes}} \gets \emptyset$
+		\For{$m=1$ to $n'$}
+		\State $(\mathsf{assign},\mathsf{ret}) \gets \threeqbfcheck(\varphi^{F'}_{holes}(m))$ \label{line:low-qbf-check}
+		\If{$\mathsf{ret}$ == 0}\label{line:low-check}
+		\State $\clow = m-1$
+		\State \textbf{break}
+		\EndIf
+		\State $ \mathsf{hashassgn_{holes}} \gets \mathsf{assign}$
+		\EndFor 
+		
+		\For{$m'=1$ to $n'$}
+		\State $(\mathsf{assign}, \mathsf{ret}) \gets \twoqbfcheck (\varphi^{F'}_{stock}(m'))	$ \label{line:high-qbf-check}
+		\If{$\mathsf{ret}$==1}\label{line:high-check}
+		\State $\chigh = m'$
+		\State $\mathsf{hashassgn_{stock}} \gets \mathsf{assign}$ 
+\State \textbf{break}
+\EndIf
+\EndFor
+\State $\Cest\gets 2^{\frac{c_\mathsf{high}}{\log n}}$  
+		\State \Return ($\Cest, \clow,\chigh,\mathsf{hashassgn_{stock}}, \mathsf{hashassgn_{holes}}$)
+	\end{algorithmic}
+
+\end{algorithm}
+
+
+
+
+
+
+
+\begin{theorem}
+	Algorithm~\ref{algo:pigeons} solves DAC and makes $O(n \log n)$ calls to $\Sigma_3^P$ oracle.
+\end{theorem}
+\begin{proof}
+Observe that \toolname\ returns the same output as that of Algorithm~\ref{algo:stock}, therefore, the correctness follows from the correctness of Algorithm~\ref{algo:stock}. Furthermore, observe that  \toolname\ makes at most $n\log  n$ calls to $\Sigma_2^P$ oracle calls and at most $n\log n$ $\Sigma_3^P$ oracle calls.
+
+
+\end{proof}
+
+
+But even though the correctness of the algorithm followed easily from earlier results, we will now see that proving the witness, i.e., the audit requires more work. To this end, we will show a relationship between $c_{high}$ and $c_{low}$.
+
+We first provide sufficient condition for $\varphi_{holes}^{F}(m)  = 1$. 
+
+\begin{lemma}[Sufficient]\label{lm:holesexist}
+	If $\sol{F} \geq 2^{m+3}$,  then $	\varphi_{holes}^{F}(m)  = 1$. 
+	
+\end{lemma}
+
+\begin{proof}
+	Let us fix a cell $\vecbold{\alpha}$ and $h_i \xleftarrow{R} H(n,m,2)$. For $\vecbold{y} \in \{0,1\}^n$, define the indicator variable $\gamma_{\vecbold{y},\vecbold{\alpha},i}$ such that 
+
+$\gamma_{\vecbold{y},\vecbold{\alpha},i} = 1$ if  $h_{i}(\vecbold{y}) = \vecbold{\alpha}$ and $0$ otherwise.
+
+	Let $\Cnt{F}{h_i,\vecbold{\alpha}} = \sum\limits_{y	\in \satisfying{F}} \gamma_{\vecbold{y},\vecbold{\alpha},i}$. 
+	Thus $\mu_{m} = \sum\limits_{y	\in \satisfying{F}} \expect[\gamma_{\vecbold{y},\vecbold{\alpha},i}] = \frac{\sol{F}}{2^m}$.
+	
+	By assumption we have $\sol{F} \geq 2^{m+3}$, which implies that $\mu_{m} \geq 8$. Further, since $h_i$ is chosen from a $2$-wise independent hash family, we infer that $\{\gamma_{\vecbold{y},\vecbold{\alpha},i}\}$ are $2$-wise independent, and can conclude that $\sigma^2[\Cnt{F}{h_i,\vecbold{\alpha}}] \leq \mu_{m}$.
+	
+	Using Payley-Zygmund inequality, we have
+	\begin{align*}
+		\Pr[\Cnt{F}{h_i,\vecbold{\alpha}} < 1] &\leq \Pr[\Cnt{F}{h_i,\vecbold{\alpha}} <  \frac{1}{8} \cdot \mu_{m}] \\
+		
+		&
+		\leq 1 - \left(1-\frac{1}{8}\right)^2\frac{\mu_{m}^2}{\sigma^2[\Cnt{F}{h_i,\vecbold{\alpha}}]+\mu_{m}^2}  \\
+		
+		&\leq 1 - \left(1-\frac{1}{8}\right)^2\frac{\mu_{m}}{1+\mu_{m}}   \\
+		
+		
+	\end{align*}
+		As $h_1, h_2, \ldots h_{m+1}$ are chosen independently, we have  
+	\begin{align*}
+		\Pr\left[\bigcap_{i=1}^{m+1} \{\Cnt{F}{h_i,\vecbold{\alpha}} <  1 \} \right] &=\left(\Pr\left[\{\Cnt{F}{h_i,\vecbold{\alpha}} <   1 \} \right]\right)^{m+1}  \\
+		&\leq \frac{1}{2^{m+1}}
+	\end{align*}  Finally, we apply union bound to bound 
+	$\Pr\left[\exists \vecbold{\alpha}, \ \bigcap_{i=1}^{m+1}  \{\Cnt{F}{h_i,\vecbold{\alpha}} <   1 \} \right] \leq \frac{2^{m}}{2^{m+1}} = \frac{1}{2}$. Therefore, 
+	$\Pr\left[\forall \vecbold{\alpha}, \ \bigcup_{i=1}^{m+1}  \{\Cnt{F}{h_i,\vecbold{\alpha}}  \ge  1 \} \right] \geq \frac{1}{2}$.
+	
+	Observe the probability space is defined over the random choice of $h_1, h_2, \ldots h_{m+1}$, and therefore, since the probability of randomly chosen $h$ ensuring $\forall \vecbold{\alpha}, \ \bigcup_{i=1}^{m+1}  \{\Cnt{F}{h_i,\vecbold{\alpha}}  \ge  1 \}$ is non-\vecbold{z}ero, therefore, there must exist an $h_1, h_2, \ldots h_m$. 
+	Formally,  when $\sol{F} > 2^{m+3}$, we have
+
+$		\exists h_1, h_2, \ldots h_{m+1} \forall \,\, \vecbold{\alpha} \,\, \exists \vecbold{z}  \left(\bigvee_{i} F(\vecbold{z}) \wedge h_i(\vecbold{z}) = \vecbold{\alpha} \right)	$.
+
+\end{proof}
+
+From this we can infer the following fact.
+
+\begin{lemma}
+	$c_{high}-c_{low} \leq 7$.
+\end{lemma}
+\shortversion{
+\begin{proof}
+    Let $m^* = \lfloor  \log |\satisfying{F'}|  \rfloor $. Then, from Lemma ~\ref{lm:stockexist}, we have $c_{high} \leq m^*+3$. Further, from Lemma~\ref{lm:holesexist}, we obtain $c_{low} \geq m^*-4$. Thus, we have  	$c_{high}-c_{low} \leq 7$
+\end{proof}
+}
+\fullversion{
+\begin{proof}
+    Let $m^* = \lfloor  \log |\satisfying{F'}|  \rfloor $.
+    Let $m'=m^*+3$, then observe that we have $|\satisfying{F'}| \leq 2^{m'-2}$, therefore, $\varphi_{stock}^{F'}(m') = 1$ from Lemma~\ref{lm:stockexist}. Recall that $c_{high}$ is the smallest value of $m$ such that $\varphi_{stock}^{F'}(m) = 1$. Therefore, $c_{high} \leq m' = m^*+3$.  
+
+Similarly, let $\hat{m} = m^*-4$, then observe that $|\satisfying{F'}| \geq 2^{\hat{m}+3}$. Therefore, as per Lemma~\ref{lm:holesexist}, we have $\varphi_{holes}^{F'}(\hat{m}) = 1$. Recall that $c_{low}$ is the largest value of $m$ for which $\varphi_{holes}^{F'}(m) = 1$. Therefore, $c_{low} \geq \hat{m} = m^*-4$. Thus, we have  	$c_{high}-c_{low} \leq 7$.
+\end{proof}
+}
+
+
+
+
+	
+
+	
+
+		
+	
+
+
+
+
+
+
+
+

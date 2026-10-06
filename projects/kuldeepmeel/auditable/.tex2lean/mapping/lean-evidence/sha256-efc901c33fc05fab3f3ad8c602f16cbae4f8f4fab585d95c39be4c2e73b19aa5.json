@@ -1,0 +1,153 @@
+{
+  "schema": "tex2lean.lean-evidence/1",
+  "sourceFingerprint": "sha256:ea79c29bdc210f2b0bcacfd87193fe79a3d6aada390c149eaeb2956c27a5dab6",
+  "buildFingerprint": "sha256:ea79c29bdc210f2b0bcacfd87193fe79a3d6aada390c149eaeb2956c27a5dab6",
+  "dependencyFingerprint": "sha256:ea79c29bdc210f2b0bcacfd87193fe79a3d6aada390c149eaeb2956c27a5dab6",
+  "toolchainDigest": "sha256-edce9c835ba8fd16fe32ec9b058ad81953b387a35723e2b323136c37f33fd4fa",
+  "interfaceReceipts": [
+    {
+      "bindingId": "binding:b0bb7c1d-2585-4b66-8bcd-a16eb4824eac",
+      "declaration": "Auditable.equalCellsCorrect",
+      "receiptDigest": "sha256-55fc56b77d55b75e2554808b3ca3709b369f218785c545366284049e6e5907f1",
+      "receipt": {
+        "sourceSignatureDigest": "sha256-552a54fe9556e415bb7c5dd8b3cc7a16abbaae33b0c1113ec590d2de5afff648",
+        "elaboratedTypeDigest": "sha256-e42e8d5b248f88844daeef8af85407ef72d98e66b4b679d8d2fb7c61c24db831",
+        "semanticRootPolicyId": "project-type-closure/1",
+        "semanticRootDigests": [
+          {
+            "declaration": "Auditable.Assignment",
+            "valueDigest": "sha256-801a9b076170983152ee4cafe9a7a0157d5a0de43c6f41c8a7a3ba8adeffcfd5"
+          },
+          {
+            "declaration": "Auditable.cellCount",
+            "valueDigest": "sha256-7e6c19e3b178b2dcf6f7826d8d9f83b713929b68e42a132f381886c98d4695ac"
+          },
+          {
+            "declaration": "Auditable.CellHash",
+            "valueDigest": "sha256-64f252ec15e95bd37dcf28c1b4509de967e4aa96aa59affb9761bc3cab514930"
+          },
+          {
+            "declaration": "Auditable.CellHash.apply",
+            "valueDigest": "sha256-5c931f581952d9f57aeb243701a7a4e51f1b7fe2b44922a7ba4196c73dedbe59"
+          },
+          {
+            "declaration": "Auditable.cellsHigh",
+            "valueDigest": "sha256-08e68c995244687ab5b64aad5e8efcaf24973276853d0ce51d3f544c3ae693b2"
+          },
+          {
+            "declaration": "Auditable.cellsLow",
+            "valueDigest": "sha256-d0c042ced0054c394e1cd361ce00d18212aecc6c2078da04f91938e8da993ada"
+          },
+          {
+            "declaration": "Auditable.CellsOut",
+            "valueDigest": "sha256-7e09586321aa69fd0e6cff8c2a6add2b737d5fd181b804e99238c09bfd04ad66"
+          },
+          {
+            "declaration": "Auditable.CellsOut.cntEst",
+            "valueDigest": "sha256-d59219be90c67e95b88b350360ed9a206113ba74e7c7f8e9cf82577b3307617d"
+          },
+          {
+            "declaration": "Auditable.CellsOut.mk",
+            "valueDigest": "sha256-7f8a6ffea3708881bde374d2f5655ef524bb654f0c3810dd77949921c9f805a5"
+          },
+          {
+            "declaration": "Auditable.cellsWith",
+            "valueDigest": "sha256-0805acd8453f1d3e5a33cc0a64b4f4ef307bf4e1252aceb1e389026400f2e387"
+          },
+          {
+            "declaration": "Auditable.CNF",
+            "valueDigest": "sha256-d5622bf9e571d0142ebd368c80fc33cac0f51931fccc675ab6bef9791e8368c1"
+          },
+          {
+            "declaration": "Auditable.CNF.eval",
+            "valueDigest": "sha256-ee45905970cdbe515509616428286b98a1c8bbf5f3154580b13f76492d6832c9"
+          },
+          {
+            "declaration": "Auditable.Lit",
+            "valueDigest": "sha256-01e4016e37ebe1b5f5299e597c1d42f61eadfd082342febd0dbdadc7c683d9f2"
+          },
+          {
+            "declaration": "Auditable.Lit.pos",
+            "valueDigest": "sha256-3dde15a1389775ad6f0f7a0120b6a5df40059a47231f8a4108837d035116ee1b"
+          },
+          {
+            "declaration": "Auditable.Lit.var",
+            "valueDigest": "sha256-2407bc29ca909cee495be048a1cbbc3bc0f56277bbbbbb8fc6e1fc629139670b"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.Cell",
+            "valueDigest": "sha256-7c326caa01ad6eac086966abd96a56e507bb831e8f26ffea9d0fb8ee693ef24f"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.CellsOp",
+            "valueDigest": "sha256-e60e92c5ed6d91437458a8bf3094ccd28b81f0acd009a7d7b2d67e2c834b3467"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.CellsOp.cellsQuery",
+            "valueDigest": "sha256-45018f6eaf0e668948a713186739f71b7b3fd6a571e74e3dd89858209c9dd517"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.CellsOp.ctorIdx",
+            "valueDigest": "sha256-efd0d5a4ba3f84e9a70bbd268918ed4e32491bf113a0772d6ca5c43b0e30cafb"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.cellsOracle",
+            "valueDigest": "sha256-da74259b663e32594702cffee763288de12047f039160877291c348975c5764f"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.enumFun",
+            "valueDigest": "sha256-ae4c159f9beae14b08c4d6ac04303325825343645c19c77212da8d16bd6e4f7b"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.instDecidableCellsWith",
+            "valueDigest": "sha256-38200fb08e430fdb7af48c8f617f02840b357b74cea8113e2195690a5cf2f3ee"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.instDecidableCellsWith._aux_1",
+            "valueDigest": "sha256-6d20c55676661bea3f8145ed0b10875474cb854fb9fede58f42e5e7f74a72bf5"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.instDecidableEqCellsOp",
+            "valueDigest": "sha256-6ff5e97f4f2d59774a02fa8b30962f81a9d465d72db48fa8ab81ed0a27bc00ca"
+          },
+          {
+            "declaration": "Auditable.Model.Operations.instDecidableEqCellsOp._proof_1",
+            "valueDigest": "sha256-4513c23e390d6a0febcc649b1f9ef79019e41b071296737045132b121d843c6f"
+          },
+          {
+            "declaration": "Auditable.Prior",
+            "valueDigest": "sha256-c59a4e15562b4460784f82e9ec7b272cf3883eb01d63707d6608d3e587bea49b"
+          },
+          {
+            "declaration": "Auditable.Program.CellsReg",
+            "valueDigest": "sha256-8be384b6ab4a42b9e097cb73130ed4b909143c6ced4ce05ee64299fe0751ea75"
+          },
+          {
+            "declaration": "Auditable.Program.cellsStep",
+            "valueDigest": "sha256-03a74536fb515b95e545b4e4907874d8ed130f7bf0ada98fcd341cc6f789cb10"
+          },
+          {
+            "declaration": "Auditable.Program.cellsStep.match_1",
+            "valueDigest": "sha256-f07848f106575dddaa66bb2262b793c3d9ec3896ee9fc9a80111fbbe296a979b"
+          },
+          {
+            "declaration": "Auditable.Program.equalCellsCounter",
+            "valueDigest": "sha256-85e32465291ecab0d6f71f9b45e9068e1f2ceedbf60bf0bbda58dffa67255116"
+          },
+          {
+            "declaration": "Auditable.sol",
+            "valueDigest": "sha256-a9cece031944a7e4d2a51148d27d67b797e4e75a05c88f8525f9f2e6d0c60a94"
+          },
+          {
+            "declaration": "Auditable.solCount",
+            "valueDigest": "sha256-5e5ccd49ab0726b5f5110dbd8742aee13f1f4809015ba78a2029f096c1ea789b"
+          }
+        ],
+        "leanVersion": "4.33.0",
+        "toolchainDigest": "sha256-edce9c835ba8fd16fe32ec9b058ad81953b387a35723e2b323136c37f33fd4fa",
+        "optionsDigest": "sha256-b01d333a0ba6076a37c01762a8978eb2d2bebd220d8530e524078067d340079e"
+      }
+    }
+  ],
+  "relationEvidence": []
+}

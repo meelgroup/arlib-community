@@ -1,0 +1,1018 @@
+{
+  "schema": "tex2lean.paper-proof-map/1",
+  "ledgerId": "ledger:1ce74572-3238-42fa-922b-fdd872f7d31f",
+  "paper": {
+    "id": "paper:9d3822d4-c823-4f03-813b-adc3382cf65e"
+  },
+  "target": {
+    "id": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+    "paperId": "paper:9d3822d4-c823-4f03-813b-adc3382cf65e",
+    "activeVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1"
+  },
+  "activeClaimSetReceiptId": "claim-set:915612f0-6d39-4066-9d53-856c58119323",
+  "activeSurfaceInventoryId": "surface-inventory:67cb9826-67fc-435c-9ec7-4da9ed185c56",
+  "targetVersions": [
+    {
+      "id": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "paperPacketDigest": "sha256-066c4b7ebb50379d1bd97c61d5aac87687d94fe2a2acf2c8655dfc11270a22f0",
+      "bodyDigest": "sha256-351bd90399990c86667fa35624e2be3efcec28c3fb88186092808cfc9228858b",
+      "anchor": {
+        "file": "finalaudit.tex",
+        "label": "thm:finalaudit",
+        "environment": "theorem",
+        "from": 77,
+        "to": 81,
+        "excerptDigest": "sha256-78934d9560a0a653b48f5e7fa54bed4295107c06788c7d10038016820bbae846"
+      },
+      "status": "active"
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim:9522bf51-3638-479e-88f5-d48ecd1bffeb",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:2b087221-8206-4c27-ade8-7dab79655664",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:829c7c62-acbe-4a55-9bdd-a525aeed7576",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:c2741179-4549-4f18-9cab-4e1c9039bd34",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:62a567d3-90a3-42a9-adea-e7ceeb1948e3",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:ea81d571-7020-443a-ac2e-61c9c78f3f4d",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:3d513088-dfbd-434b-9ed9-5e942e90cc39",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:5d77c334-437a-4026-9d13-d2f5001be81c",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:54660095-7520-4449-8847-05068c01c396",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:5db5a90c-fdaa-410b-8393-9829f8f9ddbc",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:c98d7297-1543-497f-9d6b-84d3e89e0bea",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:9d10ff9d-5b0a-4b07-a3d9-fee54300d44b",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:cfd28f68-7ff9-45d0-9665-21f6219be90d",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:2da984ca-4e5d-4444-85a8-036998b336cc",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:3b24bd9c-3eb4-43b0-9d05-cd9a4b9b5347",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:8d2f8da7-c126-4d83-ac15-6fdf02fff102",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:049e7284-3b28-481a-ae64-30394213ad95",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:b1939cec-ae3b-4878-883b-8569411651b9",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:e5af0aed-6618-4027-b7f2-265915996d6d",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:b75c3c06-e9b7-4a45-8e00-44d178bfb3d3",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:1082df27-be73-4a8d-b7d0-0b030e6ac917",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:6c92300b-789d-4a67-a7dd-5a9fdbde6199",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:40612e36-8554-463f-a1c6-8324e0285729",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:8125ecba-7ced-4eaf-b759-e2bd05d25b57",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:3af915d4-4108-48f4-8996-635c4f4f3dc4",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:e86ce81d-ca0a-435a-9135-164188cd8e5d",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:e821b817-58a5-4272-8680-f09f403ee9b5",
+      "targetId": "target:309cfdbd-aa38-4737-b0cc-7e928cb53d1f",
+      "activeVersionId": "claim-version:1e351501-03ff-49c6-a547-3563ecb72619",
+      "role": "reportable"
+    }
+  ],
+  "claimVersions": [
+    {
+      "id": "claim-version:2b087221-8206-4c27-ade8-7dab79655664",
+      "claimId": "claim:9522bf51-3638-479e-88f5-d48ecd1bffeb",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "finalaudit.tex",
+        "excerptDigest": "sha256-63f20dd3e8202cfb3830a3773abff70c81657cc2ea727a1efdb9c56102731afb"
+      },
+      "text": "(S) Soundness: CountAuditor F K = verified → |sol F|/4 ≤ 2^(c_high/k) ≤ 16|sol F|, for every certificate K and n ≥ 12",
+      "normalizedTextDigest": "sha256-f2d3bea816a6e04237eabb56639220aa98a91a991dcb4e229e12d88a0a919640",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "finalaudit.tex",
+          "excerptDigest": "sha256-63f20dd3e8202cfb3830a3773abff70c81657cc2ea727a1efdb9c56102731afb"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:c2741179-4549-4f18-9cab-4e1c9039bd34",
+      "claimId": "claim:829c7c62-acbe-4a55-9bdd-a525aeed7576",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "implicit in problem.tex:22-31 ('the auditor can certify the answer computed by A'); rests on the unlabeled lemma at combined.tex",
+        "from": 117,
+        "to": 132,
+        "excerptDigest": "sha256-9b7ea0a20e0db1fb85eab0eb614ae8e7bb10acb8bad256505ae862915ec8d97d"
+      },
+      "text": "(C) Completeness: |sol F| ≥ 1 → CountAuditor F (AFCounter F) = verified",
+      "normalizedTextDigest": "sha256-baf19a081c8fef754a076b5a5eefaba8802e2dc94d7df737f23f5969aaf686bd",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "implicit in problem.tex:22-31 ('the auditor can certify the answer computed by A'); rests on the unlabeled lemma at combined.tex",
+          "from": 117,
+          "to": 132,
+          "excerptDigest": "sha256-9b7ea0a20e0db1fb85eab0eb614ae8e7bb10acb8bad256505ae862915ec8d97d"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:ea81d571-7020-443a-ac2e-61c9c78f3f4d",
+      "claimId": "claim:62a567d3-90a3-42a9-adea-e7ceeb1948e3",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "finalaudit.tex:107, 136; problem.tex",
+        "from": 33,
+        "to": 34,
+        "excerptDigest": "sha256-5335d45453ac1a7ef6efcb186be634d23e6b2cedf96d697ddf567f02f93da312"
+      },
+      "text": "(T) CountAuditor makes exactly one oracle call, a forall-exists query answered by a Sigma_2^P oracle",
+      "normalizedTextDigest": "sha256-cf5564b5242cbf165b071d1afb8ed3474ea6760d654b7901d3864489537c4888",
+      "kind": "resource",
+      "evidence": [
+        {
+          "file": "finalaudit.tex:107, 136; problem.tex",
+          "from": 33,
+          "to": 34,
+          "excerptDigest": "sha256-5335d45453ac1a7ef6efcb186be634d23e6b2cedf96d697ddf567f02f93da312"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:5d77c334-437a-4026-9d13-d2f5001be81c",
+      "claimId": "claim:3d513088-dfbd-434b-9ed9-5e942e90cc39",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "finalaudit.tex:79, 107, 138; intro.tex",
+        "from": 162,
+        "to": 169,
+        "excerptDigest": "sha256-b5e2d4f3a4a938d487024f52cc2ce41b9b4ed66698a3613d247d6e9624dae16c"
+      },
+      "text": "(R) The query on AFCounter F has O(n log n) variables (paper: O(|α|+|z|) = O(n')), concretely ≤ 4n·ceil(log2 n)",
+      "normalizedTextDigest": "sha256-ab79c950910f4931b40b0ca3827e83b661e92229ffbd49e74cb346e04d0b63e2",
+      "kind": "resource",
+      "evidence": [
+        {
+          "file": "finalaudit.tex:79, 107, 138; intro.tex",
+          "from": 162,
+          "to": 169,
+          "excerptDigest": "sha256-b5e2d4f3a4a938d487024f52cc2ce41b9b4ed66698a3613d247d6e9624dae16c"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:5db5a90c-fdaa-410b-8393-9829f8f9ddbc",
+      "claimId": "claim:54660095-7520-4449-8847-05068c01c396",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "finalaudit.tex",
+        "excerptDigest": "sha256-e959dc33ee17dd6262c4ec7b5683bfedf5399e6ad90aa91d86701e3621e6d93d"
+      },
+      "text": "(R-exact) Pi2Query.size (auditQuery F K) = (K.chigh + 2) * n' + K.clow for every K",
+      "normalizedTextDigest": "sha256-76df8571287c94446c1c4c9d1c99fe8eb5cbb8c754dfb9b2733d042bc2d9aeac",
+      "kind": "resource",
+      "evidence": [
+        {
+          "file": "finalaudit.tex",
+          "excerptDigest": "sha256-e959dc33ee17dd6262c4ec7b5683bfedf5399e6ad90aa91d86701e3621e6d93d"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:9d10ff9d-5b0a-4b07-a3d9-fee54300d44b",
+      "claimId": "claim:c98d7297-1543-497f-9d6b-84d3e89e0bea",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "finalaudit.tex",
+        "excerptDigest": "sha256-57560d3102dcafa8c9f120aa368edc097573981a82cef803dc04954409312156"
+      },
+      "text": "eq:imp: holesWith F' c_low hs ∧ stockWith F' c_high hs' → 2^c_low/(c_low+1) ≤ |sol F'| ≤ c_high·2^c_high",
+      "normalizedTextDigest": "sha256-281a329f034f51ee3155e4e0fb716819e07cd59332d7fa61f1ab399f5d49a98b",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "finalaudit.tex",
+          "excerptDigest": "sha256-57560d3102dcafa8c9f120aa368edc097573981a82cef803dc04954409312156"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:2da984ca-4e5d-4444-85a8-036998b336cc",
+      "claimId": "claim:cfd28f68-7ff9-45d0-9665-21f6219be90d",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "finalaudit.tex",
+        "from": 53,
+        "to": 62,
+        "excerptDigest": "sha256-d1887ac856df0ec68945eae70288d27944271fde1b37c27461f07b54dfd9ff71"
+      },
+      "text": "lem:holes: holesWith G m hs → 2^m ≤ (m+1)·|sol G|",
+      "normalizedTextDigest": "sha256-a6360f3ae160baa4ee54b02fd41f67b49e42871a244a393133239f75e16083a7",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "finalaudit.tex",
+          "from": 53,
+          "to": 62,
+          "excerptDigest": "sha256-d1887ac856df0ec68945eae70288d27944271fde1b37c27461f07b54dfd9ff71"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:8d2f8da7-c126-4d83-ac15-6fdf02fff102",
+      "claimId": "claim:3b24bd9c-3eb4-43b0-9d05-cd9a4b9b5347",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "stock.tex",
+        "from": 20,
+        "to": 30,
+        "excerptDigest": "sha256-cfecf89570fb0b04ceea59ffd266041ddebb49b80206f0da071a74cf0c282249"
+      },
+      "text": "cl:stockup: stockWith G m hs → |sol G| ≤ m·2^m (true for isolation semantics; FALSE for stockPairwiseWith)",
+      "normalizedTextDigest": "sha256-99d1c5712ad3fb1c0bae02410eaaa5e07bd4edb770afa02f6204196d56a5b829",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "stock.tex",
+          "from": 20,
+          "to": 30,
+          "excerptDigest": "sha256-cfecf89570fb0b04ceea59ffd266041ddebb49b80206f0da071a74cf0c282249"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:b1939cec-ae3b-4878-883b-8569411651b9",
+      "claimId": "claim:049e7284-3b28-481a-ae64-30394213ad95",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "combined.tex",
+        "from": 74,
+        "to": 113,
+        "excerptDigest": "sha256-0e7bdf8b1e8796aaad5138c6de2d0779e7d36df49b4c612cc7359f89cf73fdf9"
+      },
+      "text": "lm:holesexist: |sol G| ≥ 2^(m+3) → holes G m (pairwise-independent family)",
+      "normalizedTextDigest": "sha256-a3bf0f0bc28f2c0d4b79b09a56272a7f779fea852bdb0343b17f2832bbab72a5",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "combined.tex",
+          "from": 74,
+          "to": 113,
+          "excerptDigest": "sha256-0e7bdf8b1e8796aaad5138c6de2d0779e7d36df49b4c612cc7359f89cf73fdf9"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:b75c3c06-e9b7-4a45-8e00-44d178bfb3d3",
+      "claimId": "claim:e5af0aed-6618-4027-b7f2-265915996d6d",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "stock.tex",
+        "from": 35,
+        "to": 80,
+        "excerptDigest": "sha256-25d63cfe8a91f62a80d6536d19ea3491a379fe5a958a5eed1abbfd92ff8afe99"
+      },
+      "text": "lm:stockexist: 1 ≤ m, |sol G| ≤ 2^(m-2) → stock G m",
+      "normalizedTextDigest": "sha256-d763b35ea846aa7d1a964d18c8aa30cf5cc4a8eeda2950583a5c122ca3051dce",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "stock.tex",
+          "from": 35,
+          "to": 80,
+          "excerptDigest": "sha256-25d63cfe8a91f62a80d6536d19ea3491a379fe5a958a5eed1abbfd92ff8afe99"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:6c92300b-789d-4a67-a7dd-5a9fdbde6199",
+      "claimId": "claim:1082df27-be73-4a8d-b7d0-0b030e6ac917",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "combined.tex",
+        "from": 117,
+        "to": 132,
+        "excerptDigest": "sha256-06c3a23d4879c8e1cde754ae0aa496d87cc3d49d0f0d04546b6a1e7a3a90f229"
+      },
+      "text": "Gap lemma: on the honest run with |sol F| ≥ 1, c_high ≤ c_low + 7",
+      "normalizedTextDigest": "sha256-693732f0fc0c8fb88edc04de433a97637914ea90a041f6e6af8b64c08720072e",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "combined.tex",
+          "from": 117,
+          "to": 132,
+          "excerptDigest": "sha256-06c3a23d4879c8e1cde754ae0aa496d87cc3d49d0f0d04546b6a1e7a3a90f229"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:8125ecba-7ced-4eaf-b759-e2bd05d25b57",
+      "claimId": "claim:40612e36-8554-463f-a1c6-8324e0285729",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "finalaudit.tex:101; stock.tex",
+        "from": 123,
+        "excerptDigest": "sha256-0a720397a343751bbbc3504d10b9c742aa62947dacde30a74419c2616bb1f39e"
+      },
+      "text": "|sol (makeCopies F k)| = |sol F|^k",
+      "normalizedTextDigest": "sha256-80390ac1702c4f261259dce97440f5baa9c4d82a788eed9bb0191ccddc3c4a01",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "finalaudit.tex:101; stock.tex",
+          "from": 123,
+          "excerptDigest": "sha256-0a720397a343751bbbc3504d10b9c742aa62947dacde30a74419c2616bb1f39e"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:e86ce81d-ca0a-435a-9135-164188cd8e5d",
+      "claimId": "claim:3af915d4-4108-48f4-8996-635c4f4f3dc4",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "combined.tex:28-49; finalaudit.tex",
+        "from": 113,
+        "excerptDigest": "sha256-27faa18d1d0056a7daf6b77b34220429006a8f4179c4edaee0ad84218278edf6"
+      },
+      "text": "Honest run: c_low ≤ n', 1 ≤ c_high ≤ n', and the returned hash tuples are valid witnesses",
+      "normalizedTextDigest": "sha256-29cab2f81084ed532d756460c0f038888c5a079b61ee0c8b667f193c1ea0155a",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "combined.tex:28-49; finalaudit.tex",
+          "from": 113,
+          "excerptDigest": "sha256-27faa18d1d0056a7daf6b77b34220429006a8f4179c4edaee0ad84218278edf6"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:1e351501-03ff-49c6-a547-3563ecb72619",
+      "claimId": "claim:e821b817-58a5-4272-8680-f09f403ee9b5",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "anchor": {
+        "file": "stock.tex:4 vs stock.tex:13-14, stock.tex",
+        "from": 26,
+        "to": 28,
+        "excerptDigest": "sha256-fff66b27f95b7875f87be24eb00d898e37aabe3fc5b3c513475541ce55523c91"
+      },
+      "text": "The paper's (R) is incompatible with (S) under any single reading of φ_stock (see ambiguityLedger); the final check must compare the formalized size bound against O(n log n) and report it",
+      "normalizedTextDigest": "sha256-d90ac7fdd9d0ac19dead2b84393361ebf2d490ef7c4ad87162f632bdbf177ea4",
+      "kind": "other",
+      "evidence": [
+        {
+          "file": "stock.tex:4 vs stock.tex:13-14, stock.tex",
+          "from": 26,
+          "to": 28,
+          "excerptDigest": "sha256-fff66b27f95b7875f87be24eb00d898e37aabe3fc5b3c513475541ce55523c91"
+        }
+      ],
+      "status": "active"
+    }
+  ],
+  "plans": [
+    {
+      "claimVersionId": "claim-version:2b087221-8206-4c27-ade8-7dab79655664",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:8eb8474b-ae76-4da3-af5f-45319111687e"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-dc143a7d43c062812c8f47c890f7edf6c3ce8f45f5346ccc4ee305cc0ad61cdf"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:c2741179-4549-4f18-9cab-4e1c9039bd34",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:1904748e-7825-4a9e-b1f2-668569bc1ce2"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-54dd0ca8c0f2b02424b54c212d9f9ae42f525ce85a2e447366b92004d5215bc5"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:ea81d571-7020-443a-ac2e-61c9c78f3f4d",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:7db54c3c-5203-45dd-a227-55a5c2f5aa39"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-cf9962341c426419229d623b78dafb9afff57c86cb5c690673e3cc8a4563254e"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:5d77c334-437a-4026-9d13-d2f5001be81c",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:9ee59332-a3b3-4560-be26-e2b3b065e298"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-617fa1c1c9c396c4afe873743e8da995b91d6122bc86433050587309657d0f19"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:5db5a90c-fdaa-410b-8393-9829f8f9ddbc",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:12bc59ad-1006-446e-9220-50e49a8cc5a1"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-ee810b3237774ebaf4ac308b36c8acc0a63e00a514dbecbc3f6f2fcbf9bc5c8b"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:9d10ff9d-5b0a-4b07-a3d9-fee54300d44b",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:be0fc867-aa10-4aec-b4fc-a69744751cb6"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-9cba5625c288af94569e1e4676f1b9907a93ec7af88d106c761c6617deb45bd5"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:2da984ca-4e5d-4444-85a8-036998b336cc",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:287a6089-83dc-4c9d-b19e-7cde94cdda84"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-494ba7bb339d3bb532df8a294247b2a1d0a08e8ecfd504065eb983ed7d9e4741"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:8d2f8da7-c126-4d83-ac15-6fdf02fff102",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:f890eae4-fff1-4a5e-86ec-60f7effecc69"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-d75ff2e89880e6d131bb6390329c0eb3aed30f8dd7c9aa39d029077b258493f0"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:b1939cec-ae3b-4878-883b-8569411651b9",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:b7f24e03-b240-4e71-b986-145e2c0a7bc8"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-b3e82c72a6b4e33b9407b0cdbb6d2bc50f18149787a8bc9f276b9524b15dec98"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:b75c3c06-e9b7-4a45-8e00-44d178bfb3d3",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:732416ad-b280-4d19-a3dd-ae2feef4d530"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-8b85e838cfce1a20fbf3829c74f3e483dae32fe04d32a79796fe639f06440c99"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:6c92300b-789d-4a67-a7dd-5a9fdbde6199",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:c36499bd-e321-4f1c-8eb6-b09a52ebaf50"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-32f2bb0e0461528f584174dcfad67215a4e5b11eeabcac1e72663dd54f381faa"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:8125ecba-7ced-4eaf-b759-e2bd05d25b57",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:67528b64-6058-4e2e-bdb2-68ed03171019"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-df500c42709ff052c9f194a0340b9981caf86d37018b58b199f042e1cf6dfc36"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:e86ce81d-ca0a-435a-9135-164188cd8e5d",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:8b8b33d2-75db-4adf-8dd2-a19a8482d6b3"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-6917b263862702b27a28b724072baf4a3f6e8a94e8fa47634b9ccb12ca954876"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Interface."
+    },
+    {
+      "claimVersionId": "claim-version:1e351501-03ff-49c6-a547-3563ecb72619",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:808890b4-2909-4a95-a34b-102fbe416a59"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-5902ec7bcc3c5154fe603c90fa67f02eb1565b7368d6e85002bba6e065f83e3b"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Handoff."
+    }
+  ],
+  "obligations": [
+    {
+      "id": "obligation:8eb8474b-ae76-4da3-af5f-45319111687e",
+      "kind": "headline",
+      "summary": "(S) Soundness: CountAuditor F K = verified → |sol F|/4 ≤ 2^(c_high/k) ≤ 16|sol F|, for every certificate K and n ≥ 12",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "materialized"
+    },
+    {
+      "id": "obligation:1904748e-7825-4a9e-b1f2-668569bc1ce2",
+      "kind": "headline",
+      "summary": "(C) Completeness: |sol F| ≥ 1 → CountAuditor F (AFCounter F) = verified",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:7db54c3c-5203-45dd-a227-55a5c2f5aa39",
+      "kind": "headline",
+      "summary": "(T) CountAuditor makes exactly one oracle call, a forall-exists query answered by a Sigma_2^P oracle",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:9ee59332-a3b3-4560-be26-e2b3b065e298",
+      "kind": "headline",
+      "summary": "(R) The query on AFCounter F has O(n log n) variables (paper: O(|α|+|z|) = O(n')), concretely ≤ 4n·ceil(log2 n)",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:12bc59ad-1006-446e-9220-50e49a8cc5a1",
+      "kind": "headline",
+      "summary": "(R-exact) Pi2Query.size (auditQuery F K) = (K.chigh + 2) * n' + K.clow for every K",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:be0fc867-aa10-4aec-b4fc-a69744751cb6",
+      "kind": "headline",
+      "summary": "eq:imp: holesWith F' c_low hs ∧ stockWith F' c_high hs' → 2^c_low/(c_low+1) ≤ |sol F'| ≤ c_high·2^c_high",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:287a6089-83dc-4c9d-b19e-7cde94cdda84",
+      "kind": "headline",
+      "summary": "lem:holes: holesWith G m hs → 2^m ≤ (m+1)·|sol G|",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:f890eae4-fff1-4a5e-86ec-60f7effecc69",
+      "kind": "headline",
+      "summary": "cl:stockup: stockWith G m hs → |sol G| ≤ m·2^m (true for isolation semantics; FALSE for stockPairwiseWith)",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:b7f24e03-b240-4e71-b986-145e2c0a7bc8",
+      "kind": "headline",
+      "summary": "lm:holesexist: |sol G| ≥ 2^(m+3) → holes G m (pairwise-independent family)",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:732416ad-b280-4d19-a3dd-ae2feef4d530",
+      "kind": "headline",
+      "summary": "lm:stockexist: 1 ≤ m, |sol G| ≤ 2^(m-2) → stock G m",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:c36499bd-e321-4f1c-8eb6-b09a52ebaf50",
+      "kind": "headline",
+      "summary": "Gap lemma: on the honest run with |sol F| ≥ 1, c_high ≤ c_low + 7",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:67528b64-6058-4e2e-bdb2-68ed03171019",
+      "kind": "headline",
+      "summary": "|sol (makeCopies F k)| = |sol F|^k",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:8b8b33d2-75db-4adf-8dd2-a19a8482d6b3",
+      "kind": "headline",
+      "summary": "Honest run: c_low ≤ n', 1 ≤ c_high ≤ n', and the returned hash tuples are valid witnesses",
+      "rationale": "The finalized blueprint assigns this paper claim to Interface.",
+      "owner": "Interface",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:808890b4-2909-4a95-a34b-102fbe416a59",
+      "kind": "headline",
+      "summary": "The paper's (R) is incompatible with (S) under any single reading of φ_stock (see ambiguityLedger); the final check must compare the formalized size bound against O(n log n) and report it",
+      "rationale": "The finalized blueprint assigns this paper claim to Handoff.",
+      "owner": "Handoff",
+      "status": "planned"
+    }
+  ],
+  "bindings": [
+    {
+      "id": "binding:23d46081-39b6-4ba4-b625-911bb824b9ab",
+      "obligationId": "obligation:8eb8474b-ae76-4da3-af5f-45319111687e",
+      "declaration": "Auditable.finalAudit",
+      "file": "Auditable/Model/Theorem.lean",
+      "module": "Auditable.Model.Theorem",
+      "role": "headline",
+      "status": "proposed"
+    }
+  ],
+  "leanRelations": [],
+  "claimSetReceipts": [
+    {
+      "id": "claim-set:915612f0-6d39-4066-9d53-856c58119323",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "paperPacketDigest": "sha256-066c4b7ebb50379d1bd97c61d5aac87687d94fe2a2acf2c8655dfc11270a22f0",
+      "claimVersionIds": [
+        "claim-version:2b087221-8206-4c27-ade8-7dab79655664",
+        "claim-version:c2741179-4549-4f18-9cab-4e1c9039bd34",
+        "claim-version:ea81d571-7020-443a-ac2e-61c9c78f3f4d",
+        "claim-version:5d77c334-437a-4026-9d13-d2f5001be81c",
+        "claim-version:5db5a90c-fdaa-410b-8393-9829f8f9ddbc",
+        "claim-version:9d10ff9d-5b0a-4b07-a3d9-fee54300d44b",
+        "claim-version:2da984ca-4e5d-4444-85a8-036998b336cc",
+        "claim-version:8d2f8da7-c126-4d83-ac15-6fdf02fff102",
+        "claim-version:b1939cec-ae3b-4878-883b-8569411651b9",
+        "claim-version:b75c3c06-e9b7-4a45-8e00-44d178bfb3d3",
+        "claim-version:6c92300b-789d-4a67-a7dd-5a9fdbde6199",
+        "claim-version:8125ecba-7ced-4eaf-b759-e2bd05d25b57",
+        "claim-version:e86ce81d-ca0a-435a-9135-164188cd8e5d",
+        "claim-version:1e351501-03ff-49c6-a547-3563ecb72619"
+      ],
+      "readerProvenance": "reader-agent"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "sha256-dc143a7d43c062812c8f47c890f7edf6c3ce8f45f5346ccc4ee305cc0ad61cdf",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "finalaudit.tex",
+          "excerptDigest": "sha256-63f20dd3e8202cfb3830a3773abff70c81657cc2ea727a1efdb9c56102731afb"
+        }
+      ]
+    },
+    {
+      "id": "sha256-54dd0ca8c0f2b02424b54c212d9f9ae42f525ce85a2e447366b92004d5215bc5",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "implicit in problem.tex:22-31 ('the auditor can certify the answer computed by A'); rests on the unlabeled lemma at combined.tex",
+          "from": 117,
+          "to": 132,
+          "excerptDigest": "sha256-9b7ea0a20e0db1fb85eab0eb614ae8e7bb10acb8bad256505ae862915ec8d97d"
+        }
+      ]
+    },
+    {
+      "id": "sha256-cf9962341c426419229d623b78dafb9afff57c86cb5c690673e3cc8a4563254e",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "finalaudit.tex:107, 136; problem.tex",
+          "from": 33,
+          "to": 34,
+          "excerptDigest": "sha256-5335d45453ac1a7ef6efcb186be634d23e6b2cedf96d697ddf567f02f93da312"
+        }
+      ]
+    },
+    {
+      "id": "sha256-617fa1c1c9c396c4afe873743e8da995b91d6122bc86433050587309657d0f19",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "finalaudit.tex:79, 107, 138; intro.tex",
+          "from": 162,
+          "to": 169,
+          "excerptDigest": "sha256-b5e2d4f3a4a938d487024f52cc2ce41b9b4ed66698a3613d247d6e9624dae16c"
+        }
+      ]
+    },
+    {
+      "id": "sha256-ee810b3237774ebaf4ac308b36c8acc0a63e00a514dbecbc3f6f2fcbf9bc5c8b",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "finalaudit.tex",
+          "excerptDigest": "sha256-e959dc33ee17dd6262c4ec7b5683bfedf5399e6ad90aa91d86701e3621e6d93d"
+        }
+      ]
+    },
+    {
+      "id": "sha256-9cba5625c288af94569e1e4676f1b9907a93ec7af88d106c761c6617deb45bd5",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "finalaudit.tex",
+          "excerptDigest": "sha256-57560d3102dcafa8c9f120aa368edc097573981a82cef803dc04954409312156"
+        }
+      ]
+    },
+    {
+      "id": "sha256-494ba7bb339d3bb532df8a294247b2a1d0a08e8ecfd504065eb983ed7d9e4741",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "finalaudit.tex",
+          "from": 53,
+          "to": 62,
+          "excerptDigest": "sha256-d1887ac856df0ec68945eae70288d27944271fde1b37c27461f07b54dfd9ff71"
+        }
+      ]
+    },
+    {
+      "id": "sha256-d75ff2e89880e6d131bb6390329c0eb3aed30f8dd7c9aa39d029077b258493f0",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "stock.tex",
+          "from": 20,
+          "to": 30,
+          "excerptDigest": "sha256-cfecf89570fb0b04ceea59ffd266041ddebb49b80206f0da071a74cf0c282249"
+        }
+      ]
+    },
+    {
+      "id": "sha256-b3e82c72a6b4e33b9407b0cdbb6d2bc50f18149787a8bc9f276b9524b15dec98",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "combined.tex",
+          "from": 74,
+          "to": 113,
+          "excerptDigest": "sha256-0e7bdf8b1e8796aaad5138c6de2d0779e7d36df49b4c612cc7359f89cf73fdf9"
+        }
+      ]
+    },
+    {
+      "id": "sha256-8b85e838cfce1a20fbf3829c74f3e483dae32fe04d32a79796fe639f06440c99",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "stock.tex",
+          "from": 35,
+          "to": 80,
+          "excerptDigest": "sha256-25d63cfe8a91f62a80d6536d19ea3491a379fe5a958a5eed1abbfd92ff8afe99"
+        }
+      ]
+    },
+    {
+      "id": "sha256-32f2bb0e0461528f584174dcfad67215a4e5b11eeabcac1e72663dd54f381faa",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "combined.tex",
+          "from": 117,
+          "to": 132,
+          "excerptDigest": "sha256-06c3a23d4879c8e1cde754ae0aa496d87cc3d49d0f0d04546b6a1e7a3a90f229"
+        }
+      ]
+    },
+    {
+      "id": "sha256-df500c42709ff052c9f194a0340b9981caf86d37018b58b199f042e1cf6dfc36",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "finalaudit.tex:101; stock.tex",
+          "from": 123,
+          "excerptDigest": "sha256-0a720397a343751bbbc3504d10b9c742aa62947dacde30a74419c2616bb1f39e"
+        }
+      ]
+    },
+    {
+      "id": "sha256-6917b263862702b27a28b724072baf4a3f6e8a94e8fa47634b9ccb12ca954876",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "combined.tex:28-49; finalaudit.tex",
+          "from": 113,
+          "excerptDigest": "sha256-27faa18d1d0056a7daf6b77b34220429006a8f4179c4edaee0ad84218278edf6"
+        }
+      ]
+    },
+    {
+      "id": "sha256-5902ec7bcc3c5154fe603c90fa67f02eb1565b7368d6e85002bba6e065f83e3b",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "stock.tex:4 vs stock.tex:13-14, stock.tex",
+          "from": 26,
+          "to": 28,
+          "excerptDigest": "sha256-fff66b27f95b7875f87be24eb00d898e37aabe3fc5b3c513475541ce55523c91"
+        }
+      ]
+    }
+  ],
+  "surfaceInventories": [
+    {
+      "id": "surface-inventory:67cb9826-67fc-435c-9ec7-4da9ed185c56",
+      "targetVersionId": "target-version:2b28a4cc-47cd-4483-ae3b-6b8f430014b1",
+      "source": "sealed-blueprint",
+      "blueprintDigest": "sha256-336fa6b4fcdb1347faf929dc21f2f890df074e207f697c104c89a4ddc26a6e7f",
+      "declarations": [
+        {
+          "declaration": "Auditable.finalAudit_sound",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.finalAudit_complete",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.finalAudit_oneQuery",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.finalAudit_querySize",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.finalAudit",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        }
+      ]
+    }
+  ],
+  "appliedDecisionIds": []
+}

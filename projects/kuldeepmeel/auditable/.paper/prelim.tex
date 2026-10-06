@@ -1,0 +1,148 @@
+
+Let $F$ be a Boolean formula in conjunctive normal form (CNF), and let
+$\Vars(F)$, also called its \emph{support}, be the set of variables
+appearing in $F$.  An assignment $\sigma$ of truth values to the
+variables in $\Vars(F)$ is called a \emph{satisfying assignment}
+or \emph{witness} of $F$ if it makes $F$ evaluate to true.  We denote
+the set of all witnesses of $F$ by $\satisfying{F}$ and its count by
+$\sol{F}$. Throughout the paper, we use $n$ to denote $|\Vars(F)|$.
+We also use bold-faced letters to represent vectors of Boolean
+variables, when there is no confusion.
+
+We write $\prob\left[\mathcal{Z}: {\Omega} \right]$ to denote the
+probability of outcome $\mathcal{Z}$ when sampling from a probability
+space ${\Omega}$.  For brevity, we omit ${\Omega}$ when it is clear
+from the context.  The expected value of $\mathcal{Z}$ is denoted
+$\expect\left[\mathcal{Z}\right]$ and its variance is denoted
+$\sigma^2\left[\mathcal{Z}\right]$. The quantity
+$\frac{ \sigma^2\left[\mathcal{Z}\right]}{\expect\left[\mathcal{Z}\right]}$
+is called the dispersion index of the random variable $\mathcal{Z}$.
+Given a distribution $\mathcal{D}$, we use
+$\mathcal{Z} \sim \mathcal{D}$ to denote that $\mathcal{Z}$ is sampled
+from the distribution $\mathcal{D}$.
+
+
+
+
+We introduce some notation from complexity theory for later use. Let
+$\mathcal{C}$ be a decision complexity class.  An \emph{oracle} for
+$\mathcal{C}$ is a (possibly hypothetical) computational device that
+when queried with any problem in $\mathcal{C}$, answers it correctly
+in one time unit.  If $\mathcal{C}_1$ and $\mathcal{C}_2$ are two
+complexity classes, we use $\mathcal{C}_1^{\mathcal{C}_2}$ to denote
+the class of problems solvable by an algorithm for a problem in
+$\mathcal{C}_1$ with access to an oracle for $\mathcal{C}_2$.  The
+complexity classes $\myP$, $\NP$ and $\coNP$ are well-known. The
+classes $\Sigma_2^P$ and $\Sigma_3^P$ are defined as $\NP^{\NP}$ and
+$\NP^{\Sigma_2^P}$ respectively.
+
+\paragraph{\bfseries Deterministic Approximate Counting (DAC):}
+Given a Boolean formula $F$ in CNF and an approximation factor $k$ ($> 1$), \emph{deterministic approximate
+counting} (or DAC for short), requires us to compute an estimate
+$\Cest~(\geq 0)$ using a deterministic algorithm such that
+$\frac{\sol{F}}{k} \leq \Cest \leq \sol{F} \cdot k$.
+
+
+
+It has been shown in~\cite{stockmeyer} that DAC is in
+$\myP^{\Sigmatwop}$, the crucial idea in the proof being use of
+pairwise independent hash functions to partition the space of all
+assignments.  Given a DAC algorithm for any $k > 1$, we can apply it
+on independent copies of $F$ (i.e., copies of $F$, each with a fresh set of variables) conjoined together to obtain $\sol{F}$ to
+within any approximation factor $> 1$. Therefore, we will often be
+concerned with DAC algorithms for some convenient $k$, viz. $8$ or
+$16$.
+
+
+
+Practical implementations of DAC algorithms must of course use SAT/QBF
+solvers as proxies for oracles like the $\Sigmatwop$ oracle
+in~\cite{stockmeyer}. Therefore, it is important in practice to look
+at the finer structure of oracle invocations, especially the support
+sizes and exact quantifier prefix of the formulas fed to the oracles.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\paragraph{\bfseries $k$-wise independent hash family:}
+
+For $n,m\in \mathbb{N}^{\ge 0}$, let $\mathcal{H}(n,m)$ denote a family
+of hash functions from $\{0,1\}^n$ to $\{0,1\}^m$. We use
+$h \xleftarrow{R} \mathcal{H}(n,m)$ to denote the probability space
+obtained by choosing $h$ uniformly at random from
+$\mathcal{H}(n,m)$.
+
+
+
+\begin{definition}
+	For $k \ge 2$, we say that $\mathcal{H}(n,m)$ is a family of
+        $k$-wise independent hash functions if
+        
+	
+	
+        for every distinct $\vecbold{y_1}, \ldots \vecbold{y_k} \in \{0,1\}^n$ and for every (possibly repeated) $\vecbold{\alpha_1}, \ldots \vecbold{\alpha_k} \in \{0,1\}^m$,
+
+
+$		\Pr [ h(\boldsymbol{y_1}) = \boldsymbol{\alpha_1} \wedge  \cdots h(\boldsymbol{y_k}) = \boldsymbol{\alpha_k}] = \left(\frac{1}{2^m}\right)^k,
+$
+
+where the probability space is $h \xleftarrow{R} \mathcal{H}(n,m)$.
+
+Such a family is also sometimes denoted $\mathcal{H}(n,m,k)$ to highlight the degree of independence.
+\end{definition}	
+
+Significantly, every $h \in \mathcal{H}(n,m,k)$
+
+
+can be specified by a $k$-tuple of coefficients ($a_1, a_2, \ldots
+a_k$) from the finite field $GF(2^{max(n,m)})$ and vice
+versa~\cite{BGP2000}.  Hence, $\bigO\big(k\cdot\max(m,n)\big)$ bits
+suffice to represent $h$.  We leverage this observation to simplify
+notation and write $\exists h$ as syntactic sugar for existentially
+quantifying over the $\bigO\big(k\cdot \max(m,n)\big)$ Boolean variables
+that represent $h$.
+
+
+
+
+For every formula $F$ on $n$ variables, and for every
+$\vecbold{\alpha} \in \{0,1\}^m$, define $\Cell{F}{h,\vecbold{\alpha}}$ to be the
+(sub-)set of solutions of $F$ that are mapped to $\vecbold{\alpha}$ by $h$.
+Formally, $\Cell{F}{h,\vecbold{\alpha}} = \{\vecbold{\sigma} \mid \vecbold{\sigma} \in \{0,1\}^n$,
+$\vecbold{\sigma}\models F$ and $h(\vecbold{\sigma}) = \vecbold{\alpha}\}$.  For 
+convenience, we use $\Cnt{F}{h,\vecbold{\alpha}}$ to denote the cardinality of
+$\Cell{F}{h,\vecbold{\alpha}}$.
+
+The following result proves useful in our analysis later.
+\begin{proposition}{\cite{BR1994}}
+	Let $t \geq 4$ be an even integer. Let $Z_1, Z_2, \ldots Z_k$
+	be $t$-wise independent random variables taking values in
+	$[0,1]$. Let $Z = Z_1 + Z_2 + \ldots Z_k$, $\mu
+	= \expect[Z]$. Then
+
+$        \Pr[|Z-\mu| \geq \varepsilon \mu ] \leq
+                    8 \cdot \left(\frac{t\mu +t^2}{\varepsilon^2 \mu^2}\right)^{t/2}
+$
+
+for all $\varepsilon > 0$.
+\end{proposition}
+
+
+
+
+

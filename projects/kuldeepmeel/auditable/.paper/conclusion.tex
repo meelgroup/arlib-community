@@ -1,0 +1,27 @@
+The design of algorithms has traditionally focused on optimizing
+resources like time, space, or communication 
+without necessarily considering how hard it is to independently
+certify correctness of results.  Yet, the need for certified or
+auditable results is becoming increasingly important in a world where
+untrusted components are unavoidable in the implementation of any
+non-trivial software.
+
+In this paper, we presented a principled
+approach towards addressing this problem by showing that appropriate
+measures of audit complexity can be treated as a first-class
+computational resource to be optimized at the design stage of an
+algorithm itself, rather than as an afterthought.  For deterministic
+approximate counting, this approach yields completely new algorithms
+that are sub-optimal with respect to time/space resources, and yet
+permit significantly simpler certification in practice.  We believe
+the same ``trade off'' applies to other hard combinatorial problems as
+well, and one needs to navigate the algorithm design space carefully
+to strike the right balance between audit complexity and
+time/space/communication complexity.  We hope our work opens the door
+for further such investigations.  As concrete steps for future work,
+we wish to explore the audit complexity versus time/space complexity
+tradeoff in probabilistic approximate counting.
+
+\paragraph*{Acknowledgments}
+This work was supported in part by National Research Foundation Singapore under its NRF Fellowship Programme[NRF-NRFFAI1-2019-0004 ] , Ministry of Education Singapore Tier 2 grant MOE-T2EP20121-0011, and Ministry of Education Singapore Tier 1 Grant [R-252-000-B59-114 ].
+

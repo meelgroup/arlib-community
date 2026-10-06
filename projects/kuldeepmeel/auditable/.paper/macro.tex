@@ -1,0 +1,43 @@
+\algnotext{EndFor}
+\algnotext{EndIf}
+
+\newcommand{\conpcheck}{\ensuremath{\mathsf{CoNPCheck}}}
+\newcommand{\twoqbfcheck}{\ensuremath{\mathsf{2QBFCheck}}}
+\newcommand{\threeqbfcheck}{\ensuremath{\mathsf{3QBFCheck}}}
+\newcommand{\Vars}{\ensuremath{\mathsf{Vars }}}
+\newcommand{\Cell}[2]{\ensuremath{\mathsf{Cell}_{\langle #1, #2 \rangle}}}
+\newcommand{\FullCell}[1]{\ensuremath{\mathsf{Cell}_{\langle #1 \rangle}}}
+\newcommand{\Cnt}[2]{\ensuremath{\mathsf{Cnt}_{\langle #1, #2 \rangle}}}
+\newcommand{\satisfying}[1]{\ensuremath{sol({#1})}} 
+\newcommand{\SatisfyingHashSet}[3]{\ensuremath{\mathsf{Cell}_{\langle #1, #2, #3 \rangle}}}
+\newcommand{\SatisfyingHashed}[3]{\ensuremath{|\mathsf{Cell}_{\langle #1, #2, #3 \rangle}|}}
+\newcommand{\prob}{\ensuremath{\mathsf{Pr}}}
+\newcommand{\expect}{\ensuremath{\mathsf{E}}}
+\newcommand{\sharpP}{\ensuremath{\#\mathsf{P}}}
+\newcommand{\bigO}{\ensuremath{\mathcal{O}}}
+
+
+\newcommand{\sol}[1]{|\satisfying{#1}|}   
+
+\newcommand{\val}{v}   
+\newcommand{\Cest}{\mathsf{CntEst}} 
+\newcommand{\hashstock}{\mathsf{hashassgn}_{stock}}
+\newcommand{\hashcells}{\mathsf{hashassgn}_{cells}}
+\newcommand{\holesalgo}{\ensuremath{\mathsf{LonelyPigeonsNoLonelyHoles}}}
+
+\newcommand{\chigh}{c_\mathsf{high}}
+\newcommand{\clow}{c_\mathsf{low}}
+
+
+\newcommand{\NP}{\mathsf{NP}}
+\newcommand{\coNP}{\mathsf{CoNP}}
+\newcommand{\BPP}{\mathsf{BPP}}
+\newcommand{\myP}{\mathsf{P}}
+\newcommand{\Sigmatwop}{{\Sigma_2^\myP}}
+
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+
+\newcommand{\vecbold}[1]{\ensuremath{{\boldsymbol{#1}}}}
+\newcommand{\Red}[1]{\textcolor{red}{#1}}
+\newcommand{\toolname}{\ensuremath{\mathsf{AFCounter}}}

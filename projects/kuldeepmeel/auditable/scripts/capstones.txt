@@ -1,0 +1,14 @@
+# The headlines of this development, one per line.
+# The axiom profile of each is read from Lean whenever the checks run.
+Auditable.finalAudit
+Auditable.finalAudit_sound
+Auditable.finalAudit_complete
+Auditable.finalAudit_oneQuery
+Auditable.finalAudit_querySize
+Auditable.afCounterCorrect
+Auditable.afCounter_dac
+Auditable.afCounter_queries
+Auditable.equalCellsCorrect
+Auditable.equalCells_dac
+Auditable.equalCells_queries
+Auditable.stockmeyerCorrect
