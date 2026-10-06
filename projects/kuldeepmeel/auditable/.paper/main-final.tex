@@ -1,0 +1,317 @@
+
+
+\documentclass[letterpaper]{article} 
+\usepackage{aaai24}  
+\usepackage{times}  
+\usepackage{helvet}  
+\usepackage{courier}  
+\usepackage[hyphens]{url}  
+\usepackage{graphicx} 
+\urlstyle{rm} 
+\def\UrlFont{\rm}  
+\usepackage{natbib}  
+\usepackage{caption} 
+\usepackage{todonotes}
+
+
+
+
+\frenchspacing  
+\setlength{\pdfpagewidth}{8.5in}  
+\setlength{\pdfpageheight}{11in}  
+
+
+\usepackage{algorithm}
+\usepackage{xcolor}
+
+\usepackage{algpseudocode}
+\usepackage{amsmath,amsthm,amssymb}
+
+
+\usepackage{newfloat}
+\usepackage{listings}
+\DeclareCaptionStyle{ruled}{labelfont=normalfont,labelsep=colon,strut=off} 
+\lstset{
+	basicstyle={\footnotesize\ttfamily},
+	numbers=left,numberstyle=\footnotesize,xleftmargin=2em,
+	aboveskip=0pt,belowskip=0pt,
+	showstringspaces=false,tabsize=2,breaklines=true}
+\floatstyle{ruled}
+\newfloat{listing}{tb}{lst}{}
+\floatname{listing}{Listing}
+
+
+
+\pdfinfo{
+	/TemplateVersion (2024.1)
+}
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\setcounter{secnumdepth}{2} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{fact}{Fact}
+
+\newenvironment{proofof}[1]{\begin{proof}[{\bf Proof of #1}]}{\end{proof}}
+
+\input{macro}
+
+\newcommand{\fullversion}[1]{}
+
+\newcommand{\shortversion}[1]{#1}
+
+
+
+\title{Auditable Algorithms for Approximate Model Counting
+\thanks{
+	The authors decided to forgo the old convention of alphabetical ordering of authors in favor of a
+	randomized ordering, denoted by \textcircled{r}. The publicly verifiable record of the randomization is available at
+	\protect\url{https://www.aeaweb.org/journals/policies/random-author-order/search}
+}
+\thanks{The full version of the paper is available at \protect\url{https://arxiv.org/abs/2312.12362}}
+}
+
+\author{
+     
+Kuldeep S. Meel \textsuperscript{\rm 1} \textcircled{r}
+Supratik Chakraborty \textsuperscript{\rm 2} \textcircled{r}
+S. Akshay\textsuperscript{\rm 2} 
+}
+\affiliations{
+    \textsuperscript{\rm 1} University of Toronto, Canada\\
+     \textsuperscript{\rm 2} Indian Institute of Technology Bombay, Mumbai, India 
+
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Model counting, or counting the satisfying assignments of a Boolean
+formula, is a fundamental problem with diverse applications.  Given
+$\#P$-hardness of the problem, developing algorithms for approximate
+counting is an important research area. Building on the practical
+success of SAT-solvers, the focus has recently shifted from theory to
+practical implementations of approximate counting algorithms. This has
+brought to focus new challenges, such as the design of auditable
+approximate counters that not only provide an approximation of the
+model count, but also a certificate that a verifier with limited
+computational power can use to check if the count is indeed within the
+promised bounds of approximation.
+
+Towards generating certificates, we start by examining the best-known
+deterministic approximate counting algorithm~\cite{stockmeyer} that
+uses polynomially many calls to a $\Sigma_2^P$ oracle. We show that
+this can be audited via a $\Sigma_2^P$ oracle with the query constructed over 
+$n^2 \log^2 n$ variables, where the original formula has $n$
+variables.  Since $n$ is often large, we ask if the count of variables
+in the certificate can be reduced -- a crucial question for potential
+implementation. We show that this is indeed possible with a tradeoff
+in the counting algorithm's complexity. Specifically, we develop new
+deterministic approximate counting algorithms that invoke a
+$\Sigma_3^P$ oracle, but can be certified using a $\Sigma_2^P$ oracle
+using certificates on far fewer variables: our final algorithm uses only $n \log n$ variables.
+Our study demonstrates that one can simplify auditing significantly if
+we allow the counting algorithm to access a slightly more powerful
+oracle. This shows for the first time how audit complexity can be
+traded for complexity of approximate counting.
+\end{abstract}
+\section{Introduction}
+\label{sec:intro}
+\input{intro}
+
+\section{Preliminaries}
+\label{sec:prelim}
+\input{prelim}
+
+
+
+\input{problem}
+  
+\section{Stockmeyer's Algorithm and its Audit}
+\label{sec:stock}
+\input{stock}
+
+\section{Trading Algorithm vs Audit Complexity}
+\label{sec:bgp}
+\input{bgp}
+
+
+\section{Improving the Audit Complexity}
+\label{sec:combined}
+\input{combined}
+\input{finalaudit}
+
+
+\section{Discussion and Perspectives}
+\label{sec:conclusion}
+\input{conclusion}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\bibliographystyle{aaai24}
+\bibliography{ref}
+
+
+
+
+
+\end{document}

@@ -1,0 +1,260 @@
+
+
+Observe that the dominant factor of $n^2\log n$ in the audit complexity of Stockmeyer's algorithm was the need to certify ``False'' returned by 2QBFCheck. Therefore, a plausible approach to improving the audit complexity would be to develop an algorithm whose audit does not have to rely on certifying any of the ``False'' values returned by the underlying QBF checker.  To this end, we construct a new formula $\varphi$ whose validity would imply both an lower and upper bound (without requires a separate check for False as in the previous case). At a high-level, our approach is to partition the solution space into cells and then assert that every cell has neither too many solutions nor too few solutions. 
+
+
+\subsubsection*{Not Too Many Solutions}
+
+For a given input Boolean formula $F$ over $n$ variables, consider the formula:
+\begin{align*}
+
+  &\exists h \in \mathcal{H}(n,m,n) \, \forall \vecbold{\alpha} \in \{0,1\}^m, \, \vecbold{y_1}, \vecbold{y_2}, \ldots \vecbold{y_{u+1}}\in \{0,1\}^n\\
+&\mathsf{ConstructNotMany}(F,h, m, \vecbold{\alpha}, \vecbold{y_1},\vecbold{y_2}, \ldots \vecbold{y_{u+1}})\\
+
+
+&\text{\it where, }
+\mathsf{ConstructNotMany}(F,h, m, \vecbold{\alpha}, \vecbold{y_1},\vecbold{y_2}, \ldots \vecbold{y_{u+1}}):=\\
+&  \left(\bigwedge_{i=1}^{u+1} (F(\vecbold{y_i}) \wedge h(\vecbold{y_i}) = \vecbold{\alpha}) \rightarrow  \bigvee_{i=1}^{u} (\vecbold{y_{u+1}} = \vecbold{y_i}) \right)\nonumber
+\end{align*}
+
+The above formula encodes that there is a $n$-wise indepedent hash function such that for each $m$-sized cell $\vecbold{\alpha}$, and every set of $u+1$ solutions (each solution being an assignment to $n$ variables), if all of them are mapped to the same cell, then two of them must be identical. So there are at most $u$ solutions in each cell. 
+
+
+\subsubsection*{At Least Few Solutions}
+Next, let us consider the formula
+\begin{align*}
+
+&\exists h \in \mathcal{H}(n,m,n) \, \forall \vecbold{\alpha} \in \{0,1\}^{m} \, \exists \vecbold{z_1}, \vecbold{z_2}, \ldots \vecbold{z_{\ell}}\in\{0,1\}^n\\
+&\mathsf{ConstructAtLeastFew}(F, h, m, \vecbold{\alpha},\vecbold{z_1},\vecbold{z_2}, \ldots \vecbold{z_{\ell}})\\
+
+&\text{\it where, }
+
+  \mathsf{ConstructAtLeastFew}(F, h, m, \vecbold{\alpha},\vecbold{z_1},\vecbold{z_2}, \ldots \vecbold{z_{\ell}}):=\\
+&  \left(\bigwedge_{i=1}^{\ell} (F(\vecbold{z_i}) \wedge h(\vecbold{z_i}) = \vecbold{\alpha} \wedge \bigwedge_{i=1,j=i+1}^{\ell} ({z_i} \neq \vecbold{z_j})
+  \right) 
+  	\nonumber
+\end{align*}
+
+
+
+
+
+This formula says that there is a hash function such that for each cell $\vecbold{\alpha}$, there are $\ell$ solutions which all map to the cell $\vecbold{\alpha}$. Hence, if they are all distinct, in each cell the number of solutions is at least $\ell$. Thus the number of solutions is bounded below by $\ell$ times number of cells.
+
+Combining these, for any Boolean formula $F$, parameters $\ell, u$, we obtain a single formula asserting existence of a hash function such that each cell has a number of solutions that is simultaneously bounded from above by $u$ and below by $\ell$.
+\begin{align*}
+ & \varphi^{\langle F, \ell, u \rangle}_{Cells}(m):=\exists h \forall \vecbold{\alpha}, \vecbold{y_1}, \vecbold{y_2}, \ldots \vecbold{y_{u+1}} \exists \vecbold{z_1}, \vecbold{z_2}, \ldots \vecbold{z_{\ell}} \\ 
+  &\big( \mathsf{ConstructNotMany}(F,h, m, \vecbold{\alpha}, \vecbold{y_1}, \vecbold{y_2}, \ldots \vecbold{y_{u+1}})\nonumber  \\
+  & \wedge \mathsf{ConstructAtLeastFew}(F, h, m, \vecbold{\alpha}, \vecbold{z_1}, \vecbold{z_2}, \ldots \vecbold{z_{\ell}})\big)
+
+\end{align*}
+Note that 
+the formula has a $\exists\forall\exists$ alternation, i.e., it is a $\Sigma_3^P$ formula. Then,
+\begin{proposition}
+\label{prop:bgp}
+
+If $\varphi^{\langle F,\ell,u\rangle}_{Cells}(m)=1$, then $\ell\cdot 2^m \leq \sol{F}\leq u\cdot 2^m$.
+\end{proposition}
+\fullversion{
+\begin{proof}
+The proof follows from the definition of $\varphi^{\langle
+F,\ell,u\rangle}_{Cells}(m)$. Specifically,
+\begin{align*}
+\exists h \in \mathcal{H}(n,m,n) \, \forall \vecbold{\alpha} \in \{0,1\}^m, \, \vecbold{y_1}, \vecbold{y_2}, \ldots \vecbold{y_{u+1}}\in \{0,1\}^n\\
+\mathsf{ConstructNotMany}(F,h, m, \vecbold{\alpha}, \vecbold{y_1},\vecbold{y_2}, \ldots \vecbold{y_{u+1}})
+\end{align*}
+is true implies that $\sol{F} \le u.2^m$. Similarly, 
+\begin{align*}
+\exists h \in \mathcal{H}(n,m,n) \, \forall \vecbold{\alpha} \in \{0,1\}^{m} \, \exists \vecbold{z_1}, \vecbold{z_2}, \ldots \vecbold{z_{\ell}}\in\{0,1\}^n\\
+\mathsf{ConstructAtLeastFew}(F, h, m, \vecbold{\alpha},\vecbold{z_1},\vecbold{z_2}, \ldots \vecbold{z_{\ell}})
+\end{align*}
+is true implies $\sol{F} \ge l.2^m$.
+\end{proof}
+}
+Assuming that it is possible to show that such a hash function $h$ with polynomial time evaluation and polynomial size description indeed exists (we will do so below), we now design an algorithm for approximate model counting. The algorithm simply goes over every value of $m$ from 1 to $n$ and checks whether  $ \varphi^{\langle F, \ell, u\rangle}_{Cells}(m)$ is True. We present the pseudocode of the algorithm in Algorithm~\ref{algo:smallcells}. 
+
+\begin{algorithm}[h]
+	\caption{$\mathsf{EqualCellsCounter}(F)$}
+	\label{algo:smallcells}
+	\begin{algorithmic}[1]
+		\State $u \gets 16384n$;
+		\State $\ell \gets 1024n$;
+                \State $\hashcells\gets 0;\Cest\gets 0$;
+		\For{$m=1$ to $n$}
+
+
+
+               	\State $\mathsf{(ret,assign)} \gets \threeqbfcheck(\varphi^{\langle F,\ell,u\rangle}_{Cells}(m))$; 
+               	
+		\If{$\mathsf{ret}$==1}\label{line:eqcells-check}
+
+                \State $\hashcells=\mathsf{assign}$;
+		\EndIf
+                \State \textbf{break}
+		\EndFor
+                \State $\Cest=\ell\cdot 2^m$;\\
+                \Return $(\Cest,\hashcells)$ 
+	\end{algorithmic}
+\end{algorithm}
+
+
+\begin{theorem}
+\label{thm:intermediate}
+Algorithm~\ref{algo:smallcells} solves DAC and makes $O(n)$ calls to a $\Sigma_3^P$ oracle. 
+
+\end{theorem}
+\shortversion{\begin{proof}
+First observe that by definition of $\varphi^{\langle F,\ell, u\rangle}_{Cells}(m)$, and Proposition~\ref{prop:bgp}, when the check in line~\ref{line:eqcells-check} in Algorithm~\ref{algo:smallcells} passes, we must have
+
+$\ell \cdot 2^m \leq \sol{F} \leq u \cdot 2^m$. 
+
+Since $\frac{u}{\ell} = 16$, we obtain a 16-factor approximation, i.e.,
+
+$\frac{\sol{F}}{16}\leq \Cest \leq \sol{F}$.
+
+Further, observe that we make at most $n$ calls to  ${\Sigma_3^P}$ oracle.
+
+It remains to show that there indeed exists $h$ such that with the choice of $\ell$ and $u$ as above, for some $m \in [n]$, the check in line~\ref{line:eqcells-check} will pass. To this end, we will utilize the probabilistic method. 
+
+
+Let us fix a cell $\vecbold{\alpha}$. Let $m= \lfloor \log \sol{F} - 12 - \log n \rfloor$. For $\vecbold{y} \in \{0,1\}^n$, define the indicator variable $\gamma_{\vecbold{y},\vecbold{\alpha}}$ such that 
+
+$\gamma_{\vecbold{y},\vecbold{\alpha}} = \begin{cases}
+	1 & h(\vecbold{y}) = \vecbold{\alpha} \\
+	0 & \text{otherwise}
+\end{cases}$. 
+
+Therefore, $\mu_{m} = \sum\limits_{\vecbold{y}	\in \satisfying{F}} \expect[\gamma_{\vecbold{y},\vecbold{\alpha}}] = \frac{|\satisfying{F}|}{2^m}$. Substituting value of $m$, we have $\mu_{m} \in [4096n,8192n] $. Now consider $h\xleftarrow{R}\mathcal{H}(n,m,n)$ i.e., chosen randomly from a $n$-wise independent hash family. Then $\{\gamma_{\vecbold{y},\vecbold{\alpha}}\}$ are $n$-wise independent,
+\begin{align*}
+	&\Pr[\Cnt{F}{h,\vecbold{\alpha}} < 1024n \text{ or } \Cnt{F}{h,\vecbold{\alpha}} > 16384n]\\ 
+	&\leq 	\Pr\left[ \left|\Cnt{F}{h,\vecbold{\alpha}} - \mu_{m} \right| \geq \frac{1}{2} \mu_{m} \right] 
+	\leq 8 \cdot \left( \frac{4(n\mu_{m} + n^2)}{\mu_{m}^2} \right)^{n/2}\\
+	&\leq 8 \cdot \left(\frac{4*4097}{4096*4096}\right)^{n/2} \leq 8 \times 31^{-n} 
+\end{align*}
+Thus, $\Pr[\exists \vecbold{\alpha}, \Cnt{F}{h,\vecbold{\alpha}} < 1024n \text{ or }  \Cnt{F}{h,\vecbold{\alpha}} >  16384n] \leq 8 \cdot \left(\frac{2}{31}\right)^{n}<1$, for $n\geq 1$, which implies $\Pr[\forall \vecbold{\alpha}, \Cnt{F}{h,\vecbold{\alpha}} > 1024n \text{ and }  \Cnt{F}{h,\vecbold{\alpha}} \leq  16384n] >0$. 
+Since the probability space is defined over a random choice of $h$, there must exist an $h$ such that we have $\exists h \forall \vecbold{\alpha}, \Cnt{F}{h,\vecbold{\alpha}} > 1024n \text{ and }  \Cnt{F}{h,\vecbold{\alpha}} \leq  16384n$. Furthermore, observe that $\ell = 1024n$ and $u = 16384n$, we have that $\varphi^{\langle F, \ell, u \rangle}_{Cells}(m)$ is True. 
+
+
+
+\end{proof}
+}
+\fullversion{
+\begin{proof}
+First observe that by definition of $\varphi^{\langle F,\ell, u\rangle}_{Cells}(m)$, and Proposition~\ref{prop:bgp}, when the check in line~\ref{line:eqcells-check} in Algorithm~\ref{algo:smallcells} passes, we must have
+
+$\ell \cdot 2^m \leq \sol{F} \leq u \cdot 2^m$. 
+
+Since $\frac{u}{\ell} = 16$, we obtain a 16-factor approximation, i.e.,
+
+$\frac{\sol{F}}{16}\leq \Cest \leq \sol{F}$.
+
+Further, observe that we make at most $n$ calls to  ${\Sigma_3^P}$ oracle.
+
+It remains to show that there indeed exists $h$ such that with the
+choice of $\ell$ and $u$ as above, for some $m \in [n]$, the check in
+line~\ref{line:eqcells-check} will pass. To this end, we will utilize
+the probabilistic method and show that for some $m \in \{1, \ldots
+n\}$, the probability that there exists a hash function
+$h \in \mathcal{H}(n,m,n)$ that satisfies $\varphi^{\langle F,\ell,
+u\rangle}_{Cells}(m)$ is $> 1$.  .
+
+Let us fix a cell $\vecbold{\alpha}$. Let $m= \lfloor \log \sol{F} -
+12 - \log n \rfloor$. For $\vecbold{y} \in \{0,1\}^n$.  Now, define
+the indicator variable $\gamma_{\vecbold{y},\vecbold{\alpha}}$ such
+that
+
+$\gamma_{\vecbold{y},\vecbold{\alpha}} = \begin{cases}
+	1 & h(\vecbold{y}) = \vecbold{\alpha} \\
+	0 & \text{otherwise}
+\end{cases}$. 
+
+Therefore, $\mu_{m}
+= \sum\limits_{\vecbold{y} \in \satisfying{F}} \expect[\gamma_{\vecbold{y},\vecbold{\alpha}}]
+= \frac{|\satisfying{F}|}{2^m}$. Recalling that
+$m= \lfloor \log \sol{F} - 12 - \log n \rfloor$, we have $\mu_{m} \in
+[4096n,8192n] $. Now consider $h\xleftarrow{R}\mathcal{H}(n,m,n)$
+i.e., chosen randomly from a $n$-wise independent hash family. Then
+$\{\gamma_{\vecbold{y},\vecbold{\alpha}}\}$ are $n$-wise independent.
+Assuming $n \ge 4$, we have
+\begin{align*}
+	&\Pr[\Cnt{F}{h,\vecbold{\alpha}} < 1024n \text{ or } \Cnt{F}{h,\vecbold{\alpha}} > 16384n]\\ 
+	&\leq 	\Pr\left[ \left|\Cnt{F}{h,\vecbold{\alpha}} - \mu_{m} \right| \geq \frac{1}{2} \mu_{m} \right] 
+	\leq 8 \cdot \left( \frac{4(n\mu_{m} + n^2)}{\mu_{m}^2} \right)^{n/2}\\
+	&\leq 8 \cdot \left(\frac{4*4097}{4096*4096}\right)^{n/2} \leq 8 \times 31^{-n} 
+\end{align*}
+
+In the above derivation, we note that we have made use of Proposition 2.2 stated
+at the end of Section~\ref{sec:prelim}.
+
+Thus, $\Pr[\exists \vecbold{\alpha}, \Cnt{F}{h,\vecbold{\alpha}} < 1024n \text{ or }  \Cnt{F}{h,\vecbold{\alpha}} >  16384n] \leq 8 \cdot \left(\frac{2}{31}\right)^{n}<1$, for $n\geq 1$, which implies $\Pr[\forall \vecbold{\alpha}, \Cnt{F}{h,\vecbold{\alpha}} > 1024n \text{ and }  \Cnt{F}{h,\vecbold{\alpha}} \leq  16384n] >0$. 
+Since the probability space is defined over random choice of $h$ and  therefore, there must exist an $h$ such that we  have $\exists h \forall \vecbold{\alpha}, \Cnt{F}{h,\vecbold{\alpha}} > 1024n \text{ and }  \Cnt{F}{h,\vecbold{\alpha}} \leq  16384n$. Furthermore, observe $\ell = 1024n$ and $u = 16384n$, we have that $\varphi^{\langle F, \ell, u \rangle}_{Cells}(m)$ is True. 
+
+\end{proof}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Auditing $\mathsf{EqualCellsCounter}(F)$}
+
+Unlike for Stockmeyer's algorithm, for Algorithm~\ref{algo:smallcells}, a single call to a $\Sigma_2^P$ oracle is sufficient for verification and this call is intrinsically different from the earlier algorithm.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{algorithm}
+	\caption{EqualCellsAudit$(F,\mathsf{EqualCellsCounter}(F))$}
+	\begin{algorithmic}[1]
+          \State $\mathsf{ck}\gets 0$; 
+          $m=\lfloor{\log (\frac{\Cest}{n})\rfloor}-10$; $\ell \gets 1024n$; $u\gets 16384n$;
+                 \State  $\mathsf{ck}\gets \twoqbfcheck (\varphi_{Cells}^{\langle F, \ell, u\rangle}(m)[h \gets \hashcells])$; \label{line:smallcellscheck}
+
+		\If{$\mathsf{ck}==1$}\label{line:equalcheck1}                            
+                \State \Return $\mathsf{Verified}$;
+\EndIf
+\end{algorithmic}
+        \label{algo:small-cells-audit}
+\end{algorithm}
+
+That is, we substitute in the formula $\varphi^{\langle F,\ell,u\rangle}_{Cells}$ the value returned by Algorithm~\ref{algo:smallcells} and the hash functions $\hashcells$ passed as witness and check if the resulting oracle call gives True. Now, examining the audit complexity, we can see that the number of variables on which the query in Algorithm~\ref{algo:small-cells-audit} is bounded by $n(2n+2)$: $n$ variables for $\vecbold{\alpha}$ (since $m\leq n$), $n^2+n$ for $u+1$ many $\vecbold{y_i}$'s and another $n^2$ for $\ell$ many $\vecbold{z_i}$'s, since $u$ and $\ell$ can at most be $n$. Thus, we get
+\begin{corollary}
+	The audit complexity of Algorithm~\ref{algo:smallcells} is $O(n^2)$.
+
+\end{corollary}
+\fullversion{
+\begin{proof}
+ The audit formula to be checked for validity is  $\varphi^{\langle F, \ell, u \rangle}_{Cells}(m)$ after $m$ is substituted by $\lfloor{\log (\frac{\Cest}{n})\rfloor}-10$ and after $h$ is substituted by $\hashcells$.  Thus, we need $m$ Boolean variables
+ for $\boldsymbol{\alpha}$ and $(\ell + u + 1)\cdot n$ Boolean variables for
+ $\boldsymbol{y_1} \ldots \boldsymbol{y_{u+1}}$, $\boldsymbol{z_1}, \ldots \boldsymbol{z_\ell}$.  Since $u$ and $\ell$ are in $\bigO\big(n\big)$, and since $m \le n$, we get
+ the audit complexity as $\bigO(n^2)$.
+\end{proof}
+}
+
+
+
+

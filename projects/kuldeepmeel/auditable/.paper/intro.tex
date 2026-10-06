@@ -1,0 +1,191 @@
+Trust in computation done by third-party software is increasingly
+becoming a concern in today's world.  As an example, consider a
+software implementing an algorithm for which we already have a
+rigorous proof of correctness.  Even when the software is implemented
+by trusted and expert programmers, one cannot be sure that the
+implementation will never produce an erroneous result.  
+
+
+Insidious bugs may go undetected for several reasons: for
+example, the implementation may be too complex to have been tested
+comprehensively, or it may use code from untrusted libraries that have
+bugs, or the programmer may have inadvertently introduced a bug.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+In such a scenario, we wish to ask: \emph{How can we provide assurance
+that an untrusted implementation of an algorithm has produced a
+correct result for a given problem instance?}
+
+One way to answer the above question is to formally model the semantics of
+every instruction in the implementation in a theorem proving system
+
+and then prove that the composition of these instructions always
+produces the correct result.
+
+
+This is a challenging and skill-intensive exercise for anything but
+the simplest of software, but once completed, it gives very
+high assurance about the correctness of results produced by the
+implementation \emph{for all instances of the problem being solved.}
+A relatively less daunting alternative is to have the algorithm (and
+its implementation) output for each problem instance, not only the
+result but also a \emph{certificate} of correctness of the result.
+The certificate must be independently checkable by an auditor, and a
+successful audit must yield a proof of correctness of the computed
+result \emph{for the given problem instance}.  We call such
+algorithms \emph{auditable algorithms}. Note that a successful audit
+for one problem instance does not prove bug-freeness of the
+implementation; it only shows that the result computed for this
+specific problem instance is correct.  A key requirement for effective
+use of auditable algorithms is access to an independent trusted
+certificate auditor. Fortunately, a certificate auditor is usually
+much simpler to design, and its implementation far easier to prove
+correct than the implementation of the original algorithm.  Therefore,
+auditable algorithms provide a pragmatic solution to the problem of
+assuring correctness for untrusted implementations of algorithms.  Not
+surprisingly, auditable algorithms have been studied earlier in the
+context of different
+problems~\cite{mehlhorn-auditable,Heule13,Wetzler14,Gocht22,Ekici17,Barthe06,Necula98,Magron15,Cheung16}.
+
+
+
+
+
+In this paper, we present the first detailed study of auditable
+algorithms for model counting with provable approximation guarantees--
+an important problem with diverse applications.  Our study reveals a
+nuanced landscape where the complexity of an auditable algorithm can
+be ``traded off'' for suitable measures of complexity of certificate
+auditing.  This opens up the possibility of treating certificate audit
+complexity as a first-class concern in designing auditable
+algorithms.
+
+Before we delve into further details, a brief background on model
+counting is useful.  Formally, given a system of constraints
+$\varphi$, model counting requires us to count the solutions (or
+models) of $\varphi$.  This problem is known to be computationally
+hard~\cite{Valiant79}, and consequently, 
+
+significant effort has therefore been invested over the
+years in designing approximate model counters.
+
+Over the last
+decade, riding on spectacular advances in propositional satisfiability
+(SAT) solving techniques (see~\cite{sat-technique} for details),
+approximate model counting technology has matured to the point where
+we can count solutions of propositional constraints with several
+thousands of variables within a couple of hours on a standard laptop,
+while providing strong approximation guarantees~\cite{approxmc}.  This
+has led to a surge in the number of tools from different application
+domains that have started using approximate model counters as
+black-box
+engines~\cite{klebanov2014,teuber2021quantifying,beck2020automating,zinkus2023mcfil}
+to solve various problems.  With increasing such usage comes
+increasing demands of assurance on the correctness of counts computed
+by approximate counters.  Auditable approximate counting offers a
+promising approach to solve this problem.
+
+Approximate model counting algorithms come in two different flavours,
+viz. deterministic and randomized.  While randomized counting
+algorithms with probably approximately correct (PAC)
+guarantees~\cite{Valiant84,Valiant84CACM} have been found to scale
+better in practice, { it is not possible to provide a meaningful
+certificate of correctness for the result computed by a single run of
+a randomized algorithm (see~\cite{mehlhorn-auditable} for a nice
+exposition on this topic)}.  Therefore, we focus on deterministic
+algorithms for approximate model counting.  Specifically, we ask: (a)
+what would serve as a meaningful certificate for the best-known
+deterministic approximate counting algorithm~\cite{stockmeyer}?
+(b) what is the fine-grained complexity of auditing such a
+certificate?  (c) can we re-design the approximate counting algorithm
+so as to make certificate auditing more efficient?  and (d) is there a
+tradeoff in the complexity of an auditable deterministic approximate
+counting algorithm and the fine-grained complexity of certificate
+auditing?  Our study shows that there is a nuanced interplay between
+the complexity of auditable approximate counting algorithms and that
+of auditing the certificates generated by such algorithms. Therefore,
+if efficiency of certificate auditing is treated as a first-class
+concern, we must re-think the design of auditable
+algorithms for approximate counting.  Indeed, we present two new
+auditable approximate counting algorithms that
+significantly improve the efficiency of certificate auditing at the
+cost of making the counting algorithms themselves a bit less
+efficient.
+
+
+
+
+
+The primary contributions of the paper can be summarized as listed
+below.  In the following, we wish to count models of a propositional
+formula on $n$ variables, upto a constant approximation factor.  
+
+
+
+
+\begin{enumerate}
+\item We first show that the best-known deterministic approximate
+counting algorithm (from~\cite{stockmeyer}) can be converted to an
+auditable algorithm that generates a certificate over $\bigO(n^2\log^2
+n)$ variables.  The resulting counting algorithm uses
+$\bigO(n\log n)$ invocations of a $\Sigma_2^P$ oracle, as in
+Stockmeyer's original algorithm.  An auditor, however,
+needs only an invocation of a $\Sigma_2^P$ oracle on formulas
+constructed over $\bigO(n^2\log^2 n)$ variables.
+\item Next, we develop an deterministic approximate counting algorithm for which the certificate uses only $\bigO(n^2)$ variables.  This reduction is achieved by allowing the counting algorithm access to a more powerful $\Sigma_3^P$ (instead of a
+$\Sigma_2^P$) oracle, that is invoked only $\bigO(n)$ times.
+Certificate auditing in this case requires a single invocation of a
+$\Sigma_2^P$ oracle on a formula constructed over $\bigO(n^2)$
+variables.
+\item Finally, we present another deterministic approximate
+counting algorithm that requires a certificate over only $\bigO(n \log
+n)$ variables.  This makes certificate auditing significantly more
+efficient compared to the cases above, when viewed through the lens of
+fine-grained complexity.  This improvement is obtained by allowing the
+counting algorithm to invoke a $\Sigma_3^P$ oracle $\bigO(n \log n)$
+times. Certificate auditing now requires one invocation of a
+$\Sigma_2^P$ oracle on formulas over $\bigO(n \log n)$ variables.
+\end{enumerate}
+Our results show that the fine-grained complexity of certificate
+checking can be ``traded off'' significantly against the power of
+oracles accessible to a determistic approximate counting algorithm.
+This opens up the possibility of designing new counting algorithms
+that are cognizant of certificate checking complexity. Our
+proofs involve reasoning about specially constructed formulas with
+qantifier alternations, with incomplete information about parts of the
+formula.  
+This is quite challenging in general, and one of our technical novelties lies in our application of the probabilistic method in the proofs.
+
+
+
+The remainder of the paper is organized as follows.  We present
+some preliminaries and notation in Section~\ref{sec:prelim}, and
+formalize the notion of an audit for approximate counting
+algorithms.  In Section~\ref{sec:stock}, we discuss how Stockmeyer's algorithm can be turned into an auditable algorithm, and also present the corresponding audit algorithm. Sections~\ref{sec:bgp} and \ref{sec:combined} discuss the
+design of two new auditable algorithms for approximate counting
+with successively small certificate sizes, and the complexity
+of auditing these certificates.  Finally, we conclude with
+a discussion of our findings in Section~\ref{sec:conclusion}. \shortversion{Proof details, omitted due to space constraints, can be found in a full version of the paper available at~\cite{audit-arxiv}.}
+

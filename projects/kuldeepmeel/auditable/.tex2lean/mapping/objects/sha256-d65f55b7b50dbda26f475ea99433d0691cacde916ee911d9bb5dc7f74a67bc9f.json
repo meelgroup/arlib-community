@@ -1,0 +1,588 @@
+{
+  "schema": "tex2lean.paper-proof-map/1",
+  "ledgerId": "ledger:e70af548-07c7-484f-80ba-ee46c37e3126",
+  "paper": {
+    "id": "paper:1293aed5-c7c7-462b-a2d0-ee69cf4348af"
+  },
+  "target": {
+    "id": "target:b8a9c42e-88f6-475e-9a32-173bdfe2cf90",
+    "paperId": "paper:1293aed5-c7c7-462b-a2d0-ee69cf4348af",
+    "activeVersionId": "target-version:2e120744-dc04-42ae-8a96-90f426edd456"
+  },
+  "activeClaimSetReceiptId": "claim-set:8ee38921-815a-4c32-83a2-bcc849eef870",
+  "activeSurfaceInventoryId": "surface-inventory:8ccdd577-66a7-47dd-88cb-0e347066aa78",
+  "targetVersions": [
+    {
+      "id": "target-version:2e120744-dc04-42ae-8a96-90f426edd456",
+      "targetId": "target:b8a9c42e-88f6-475e-9a32-173bdfe2cf90",
+      "paperPacketDigest": "sha256-5643cd3d0eee94d644136127eed4c98ea76031b9907d30d3ffc50b265d57c847",
+      "bodyDigest": "sha256-9b8aa39ada4f95958c1afd311fc0591fe3e9643118cb6ae650ddd953f157bffc",
+      "anchor": {
+        "file": "bgp.tex",
+        "label": "thm:intermediate",
+        "environment": "theorem",
+        "from": 101,
+        "to": 105,
+        "excerptDigest": "sha256-ce9200944a292dfcbc9f3fc6aa14d3893ef126093e9f7def71ad24bc314139f3"
+      },
+      "status": "active"
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim:6c71a258-9d38-4766-b35b-b621ffed9416",
+      "targetId": "target:b8a9c42e-88f6-475e-9a32-173bdfe2cf90",
+      "activeVersionId": "claim-version:0dad6de6-e4af-4090-98c7-146245d734bc",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:066bcd7e-c536-4d4b-bac5-cc6a76ca0137",
+      "targetId": "target:b8a9c42e-88f6-475e-9a32-173bdfe2cf90",
+      "activeVersionId": "claim-version:3255836e-c474-45c0-8ce3-bf34e39e13d2",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:d042132e-2a4a-4229-a240-6647efede2bd",
+      "targetId": "target:b8a9c42e-88f6-475e-9a32-173bdfe2cf90",
+      "activeVersionId": "claim-version:85f47030-10d5-4a70-97cd-14b2dbb8ffb9",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:48a31026-af7d-4b8e-897f-092307388d32",
+      "targetId": "target:b8a9c42e-88f6-475e-9a32-173bdfe2cf90",
+      "activeVersionId": "claim-version:20cc6457-d276-4796-9fee-cee376809bda",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:3af1f6be-0e27-48c2-b41e-56b2591ba32c",
+      "targetId": "target:b8a9c42e-88f6-475e-9a32-173bdfe2cf90",
+      "activeVersionId": "claim-version:9a9e80f6-43b3-41bf-99b5-6f4ced7b2d87",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:d5034014-9933-4257-a809-2d98ef726c71",
+      "targetId": "target:b8a9c42e-88f6-475e-9a32-173bdfe2cf90",
+      "activeVersionId": "claim-version:7fed7885-5ef7-4d78-bfe7-ea39add9f3a3",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:be0e0fb9-c224-4d4a-9b01-9892cb0f12c0",
+      "targetId": "target:b8a9c42e-88f6-475e-9a32-173bdfe2cf90",
+      "activeVersionId": "claim-version:9ab63121-08a0-49ab-9bf1-2bc64b0559ba",
+      "role": "reportable"
+    }
+  ],
+  "claimVersions": [
+    {
+      "id": "claim-version:0dad6de6-e4af-4090-98c7-146245d734bc",
+      "claimId": "claim:6c71a258-9d38-4766-b35b-b621ffed9416",
+      "targetVersionId": "target-version:2e120744-dc04-42ae-8a96-90f426edd456",
+      "anchor": {
+        "file": "bgp.tex",
+        "excerptDigest": "sha256-504a82f7e3fb48b29014c4fab206b0785ca7ec2d6ace54f50f88344a82e3b4b2"
+      },
+      "text": "EqualCellsCounter makes at most n (= O(n)) calls to a Sigma_3^P oracle and calls no other oracle",
+      "normalizedTextDigest": "sha256-ddb96bebc98c3f50eb68bf7e4e9e863715cf42485e14b67d3c3d4a1a420c557b",
+      "kind": "resource",
+      "evidence": [
+        {
+          "file": "bgp.tex",
+          "excerptDigest": "sha256-504a82f7e3fb48b29014c4fab206b0785ca7ec2d6ace54f50f88344a82e3b4b2"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:3255836e-c474-45c0-8ce3-bf34e39e13d2",
+      "claimId": "claim:066bcd7e-c536-4d4b-bac5-cc6a76ca0137",
+      "targetVersionId": "target-version:2e120744-dc04-42ae-8a96-90f426edd456",
+      "anchor": {
+        "file": "bgp.tex",
+        "excerptDigest": "sha256-52877fa6904fc5a83ba8d577a1c7352f195602dcf96cc66209da31ac6106774a"
+      },
+      "text": "If the check at line:eqcells-check passes at m, then l 2^m <= |sol F| <= u 2^m (Proposition prop:bgp)",
+      "normalizedTextDigest": "sha256-9250633a114a91fe7642d3bdc02b7e137dd667b9cab443f19c8c80a2014b4b98",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "bgp.tex",
+          "excerptDigest": "sha256-52877fa6904fc5a83ba8d577a1c7352f195602dcf96cc66209da31ac6106774a"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:85f47030-10d5-4a70-97cd-14b2dbb8ffb9",
+      "claimId": "claim:d042132e-2a4a-4229-a240-6647efede2bd",
+      "targetVersionId": "target-version:2e120744-dc04-42ae-8a96-90f426edd456",
+      "anchor": {
+        "file": "bgp.tex",
+        "from": 111,
+        "to": 113,
+        "excerptDigest": "sha256-c901f8d5e8ad65563d15cb1b36f4f8404b218b51072f374ac2e87604d8cf6fe4"
+      },
+      "text": "u/l = 16 gives |sol F|/16 <= CntEst <= |sol F|",
+      "normalizedTextDigest": "sha256-2c2f71bf1137bedaeed712b7bbdd0a033a15674bc557d509b0048eb1fb38dfdf",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "bgp.tex",
+          "from": 111,
+          "to": 113,
+          "excerptDigest": "sha256-c901f8d5e8ad65563d15cb1b36f4f8404b218b51072f374ac2e87604d8cf6fe4"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:20cc6457-d276-4796-9fee-cee376809bda",
+      "claimId": "claim:48a31026-af7d-4b8e-897f-092307388d32",
+      "targetVersionId": "target-version:2e120744-dc04-42ae-8a96-90f426edd456",
+      "anchor": {
+        "file": "bgp.tex",
+        "from": 117,
+        "to": 135,
+        "excerptDigest": "sha256-dd9634d182f998f7828e4c411089b11969131156bfc205ce2d2cfa2370ff15a2"
+      },
+      "text": "Some m in [1,n] passes: at m0 = floor(log2|sol F| - 12 - log2 n), mu = |sol F|/2^m0 is in [4096n, 8192n], and with h <-R H(n,m0,n), Pr[some cell outside [l,u]] <= 8(2/31)^n < 1",
+      "normalizedTextDigest": "sha256-ede92c7b70ddfa8a7b61fc85be0905c9a3094043ee49ff9307a1f3063e43346b",
+      "kind": "probability",
+      "evidence": [
+        {
+          "file": "bgp.tex",
+          "from": 117,
+          "to": 135,
+          "excerptDigest": "sha256-dd9634d182f998f7828e4c411089b11969131156bfc205ce2d2cfa2370ff15a2"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:9a9e80f6-43b3-41bf-99b5-6f4ced7b2d87",
+      "claimId": "claim:3af1f6be-0e27-48c2-b41e-56b2591ba32c",
+      "targetVersionId": "target-version:2e120744-dc04-42ae-8a96-90f426edd456",
+      "anchor": {
+        "file": "bgp.tex",
+        "from": 103,
+        "excerptDigest": "sha256-a929917babf4dbaa7a1ba153441887b5feb86b4d2cb9e295c3a64c384b049e6d"
+      },
+      "text": "Hence EqualCellsCounter solves DAC (16-factor)",
+      "normalizedTextDigest": "sha256-17fc844bd3b9b546c2a0d94bb237615dcb34b4ebad5a17517bc2714f148c408e",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "bgp.tex",
+          "from": 103,
+          "excerptDigest": "sha256-a929917babf4dbaa7a1ba153441887b5feb86b4d2cb9e295c3a64c384b049e6d"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:7fed7885-5ef7-4d78-bfe7-ea39add9f3a3",
+      "claimId": "claim:d5034014-9933-4257-a809-2d98ef726c71",
+      "targetVersionId": "target-version:2e120744-dc04-42ae-8a96-90f426edd456",
+      "anchor": {
+        "file": "bgp.tex",
+        "excerptDigest": "sha256-5330c24883b081ab0e8246a1080e9ea71b3c9b8970f76059b73c4a629ff8f5cf"
+      },
+      "text": "'Solves DAC' holds for every F: false; needs |sol F| >= 8192 n (proof) and in any case >= 2048 n",
+      "normalizedTextDigest": "sha256-92837ca8ad670868cf277bbd73e3d427fb6ea641b920eda3f6bc97754933ef48",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "bgp.tex",
+          "excerptDigest": "sha256-5330c24883b081ab0e8246a1080e9ea71b3c9b8970f76059b73c4a629ff8f5cf"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:9ab63121-08a0-49ab-9bf1-2bc64b0559ba",
+      "claimId": "claim:be0e0fb9-c224-4d4a-9b01-9892cb0f12c0",
+      "targetVersionId": "target-version:2e120744-dc04-42ae-8a96-90f426edd456",
+      "anchor": {
+        "file": "bgp.tex",
+        "from": 51,
+        "to": 52,
+        "excerptDigest": "sha256-835a0a83eee8332cc13bd3072ffe685abd37582e6efb17a95e8861f70962c30a"
+      },
+      "text": "phi_Cells is a Sigma_3 (exists-forall-exists) formula",
+      "normalizedTextDigest": "sha256-1ceabc87e251aeb433fbc88d7f6049aa78fa6de4229396377d7ea5954158ffb5",
+      "kind": "other",
+      "evidence": [
+        {
+          "file": "bgp.tex",
+          "from": 51,
+          "to": 52,
+          "excerptDigest": "sha256-835a0a83eee8332cc13bd3072ffe685abd37582e6efb17a95e8861f70962c30a"
+        }
+      ],
+      "status": "active"
+    }
+  ],
+  "plans": [
+    {
+      "claimVersionId": "claim-version:0dad6de6-e4af-4090-98c7-146245d734bc",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:d9548b70-092b-47c0-abaf-6aefc99e89c0"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-0168b9f7c20dce674e67fae336c04801d1c91ac202d0d6e439228c96682a2fc6"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:3255836e-c474-45c0-8ce3-bf34e39e13d2",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:6d961a9f-e2b7-4061-9d17-5108b7b969b7"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-ff555e681f0ceafa48adeba70d46722ad81fd1df3b3f29b5a7fa1f3db042801d"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:85f47030-10d5-4a70-97cd-14b2dbb8ffb9",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:645e1574-a61d-43e4-a5a4-fc7daee76043"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-49cdabaf436eb61d97fe3e1827f685cbf4dadb53b3ddfac2662ef42b20f2deee"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:20cc6457-d276-4796-9fee-cee376809bda",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:8f40751e-5aef-4663-a04d-4faa8608dfce"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-c21d61d29bde74483ffceacb75a567ae4867a92280e8251e8e6d00fbfbb1fe10"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:9a9e80f6-43b3-41bf-99b5-6f4ced7b2d87",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:44ef628c-e9d5-4276-b221-d7fb8f9de057"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-29dfff0a28bed4a587602763a183e2efabe88597f0740c9cb1d0c753c1ecac96"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:7fed7885-5ef7-4d78-bfe7-ea39add9f3a3",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:9d371f02-c4cb-47a2-8f4d-aa51cafe1139"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-25c08ac9c765a256996e6aef2b2095f24537f1df0b7a469f7f8e60ae5f130943"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Handoff."
+    },
+    {
+      "claimVersionId": "claim-version:9ab63121-08a0-49ab-9bf1-2bc64b0559ba",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:0820a426-d829-44b7-9e8a-61a9eded5888"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-b46a5537698fc11db7dc9c4edadc44fae0b93dff8850f8b473935abad350beeb"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Handoff."
+    }
+  ],
+  "obligations": [
+    {
+      "id": "obligation:d9548b70-092b-47c0-abaf-6aefc99e89c0",
+      "kind": "headline",
+      "summary": "EqualCellsCounter makes at most n (= O(n)) calls to a Sigma_3^P oracle and calls no other oracle",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "materialized"
+    },
+    {
+      "id": "obligation:6d961a9f-e2b7-4061-9d17-5108b7b969b7",
+      "kind": "headline",
+      "summary": "If the check at line:eqcells-check passes at m, then l 2^m <= |sol F| <= u 2^m (Proposition prop:bgp)",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:645e1574-a61d-43e4-a5a4-fc7daee76043",
+      "kind": "headline",
+      "summary": "u/l = 16 gives |sol F|/16 <= CntEst <= |sol F|",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:8f40751e-5aef-4663-a04d-4faa8608dfce",
+      "kind": "headline",
+      "summary": "Some m in [1,n] passes: at m0 = floor(log2|sol F| - 12 - log2 n), mu = |sol F|/2^m0 is in [4096n, 8192n], and with h <-R H(n,m0,n), Pr[some cell outside [l,u]] <= 8(2/31)^n < 1",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:44ef628c-e9d5-4276-b221-d7fb8f9de057",
+      "kind": "headline",
+      "summary": "Hence EqualCellsCounter solves DAC (16-factor)",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:9d371f02-c4cb-47a2-8f4d-aa51cafe1139",
+      "kind": "headline",
+      "summary": "'Solves DAC' holds for every F: false; needs |sol F| >= 8192 n (proof) and in any case >= 2048 n",
+      "rationale": "The finalized blueprint assigns this paper claim to Handoff.",
+      "owner": "Handoff",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:0820a426-d829-44b7-9e8a-61a9eded5888",
+      "kind": "headline",
+      "summary": "phi_Cells is a Sigma_3 (exists-forall-exists) formula",
+      "rationale": "The finalized blueprint assigns this paper claim to Handoff.",
+      "owner": "Handoff",
+      "status": "planned"
+    }
+  ],
+  "bindings": [
+    {
+      "id": "binding:b0bb7c1d-2585-4b66-8bcd-a16eb4824eac",
+      "obligationId": "obligation:d9548b70-092b-47c0-abaf-6aefc99e89c0",
+      "declaration": "Auditable.equalCellsCorrect",
+      "file": "Auditable/Model/Theorem.lean",
+      "module": "Auditable.Model.Theorem",
+      "role": "headline",
+      "status": "proposed"
+    }
+  ],
+  "leanRelations": [],
+  "claimSetReceipts": [
+    {
+      "id": "claim-set:8ee38921-815a-4c32-83a2-bcc849eef870",
+      "targetVersionId": "target-version:2e120744-dc04-42ae-8a96-90f426edd456",
+      "paperPacketDigest": "sha256-5643cd3d0eee94d644136127eed4c98ea76031b9907d30d3ffc50b265d57c847",
+      "claimVersionIds": [
+        "claim-version:0dad6de6-e4af-4090-98c7-146245d734bc",
+        "claim-version:3255836e-c474-45c0-8ce3-bf34e39e13d2",
+        "claim-version:85f47030-10d5-4a70-97cd-14b2dbb8ffb9",
+        "claim-version:20cc6457-d276-4796-9fee-cee376809bda",
+        "claim-version:9a9e80f6-43b3-41bf-99b5-6f4ced7b2d87",
+        "claim-version:7fed7885-5ef7-4d78-bfe7-ea39add9f3a3",
+        "claim-version:9ab63121-08a0-49ab-9bf1-2bc64b0559ba"
+      ],
+      "readerProvenance": "reader-agent"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "sha256-0168b9f7c20dce674e67fae336c04801d1c91ac202d0d6e439228c96682a2fc6",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "bgp.tex",
+          "excerptDigest": "sha256-504a82f7e3fb48b29014c4fab206b0785ca7ec2d6ace54f50f88344a82e3b4b2"
+        }
+      ]
+    },
+    {
+      "id": "sha256-ff555e681f0ceafa48adeba70d46722ad81fd1df3b3f29b5a7fa1f3db042801d",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "bgp.tex",
+          "excerptDigest": "sha256-52877fa6904fc5a83ba8d577a1c7352f195602dcf96cc66209da31ac6106774a"
+        }
+      ]
+    },
+    {
+      "id": "sha256-49cdabaf436eb61d97fe3e1827f685cbf4dadb53b3ddfac2662ef42b20f2deee",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "bgp.tex",
+          "from": 111,
+          "to": 113,
+          "excerptDigest": "sha256-c901f8d5e8ad65563d15cb1b36f4f8404b218b51072f374ac2e87604d8cf6fe4"
+        }
+      ]
+    },
+    {
+      "id": "sha256-c21d61d29bde74483ffceacb75a567ae4867a92280e8251e8e6d00fbfbb1fe10",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "bgp.tex",
+          "from": 117,
+          "to": 135,
+          "excerptDigest": "sha256-dd9634d182f998f7828e4c411089b11969131156bfc205ce2d2cfa2370ff15a2"
+        }
+      ]
+    },
+    {
+      "id": "sha256-29dfff0a28bed4a587602763a183e2efabe88597f0740c9cb1d0c753c1ecac96",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "bgp.tex",
+          "from": 103,
+          "excerptDigest": "sha256-a929917babf4dbaa7a1ba153441887b5feb86b4d2cb9e295c3a64c384b049e6d"
+        }
+      ]
+    },
+    {
+      "id": "sha256-25c08ac9c765a256996e6aef2b2095f24537f1df0b7a469f7f8e60ae5f130943",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "bgp.tex",
+          "excerptDigest": "sha256-5330c24883b081ab0e8246a1080e9ea71b3c9b8970f76059b73c4a629ff8f5cf"
+        }
+      ]
+    },
+    {
+      "id": "sha256-b46a5537698fc11db7dc9c4edadc44fae0b93dff8850f8b473935abad350beeb",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "bgp.tex",
+          "from": 51,
+          "to": 52,
+          "excerptDigest": "sha256-835a0a83eee8332cc13bd3072ffe685abd37582e6efb17a95e8861f70962c30a"
+        }
+      ]
+    }
+  ],
+  "surfaceInventories": [
+    {
+      "id": "surface-inventory:8ccdd577-66a7-47dd-88cb-0e347066aa78",
+      "targetVersionId": "target-version:2e120744-dc04-42ae-8a96-90f426edd456",
+      "source": "sealed-blueprint",
+      "blueprintDigest": "sha256-e4cffe08b190a7de4ef8e65254f1ef1e4aa8de9f0b61f771d79bec2ef18a67f4",
+      "declarations": [
+        {
+          "declaration": "Auditable.finalAudit_sound",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.finalAudit_complete",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.finalAudit_oneQuery",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.finalAudit_querySize",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.finalAudit",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.afCounter_dac",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.afCounter_queries",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.afCounterCorrect",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.equalCells_dac",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.equalCells_queries",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        },
+        {
+          "declaration": "Auditable.equalCellsCorrect",
+          "role": "headline",
+          "file": "Auditable/Model/Theorem.lean",
+          "module": "Auditable.Model.Theorem"
+        }
+      ]
+    }
+  ],
+  "appliedDecisionIds": []
+}

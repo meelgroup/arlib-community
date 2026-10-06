@@ -1,0 +1,166 @@
+\subsection{Audit complexity of Algorithm~\ref{algo:pigeons}}
+
+Now, we focus on certifying Algorithm~\ref{algo:pigeons}. Observe that, $c_{high}$ is the smallest value of $m$ for which $\varphi_{stock}^{F'}(m)$  evaluates to True and $c_{low}$ is the largest value of $m$ for which $\varphi_{holes}^{F'}(m)$ evaluates to True. Thus, a straightforward approach would be to certify that  $c_{high}$ is indeed smallest value of $m$ for which $\varphi_{stock}^{F'}(m)$ but that is precisely what we did in Algorithm~\ref{algo:stock-audit}, which led to the audit complexity of $O(n^2 \log ^2 n)$. How do we overcome the barrier? 
+
+The key surprising observation is that we do not need to certify that  $c_{high}$ is indeed the smallest value: instead we will just certify that  $\varphi_{stock}^{F'}(c_{high})$ evaluates to True and $\varphi_{holes}^{F'}(c_{low})$ evaluates to True, and then we check $c_{high} - c_{low} \leq 7$, and these three facts allow the auditor to certify the estimate returned by Algorithm~\ref{algo:pigeons}. Note that we were able to side step certifying $c_{high}$ being the smallest value because we had access to $c_{low}$, which was not the case when we were trying to certify Algorithm~\ref{algo:stock}.
+
+
+
+
+
+
+
+
+
+
+
+\begin{algorithm}
+	\caption{CountAuditor$(F',\toolname(F))$}
+	  \label{algo:lonely-audit}
+	\begin{algorithmic}[1]
+\State $\mathsf{poscheck}\gets 0$; $\mathsf{negcheck}\gets 0$;
+\State  $\mathsf{poscheck}\gets \conpcheck (\varphi_{stock}^{F'}(\chigh)[h_1\ldots,h_{\chigh} \gets \hashstock])$; \label{line:zconpcheck}
+                \State  $\mathsf{negcheck}\gets \twoqbfcheck(\varphi_{holes}^{F'}(\clow)[h_1\ldots h_{\clow}\gets \mathsf{hashassign}_{holes}])$;\label{line:ztwoqbfcheck}   \label{line:zconncheck}
+		\If{$(\mathsf{poscheck}\land \mathsf{negcheck}==1)\land (\chigh-\clow \leq 7)$}\label{line:zequalcheck}                            
+               \Return $\mathsf{Verified}$;
+\EndIf
+\end{algorithmic}
+      
+\end{algorithm}
+
+
+To show correctness of CountAuditor, we also need the following, which gives a lower bound on no. of solutions:
+
+
+
+
+
+
+	
+	
+
+	
+	
+	
+
+	
+	
+
+	
+
+
+
+\begin{lemma}[Necessary]
+	\label{lem:holes}
+	If 	$\varphi_{holes}^{F'}(m) =1$, then $\sol{F'}\geq \frac{2^{m}}{m+1}$ 
+\end{lemma}
+\begin{proof}
+	Let us construct a many-to-one mapping $g$ from $\{0,1\}^m$ to $\satisfying{F'}$ such that every edge  from $\vecbold{\alpha} \in \{0,1\}^m$ to $\vecbold{z} \in \satisfying{F'}$ is labeled with a non-empty set of hash functions $\{h_i\}$ such that $h_i(\vecbold{z}) = \vecbold{\alpha}$.  
+	
+	Such a mapping must exist when $\varphi_{holes}^{F'}(m) =1$, since for every cell $\vecbold{\alpha}$, we have  $\vecbold{z} \in \satisfying{F'}$ such that $h_i(\vecbold{z})  = \vecbold{\alpha}$ for some $h_i$.  Furthermore, observe that there can be at most $m + 1$ different $\vecbold{\alpha}$ that map to same $\vecbold{z}$ as every hash function maps $\vecbold{z}$ to only one unique $\vecbold{\alpha}$ . Therefore, the range of $g$, which is a subset of $\satisfying{F'}$, must be at least $\frac{2^m}{m  + 1}$.
+	
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+Finally, combining all these, we obtain:
+
+\begin{theorem}
+\label{thm:finalaudit}
+  The audit complexity of Algorithm~\ref{algo:pigeons} is $O(n \log n)$.
+
+\end{theorem}
+\shortversion{
+\begin{proof}
+	We will first show that Algorithm~\ref{algo:lonely-audit} certifies the estimate returned by Algorithm~\ref{algo:pigeons}, and then focus on measuring the audit complexity. From the True answers to $\mathsf{poscheck}$ and $\mathsf{negcheck}$, the auditor can conclude using Lemma~\ref{lem:holes} and Claim~\ref{cl:stockup} that
+\begin{align}
+  \frac{2^{\clow}}{\clow + 1} \leq \sol{F'}\leq \chigh \cdot 2^{\chigh}
+  \label{eq:imp}
+\end{align}
+
+From the rhs of Eq~\ref{eq:imp}, and since $\chigh\leq n \log n \leq n^2$, we  have 
+$  \frac{\sol{F'}}{n^2} \leq \frac{\sol{F'}}{\chigh}\leq  2^{\chigh}$
+
+
+Now, from line~\ref{line:zequalcheck} of the audit, we have $\chigh-\clow\leq 7$. We combine this with lhs of Eq~\ref{eq:imp}, and observe that $\clow\leq n \log n$, and hence $\clow + 1 \leq n^2$ for $n\geq 12$, $n^2>128$, 
+
+\begin{align*}
+  2^{\chigh} \leq n^2 \cdot 2^{\clow} \leq n^2\cdot  (\clow + 1) \cdot  \sol{F'} \leq n^4\cdot \sol{F'}
+
+\end{align*}
+
+Noting that $\sol{F'}=\sol{F}^{\log n}$, we have
+\begin{align*}
+  \big(\frac{\sol{F}}{4}\big)^{\log n} &\leq (2^{\frac{\chigh}{\log n}})^{\log n} \leq (16\cdot \sol{F})^{\log n}\\
+\text{i.e., }\quad  \frac{\sol{F}}{4} &\leq \Cest \leq 16\cdot \sol{F}
+  \end{align*}
+
+which is a 16-factor approximation. As before, the calls in line~\ref{line:zconpcheck} and line~\ref{line:zconncheck} can be combined and answered using a single $\Sigma_2^P$ oracle query. Finally, the number of variables on which this query is made is $O(|\vecbold{\alpha}|+|\vecbold{z}|)$, thus of size $O(n')=O(n\log n)$.
+\end{proof}
+}
+
+\fullversion{
+\begin{proof}
+	We will first show that Algorithm~\ref{algo:lonely-audit} certifies the estimate returned by Algorithm~\ref{algo:pigeons}, and then focus on measuring the audit complexity. We start by noting that $\clow, \chigh$ are at most $m\leq n\log n$. From the True answers to $\mathsf{poscheck}$ and $\mathsf{negcheck}$, the auditor can conclude using Lemma~\ref{lem:holes} and Claim~\ref{cl:stockup} that
+\begin{align}
+  \frac{2^{\clow}}{\clow + 1} \leq \sol{F'}\leq \chigh \cdot 2^{\chigh}
+  \label{eq:imp}
+\end{align}
+
+From the rhs of Eq~\ref{eq:imp}, and since $\chigh\leq n \log n \leq n^2$, we  have 
+$  \frac{\sol{F'}}{n^2} \leq \frac{\sol{F'}}{\chigh}\leq  2^{\chigh}$
+
+
+Now, from line~\ref{line:zequalcheck} of the audit, we have $\chigh-\clow\leq 7$. We combine this with lhs of Eq~\ref{eq:imp}, and observe that $\clow\leq n \log n$, and hence $\clow + 1 \leq n^2$ for $n\geq 12$, $n^2>128$, 
+
+\begin{align*}
+  2^{\chigh} \leq n^2 \cdot 2^{\clow} \leq n^2\cdot  (\clow + 1) \cdot  \sol{F'} \leq n^4\cdot \sol{F'}
+
+\end{align*}
+
+Noting that $\sol{F'}=\sol{F}^{\log n}$, we have
+\begin{align*}
+  \big(\frac{\sol{F}}{4}\big)^{\log n} &\leq (2^{\frac{\chigh}{\log n}})^{\log n} \leq (16\cdot \sol{F})^{\log n}\\
+  \frac{\sol{F}}{4} &\leq \Cest \leq 16\cdot \sol{F}
+  \end{align*}
+
+which is a 16-factor approximation. Notice that to obtain this guarantee, we indeed used not only the witnessing hash functions $\mathsf{hashassign_{stock}}$ and $\mathsf{hashassign_{holes}}$, but also critically, the fact that $\chigh-\clow\leq 7$. As before, the calls in line~\ref{line:zconpcheck} and line~\ref{line:zconncheck} of Algorithm~\ref{algo:lonely-audit} can be combined and answered using a single $\Sigma_2^P$ oracle query.
+
+Finally, the number of variables on which this query is made is bounded by the number of variables in $\varphi^{F'}_{holes}$, where the hash functions are given as a witness. Hence the remaining variables for the query are just $\vecbold{\alpha}$ and $\vecbold{z}$. Thus the audit complexity of the Algorithm is bounded above by $O(|\vecbold{\alpha}|+|\vecbold{z}|)$, thus of size $O(n')=O(n\log n)$.
+\end{proof}
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
