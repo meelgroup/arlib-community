@@ -1,0 +1,85 @@
+{
+  "schema": "tex2lean.lean-evidence/1",
+  "sourceFingerprint": "sha256:386ca42808bfe12fa2eaee2c34abc19a2177965e062e57dc3ecea1bbfdc5fcfa",
+  "buildFingerprint": "sha256:386ca42808bfe12fa2eaee2c34abc19a2177965e062e57dc3ecea1bbfdc5fcfa",
+  "dependencyFingerprint": "sha256:386ca42808bfe12fa2eaee2c34abc19a2177965e062e57dc3ecea1bbfdc5fcfa",
+  "toolchainDigest": "sha256-edce9c835ba8fd16fe32ec9b058ad81953b387a35723e2b323136c37f33fd4fa",
+  "interfaceReceipts": [
+    {
+      "bindingId": "binding:06d3c16f-a383-4b5b-92bd-9b8f707ca8ba",
+      "declaration": "Formalization3sum.formalization3sum_main",
+      "receiptDigest": "sha256-f0bc6c133d263a4e21926c9652c125d3af500ef7408bb8b169328bec1cb52b55",
+      "receipt": {
+        "sourceSignatureDigest": "sha256-03f326b93b0d6cf9b3fce96b9ff1f27cc5260580a29e66d5f74a79370eee99f2",
+        "elaboratedTypeDigest": "sha256-379066329deffe00c168c6bd13bb740431edded1487ea558d84315db9d395750",
+        "semanticRootPolicyId": "project-type-closure/1",
+        "semanticRootDigests": [
+          {
+            "declaration": "Formalization3sum.Model.Input",
+            "valueDigest": "sha256-c5b97d458ad89d5c8095ae7f5e4918c6213dde587cae76e1c8c58bb6ea27926a"
+          },
+          {
+            "declaration": "Formalization3sum.Model.Input.W",
+            "valueDigest": "sha256-3bdfef88739ca7e4c04f133f4275c3cc21d621406a1db27fdc733baafa0e2b9c"
+          },
+          {
+            "declaration": "Formalization3sum.Model.Input.X",
+            "valueDigest": "sha256-a091e51844ac572d54125504750fa07848151eb635b9ff2fad23e2c974a17e67"
+          },
+          {
+            "declaration": "Formalization3sum.Model.Input.Y",
+            "valueDigest": "sha256-2bb93b208ced44d8bae5720a0d15960ccbedb6ee64736aec3b5688047088e0d2"
+          },
+          {
+            "declaration": "Formalization3sum.Model.magnitudeBound",
+            "valueDigest": "sha256-32b2d8a63289e7689c3ca252192bbd7b791eff7efdad319ca3437d76e7dfb636"
+          },
+          {
+            "declaration": "Formalization3sum.Model.Operations.Cell",
+            "valueDigest": "sha256-7c326caa01ad6eac086966abd96a56e507bb831e8f26ffea9d0fb8ee693ef24f"
+          },
+          {
+            "declaration": "Formalization3sum.Model.Operations.Op",
+            "valueDigest": "sha256-1a3bc508bf62a8342e04a8edca3c6da23b295318d1ab5054f466e3e6841830f6"
+          },
+          {
+            "declaration": "Formalization3sum.Model.Operations.rate",
+            "valueDigest": "sha256-cfbe12b6a2232c97f7c3cdd66d968630769054bef861697c1435b11d4af35617"
+          },
+          {
+            "declaration": "Formalization3sum.Model.wantedValue",
+            "valueDigest": "sha256-c31adfdd7bc20a3552717c103fc5c341deed6ce4baf221e57db3f78c1db4933e"
+          },
+          {
+            "declaration": "Formalization3sum.Prior",
+            "valueDigest": "sha256-c59a4e15562b4460784f82e9ec7b272cf3883eb01d63707d6608d3e587bea49b"
+          },
+          {
+            "declaration": "Formalization3sum.Program.directEntry",
+            "valueDigest": "sha256-3844a63f8c8784868c05a75eb9a73183b1b0c7181b683c62ca6c589d378a58c5"
+          },
+          {
+            "declaration": "Formalization3sum.Program.directRun",
+            "valueDigest": "sha256-fd489940680594082c8605da8b8825cd6ef5296e5737993550c9b45c2312731c"
+          },
+          {
+            "declaration": "Formalization3sum.Program.directRun._proof_1",
+            "valueDigest": "sha256-860694ef2acca13987793c631077a2d2c7b2a3157bfc9b336f3b8b7330cb87a5"
+          },
+          {
+            "declaration": "Formalization3sum.Program.directRun._proof_2",
+            "valueDigest": "sha256-2130dd1c40eb503570845a660abe2891f042f82279466fe41a899cef9730d737"
+          },
+          {
+            "declaration": "Formalization3sum.Program.directRun._proof_3",
+            "valueDigest": "sha256-ce7d20c45d472d70e9cdfdce6f78c5aa4384950cd06e9c0f89e1621a32146f87"
+          }
+        ],
+        "leanVersion": "4.33.0",
+        "toolchainDigest": "sha256-edce9c835ba8fd16fe32ec9b058ad81953b387a35723e2b323136c37f33fd4fa",
+        "optionsDigest": "sha256-b01d333a0ba6076a37c01762a8978eb2d2bebd220d8530e524078067d340079e"
+      }
+    }
+  ],
+  "relationEvidence": []
+}

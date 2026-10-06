@@ -1,0 +1,185 @@
+\section{Exact Triangle reduces to computing certain entries of a thin matrix product}\label{sec:reduction}
+
+
+This section derives the faster deterministic algorithms for Exact Triangle (given a tripartite graph with integer weights on its edges, is there a triangle whose three weights sum to zero?), $3$SUM, and APSP from our new matrix theorem. Theorem~\ref{thm:main} already suffices for this, and its stronger form in Section~\ref{sec:general}, Corollary~\ref{cor:zt}, gives the running times stated in the introduction. Later, in Section~\ref{sec:other}, we will similarly derive our other algorithmic results.
+
+Almost nothing in this section is new. We will apply known reductions from fine-grained complexity theory, due to P\u{a}tra\c{s}cu~\cite{Pat10}, Kopelowitz, Pettie, and Porat~\cite{KPP16}, Vassilevska Williams and Williams~\cite{VW13,VW10,VW18}, Vassilevska Williams and Xu~\cite{VX20a}, Chan and He~\cite{CH20}, Chan and Xu~\cite{CX24}, and Fischer, Kaliciak, and Polak~\cite{FKP24}. We go into some detail rather than just citing these known results for two main reasons. First, the theorem statements in the literature do not quite match the parameter regime of the matrix theorem, and obtaining exactly the matrix shapes that our algorithm needs requires slight modifications of the known constructions. Second, for one step, the reduction from Exact Triangle to the lopsided triangle problem, the only known reduction that achieves the parameters we need is randomized~\cite{VX20a}, and the known deterministic one~\cite{CX24} targets the balanced problem. We will make a small modification to achieve a deterministic reduction, using a known tool~\cite{FKP24}. The reductions from $3$SUM and APSP to Exact Triangle are deterministic already, and we cite them as they are. Thus, all the steps are deterministic, and so we ultimately design deterministic algorithms for all these problems. In Figure~\ref{fig:chain} we give an overview of the relevant reductions.
+
+\suppressfloats[t]
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  font=\footnotesize,
+  >={Stealth[length=2mm]},
+  box/.style={rounded corners=2pt,align=center,inner sep=3pt,text width=#1},
+  cls/.style={box=#1,draw=blue!60!black,very thick,fill=blue!7},
+  ours/.style={box=#1,draw=orange!85!black,very thick,fill=orange!12},
+  thm/.style={box=#1,draw=blue!60!black,fill=blue!7},
+  red/.style={->,thick,blue!55!black},
+  lab/.style={font=\scriptsize,fill=white,inner sep=1.5pt,text=black}
+]
+\node[cls=3.9cm] (sum) at (-2.35,0) {\textbf{3SUM}\\ $O(n^{1.99923})$, $O(n^{1.9992})$\\ (Thm.~\ref{thm:3sumapsp})};
+\node[cls=3.9cm] (apsp) at (2.35,0) {\textbf{APSP}\\ $O(n^{2.99949})$, $O(n^{2.99942})$\\ (Thm.~\ref{thm:3sumapsp})};
+\node[cls=8.6cm] (et) at (0,-1.75) {\textbf{Exact Triangle}\\ $O(n^{3-1/648}\log^2n)$, $O(n^{3-0.00175}\log n)$ (Thm.~\ref{thm:zwt})};
+\node[ours=8.6cm] (lop) at (0,-3.5) {\textbf{Lopsided All-Edges Sparse Triangle}\\ $O(n^2\log^2\!D/D^{1/18})$ (Cor.~\ref{fact:lopmain}), $O(n^2/D^{0.063})$ (Cor.~\ref{fact:lop})};
+\node[thm=8.6cm] (mat) at (0,-5.25) {\textbf{Certain entries of a thin matrix product}\\ $O(n^2\log^2\!D/D^{1/18})$ (Thm.~\ref{thm:main}), $O(n^2/D^{0.063})$ (Cor.~\ref{cor:zt})};
+\draw[red] (sum.south) -- node[lab,left,pos=0.5,xshift=-2pt]{\cite{CH20,VW13}, Thm.~\ref{thm:knownred}(a)} (sum.south |- et.north);
+\draw[red] (apsp.south) -- node[lab,right,pos=0.5,xshift=2pt]{\cite{VW10,VW18,VW13}, Thm.~\ref{thm:knownred}(b)} (apsp.south |- et.north);
+\draw[red] (et.south) -- node[lab,right,pos=0.5,xshift=3pt]{\cite{VX20a,CX24,FKP24}, Thm.~\ref{thm:red}} (lop.north);
+\draw[red] (lop.south) -- node[lab,right,pos=0.5,xshift=3pt]{Straightforward (Sec.~\ref{sec:tri})} (mat.north);
+\path let \p1=(current bounding box.east) in (-\x1,0);
+\end{tikzpicture}
+\caption{The reductions of this section. Each arrow is a reduction, labeled with the prior work it follows and with the statement here that proves it. Each box gives two running times: the first follows from Theorem~\ref{thm:main}, and the second from its stronger form, Corollary~\ref{cor:zt}. We reprove only the reduction from Exact Triangle to Lopsided All-Edges Sparse Triangle, deterministically and for the parameters of the matrix theorem; the reductions from 3SUM and APSP are cited as they are. The running times in the two bottom boxes assume $n\ge D^{18}$ and $|W|\le n^2/\sqrt D$.}
+\label{fig:chain}
+\end{figure}
+
+We remind the reader of some basics from fine-grained complexity that we will use here. 
+A \defn{reduction} from a problem $A$ to a problem $B$ is an algorithm for $A$ that builds instances of $B$, solves them using an \defn{oracle} (an algorithm for $B$ that it treats as a constant time black box), and does some extra work. We will typically state three things about it: how many instances it builds, of what size, and how much extra time it uses. Composed with an algorithm for $B$, it is an algorithm for $A$, whose running time is the extra time plus the total time to solve $B$ on each instance created. Such a reduction can be interpreted as conferring hardness (if $A$ is hard then so is $B$) or as an algorithmic tool (a faster algorithm for $B$ gives one for $A$). Here we will use the second interpretation to design our algorithms.
+
+The particular types of reductions we focus on are {\em fine-grained reductions}. Here, for two problems $A$ and $B$ and two time bounds $a(n),b(n)$, an $(a(n),b(n))$-fine-grained reduction from $A$ to $B$ is an algorithm $R$ that solves any $n$-sized instance of $A$ by making oracle calls to instances of $B$ of some sizes $n_1,\ldots,n_t$ where for every $\delta>0$ there is an $\eps>0$ s.t. $\sum_{i=1}^t (b(n_i))^{1-\delta}\leq a(n)^{1-\eps}$ and so that $R$ solves $A$ in $O(a(n)^{1-\eps})$ time. In other words, if $B$ had an $O(b(N)^{1-\delta})$ time algorithm, then replacing the oracle calls by calls to the algorithm, due to the inequality above, we would get an $O(a(n)^{1-\eps})$ time algorithm for $A$.
+
+
+Section~\ref{sec:tri} restates Theorem~\ref{thm:main} and Corollary~\ref{cor:zt} in the language of graphs. Section~\ref{sec:redproof} reproves the reduction from Exact Triangle to the lopsided problem in a deterministic way. It hashes the weights modulo a small prime (in place of the random hash functions of earlier reductions: almost-linear hashing in the reductions from $3$SUM~\cite{Pat10,KPP16}, and a random map into a large prime field in~\cite{VX20a}), chooses the prime deterministically by counting false positives, as in the $3$SUM reduction of Fischer, Kaliciak, and Polak~\cite{FKP24}, and builds the instances and searches for witnesses as in Chan and Xu~\cite{CX24}. 
+The false positive counting in~\cite{FKP24} is accomplished using the FFT; here, similar to prior work (e.g.,~\cite{AGM97}), for Exact Triangle we compute the count by multiplying two matrices whose entries are polynomials of low degree which can be done efficiently using fast matrix multiplication.
+Section~\ref{sec:zwt} combines this reduction with Theorem~\ref{thm:main} and Corollary~\ref{cor:zt} to solve Exact Triangle in truly subcubic time. Section~\ref{sec:3sumapsp} restates the reductions from $3$SUM and APSP to Exact Triangle~\cite{VW13,VW10,VW18,CH20} with their overheads, and applies them.
+
+
+
+\subsection{The Lopsided All-Edges Sparse Triangle problem}\label{sec:tri}
+
+We define a lopsided (rectangular) version of the well-studied problem All-Edges Sparse Triangle.
+When viewed in graph terms, Theorem~\ref{thm:main} counts the triangles through prescribed pairs of vertices in a tripartite graph whose middle part is small, and thus in particular can be used to solve All-Edges Sparse Triangle in such graphs.
+
+
+\begin{definition}[Lopsided All-Edges Sparse Triangle, $\Lop(n,D)$]\label{def:lop}
+We are given an unweighted undirected tripartite graph with two parts $A$ and $B$ of $n$ vertices each and a middle part $M$ of at most $D$ vertices, with arbitrary edges in $M\times A$ and $M\times B$. Let $W\subseteq A\times B$ be the set of edges between $A$ and $B$. Decide, for every edge $(a,b)\in W$, whether it lies in a triangle with some vertex of $M$, that is, whether $a$ and $b$ have a common neighbor in $M$.
+\end{definition}
+
+In this notation, the usual All-Edges Sparse Triangle problem is the balanced case $D=n$ (after the standard reduction to tripartite graphs), except that one asks about every edge of the graph, not only those between $A$ and $B$, and that the running time is measured in terms of the number $m$ of edges. We think of $W$ as being polynomially smaller than $n^2$ and $D$ as polynomially smaller than $n$, so the instance is sparse in this sense. The brute-force algorithm solves $\Lop(n,D)$ in $O(|W|D)$ time. If $D\leq n^{0.321}$, then, since $0.321\le\alpha$~\cite{VXXZ24},\footnote{Here $\alpha$ denotes the supremum of the constants $\alpha\in(0,1]$ such that $n\times n^\alpha$ by $n^\alpha\times n$ matrices can be multiplied using $n^{2+o(1)}$ operations.} fast rectangular matrix multiplication can solve the problem in $n^{2+o(1)}$ time even when $|W|=n^2$. We will beat both $|W|D$ and $n^2$ for $D=n^{\varepsilon}$ and $|W|=n^2/\sqrt D$ with a constant $\varepsilon>0$, and this will suffice to refute both the $3$SUM and the APSP hypotheses.
+
+Some of the known reductions, such as those from the real-valued problems in Section~\ref{sec:real}, reduce to the counting version of All-Edges Sparse Triangle, which asks for the number of triangles through each edge; we define the lopsided version.
+
+\begin{definition}[Lopsided All-Edges Sparse Triangle Counting, $\#\Lop(n,D)$]\label{def:countlop}
+This is the same problem as $\Lop(n,D)$, except that for every edge $(a,b)\in W$ we ask for the number of triangles it lies in, that is, the number of common neighbors of $a$ and $b$ in $M$.
+\end{definition}
+
+In matrix language, let $X\in\{0,1\}^{n\times D}$ and $Y\in\{0,1\}^{D\times n}$ be the biadjacency matrices of the edges between $A$ and $M$ and between $M$ and $B$, that is, $X[a,v]=1$ if and only if $a\in A$ and $v\in M$ are adjacent, and $Y[v,b]=1$ if and only if $v\in M$ and $b\in B$ are adjacent (padded with zeros if $M$ has fewer than $D$ vertices). Then $\Lop(n,D)$ asks for the entries of the Boolean product of $X$ and $Y$ at the positions in $W$, and $\#\Lop(n,D)$ asks for the corresponding entries of the product of $X$ and $Y$ over the integers. In the language of Section~\ref{sec:result}, $W$ is the set of wanted positions, and we call its elements the \defn{query pairs}.
+
+The counting version $\#\Lop(n,D)$ is also equivalent, up to polylogarithmic factors, to the problem of Theorem~\ref{thm:main} and Corollary~\ref{cor:zt}, that is, to computing the wanted entries $(XY)[I,J]$, $(I,J)\in W$, of a thin matrix product, for matrices $X\in\Z^{n\times D}$ and $Y\in\Z^{D\times n}$ whose entries have absolute value $n^{O(1)}$.\footnote{An instance of $\#\Lop(n,D)$ asks for the wanted entries of a thin matrix product of two $0/1$ matrices. To reduce to $\#\Lop$, we use a standard idea: split each matrix into its positive and negative parts and write their entries in binary, $X=\sum_i2^iX_i$ and $Y=\sum_j2^jY_j$ with $0/1$ matrices $X_i$ and $Y_j$. Then $XY=\sum_{i,j}2^{i+j}X_iY_j$, so a product with $b$-bit entries costs $O(b^2)$ instances of $\#\Lop(n,D)$ with the same query pairs $W$.} 
+
+Besides asking for the wanted entries of a Boolean thin matrix product, the detection version $\Lop(n,D)$ can also be viewed as offline Set Disjointness (see, e.g.,~\cite{KPP16,VX20a}): the sets are the neighborhoods in $M$ of the vertices of $A$ and $B$, over a universe of at most $D$ elements, and a query pair $(a,b)\in W$ asks whether the sets of $a$ and $b$ are disjoint. The reductions below (mostly from prior work) produce at most $n^2/\sqrt D$ query pairs and sets of at most $\sqrt D$ elements, which is the regime of~\cite{KPP16} and of~\cite[Corollary~3.12]{VX20a}.
+
+With the above discussion in mind, Theorem~\ref{thm:main} gives the following.
+
+\begin{corollary}\label{fact:lopmain}
+Let $D\ge4$ be a power of four with $n\ge D^{18}$, and consider an instance of $\#\Lop(n,D)$ or of $\Lop(n,D)$ with $|W|$ query pairs. If $|W|\le n^2/\sqrt D$, then the instance can be solved deterministically in $O(n^2\log^2\!D/D^{1/18})$ time. In general, splitting $W$ into sets of at most $n^2/\sqrt D$ query pairs solves it deterministically in time
+\[
+O\big((n^2+|W|\sqrt D)\log^2\!D/D^{1/18}\big).
+\]
+\end{corollary}
+\begin{proof}
+Apply Theorem~\ref{thm:main} with $N=n$ to the two biadjacency matrices: the entries $(XY)[a,b]$, $(a,b)\in W$, are the numbers of common neighbors, and they are nonzero exactly for the query pairs that lie in a triangle. For larger $W$, apply the theorem to each of at most $\lceil|W|\sqrt D/n^2\rceil+1$ pieces.
+\end{proof}
+
+The data structure of Section~\ref{sec:general} improves the saving $D^{1/18}$ to $D^{0.063}$ (Corollary~\ref{cor:zt}), and gives the following.
+
+\begin{corollary}\label{fact:lop}
+Let $n\ge D^{18}$, and consider an instance of $\#\Lop(n,D)$ or of $\Lop(n,D)$ with $|W|$ query pairs. It can be solved deterministically in $O(|W|\,D^{0.437}+n^2/D^{0.063})$ time. 
+\end{corollary}
+\begin{proof}
+This is Corollary~\ref{cor:zt} with $N=n$, applied to the two biadjacency matrices as above.
+\end{proof}
+
+For $|W|=O(n^2/\sqrt D)$, which is what the reductions below produce, the running time in Corollary~\ref{fact:lop} is $O(n^2/D^{0.063})$.
+
+The reduction of Section~\ref{sec:redproof} is stated for an arbitrary $D$, with the number of oracle calls and the additional time as functions of $D$ and a free parameter $g$, and Section~\ref{sec:zwt} chooses $D$ and $g$.
+
+\subsection{A deterministic reduction from Exact Triangle to \texorpdfstring{{\boldmath$\Lop$}}{Lop}}\label{sec:redproof}
+
+\paragraph{Exact Triangle.}
+An instance of \defn{Exact Triangle} (also called Zero-Weight Triangle, and sometimes ``Love Triangle''~\cite{GP18}) consists of a complete tripartite graph on vertex parts $A,B,C$ of $n$ vertices each, and an integer weight $w(e)$ on every edge, with $|w(e)|\le n^\nu$ for some constant $\nu\ge1$. Let $S(a,b,c):=w(a,b)+w(b,c)+w(a,c)$. A \defn{zero triangle} is a triangle $(a,b,c)\in A\times B\times C$ with $S(a,b,c)=0$, and the task is to decide whether one exists. As is standard, an instance on an arbitrary $n$-vertex graph reduces to this form by taking three copies of the vertex set and giving every missing edge the weight $3n^\nu+1$, which lies in no zero triangle (this replaces $\nu$ by $\nu+1$), and the search version, which asks the algorithm to find a zero triangle if one exists, is equivalent to the decision version via a simple self-reduction (the reduction below finds one anyway).
+
+\begin{theorem}[Exact Triangle to $\Lop$, deterministically]\label{thm:red}
+Let $16\le D\le n$, and let $1\le g\le\sqrt D$ be an integer. Exact Triangle on $n$ vertices per part with weights of absolute value at most $n^\nu$ reduces deterministically to at most $4ng$ instances of $\Lop(n,D)$, each with at most $n^2/\sqrt D$ query pairs, plus $O(\nu\,n^3\log n/g+n^{\omega+o(1)}D^{3/2}+n^2Dg)$ additional time, where $\omega<2.372$ is the matrix multiplication exponent~\cite{ADVXXZ25}. The reduction is non-adaptive: it produces all the instances before it makes any oracle call, so they can be solved in any order, or all together.
+\end{theorem}
+
+The parameter $g$ trades the number of instances against the cost of the search for witnesses in the last step of the proof (the term $\nu n^3\log n/g$); Section~\ref{sec:zwt} balances the two. The oracle returns at most $n^2/\sqrt D$ answers per instance, and the time to read them is counted as part of the oracle calls, rather than as additional time.
+
+\begin{proof}
+The proof has three steps: we hash the weights modulo a prime, build the instances, and search for witnesses.
+
+\emph{Hashing modulo a prime.} We reduce the weights modulo a prime $p\in[\sqrt D/2,\sqrt D)$, chosen deterministically. This size of $p$ fits the instances below: a piece of $C$ of up to $\sqrt D$ vertices, paired with the $p$ labels, gives a middle part of at most $D$ vertices, and the $n^2$ pairs $(a,b)$ fall into $p$ residue classes of about $n^2/\sqrt D$ pairs on average, which is the number of query pairs that an instance may have. A \defn{false positive} of $p$ is a triple $(a,b,c)$ with $S(a,b,c)\ne0$ and $p\mid S(a,b,c)$; let $F(p)$ denote the number of false positives of $p$. For every prime $p$ in the range we count the triples with $S(a,b,c)\equiv0\pmod p$. This number is the number of false positives $F(p)$ plus $Z_0$, the number of zero triangles, which does not depend on $p$. Each $F(p)+Z_0$ is computed by a standard trick for small weights~\cite{AGM97,Zwi02}: let $P[a,c]:=x^{w(a,c)\bmod p}$ and $Q[c,b]:=x^{w(b,c)\bmod p}$ be matrices over the ring $\Z[x]/(x^p-1)$, so that the coefficient of $x^r$ in $(PQ)[a,b]$ is the number of $c\in C$ with $w(a,c)+w(b,c)\equiv r\pmod p$; then $F(p)+Z_0$ is the sum over the pairs $(a,b)\in A\times B$ of the coefficient of $x^{-w(a,b)\bmod p}$ in $(PQ)[a,b]$. Computing $PQ$ takes $n^{\omega+o(1)}$ ring operations, or $O(n^{\log_27})$ with Strassen's algorithm~\cite{Str69}, each of them $O(p^2)$ word operations, so $n^{\omega+o(1)}D^{3/2}$ time over the fewer than $\sqrt D$ primes in the range. (Any matrix multiplication algorithm fast enough to make this term negligible suffices. For our choice of $D$, Strassen's algorithm already does, and keeps the reduction potentially practical.)\footnote{Our reduction uses matrix multiplication, so that it is not ``combinatorial.'' One can obtain a combinatorial reduction to $\#\Lop(n,D)$ instead of $\Lop(n,D)$ by counting the false positives with the oracle itself (for instance, by choosing the modulus one prime factor at a time as in~\cite[Lemma~3.2]{FKP24}). We use matrix multiplication because we want to show that even the detection problem $\Lop(n,D)$ solves Exact Triangle deterministically.}
+
+We select the prime with the smallest count, which is also the prime with the fewest false positives, and call it $p$. To bound $F(p)$, note that a triple with $S(a,b,c)\ne0$ is a false positive exactly of the primes in the range that divide $S(a,b,c)$. Since $0<|S(a,b,c)|\le3n^\nu$ and these primes are at least $\sqrt D/2$, there are at most $\log_{\sqrt D/2}(3n^\nu)$ of them. Hence the numbers of false positives of all the primes in the range add up to at most $n^3\log_{\sqrt D/2}(3n^\nu)$. 
+By the prime number theorem there are $\Omega(\sqrt D/\log D)$ primes in the range, and $F(p)$ is at most the average over them, so, as in~\cite[Lemma~3.2]{FKP24}, $F(p)=O(n^3\log(3n^\nu)/\sqrt D)=O(\nu\,n^3\log n/\sqrt D)$, since $\log D=O(\log(\sqrt D/2))$ for $D\ge16$.
+
+\emph{The instances.} As in~\cite{CX24}, let $s:=\lfloor\sqrt D\rfloor$ and split $C$ into pieces $C_1,\ldots,C_h$ of at most $\lceil s/g\rceil$ vertices each, so that $h\le\lceil ng/s\rceil$. For $\varrho\in\Z_p$ let $W_\varrho$ be the set of edges $(a,b)\in A\times B$ with $w(a,b)\equiv\varrho\pmod p$, and cut it into chunks of at most $n^2/\sqrt D$ query pairs. There are at most $p+\sqrt D\le2\sqrt D$ chunks in all. For each chunk $\mathcal Q\subseteq W_\varrho$ and each piece $C_k$ form the instance of $\Lop(n,D)$ with query pairs $W:=\mathcal Q$ and middle part $C_k\times\Z_p$, of size at most $sp\le D$, whose middle vertices are pairs (vertex, label) as in~\cite{CX24}, with
+\[
+a\sim(c,\sigma)\iff\sigma\equiv w(a,c)+\varrho,\qquad(c,\sigma)\sim b\iff\sigma\equiv-w(b,c)\pmod p .
+\]
+Within the chunk, the condition $S(a,b,c)\equiv0\pmod p$ has become the equality $w(a,c)+\varrho\equiv-w(b,c)$ of a label of $(a,c)$ and a label of $(b,c)$, so a query pair $(a,b)\in\mathcal Q$ has a common neighbor if and only if some $c\in C_k$ has $S(a,b,c)\equiv0\pmod p$. There are at most $2\sqrt D\,h\le2\sqrt D(ng/s+1)\le4ng$ instances, since $s\ge\sqrt D-1\ge3\sqrt D/4$ because $D\ge16$, and $\sqrt D\le\sqrt n\le2n/3$ because $D\le n$ and we may assume $n\ge3$, and they are produced non-adaptively, since $p$ is chosen before any of them. Writing them down costs $O(n^2Dg)$: the two bipartite graphs of an instance have $O(nD)$ entries, and the chunks are computed once and shared by the pieces.
+
+\emph{Witnesses.} For every query pair that the oracle accepts, scan the piece $C_k$ of its instance for a $c$ with $S(a,b,c)=0$, as in the exhaustive search of~\cite{CX24}. A zero triangle is always found, since its $c$ lies in some piece and makes the oracle accept its pair. We stop as soon as a zero triangle is found. A failed scan, of a piece $C_k$ for a pair $(a,b)$, contains a $c\in C_k$ with $S(a,b,c)\equiv0\pmod p$ but $S(a,b,c)\ne0$, that is, a false positive $(a,b,c)$ of $p$, and distinct scans contain distinct false positives, so there are at most $F(p)$ failed scans, and the scans cost $O((F(p)+1)\sqrt D/g)=O(\nu\,n^3\log n/g)$.
+\end{proof}
+
+\begin{remark}[Comparison with~\cite{CX24} and~\cite{VX20a}]
+We emulate the instances and the witness search of Chan and Xu~\cite[Section~3]{CX24}. The difference is in how the pairs are grouped so that the condition on $S(a,b,c)$ becomes an equality of labels. For exact integer weights, $w(a,b)$ takes too many values to group by, so Chan and Xu group the pairs by a reference witness $k$ with known $S(a,b,k)$, which they find by a recursion on the bits of the weights, and use Fredman's trick. Their labels are exact and there are no false positives. After hashing, $w(a,b)\bmod p$ takes only $p$ values, so we can group by it directly, in a single round of instances instead of a recursion. The labels take only $p$ values, so the middle part is small, but in exchange, this introduces false positives. Vassilevska Williams and Xu~\cite[Theorem~3.4]{VX20a} also hash, but by a random map $w(u,v)\mapsto x\,w(u,v)+y_u-y_v$ into a large prime field, with $x$ and the vertex weights $y_v$ random, followed by a split of the field into intervals. With residues in place of their intervals, the block $C_k\times\{-j\}$ of our instance for $\varrho$ and $C_k$ is their graph $G_{-\varrho-j,j,\varrho}$, and our instance puts the $p$ graphs with the same $\varrho$ side by side. They use randomness to bound the degrees and the false positives through each edge, which their listing step needs~\cite[Claims~3.5 and~3.6, Proposition~3.8]{VX20a}, whereas the scans above need only the total number of false positives, controlled by the choice of $p$.
+\end{remark}
+
+\subsection{Exact Triangle in truly subcubic time}\label{sec:zwt}
+
+\begin{theorem}[Exact Triangle]\label{thm:zwt}
+Let $\varepsilon':=0.00175$ and $\varepsilon_T:=0.0017$. For every constant $\nu\ge1$, Exact Triangle on $n$ vertices per part with integer weights of absolute value at most $n^\nu$ can be solved by a deterministic algorithm in $O(n^{3-1/648}\log^2n)$ time using Theorem~\ref{thm:main} (via Corollary~\ref{fact:lopmain}), and in $O(n^{3-\varepsilon'}\log n)\leq O(n^{3-\varepsilon_T})$ time using Corollary~\ref{cor:zt} (via Corollary~\ref{fact:lop}).
+\end{theorem}
+\begin{proof}
+Assume $n$ is larger than a constant depending on $\nu$ (smaller instances are solved by brute force). In both cases we apply Theorem~\ref{thm:red}, whose instances have at most $n^2/\sqrt D$ query pairs each, and solve every instance by a corollary of Section~\ref{sec:tri}. The values of $g$ below balance the cost of the instances against that of the scans (Remark~\ref{rem:g}).
+
+\emph{By Theorem~\ref{thm:main}.} Let $D$ be the largest power of four with $D\le n^{1/18}$, so that $D\ge n^{1/18}/4$, and let $g:=\lceil D^{1/36}\rceil$. Solve every instance by Corollary~\ref{fact:lopmain}, which applies because $D^{18}\le n$. The $O(nD^{1/36})$ instances cost $O(n^2\log^2\!D/D^{1/18})$ each, so $O(n^3D^{-1/36}\log^2n)$ in all, the scans cost $O(n^3D^{-1/36}\log n)$, the choice of $p$ costs $O(n^{\log_27}D^{3/2})=O(n^{2.9})$ with Strassen's algorithm, and building the instances costs $O(n^2D^{1.03})$. Finally $D^{-1/36}\le4^{1/36}n^{-1/648}$, so the time is $O(n^{3-1/648}\log^2n)$.
+
+\emph{By Corollary~\ref{cor:zt}.} Let $D:=\lfloor n^{1/18}\rfloor$ and $g:=\lceil D^{0.0315}\rceil$, and solve every instance by Corollary~\ref{fact:lop}, which applies because $D^{18}\le n$. The instances cost $O(nD^{0.0315})\cdot O(n^2/D^{0.063})=O(n^3D^{-0.0315})$, the scans $O(n^3D^{-0.0315}\log n)$, the choice of $p$ costs $O(n^{\log_27}D^{3/2})=O(n^{2.9})$ with Strassen's algorithm, and building the instances costs $O(n^2D^{1.04})$. Finally $D\ge n^{1/18}/2$ gives $D^{-0.0315}\le2\,n^{-0.0315/18}=2\,n^{-0.00175}$, so the time is $O(n^{3-\varepsilon'}\log n)\leq O(n^{3-\varepsilon_T})$.
+\end{proof}
+
+\begin{remark}\label{rem:g}
+With $g=D^\eta$ and a saving $D^{\gamma}$ per instance, the instances cost $n^3D^{\eta-\gamma}$ and the scans $n^3D^{-\eta}$, up to logarithmic factors. They balance at $\eta=\gamma/2$, that is, at $\eta=1/36$ for the saving $D^{1/18}$ of Theorem~\ref{thm:main} and at $\eta=0.0315$ for the saving $D^{0.063}$ of Corollary~\ref{cor:zt}. Any improvement of these savings improves the final exponent $\eta/18$ directly, and the factor $1/18$ in it comes from the assumption $N\ge D^{18}$ of these theorems. Any other algorithm for $\Lop(n,D)$ can be plugged into Theorem~\ref{thm:red} in the same way. With the straightforward algorithm ($O(n^2/g)$ per instance, since every vertex of $A$ has $O(\sqrt D/g)$ neighbors in the middle part) the reduction recovers the brute-force bound $n^3$ up to a logarithmic factor.
+\end{remark}
+
+\subsection{3SUM and APSP reduce to Exact Triangle}\label{sec:3sumapsp}
+
+The reductions here are known and deterministic. We recall them in the form we use, and then apply Theorem~\ref{thm:zwt}, with its bound $O(n^{3-\varepsilon'}\log n)$, $\varepsilon'=0.00175$, when it uses Corollary~\ref{cor:zt}. 
+
+\begin{theorem}[Known reductions]\label{thm:knownred}
+For every constant $\nu$:
+\begin{enumerate}
+\item[(a)] \textup{($3$SUM)} $3$SUM on $n$ integers of absolute value at most $n^\nu$ reduces deterministically, in $n^{3/2+o(1)}$ time, to $n^{1/2+o(1)}$ instances of Exact Triangle on $n^{1/2+o(1)}$ vertices per part with weights of absolute value $n^{O(1)}$~\cite{CH20,VW13}.
+\item[(b)] \textup{($(\min,+)$-product and APSP)} If a deterministic algorithm solves Exact Triangle on $s$ vertices per part with weights of absolute value at most $cU$, for a suitable constant $c$, in time $T(s)$ with $T(s)/s$ nondecreasing, then the $(\min,+)$-product of two $n\times n$ integer matrices with entries of absolute value at most $U$ can be computed deterministically in $O(n^2T(n^{1/3})\log^2U)$ time, and APSP on directed $n$-vertex graphs with integer weights of absolute value at most $n^\nu$ and no negative cycles in $O(n^2T(n^{1/3})\log^3n)$ time~\cite{VW10,VW18,VW13}.
+\end{enumerate}
+\end{theorem}
+
+
+
+Using the above known reductions we solve both $3$SUM and APSP polynomially faster:
+\begin{theorem}[$3$SUM and APSP]\label{thm:3sumapsp}
+Let $\nu$ be a constant. Using Theorem~\ref{thm:main} (through Theorem~\ref{thm:zwt}), deterministic algorithms solve $3$SUM on $n$ integers of absolute value at most $n^\nu$ in $n^{2-1/1296+o(1)}\leq O(n^{1.99923})$ time, and the $(\min,+)$-product of two $n\times n$ integer matrices with entries of absolute value at most $n^\nu$, as well as APSP on directed $n$-vertex graphs with integer weights of absolute value at most $n^\nu$ and no negative cycles, in $\tilde O(n^{3-1/1944})\leq O(n^{2.99949})$ time. Using Corollary~\ref{cor:zt} instead, the times are $n^{2-\varepsilon'/2+o(1)}\leq O(n^{1.9992})$ and $\tilde O(n^{3-\varepsilon'/3})\leq O(n^{2.99942})$.
+\end{theorem}
+\begin{proof}
+Plug Theorem~\ref{thm:zwt} into Theorem~\ref{thm:knownred}. With the bound $O(n^{3-1/648}\log^2n)$ of Theorem~\ref{thm:zwt}, the cost for $3$SUM is
+\[
+n^{3/2+o(1)}+n^{1/2+o(1)}\cdot O\big((n^{1/2+o(1)})^{3-1/648}\log^2n\big)=n^{2-1/1296+o(1)}=n^{1.999228\ldots+o(1)} ,
+\]
+and for the $(\min,+)$-product and APSP, with $T(s)=O(s^{3-1/648}\log^2s)$, for which $T(s)/s$ is nondecreasing, it is
+\[
+\tilde O\big(n^2(n^{1/3})^{3-1/648}\big)=\tilde O\big(n^{3-1/1944}\big),\quad 3-1/1944=2.99948\ldots<2.99949 .
+\]
+With the bound $O(n^{3-\varepsilon'}\log n)$ instead, the cost for $3$SUM is
+\[
+n^{3/2+o(1)}+n^{1/2+o(1)}\cdot O\big((n^{1/2+o(1)})^{3-\varepsilon'}\log n\big)=n^{2-\varepsilon'/2+o(1)}=n^{1.999125+o(1)} ,
+\]
+and for the $(\min,+)$-product and APSP, with $T(s)=O(s^{3-\varepsilon'}\log s)$, it is
+\[
+\tilde O\big(n^2(n^{1/3})^{3-\varepsilon'}\big)=\tilde O\big(n^{3-\varepsilon'/3}\big),\qquad 3-\varepsilon'/3=2.99941\ldots<2.99942 .
+\]
+\end{proof}
+
+\begin{remark}[3XOR]\label{rem:3xor}
+The same approach as for $3$SUM gives a deterministic truly subquadratic algorithm for 3XOR (given three lists of $n$ vectors in $\mathbb F_2^{O(\log n)}$, find one vector from each list such that the three XOR to zero~\cite{JV16,DSW18}), using linear hash functions over $\mathbb F_2$ whose rows are chosen one at a time from an $\varepsilon$-biased set~\cite{AGHP92} by the method of conditional expectations.
+\end{remark}

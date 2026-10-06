@@ -1,0 +1,299 @@
+\section{Introduction}\label{sec:intro}
+
+Since its inception, algorithms research has sought the fastest possible algorithm for every problem it considers. Powerful techniques have been developed, from variants of dynamic programming to surprising algebraic tools such as the Fast Fourier Transform~\cite{CT65} and fast matrix multiplication~\cite{Str69}. Yet for many problems, these techniques have not sufficed. Some examples include:
+
+\begin{itemize}
+\item \textbf{$3$SUM}: Given $n$ numbers, decide whether three of them sum to $0$. 
+This is a classical problem with a long history, and it is central to computational geometry (see~\cite{GO95}). Despite many decades of research, the $O(n^2)$-time algorithm taught in algorithms classes has only been sped up by polylogarithmic factors~\cite{BDP08,GP18,Cha20}.
+
+
+\item \textbf{All-Pairs Shortest Paths} (APSP): Given an edge-weighted graph on $n$ vertices with no negative cycles, compute the shortest-path distance between every pair of vertices. 
+Classical algorithms such as Johnson's~\cite{Joh77} and Floyd and Warshall's~\cite{Flo62,War62} solve APSP in $O(n^3)$ time. After a long line of work~\cite{Fre76,Tak92,Dob90,Han04,Tak04,Tak05,Zwi06,Cha08,Han08,Cha10,HT16}, the fastest known algorithm~\cite{Wil18} only shaves a subpolynomial, $2^{\Omega(\sqrt{\log n})}$ factor off the cubic running time.
+ 
+\item \textbf{Directed Unweighted APSP}: The version of APSP in $n$-vertex directed unweighted graphs. The fastest known algorithm, by Zwick~\cite{Zwi02}, runs in $O(n^{2.5275})$ time with the current bounds for rectangular matrix multiplication~\cite{ADVXXZ25}, and beyond improvements to the matrix multiplication bounds, it has not been improved for more than two decades. If the exponent $\omega$ of matrix multiplication is $2$, the best known running time for this problem~\cite{AGM97,Zwi02} is still only $\tilde{O}(n^{2.5})$.
+
+
+
+\item \textbf{Tree Edit Distance}: Given two rooted, ordered, labeled trees with $n$ vertices, and costs for deleting, inserting, and relabeling vertices, find the cheapest sequence of such operations that transforms one tree into the other. Tree Edit Distance is used, for instance, to compare RNA secondary structures and XML documents. The fastest known algorithms for this problem~\cite{DMRW09,NPSVXY25} run in cubic time, up to subpolynomial improvements. Only when all costs are equal to $1$ are truly subcubic algorithms known~\cite{Mao21,Dur23,NPSVXY25}.
+
+
+\item \textbf{Online Set Disjointness}: Preprocess sets $S_1,\dots,S_N$ and $T_1,\dots,T_N$ over a universe of size $D$, so that given $I$ and $J$ one can quickly decide whether $S_I\cap T_J=\emptyset$, or, in the counting version, return $|S_I\cap T_J|$. Essentially only two straightforward solutions are known: (1) to compute all $N^2$ answers in advance, which fast rectangular matrix multiplication does in $N^{2+o(1)}$ time when $D\le N^{0.321}$~\cite{Cop82,VXXZ24}, and (2) to store the sets and compute each intersection at query time in $O(D)$ time. Set Disjointness data structures have been studied extensively~\cite{CP10,KPP16,GKLP17b,KV20,GLP19}, mostly for sets of small total size over a large universe. 
+
+\item \textbf{CNF-SAT}: Given a Boolean formula $F$ in conjunctive normal form over $n$ variables and $O(n)$ clauses, is there an assignment to the variables that satisfies all clauses? The brute-force algorithm solves CNF-SAT in $2^n\poly(n)$ time. There are slightly faster algorithms when the width of the clauses is bounded by a constant independent of $n$~\cite{Sch99,PPSZ05,Her14}. However, no $O(1.99999^n)$-time algorithm is known.
+
+\item \textbf{Orthogonal Vectors (OV)}: Given $n$ Boolean vectors in $d=\omega(\log n)$ dimensions, are two of them orthogonal? The brute-force algorithm solves OV in $O(n^2d)$ time, and only subpolynomial improvements are known: the fastest algorithms~\cite{AWY15,CW21} run in $n^{2-1/O(\log(d/\log n))}$ time.
+\end{itemize}
+
+
+
+
+
+
+The apparent lack of progress on problems such as these led to new theories of hardness: NP-completeness~\cite{Coo71,Kar72} for problems with no known polynomial-time algorithm, and fine-grained complexity (FGC)~\cite{Vas18,Bri19} for problems whose best known algorithms were stuck at essentially the straightforward running time. Both theories relate problems via reductions. FGC focuses on improvements in the exponent: a fine-grained reduction from problem $A$ to problem $B$ with respect to running times $a(n)$ and $b(n)$ implies that an $O(b(n)^{1-\eps})$-time algorithm for $B$ for some $\eps>0$ can be converted into an $O(a(n)^{1-\delta})$-time algorithm for $A$ for some $\delta>0$. 
+
+
+
+
+Fine-grained complexity took three of the problems from our list above and postulated that the state-of-the-art algorithms cannot be beaten: in the word RAM model of computation with $O(\log n)$-bit words, APSP with polynomially bounded integer weights requires $n^{3-o(1)}$ time (the ``APSP hypothesis''~\cite{RZ04,VW10,VW18,AV14}), $3$SUM on $n$ integers of polynomial size requires $n^{2-o(1)}$ time (the ``$3$SUM hypothesis''~\cite{GO95,Pat10}), and there is no $\varepsilon>0$ such that CNF-SAT on $n$ variables and $O(n)$ clauses can be solved in $(2-\varepsilon)^n$ time (the ``Strong Exponential Time Hypothesis,'' SETH~\cite{IP01,IPZ01,CIP10}).
+
+Through fine-grained reductions, FGC built a web of relations among problems, and within it, classes of problems that are equivalent to each other (see the surveys~\cite{Vas18,Bri19}). For a large variety of problems for which no improved running times had been obtained in decades, FGC pointed to reasons: they are 3SUM-hard, APSP-hard, SETH-hard, or worse. In other words, to improve the known algorithms, one knew which obstacle needed to be overcome.
+
+
+For instance, many problems are known to be equivalent to APSP under fine-grained reductions. Either all of the following problems are solvable in \emph{truly subcubic} time, meaning in $O(n^{3-\varepsilon})$ time for some constant $\varepsilon>0$ (\emph{truly subquadratic} is defined similarly), or none of them is: the $(\min,+)$-product $A\star B$ of two $n\times n$ matrices $A$ and $B$ (defined by $(A\star B)[i,j]=\min_k(A[i,k]+B[k,j])$)~\cite{FM71,AHU74}\footnote{The equivalence between APSP and $(\min,+)$-product is extremely tight: the running times are the same up to constant factors~\cite{FM71,AHU74}.}, Negative Triangle and Second Shortest Simple Path~\cite{VW10,VW18}, Graph Radius~\cite{AGV15,AGV23}, Tree Edit Distance~\cite{BGMW20,NPSVXY25}, and many other problems~\cite{VW10,VW18,RV11,AGV15,AGV23}, more of which are listed below, after Figure~\ref{fig:web}. Perhaps surprisingly, it is also known~\cite{CVX21} that solving APSP in truly subcubic time would give a polynomially faster algorithm for directed unweighted APSP as well, and the corresponding hypotheses are in fact equivalent~\cite{Fis26} (albeit conditionally\footnote{The equivalence in~\cite{Fis26} requires both $\omega=2$ and the resolution of a conjecture in combinatorics.}), even though the longstanding running times of the two problems are different: $\approx n^3$ for APSP and $\approx n^{2.5}$ for directed unweighted APSP (if $\omega=2$).
+
+Similar reductions and equivalences are also known for $3$SUM: all nontrivial 3-linear degeneracy tests are equivalent to $3$SUM~\cite{DGS20}, and many other problems are 3SUM-hard (e.g., many problems in computational geometry~\cite{GO95,BH01,SEO03,AH08}, and some string problems~\cite{ACLL14,AVWW14,KPP16}). 
+
+CNF-SAT reduces to Orthogonal Vectors~\cite{Wil05}, so that unless SETH is refuted, OV requires $n^{2-o(1)}$ time. SETH also implies fine-grained hardness for many exponential-time problems~\cite{CDL+16}.
+
+Both $3$SUM and APSP reduce to the Exact Triangle problem (given a tripartite graph with integer edge weights, is there a triangle whose three weights sum to zero?)~\cite{VW13,VW10,VW18}. Through Exact Triangle, both reduce to online Set Disjointness (from the list above), and even to its offline version, in which the query pairs are given in advance together with the sets~\cite{VX20a,CX24}; for $3$SUM, direct reductions are also known~\cite{Pat10,KPP16,JX23,ABF23}. In graph terms, offline Set Disjointness is the All-Edges Sparse Triangle problem: given a graph with $m$ edges, decide for every edge whether it lies in a triangle.
+
+All-Edges Sparse Triangle thus inherits the hardness of both $3$SUM and APSP, and it is in turn the source of the conditional lower bounds for Set Disjointness data structures, dynamic graph problems, and other problems~\cite{Pat10,AV14,KPP16,GLP19}. Many came to regard it as one of the most reliably hard problems in fine-grained complexity, and the evidence seemed good. 
+
+
+All-Edges Sparse Triangle can be solved in $O(m^{3/2})$ time just by listing all triangles~\cite{IR78,CN85}, and a high-degree/low-degree split combined with matrix multiplication~\cite{AYZ97} improves this to $O(m^{2\omega/(\omega+1)})$, where $2\le\omega<2.372$ is the matrix multiplication exponent.\footnote{Triangle detection in $n$-vertex graphs has long been known to be reducible to matrix multiplication~\cite{IR78}.} Even if $\omega=2$, this is $m^{4/3}$. On the graphs the reductions produce, which have $n$ vertices of degree about $\sqrt n$, this equals the brute-force running time $n^2$ conjectured to be optimal. Matrix multiplication only seemed useful for dealing with dense inputs, whereas these instances ask for a sparse set of outputs, and it seemed plausible that no technique could do better.
+
+However, a reduction from $A$ to $B$, proved in order to show that $B$ is hard, is also an algorithm for $A$ whenever $B$ turns out to be easy. In this paper we give a new algorithm for a \emph{lopsided} version of All-Edges Sparse Triangle, in which the graph is tripartite and one of the three parts is significantly smaller than the other two. Most known reductions to All-Edges Sparse Triangle can be slightly modified to produce such instances.
+
+As a consequence, all of the problems in the list above (and many more), except for CNF-SAT and Orthogonal Vectors, have polynomially faster algorithms than before:
+\begin{itemize}
+
+
+
+\item \textbf{$3$SUM}: deterministic $O(n^{1.9992})$ time for integers of polynomial size (Theorem~\ref{thm:3sumapsp}), and for real numbers, a Las Vegas algorithm with $O(n^{1.998})$ expected time whose only operations on real numbers are comparisons, additions, and subtractions (Theorem~\ref{thm:real}).
+
+
+
+
+\item \textbf{APSP}: deterministic $O(n^{2.9995})$ time for polynomially bounded integer weights, and the same bound for the $(\min,+)$-product (Theorem~\ref{thm:3sumapsp}), and for real weights, Las Vegas algorithms with $O(n^{2.998})$ expected time, again using only comparisons, additions, and subtractions on real numbers (Theorem~\ref{thm:real}).
+
+\item \textbf{Directed Unweighted APSP}: a deterministic algorithm running in $O(n^{2+\mu-\varepsilon''})$ time for some constant $\varepsilon''>0$, where $\mu<0.5275$ is defined by $\omega(1,\mu,1)=1+2\mu$, and $\omega(1,\mu,1)$ is the exponent of multiplying an $n\times n^\mu$ by an $n^\mu\times n$ matrix.
+Note that $\tilde O(n^{2+\mu})\leq O(n^{2.5275})$ is the longstanding running time of Zwick's algorithm. This is the first improvement over Zwick's algorithm that does not come from faster rectangular matrix multiplication, and it refutes the Directed Unweighted APSP hypothesis~\cite{CVX21,CVX23,Fis26} (Theorem~\ref{thm:dirapsp}).
+
+\item \textbf{Tree Edit Distance}: $O(n^{2.9995})$ time for polynomially bounded integer costs via the tight reduction of~\cite{NPSVXY25}.
+
+
+\item \textbf{Online Set Disjointness}: for $D\le N^{0.12}$, a deterministic data structure whose preprocessing time is polynomially less than $N^2$ and whose query time is polynomially less than $\sqrt D$, and which returns $|S_I\cap T_J|$, so that it solves the counting version as well. For $D\le N^{1/18}$, the preprocessing takes $O(N^2/D^{0.063})$ time and the queries take $O(D^{0.437})$ time (Theorem~\ref{thm:intro3}). 
+\end{itemize}
+
+The APSP and $3$SUM hypotheses are therefore refuted, and so are several other hypotheses of fine-grained complexity. Figure~\ref{fig:web} summarizes the problems affected, and in Section~\ref{Sec:introknown} below we list many more new algorithmic results. All of these results follow from one algorithm, for computing a given sparse set of entries of the product of two thin matrices, which we describe in the next subsection.
+
+We view this as a great success for fine-grained complexity. The hypotheses were made to be tested.
+The reductions and connections between problems have always been the focus of fine-grained complexity, and these connections persist whether or not the problems turn out to be hard.
+The web of reductions that was interpreted to imply hardness is exactly what turns a single new algorithm into faster algorithms for a myriad of problems at once.
+This also opens a number of research directions in fine-grained complexity, algorithm design, and algebraic complexity; we discuss some in Section~\ref{sec:conclusion}.
+
+\subsection{All-Edges Sparse Triangle}
+In this paper we present a simple algebraic technique that solves All-Edges Sparse Triangle in $O(n^{2-\delta})$ time, for a constant $\delta>0$, on sparse tripartite graphs with two parts of $n$ vertices and a third part of at most $n^{0.12}$ vertices. In matrix language it computes a prescribed sparse set of entries of a dense product of thin matrices. We call a product of an $N\times D$ matrix by a $D\times N$ matrix \emph{thin} when $D$ is a small power of $N$, and, given a set $W$ of positions of the product, we call these positions, and the entries of the product at them, \emph{wanted}. Unlike in usual fast matrix multiplication algorithms, the wanted entries are a sparse subset of the full matrix product, and our new algorithm critically exploits this. A matrix multiplication algorithm computes all $N^2$ entries of the product whether they are wanted or not, and thus takes $\Omega(N^2)$ time, whereas ours is faster than this. Our theorem is as follows.
+
+\begin{theorem}[see Corollary~\ref{cor:zt} and Theorem~\ref{thm:general}]\label{thm:intro}
+Let $N\ge D^{18}$, let $X\in\Z^{N\times D}$ and $Y\in\Z^{D\times N}$ have entries of absolute value $N^{O(1)}$, and let $W$ be any set of $|W|\le N^2/\sqrt D$ positions. The entries $(XY)[I,J]$, $(I,J)\in W$, can be computed deterministically in $O(N^2/D^{0.063})$ operations on $O(\log N)$-bit integers. More generally, for every $\varepsilon<0.1204$ and every $\kappa>0$ there is a $\gamma>0$ such that, whenever $D\le N^{\varepsilon}$ and $|W|\le N^2/D^{\kappa}$, the task takes $O(N^2/D^{\gamma})$ operations.
+\end{theorem}
+
+For comparison, when $|W| = N^2/\sqrt D$, computing each wanted entry one by one as an inner product costs $N^2\sqrt D$, and computing the whole product with Coppersmith's rectangular matrix multiplication algorithm~\cite{Cop82} costs $N^{2+o(1)}$. Our algorithm is faster than either of these, and uses polynomially less than one operation per entry of the full product.
+
+The algorithm builds on Coppersmith's algorithm~\cite{Cop82} for rectangular matrix multiplication, which makes use of an algebraic identity of Sch\"onhage~\cite{Sch81}. The high-level idea is to carefully analyze the inner workings of Coppersmith's algorithm to see which operations are no longer needed since they are only used to compute output entries outside of $W$. This approach would not work effectively for most known matrix multiplication algorithms,\footnote{In fact, prior to this work, the authors had tried approaches like this using the Coppersmith--Winograd identities~\cite{CW90} and more, without success.} but it turns out that Sch\"onhage's identity has sparsity and combinatorial properties we can take advantage of to make this work. See Section~\ref{sec:result} for a more detailed overview.
+
+
+Coppersmith's paper~\cite{Cop82} contains two algorithms. The first algorithm achieves an $n^2\poly\log n$ running time for $n\times n^{0.172}\times n$ matrix multiplication (for matrices with $\poly\log n$ bit entries). We do not use this algorithm here, but it has been extensively used before, both in the previous fastest APSP algorithm by Williams~\cite{Wil18} and to design the fastest fine-grained algorithms for a number of problems using the polynomial method~\cite{Wil14,AWY15,AW15,CW21,ACW16,ACW20}. Our approach instead builds on the second algorithm in~\cite{Cop82}, which only achieves an $n^{2+o(1)}$ running time (and not $n^2\poly\log n$) for $n\times n^\alpha\times n$ matrix multiplication for some constant $\alpha>0$; these $n^{o(1)}$ factors become insignificant in our setting of polynomial savings. Subsequent work on rectangular matrix multiplication has mostly followed this second approach~\cite{Cop97,LeG12,LU18,VXXZ24} achieving the current bound $\alpha > 0.321$. In order to take advantage of the wanted set, we will modify Coppersmith's second algorithm quite differently from prior work, in a way which ultimately achieves the worse bound $\alpha>0.12$.
+
+Computing the wanted entries of a thin matrix product is equivalent to the counting version of Lopsided All-Edges Sparse Triangle (if $X$ and $Y$ are the two biadjacency matrices, then $(XY)[a,b]$ is the number of middle vertices adjacent to both $a$ and $b$), so it solves the detection variant as well. In a tripartite graph with two parts of $n$ vertices and a middle part of $n^{\varepsilon}$ vertices, our algorithm counts the triangles through each of $|W|$ prescribed pairs of outer vertices in $O(|W|\,n^{0.437\varepsilon}+n^{2-0.063\varepsilon})$ time for $\varepsilon<1/18$, which is $O(n^{2-0.063\varepsilon})$ for $|W|\le n^{2-\varepsilon/2}$, and, whenever $|W|\le n^{2-\Omega(1)}$, in truly subquadratic time for every $\varepsilon<0.1204$ (Corollary~\ref{fact:lop} and Theorem~\ref{thm:general}).
+
+\subsection{Known reductions} \label{Sec:introknown}
+It is known that $3$SUM~\cite{Pat10,KPP16}, Exact Triangle and hence APSP~\cite{VX20a}, and even their real-valued versions~\cite{CVX22}, all reduce to Lopsided All-Edges Sparse Triangle. In matrix terms, this detection version is a Boolean matrix problem, and it is also known as offline Set Disjointness~\cite{KPP16,VX20a}. 
+
+The published reductions are mostly randomized, since the hypotheses were stated for randomized algorithms, but some have been derandomized: the reductions from $3$SUM~\cite{CH20,FKP24}, including the reduction of~\cite{KPP16} to offline Set Disjointness~\cite[Theorem~1.4]{FKP24}, and the reduction from Exact Triangle to the standard balanced case of All-Edges Sparse Triangle, by Chan and Xu~\cite{CX24}. We show that the reduction from Exact Triangle to the lopsided case can also be made deterministic by hashing the weights modulo a prime chosen with fast matrix multiplication and building the instances as Chan and Xu~\cite{CX24} do (Section~\ref{sec:redproof}), so we refute both hypotheses deterministically.
+
+With randomization, we refute the hypotheses in their most general form, 
+where the inputs are real numbers.
+ The reduction of Chan, Vassilevska Williams, and Xu~\cite{CVX22} from the real-valued
+  problems to sparse triangle problems (which was designed as a hardness argument) uses 
+  only additions, subtractions, and comparisons (via Fredman's trick~\cite{Fre76}), 
+  so combined with our algorithm it gives Las Vegas algorithms for the real-valued 
+  versions of $3$SUM and APSP (Section~\ref{sec:real}). Unlike the reductions for 
+  integer inputs, which need only the detection version, the reduction of~\cite{CVX22} 
+  that we use is to the counting version of Lopsided All-Edges Sparse Triangle, which 
+  asks for the number of triangles through each prescribed pair, and which our 
+  Theorem~\ref{thm:main} also solves. Chan, Vassilevska Williams, and Xu~\cite{CVX22} 
+  also give a reduction to the Boolean version of All-Edges Sparse Triangle, but it is
+   tight only from real APSP, not from real $3$SUM or Exact Triangle.
+
+\begin{theorem}[Theorems~\ref{thm:zwt}, \ref{thm:3sumapsp}, and~\ref{thm:real}]\label{thm:intro2}
+On a word RAM with $O(\log n)$-bit words, deterministic algorithms solve the following problems, where all numbers in the input are integers of absolute value $n^{O(1)}$:
+\begin{itemize}
+\item Exact Triangle on $n$-vertex graphs in $O(n^{2.9983})$ time,
+\item APSP on directed $n$-vertex graphs with no negative cycles in $O(n^{2.9995})$ time,
+\item the $(\min,+)$-product of two $n\times n$ matrices in $O(n^{2.9995})$ time, and
+\item $3$SUM on $n$ numbers in $O(n^{1.9992})$ time.
+\end{itemize}
+In the real RAM in which the only operations allowed on real numbers are comparisons, additions, and subtractions, Las Vegas algorithms solve the following problems on real inputs:
+\begin{itemize}
+\item $3$SUM on $n$ numbers in $O(n^{1.998})$ expected time,
+\item APSP in $O(n^{2.998})$ expected time,
+\item the $(\min,+)$-product in $O(n^{2.998})$ expected time, and
+\item Exact Triangle in $O(n^{2.998})$ expected time.
+\end{itemize}
+\end{theorem}
+
+
+
+Lower bounds are known for the above problems in some restricted models of computation: over the $(\min,+)$ semiring, straight-line programs need $n^3$ operations~\cite{Ker70} and path-comparison algorithms need $\Omega(n^3)$ time~\cite{KKP93}, and 3-linear decision trees for $3$SUM need depth $\Omega(n^2)$~\cite{Eri99,AC05}.
+
+Our algorithms are not in these restricted models, since the known reductions remove the weights (by hashing, or by Fredman's trick for real inputs), and we then count triangles in unweighted graphs using integer matrix multiplication. 
+
+We remark that there already was some indication that some of these models were too restricted, as for instance recent work~\cite{KLM19} showed that $6$-linear decision trees of depth $O(n\log^2 n)$ suffice to solve $3$SUM, and similar strong bounds are known for Exact Triangle. (See the paragraph on unaffected conjectures below for more on this.)
+
+\paragraph{Data structure version, and hinted Online Matrix--Vector.}
+Our algorithm for computing the wanted entries of a thin matrix product can also be converted into a data structure. We strengthen Theorem~\ref{thm:intro} as follows (Section~\ref{sec:general}):
+
+\begin{theorem}[see Theorem~\ref{thm:single} and Corollary~\ref{cor:zt}]\label{thm:intro3}
+Let $N\ge D^{18}$, and let $X\in\Z^{N\times D}$, $Y\in\Z^{D\times N}$ have entries of absolute value $N^{O(1)}$. The pair $(X,Y)$ can be preprocessed deterministically in $O(N^2/D^{0.063})$ time, polynomially less than the size of the product. After this, any single entry $(XY)[I,J]$ can be computed deterministically in $O(D^{0.437})$ time, polynomially less than $\sqrt D$. More generally, for every $\varepsilon<0.1204$ and every $q>0$ there is a $\gamma>0$ such that, whenever $D\le N^{\varepsilon}$, the pair can be preprocessed in $O(N^2/D^{\gamma})$ time, after which any single entry can be computed in $O(D^{q})$ time.
+\end{theorem}
+
+The bounds of Theorem~\ref{thm:intro} follow by asking $|W|$ queries to the data structure.
+
+This allows us to refute the hinted Online Matrix--Vector (OMv) conjectures of van den Brand, Nanongkai, and Saranurak~\cite{BNS19} in the regime of thin hints, i.e., for very rectangular matrices. In the OMv problem, one is given an $n\times n$ Boolean matrix $M$, and then $n$ vectors arrive one at a time, each of which must be multiplied by $M$ before the next one arrives. The OMv conjecture~\cite{HKNS15} asserts that this requires $n^{3-o(1)}$ total time, and it implies tight lower bounds for many dynamic problems. In the hinted versions, the algorithm gets a hint before the vector arrives. For instance, in $v$-hinted Mv, $M$ is an $n\times t$ matrix and the hint is a $t\times n$ matrix $V$, one of whose columns will be the vector. One can then either compute all of $MV$ by fast matrix multiplication as soon as the hint arrives, or wait and compute one matrix--vector product in $O(nt)$ time, and van den Brand et al.~\cite{BNS19} conjecture that no algorithm is polynomially faster than both. Our data structure is faster than both when the hint is thin:
+
+\begin{theorem}[Corollary~\ref{cor:bns}]\label{thm:intro4}
+The $v$-hinted Mv, Mv-hinted Mv, and uMv-hinted uMv conjectures of~\cite{BNS19} (Conjectures 5.2, 5.7, and 5.12 there) are refuted in the regime of thin hints. For hint dimension $t=n^{\tau}$ with $0<\tau<1/18$, the phase after the hint takes $O(n^{2-0.063\tau})$ time and the phase after the vector $O(n^{1+0.437\tau})$ time, against the conjectured $n^{2-o(1)}$ and $n^{1+\tau-o(1)}$. Correspondingly, the uMv version, whose two hints have dimensions $t_1=n^{\tau_1}$ and $t_2=n^{\tau_2}$, fails for $\tau_1<\tau_2/18$. All three fail, with smaller savings, for every $\tau<0.1204$ (for the uMv version, $\tau_1<0.1204\,\tau_2$).
+\end{theorem}
+
+The main conditional lower bounds of~\cite{BNS19} for dynamic matrix inverse use the conjectures at $\tau\approx0.53$, far from the thin regime, and are unaffected. The bounds that are affected are those for the tail end of the update--query trade-offs with the fastest queries. These
+had established the conditional optimality of the dynamic matrix inverse algorithms of Sankowski~\cite{San04} and of~\cite{BNS19} when queries are fast, and these no longer have a believable conditional lower bound. Neither do other results whose lower bounds were based on this end of the trade-offs, e.g., for partially dynamic distance oracles~\cite{HLS24} and dynamic attention~\cite{BSZ24} (Section~\ref{sec:bns}).
+
+\begin{figure}[p]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}[
+  font=\footnotesize,
+  >={Stealth[length=2mm]},
+  box/.style={rounded corners=2pt,align=center,inner sep=3pt,text width=#1,execute at begin node={\hyphenpenalty=10000\relax}},
+  new/.style={box=#1,draw=blue!60!black,fill=blue!7},
+  new/.default=2.7cm,
+  old/.style={box=#1,draw=black!45,fill=black!4,text=black!80},
+  old/.default=2.7cm,
+  cls/.style={box=#1,draw=blue!60!black,very thick,fill=blue!7},
+  ours/.style={box=#1,draw=orange!85!black,very thick,fill=orange!12,inner sep=4pt},
+  red/.style={->,thick,blue!55!black},
+  hard/.style={->,semithick,black!45},
+  lab/.style={font=\scriptsize,inner sep=1pt,text=black}
+]
+\node[cls=3.2cm,anchor=north] (et) at (7.78,0) {\textbf{Exact Triangle}\\ $\equiv$ \#Exact Triangle\\ \cite{CVX23}\\[1pt] \emph{here:} truly subcubic};
+\node[cls=7.3cm,anchor=north west] (apsp) at (10.9,0) {\textbf{APSP class}~\cite{VW10,VW18,RV11,AGV15,AGV23,BGMW20,NPSVXY25,TT00,BDT16}\\[2pt]
+APSP, $(\min,+)$-product, Negative / Min-Weight Triangle, Metricity, $(\min,+)$-Product Verification, Minimum Weight Cycle, Replacement Paths, Second Shortest Simple Path, Radius, Median, Betweenness Centrality (for unique shortest paths), Tree Edit Distance, Maximum Subarray\\[2pt] \emph{here:} truly subcubic};
+\node[new=3.2cm,anchor=north east] (kcl) at (5.45,0) {\textbf{Zero-Weight $k$-Clique}\\ folding~\cite{NP85}\\ \emph{here:} $O(n^{k-\varepsilon})$};
+
+\node[cls=6.3cm,anchor=south west] (sum) at (5.6,1.2) {\textbf{3SUM class}~\cite{GO95,VW10,VW18,FKP24,Pat10,CH20,DGS20,LPV20,CVX23,FJX25}\\[2pt] 3SUM, GeomBase, All-Numbers 3SUM, Convolution-3SUM, \mbox{3-Linear} Degeneracy Testing (e.g.\ 3AP), \#3SUM; MonoConvolution (baseline $n^{1.5}$)\\[2pt] \emph{here:} truly subquadratic, and $O(n^{1.5-\varepsilon})$ for MonoConvolution};
+\node[old=3.6cm,anchor=east] (aes) at (5.1,0 |- sum.center) {\textbf{All-Edges Sparse Triangle} (balanced, $m^{4/3}$), triangle listing~\cite{Pat10,KPP16,VX20a,DKPW20,CX24}, and 4-cycle listing~\cite{ABKZ22,JX23}};
+\coordinate (Tb) at ($(sum.north)+(0,0.35)$);
+\node[old=10.0cm,anchor=south west] (hard3) at (0,0 |- Tb) {\textbf{3SUM-hard problems}\\[2pt]
+computational geometry: three collinear points (hence minimum-area triangle), point covering, motion planning~\cite{GO95}, polygon containment~\cite{BH01}\\ strings: jumbled indexing~\cite{ACLL14}, local alignment~\cite{AVWW14}\\ set-intersection and set-disjointness data structures~\cite{Pat10,KPP16} (for universes larger than in Theorem~\ref{thm:intro3})\\ approximate distance oracles~\cite{ABKZ22,ABF23}};
+\node[old=7.3cm,anchor=south east] (dyn) at (apsp.east |- Tb) {\textbf{Dynamic graph problems}~\cite{Pat10,AV14,KPP16}: reachability, shortest paths, subgraph connectivity, matching, \dots};
+
+\node[new=3.6cm,anchor=south west] (conv) at ($(sum.south east)+(1.75,-0.65)$) {\textbf{\boldmath$(\min,+)$-Convolution class}~\cite{CMWW19,KPS17}: Superadditivity Testing, MaxConv Upper Bound, Unbounded and 0/1 Knapsack with capacity $t$ (time in terms of $n+t$)\\[1pt] \emph{here:} truly subquadratic (randomized for 0/1 Knapsack)};
+
+\node[new=3.3cm,anchor=north west] (mink) at ($(apsp.south west)+(0,-0.5)$) {\textbf{Min-/Max-Weight $k$-Clique}\\ folding~\cite{NP85}\\[1pt] \emph{here:} $O(n^{k-\varepsilon})$};
+\node[new=3.3cm,anchor=north east] (dir) at ($(apsp.south east)+(0,-0.5)$) {\textbf{Directed unweighted APSP}\\ (and weights $\le\nobreak\log^cn$)~\cite{CVX21}\\[1pt] \emph{here:} polynomially faster than Zwick's algorithm};
+
+\node[ours=6.0cm,anchor=north east] (lop) at (10.35,-2.9) {\textbf{Lopsided All-Edges Sparse Triangle}\\ Definitions~\ref{def:lop} and~\ref{def:countlop}\\[2pt] \emph{here:} truly subquadratic\\ \mbox{for $D=n^{\varepsilon}$, $\varepsilon<0.12$}};
+\node[new=2.6cm,anchor=north west] (real) at (0,-2.9) {\textbf{Real-valued problems} \cite{CVX22}: real 3SUM, real APSP and $(\min,+)$-product, real Exact Triangle\\[1pt] \emph{here:} truly subquadratic and truly subcubic (Las Vegas)};
+\node[new=3.2cm,anchor=north east] (omv) at ($(lop.south east)+(0,-1.0)$) {\textbf{Hinted OMv} \cite{BNS19}, thin regime: $v$-hinted Mv, Mv-hinted Mv, uMv-hinted uMv\\[1pt] \emph{here:} polynomially faster than conjectured};
+\node[new=2.2cm,anchor=north west] (xor) at ($(lop.south west)+(0,-1.0)$) {\textbf{3XOR}\\[1pt] \emph{here:} truly subquadratic};
+
+\draw[red] (et |- sum.south) -- node[lab,right]{\cite{CH20,VW13}} (et);
+\draw[red] (apsp.west|-et) -- node[lab,below,align=center,text width=1.0cm]{\cite{VW13,VW10,VW18}} (et.east);
+\draw[red] (kcl.east|-et) -- (et.west);
+\draw[red,very thick] (et) -- node[lab,right,align=left,text width=2.3cm]{\cite{VX20a,CX24,FKP24}, Sec.~\ref{sec:redproof}} (et|-lop.north);
+\draw[red] (real.east|-lop.west) -- node[lab,above=1.5pt]{Sec.~\ref{sec:real}} (lop.west);
+\draw[red,dashed] (omv.north) -- node[lab,right,align=left]{Thm.~\ref{thm:single},\\ Sec.~\ref{sec:bns}} (omv.north|-lop.south);
+\draw[red] (xor.north) -- node[lab,right]{Remark~\ref{rem:3xor}} (xor.north|-lop.south);
+\draw[red] (conv.south) -- node[lab,right=1.5pt]{\cite{BCD14}} (conv.south|-apsp.north);
+\draw[red] (conv.west) -- node[lab,above=1.5pt,align=center,text width=1.5cm]{\cite{BIS17,CMWW19}} (conv.west-|sum.east);
+\draw[red] (mink.north) -- (mink.north|-apsp.south);
+\draw[red] (dir.north) -- (dir.north|-apsp.south);
+
+\draw[hard] (sum.west) -- (aes.east|-sum.west);
+\draw[hard] ([xshift=-12pt]sum.north) -- ([xshift=-12pt]sum.north|-hard3.south);
+\draw[hard] ([xshift=-12pt]sum.north east) -- ([xshift=-12pt]sum.north east |- dyn.south);
+\draw[hard] (et.north west) -- ([xshift=-14pt]aes.south east);
+\draw[hard] ([xshift=-0.33cm]apsp.north east) -- ([xshift=-0.33cm]dyn.south east);
+\draw[hard,rounded corners=3pt] (real.north-|0.55,0) |- (aes.west);
+
+\node[box=3.4cm,draw=black!25,anchor=north west] (unaff) at ($(real.south west)+(0,-0.6)$) {\textbf{Unaffected:} SETH, Orthogonal Vectors, OMv without hints, $k$-SUM and $k$-XOR for $k\ge4$, 3SUM-Indexing};
+\begin{scope}[shift={($(mink.west |- dir.south)+(0,-0.3)$)},every node/.style={anchor=west,inner sep=1pt}]
+\draw[draw=blue!60!black,fill=blue!7,rounded corners=1pt] (0,-0.12) rectangle (0.7,0.12);
+\node at (0.85,0) {new, polynomially faster algorithm};
+\draw[draw=black!45,fill=black!4,rounded corners=1pt] (0,-0.57) rectangle (0.7,-0.33);
+\node at (0.85,-0.45) {reductions no longer give evidence of hardness};
+\draw[red] (0,-0.9) -- (0.7,-0.9);
+\node[align=left,anchor=north west] at (0.85,-0.72) {$A\to B$: $A$ reduces to $B$, so our algorithm for $B$\\ gives one for $A$};
+\draw[hard] (0,-1.75) -- (0.7,-1.75);
+\node at (0.85,-1.75) {$A\to B$: $B$ is hard under $A$};
+\draw[red,dashed] (0,-2.2) -- (0.7,-2.2);
+\node[align=left,anchor=north west] at (0.85,-2.02) {$A\dashrightarrow B$: $A$ uses the data structure version\\ of our algorithm for $B$ (Theorem~\ref{thm:single})};
+\end{scope}
+\end{tikzpicture}}
+\caption{Problems affected by our algorithm, which solves the problem in the orange box (Lopsided All-Edges Sparse Triangle) directly. The problems inside each of the three thick-bordered blue boxes (3SUM class, Exact Triangle, and APSP class) are pairwise equivalent under fine-grained reductions (for MonoConvolution, whose baseline is $n^{1.5}$, this means $O(n^{1.5-\varepsilon})$ time), and we omit the arrows between them. Problems in gray boxes are reached from 3SUM, APSP, or Exact Triangle only by one-way reductions, so our result gives no faster algorithms for them, but these reductions no longer give evidence of hardness. The new algorithms are deterministic except where marked. Citations are to the reductions; for the problems in the top rows, the cited papers contain many more problems of the same kind.}\label{fig:web}
+\end{figure}
+
+\paragraph{More new algorithms.}
+Figure~\ref{fig:web} shows the reductions involved. In addition to the results listed above, composing known reductions with our algorithms for Exact Triangle, $3$SUM, APSP, and the $(\min,+)$-product (Theorem~\ref{thm:intro2}) gives polynomially faster algorithms for many other problems. We next list some examples. Throughout, the numbers in the input are integers of absolute value polynomial in the input size, $n$ is the number of vertices, matrix rows, or input elements, and our algorithms are deterministic unless stated otherwise.
+\begin{itemize}
+\item \textbf{The APSP class.} Negative Triangle, which asks whether an edge-weighted graph has a triangle of negative total weight, is arguably the simplest problem of the subcubic equivalence class of APSP~\cite{VW10,VW18}; the fact that it is equivalent to APSP made many other reductions possible. The APSP subcubic equivalence class also contains Minimum Weight Cycle (with nonnegative weights)~\cite{RV11,VW10,VW18}, Replacement Paths (for each edge of a shortest $s$--$t$ path, the length of a shortest $s$--$t$ path avoiding it) and Second Shortest Simple Path in directed graphs~\cite{VW10,VW18}, Radius, Median, and (for unique shortest paths) Betweenness Centrality~\cite{AGV15,AGV23}, Metricity (does a given matrix satisfy the triangle inequality?) and $(\min,+)$-Product Verification (is $C=A\star B$ for given matrices $A$, $B$, and $C$?)~\cite{VW10,VW18}, Tree Edit Distance~\cite{BGMW20,NPSVXY25}, Maximum Subarray (the contiguous submatrix of an $n\times n$ matrix with the largest sum of entries)~\cite{TT00,BDT16}, the Wiener Index (returning the sum of all distances in a graph)~\cite{LVW18}, computing the number of witnesses for every entry of the $(\min,+)$-product~\cite{CVX23} and a variety of parity versions of many of the mentioned problems~\cite{paritypaper}. \emph{We give the first truly subcubic algorithms for all of these problems}, and for Diameter and many other problems which reduce to APSP but may not be known to be equivalent.
+
+\item \textbf{The $3$SUM class.} The subquadratic equivalence class of $3$SUM contains the variant with three input sets $A$, $B$, and $C$ (is there $a\in A$, $b\in B$, $c\in C$ with $a+b=c$?) and GeomBase (given $n$ points with integer coordinates on the three horizontal lines $y=0$, $y=1$, and $y=2$, is there a non-horizontal line through three of them?)~\cite{GO95}, All-Numbers $3$SUM (for every input number, decide whether it is part of a solution)~\cite{VW10,VW18} (the reduction becomes deterministic with the self-reductions of~\cite{LVWW16,GP18}, as noted in~\cite{FKP24}), Convolution-3SUM (do $x_0,\dots,x_{n-1}$ satisfy $x_i+x_j=x_{i+j}$ for some $i,j$?)~\cite{Pat10,CH20}, and every nontrivial variant of 3-Linear Degeneracy Testing (are there distinct input numbers $x_1,x_2,x_3$ with $\alpha_1x_1+\alpha_2x_2+\alpha_3x_3=t$, for fixed integers $\alpha_1,\alpha_2,\alpha_3,t$?), such as 3AP, the case $x_1+x_2=2x_3$ (do three of the numbers form an arithmetic progression?)~\cite{DGS20}. The counting version \#3SUM is also in the class~\cite{CVX23,FJX25}; see the last item below. \emph{We give the first truly subquadratic algorithms for all of these problems}.
+
+The $3$SUM class also contains MonoConvolution, a ``colored'' version of Boolean convolution: given three integer sequences $a,b,c$ of length $n$, determine for every index $i$ whether there is a $j<i$ with $a[j]=b[i-j]=c[i]$. Lincoln, Polak, and Vassilevska Williams~\cite[Theorems~7 and~8]{LPV20} show that MonoConvolution is $(n^2, n^{1.5})$ fine-grained equivalent to $3$SUM:  an $O(n^{2-\varepsilon})$-time algorithm for $3$SUM gives an $\tilde O(n^{3/2-\varepsilon/(8-2\varepsilon)})$-time algorithm for MonoConvolution. Our approach gives $O(n^{1.4999})$ time for MonoConvolution, improving on the previous $\tilde O(n^{1.5})$ time of~\cite{LPV20}.
+
+\item \textbf{The $(\min,+)$-convolution class.} The $(\min,+)$-convolution of two sequences $a$ and $b$ of $n$ integers is defined as the sequence $c$ with $c[k]=\min_{i+j=k}(a[i]+b[j])$ for all $k$. This convolution version of APSP is fine-grained reducible to both
+ the $(\min,+)$-product~\cite{BCD14} and $3$SUM~\cite{BIS17,CMWW19}. Problems equivalent to $(\min,+)$-convolution include Superadditivity Testing (is $a[i+j]\ge a[i]+a[j]$ for all $i,j$?), Maximum Consecutive Subsums (for every $k$, the largest sum of $k$ consecutive elements), and Tree Sparsity (a subtree with $k$ vertices of maximum weight in a vertex-weighted tree)~\cite{CMWW19}. \emph{We give the first truly subquadratic algorithms for all of these problems}, refuting the $(\min,+)$-convolution hypothesis~\cite{KPS17,CMWW19}. (This would have been possible by refuting either the APSP or the $3$SUM hypothesis, and we refute both.)
+
+\item \textbf{Knapsack and Approximate Subset Sum.} Both 0/1 and Unbounded Knapsack, with $n$ items and capacity $t$, reduce to $(\min,+)$-convolution~\cite{CMWW19}. So does approximating Subset Sum to within a factor $1-\varepsilon$, which is in fact equivalent to it: an algorithm for $(\min,+)$-convolution in time $T(n)$ gives a randomized approximation scheme in $\tilde O(n+T(1/\varepsilon))$ time~\cite{BN21}. For 0/1 Knapsack, the best known bound in terms of $n$ and the largest item weight $w_{\max}\le t$ is $\tilde O(n+w_{\max}^2)$~\cite{Bri24,Jin24}. \emph{We give the first algorithms running in $\tilde O(n+t^{2-\delta})$ time, and the first approximation scheme running in $\tilde O(n+(1/\varepsilon)^{2-\delta})$ time, for a constant $\delta>0$.} Only the algorithm for Unbounded Knapsack is deterministic.
+
+\item \textbf{Zero-, Min-, and Max-Weight $k$-Clique.} For a constant $k\ge3$, find $k$ vertices of an edge-weighted graph whose $\binom k2$ edge weights sum to zero, or to the minimum or maximum possible value. Due to the now classical reduction of Ne\v{s}et\v{r}il and Poljak~\cite{NP85} from $k$-Clique to triangle detection, our new Exact Triangle algorithm immediately implies \emph{the first algorithms running in $O(n^{k-\varepsilon})$ time for an $\varepsilon>0$} (Section~\ref{sec:kclique}), refuting the weighted $k$-Clique hypotheses~\cite{AL13,LVW18,BDT16}.
+
+\item \textbf{3XOR.} Given three lists of $n$ vectors in $\mathbb F_2^{d}$, where $d=O(\log n)$, decide whether there are vectors $a$, $b$, and $c$, one from each list, with $a\oplus b\oplus c=0$, where $\oplus$ denotes the bitwise XOR. This is a well-studied variant of $3$SUM~\cite{JV16,DSW18}. It is not known to reduce to $3$SUM, but the same approach works for it as well, so \emph{we give the first truly subquadratic algorithm} (Remark~\ref{rem:3xor}).
+
+\item \textbf{Counting versions.} Counting the zero-weight triangles of an Exact Triangle instance, or the solutions of a $3$SUM instance, is equivalent to the decision problem~\cite{CVX23}, and for $3$SUM the equivalence also holds under deterministic reductions~\cite{FJX25}. Similarly, counting the witnesses of each entry of the $(\min,+)$-product is equivalent to computing the $(\min,+)$-product~\cite{CVX23}. \emph{We give the first truly subcubic algorithms for \#Exact Triangle and for counting the witnesses of the $(\min,+)$-product, and the first truly subquadratic algorithm for \#3SUM}. See~\cite{CVX23,FJX25} for applications.
+\end{itemize}
+
+For problems that are only known to be 3SUM-hard or APSP-hard, such as many of the geometric problems of~\cite{GO95} and the dynamic problems of~\cite{Pat10,AV14,KPP16}, we get no faster algorithms, since the reductions go the other way. For instance, it is now open whether one can find three collinear points among $n$ points in the plane in truly subquadratic time.
+
+
+
+
+\paragraph{Relationships to some unaffected conjectures.}
+While we refute various hypotheses, their underlying problems are all similar in nature. We outline how a few other important problems with fine-grained hypotheses differ from $3$SUM, Exact Triangle, and APSP, signaling that refuting them might require other techniques.
+
+We begin with CNF-SAT and Orthogonal Vectors (OV). Neither of these problems is known to reduce to All-Edges Sparse Triangle or similar problems. CNF-SAT and Exact Triangle are known to both reduce to certain triangle problems (Matching Triangles and Triangle Collection~\cite{AVY15}), but these triangle problems concern the triangles in each of about $n^3$ color triples in dense node-colored graphs, and our techniques do not appear to work there.
+
+Unlike CNF-SAT and Orthogonal Vectors, $3$SUM, APSP, and Exact Triangle have long been known to have fast algorithms in certain more powerful models.
+
+$3$SUM (and more generally $k$-SUM) and also Exact Triangle have very efficient {\em linear decision trees}. Following a long line of work~\cite{MadH84,Eri99,AC05,GS17,ES17,CIO16,GP18,KLM19}, it is now known~\cite{KLM19} that for every $k\geq 3$, $k$-SUM has $2k$-linear decision trees of depth $O(n\log^2 n)$, and Exact Triangle in $m$-edge graphs has $6$-linear decision trees of depth $O(m\log^2 m)$. APSP has decision trees of depth $\tilde O(n^{2.5})$~\cite{Fre76}.  No such results are known for CNF-SAT and OV.
+
+
+$3$SUM, Exact Triangle, and APSP also all have fast
+{\em nondeterministic and co-nondeterministic algorithms}.
+A nondeterministic algorithm for a decision problem verifies a proof for YES, and a co-nondeterministic algorithm verifies a given proof for NO. Carmosino et al.~\cite{CGI+16}
+showed that $3$SUM can be solved nondeterministically and co-nondeterministically in $\tilde O(n^{1.5})$ time, and Exact Triangle and APSP in $\tilde{O}(n^{(3+\omega)/2})$ time. The best known co-nondeterministic algorithms for CNF-SAT and OV are no better than the known deterministic ones, and~\cite{CGI+16} postulate NSETH, the hypothesis that CNF-SAT requires $2^{n-o(n)}$ time even for co-nondeterministic algorithms. They then prove that if NSETH is true, then there cannot be a deterministic (or zero-error randomized) fine-grained reduction from CNF-SAT or OV to $3$SUM, APSP, or Exact Triangle. In fact, our algorithm  shows that if there were a deterministic fine-grained reduction from CNF-SAT or OV to $3$SUM, APSP, or Exact Triangle, then SETH (and not merely NSETH) is false.
+
+Interestingly, the issues posed by co-nondeterminism disappear in the Merlin--Arthur world where randomization is allowed. CNF-SAT~\cite{Wil16}, $3$SUM, and APSP~\cite{ACJRW22} all have vastly improved Merlin--Arthur protocols: the verification time for CNF-SAT (indeed for counting its satisfying assignments) is $2^{n/2}\poly(n)$, for $3$SUM it is $\tilde O(n)$, and for APSP it is $\tilde O(n^2)$.
+
+While we obtain a polynomial improvement for $3$SUM, we are unable to do so for $k$-SUM for $k\geq 4$. $3$SUM reduces to $k$-SUM, but no reduction in the other direction is known, and although $k$-SUM reduces to exact-weight subgraph problems~\cite{AL13,ALW14}, whose $n^k$ baseline we improve (Section~\ref{sec:kclique}), those reductions can only give $k$-SUM algorithms far slower than the $n^{\lceil k/2\rceil}$ baseline. The same holds for $k$-XOR for $k\ge 4$ and for the 3SUM-Indexing conjecture~\cite{GKLP17b,KP19,GGHPV20}. Ultimately, we believe that one good reason for the lack of progress on $k\geq 4$ is that $k$-SUM for $k\geq 4$ is not known to have fine-grained self-reductions. This has been a major obstacle in designing reductions from $k$-SUM and is also a major obstacle in designing algorithms for it. (The same goes for $k$-XOR for $k\geq 4$.)
+
+
+\paragraph{Combinatorial algorithms.}
+The new algorithms are algebraic and potentially impractical in their current form: the constants hidden in the $O(\cdot)$ are enormous, and the exponents can likely be improved. One might ask whether there are practical or ``combinatorial'' algorithms for these problems, similar to how one talks about combinatorial Boolean Matrix Multiplication (BMM). The known algorithms for combinatorial BMM, including the Four Russians~\cite{ADKF70}, the $n^3/\poly\log n$ bounds of~\cite{BW09,Cha15,Yu18}, and the recent $n^3/2^{\Omega((\log n)^{1/7})}$ bound of Abboud, Fischer, Kelley, Lovett, and Meka~\cite{AFK+24}, save only a subpolynomial factor, and no truly subcubic combinatorial algorithm is known. We do not know whether such algorithms exist. Most FGC reductions are combinatorial, so one could refocus the hypotheses to be about combinatorial algorithms~\cite{VW10,VW18,AV14}. 
+
+\paragraph{Other parameter regimes.}
+Even without considering combinatorial algorithms, one might also ask whether All-Edges Sparse Triangle can be solved faster in every regime of how large the three parts are. Our technique (due to the identity we use) needs the middle part to have at most $n^{0.12}$ vertices, whereas prior reductions have focused on different regimes.
+
+For instance, 
+the balanced sparse case of All-Edges Sparse Triangle introduced by P{\u a}tra{\c s}cu \cite{Pat10} has as input a tripartite graph with roughly equal parts and $m$ edges overall. Most known fine-grained reductions produce such balanced instances and give conditional lower bounds of $m^{4/3-o(1)}$.
+
+Another case of interest is where the tripartite graph has two parts of size $n$ and one part of size $\sqrt n$ and $O(n^{3/2})$ edges overall. Solving this version in $O(n^{2-\eps})$ time, even only for triangle detection (and not even for the all-edge version), would have consequences for girth approximation in undirected unweighted graphs~\cite{RV12}.
+
+\paragraph{Even faster algorithms.}
+Our focus in this paper is to give the simplest presentation of our new algorithm for thin matrix products, and show how known reductions to All-Edges Sparse Triangle combine with this to give all the polynomial speedups mentioned above. In particular, over the course of this project, with Claude we generated some algorithms whose exponents are slightly better than the ones we present here, but which are significantly more complicated. We intentionally did not include them in this paper. See also the discussion in Section~\ref{sec:conclusion} and footnote~\ref{footnote:improvements}.
+
+\paragraph{Organization.}
+In Section~\ref{sec:result} we give the main matrix algorithm. In Section~\ref{sec:reduction} we derive the algorithms for Exact Triangle, $3$SUM, and APSP from it, by using or slightly modifying known reductions. In Section~\ref{sec:general} we give the data structure version of our matrix algorithm, proving Theorems~\ref{thm:intro} and~\ref{thm:intro3}. In Section~\ref{sec:other} we present reductions to achieve the other algorithmic results discussed above. Finally, in Section~\ref{sec:conclusion} we discuss future directions.

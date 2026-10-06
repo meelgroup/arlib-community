@@ -1,0 +1,668 @@
+{
+  "schema": "tex2lean.paper-proof-map/1",
+  "ledgerId": "ledger:d19f200e-8e9e-4743-a251-a09acf9a5e13",
+  "paper": {
+    "id": "paper:8b864c6a-9f2c-4580-a7ba-5afcd7d2ff49"
+  },
+  "target": {
+    "id": "target:19cb3b28-7add-499c-a992-656881e6e548",
+    "paperId": "paper:8b864c6a-9f2c-4580-a7ba-5afcd7d2ff49",
+    "activeVersionId": "target-version:33babb66-b275-4dec-ae2b-e52b99b3ec05"
+  },
+  "activeClaimSetReceiptId": "claim-set:88ae59f7-372f-47e1-a122-9d095352078c",
+  "activeSurfaceInventoryId": "surface-inventory:cf84f090-5c86-44ef-8352-a27d9d6ddd99",
+  "targetVersions": [
+    {
+      "id": "target-version:33babb66-b275-4dec-ae2b-e52b99b3ec05",
+      "targetId": "target:19cb3b28-7add-499c-a992-656881e6e548",
+      "paperPacketDigest": "sha256-853d6a9c6c3662103277ef6b18915c5770e4f2ca318f9b59567452c1af0b7ca1",
+      "bodyDigest": "sha256-4838c85e1dd1dbbbc84bdfe3f3e749db2a6932d043b859189101dffa9e682d23",
+      "anchor": {
+        "file": "01-intro.tex",
+        "label": "thm:intro",
+        "environment": "theorem",
+        "from": 88,
+        "to": 90,
+        "excerptDigest": "sha256-f843205d5af41243054af0872bcbbab6fba18d3a96915a5d5a02eb5d7c1d909c"
+      },
+      "status": "active"
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim:11314e4d-8d24-4cbe-8837-cda67e750ab6",
+      "targetId": "target:19cb3b28-7add-499c-a992-656881e6e548",
+      "activeVersionId": "claim-version:d2dbdf21-d72b-47c8-b273-bf76b6d8cb6d",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:6d4a9aa6-29a9-4c54-ac8e-462408df7120",
+      "targetId": "target:19cb3b28-7add-499c-a992-656881e6e548",
+      "activeVersionId": "claim-version:877e49c8-1059-40d8-afa0-c3343af8852c",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:f582ff85-4f45-496a-ba97-128921ba208c",
+      "targetId": "target:19cb3b28-7add-499c-a992-656881e6e548",
+      "activeVersionId": "claim-version:393dd5cd-3935-4d97-ad52-918c285383c1",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:e85d885d-0cc8-4a8a-929e-65430559e252",
+      "targetId": "target:19cb3b28-7add-499c-a992-656881e6e548",
+      "activeVersionId": "claim-version:5884a3c5-0394-4ae4-b38b-08d29e31d951",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:8ecee3a9-4891-4cc4-817b-13923f37c0ff",
+      "targetId": "target:19cb3b28-7add-499c-a992-656881e6e548",
+      "activeVersionId": "claim-version:c3472a1a-70a3-43a8-b1ec-5acad2000197",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:81c745c5-4f52-4a53-8f28-463e9ce0f06a",
+      "targetId": "target:19cb3b28-7add-499c-a992-656881e6e548",
+      "activeVersionId": "claim-version:7e871314-0976-46e1-9994-55348b475de7",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:b06ee57b-c696-4ca3-9775-04e228a65c08",
+      "targetId": "target:19cb3b28-7add-499c-a992-656881e6e548",
+      "activeVersionId": "claim-version:8a82f142-6102-49a8-b9b5-53fceedcc55d",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:295b7a58-1801-4e69-8a7b-cb766a720a3d",
+      "targetId": "target:19cb3b28-7add-499c-a992-656881e6e548",
+      "activeVersionId": "claim-version:61a9f42c-26e6-4f4c-8945-f158d22d6339",
+      "role": "reportable"
+    },
+    {
+      "id": "claim:3fce89b3-a073-40ce-be85-23e13553f4eb",
+      "targetId": "target:19cb3b28-7add-499c-a992-656881e6e548",
+      "activeVersionId": "claim-version:cecf2365-9d49-4391-b9be-d2328c265176",
+      "role": "reportable"
+    }
+  ],
+  "claimVersions": [
+    {
+      "id": "claim-version:d2dbdf21-d72b-47c8-b273-bf76b6d8cb6d",
+      "claimId": "claim:11314e4d-8d24-4cbe-8837-cda67e750ab6",
+      "targetVersionId": "target-version:33babb66-b275-4dec-ae2b-e52b99b3ec05",
+      "anchor": {
+        "file": "01-intro.tex",
+        "excerptDigest": "sha256-d7113874076301f05495846eed90de0d560d959907262b6183f77873ae8ee631"
+      },
+      "text": "For every wanted position, return the exact integer matrix-product entry.",
+      "normalizedTextDigest": "sha256-f0e8febb123538f8431ed95593f3831eb458ce2bb3b64185f3d5ccbaf4715a71",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "01-intro.tex",
+          "excerptDigest": "sha256-d7113874076301f05495846eed90de0d560d959907262b6183f77873ae8ee631"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:877e49c8-1059-40d8-afa0-c3343af8852c",
+      "claimId": "claim:6d4a9aa6-29a9-4c54-ac8e-462408df7120",
+      "targetVersionId": "target-version:33babb66-b275-4dec-ae2b-e52b99b3ec05",
+      "anchor": {
+        "file": "01-intro.tex",
+        "excerptDigest": "sha256-9f928657f98fb7562c98c1a8b57f9f44f927fdf42e1651c93f4ac6686dc218dc"
+      },
+      "text": "Fixed-clause total deterministic operation count O(N²/D^0.063).",
+      "normalizedTextDigest": "sha256-5cedc6957b67da09753cc2d4f31f953514b38b303900652ce23e1191e25897a1",
+      "kind": "time",
+      "evidence": [
+        {
+          "file": "01-intro.tex",
+          "excerptDigest": "sha256-9f928657f98fb7562c98c1a8b57f9f44f927fdf42e1651c93f4ac6686dc218dc"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:393dd5cd-3935-4d97-ad52-918c285383c1",
+      "claimId": "claim:f582ff85-4f45-496a-ba97-128921ba208c",
+      "targetVersionId": "target-version:33babb66-b275-4dec-ae2b-e52b99b3ec05",
+      "anchor": {
+        "file": "01-intro.tex",
+        "excerptDigest": "sha256-bbd05ac3bb906194509d4af8299380a9d3d48f9d101fd8754580b2cb064691d9"
+      },
+      "text": "General-clause ∀ε<0.1204 ∀κ>0 ∃γ>0 total O(N²/D^γ).",
+      "normalizedTextDigest": "sha256-d7d056869f615b29d1ee957875a9de745f9505dbe623b97f4c27e8e3208ac26e",
+      "kind": "time",
+      "evidence": [
+        {
+          "file": "01-intro.tex",
+          "excerptDigest": "sha256-bbd05ac3bb906194509d4af8299380a9d3d48f9d101fd8754580b2cb064691d9"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:5884a3c5-0394-4ae4-b38b-08d29e31d951",
+      "claimId": "claim:e85d885d-0cc8-4a8a-929e-65430559e252",
+      "targetVersionId": "target-version:33babb66-b275-4dec-ae2b-e52b99b3ec05",
+      "anchor": {
+        "file": "01-intro.tex:89; 02-matrix.tex:3; 04-general.tex",
+        "from": 335,
+        "excerptDigest": "sha256-4884a5f799036384b66e03516402483e590dc769064e54847265d99b12f5af7d"
+      },
+      "text": "All operations use O(log N)-bit integer words.",
+      "normalizedTextDigest": "sha256-089445345394d4c9915af387029b4a8cd0b503762fe462d0f90375d441170b62",
+      "kind": "resource",
+      "evidence": [
+        {
+          "file": "01-intro.tex:89; 02-matrix.tex:3; 04-general.tex",
+          "from": 335,
+          "excerptDigest": "sha256-4884a5f799036384b66e03516402483e590dc769064e54847265d99b12f5af7d"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:c3472a1a-70a3-43a8-b1ec-5acad2000197",
+      "claimId": "claim:8ecee3a9-4891-4cc4-817b-13923f37c0ff",
+      "targetVersionId": "target-version:33babb66-b275-4dec-ae2b-e52b99b3ec05",
+      "anchor": {
+        "file": "01-intro.tex",
+        "excerptDigest": "sha256-9848ddc13c18a92c70327402b967282db82f38193fac2fcf5250a94e6796a5c7"
+      },
+      "text": "Preprocessing constructs assignment, shared encodings, and tile box tries.",
+      "normalizedTextDigest": "sha256-71f333cd76bf252a2f5cd44233dba45bff5823e00682222af927e3b65f655358",
+      "kind": "other",
+      "evidence": [
+        {
+          "file": "01-intro.tex",
+          "excerptDigest": "sha256-9848ddc13c18a92c70327402b967282db82f38193fac2fcf5250a94e6796a5c7"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:7e871314-0976-46e1-9994-55348b475de7",
+      "claimId": "claim:81c745c5-4f52-4a53-8f28-463e9ce0f06a",
+      "targetVersionId": "target-version:33babb66-b275-4dec-ae2b-e52b99b3ec05",
+      "anchor": {
+        "file": "01-intro.tex",
+        "excerptDigest": "sha256-78b1181f67633da89aeb48c633ec7426589c73c167058527d43537d7dbe20e31"
+      },
+      "text": "A query adds low-order products and its box values.",
+      "normalizedTextDigest": "sha256-68da0e64a8381e2667f4e3e9cd2ff5260bec4f30072c57380e1378131792d300",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "01-intro.tex",
+          "excerptDigest": "sha256-78b1181f67633da89aeb48c633ec7426589c73c167058527d43537d7dbe20e31"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:8a82f142-6102-49a8-b9b5-53fceedcc55d",
+      "claimId": "claim:b06ee57b-c696-4ca3-9775-04e228a65c08",
+      "targetVersionId": "target-version:33babb66-b275-4dec-ae2b-e52b99b3ec05",
+      "anchor": {
+        "file": "04-general.tex",
+        "from": 239,
+        "to": 260,
+        "excerptDigest": "sha256-6f6a88bb8e76f3a97c2868c720462af675c242f70e111d01f79f6f2de1ba60f7"
+      },
+      "text": "Boxes partition every high-order contributing leaf exactly once.",
+      "normalizedTextDigest": "sha256-2724f8a91e42dbe16ba49d7ffa4a1d8f4a3eb7de4f9df63c80f42eea0f552b70",
+      "kind": "correctness",
+      "evidence": [
+        {
+          "file": "04-general.tex",
+          "from": 239,
+          "to": 260,
+          "excerptDigest": "sha256-6f6a88bb8e76f3a97c2868c720462af675c242f70e111d01f79f6f2de1ba60f7"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:61a9f42c-26e6-4f4c-8945-f158d22d6339",
+      "claimId": "claim:295b7a58-1801-4e69-8a7b-cb766a720a3d",
+      "targetVersionId": "target-version:33babb66-b275-4dec-ae2b-e52b99b3ec05",
+      "anchor": {
+        "file": "04-general.tex",
+        "from": 315,
+        "to": 335,
+        "excerptDigest": "sha256-9a31c3bb5e9b968cbd2a24b6d13d88cf8f153939d20f4dddd1d3f29707239df0"
+      },
+      "text": "Technical preprocessing time/space and query bounds support both headline branches.",
+      "normalizedTextDigest": "sha256-98cdaaa42f3a4febbb7a5f1f082a4a454b7662fd8a085e9fb33407279050f26e",
+      "kind": "time",
+      "evidence": [
+        {
+          "file": "04-general.tex",
+          "from": 315,
+          "to": 335,
+          "excerptDigest": "sha256-9a31c3bb5e9b968cbd2a24b6d13d88cf8f153939d20f4dddd1d3f29707239df0"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "id": "claim-version:cecf2365-9d49-4391-b9be-d2328c265176",
+      "claimId": "claim:3fce89b3-a073-40ce-be85-23e13553f4eb",
+      "targetVersionId": "target-version:33babb66-b275-4dec-ae2b-e52b99b3ec05",
+      "anchor": {
+        "file": "01-intro.tex",
+        "excerptDigest": "sha256-a53dca3041b43b661aad18a328405fe6cb3dd02e55aaa561a95f08ab7e0c031f"
+      },
+      "text": "The output theorem covers D=1 and small m by direct calculation.",
+      "normalizedTextDigest": "sha256-97f30cb394385ad98b74fce36c86a8f6a9d9b24574424b6c21aa455e41c2244e",
+      "kind": "other",
+      "evidence": [
+        {
+          "file": "01-intro.tex",
+          "excerptDigest": "sha256-a53dca3041b43b661aad18a328405fe6cb3dd02e55aaa561a95f08ab7e0c031f"
+        }
+      ],
+      "status": "active"
+    }
+  ],
+  "plans": [
+    {
+      "claimVersionId": "claim-version:d2dbdf21-d72b-47c8-b273-bf76b6d8cb6d",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:2c10190d-4f5f-4780-92f9-2e530c8214e0"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-0f7e841a6b33c923ae8ff1b226fb629e89aa3d4167f93c70209b013207f8aef2"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:877e49c8-1059-40d8-afa0-c3343af8852c",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:b5c09aad-fcb7-4933-ad8a-4ba2c6ed079e"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-7531bfcc2d82bc51b302c3fc228bf15662f3f5c9511c6c0acf6bc373c1440e81"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:393dd5cd-3935-4d97-ad52-918c285383c1",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:f0865a3b-53f3-447b-a94c-63614d9a89ba"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-770522ed47d33961476061bc988f1cbc66697b56a779114edb740ca1a68140cc"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:5884a3c5-0394-4ae4-b38b-08d29e31d951",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:491578d3-73dc-43ed-a5ab-85826b098035"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-154f17d188897ef454062ada4ab785fef97021cebc3e1647500b4a12d55b3272"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Theorem."
+    },
+    {
+      "claimVersionId": "claim-version:c3472a1a-70a3-43a8-b1ec-5acad2000197",
+      "disposition": "implement",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:585e7286-72f2-4adc-ae6f-9f4303ef057f"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-93bcb0ae019a72340928c1f36b270e2e3a36b7858b8167d0174193e31dbb043b"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Model/Program."
+    },
+    {
+      "claimVersionId": "claim-version:7e871314-0976-46e1-9994-55348b475de7",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:51949977-9051-4c57-b712-3296741b7162"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-866112e60926fdcf7fc857cd6cdf4602ab9f01a9cd1697e3311d798fccf52dfb"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Interface."
+    },
+    {
+      "claimVersionId": "claim-version:8a82f142-6102-49a8-b9b5-53fceedcc55d",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:32aca952-3b70-4fc0-aa26-e3e87cc6456e"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-191d70ae0f3296765067870bf890fa6c02ee91558bf3c820e244ee6ff731e811"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:61a9f42c-26e6-4f4c-8945-f158d22d6339",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:190c0498-e28f-4033-b805-1b04737f7031"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-fbd0d33175d907d16f4ec3191e354851c3b870bc14cacbff18bcfda889ae9fa2"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Analysis."
+    },
+    {
+      "claimVersionId": "claim-version:cecf2365-9d49-4391-b9be-d2328c265176",
+      "disposition": "formalize",
+      "requirements": {
+        "allOf": [
+          {
+            "anyOf": [
+              "obligation:26276bdb-2f05-4280-b854-be476f8243d1"
+            ]
+          }
+        ]
+      },
+      "evidenceIds": [
+        "sha256-0e919d6b56c7ff2cc6e6661938a0fdb378bba2e1e6b767de0c3cd2d169654900"
+      ],
+      "reason": "Carried from the finalized blueprint claim ledger into Handoff."
+    }
+  ],
+  "obligations": [
+    {
+      "id": "obligation:2c10190d-4f5f-4780-92f9-2e530c8214e0",
+      "kind": "headline",
+      "summary": "For every wanted position, return the exact integer matrix-product entry.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "materialized"
+    },
+    {
+      "id": "obligation:b5c09aad-fcb7-4933-ad8a-4ba2c6ed079e",
+      "kind": "headline",
+      "summary": "Fixed-clause total deterministic operation count O(N²/D^0.063).",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:f0865a3b-53f3-447b-a94c-63614d9a89ba",
+      "kind": "headline",
+      "summary": "General-clause ∀ε<0.1204 ∀κ>0 ∃γ>0 total O(N²/D^γ).",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:491578d3-73dc-43ed-a5ab-85826b098035",
+      "kind": "headline",
+      "summary": "All operations use O(log N)-bit integer words.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Theorem.",
+      "owner": "Model/Theorem",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:585e7286-72f2-4adc-ae6f-9f4303ef057f",
+      "kind": "implementation",
+      "summary": "Preprocessing constructs assignment, shared encodings, and tile box tries.",
+      "rationale": "The finalized blueprint assigns this paper claim to Model/Program.",
+      "owner": "Model/Program",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:51949977-9051-4c57-b712-3296741b7162",
+      "kind": "headline",
+      "summary": "A query adds low-order products and its box values.",
+      "rationale": "The finalized blueprint assigns this paper claim to Interface.",
+      "owner": "Interface",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:32aca952-3b70-4fc0-aa26-e3e87cc6456e",
+      "kind": "headline",
+      "summary": "Boxes partition every high-order contributing leaf exactly once.",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:190c0498-e28f-4033-b805-1b04737f7031",
+      "kind": "headline",
+      "summary": "Technical preprocessing time/space and query bounds support both headline branches.",
+      "rationale": "The finalized blueprint assigns this paper claim to Analysis.",
+      "owner": "Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "obligation:26276bdb-2f05-4280-b854-be476f8243d1",
+      "kind": "headline",
+      "summary": "The output theorem covers D=1 and small m by direct calculation.",
+      "rationale": "The finalized blueprint assigns this paper claim to Handoff.",
+      "owner": "Handoff",
+      "status": "planned"
+    }
+  ],
+  "bindings": [
+    {
+      "id": "binding:06d3c16f-a383-4b5b-92bd-9b8f707ca8ba",
+      "obligationId": "obligation:2c10190d-4f5f-4780-92f9-2e530c8214e0",
+      "declaration": "Formalization3sum.formalization3sum_main",
+      "file": "Formalization3sum/Model/Theorem.lean",
+      "module": "Formalization3sum.Model.Theorem",
+      "role": "headline",
+      "status": "proposed"
+    }
+  ],
+  "leanRelations": [],
+  "claimSetReceipts": [
+    {
+      "id": "claim-set:88ae59f7-372f-47e1-a122-9d095352078c",
+      "targetVersionId": "target-version:33babb66-b275-4dec-ae2b-e52b99b3ec05",
+      "paperPacketDigest": "sha256-853d6a9c6c3662103277ef6b18915c5770e4f2ca318f9b59567452c1af0b7ca1",
+      "claimVersionIds": [
+        "claim-version:d2dbdf21-d72b-47c8-b273-bf76b6d8cb6d",
+        "claim-version:877e49c8-1059-40d8-afa0-c3343af8852c",
+        "claim-version:393dd5cd-3935-4d97-ad52-918c285383c1",
+        "claim-version:5884a3c5-0394-4ae4-b38b-08d29e31d951",
+        "claim-version:c3472a1a-70a3-43a8-b1ec-5acad2000197",
+        "claim-version:7e871314-0976-46e1-9994-55348b475de7",
+        "claim-version:8a82f142-6102-49a8-b9b5-53fceedcc55d",
+        "claim-version:61a9f42c-26e6-4f4c-8945-f158d22d6339",
+        "claim-version:cecf2365-9d49-4391-b9be-d2328c265176"
+      ],
+      "readerProvenance": "reader-agent"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "sha256-0f7e841a6b33c923ae8ff1b226fb629e89aa3d4167f93c70209b013207f8aef2",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "01-intro.tex",
+          "excerptDigest": "sha256-d7113874076301f05495846eed90de0d560d959907262b6183f77873ae8ee631"
+        }
+      ]
+    },
+    {
+      "id": "sha256-7531bfcc2d82bc51b302c3fc228bf15662f3f5c9511c6c0acf6bc373c1440e81",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "01-intro.tex",
+          "excerptDigest": "sha256-9f928657f98fb7562c98c1a8b57f9f44f927fdf42e1651c93f4ac6686dc218dc"
+        }
+      ]
+    },
+    {
+      "id": "sha256-770522ed47d33961476061bc988f1cbc66697b56a779114edb740ca1a68140cc",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "01-intro.tex",
+          "excerptDigest": "sha256-bbd05ac3bb906194509d4af8299380a9d3d48f9d101fd8754580b2cb064691d9"
+        }
+      ]
+    },
+    {
+      "id": "sha256-154f17d188897ef454062ada4ab785fef97021cebc3e1647500b4a12d55b3272",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "01-intro.tex:89; 02-matrix.tex:3; 04-general.tex",
+          "from": 335,
+          "excerptDigest": "sha256-4884a5f799036384b66e03516402483e590dc769064e54847265d99b12f5af7d"
+        }
+      ]
+    },
+    {
+      "id": "sha256-93bcb0ae019a72340928c1f36b270e2e3a36b7858b8167d0174193e31dbb043b",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "01-intro.tex",
+          "excerptDigest": "sha256-9848ddc13c18a92c70327402b967282db82f38193fac2fcf5250a94e6796a5c7"
+        }
+      ]
+    },
+    {
+      "id": "sha256-866112e60926fdcf7fc857cd6cdf4602ab9f01a9cd1697e3311d798fccf52dfb",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "01-intro.tex",
+          "excerptDigest": "sha256-78b1181f67633da89aeb48c633ec7426589c73c167058527d43537d7dbe20e31"
+        }
+      ]
+    },
+    {
+      "id": "sha256-191d70ae0f3296765067870bf890fa6c02ee91558bf3c820e244ee6ff731e811",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "04-general.tex",
+          "from": 239,
+          "to": 260,
+          "excerptDigest": "sha256-6f6a88bb8e76f3a97c2868c720462af675c242f70e111d01f79f6f2de1ba60f7"
+        }
+      ]
+    },
+    {
+      "id": "sha256-fbd0d33175d907d16f4ec3191e354851c3b870bc14cacbff18bcfda889ae9fa2",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "04-general.tex",
+          "from": 315,
+          "to": 335,
+          "excerptDigest": "sha256-9a31c3bb5e9b968cbd2a24b6d13d88cf8f153939d20f4dddd1d3f29707239df0"
+        }
+      ]
+    },
+    {
+      "id": "sha256-0e919d6b56c7ff2cc6e6661938a0fdb378bba2e1e6b767de0c3cd2d169654900",
+      "kind": "source-reading",
+      "anchors": [
+        {
+          "file": "01-intro.tex",
+          "excerptDigest": "sha256-a53dca3041b43b661aad18a328405fe6cb3dd02e55aaa561a95f08ab7e0c031f"
+        }
+      ]
+    }
+  ],
+  "surfaceInventories": [
+    {
+      "id": "surface-inventory:cf84f090-5c86-44ef-8352-a27d9d6ddd99",
+      "targetVersionId": "target-version:33babb66-b275-4dec-ae2b-e52b99b3ec05",
+      "source": "sealed-blueprint",
+      "blueprintDigest": "sha256-ffe17ffda267bb5918d5de432d8ffcee9417cebf5393d6d21c4cc203b1f84f3f",
+      "declarations": [
+        {
+          "declaration": "Formalization3sum.formalization3sum_correct",
+          "role": "headline",
+          "file": "Formalization3sum/Model/Theorem.lean",
+          "module": "Formalization3sum.Model.Theorem"
+        },
+        {
+          "declaration": "Formalization3sum.formalization3sum_fixed_time",
+          "role": "headline",
+          "file": "Formalization3sum/Model/Theorem.lean",
+          "module": "Formalization3sum.Model.Theorem"
+        },
+        {
+          "declaration": "Formalization3sum.formalization3sum_general_time",
+          "role": "headline",
+          "file": "Formalization3sum/Model/Theorem.lean",
+          "module": "Formalization3sum.Model.Theorem"
+        },
+        {
+          "declaration": "Formalization3sum.formalization3sum_word_magnitude",
+          "role": "headline",
+          "file": "Formalization3sum/Model/Theorem.lean",
+          "module": "Formalization3sum.Model.Theorem"
+        },
+        {
+          "declaration": "Formalization3sum.formalization3sum_main",
+          "role": "headline",
+          "file": "Formalization3sum/Model/Theorem.lean",
+          "module": "Formalization3sum.Model.Theorem"
+        }
+      ]
+    }
+  ],
+  "appliedDecisionIds": []
+}

@@ -1,0 +1,408 @@
+\section{The matrix theorem in general: a data structure}\label{sec:general}
+
+In this section, we extend our algorithm from Section~\ref{sec:result} in two directions. First, we turn it into a data structure. After preprocessing $X$ and $Y$ in less time than it takes to write down $XY$, the data structure answers a query for any single entry of $XY$, not known in advance, in time polynomially smaller than the $D$ operations that it would take to compute that entry as an inner product. Second, we let the parameters of our construction vary. This will give larger time savings than $D^{1/18}$, and trade-offs between the time savings, how thin the product must be, the query time, and the density of the set $W$ of wanted entries. We assume that the reader is familiar with Section~\ref{sec:result}, whose notation we use throughout, although we will begin with a brief reminder of the relevant notions.
+
+In Section~\ref{sec:results}, we state the main results, Theorems~\ref{thm:single} and~\ref{thm:general}, with explicit parameter examples in Table~\ref{tab:ds}, as well as Corollary~\ref{cor:zt}, the instance of Theorem~\ref{thm:single} that our reductions in Sections~\ref{sec:reduction} and~\ref{sec:other} use. In Section~\ref{sec:boxes}, we will introduce the key new idea, the partial sums that our data structure stores, which we call boxes. In Section~\ref{sec:single}, we will then give the data structure in terms of the parameters (listed in Table~\ref{tab:params}), and finally we will set the parameters in Section~\ref{sec:corproofs}.
+
+\begin{table}[!t]
+\centering
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{6.3cm}ll@{}}
+symbol & meaning & in Section~\ref{sec:result} & in this section\\\hline
+$m$, $D=4^m$ & the number of inner levels, and the inner dimension of the product $XY$ & & \\
+$L$, $c=L/m$ & the number of levels of the recursion, and its ratio to $m$ & $L=19m$ & $L=cm$, $c>10$\\
+$\Nz=3^{L-m}$ & the number of rows of a row block, and of columns of a column block & & \\
+$K=\binom Lm$ & the number of products $X_QY_Q$ of a tile, one for each set $Q$ of $m$ levels & & \\
+$\Cm=K\Nz^2$ & the number of output entries of a tile & & \\
+$\alpha_d=\binom md9^d$ & the number of leaves of order $d$ contributing to one output entry & & \\
+$\beta_d=\binom L{m-d}9^{L-m+d}$ & the number of leaves of order $d$ in a tile & $\beta_d\le2^{-d}\Cm$ & $\beta_d\le\rho^d\Cm$\\
+$\rho=9m/(L-m+1)$ & the decay rate of the $\beta_d$: $\beta_d/\beta_{d-1}\le\rho$, see~\eqref{eq:gendecay} & $\rho<\frac12$ & $\rho<1$\\
+$t$ & the switching order: a query reads the leaves of order below $t$, and the preprocessing puts the others into boxes; in Section~\ref{sec:result}, the order at which the count of Lemma~\ref{lem:count} splits & $t=m/9$ & $t=\theta m$, $0<\theta<0.9$\\
+$\gamma$ & the preprocessing, or the whole computation when $W$ is given in advance, takes $O(N^2\log^2\!D/D^{\gamma})$ time & $\gamma=1/18$ & see Table~\ref{tab:ds}\\
+$\varepsilon$ & the results hold for $D\le N^{\varepsilon}$ & $\varepsilon=1/18$ & $\varepsilon<R_c(\gamma)<0.1204\ldots$\\
+$q$ & a query takes $O(D^{q}\log D)$ time & no queries & see Table~\ref{tab:ds}\\
+$\kappa$ & the set $W$ of wanted entries has $|W|\le N^2/D^{\kappa}$ & $\kappa=\frac12$ & see Table~\ref{tab:ds}
+\end{tabular}
+\caption{The parameters of our construction. The last two columns give their values or bounds in Section~\ref{sec:result} and in this section. Where these columns are empty, the parameter is given by the formula in the first column in both sections. In this section, $L$ and $t$ are $cm$ and $\theta m$ rounded up to integers, and the bound $R_c(\gamma)$ is defined in Section~\ref{sec:corproofs}.}
+\label{tab:params}
+\end{table}
+
+\paragraph{Notions from Section~\ref{sec:result}.}
+We keep the recursion, the tiling, and the encodings of Sections~\ref{sec:full} and~\ref{sec:encoders}, and we use the terminology of Sections~\ref{sec:whatit} and~\ref{sec:counts} as defined there: the leaves contributing to an output string, its private leaf, the order of a leaf, and the counts $\alpha_d$ and $\beta_d$. For convenience, we briefly recall these notions here.
+\begin{itemize}[nosep]
+\item A \emph{leaf} $\tau=\tau_1\cdots\tau_L$ is a string of $L$ terms of Sch\"onhage's identity, where $\tau_\ell$ is the term chosen at \emph{level} $\ell$ of the recursion (Section~\ref{sec:recursion}). Throughout this section, we compare levels by their indices: we say that level $\ell$ is \emph{lower} than level $\ell'$ if $\ell<\ell'$, so that the lowest level is the first level of the recursion.
+\item An \emph{output string} $w$ with \emph{inner set} $Q$ has the variable $z_0$ at each of the $m$ levels of $Q$, and one of the variables $z_{ij}$ at every other level. It indexes the entry $(X_QY_Q)[w]$ of the product $X_QY_Q$ (Section~\ref{sec:defs}).
+\item A leaf \emph{contributes to} $w$ if it chooses $P_{ij}$ at every level where $w$ has $z_{ij}$, while it may choose any of the ten terms at the levels of $Q$, where $w$ has $z_0$ (Section~\ref{sec:whatit}).
+\item The \emph{private leaf} of $w$ is the leaf contributing to $w$ that chooses $P_0$ at every level of $Q$ (Section~\ref{sec:counts}).
+\item The \emph{order} of a leaf is $m$ minus the number of levels at which it chooses $P_0$. For a leaf contributing to $w$, this is the number of levels of $Q$ at which it chooses a term other than $P_0$ (Section~\ref{sec:counts}).
+\item A \emph{tile} consists of a \emph{band} of $K_0=\lfloor\sqrt K\rfloor$ row blocks of $X$ together with a band of $K_0$ column blocks of $Y$ (Section~\ref{sec:tiling}), and the \emph{encoding} of a band is the array of the $10^L$ numbers $\Phi_\tau(a)$, or $\Psi_\tau(b)$, computed from its input array (Section~\ref{sec:encoders}). We will recall both in more detail in Section~\ref{sec:single}.
+\end{itemize}
+
+As in Section~\ref{sec:counts}, all output strings in this section have inner sets of exactly $m$ elements, so that they index the $\Cm=K\Nz^2$ entries of the $K$ products $X_QY_Q$ of a tile, and we will use that $\Cm=\beta_0\le10^L$. For a leaf $\tau$ of a tile with input arrays $a$ and $b$, we call $\Phi_\tau(a)\Psi_\tau(b)$ the \defn{product at} $\tau$. We read its two factors from the encodings of the tile (Section~\ref{sec:encoders}), and by~\eqref{eq:multdef} and Lemma~\ref{lem:correct}, $(X_QY_Q)[w]$ is the sum of the products at the leaves contributing to $w$. The one change from Section~\ref{sec:result} is that $L$ is now any integer with $L\ge10m$, and we call $c=L/m$ the \defn{ratio}.
+
+\paragraph{Technique overview.}
+The pruned recursion of Section~\ref{sec:sparse} needs to know $W$ in advance, since it visits exactly the leaves that the wanted entries need. When the queries arrive one at a time, we must instead prepare for every possible output entry.
+
+Recall that our preprocessing must take less time than it takes to write down $XY$. This means it stores fewer than one number per entry of $XY$, so each number that it stores must be useful for many different entries. Meanwhile, a query must take far fewer than the $D$ operations that it would take to compute the entry directly as an inner product. In Section~\ref{sec:result}, the running time had three parts: the leaves of small order, the leaves of large order, and the encodings (Lemma~\ref{lem:count} and Section~\ref{sec:proof}). Our data structure will divide these parts between the queries and the preprocessing. Each output entry uses only a few of the leaves of small order, so a query may just read them one by one. By contrast, each output entry may use many leaves of large order, but there are not too many such leaves in total, and each of them is shared by many output entries. Thus, in preprocessing we will add them up in advance, in groups which can be quickly summed during queries. The preprocessing also computes the encodings, once.
+
+The $10^m$ leaves contributing to an output string form a cube: at each level of the inner set $Q$ of the output string, they choose any of the ten terms, and at each other level, they agree with the private leaf of the output string. Every one of these leaves, other than the private leaf, also contributes to other output entries. We will therefore add up parts of every cube in advance, into what we call boxes (which are themselves smaller cubes), so that a query adds up a few box values instead of $10^m$ products. For this we need a rule that cuts every cube into few boxes, with each of its leaves of large order in exactly one of them; we will prove this for our rule in Lemma~\ref{lem:partition}. We will make sure that the definition of a box does not refer to the output entry, so that the same box serves many output entries, which keeps the total number of boxes small, as we will show in Lemma~\ref{lem:allboxes}.
+
+We also need to compute all the boxes of a tile quickly in preprocessing, and here we will use dynamic programming. Since a box is a cube, it has a fixed term at some levels, and its other levels are free, meaning all ten terms are allowed there. Fixing each of the ten terms in turn at the highest free level splits the box into ten smaller boxes, and its value is the sum of their values. Thus, in Lemma~\ref{lem:allboxes}, we will compute the boxes from the smallest up, each from the values of smaller boxes computed before.
+
+The order $t$ at which a query switches from leaves to boxes, which we call the \defn{switching order}, trades off the query time (about $\alpha_t$) against the preprocessing time (about $\rho^t$ boxes per entry of the product, where $\rho<1$ is the rate at which the $\beta_d$ decay). The ratio $c=L/m$ (which we fixed to be $19$ in Section~\ref{sec:result}, but we now allow to vary) trades off the time savings against how thin the product must be. While a larger $c$ makes $\rho$ smaller, it also makes the encodings larger relative to $D$, so that computing them stays within the time bound only when $N$ is a larger power of $D$. With $c=21$ and $t=m/9$, we will get the instance $N\ge D^{18}$ of Corollary~\ref{cor:zt}, and pushing $c$ down toward $10$ will give the upper limit for $D$ of our technique, namely $D\le N^{0.1204}$  (Corollary~\ref{cor:tradeoff}).
+
+\subsection{The results}\label{sec:results}
+
+In this section, we design a data structure with the following guarantee. Let $\varepsilon^*:=\ln4/(5\ln10)=0.1204\ldots$.
+
+\begin{theorem}\label{thm:single}
+For every $\varepsilon<\varepsilon^*$, and every $q>0$, there is a $\gamma>0$ such that the following holds. Given as input matrices $X\in\Z^{N\times D}$ and $Y\in\Z^{D\times N}$, where $2\le D\le N^{\varepsilon}$, whose entries are integers of absolute value at most $N^{O(1)}$, we can preprocess them deterministically in $O(N^2\log^2\!D/D^{\gamma})$ time and space, after which any single entry $(XY)[I,J]$ can be computed deterministically in $O(D^{q}\log D)$ time.
+\end{theorem}
+
+The constant $\varepsilon^*$ gives the upper limit for $D$ of our technique, and we will explain where it comes from in Section~\ref{sec:corproofs} below (after the proof of Corollary~\ref{cor:tradeoff}). To achieve the general form of the matrix theorem, where we know the positions in advance as in Section~\ref{sec:result}, we simply ask the data structure one query per position. Setting the parameters to balance the preprocessing time and the total time for all the queries gives the following.
+
+\begin{theorem}\label{thm:general}
+For every $\varepsilon<\varepsilon^*$ and every $\kappa>0$ there is a $\gamma>0$ such that the following holds. Given as input matrices $X\in\Z^{N\times D}$ and $Y\in\Z^{D\times N}$, where $2\le D\le N^{\varepsilon}$, whose entries are integers of absolute value at most $N^{O(1)}$, as well as a set $W$ of at most $N^2/D^{\kappa}$ positions of an $N\times N$ matrix, the entries $(XY)[I,J]$, $(I,J)\in W$, can be computed deterministically in time $O(N^2\log^2\!D/D^{\gamma})$.
+\end{theorem}
+
+The logarithmic factors in both theorems can be removed by halving $\gamma$ and applying Theorem~\ref{thm:single} with $q/2$ in place of $q$; for $D=1$ the bounds are trivial.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{c|c|cccccc|ccccc}
+ & & \multicolumn{6}{c|}{Theorem~\ref{thm:single}: the data structure} & \multicolumn{5}{c}{Theorem~\ref{thm:general}: the wanted entries}\\
+ratio & $D\le N^{\varepsilon}$ & \multicolumn{6}{c|}{$\gamma$ for query time $D^{q}$, $q=$} & \multicolumn{5}{c}{$\gamma$ for $|W|\le N^2/D^{\kappa}$, $\kappa=$}\\
+$c$ & $\varepsilon$ & $0.10$ & $0.25$ & $0.43$ & $0.50$ & $0.75$ & $0.90$ & $0.10$ & $0.25$ & $0.50$ & $0.75$ & $1.00$\\\hline
+$40$ & $0.029$ & $0.0205$ & $0.0608$ & $0.1175$ & $0.1429$ & $0.2417$ & $0.3095$ & $0.0166$ & $0.0473$ & $0.1060$ & $0.1720$ & $0.2442$\\
+$21$ & $0.056$ & $0.0112$ & $0.0331$ & $\mathbf{0.0640}$ & $0.0778$ & $0.1316$ & $0.1685$ & $0.0099$ & $0.0286$ & $0.0653$ & $0.1074$ & $0.1546$\\
+$19$ & $0.062$ & $0.0097$ & $0.0287$ & $\mathbf{0.0555}$ & $0.0675$ & $0.1142$ & $0.1463$ & $0.0087$ & $0.0253$ & $0.0578$ & $0.0954$ & $0.1379$\\
+$15$ & $0.079$ & $0.0061$ & $0.0183$ & $0.0354$ & $0.0430$ & $0.0728$ & $0.0932$ & $0.0057$ & $0.0168$ & $0.0389$ & $0.0646$ & $0.0941$\\
+$12$ & $0.099$ & $0.0028$ & $0.0083$ & $0.0160$ & $0.0195$ & $0.0330$ & $0.0423$ & $0.0027$ & $0.0080$ & $0.0186$ & $0.0312$ & $0.0459$\\
+$10.5$ & $0.114$ & $0.0007$ & $0.0022$ & $0.0043$ & $0.0052$ & $0.0089$ & $0.0114$ & $0.0007$ & $0.0022$ & $0.0052$ & $0.0087$ & $0.0129$
+\end{tabular}
+\caption{Explicit parameters for Theorems~\ref{thm:single} and~\ref{thm:general}. Each row is a choice of the ratio $c=L/m$. The parameter $\varepsilon$ is determined by $c$ and says how thin the product must be, i.e., every entry of the row holds whenever $D\le N^{\varepsilon}$. On the left, the columns correspond to a choice of $q$, and the numerical entry is a value $\gamma$ for which Theorem~\ref{thm:single} holds, meaning that after $O(N^2\log^2\!D/D^{\gamma})$ preprocessing, a query takes $O(D^{q}\log D)$ time. On the right, the columns correspond to a choice of $\kappa$, and the numerical entry is a value $\gamma$ for which Theorem~\ref{thm:general} holds, meaning that any $|W|\le N^2/D^{\kappa}$ wanted entries take $O(N^2\log^2\!D/D^{\gamma})$ time. On the left side, the column $q=0.43$ uses the switching order $t=m/9$ of Section~\ref{sec:result} (more precisely, $q=0.4277\ldots$), and its two bold entries are Theorem~\ref{thm:main} ($c=19$, where $\gamma=1/18=0.0555\ldots$) and Corollary~\ref{cor:zt} ($c=21$). A larger $c$ gives a larger $\gamma$ but a smaller $\varepsilon$, and a slower query or a sparser $W$ allows a larger $\gamma$. We round all values down, and we will explain how we compute them in Section~\ref{sec:corproofs}.}
+\label{tab:ds}
+\end{table}
+
+In Table~\ref{tab:ds}, we list several parameter settings for Theorems~\ref{thm:single} and~\ref{thm:general}. Theorem~\ref{thm:main} is the entry $c=19$, $q=0.43$, applied to a set $W$ of $N^2/\sqrt D$ wanted entries (that is, $\kappa=\frac12$). 
+We next state explicitly the parameter setting that we use in the introduction and in our reductions in Sections~\ref{sec:reduction} and~\ref{sec:other}. It is the entry $c=21$, $q=0.43$ of Table~\ref{tab:ds}, whose switching order is $t=m/9$, as in Section~\ref{sec:result}, with the logarithmic factors absorbed into the exponents. 
+
+\begin{corollary}\label{cor:zt}
+Let $N\ge D^{18}$, and let $X\in\Z^{N\times D}$ and $Y\in\Z^{D\times N}$ have entries of absolute value at most $N^{O(1)}$. We can preprocess them deterministically in $O(N^2/D^{0.063})$ time and space, after which any single entry $(XY)[I,J]$ can be computed deterministically in $O(D^{0.437})$ time. Hence, for every set $W$ of positions of an $N\times N$ matrix, the entries $(XY)[I,J]$, $(I,J)\in W$, can be computed deterministically in $O(|W|\,D^{0.437}+N^2/D^{0.063})$ time, which is $O(N^2/D^{0.063})$ whenever $|W|\le N^2/\sqrt D$.
+\end{corollary}
+
+
+\subsection{Boxes}\label{sec:boxes}
+
+In this subsection, we define the boxes and prove  two important facts about them. Intuitively, a box is a group of leaves that is shared by many output strings. In preprocessing we will add up the products at the leaves of each box, and then that value can help to answer many queries. In terms of the switching order $t$, we will ensure that the boxes of an output string partition its leaves of order at least $t$, and that there are only $\alpha_t$ of them. We will thus see, in Lemmas~\ref{lem:partition} and~\ref{lem:boxes}, that every output entry is the sum of a few products and a few values of boxes.
+
+\paragraph{Cubes.}
+A \defn{cube} is a string $\pi=\pi_1\cdots\pi_L$ of $L$ symbols, each of which is one of the ten terms of Sch\"onhage's identity or a star~$\ast$. Its \defn{leaves} are the leaves obtained by replacing each star by any of the ten terms, so a cube with $e$ stars has $10^e$ leaves, and a cube without stars is a single leaf. The \defn{value} of a cube $\pi$ is the sum of the products at its leaves,
+\[
+\val(\pi):=\sum_{\tau\text{ a leaf of }\pi}\Phi_\tau(a)\,\Psi_\tau(b).
+\]
+Every output entry is the value of a cube. Indeed, recall that the entry $(X_QY_Q)[w]$ of an output string $w$ with inner set $Q$ is the sum of the products at the $10^m$ leaves contributing to $w$. These are the leaves of the \defn{cube of $w$}, the cube $\pi^w$ that has a star at each level where $w$ has $z_0$ (the levels of $Q$) and the term $P_{ij}$ at each level where $w$ has $z_{ij}$, so that $(X_QY_Q)[w]=\val(\pi^w)$. In Figure~\ref{fig:terms}, this cube is all the rows taken together. Figure~\ref{fig:tree} shows the cube of an output string, and the boxes defined next, in the recursion tree of a small example.
+
+We will cut the cube of every output string into parts that are again cubes, in a way where each leaf of the cube lies in exactly one part, so that
+\[
+(X_QY_Q)[w]=\val(\pi^w)=\sum_{\text{parts }\pi\text{ of }\pi^w}\val(\pi),
+\]
+and the value of a part will be shared by all the output strings that have it as a part. In Lemma~\ref{lem:boxes} below, we will prove this equation for the parts that we will choose. There will be two kinds of parts. Each leaf of small order will be a part on its own (recall that a single leaf is a cube without stars), whereas the leaves of large order will be grouped together into larger parts, which we call boxes.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm,
+  call/.style={draw,rounded corners=1pt,inner sep=2pt,font=\scriptsize,fill=blue!8,minimum height=4mm,minimum width=7.5mm},
+  leaf/.style={draw=black!60,fill=white,inner sep=0pt,minimum size=2.5mm},   
+  leafone/.style={leaf,fill=black!35},   
+  leafzero/.style={leaf,draw=black,fill=black!80},   
+  wire/.style={gray!70,line width=0.35pt},
+  box/.style={draw=orange!70!black,fill=orange!25,rounded corners=2pt,line width=0.4pt},
+  lab/.style={font=\scriptsize,align=left}]
+\def\cw{1.06}   
+\def\rh{0.38}   
+\def\terms{P_0,P_{11},P_{12},P_{13},P_{21},P_{22},P_{23},P_{31},P_{32},P_{33}}
+\draw[black!45,line width=0.4pt,rounded corners=3pt] (-0.5,0.3) rectangle (9*\cw+0.5,-9*\rh-0.3);
+\foreach \row in {1,...,9} { \draw[box] (-0.38,-\rh*\row-0.155) rectangle (9*\cw+0.38,-\rh*\row+0.155); }
+\foreach \col in {1,...,9} { \draw[box] (\col*\cw-0.25,-0.155) rectangle (\col*\cw+0.25,0.155); }
+\node[call] (root) at (4.5*\cw,2.33) {root};
+\foreach \tm [count=\col from 0] in \terms {
+  \node[call] (a\col) at (\col*\cw,1.63) {$\tm$};
+  \node[call] (b\col) at (\col*\cw,0.93) {$P_{21}$};
+  \draw[wire] (root.south) -- ++(0,-0.1) -| (a\col.north);
+  \draw[wire] (a\col) -- (b\col);
+  \draw[wire] (b\col.south) -- (\col*\cw,-9*\rh);
+  \foreach \row in {0,...,9} {
+    \pgfmathtruncatemacro{\ord}{(\col>0)+(\row>0)}
+    \ifcase\ord \node[leafzero] at (\col*\cw,-\rh*\row) {};
+    \or \node[leafone] at (\col*\cw,-\rh*\row) {};
+    \else \node[leaf] at (\col*\cw,-\rh*\row) {}; \fi
+  }
+}
+\draw[densely dashed,line width=0.6pt,rounded corners=3pt] (2*\cw-0.47,1.93) rectangle (2*\cw+0.47,-9*\rh-0.22);
+\node[lab,anchor=base] at (2*\cw,-9*\rh-0.65) {one subtree};
+\node[lab,anchor=base east] at (9*\cw+0.5,-9*\rh-0.65) {the cube $\pi^w=\ast\,P_{21}\,\ast$};
+\begin{scope}[shift={(3.45,-9*\rh-0.65)}]
+  \node[lab,anchor=base west] at (0,0) {order:};
+  \node[leafzero] at (1.15,0.09) {}; \node[lab,anchor=base west] at (1.28,0) {$0$};
+  \node[leafone] at (1.90,0.09) {};  \node[lab,anchor=base west] at (2.03,0) {$1$};
+  \node[leaf] at (2.65,0.09) {};     \node[lab,anchor=base west] at (2.78,0) {$2$};
+\end{scope}
+\node[lab,anchor=east] at (-0.65,1.63) {level $1\in Q$};
+\node[lab,anchor=east] at (-0.65,0.93) {level $2\notin Q$};
+\foreach \tm [count=\row from 0] in \terms { \node[font=\scriptsize,anchor=east] at (-0.6,-\rh*\row) {$\tm$}; }
+\draw[decorate,decoration={brace,amplitude=4pt,mirror},line width=0.35pt] (-1.22,0.15) -- (-1.22,-9*\rh-0.15) node[midway,left=5pt,lab] {level $3\in Q$};
+\node[lab,anchor=east] (pl) at (-0.6,0.38) {private leaf};
+\draw[-{Stealth[length=3pt]},line width=0.35pt] (pl.east) -- (-0.15,0.15);
+\node[lab,anchor=west] at (9*\cw+0.62,0.93) {$P_{21}$ is the term\\ of $w$ at level $2$};
+\node[lab,anchor=west] at (9*\cw+0.62,0) {$9$ boxes $P_{ij}\,P_{21}\,P_0$};
+\draw[decorate,decoration={brace,amplitude=4pt},line width=0.35pt] (9*\cw+0.62,-\rh+0.155) -- (9*\cw+0.62,-9*\rh-0.155) node[midway,right=5pt,lab] {$9$ boxes\\ $\ast\,P_{21}\,P_{ij}$};
+\end{tikzpicture}
+\caption{The cube and the boxes of the output string $w=z_0z_{21}z_0$ in the recursion tree, for $L=3$ and switching order $t=1$. Since $w$ has $z_0$ at levels~$1$ and~$3$, its inner set is $Q=\{1,3\}$ (so $m=2$). A query for $w$ reads the private leaf, which has order $0<t$, and the values of the $\alpha_1=18$ boxes of $w$, which contain the other $99$ leaves (of orders $1$ and $2$). A box with a star is not a subtree: it consists of the same leaf of every subtree.}
+\label{fig:tree}
+\end{figure}
+
+\paragraph{The definition of a box.}
+The order of a leaf tells us how widely it is shared between output entries. Recall that the order is $m$ minus the number of levels at which the leaf chooses $P_0$, so that $\alpha_d=\binom md9^d$ leaves of order $d$ contribute to an output string, and that a leaf of larger order contributes to more output strings. Throughout, we fix the switching order $t$, an integer with $0\le t\le m$. The boxes will collect the leaves of order at least $t$, i.e., the leaves that choose $P_0$ at most $m-t$ times, and a query will read the leaves of order below $t$ one by one (Section~\ref{sec:single}).
+
+Before giving the formal definition, we describe the idea informally and give some examples. Consider an output string $w$ with inner set $Q$, and a leaf $\tau$ of order at least $t$ contributing to $w$. To find the box of $\tau$, we look at the levels of $Q$ one at a time, from the highest down, and we stop as soon as we have seen $t$ levels at which $\tau$ chooses a term other than $P_0$. The box of $\tau$ then agrees with $\tau$ everywhere, except that it has a star at every level of $Q$ below the level where we stopped. For instance, let $m=4$ and $t=2$ as in Figure~\ref{fig:boxes}, and suppose that $\tau$ chooses the terms $P_{12},P_0,P_{31},P_{22}$ at the four levels $\ell_1<\ell_2<\ell_3<\ell_4$ of $Q$. We see $P_{22}$ at level $\ell_4$ and $P_{31}$ at level $\ell_3$, and we stop there, so the box of $\tau$ is $\ast\;\ast\;P_{31}\;P_{22}$ (in the first row of the figure). This box contains $\tau$ along with the $99$ other leaves that differ from $\tau$ only at the levels $\ell_1$ and $\ell_2$. Similarly, for a leaf that chooses the terms $P_0,P_{23},P_0,P_{11}$, we stop at level $\ell_2$, so its box is $\ast\;P_{23}\;P_0\;P_{11}$ (in the second row of the figure). Since a box has stars at the levels that we did not reach, it contains many leaves. Moreover, although we described the box of $\tau$ in terms of $w$, the definition of a box below does not refer to an output string, and the same box serves many output strings.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm,
+  cell/.style={draw,minimum width=8mm,minimum height=6mm,inner sep=1pt,font=\small},
+  bstar/.style={cell,fill=orange!22},
+  bzero/.style={cell,fill=blue!12},
+  lab/.style={font=\small,anchor=west,align=left},
+  every node/.append style={text height=1.6ex,text depth=0.35ex}]
+\newcommand{\bxrow}[5]{
+  \node[anchor=east,font=\small] at (0.3,#1) {#2};
+  \foreach \txt/\sty [count=\k] in {#3} { \node[\sty] at (\k*0.85,#1) {$\txt$}; }
+  \node[lab] at (4*0.85+0.6,#1) {#4};
+  \node[lab] at (4*0.85+5.0,#1) {#5};
+}
+\node[anchor=east,font=\small] at (0.3,0.75) {$V$};
+\foreach \k in {1,...,4} { \node[font=\small] at (\k*0.85,0.75) {$\ell_\k$}; }
+\node[lab] at (4*0.85+0.6,0.75) {sets $Z$ of its leaves};
+\node[lab] at (4*0.85+5.0,0.75) {leaves per box};
+\bxrow{0}{$\{\ell_1,\ell_2\}$}{\ast/bstar,\ast/bstar,P_{ij}/cell,P_{ij}/cell}{$\emptyset,\ \{\ell_1\},\ \{\ell_2\},\ \{\ell_1,\ell_2\}$}{$10^2$}
+\bxrow{-0.75}{$\{\ell_1,\ell_3\}$}{\ast/bstar,P_{ij}/cell,P_0/bzero,P_{ij}/cell}{$\{\ell_3\},\ \{\ell_1,\ell_3\}$}{$10$}
+\bxrow{-1.5}{$\{\ell_1,\ell_4\}$}{\ast/bstar,P_{ij}/cell,P_{ij}/cell,P_0/bzero}{$\{\ell_4\},\ \{\ell_1,\ell_4\}$}{$10$}
+\bxrow{-2.25}{$\{\ell_2,\ell_3\}$}{P_{ij}/cell,P_0/bzero,P_0/bzero,P_{ij}/cell}{$\{\ell_2,\ell_3\}$}{$1$}
+\bxrow{-3.0}{$\{\ell_2,\ell_4\}$}{P_{ij}/cell,P_0/bzero,P_{ij}/cell,P_0/bzero}{$\{\ell_2,\ell_4\}$}{$1$}
+\bxrow{-3.75}{$\{\ell_3,\ell_4\}$}{P_{ij}/cell,P_{ij}/cell,P_0/bzero,P_0/bzero}{$\{\ell_3,\ell_4\}$}{$1$}
+\end{tikzpicture}
+\caption{The boxes of an output string $w$ for $m=4$ and $t=2$, drawn at the four levels $\ell_1<\ell_2<\ell_3<\ell_4$ of its inner set $Q$ (at every other level, they have the term of the private leaf of $w$). Here $P_{ij}$ stands for one of the nine terms other than $P_0$, and $\ast$ for all ten terms. Each row is one of the six sets $V$ of $m-t=2$ levels and stands for the $9^t=81$ boxes of $\mathcal B_V$, one for each choice of the two terms $P_{ij}$. Read from right to left, a row stops at its second $P_{ij}$, and the levels to the left of it, those of $F_V$, carry stars. On the right are the sets $Z$ of levels at which the leaves of such a box choose $P_0$, and the number $10^{|F_V|}$ of its leaves. Every set $Z$ of at most two levels appears in exactly one row (Lemma~\ref{lem:partition}), so these $6\cdot81=486=\alpha_2$ boxes contain each of the $\alpha_2+\alpha_3+\alpha_4=9963$ leaves of order at least $2$ contributing to $w$ exactly once.}
+\label{fig:boxes}
+\end{figure}
+
+A \defn{box} is a cube $\pi=\pi_1\cdots\pi_L$ such that (i)~at most $m-t$ of its symbols are $P_0$ or stars, and (ii)~every star is at a lower level than every $P_0$. That is, the symbols $P_0$ and stars of a box, read in increasing order of the levels, are
+\[
+\underbrace{\ast\;\ast\;\cdots\;\ast}_{e}\;\;\underbrace{P_0\;P_0\;\cdots\;P_0}_{f-e}\qquad\text{for some }0\le e\le f\le m-t,
+\]
+and its other $L-f$ symbols are among the nine terms $P_{ij}$. A leaf of $\pi$ chooses $P_0$ at the $f-e$ levels where $\pi$ has $P_0$ and possibly at some of its $e$ star levels, and hence at most $f\le m-t$ times by~(i), so a box only contains leaves of order at least $t$. By~(ii), a box is obtained from a leaf of order at least $t$ by replacing its $e$ lowest symbols $P_0$ (rather than an arbitrary subset of them) by stars. Therefore, each leaf yields at most $m+1$ boxes, one for each value of $e$, which keeps their total number small, as we will show in Lemma~\ref{lem:allboxes}. Boxes of this shape suffice: we will prove in Lemmas~\ref{lem:partition} and~\ref{lem:boxes} that the leaves of order at least $t$ of an output string can be split among $\alpha_t$ of them. (We will see below that the boxes of an output string all have exactly $m-t$ symbols that are $P_0$ or stars. We nonetheless allow fewer in the definition of a box, since boxes with fewer such symbols will arise as intermediate values in the dynamic program of Lemma~\ref{lem:allboxes}.)
+
+It is important here that a star stands for all ten terms, $P_0$ included, so that one box collects leaves of several orders (from $m-f$ to $m-f+e$, for a box with $e$ stars and $f-e$ symbols $P_0$). This is needed for fast queries. If a star stood only for the nine terms $P_{ij}$, then every box would fix the set of levels at which its leaves choose $P_0$, so an output string would need a separate box for each subset of $Q$ of size at most $m-t$. That would be about $2^m=\sqrt D$ boxes when $t$ is small, so a query would take about $\sqrt D$ time, which gives no saving below $N^2$ when there are $N^2/\sqrt D$ queries.
+
+\paragraph{The boxes of an output string.}
+We now make precise the informal rule above for finding the box of a leaf, and describe all the boxes of an output string $w$ with inner set $Q$. Let $\tau$ be a leaf of order at least $t$ contributing to $w$, whose box we found above by going through the levels of $Q$ from the highest down (Figure~\ref{fig:boxes}). In symbols, let
+\begin{alignat*}{2}
+Z&:=\{\ell\in Q:\ \tau_\ell=P_0\}&\qquad&\text{(the levels at which $\tau$ chooses $P_0$),}\\
+V&:=Z\cup\{\text{the $m-t-|Z|$ lowest levels of }Q\setminus Z\}&&\text{($Z$ padded from the bottom),}\\
+F_V&:=\{\ell\in Q:\ \ell<\min(Q\setminus V)\}&&\text{(the levels that we have not reached).}
+\end{alignat*}
+Since the order of $\tau$ is $m-|Z|\ge t$, the set $V$ has exactly $m-t$ levels, namely, all the levels of $Q$ except the $t$ at which we saw a term other than $P_0$. We define $F_V$ by the same formula for every $V\subseteq Q$, with $F_V:=Q$ if $V=Q$. It is the longest initial segment of $Q$ contained in $V$. ($Z$ stands for \emph{zero}, since these are the levels where $\tau$ chooses $P_0$, and $F$ stands for \emph{free}, since these are the levels where the box has a star.)
+
+For $V\subseteq Q$ with $|V|=m-t$, let $\mathcal B_V$ be the set of the $9^t$ cubes $\pi$ with
+\[
+\pi_\ell=\begin{cases}
+\ast&\text{if }\ell\in F_V,\\
+P_0&\text{if }\ell\in V\setminus F_V,\\
+\text{one of the nine terms }P_{ij}&\text{if }\ell\in Q\setminus V,\\
+\text{the term }P_{ij}\text{ with }w_\ell=z_{ij}&\text{if }\ell\notin Q.
+\end{cases}
+\]
+Every cube in $\mathcal B_V$ is a box: it satisfies condition~(i) of the definition because it has $|V|=m-t$ symbols $P_0$ or stars, and condition~(ii) because its stars are below its symbols $P_0$, since $F_V$ is an initial segment of $Q$. When $V$ is the set defined above from a leaf $\tau$, the box of $\tau$ is the one in $\mathcal B_V$ with the terms of $\tau$ at the levels of $Q\setminus V$. Since a box of $\mathcal B_V$ has stars at the levels of $F_V$, it contains the leaves with any terms there, of which there are $10^{|F_V|}$. Notice that the set $\mathcal B_V$ depends on $w$ (since it depends on $Q$ and on the terms at the levels outside $Q$), but we omit this from the notation since $w$ will always be clear from context. We call the boxes in these sets, over all $V\subseteq Q$ with $|V|=m-t$, the \defn{boxes of $w$}.
+
+There is another way to describe the boxes of $w$, in terms of the leaves of order exactly $t$ contributing to $w$. For such a leaf, consider the lowest level of $Q$ at which it chooses a term other than $P_0$, and replace its $P_0$ by a star at every lower level of $Q$ (or at every level of $Q$, if $t=0$). The result is a box of $w$, and each box of $w$ arises exactly once in this way. This means that $w$ has exactly $\alpha_t$ boxes.
+
+\paragraph{Every leaf of order at least $t$ lies in exactly one box.}
+A leaf contributing to $w$ that chooses $P_0$ at the set $Z$ of levels is a leaf of a box of $\mathcal B_V$ if and only if it chooses $P_0$ at every level of $V\setminus F_V$ and at no level of $Q\setminus V$, that is,
+\[
+V\setminus F_V\;\subseteq\;Z\;\subseteq\;V.
+\]
+Furthermore, it is a leaf of exactly one of these boxes, namely, the one with its terms at the levels of $Q\setminus V$. We will see in the following lemma that, for $|Z|\le m-t$, exactly one $V$ satisfies this condition, namely $Z$ padded from the bottom. Thus every leaf of order at least $t$ lands in exactly one box.
+
+\begin{lemma}\label{lem:partition}
+Let $Q$ be a set of $m$ levels, and let $0\le t\le m$. For every $Z\subseteq Q$ with $|Z|\le m-t$, there is exactly one set $V\subseteq Q$ with $|V|=m-t$ and
+\[
+V\setminus F_V\;\subseteq\;Z\;\subseteq\;V,
+\]
+namely $Z$ together with the $m-t-|Z|$ lowest levels of $Q\setminus Z$.
+\end{lemma}
+
+\begin{proof}
+Let $V\subseteq Q$ with $|V|=m-t$ and $Z\subseteq V$. We show that $V\setminus F_V\subseteq Z$ holds if and only if $V\setminus Z$ consists of the $|V\setminus Z|=m-t-|Z|$ lowest levels of $Q\setminus Z$, which determines $V$. If $V=Q$, then both conditions hold: $F_V=Q$, so $V\setminus F_V=\emptyset\subseteq Z$, and $V\setminus Z$ is all of $Q\setminus Z$. Otherwise, let $\ell$ be the lowest level of $Q\setminus V$. Then $F_V$ consists of the levels of $Q$ below $\ell$, so $V\setminus F_V\subseteq Z$ says that every level of $V\setminus Z$ is below $\ell$. Since $Q\setminus Z$ is the disjoint union of $V\setminus Z$ and $Q\setminus V$, and every level of $Q\setminus V$ is at least $\ell$, this holds if and only if $V\setminus Z$ consists of the lowest levels of $Q\setminus Z$.
+\end{proof}
+
+\begin{lemma}\label{lem:boxes}
+Let $w$ be an output string, with inner set $Q$. The leaves of order at least $t$ contributing to $w$ are exactly the leaves of the boxes in $\bigcup_V\mathcal B_V$, the union over all $V\subseteq Q$ with $|V|=m-t$, and each of them is a leaf of exactly one of these boxes. Hence
+\[
+(X_QY_Q)[w]\;=\sum_{\substack{\tau\text{ contributing to }w\\\text{of order }<\,t}}\Phi_\tau(a)\,\Psi_\tau(b)\;+\;\sum_{\substack{V\subseteq Q\\|V|=m-t}}\;\sum_{\pi\in\mathcal B_V}\val(\pi),
+\]
+a sum of $\sum_{d=0}^{t-1}\alpha_d$ products and $\alpha_{t}$ values of boxes.
+\end{lemma}
+
+\begin{proof}
+Every leaf of a box of $\mathcal B_V$ agrees with the private leaf of $w$ outside $Q$, so it contributes to $w$, and it chooses $P_0$ at most $|V|=m-t$ times, so its order is at least $t$. Conversely, a leaf $\tau$ contributing to $w$, of order at least $t$, chooses $P_0$ at a set $Z\subseteq Q$ of at most $m-t$ levels, and as we saw above, it is a leaf of a box of $\mathcal B_V$ if and only if $V\setminus F_V\subseteq Z\subseteq V$, and then of exactly one such box. By Lemma~\ref{lem:partition}, exactly one $V$ satisfies this condition. The desired equation follows, since $(X_QY_Q)[w]$ is the sum of the products at the leaves contributing to $w$. Finally, $\alpha_d$ leaves of order $d$ contribute to $w$, and there are $\binom m{m-t}$ sets $V$ with $9^t$ boxes each, i.e., $\binom m{m-t}9^t=\binom mt9^t=\alpha_t$ boxes in all (as many as the leaves of order exactly $t$ contributing to $w$, although they cover its leaves of every order from $t$ to $m$).
+\end{proof}
+
+\subsection{The data structure, in terms of the parameters}\label{sec:single}
+
+In this subsection, we assemble the boxes into our data structure and bound its costs in terms of the parameters $m$, $L$, and $t$. We will then choose settings for the parameters in Section~\ref{sec:corproofs}. We begin by recalling two notions from Section~\ref{sec:result} that the data structure builds on.
+
+The \emph{tiling} of Section~\ref{sec:tiling} cuts the product $XY$ into \emph{tiles}. A row block is $\Nz$ consecutive rows of $X$, a column block is $\Nz$ consecutive columns of $Y$, and a tile is a band of $K_0=\lfloor\sqrt K\rfloor$ consecutive row blocks together with a band of $K_0$ consecutive column blocks. One run of the recursion computes all $K_0^2$ block products of a tile at once, each as the product $X_QY_Q$ for its own subset $Q$. The \emph{encodings} of Section~\ref{sec:encoders} are the arrays of the $10^L$ numbers $\Phi_\tau(a)$, one for each leaf $\tau$, computed from the input array $a$ of a row band, and similarly the numbers $\Psi_\tau(b)$ computed from the input array $b$ of a column band. We compute an encoding once per band and share it among all the tiles that use that band, and the product at a leaf of a tile is the product of its two encoded numbers.
+
+Our data structure consists of three components:
+\begin{itemize}[nosep]
+\item the list of the $K_0^2$ subsets $Q$ assigned to the block products of a tile (recall that this list is the same for every tile),
+\item the encodings of all row bands and all column bands, and
+\item for every tile, the values of all its boxes (the boxes are the same strings in every tile, but their values depend on the input arrays of the tile).
+\end{itemize}
+To answer a query for an entry $(XY)[I,J]$, the data structure performs the following three steps:
+\begin{enumerate}[label=(\arabic*),nosep]
+\item Find the tile that contains $(I,J)$, the subset $Q$ of its block product, and the output string $w$ of $(I,J)$.
+\item Add up the products at the leaves of order below $t$ contributing to $w$, by reading the two factors of each product from the encodings of the tile.
+\item Add to this the values of the $\alpha_t$ boxes of $w$, which are stored for the tile.
+\end{enumerate}
+By Lemma~\ref{lem:boxes}, the result is $(X_QY_Q)[w]=(XY)[I,J]$. We will give the details of the query, as well as the preprocessing, in the proof of Theorem~\ref{thm:singletech} below.
+
+The encodings are indexed by the leaves (Section~\ref{sec:encoders}), and for each tile we store its boxes, with their values, in a standard trie on their strings of $L$ symbols. Thus reading the product at a leaf, or looking up or inserting a box, takes $O(L)$ operations.
+
+We will next show that there are at most $m+1$ times as many boxes as there are leaves of order at least $t$, and that the dynamic program described in the technique overview computes their values (a box with $e$ stars being the sum of ten boxes with $e-1$ stars).
+
+\begin{lemma}\label{lem:allboxes}
+There are at most $(m+1)\sum_{d=t}^{m}\beta_d$ boxes. Given the two encodings of a tile, we can compute the values of all these boxes, and store them in the trie for that tile, in $O(L)$ time and space per box.
+\end{lemma}
+
+\begin{proof}
+\emph{The count.} A box in which $f$ of the symbols are $P_0$ or stars is obtained from a leaf of order $m-f$ (namely the leaf we get by replacing its stars with $P_0$) by turning the $e$ lowest symbols $P_0$ of that leaf into stars, for some $e\le f$. Thus, such a box can be specified by choosing the $f$ levels of these symbols, the number $e$, and a term other than $P_0$ at each of the other $L-f$ levels. There are hence $(f+1)\binom Lf9^{L-f}=(f+1)\,\beta_{m-f}$ such boxes, and summing over $f\le m-t$ gives the upper bound on the number of boxes.
+
+\emph{The values.} We compute the values of the boxes in increasing order of their number of stars. The boxes without stars are the leaves with at most $m-t$ symbols $P_0$, and the value of each of them is the product of its two numbers in the encodings.
+
+For a box $\pi$ with $e\ge1$ stars, let $\ell$ be the highest level at which $\pi$ has a star. The leaves of $\pi$ are the leaves of the ten strings $\pi[\ell\leftarrow\lambda]$ obtained by replacing that star by a term $\lambda$, and each of these strings is again a box, with $e-1$ stars. Indeed, if $\lambda=P_0$, then the number of symbols that are $P_0$ or stars stays the same, and the new $P_0$ at level $\ell$ is above all the remaining stars. If $\lambda$ is any other term, then that number decreases by one, and every star is still below every $P_0$. Thus conditions (i) and (ii) in the definition of a box hold in both cases. (We expand the highest star because replacing a lower star by $P_0$ would leave a star above a $P_0$, which is not a box.) Hence we compute
+\[
+\val(\pi)=\sum_\lambda\val(\pi[\ell\leftarrow\lambda])
+\]
+with ten lookups in the trie, in $O(L)$ operations. Generating the boxes with $e$ stars and inserting them into the trie also takes $O(L)$ operations per box, and adds at most $L$ vertices per box.
+\end{proof}
+
+See Figure~\ref{fig:count} for an illustration of these counts (in that figure, the switching order $t$ is set to $m/9$). At every order $d$, the pruned recursion of Section~\ref{sec:sparse} visits at most $\min\{|U|\alpha_d,\beta_d\}$ leaves of order $d$ in a tile whose wanted output strings form the set $U$ (see the proof of Lemma~\ref{lem:count}), the smaller of the two bounds at that order. The data structure cannot do this, since $U$ is not known in advance. Instead, a query computes $\alpha_d$ products at every order $d<t$, and looks up $\alpha_t$ boxes at the order $t$. The data structure also stores at most $(m+1)\sum_{d\ge t}\beta_d$ boxes per tile, even if they are not used by a query. The preprocessing time is therefore dominated by the sum $\sum_{d\ge t}\beta_d$, and hence by how fast the $\beta_d$ decay. Let
+\[
+\rho:=\frac{9m}{L-m+1},
+\]
+which is less than $1$ since $L\ge10m$. It plays the role of $\frac12$ in~\eqref{eq:decay}: for $1\le d\le m$,
+\begin{equation}\label{eq:gendecay}
+\frac{\beta_d}{\beta_{d-1}}=\frac{9(m-d+1)}{L-m+d}\le\frac{9m}{L-m+1}=\rho,\qquad\text{so}\qquad\beta_d\le\rho^d\,\Cm .
+\end{equation}
+The closer the ratio $c=L/m$ is to $10$, the closer $\rho$ is to $1$, and the more boxes the preprocessing has to compute. This is one side of the trade-off mentioned at the beginning of this section between the time savings and how thin the product must be.
+
+We can now bound the costs. The theorem below assumes that $N\ge\sqrt K\,\Nz$. Since a tile spans $K_0\Nz\le\sqrt K\,\Nz$ rows and as many columns of the $N\times N$ product $XY$, this ensures that a tile fits inside $XY$, so padding $N$ to a multiple of $K_0\Nz$ at most doubles it. We checked the same requirement in Section~\ref{sec:proof}, where it was the first of the two consequences of $N\ge D^{18}$. Here it will also follow, in Section~\ref{sec:corproofs}, from the requirement that computing the encodings takes at most $N^2/D^{\gamma}$ time, since $10^L\ge\Cm$.
+
+\begin{theorem}\label{thm:singletech}
+Let $m\ge1$, $D=4^m$, $L\ge10m$, $0\le t\le m$, and $N\ge\sqrt K\,\Nz$. Given as input matrices $X\in\Z^{N\times D}$ and $Y\in\Z^{D\times N}$, whose entries are integers of absolute value at most $N^{O(1)}$, we can preprocess them deterministically in time and space
+\begin{equation}\label{eq:prep}
+O\Big(L\,m\,\frac{\rho^t}{1-\rho}\,N^2\;+\;\frac{N\cdot10^L}{\sqrt K\,\Nz}\Big).
+\end{equation}
+After this, any single entry $(XY)[I,J]$ can be computed deterministically in $O\big(L\sum_{d=0}^{t}\alpha_d\big)$ time. In particular, for every set $W$ of positions of an $N\times N$ matrix, the entries $(XY)[I,J]$, $(I,J)\in W$, can be computed deterministically in time
+\begin{equation}\label{eq:wanted}
+O\Big(\underbrace{L\,|W|\sum_{d=0}^{t}\alpha_d}_{\text{\normalfont queries}}\;+\;\underbrace{L\,m\,\frac{\rho^t}{1-\rho}\,N^2}_{\text{\normalfont boxes}}\;+\;\underbrace{\frac{N\cdot10^L}{\sqrt K\,\Nz}}_{\text{\normalfont encodings}}\Big).
+\end{equation}
+The constants hidden in the $O(\cdot)$ depend only on the exponent in $N^{O(1)}$.
+\end{theorem}
+
+
+\begin{proof}
+\emph{Preprocessing.} We tile the product as in Section~\ref{sec:tiling}, padding $N$ to a multiple of $K_0\Nz$, which at most doubles it since $N\ge\sqrt K\,\Nz\ge K_0\Nz$, and we store the $K_0^2$ subsets, in $O(KL)\le O(10^L)$ operations. We then form and encode the input arrays of all row bands and column bands, at most $4N/(\sqrt K\,\Nz)$ of them since $K_0\ge\sqrt K/2$. Each has at most $K\Nz D\le7^L$ nonzero entries, so we form it in $O(L\cdot7^L)$ operations, and its encoding takes $O(10^L)$ operations (Section~\ref{sec:encoders}). This is the last term of~\eqref{eq:prep}. Finally, we compute the values of all the boxes of each of the at most $4N^2/\Cm$ tiles, where $\Cm=K\Nz^2$ is the number of output entries of a tile. By Lemma~\ref{lem:allboxes}, this takes $O(L(m+1)\sum_{d\ge t}\beta_d)$ time and space per tile, and $\sum_{d\ge t}\beta_d\le\Cm\rho^t/(1-\rho)$ by~\eqref{eq:gendecay}, which gives the first term.
+
+\emph{Query.} Given $(I,J)$, we find its tile from the bands of row $I$ and column $J$, the subset $Q$ of its block product, and its output string $w$ (whose variables at the levels outside $Q$ we read off the row and column of $(I,J)$ within the block product), all in $O(L)$ operations (Section~\ref{sec:proof}). We then compute $(X_QY_Q)[w]$ as the sum in Lemma~\ref{lem:boxes}, which has two parts.
+
+The first part is the sum of the products at the leaves of order below $t$ contributing to $w$. Each of these leaves is obtained from the private leaf of $w$, which has $P_0$ at every level of $Q$, by picking fewer than $t$ of those levels and replacing $P_0$ with one of the nine other terms at each of them. We enumerate them, and for each such leaf $\tau$ we look up its two numbers $\Phi_\tau(a)$ and $\Psi_\tau(b)$ in the encodings of the tile and multiply them. The second part is the sum of the values of the boxes of $w$: for every $V\subseteq Q$ with $|V|=m-t$ and every box of $\mathcal B_V$, we look up its value in the trie of the tile. In all, these are $\sum_{d=0}^{t-1}\alpha_d+\alpha_t$ numbers, and we find each of them in $O(L)$ operations, including forming its leaf or its box from the private leaf. Enumerating them also takes $O(L)$ operations per number. By Section~\ref{sec:proof}, the sum is $(XY)[I,J]$. For a set $W$, we ask $|W|$ queries, which gives~\eqref{eq:wanted}.
+
+\emph{Word size.} As in Section~\ref{sec:proof}, every number in an encoding is a sum of entries of the input array with coefficients $0,\pm1$, and every value we compute is a sum of at most $10^m$ products of two such numbers. Since $N\ge\Nz=3^{L-m}$ and $L\ge10m$, we have $10^L\le N^{5/2}$, so, as in Section~\ref{sec:proof}, all the values are $N^{O(1)}$ in absolute value, and every integer we use has $O(\log N)$ bits.
+\end{proof}
+
+\subsection{Choosing the parameters}\label{sec:corproofs}
+
+We now choose the parameters in Theorem~\ref{thm:singletech} and prove the results of Section~\ref{sec:results}. In other words, we do the arithmetic and bookkeeping to derive the explicit exponents from Theorem~\ref{thm:singletech}. We first do the calculation in full for a single choice of the parameters, $L=21m$ and $t=\lceil m/9\rceil$, which proves Corollary~\ref{cor:zt}. We then say what changes for other choices, which gives Theorems~\ref{thm:single} and~\ref{thm:general} and the entries of Table~\ref{tab:ds}.
+
+\begin{proof}[Proof of Corollary~\ref{cor:zt}]
+\emph{Setting up.} Let $m:=\lceil\log_4D\rceil$, and pad the inner dimension to $4^m<4D$ with zero columns of $X$ and zero rows of $Y$. This changes no entry of $XY$, and it changes $D$ by a factor less than $4$, which only affects the constants. So from now on $D=4^m$, and since the original $D$ was larger than $4^{m-1}$, the assumption $N\ge D^{18}$ now reads $N\ge4^{18(m-1)}$. Let $L:=21m$ and $t:=\lceil m/9\rceil$. We will apply Theorem~\ref{thm:singletech} with these parameters, and we will verify its condition $N\ge\sqrt K\,\Nz$ below, in the step on the encodings.
+
+\emph{Boxes.} We have $\rho=9m/(L-m+1)=9m/(20m+1)<9/20$, so $1/(1-\rho)<2$, and since $t\ge m/9$, also $\rho^t\le(9/20)^{m/9}=D^{-\gamma}$, where $\gamma:=\ln(20/9)/(9\ln4)=0.0640\ldots$. Hence the first term of~\eqref{eq:prep} is $O(m^2N^2/D^{\gamma})$.
+
+\emph{Queries.} A query reads $\sum_{d\le t}\alpha_d$ numbers, and we bound this sum as in the proof of Lemma~\ref{lem:count}. Since $9^d=72^d8^{-d}\le72^t8^{-d}$ for $d\le t$, and $t<m/9+1$,
+\[
+\sum_{d=0}^{t}\binom md9^d\;\le\;72^t\sum_{d=0}^{m}\binom md8^{-d}=72^t\Big(\frac98\Big)^m<72\cdot\Big(72\cdot\big(\tfrac98\big)^9\Big)^{m/9}=72\,D^{q},
+\]
+where $q:=\ln(72\cdot(9/8)^9)/(9\ln4)=0.4277\ldots$. Hence a query takes $O(L\,D^{q})=O(m\,D^{q})$ time.
+
+\emph{Encodings.} It remains to show that the last term of~\eqref{eq:prep} is at most $N^2/D^{\gamma}$, and that $N\ge\sqrt K\,\Nz$. Both follow from
+\begin{equation}\label{eq:encrange}
+\frac{D^{\gamma}\cdot10^L}{\sqrt K\,\Nz}\;\le\;N ,
+\end{equation}
+the first by rearranging, and the second because $10^L\ge\Cm=K\Nz^2$ and $D^{\gamma}\ge1$. As in Section~\ref{sec:proof}, we compare $m$-th powers by comparing their bases. We have $D^{\gamma}=(20/9)^{m/9}$, $10^L=10^{21m}$, and $\Nz=3^{20m}$, and the standard bound $\binom nk\ge\frac1{n+1}\cdot\frac{n^n}{k^k(n-k)^{n-k}}$ gives $K=\binom{21m}m\ge\frac1{21m+1}\big(21^{21}/20^{20}\big)^m$. Hence the left-hand side of~\eqref{eq:encrange} is at most $\sqrt{21m+1}\cdot\Lambda^m$, where
+\[
+\Lambda:=\frac{10^{21}\cdot(20/9)^{1/9}}{(21^{21}/20^{20})^{1/2}\cdot3^{20}}=4.198\ldots\cdot10^{10} .
+\]
+We now use the assumption $N\ge D^{18}$. Its base $4^{18}=6.871\ldots\cdot10^{10}$ is larger than $\Lambda$ by a factor of more than $1.63$. Since $N\ge4^{18(m-1)}$, the inequality~\eqref{eq:encrange} therefore holds whenever $1.63^m\ge4^{18}\sqrt{21m+1}$, which is the case for all $m\ge60$. (For $m<60$, $D$ is bounded by a constant, and the corollary holds trivially.)
+
+\emph{Conclusion.} For $m\ge60$, Theorem~\ref{thm:singletech} thus applies. The preprocessing takes $O(m^2N^2/D^{\gamma})$ time and space, and a query takes $O(m\,D^{q})$ time. Since $m=O(\log D)$ and the exponents $\gamma-0.063$ and $0.437-q$ are positive, we have $m^2=O(D^{\gamma-0.063})$ and $m=O(D^{0.437-q})$, which gives the bounds $O(N^2/D^{0.063})$ and $O(D^{0.437})$ of the corollary. The bound for a set $W$ follows by asking $|W|$ queries.
+\end{proof}
+
+\paragraph{Other choices of the parameters.}
+The numbers $21$ and $\frac19$ did not play a special role in this proof, and the same calculation works with $L=\lceil cm\rceil$ and $t=\lceil\theta m\rceil$ for any constants $c>10$ and $0<\theta<0.9$. This gives Corollary~\ref{cor:tradeoff} below, which we use for the left half of Table~\ref{tab:ds}, with the $c$ of the row and the $\theta$ that gives the $q$ of the column ($\theta=\frac19$ for $q=0.43$). To state it, let $\Hh(x):=-x\ln x-(1-x)\ln(1-x)$ be the entropy function (with natural logarithms), let $\Lambda:=10^{c}\,e^{-\frac12c\Hh(1/c)}\,3^{-(c-1)}\,4^{\gamma}$ be the general form of the base $\Lambda$ above, and let
+\begin{equation}\label{eq:Rc}
+R_c(\gamma):=\frac{\ln4}{\ln\Lambda}=\frac{\ln4}{c\ln10-\tfrac12c\Hh(1/c)-(c-1)\ln3+\gamma\ln4} .
+\end{equation}
+
+\begin{corollary}\label{cor:tradeoff}
+Let $c>10$ and $0<\theta<0.9$, let $\rho_c:=9/(c-1)$, and let
+\[
+\gamma:=\frac{\theta\ln(1/\rho_c)}{\ln4}>0\qquad\text{and}\qquad q:=\frac{\Hh(\theta)+\theta\ln9}{\ln4} .
+\]
+Given as input matrices $X\in\Z^{N\times D}$ and $Y\in\Z^{D\times N}$ whose entries are integers of absolute value at most $N^{O(1)}$, where $2\le D\le N^{\varepsilon}$ and $\varepsilon<R_c(\gamma)$, with $R_c$ as in~\eqref{eq:Rc}, we can preprocess them deterministically in $O(N^2\log^2\!D/D^{\gamma})$ time and space, after which any single entry $(XY)[I,J]$ can be computed deterministically in $O(D^{q}\log D)$ time. The constants hidden in the $O(\cdot)$ depend on $c$, $\theta$, and $\varepsilon$.
+
+Moreover, $R_c(0)$ increases to $\varepsilon^*=\ln4/(5\ln10)=0.1204\ldots$ as $c$ decreases to $10$.
+\end{corollary}
+
+
+\begin{proof}
+We repeat the proof of Corollary~\ref{cor:zt} with $L:=\lceil cm\rceil$ and $t:=\lceil\theta m\rceil$. After the padding, the assumption $D\le N^{\varepsilon}$ now reads $N\ge4^{(m-1)/\varepsilon}$. For the boxes, $\rho<\rho_c$ gives $\rho^t\le\rho_c^{\theta m}=D^{-\gamma}$. For the queries, the same calculation with $x:=(1-\theta)/\theta$ in place of $8$, where $9x>1$ because $\theta<0.9$, gives $\sum_{d\le t}\alpha_d\le(9x)^t(1+1/x)^m=O(D^{q})$. For the encodings, the same bound on the binomial coefficient, $\binom nk\ge e^{n\Hh(k/n)}/(n+1)$, shows that the left-hand side of~\eqref{eq:encrange} is $O(\sqrt m\cdot\Lambda^m)$. As $\varepsilon<R_c(\gamma)$ says that $\Lambda<4^{1/\varepsilon}$, the inequality~\eqref{eq:encrange} thus holds once $m$ exceeds a constant depending on $c$, $\theta$, and $\varepsilon$, and for smaller $m$ the corollary again holds trivially.
+
+Finally, a direct calculation shows that for $\gamma=0$, $\ln\Lambda$ increases with $c$ and tends to $5\ln10$ as $c$ decreases to $10$, by the identity $\Hh(\frac1{10})+\frac9{10}\ln9=\ln10$. Hence $R_c(0)$ increases to $\ln4/(5\ln10)=\varepsilon^*$.
+\end{proof}
+
+\paragraph{Where $\varepsilon^*$ comes from.}
+The identity $\Hh(\frac1{10})+\frac9{10}\ln9=\ln10$ says that $\binom{10m}m9^{9m}$, the largest term of the binomial expansion of $(1+9)^{10m}$, is $10^{10m}$ up to polynomial factors. So at $c=10$ a tile has $\Cm\approx10^L$ output entries, as many as the recursion has leaves, and the encodings cost $N\cdot10^L/\sqrt{\Cm}\approx N\cdot10^{L/2}$, which is below $N^2$ exactly when $N\ge10^{L/2}=D^{1/\varepsilon^*}$.
+
+\begin{proof}[Proof of Theorem~\ref{thm:single}]
+Let $\varepsilon<\varepsilon^*$ and $q>0$. Choose $c>10$ with $R_c(0)>\varepsilon$ (Corollary~\ref{cor:tradeoff}), and then $\theta\in(0,0.9)$ small enough that $(\Hh(\theta)+\theta\ln9)/\ln4<q$ and $R_c(\theta\ln(1/\rho_c)/\ln4)>\varepsilon$. This is possible since, as $\theta\to0$, the first expression tends to $0$ and the second to $R_c(0)$. Corollary~\ref{cor:tradeoff} with these $c$ and $\theta$ gives the theorem.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:general}]
+Apply Theorem~\ref{thm:single} with $q:=\kappa/2$, and ask one query for each position of $W$. As $|W|\le N^2/D^{\kappa}$, this takes $O(N^2\log^2\!D/D^{\gamma}+|W|\,D^{\kappa/2}\log D)=O(N^2\log^2\!D/D^{\gamma'})$ time, where $\gamma':=\min\{\gamma,\kappa/2\}$.
+\end{proof}
+
+With Corollary~\ref{cor:tradeoff} in place of Theorem~\ref{thm:single}, the same argument gives explicit exponents, which we use for the right half of Table~\ref{tab:ds}, with the $\theta$ at which $\gamma=\kappa-q$. The $\varepsilon$ of a row of the table is the smallest $R_c(\gamma)$ over its entries.
+
+\begin{corollary}\label{cor:range}
+Let $c$, $\theta$, $\gamma$, $q$, $X$, $Y$, $D$, and $\varepsilon$ be as in Corollary~\ref{cor:tradeoff}, and let $\kappa>0$. For every set $W$ of at most $N^2/D^{\kappa}$ positions of an $N\times N$ matrix, the entries $(XY)[I,J]$, $(I,J)\in W$, can be computed deterministically in time
+\[
+O\big(N^2\log^2\!D\,(D^{-\gamma}+D^{q-\kappa})\big),
+\]
+a saving of $D^{\min\{\gamma,\,\kappa-q\}}$, up to logarithmic factors, over the size $N^2$ of the product.
+\end{corollary}

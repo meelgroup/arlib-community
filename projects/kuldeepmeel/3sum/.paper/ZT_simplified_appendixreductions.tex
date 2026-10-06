@@ -1,0 +1,96 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing,calc,arrows.meta}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\val}{\mathrm{val}}
+\newcommand{\Lop}{\mathrm{Lop}\text{-}\mathrm{AE}\text{-}\mathrm{SparseTri}}
+\DeclareMathOperator{\Hh}{H}
+\DeclareMathOperator{\polyop}{poly}
+\DeclareMathOperator{\polylog}{polylog}
+\makeatletter
+\newcommand{\poly}{\@ifnextchar\log{\poly@log}{\polyop}}
+\def\poly@log\log{\polylog}
+\makeatother
+\newcommand{\Leaves}{\mathrm{Leaves}}
+\newcommand{\Cm}{M}
+\newcommand{\Nz}{N_0}
+\newcommand{\Mult}{\textnormal{\textsc{Mult}}}
+\newcommand{\Pruned}{\textnormal{\textsc{Pruned}}}
+\newcommand{\Full}{\textnormal{\textsc{Full}}}
+\newcommand{\defn}[1]{\textbf{\emph{#1}}}
+
+\title{Truly Subquadratic 3SUM and Truly Subcubic APSP \\via Triangles in Sparse Lopsided Graphs}
+\author{Josh Alman\\ Columbia University \and Virginia Vassilevska Williams\\ MIT}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We give the first polynomial improvements over the textbook algorithms for $3$SUM and All-Pairs Shortest Paths (APSP): we show how to deterministically solve $3$SUM on $n$ integers of polynomial size in  $O(n^{1.9992})$ time and APSP on directed $n$-vertex graphs with polynomially bounded integer weights in $O(n^{2.9995})$ time. This refutes the $3$SUM and APSP hypotheses of fine-grained complexity theory. Using known reductions, we also refute the real-valued versions of the $3$SUM and APSP hypotheses, the Exact Triangle hypothesis, the Zero-Weight $k$-Clique hypotheses, and the three rectangular hinted Online Matrix--Vector conjectures of van den Brand, Nanongkai, and Saranurak, and we give polynomial speedups for a variety of other problems. 
+
+All of these results follow from a single new algorithm for thin matrix products. Let $X$ be an $N\times D$ integer matrix and $Y$ a $D\times N$ integer matrix with $D\le N^{1/18}$, and let $W$ be any set of at most $N^2/\sqrt D$ positions. We compute the entries $(XY)[I,J]$, $(I,J)\in W$, in $O(N^2/D^{0.063})$ operations, which is polynomially less than the time needed to write down $XY$ or to compute $N^2/\sqrt D$ inner products one by one. We design this algorithm by modifying a variant of Coppersmith's rectangular matrix multiplication algorithm, built from a ten-multiplication identity of Sch\"onhage, to perform only the operations needed for the entries in $W$, and show that few operations are needed. Interpreted as a graph algorithm, this solves the All-Edges Sparse Triangle problem in truly subquadratic time on sparse lopsided tripartite graphs where two parts have $n$ vertices but one part has $n^{\varepsilon}$ vertices for $\varepsilon<0.12$. By known reductions, Exact Triangle, and hence $3$SUM and APSP, reduce to this problem. We also give a data structure version that answers queries for single entries of $XY$, not known in advance.
+
+We view this as a great success for fine-grained complexity, whose main focus has been reductions that uncover connections between problems. So far these reductions have mostly served to infer conditional hardness, since $3$SUM and APSP themselves resisted improvement for so long. But reductions are also algorithms, and they allow a single new technique to speed up a wide range of problems at once. This opens new directions in both algorithm design and complexity.
+
+\vspace{12pt}
+
+\textit{Claude, an AI model developed by Anthropic, discovered the algorithm that refutes the $3$SUM, APSP, and Exact Triangle hypotheses. The authors then worked to understand, simplify, strengthen, and extend the algorithm, derive additional consequences, and make the presentation accessible. See ``Acknowledgments and Methodology'' for how the result was found and shared with the authors. The authors take full responsibility for this paper.}
+
+\vspace{12pt}
+
+\textit{Claude also verified this paper's main results using the Lean 4 proof assistant with the Mathlib library.}
+\end{abstract}
+
+\newpage
+\input{01-intro}
+\input{02-matrix}
+\input{03-reduction}
+\input{04-general}
+\input{05-other}
+\input{06-conclusion}
+
+\section*{Acknowledgments and Methodology}
+
+\paragraph{How the result was originally found and shared with the authors.} An Anthropic employee used an internal research model to investigate open problems in the theory of cryptography. One of them was about cryptographic constructions based on the average-case hardness of Zero-$k$-Clique~\cite{LLV19,AHY25}. Claude was tasked with verifying and improving the constructions, but instead developed this algorithm, first for the average case, then for the worst case. The session used 16M output tokens with no human input.
+
+Anthropic shared the algorithm with the authors in September 2026 under a confidentiality agreement, offered compensation, 
+and provided access to the public version of Claude. 
+
+\paragraph{Shared algorithm.}
+The algorithm that was shared with the authors is essentially the algorithm in Section~\ref{sec:result}, although presented differently and with other numerical parameters. A different reduction from Exact Triangle to the problem of Section~\ref{sec:result} was also shared, although the authors did not include it here, and instead used known reductions to All-Edges Sparse Triangle, which suffice and strengthen the connection. The authors derived the data structure version in Section~\ref{sec:general} and its connection with Hinted OMv. 
+
+\paragraph{Lean certification.} After the paper was completely written, Anthropic used an internal research model to certify this paper's main results using the Lean 4 proof assistant with the Mathlib library. The formalization is available at \url{https://github.com/anthropics/formal-math/tree/main/3sum-apsp}. The following are formalized there: Theorem~\ref{thm:zwt} (Exact Triangle in $O(n^{2.9983})$ time), Theorem~\ref{thm:3sumapsp} ($3$SUM in $O(n^{1.9992})$ time, and the $(\min,+)$-product and APSP in $O(n^{2.99942})$ time), and the Zero-Weight case of Corollary~\ref{cor:kclique} (Zero-Weight $k$-Clique in $O(n^{k-0.0017\lfloor k/3\rfloor})$ time for every $k\ge3$). All lemmas and prior results that these statements rely on are also formalized there.
+
+\paragraph{Further acknowledgments.}
+The authors used Claude to help with writing, figure creation, and checking mathematical details throughout this project. They have attempted to make the entire paper accessible and well-written, and take full responsibility for its contents.
+
+The authors' contribution to this publication was done in their individual capacities, 
+not in connection with their duties
+or responsibilities to Columbia University or to MIT. Any opinions expressed in this work are opinions of the authors; they are not official positions or endorsements of Columbia University or of MIT, and do not represent the research of the authors at Columbia University or MIT.
+
+
+\bibliographystyle{alpha}
+\bibliography{references}
+
+\end{document}
