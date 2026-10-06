@@ -114,6 +114,8 @@ sparsifications where the listing performs `n`.  Both departures are recorded in
 
 set_option autoImplicit false
 
+universe u
+
 namespace TvDomainReduction.Program
 
 open Arlib.Approximation
@@ -236,8 +238,72 @@ def runDense {δ η' : ℝ} {V : Vtree} {gP gQ : ℕ} (C : CircuitPair V gP gQ)
   let R ← abses rows R
   divs 1 R
 
+/-! ## The third entry point, for weighted tree automata
+
+`thm:wta_fpras` (main.tex:996–1003) has no numbered listing either.  Its
+algorithm is spread over main.tex:967 (the normalisation DP), main.tex:969–992
+(joint features, root query, estimator) and the proof main.tex:1005–1034, which
+appeals to §4.2.  On `C : CircuitPair V 1 1` it is:
+
+| paper step | Lean |
+| --- | --- |
+| **W1** `m_ℓ = ∑_a h_ℓ(a)`, `m_u = B_u(m_{u_L}, m_{u_R})`, `Z_R = m_r` (main.tex:967) | `massDP`, once per model; its *value* is `Model.Prelude.circuitMass` |
+| **W3** zero-padding to dimension `d` (main.tex:1006) | none: arlib allows per-node dimensions |
+| **W4** unary root sum gate of weight `Z_R^{-1}` (main.tex:1006) | folded into the root query `aWTA = (Z_P^{-1}, −Z_Q^{-1})` (main.tex:984): 2 inversions and 1 negation |
+| **W5** scalar product/sum-gate expansion (main.tex:1008–1030) | none: `Circuit.node` is the bilinear gate (`valP_node` = main.tex:953) |
+| **W6** exact leaf coreset (main.tex:888) | `build`, leaf branch, unchanged |
+| **W7** product, then **one** `Sparsify` per internal node at `(ε/(3I), η/I)` (main.tex:896) | `build`, node branch, unchanged |
+| **W8** `d̂ = ½ ∑ μ |v_P/Z_P − v_Q/Z_Q|` (main.tex:992, 997) | `runDense` with `gP = gQ = 1` (dense 2-vector query); value `Model.Prelude.DtildeWTA` |
+
+`build` is reused unchanged, which carries the circuit theorem's fused-node model
+gap over: the post-gate features (`≤ d³` wires) are formed on every candidate
+row, where the paper's expanded circuit pays `d²` per candidate row and the
+`d³`-wire sum layer on the survivors only.  `Model/Theorem.lean`'s
+`wta_fpras_time` states the bound this accounting supports. -/
+
+/-- **The normalisation DP** (main.tex:967), charged, for one automaton.
+
+At a leaf with `g` coordinates over `Fin m`: `g · (m − 1)` additions for
+`m_ℓ = ∑_a h_ℓ(a)`.  At an internal node: both children first, then for each of
+the `g · gl · gr` tensor entries two multiplications and one addition, for
+`[m_u]_i = ∑_j ∑_k T_{u,i,j,k} [m_{u_L}]_j [m_{u_R}]_k`.  The value is not produced
+here (real arithmetic is read off as `Model.Prelude.circuitMass`); the operations
+that produce it are paid for, and the argument `a` is passed through untouched so
+that the charge can be sequenced in any `Comp` block. -/
+def massDP {α : Type u} : {V : Vtree} → {g : ℕ} → Circuit V g → α → Comp α
+  | _, _, @Circuit.leaf m g _, a => adds (g * (m - 1)) a
+  | _, _, @Circuit.node _ _ gl gr g l r _, a => do
+      let a ← massDP l a
+      let a ← massDP r a
+      let a ← muls (2 * g * gl * gr) a
+      adds (g * gl * gr) a
+
+/-- **One whole run of the WTA algorithm** (§5, main.tex:961–1034), returning the
+bottom-up construction.
+
+First the normalisation DP for both automata (W1), then the two query entries
+`Z_P^{-1}` and `−Z_Q^{-1}` (2 divisions and 1 negation, charged as a
+subtraction from `0`), then `runDense` **unchanged**: `build` on the joint pair
+(W6, W7) and the dense root evaluation, which with `gP = gQ = 1` is exactly two
+multiplications and one addition per retained row for `⟨a_TV, v⟩`, then one
+absolute value, one multiplication by `μ_j`, one addition, and the final division
+by `2` (W8).  `Program.run` is not reused: its single subtraction per row is
+priced for the `±1` query and it omits the DP.
+
+The whole construction is returned so that the accuracy and time claims of
+`thm:wta_fpras` are about one run; `Model.Prelude.DtildeWTA` reads `d̂` off it. -/
+def runWTA {δ η' : ℝ} {V : Vtree} (C : CircuitPair V 1 1)
+    (prior : TvDomainReduction.SparsifyPrior δ η') (t : Tape prior) :
+    Comp (CircuitPair.Reduction C) := do
+  let u : PUnit.{2} := PUnit.unit
+  let u ← massDP C.P u
+  let u ← massDP C.Q u
+  let u ← divs 2 u
+  let _ ← subs 1 u
+  runDense C prior t
+
 #programSeal TvDomainReduction.Program
 #executableModule TvDomainReduction.Model.Program
-#surplusIn TvDomainReduction.Model.Program from run runDense
+#surplusIn TvDomainReduction.Model.Program from run runDense runWTA
 
 end TvDomainReduction.Program

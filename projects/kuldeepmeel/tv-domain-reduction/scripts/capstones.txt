@@ -5,3 +5,6 @@ TvDomainReduction.pc_fpras_correct
 TvDomainReduction.pc_fpras_space
 TvDomainReduction.pc_fpras_time
 TvDomainReduction.mixture_fpras
+TvDomainReduction.mixture_fpras_correct
+TvDomainReduction.mixture_fpras_time
+TvDomainReduction.wta_fpras

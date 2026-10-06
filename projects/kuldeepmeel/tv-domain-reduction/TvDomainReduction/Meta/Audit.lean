@@ -18,6 +18,8 @@ import TvDomainReduction.Analysis.ReduceLawNotSparsifiesLe
 import TvDomainReduction.Analysis.SpaceProof
 import TvDomainReduction.Analysis.TheoremProof
 import TvDomainReduction.Analysis.TimeProof
+import TvDomainReduction.Analysis.WtaCorrectnessProof
+import TvDomainReduction.Analysis.WtaTimeProof
 import TvDomainReduction.Interface.Encoding
 import TvDomainReduction.Interface.ProgramModel
 import TvDomainReduction.Interface.Pseudocode
@@ -31,6 +33,6 @@ import TvDomainReduction.Model.Theorem
 
 namespace TvDomainReduction.Meta
 
-#surplusIn TvDomainReduction.Model from TvDomainReduction.mixture_fpras
+#surplusIn TvDomainReduction.Model from TvDomainReduction.wta_fpras
 
 end TvDomainReduction.Meta

@@ -134,11 +134,38 @@ noncomputable def answerLawMix (M : TvDomainReduction.MixtureInstance) {δ η' :
     (prior : TvDomainReduction.SparsifyPrior δ η') : PMF ℝ :=
   (runLawMix M prior).map (fun p => TvDomainReduction.DtildeMix M p.val)
 
+/-! ## The same randomness, for weighted tree automata
+
+`tapeLaw` is reused **unchanged** for `thm:wta_fpras` (main.tex:996): the
+normalisation DP is deterministic and consumes no randomness, and the query
+`aWTA` is a function of the input only, so the run draws exactly as the circuit
+run does — one history-dependent draw per internal node of the tree, from
+`prior.law` of the candidate set that node actually sees.  Only the wrapper
+differs, so only `Program.runWTA` replaces `Program.run`. -/
+
+/-- **The WTA algorithm, as a distribution over charged computations** (§5,
+main.tex:961–1034), on the two automata `C : CircuitPair V 1 1`.  One draw per
+internal node, `I = CircuitPair.steps C` of them, with tolerance `ε/(3I)` and
+failure `η/I` carried by the prior's indices. -/
+noncomputable def runLawWTA {V : Vtree} (C : CircuitPair V 1 1) {δ η' : ℝ}
+    (prior : TvDomainReduction.SparsifyPrior δ η') :
+    PMF (Comp (CircuitPair.Reduction C)) :=
+  (tapeLaw prior C.P C.Q).map (fun t => Program.runWTA C prior t)
+
+/-- **The output distribution of the WTA algorithm**: the law of
+`d̂ = ½ E(C_r, a_TV)` with `a_TV = (Z_P^{-1}, −Z_Q^{-1})` (main.tex:984, 997).
+This is the object the accuracy claim of `thm:wta_fpras` is a measure of. -/
+noncomputable def answerLawWTA {V : Vtree} (C : CircuitPair V 1 1) {δ η' : ℝ}
+    (prior : TvDomainReduction.SparsifyPrior δ η') : PMF ℝ :=
+  (runLawWTA C prior).map (fun p => TvDomainReduction.DtildeWTA C p.val)
+
 #modelClosure graft
 #modelClosure tapeLaw
 #modelClosure runLaw
 #modelClosure answerLaw
 #modelClosure runLawMix
 #modelClosure answerLawMix
+#modelClosure runLawWTA
+#modelClosure answerLawWTA
 
 end TvDomainReduction.Run

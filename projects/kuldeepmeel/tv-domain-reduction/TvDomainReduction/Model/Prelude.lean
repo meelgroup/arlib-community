@@ -671,4 +671,147 @@ noncomputable def DtildeMix (M : MixtureInstance)
     (R : CircuitPair.Reduction (mixPair M)) : ℝ :=
   DtildeAt R (wVec M)
 
+/-! ## The vocabulary of `thm:wta_fpras`, weighted tree automata
+
+Everything above is untouched.  What follows is the vocabulary of
+`thm:wta_fpras` (main.tex:996–1003), the paper's **weighted-tree-automaton**
+theorem, whose setting is §5, main.tex:943–992.
+
+**No new input type.**  On a fixed full binary tree a weighted tree automaton is
+exactly arlib's `Circuit V g`:
+
+| paper (§5) | Lean |
+| --- | --- |
+| tree `T = (V, E)`, leaf variables `X_i` with domain `Ω_i` (main.tex:943) | `V : Vtree`, `Vtree.leaf m` with `Ω_i = Fin m` |
+| `Ω = ∏_i Ω_i` | `C.Assign` (nested pairs following the tree) |
+| leaf table `h_ℓ^R : Ω_i → ℝ^{d_ℓ^R}` (main.tex:948) | `Circuit.leaf θ`, `θ : Fin d_ℓ → Fin m → ℝ` (coordinate first) |
+| `[B_u^R(p,q)]_i = ∑_j ∑_k T_{u,i,j,k} p_j q_k` (main.tex:953) | `Circuit.node l r c`; `CircuitPair.valP_node` is main.tex:953 verbatim (output, left, right) |
+| `d_r^R = 1` | `CircuitPair V 1 1` |
+| the two automata on the **same** tree | the shared index `V` |
+| `Φ_u = [h_u^P ; h_u^Q]`, `B_u` (main.tex:971–982) | `CircuitPair.Phi`, `blockTensor cP cQ` |
+| `f_R(x) = h_r^R(x)` (main.tex:960) | `C.valP x 0`, `C.valQ x 0` |
+| `m_u^R`, the normalisation DP (main.tex:967) | `circuitMass` |
+| `Z_R = ∑_{x∈Ω} f_R(x)` (main.tex:962) | `wtaZP`, `wtaZQ` |
+| `R(x) = f_R(x)/Z_R` (main.tex:964) | `wtaDistP`, `wtaDistQ` |
+| `d_TV(P,Q)` (main.tex:989–991) | `dTVwta`, the library's `FinDist.tvDist` |
+| `a_TV = (Z_P^{-1}, −Z_Q^{-1})` (main.tex:984) | `aWTA` |
+| `d̂ = ½ E(C_r, a_TV)` (main.tex:992, 997) | `DtildeWTA` = `DtildeAt · (aWTA C)` |
+| `|V|`, the number of tree nodes | `vtreeNodes` |
+| `d = max_u (d_u^P + d_u^Q)` (main.tex:1002) | `pairJointDim` |
+| `q`, `I = L`, `δ = ε/(3I)`, `η' = η/I`, `M` | `leafDomMax`, `CircuitPair.steps`, `perStepTol`, `perStepFail`, `pairRetainedBudget` (reused) |
+
+The paper's proof pads every message to the global dimension `d` and expands each
+bilinear gate into a layer of scalar product gates and a layer of scalar sum
+gates (main.tex:1006–1030) so that the WTA fits §4's gate-level model.  On
+arlib's `Circuit` neither step is needed: per-node dimensions are already
+allowed, and the fused `Circuit.node` *is* the bilinear gate (`valP_node` is the
+identity the expansion establishes).  Smoothness, decomposability and
+structuredness hold by the type.  Neither device is formalised.
+
+### Two decisions recorded here and repeated in `Model/Theorem.lean`
+
+1. **`aTV`, `dTV`, `rootDistP` do not extend, and are not reused.**  They are
+   built for a *self-normalised* root (`∑_x C.valP x jP = 1`); a WTA's root value
+   `f_R` is unnormalised, so `pc_fpras_correct`'s hypothesis is false for a
+   generic WTA and its `±1` query would estimate `½ ∑ |f_P − f_Q|`.
+2. **The normaliser is computed twice, on purpose.**  The query `aWTA` uses the
+   DP value `circuitMass` — what the algorithm actually computes (main.tex:967) —
+   while the distributions use `Z_R := ∑_x f_R(x)`, the paper's definition.  That
+   the two agree (`circuitMass C.P 0 = wtaZP C`, by bilinearity, no sign
+   hypothesis) is an `Analysis/` obligation, and so is the cross-check
+   `½ · C.toRegion.exactWPS.E (aWTA C) = dTVwta C …` (eq:wta-pointwise-difference,
+   main.tex:986–991), which is the WTA analogue of `dTV_eq_half_exactWPS_E`.
+   Neither is stated in this file, for the module reason recorded in
+   `Model/Quantity.lean` and following the mixture precedent. -/
+
+/-- **The normalisation DP `m_u^R`** (main.tex:967): at a leaf
+`m_ℓ = ∑_{a ∈ Ω_i} h_ℓ(a)`, at an internal node `m_u = B_u(m_{u_L}, m_{u_R})`.
+
+This is the value the algorithm computes for `Z_R` (as `circuitMass C.P 0`); that
+it equals `∑_x f_R(x)` is an `Analysis/` obligation. -/
+def circuitMass : {V : Vtree} → {g : ℕ} → Circuit V g → Fin g → ℝ
+  | _, _, @Circuit.leaf _ _ θ => fun j => ∑ a, θ j a
+  | _, _, @Circuit.node _ _ _ _ _ l r c =>
+      fun j => ∑ p, ∑ q, c j p q * circuitMass l p * circuitMass r q
+
+/-- **`Z_P = ∑_{x ∈ Ω} f_P(x)`** (main.tex:962), written as the paper defines it. -/
+def wtaZP {V : Vtree} (C : CircuitPair V 1 1) : ℝ := ∑ x : C.Assign, C.valP x 0
+
+/-- **`Z_Q = ∑_{x ∈ Ω} f_Q(x)`** (main.tex:962). -/
+def wtaZQ {V : Vtree} (C : CircuitPair V 1 1) : ℝ := ∑ x : C.Assign, C.valQ x 0
+
+/-- **`P(x) = f_P(x)/Z_P` as a distribution** (main.tex:964).  Nonnegativity and
+normalisation are arguments, as for `rootDistP` and `Pmix`, because this file
+holds no proofs.  The paper's hypotheses — nonnegative parameters and `Z_P > 0`
+(main.tex:937, 962) — imply both (`div_nonneg`, `Finset.sum_div`, `div_self`);
+the arguments are slightly weaker (they also allow `f ≤ 0` with `Z < 0`, which is
+still a genuine distribution). -/
+noncomputable def wtaDistP {V : Vtree} (C : CircuitPair V 1 1)
+    (hnn : ∀ x : C.Assign, 0 ≤ C.valP x 0 / wtaZP C)
+    (hsum : ∑ x : C.Assign, C.valP x 0 / wtaZP C = 1) :
+    Arlib.Probability.FinDist C.Assign where
+  p := fun x => C.valP x 0 / wtaZP C
+  p_nonneg := hnn
+  p_sum := hsum
+
+/-- **`Q(x) = f_Q(x)/Z_Q` as a distribution** (main.tex:964). -/
+noncomputable def wtaDistQ {V : Vtree} (C : CircuitPair V 1 1)
+    (hnn : ∀ x : C.Assign, 0 ≤ C.valQ x 0 / wtaZQ C)
+    (hsum : ∑ x : C.Assign, C.valQ x 0 / wtaZQ C = 1) :
+    Arlib.Probability.FinDist C.Assign where
+  p := fun x => C.valQ x 0 / wtaZQ C
+  p_nonneg := hnn
+  p_sum := hsum
+
+/-- **`d_TV(P,Q)`** for the two normalised automata (main.tex:989–991), as the
+ambient library's total variation distance.  Not the settled `dTV`, which is the
+distance between two raw root gate outputs. -/
+noncomputable def dTVwta {V : Vtree} (C : CircuitPair V 1 1)
+    (hPnn : ∀ x : C.Assign, 0 ≤ C.valP x 0 / wtaZP C)
+    (hPs : ∑ x : C.Assign, C.valP x 0 / wtaZP C = 1)
+    (hQnn : ∀ x : C.Assign, 0 ≤ C.valQ x 0 / wtaZQ C)
+    (hQs : ∑ x : C.Assign, C.valQ x 0 / wtaZQ C = 1) : ℝ :=
+  Arlib.Probability.FinDist.tvDist (wtaDistP C hPnn hPs) (wtaDistQ C hQnn hQs)
+
+/-- **`a_TV = (Z_P^{-1}, −Z_Q^{-1})`** (main.tex:984): `+1/Z_P` on the single `P`
+root coordinate, **minus** `1/Z_Q` on the single `Q` root coordinate, with `Z`
+the DP value `circuitMass`.  So `⟨a_TV, Φ_r(x)⟩ = P(x) − Q(x)` pointwise
+(main.tex:986).
+
+Not the settled `aTV`, which is `±1`.  The paper's proof instead appends a unary
+root sum gate of weight `Z_R^{-1}` (main.tex:1006); that gate is a same-scope
+linear map applied after the root sparsification and introduces no error, so
+folding it into the query gives the same number.  The input circuit's root tensor
+is *not* rescaled, which would change the matrix handed to `Sparsify`.  A sign
+swap or a dropped inverse here compiles and breaks the claim. -/
+noncomputable def aWTA {V : Vtree} (C : CircuitPair V 1 1) : Coord 1 1 → ℝ :=
+  Sum.elim (fun _ => (circuitMass C.P 0)⁻¹) (fun _ => -(circuitMass C.Q 0)⁻¹)
+
+/-- **The estimator `d̂ = ½ E(C_r, a_TV)`** (main.tex:992, 997).  An instance of
+`DtildeAt`, not a new estimator. -/
+noncomputable def DtildeWTA {V : Vtree} (C : CircuitPair V 1 1)
+    (R : CircuitPair.Reduction C) : ℝ :=
+  DtildeAt R (aWTA C)
+
+/-- **`|V|`, the number of nodes of the tree**, which the time bound of
+`thm:wta_fpras` is stated in.  Not to be confused with the Lean binder `V`, which
+is the tree itself.  On a full binary tree it is `2 · I + 1` with `I` the number
+of internal nodes (`CircuitPair.steps`); that is an `Analysis/` lemma. -/
+def vtreeNodes : Vtree → ℕ
+  | .leaf _ => 1
+  | .node l r => vtreeNodes l + vtreeNodes r + 1
+
+/-- The joint interface dimension `max_u (d_u^P + d_u^Q)` of two circuits over the
+same tree, by simultaneous recursion as in `retainedBudget`. -/
+def jointDim : {V : Vtree} → {gP gQ : ℕ} → Circuit V gP → Circuit V gQ → ℕ
+  | _, _, _, @Circuit.leaf _ gP _, @Circuit.leaf _ gQ _ => gP + gQ
+  | _, _, _, @Circuit.node _ _ _ _ gP lP rP _, @Circuit.node _ _ _ _ gQ lQ rQ _ =>
+      max (gP + gQ) (max (jointDim lP lQ) (jointDim rP rQ))
+
+/-- **`d := max_{u ∈ V} d_u`, `d_u = d_u^P + d_u^Q`** (main.tex:969, 1002): the
+joint node-interface dimension of the pair.  Differs from the settled `pairWidth`
+(`pairWidth ≤ d ≤ 2 · pairWidth`).  For `CircuitPair V 1 1`, `d ≥ 2`. -/
+def pairJointDim {V : Vtree} {gP gQ : ℕ} (C : CircuitPair V gP gQ) : ℕ :=
+  jointDim C.P C.Q
+
 end TvDomainReduction
