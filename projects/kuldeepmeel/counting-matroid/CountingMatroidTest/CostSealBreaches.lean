@@ -199,7 +199,7 @@ of `Roster.card`, and noncomputable for the same reason. -/
 error: failed to compile definition, consider marking it as 'noncomputable' because it depends on 'Residency.at'', which is 'noncomputable'
 -/
 #guard_msgs in
-def readResidency (r : Residency Cell) : Nat := r.at' Cell.cell
+def readResidency (r : Residency Cell) : Nat := r.at' Cell.roster
 
 /-! **Supplying your own measure.**  `opUpdate` is computable and takes the
 measure as an argument, so nothing the compiler checks objects to a measure that
@@ -221,7 +221,7 @@ error: Program seal must target the canonical namespace CountingMatroid.Program,
 not object, and the seal is what stops an algorithm from using it as a free size
 query.  Same standing as `Charged.cost`. -/
 namespace Breach.PeakAt.Program
-def cheat (p : Charged StdOp Cell Nat) : Int := p.peakAt Cell.cell
+def cheat (p : Charged StdOp Cell Nat) : Int := p.peakAt Cell.roster
 end Breach.PeakAt.Program
 
 /--

@@ -8,7 +8,7 @@ import Arlib.Computation.Std
 open Arlib.Computation
 
 namespace CountingMatroid.Program
-def cheatPeakAt (p : Charged StdOp Cell Nat) : Int := p.peakAt Cell.cell
+def cheatPeakAt (p : Charged StdOp Cell Nat) : Int := p.peakAt Cell.roster
 end CountingMatroid.Program
 
 /--
