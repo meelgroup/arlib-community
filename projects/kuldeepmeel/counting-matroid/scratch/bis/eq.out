@@ -1,0 +1,3 @@
+scratch/bis/eq.lean:427:8: warning: declaration uses `sorry`
+scratch/bis/eq.lean:427:8: error: (kernel) deterministic timeout
+eq exit 1

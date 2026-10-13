@@ -1,0 +1,3 @@
+scratch/bis/true.lean:427:8: warning: declaration uses `sorry`
+scratch/bis/true.lean:427:8: error: (kernel) deterministic timeout
+true exit 1
