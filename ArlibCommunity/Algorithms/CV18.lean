@@ -105,6 +105,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledCheapAbo
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledTheoremAssembly
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledPhasewiseCapstone
 import ArlibCommunity.Algorithms.CV18.Model.Theorem
+import ArlibCommunity.Algorithms.CV18.Program
 
 /-!
 # CV18 accelerated Gaussian cooling
