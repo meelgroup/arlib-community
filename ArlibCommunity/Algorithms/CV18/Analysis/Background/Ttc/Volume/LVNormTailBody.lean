@@ -2,7 +2,7 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license.
 -/
-import ArlibCommunity.External.Kr25.Ttc.Volume.LVNormTailShellGeometry
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.Ttc.Volume.LVNormTailShellGeometry
 
 /-! # Body-level logarithmic norm tail -/
 

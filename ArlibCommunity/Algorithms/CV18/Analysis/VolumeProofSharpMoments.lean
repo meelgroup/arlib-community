@@ -3,7 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofIdealProduct
-import ArlibCommunity.External.Kr25.Arlib.Convexity.GaussianCooling.LogConcaveProfileVariance
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.Convexity.GaussianCooling.LogConcaveProfileVariance
 
 open MeasureTheory
 
@@ -13,7 +13,7 @@ namespace ArlibCommunity.Algorithms.CV18
 # Unconditional accelerated-phase moment bound
 
 This module adapts the compact-convex localization theorem vendored under
-`ArlibCommunity.External.Kr25` to the variance convention and clipped cooling
+`ArlibCommunity.Algorithms.CV18.Analysis.Background` to the variance convention and clipped cooling
 schedule used by the CV18 executable model.
 -/
 

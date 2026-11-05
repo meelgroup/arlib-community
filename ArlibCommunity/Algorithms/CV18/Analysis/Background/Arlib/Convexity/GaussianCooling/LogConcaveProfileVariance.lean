@@ -3,10 +3,10 @@ Copyright (c) 2026 ArLib contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ArLib contributors
 -/
-import ArlibCommunity.External.Kr25.Arlib.Convexity.ProductLocalization
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.Convexity.ProductLocalization
 import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Convexity.BrascampLieb1D
-import ArlibCommunity.External.Kr25.Arlib.Convexity.GaussianCooling.Variance
-import ArlibCommunity.External.Kr25.Arlib.Convexity.GaussianCooling.IndicatorVariance
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.Convexity.GaussianCooling.Variance
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.Convexity.GaussianCooling.IndicatorVariance
 
 /-!
 # Gaussian variance for an arbitrary one-dimensional log-concave profile

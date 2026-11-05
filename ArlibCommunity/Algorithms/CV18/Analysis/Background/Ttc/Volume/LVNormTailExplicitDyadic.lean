@@ -2,7 +2,7 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license.
 -/
-import ArlibCommunity.External.Kr25.Ttc.Volume.LVNormTailDyadic
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.Ttc.Volume.LVNormTailDyadic
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 
 /-! # An explicit logarithmic shell count for the LV norm tail -/

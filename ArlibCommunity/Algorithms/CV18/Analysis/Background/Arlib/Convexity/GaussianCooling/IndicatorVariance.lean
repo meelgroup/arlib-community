@@ -2,7 +2,7 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license.
 -/
-import ArlibCommunity.External.Kr25.Arlib.Convexity.GaussianCooling.ZLogconcave
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.Convexity.GaussianCooling.ZLogconcave
 
 /-!
 # The Cousins–Vempala per-phase variance bound, unconditional for a convex body

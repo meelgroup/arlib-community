@@ -5,7 +5,7 @@ Authors: ArLib contributors
 -/
 import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Convexity.LocalizationMeasurable
 import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Convexity.LocalizationLSC
-import ArlibCommunity.External.Kr25.Arlib.Convexity.GaussianCooling.IndicatorVariance
+import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.Convexity.GaussianCooling.IndicatorVariance
 
 /-!
 # `thm:iso` with **no** localization binder, for `S₁, S₂` open and `S₃` closed

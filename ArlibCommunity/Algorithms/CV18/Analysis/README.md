@@ -21,7 +21,7 @@ assumption of the assembled theorem.
 `FigureOneSharpAcceleratedMoments`, the phase-sensitive accelerated
 localization estimate, is now proved unconditionally in
 `VolumeProofSharpMoments.lean`. Its compact-convex localization dependency is
-vendored under `ArlibCommunity/External/Kr25`; the adapter covers the exact
+vendored under `Background/` (see `Background/KR25-PROVENANCE.md`); the adapter covers the exact
 first-hit schedule, including the terminally clipped accelerated step.
 
 The final recurrence constructs the accepted initial reference, performs the
