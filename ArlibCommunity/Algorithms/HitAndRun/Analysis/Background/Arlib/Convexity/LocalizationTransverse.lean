@@ -75,11 +75,11 @@ theorem eventually_subset_of_antitone_isCompact {X : Type*} [TopologicalSpace X]
     have hxI : x ∈ ⋂ k, C k := Set.mem_iInter.mpr fun k =>
       (Set.mem_iInter.mp hx.2 k).1
     exact (Set.mem_iInter.mp hx.2 0).2 (hsub hxI)
-  obtain ⟨u, hu⟩ := (hC 0).elim_finite_subfamily_closed (fun k => C k ∩ Uᶜ) hclosed hempty
+  obtain ⟨u, hu⟩ := (hC 0).elim_finite_subfamily_closed (fun k => C k ∩ Uᶜ) hclosed (Set.disjoint_iff_inter_eq_empty.mpr hempty)
   refine ⟨u.sup id, fun k hk => ?_⟩
   intro x hx
   by_contra hxU
-  refine Set.eq_empty_iff_forall_notMem.mp hu x ⟨hanti (Nat.zero_le k) hx, ?_⟩
+  refine Set.eq_empty_iff_forall_notMem.mp (Set.disjoint_iff_inter_eq_empty.mp hu) x ⟨hanti (Nat.zero_le k) hx, ?_⟩
   refine Set.mem_iInter₂.mpr fun i hi => ?_
   have hik : i ≤ k := le_trans (Finset.le_sup (f := id) hi) hk
   exact ⟨hanti hik hx, hxU⟩

@@ -3,6 +3,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofKilledCollectorMean
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependentAverage
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependenceTransport
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependenceMarkov
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Sample-history shadow for a killed collector
@@ -34,7 +35,7 @@ theorem measurable_retainedSampleHistoryUpdate
     Measurable fun value : RetainedSampleHistory S × Option S =>
       retainedSampleHistoryUpdate i value.1 value.2 := by
   apply Measurable.prodMk
-  · refine measurable_pi_lambda _ fun j => ?_
+  · refine Measurable.of_eval fun j => ?_
     by_cases hji : j = i
     · subst j
       simpa [retainedSampleHistoryUpdate] using
@@ -74,7 +75,7 @@ theorem retainedSampleHistoryKernel_measurable_and_probability
   · intro history
     unfold retainedSampleHistoryKernel
     let _ : IsProbabilityMeasure (K history.2) := hKprob history.2
-    exact Measure.isProbabilityMeasure_map
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (hupdate.comp (measurable_const.prodMk measurable_id)).aemeasurable
 
 /-- Forget the coordinate record and keep the retained optional state. -/

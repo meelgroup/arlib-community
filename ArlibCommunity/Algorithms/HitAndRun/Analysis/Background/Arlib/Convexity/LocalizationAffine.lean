@@ -157,7 +157,7 @@ theorem map_affine_addHaar (a : E) (L : E ≃ₗ[ℝ] E) :
     (L : E →ₗ[ℝ] E).continuous_of_finiteDimensional.measurable
   have h1 : (fun x => a + L x) = (fun y : E => a + y) ∘ ((L : E →ₗ[ℝ] E) : E → E) := rfl
   rw [h1, ← Measure.map_map (measurable_const_add a) hLm,
-    Measure.map_linearMap_addHaar_eq_smul_addHaar μ hdet, Measure.map_smul,
+    Measure.map_linearMap_addHaar_eq_smul_addHaar μ hdet, Measure.map_smul (hf := by fun_prop),
     map_add_left_eq_self]
 
 /-- The volume of the preimage of a set under an invertible affine self-map. -/

@@ -2,6 +2,7 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTerminalResetDeviation
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledPhaseMeanBridge
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.RecordedKernelReset
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Joint terminal reset target
@@ -373,7 +374,7 @@ theorem exists_terminalScheduledResetJointTarget
   let target := reference.map output
   have houtput : Measurable output := measurable_terminalScheduledResetJointOutput q
   have htargetProb : IsProbabilityMeasure target :=
-    Measure.isProbabilityMeasure_map houtput.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable houtput.aemeasurable
   have hlive := ae_retainedSampleHistoryState_ne_none_of_map_eq_exactSome
     q I reference hstate
   have hscalar : ∀ᵐ history ∂reference,

@@ -4,6 +4,7 @@ Released under Apache 2.0 license, as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofMeasureApproximation
 import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.MarkovChains.Continuous.L2Mixing
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Empirical averages along warm Markov trajectories
@@ -52,7 +53,7 @@ noncomputable def markovSumKernel (P : Kernel S S) [IsMarkovKernel P]
 instance markovSumKernel_isMarkovKernel
     (P : Kernel S S) [IsMarkovKernel P] (f : S → ℝ) (hf : Measurable f) :
     IsMarkovKernel (markovSumKernel P f hf) :=
-  ⟨fun _ => Measure.isProbabilityMeasure_map (by fun_prop)⟩
+  ⟨fun _ => ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)⟩
 
 @[simp] theorem markovSumKernel_apply
     (P : Kernel S S) [IsMarkovKernel P] (f : S → ℝ) (hf : Measurable f)
@@ -73,14 +74,14 @@ theorem markovSumLaw_isProbabilityMeasure
   intro samples
   induction samples with
   | zero =>
-      exact Measure.isProbabilityMeasure_map (by fun_prop)
+      exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
   | succ samples ih =>
       simp only [markovSumLaw]
       let _ : IsProbabilityMeasure (markovSumLaw P f samples mu) := ih
       apply MeasureTheory.isProbabilityMeasure_bind
         (measurable_markovSumStep P hf).aemeasurable
       filter_upwards with stateSum
-      exact Measure.isProbabilityMeasure_map (by fun_prop)
+      exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
 
 /-- Product-kernel form of one accumulator update.  This is equivalent to
 `markovSumLaw_succ_eq_comp`, but supports a substantially smaller specialized
@@ -268,7 +269,7 @@ theorem markovSumLaw_le_smul_of_le_smul
   induction samples with
   | zero =>
       exact (Measure.map_mono_of_aemeasurable h (by fun_prop)).trans_eq
-        (Measure.map_smul _ _ _)
+        (Measure.map_smul _ (by fun_prop))
   | succ samples ih =>
       simp only [markovSumLaw]
       let Q : S × ℝ → Measure (S × ℝ) := fun stateSum =>
@@ -279,7 +280,7 @@ theorem markovSumLaw_le_smul_of_le_smul
             (M • markovSumLaw P f samples pi).bind Q :=
           ArlibCommunity.Algorithms.CV18.measure_bind_mono_left ih hQ
         _ = M • (markovSumLaw P f samples pi).bind Q := by
-          rw [Measure.bind_smul]
+          rw [Measure.bind_smul (hf := by fun_prop)]
 
 /-- Warmness therefore controls every failure event of the complete dependent
 finite sampling experiment. -/

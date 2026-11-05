@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceRawMeanApprox
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledInitialWarmStart
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Boundary-phase raw-coordinate adapters
@@ -260,14 +261,14 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_zero_tv_target
         figureOneFinalScheduledBalancedParameters q I
         (figureOneDependentPhaseCount q)).map
           (scheduledBalancedTracePhaseVariable q 1)) :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (measurable_scheduledBalancedTracePhaseVariable q 1).aemeasurable
   let _ : IsProbabilityMeasure (figureOneScheduledGaussianPhaseTarget q I 0) :=
     figureOneScheduledGaussianPhaseTarget_isProbabilityMeasure q I 0
   let _ : IsProbabilityMeasure
       ((figureOneScheduledGaussianPhaseTarget q I 0).map
         figureOneScheduledTraceLiveRawOutput) :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       measurable_figureOneScheduledTraceLiveRawOutput.aemeasurable
   exact
     (scheduledBalancedFinalTraceRawGaussianPhase_zero_leUpTo_target q I).to_tvLe
@@ -298,14 +299,14 @@ theorem scheduledBalancedFinalTraceRawTerminalPhase_tv_target
         (figureOneDependentPhaseCount q)).map
           (scheduledBalancedTracePhaseVariable q
             (terminalPhaseSteps q + 1))) :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (measurable_scheduledBalancedTracePhaseVariable q _).aemeasurable
   let _ : IsProbabilityMeasure (figureOneScheduledTerminalPhaseTarget q I) :=
     figureOneScheduledTerminalPhaseTarget_isProbabilityMeasure q I
   let _ : IsProbabilityMeasure
       ((figureOneScheduledTerminalPhaseTarget q I).map
         figureOneScheduledTraceLiveRawOutput) :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       measurable_figureOneScheduledTraceLiveRawOutput.aemeasurable
   exact
     (scheduledBalancedFinalTraceRawTerminalPhase_leUpTo_target q I).to_tvLe

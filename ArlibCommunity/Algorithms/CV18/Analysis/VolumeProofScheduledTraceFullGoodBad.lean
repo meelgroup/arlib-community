@@ -2,6 +2,7 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGoodBadIndependence
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceDependentAssembly
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceFuture
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Full retained-state good/bad decomposition for the scheduled trace -/
 
@@ -379,7 +380,7 @@ theorem figureOneScheduledScaledGaussianPhaseLaw_measurable_and_probability
             (scheduleValue q phase))
           (figureOneFinalScheduledBalancedParameters.retryLimit q
             (scheduleValue q phase)) count 0 current) := hcollect.2 0 current
-    exact Measure.isProbabilityMeasure_map havg.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable havg.aemeasurable
 
 /-- Common ideal output law for a complete Gaussian phase: its first point
 is exactly stationary and all remaining scheduled collector steps are common
@@ -472,11 +473,11 @@ theorem figureOneScheduledGaussianPhaseTarget_isProbabilityMeasure
     | none => infer_instance
     | some point => exact htailCollect.2 _ _
   let _ : IsProbabilityMeasure first :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   let _ : IsProbabilityMeasure (first.bind tail) :=
     isProbabilityMeasure_bind htail.aemeasurable (ae_of_all _ htailProb)
   unfold figureOneScheduledGaussianPhaseTarget
-  exact Measure.isProbabilityMeasure_map
+  exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
     (measurable_balancedCoolingAverage count).aemeasurable
 
 /-- A warm speedy start is replaced only at the first transition of the
@@ -538,7 +539,7 @@ theorem bind_figureOneScheduledScaledGaussianPhaseLaw_leUpTo_target_of_warmSixte
   let _ : IsProbabilityMeasure
       ((truncatedGaussianProbability q I (scheduleValue q phase)
         (scheduleValue_pos q phase) : Measure (AmbientSpace q.n)).map some) :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   have hfirst : MeasureLeUpTo
       (mu.bind transition)
       ((truncatedGaussianProbability q I (scheduleValue q phase)
@@ -784,9 +785,9 @@ theorem scheduledBalancedTracePhaseOutputLaw_measurable_and_probability
     rcases trace with ⟨history, live⟩
     cases live with
     | false =>
-        exact Measure.isProbabilityMeasure_map measurable_const.aemeasurable
+        exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_const.aemeasurable
     | true =>
-        exact Measure.isProbabilityMeasure_map hliveOutput.aemeasurable
+        exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hliveOutput.aemeasurable
 
 /-- Exact live/dead decomposition after applying a trace-dependent phase
 observable. -/
@@ -925,11 +926,11 @@ theorem bind_scheduledBalancedTracePhaseOutputLaw_leUpTo_of_live_good_bad
   have hKprob : ∀ current, IsProbabilityMeasure (K current) := by
     intro current
     let _ : IsProbabilityMeasure (rawK current) := hrawK.2 current
-    exact Measure.isProbabilityMeasure_map hliveOutput.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hliveOutput.aemeasurable
   let target := (figureOneScheduledGaussianPhaseTarget q I phase).map liveOutput
   let _ : IsProbabilityMeasure target := by
     let _ := figureOneScheduledGaussianPhaseTarget_isProbabilityMeasure q I phase
-    exact Measure.isProbabilityMeasure_map hliveOutput.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hliveOutput.aemeasurable
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
     accuracyScaleFactor q • x
   let live := scheduledBalancedTraceLiveStateLaw law scale
@@ -1434,7 +1435,8 @@ theorem scheduledBalancedTraceLiveStateLaw_mono_smul
     scheduledBalancedTraceLiveStateLaw mu transform ≤
       c • scheduledBalancedTraceLiveStateLaw rho transform := by
   unfold scheduledBalancedTraceLiveStateLaw
-  rw [← Measure.map_smul, ← Measure.restrict_smul]
+  rw [← Measure.map_smul (hf := (htransform.comp
+    measurable_scheduledBalancedTraceRetainedState).aemeasurable), ← Measure.restrict_smul]
   exact Measure.map_mono
     (Measure.restrict_mono Set.Subset.rfl h)
     (htransform.comp measurable_scheduledBalancedTraceRetainedState)
@@ -1450,7 +1452,8 @@ theorem scheduledBalancedTraceDeadStateLaw_mass_mono_smul
   have hmeasure : scheduledBalancedTraceDeadStateLaw mu transform ≤
       c • scheduledBalancedTraceDeadStateLaw rho transform := by
     unfold scheduledBalancedTraceDeadStateLaw
-    rw [← Measure.map_smul, ← Measure.restrict_smul]
+    rw [← Measure.map_smul (hf := (htransform.comp
+    measurable_scheduledBalancedTraceRetainedState).aemeasurable), ← Measure.restrict_smul]
     exact Measure.map_mono
       (Measure.restrict_mono Set.Subset.rfl h)
       (htransform.comp measurable_scheduledBalancedTraceRetainedState)
@@ -1520,7 +1523,7 @@ theorem approxIndepFun_figureOneScheduledTrace_gaussianPhaseOutput
       hliveOutput
   let _ : IsProbabilityMeasure target := by
     let _ := figureOneScheduledGaussianPhaseTarget_isProbabilityMeasure q I i
-    exact Measure.isProbabilityMeasure_map hliveOutput.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hliveOutput.aemeasurable
   have hgood : Arlib.IsWarm
       (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I i) := by
@@ -1822,7 +1825,7 @@ theorem figureOneScheduledScaledTerminalPhaseLaw_measurable_and_probability
   · intro current
     unfold figureOneScheduledScaledTerminalPhaseLaw
     let _ := hcollect.2 0 current
-    exact Measure.isProbabilityMeasure_map havg.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable havg.aemeasurable
 
 noncomputable def figureOneScheduledTerminalPhaseTarget
     (q : VolumeParams) (I : VolumeInput q.n) :
@@ -1904,11 +1907,11 @@ theorem figureOneScheduledTerminalPhaseTarget_isProbabilityMeasure
     | none => infer_instance
     | some point => exact htailCollect.2 _ _
   let _ : IsProbabilityMeasure first :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   let _ : IsProbabilityMeasure (first.bind tail) :=
     isProbabilityMeasure_bind htail.aemeasurable (ae_of_all _ htailProb)
   unfold figureOneScheduledTerminalPhaseTarget
-  exact Measure.isProbabilityMeasure_map
+  exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
     (measurable_balancedCoolingAverage count).aemeasurable
 
 theorem bind_figureOneScheduledScaledTerminalPhaseLaw_leUpTo_target_of_warmSixteen
@@ -1965,7 +1968,7 @@ theorem bind_figureOneScheduledScaledTerminalPhaseLaw_leUpTo_target_of_warmSixte
   let _ : IsProbabilityMeasure
       ((truncatedGaussianProbability q I (terminalVariance q)
         (terminalVariance_pos' q) : Measure (AmbientSpace q.n)).map some) :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   have hfirst : MeasureLeUpTo (mu.bind transition)
       ((truncatedGaussianProbability q I (terminalVariance q)
         (terminalVariance_pos' q) : Measure (AmbientSpace q.n)).map some)
@@ -2130,11 +2133,11 @@ theorem bind_scheduledBalancedTerminalTracePhaseOutputLaw_leUpTo_of_live_good_ba
   have hKprob : ∀ current, IsProbabilityMeasure (K current) := by
     intro current
     let _ := hrawK.2 current
-    exact Measure.isProbabilityMeasure_map hliveOutput.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hliveOutput.aemeasurable
   let target := (figureOneScheduledTerminalPhaseTarget q I).map liveOutput
   let _ : IsProbabilityMeasure target := by
     let _ := figureOneScheduledTerminalPhaseTarget_isProbabilityMeasure q I
-    exact Measure.isProbabilityMeasure_map hliveOutput.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hliveOutput.aemeasurable
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
     accuracyScaleFactor q • x
   let live := scheduledBalancedTraceLiveStateLaw law scale
@@ -2249,7 +2252,7 @@ theorem approxIndepFun_figureOneScheduledTrace_terminalPhaseOutput
       hliveOutput
   let _ : IsProbabilityMeasure target := by
     let _ := figureOneScheduledTerminalPhaseTarget_isProbabilityMeasure q I
-    exact Measure.isProbabilityMeasure_map hliveOutput.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hliveOutput.aemeasurable
   have hgood : Arlib.IsWarm
       (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I i) := by

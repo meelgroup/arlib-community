@@ -4,6 +4,7 @@ Released under Apache 2.0 license, as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependenceMarkov
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBalancedRetryApproximation
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Balanced executable transitions and CV18 approximate independence
@@ -105,7 +106,7 @@ theorem bind_balancedTransition_tvLe_acceptedTarget
     balancedAccuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_of_lower
       q I hsigma2 pi hacceptedLower
   let _ : IsProbabilityMeasure (target.map some) :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   have hdom := bind_balancedTransition_leUpTo_acceptedTarget
     q I hsigma2 proposalCap properStride attempts rho pi
       hacceptedLower hrejectedLower hfirstBlock hretryBlock
@@ -317,7 +318,7 @@ private theorem approxIndepFun_balancedTransition_of_warm_blocks_aux
     balancedAccuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_of_lower
       q I hsigma2 pi hacceptedLower
   let _ : IsProbabilityMeasure targetSome :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   apply approxIndepFun_fst_snd_sequentialPairLaw_of_warm_leUpTo
     rho hK.1 hK.2 targetSome herror
   intro mu hmu hwarm
@@ -499,7 +500,7 @@ theorem approxIndepFun_balancedTransition_of_warm_blocks
     balancedAccuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_of_lower
       q I hsigma2 pi hacceptedLower
   let _ : IsProbabilityMeasure targetSome :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   apply approxIndepFun_fst_snd_sequentialPairLaw_of_warm_leUpTo
     rho hK.1 hK.2 targetSome herror
   intro mu hmu hwarm
@@ -586,7 +587,7 @@ theorem approxIndepFun_balancedTransition_history_of_warm_blocks
     balancedAccuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_of_lower
       q I hsigma2 pi hacceptedLower
   let _ : IsProbabilityMeasure targetSome :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   apply approxIndepFun_accumulatedProduct_nextEstimator_of_state_warm_leUpTo
     history state hstate hK.1 hK.2 targetSome herror ?_
       (pastProduct := pastProduct) (nextEstimator := nextEstimator)

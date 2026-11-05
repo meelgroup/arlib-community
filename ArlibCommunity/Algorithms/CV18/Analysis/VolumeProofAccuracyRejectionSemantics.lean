@@ -142,7 +142,7 @@ theorem accuracyGaussianAcceptedTargetLaw_eq_kls
       ((Arlib.condOn mu (c • K)).map scale).withDensity g =
         (mu (c • K))⁻¹ •
           (((mu.restrict (c • K)).map scale).withDensity g) := by
-    rw [Arlib.condOn_def, Measure.map_smul, withDensity_smul_measure]
+    rw [Arlib.condOn_def, Measure.map_smul (hf := by fun_prop), withDensity_smul_measure]
   rw [hproposal]
   have hunscaled := map_withDensity_accuracyRejectionAcceptance q I sigma2 mu
   change Arlib.condOn

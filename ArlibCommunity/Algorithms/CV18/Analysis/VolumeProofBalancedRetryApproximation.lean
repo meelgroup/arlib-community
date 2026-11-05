@@ -5,6 +5,7 @@ Released under Apache 2.0 license, as described in the file LICENSE.
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBalancedRetryProgram
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofMeasureApproximation
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofCappedDominance
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Approximation of finite balanced retries
@@ -330,7 +331,7 @@ instance optionKernel_isProbabilityMeasure
       dsimp only [optionKernel]
       let _ : IsProbabilityMeasure (R state) :=
         IsMarkovKernel.isProbabilityMeasure state
-      exact Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+      exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
 
 /-- One balanced KLS observation after a capped mixing block inherits the
 same additive error. -/
@@ -441,7 +442,7 @@ theorem balancedAccuracyGaussianRejectionKernel_map_recover
       (balancedRetryRecover q) =
     balancedAccuracyDecisionLaw q I sigma2 current
   unfold balancedAccuracyGaussianRejectionLaw balancedAccuracyDecisionLaw
-  rw [Measure.map_add _ _ hrecover, Measure.map_smul, Measure.map_smul,
+  rw [Measure.map_add _ _ hrecover, Measure.map_smul (hf := by fun_prop), Measure.map_smul (hf := by fun_prop),
     Measure.map_dirac' hrecover, Measure.map_dirac' hrecover]
   have hcancel : accuracyScaleFactor q •
       ((accuracyScaleFactor q)⁻¹ • current) = current := by
@@ -1002,7 +1003,7 @@ theorem bind_balancedAccuracyTransitionLawAux_succ_eq_pipeline
   have hBMprob : ∀ current, IsProbabilityMeasure (BM current) := by
     intro current
     dsimp only [BM]
-    exact Measure.isProbabilityMeasure_map measurable_optionSnd.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_optionSnd.aemeasurable
   let BD : AmbientSpace q.n → Measure (Option (Bool × AmbientSpace q.n)) :=
     fun current => (BM current).bind (optionKernel D)
   have hBD : Measurable BD := by
@@ -1261,7 +1262,7 @@ theorem bind_balancedRejectedTransition_leUpTo_acceptedTarget
       q I hsigma2 pi hacceptedLower
     change (accepted.map
       (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some = _
-    rw [hbase, Measure.map_smul]
+    rw [hbase, Measure.map_smul (hf := measurable_some.aemeasurable)]
   have hrejectedNormalize : rejected = rejectMass • rejectedProb := by
     exact measure_eq_mass_smul_condOn_univ rejected hrejected0 hrejectedTop
   intro attempts
@@ -1284,7 +1285,8 @@ theorem bind_balancedRejectedTransition_leUpTo_acceptedTarget
       have hrejectedBind :
           rejected.bind (E attempts) =
             rejectMass • (rejectedProb.bind (E attempts)) := by
-        rw [hrejectedNormalize, Measure.bind_smul]
+        rw [hrejectedNormalize, Measure.bind_smul (hf := (balancedAccuracyTransitionLawAux_measurable_and_probability
+          q I hsigma2 proposalCap properStride attempts).1.aemeasurable)]
       rw [← hrejectedBind] at hscaled
       have hadd := hscaled.add_left
         ((accepted.map
@@ -1422,7 +1424,7 @@ theorem bind_balancedTransition_leUpTo_acceptedTarget
       q I hsigma2 pi hacceptedLower
     change (accepted.map
       (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some = _
-    rw [hbase, Measure.map_smul]
+    rw [hbase, Measure.map_smul (hf := measurable_some.aemeasurable)]
   have hrejectedNormalize : rejected = rejectMass • rejectedProb :=
     measure_eq_mass_smul_condOn_univ rejected hrejected0 hrejectedTop
   have hretry := bind_balancedRejectedTransition_leUpTo_acceptedTarget
@@ -1431,7 +1433,8 @@ theorem bind_balancedTransition_leUpTo_acceptedTarget
   have hscaled := hretry.smul (c := rejectMass)
   have hrejectedBind : rejected.bind (E attempts) =
       rejectMass • (rejectedProb.bind (E attempts)) := by
-    rw [hrejectedNormalize, Measure.bind_smul]
+    rw [hrejectedNormalize, Measure.bind_smul (hf := (balancedAccuracyTransitionLawAux_measurable_and_probability
+          q I hsigma2 proposalCap properStride attempts).1.aemeasurable)]
   rw [← hrejectedBind] at hscaled
   have hadd := hscaled.add_left
     ((accepted.map (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some)

@@ -151,7 +151,7 @@ theorem initialGaussianRestriction_bind_le
       ((truncatedGaussianProbability q I (initialVariance q)
         (initialVariance_pos q) : Measure (AmbientSpace q.n)).bind K) E := by
   rw [initialGaussianSamplingMeasure_restrict_truncatedBody q I,
-    Measure.bind_smul, Measure.smul_apply]
+    Measure.bind_smul (hf := by fun_prop), Measure.smul_apply]
   rw [smul_eq_mul]
   apply mul_le_of_le_one_left
   · exact bot_le

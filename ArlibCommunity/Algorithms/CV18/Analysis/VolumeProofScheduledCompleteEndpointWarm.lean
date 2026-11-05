@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledCollectorEndpoint
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledInitialWarmStart
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Complete scheduled phase endpoint replacement
 
@@ -198,7 +199,7 @@ theorem figureOneFinalScheduledCompleteRetainedKernel_measurable_and_probability
             (scheduledBalancedTransitionCollectLaw q I sigma2 weight cap stride
               retries (samples + 1) 0 (accuracyScaleFactor q • current)) :=
           hcollect.2 _ _
-        exact Measure.isProbabilityMeasure_map measurable_optionSnd.aemeasurable
+        exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_optionSnd.aemeasurable
 
 /-- One chronological phase transports all prior exact-chance loss unchanged
 and adds precisely one corrected transition budget for each collected sample.
@@ -238,7 +239,7 @@ theorem bind_figureOneFinalScheduledCompleteRetainedKernel_leUpTo
   have htransport := hstart.bind_same hG.1 hG.2
   let _ : IsProbabilityMeasure
       (goodRetained.map fun x => accuracyScaleFactor q • x) :=
-    Measure.isProbabilityMeasure_map (by fun_prop)
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
   have hgoodPhase :=
     map_bind_figureOneFinalScheduledTransitionCollectLaw_optionSnd_leUpTo
       q I hsigma2 hweight samples 0

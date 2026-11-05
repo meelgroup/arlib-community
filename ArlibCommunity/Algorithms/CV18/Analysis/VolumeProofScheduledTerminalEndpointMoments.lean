@@ -2,6 +2,7 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGaussianEndpointMean
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledAcceptedSupport
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceRawMeanApprox
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Sharp terminal moments of finite retained endpoints
@@ -137,7 +138,7 @@ theorem integral_iterated_retainedOption_uniform_terminal_abs_sub_ideal_le
     retainedOptionWeight (uniformRatioWeight (terminalVariance q))
   let _ : IsProbabilityMeasure exact := inferInstance
   let _ : IsProbabilityMeasure exactSome :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   have hK := figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
     q I (scheduleValue_pos q (terminalPhaseSteps q))
   let _ : IsProbabilityMeasure actual :=
@@ -219,7 +220,7 @@ theorem integral_iterated_retainedOption_uniform_terminal_sq_le
     retainedOptionWeight (uniformRatioWeight (terminalVariance q))
   let _ : IsProbabilityMeasure exact := inferInstance
   let _ : IsProbabilityMeasure exactSome :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   have hK := figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
     q I (scheduleValue_pos q (terminalPhaseSteps q))
   let _ : IsProbabilityMeasure actual :=

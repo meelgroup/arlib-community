@@ -2,6 +2,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAverageConductance
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofTruncation
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.MarkovChains.Continuous.MetropolisConductance
 import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Probability.Rejection
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 namespace Arlib.MarkovChains
 
@@ -1153,7 +1154,7 @@ theorem TVLe.speedyToGaussian_twoStage_cv18
     ((continuous_const_smul c⁻¹).measurable)
   let _ : IsProbabilityMeasure
       ((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)) :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       ((continuous_const_smul c⁻¹).measurable.aemeasurable)
   let proposal : Measure (EuclideanSpace ℝ (Fin n)) :=
     Arlib.condOn
@@ -1340,7 +1341,7 @@ theorem TVLe.speedyToGaussian_twoStage_of_coreDefect_cv18
   have hmap := hcoreMix.map ((continuous_const_smul c⁻¹).measurable)
   let _ : IsProbabilityMeasure
       ((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)) :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       ((continuous_const_smul c⁻¹).measurable.aemeasurable)
   let proposal : Measure (EuclideanSpace ℝ (Fin n)) :=
     Arlib.condOn

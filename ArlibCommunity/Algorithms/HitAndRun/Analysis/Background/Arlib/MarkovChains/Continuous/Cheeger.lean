@@ -312,7 +312,7 @@ theorem varianceReal_indicator {pi : Measure Ω} [IsProbabilityMeasure pi] {S : 
     varianceReal pi (Set.indicator S (fun _ => (1 : ℝ)))
       = (pi S).toReal - (pi S).toReal ^ 2 := by
   have hmem : MemLp (Set.indicator S (fun _ => (1 : ℝ))) 2 pi :=
-    (memLp_const (1 : ℝ)).indicator hS
+    (memLp_const (1 : ℝ)).indicator hS.nullMeasurableSet
   have hsq : ∀ x : Ω, Set.indicator S (fun _ => (1 : ℝ)) x ^ 2
       = Set.indicator S (fun _ => (1 : ℝ)) x := by
     intro x
@@ -325,7 +325,7 @@ theorem varianceReal_indicator {pi : Measure Ω} [IsProbabilityMeasure pi] {S : 
 /-- The indicator of a measurable set is in `L²` of a finite measure. -/
 theorem memLp_two_indicator {pi : Measure Ω} [IsFiniteMeasure pi] {S : Set Ω}
     (hS : MeasurableSet S) : MemLp (Set.indicator S (fun _ => (1 : ℝ))) 2 pi :=
-  (memLp_const (1 : ℝ)).indicator hS
+  (memLp_const (1 : ℝ)).indicator hS.nullMeasurableSet
 
 /-! ## The spectral gap -/
 

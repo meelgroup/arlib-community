@@ -209,10 +209,10 @@ theorem map_first_markedChain_pathMeasure_properProposalGaussianLift
     fun ω => markedChain (fun q => (ω q).2) (fun q => (ω (q + 1)).1) 1
   have hstate : Measurable
       (fun ω : ℕ → Bool × EuclideanSpace ℝ (Fin n) => fun q => (ω q).2) :=
-    measurable_pi_lambda _ fun q => measurable_snd.comp (measurable_pi_apply q)
+    Measurable.of_eval fun q => measurable_snd.comp (measurable_pi_apply q)
   have hmark : Measurable
       (fun ω : ℕ → Bool × EuclideanSpace ℝ (Fin n) => fun q => (ω (q + 1)).1) :=
-    measurable_pi_lambda _ fun q => measurable_fst.comp (measurable_pi_apply (q + 1))
+    Measurable.of_eval fun q => measurable_fst.comp (measurable_pi_apply (q + 1))
   have hstop : Measurable stop :=
     (measurable_markedChain 1).comp (hstate.prodMk hmark)
   ext t ht
@@ -249,10 +249,10 @@ theorem measurable_firstProperMarkedState :
     Measurable (firstProperMarkedState (n := n)) := by
   have hstate : Measurable
       (fun ω : ℕ → Bool × EuclideanSpace ℝ (Fin n) => fun q => (ω q).2) :=
-    measurable_pi_lambda _ fun q => measurable_snd.comp (measurable_pi_apply q)
+    Measurable.of_eval fun q => measurable_snd.comp (measurable_pi_apply q)
   have hmark : Measurable
       (fun ω : ℕ → Bool × EuclideanSpace ℝ (Fin n) => fun q => (ω (q + 1)).1) :=
-    measurable_pi_lambda _ fun q => measurable_fst.comp (measurable_pi_apply (q + 1))
+    Measurable.of_eval fun q => measurable_fst.comp (measurable_pi_apply (q + 1))
   exact (measurable_markedChain 1).comp (hstate.prodMk hmark)
 
 /-- Kernel from an initial position to the whole lifted marked trajectory. -/
@@ -263,7 +263,7 @@ noncomputable def properProposalTrajectoryKernel
     (Kernel.traj (X := fun _ : ℕ => Bool × EuclideanSpace ℝ (Fin n))
       (chainKernel (properProposalGaussianLift K hK δ s)) 0)
     (fun x (_ : ↥(Finset.Iic 0)) => (false, x))
-    (measurable_pi_lambda _ fun _ => measurable_const.prodMk measurable_id)
+    (Measurable.of_eval fun _ => measurable_const.prodMk measurable_id)
 
 instance isMarkovKernel_properProposalTrajectoryKernel
     (K : Set (EuclideanSpace ℝ (Fin n))) (hK : MeasurableSet K) (δ s : ℝ) :

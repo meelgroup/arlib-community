@@ -2,6 +2,7 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.RecordedKernelReset
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledRetainedWarm
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceFullGoodBad
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Output marginals for one outer scheduled phase
@@ -148,7 +149,7 @@ theorem sequentialPairLaw_gaussian_output_leUpTo_of_retainedSome_warm
   rw [map_bind_eq_bind_comp_state mu measurable_some hK.1]
   let _ : IsProbabilityMeasure
       (mu.map fun point => accuracyScaleFactor q • point) :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
         accuracyScaleFactor q).smul measurable_id).aemeasurable
   have hbase :=
@@ -226,7 +227,7 @@ theorem sequentialPairLaw_gaussian_output_tvLe_resetTarget_of_accepted_same
       ((sequentialPairLaw source
         (scheduledBalancedTracePhaseObservationLaw
           figureOneFinalScheduledBalancedParameters q I phase)).map Prod.snd) :=
-    Measure.isProbabilityMeasure_map measurable_snd.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_snd.aemeasurable
   exact ((sequentialPairLaw_gaussian_output_leUpTo_of_accepted_same
     q I phase hphase source hretained).trans htarget).to_tvLe
 
@@ -291,7 +292,7 @@ theorem sequentialPairLaw_gaussian_output_tvLe_resetTarget_of_accepted_adjacent
         (scheduledBalancedTracePhaseObservationLaw
           figureOneFinalScheduledBalancedParameters q I (previous + 1))).map
             Prod.snd) :=
-    Measure.isProbabilityMeasure_map measurable_snd.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_snd.aemeasurable
   exact ((sequentialPairLaw_gaussian_output_leUpTo_of_accepted_adjacent
     q I previous hnext source hretained).trans htarget).to_tvLe
 
@@ -394,7 +395,7 @@ theorem sequentialPairLaw_terminal_output_leUpTo_of_retainedSome_warm
   rw [map_bind_eq_bind_comp_state mu measurable_some hK.1]
   let _ : IsProbabilityMeasure
       (mu.map fun point => accuracyScaleFactor q • point) :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
         accuracyScaleFactor q).smul measurable_id).aemeasurable
   have hbase :=
@@ -479,7 +480,7 @@ theorem sequentialPairLaw_terminal_output_tvLe_resetTarget_of_accepted
         (scheduledBalancedTracePhaseObservationLaw
           figureOneFinalScheduledBalancedParameters q I
             (terminalPhaseSteps q))).map Prod.snd) :=
-    Measure.isProbabilityMeasure_map measurable_snd.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_snd.aemeasurable
   exact ((sequentialPairLaw_terminal_output_leUpTo_of_accepted
     q I source hretained).trans htarget).to_tvLe
 

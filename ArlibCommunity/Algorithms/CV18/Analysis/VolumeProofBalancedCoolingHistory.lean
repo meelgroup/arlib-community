@@ -4,6 +4,7 @@ Released under Apache 2.0 license, as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBalancedRetryHistory
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofDependentSchedule
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # A balanced-retry implementation of the CV18 cooling history
@@ -249,7 +250,7 @@ theorem measurable_balancedCoolingHistoryCons :
     apply measurable_some.comp
     have hsequence : Measurable fun value : ℝ × BalancedCoolingHistory n =>
         fun k => if k = 0 then value.1 else value.2.1 (k - 1) := by
-      refine measurable_pi_lambda _ fun k => ?_
+      refine Measurable.of_eval fun k => ?_
       split_ifs
       · exact measurable_fst
       · exact (measurable_pi_apply (k - 1)).comp
@@ -359,7 +360,7 @@ theorem balancedCoolingRatioLaw_measurable_and_probability
     let _ : IsProbabilityMeasure
         (balancedAccuracyTransitionCollectLaw q I sigma2 weight cap stride retries
           samples 0 (accuracyScaleFactor q • current)) := hsourceProb current
-    exact Measure.isProbabilityMeasure_map havg.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable havg.aemeasurable
 
 /-- The cooling history is a measurable probability kernel of its initial
 target-space point. -/
@@ -447,7 +448,7 @@ theorem balancedCoolingHistoryLaw_measurable_and_probability
                 let _ : IsProbabilityMeasure
                     (balancedCoolingHistoryLaw parameters q I
                       (tau2 :: rest) value.2) := htail.2 value.2
-                exact Measure.isProbabilityMeasure_map <|
+                exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable <|
                   (measurable_balancedCoolingHistoryCons (n := q.n)).comp
                     (measurable_const.prodMk measurable_id) |>.aemeasurable
           have hlaw : balancedCoolingHistoryLaw parameters q I

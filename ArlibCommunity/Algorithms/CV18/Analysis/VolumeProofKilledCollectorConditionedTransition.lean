@@ -2,6 +2,7 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofKilledCollectorMean
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledWarmSixteenTransition
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceFullGoodBad
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Conditioned transition for a killed within-phase collector
 
@@ -62,7 +63,9 @@ theorem retainedOptionScaledLiveLaw_mono_smul
     Measure.restrict_mono Set.Subset.rfl hmu
   have hmapped := Measure.map_mono hrestrict
     (hscale.comp measurable_scheduledRetainedGetDZero)
-  simpa only [Measure.restrict_smul, Measure.map_smul] using hmapped
+  rw [Measure.restrict_smul, Measure.map_smul (hf :=
+    (hscale.comp measurable_scheduledRetainedGetDZero).aemeasurable)] at hmapped
+  exact hmapped
 
 theorem retainedOptionDeadLaw_mass_mono_smul
     (mu rho : Measure (Option (AmbientSpace n))) (c : ENNReal)
@@ -264,7 +267,7 @@ theorem bind_figureOneFinalScheduledRetainedOptionKernel_leUpTo_of_warm_iterated
   let pi := figureOneScheduledSpeedyPiAt q I phase
   let _ : IsProbabilityMeasure exact := inferInstance
   let _ : IsProbabilityMeasure (exact.map some) :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   have hoptionK :=
     figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
       q I hsigma2

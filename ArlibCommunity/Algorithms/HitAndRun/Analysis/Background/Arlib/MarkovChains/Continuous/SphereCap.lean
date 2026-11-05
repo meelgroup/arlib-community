@@ -851,7 +851,7 @@ theorem integral_chord (m : ℕ) : (∫ s in (-1:ℝ)..1, chord m s) = P (m + 1)
   have hderiv : ∀ x ∈ uIcc (0:ℝ) π, HasDerivAt Real.cos (-Real.sin x) x :=
     fun x _ => Real.hasDerivAt_cos x
   have hcont : ContinuousOn (fun x : ℝ => -Real.sin x) (uIcc (0:ℝ) π) := by fun_prop
-  have hsub := intervalIntegral.integral_comp_smul_deriv hderiv hcont (continuous_chord m)
+  have hsub := intervalIntegral.integral_deriv_smul_comp hderiv hcont (continuous_chord m)
   rw [Real.cos_zero, Real.cos_pi] at hsub
   have hL : (∫ x in (0:ℝ)..π, (-Real.sin x) • (chord m ∘ Real.cos) x)
       = ∫ x in (0:ℝ)..π, -(Real.sin x ^ (m + 1)) := by

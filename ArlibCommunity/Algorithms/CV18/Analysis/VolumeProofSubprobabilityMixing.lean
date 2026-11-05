@@ -33,7 +33,7 @@ theorem iterate_smul_measure
   | succ t ih =>
       rw [iterate_succ, ih, iterate_succ]
       change (c • iterate P mu t).bind P = c • (iterate P mu t).bind P
-      exact Measure.bind_smul c _ _
+      exact Measure.bind_smul c _ (by fun_prop)
 
 /-- Total variation scales linearly when both finite measures are multiplied
 by the same coefficient. -/

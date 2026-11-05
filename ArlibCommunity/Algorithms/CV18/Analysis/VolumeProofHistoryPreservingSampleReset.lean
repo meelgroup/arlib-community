@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofExactChance
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.HistoryPreservingReset
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # History-preserving reset before recording a sample
@@ -45,7 +46,7 @@ theorem historyRawNextKernel_measurable_and_probability
   · intro state
     unfold historyRawNextKernel
     let _ : IsProbabilityMeasure (K state.2) := hKprob state.2
-    exact Measure.isProbabilityMeasure_map
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (measurable_const.prodMk measurable_id).aemeasurable
 
 /-- A raw transition preserves every measurable observable of the old
@@ -157,7 +158,7 @@ theorem historyOperationalRecordKernel_measurable_and_probability
   · intro state
     unfold historyOperationalRecordKernel
     let _ : IsProbabilityMeasure (K state.2) := hKprob state.2
-    exact Measure.isProbabilityMeasure_map
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (hupdate.comp (measurable_const.prodMk measurable_id)).aemeasurable
 
 /-- Recording an observation does not change the operational next-state
@@ -309,7 +310,7 @@ theorem exists_recordedResetReference_of_nextMarginal_tvLe_preserving
   have hrecordState := measurable_historyRecordResetState
     record observe hrecord hobserve
   have hreferenceProb : IsProbabilityMeasure reference :=
-    Measure.isProbabilityMeasure_map hrecordState.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hrecordState.aemeasurable
   refine ⟨reference, hreferenceProb, ?_, ?_, ?_, ?_⟩
   · have hresetMlu : MeasureLeUpTo raw reset epsilon :=
       MeasureLeUpTo.of_tvLe hresetTV
@@ -380,7 +381,7 @@ theorem historyRawNextWithCopyKernel_measurable_and_probability
   · intro state
     unfold historyRawNextWithCopyKernel
     let _ : IsProbabilityMeasure (K state.2) := hKprob state.2
-    exact Measure.isProbabilityMeasure_map
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (((measurable_const.prodMk measurable_id).prodMk
         measurable_id)).aemeasurable
 
@@ -635,7 +636,7 @@ theorem exists_shadowRecordedReference_of_nextMarginal_tvLe
   have hrecordShadow := measurable_historyRecordShadowState
     record observe hrecord hobserve
   have hreferenceProb : IsProbabilityMeasure reference := by
-    exact Measure.isProbabilityMeasure_map hrecordShadow.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hrecordShadow.aemeasurable
   refine ⟨reference, hreferenceProb, ?_, ?_, ?_⟩
   · have hresetMlu : MeasureLeUpTo raw reset epsilon :=
       MeasureLeUpTo.of_tvLe hresetTV
@@ -701,7 +702,7 @@ theorem exists_shadowRecordedReference_of_nextMarginal_tvLe_preserving
   have hrecordShadow := measurable_historyRecordShadowState
     record observe hrecord hobserve
   have hreferenceProb : IsProbabilityMeasure reference :=
-    Measure.isProbabilityMeasure_map hrecordShadow.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hrecordShadow.aemeasurable
   refine ⟨reference, hreferenceProb, ?_, ?_, ?_, ?_⟩
   · have hresetMlu : MeasureLeUpTo raw reset epsilon :=
       MeasureLeUpTo.of_tvLe hresetTV

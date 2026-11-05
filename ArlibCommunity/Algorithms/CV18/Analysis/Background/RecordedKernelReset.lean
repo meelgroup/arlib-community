@@ -2,6 +2,7 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.HistoryPreservingReset
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofCollectSemantics
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependenceMarkov
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # History-preserving reset after a recorded kernel step
@@ -53,7 +54,7 @@ theorem historyRawOutputLaw_measurable_and_probability
       (measurable_fst.comp measurable_fst |>.prodMk measurable_snd)
   have hliftProb : ∀ state, IsProbabilityMeasure (lift state) := by
     intro state
-    exact Measure.isProbabilityMeasure_map
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (measurable_const.prodMk measurable_id).aemeasurable
   exact isProbabilityMeasure_bind hlift.aemeasurable (ae_of_all _ hliftProb)
 
@@ -135,11 +136,11 @@ theorem exists_historyRecordedOutputReset_of_tvLe
         (hnextState.comp measurable_snd)
   let reference := reset.map update
   have hreferenceProb : IsProbabilityMeasure reference :=
-    Measure.isProbabilityMeasure_map hupdate.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hupdate.aemeasurable
   let actual := historyRecordedOutputLaw sourceLaw K record observe nextState
   let _ : IsProbabilityMeasure actual := by
     dsimp only [actual, historyRecordedOutputLaw]
-    exact Measure.isProbabilityMeasure_map hupdate.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hupdate.aemeasurable
   refine ⟨reference, hreferenceProb, ?_, ?_, ?_, ?_⟩
   · change MeasureLeUpTo actual reference epsilon
     exact MeasureLeUpTo.of_tvLe (by

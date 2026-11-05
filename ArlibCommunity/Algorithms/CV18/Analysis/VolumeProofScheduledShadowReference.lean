@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofHistoryPreservingSampleReset
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledCollectorPrefixIndependence
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # An exact-shadow reference step for the scheduled collector
@@ -34,7 +35,7 @@ theorem scheduledRetainedExactSome_isProbabilityMeasure
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ) :
     IsProbabilityMeasure (scheduledRetainedExactSome q I phase) := by
   unfold scheduledRetainedExactSome
-  exact Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+  exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
 
 /-- Updating one coordinate of the recorded part of a retained history is
 measurable as a two-argument operation. -/
@@ -42,7 +43,7 @@ theorem measurable_uncurry_update_retainedHistoryCoordinate
     {S : Type*} [MeasurableSpace S] (i : ℕ) :
     Measurable (Function.uncurry fun history : ℕ → Option S =>
       Function.update history i) := by
-  refine measurable_pi_lambda _ fun j => ?_
+  refine Measurable.of_eval fun j => ?_
   by_cases hji : j = i
   · subst j
     simpa [Function.uncurry, Function.update] using
@@ -74,7 +75,7 @@ def retainedSampleHistoryPrefix {S : Type*} (limit : ℕ)
 theorem measurable_retainedSampleHistoryPrefix
     {S : Type*} [MeasurableSpace S] (limit : ℕ) :
     Measurable (retainedSampleHistoryPrefix (S := S) limit) := by
-  refine measurable_pi_lambda _ fun j => ?_
+  refine Measurable.of_eval fun j => ?_
   by_cases hj : j < limit
   · simpa [retainedSampleHistoryPrefix, hj] using
       (measurable_pi_apply j :

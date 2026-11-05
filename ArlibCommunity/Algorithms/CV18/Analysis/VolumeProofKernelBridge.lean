@@ -93,7 +93,7 @@ theorem uniformClosedBallMeasure_eq_openBall {n : ℕ} [NeZero n]
     (by fun_prop) measurableSet_ball
   rw [hpre] at hrestrict
   unfold uniformClosedBallMeasure
-  rw [centeredClosedBallMeasure_eq_openBall hradius, Measure.map_smul,
+  rw [centeredClosedBallMeasure_eq_openBall hradius, Measure.map_smul (hf := by fun_prop),
     hvolume]
   exact congrArg
     (fun mu : Measure (AmbientSpace n) =>

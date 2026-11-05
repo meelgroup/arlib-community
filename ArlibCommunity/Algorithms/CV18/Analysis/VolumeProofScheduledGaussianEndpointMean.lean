@@ -3,6 +3,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofKilledCollectorMean
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofOneSidedL2Transfer
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledAcceptedL2
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTransitionSupport
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # First moments of scheduled Gaussian retained endpoints
@@ -145,7 +146,7 @@ theorem retainedOptionWeight_gaussianRatio_memLp_iterated_from_truncated
     (truncatedGaussianProbability q I s hs :
       Measure (AmbientSpace q.n)).map some
   let K := figureOneFinalScheduledRetainedOptionKernel q I s
-  let _ : IsProbabilityMeasure initial := Measure.isProbabilityMeasure_map
+  let _ : IsProbabilityMeasure initial := ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
     measurable_some.aemeasurable
   have hK := figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
     q I hs
@@ -278,7 +279,7 @@ theorem integral_iterated_retainedOption_gaussianRatio_lower
     samples • figureOneCorrectedTransitionBudget q
   let _ : IsProbabilityMeasure exact := inferInstance
   let _ : IsProbabilityMeasure exactSome :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   have hK := figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
     q I (scheduleValue_pos q phase)
   let _ : IsProbabilityMeasure actual :=

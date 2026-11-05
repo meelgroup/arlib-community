@@ -9,6 +9,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.MarkovChains.Con
 import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
 import Mathlib.Analysis.SpecialFunctions.Gamma.BohrMollerup
 import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.MeasureTheory.Order.Group.Lattice
 
 /-!
 # Cousins–Vempala's `cor:overlap`, at separation `δ/√n`

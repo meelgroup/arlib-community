@@ -84,7 +84,7 @@ theorem gaussianIntegral_scaling_le {n : ℕ} (K : Set (AmbientSpace n))
     (∫ x in K, gaussianDensity t x) ≤
         ∫ x in r • K, gaussianDensity t x := hmono
     _ = r ^ n * ∫ x in K, gaussianDensity s x := by
-      simpa [mul_comm] using hchange.symm
+      rw [← hchange, mul_comm]
 
 theorem fixedRate_sqrt_factor_le (n : ℕ) (hn : 0 < n) :
     Real.sqrt (1 + 1 / (n : ℝ)) ^ n ≤ Real.exp (1 / 2) := by

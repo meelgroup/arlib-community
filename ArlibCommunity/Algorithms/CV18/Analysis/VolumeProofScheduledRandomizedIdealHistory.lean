@@ -1,5 +1,6 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledChronologicalPhase
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Randomized ideal chronological history laws
@@ -70,7 +71,7 @@ theorem bind_map_fresh_eq_map_append_of_indepFun
     have hprodKernel : Measurable fun history : H =>
         (mu.map fresh).map (Prod.mk history) :=
       Measurable.map_prodMk_left
-    rw [Measure.prod]
+    rw [Measure.prod, if_pos (by infer_instance)]
     rw [map_bind_eq_bind_map_of_measurable
       (mu.map past) hprodKernel happend]
     apply Measure.bind_congr_right
@@ -175,7 +176,7 @@ theorem figureOneRandomizedIdealHistoryKernel_measurable_and_probability
   · intro history
     let _ : IsProbabilityMeasure block :=
       figureOneIdealPhaseLaw_isProbabilityMeasure q I p
-    exact Measure.isProbabilityMeasure_map
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (happend.comp (measurable_const.prodMk measurable_id)).aemeasurable
 
 /-- If the visible ideal prefix is independent of the next latent phase
@@ -208,7 +209,7 @@ theorem figureOneRandomizedIdealHistoryLaw_succ_of_indepFun
       (initialVariance_pos q) : Measure (AmbientSpace q.n)).map
         balancedCoolingInitialHistory
   let _ : IsProbabilityMeasure initialHistory :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       measurable_balancedCoolingInitialHistory.aemeasurable
   let _ : IsProbabilityMeasure (figureOneIdealExperimentLaw q I) :=
     figureOneIdealExperimentLaw_isProbabilityMeasure q I
@@ -230,7 +231,7 @@ theorem figureOneRandomizedIdealHistoryLaw_succ_of_indepFun
           (initialVariance_pos q) : Measure (AmbientSpace q.n)).map
             balancedCoolingInitialHistory
       let _ : IsProbabilityMeasure initialHistory :=
-        Measure.isProbabilityMeasure_map
+        ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
           measurable_balancedCoolingInitialHistory.aemeasurable
       rw [Measure.map_fst_prod, measure_univ, one_smul]
     rw [hfst]
@@ -277,7 +278,7 @@ theorem figureOneRandomizedIdealHistoryLaw_isProbabilityMeasure
       (initialVariance_pos q) : Measure (AmbientSpace q.n)).map
         balancedCoolingInitialHistory
   let _ : IsProbabilityMeasure initialHistory :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       measurable_balancedCoolingInitialHistory.aemeasurable
   let _ : IsProbabilityMeasure idealInitial := by
     dsimp [idealInitial, scheduledChronologicalCommonInitial]
@@ -294,7 +295,7 @@ theorem figureOneRandomizedIdealHistoryLaw_isProbabilityMeasure
         (figureOneIdealChronologicalPhaseKernel_measurable_and_probability
           q phase).2 state)
       phases
-  exact Measure.isProbabilityMeasure_map measurable_snd.aemeasurable
+  exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_snd.aemeasurable
 
 theorem figureOneRandomizedIdealHistoryLaw_zero
     (q : VolumeParams) (I : VolumeInput q.n) :

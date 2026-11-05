@@ -26,7 +26,7 @@ theorem measurable_retainedSampleHistoryWithFirst
     Measurable (retainedSampleHistoryWithFirst :
       S → RetainedSampleHistory S) := by
   apply Measurable.prodMk
-  · refine measurable_pi_lambda _ fun j => ?_
+  · refine Measurable.of_eval fun j => ?_
     by_cases hj : j = 0
     · subst j
       simpa [retainedSampleHistoryWithFirst, Function.update] using

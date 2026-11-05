@@ -3,6 +3,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledHistoryNonneg
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledAdjacentTransition
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceRetainedInduction
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledWarmSixteenTransition
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Lemma 7.17(c) from an additive good/bad retained marginal
 
@@ -66,13 +67,13 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_good_bad
     fun_prop
   let rho := history.map scaledState
   let _ : IsProbabilityMeasure rho :=
-    Measure.isProbabilityMeasure_map hscaledState.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hscaledState.aemeasurable
   let target : Measure (Option (AmbientSpace q.n)) :=
     (truncatedGaussianProbability q I (scheduleValue q (phase + 1))
       (scheduleValue_pos q (phase + 1)) :
         Measure (AmbientSpace q.n)).map some
   let _ : IsProbabilityMeasure target :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   let delta := figureOneCorrectedTransitionBudget q + 2 * eta
   have hdelta : delta ≠ ⊤ := by
     apply ENNReal.add_ne_top.mpr
@@ -177,7 +178,7 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_accepted_good_bad
     fun_prop
   let rho := history.map scaledState
   let _ : IsProbabilityMeasure rho :=
-    Measure.isProbabilityMeasure_map hscaledState.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hscaledState.aemeasurable
   let good := (figureOneScheduledAcceptedTargetAt q I phase).map
     (fun x => accuracyScaleFactor q • x)
   let target : Measure (Option (AmbientSpace q.n)) :=
@@ -185,7 +186,7 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_accepted_good_bad
       (scheduleValue_pos q (phase + 1)) :
         Measure (AmbientSpace q.n)).map some
   let _ : IsProbabilityMeasure target :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   let delta := figureOneCorrectedTransitionBudget q + 2 * eta
   have hdelta : delta ≠ ⊤ := by
     apply ENNReal.add_ne_top.mpr

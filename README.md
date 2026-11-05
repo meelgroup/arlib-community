@@ -47,7 +47,7 @@ The area roots carry the real documentation: read the corresponding
 Use the same toolchain as arlib, which is Mathlib's own — today:
 
 ```
-leanprover/lean4:v4.33.0
+leanprover/lean4:v4.35.0
 ```
 
 Copy that line into your `lean-toolchain`, then add arlib-community to your

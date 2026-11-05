@@ -3,6 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.ContinuousProgramSemantics
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 namespace ArlibCommunity.Algorithms.CV18
 
@@ -335,7 +336,7 @@ theorem repeatEstimateMeasure_isProbabilityMeasure
         (measurable_measure_map_param (repeatEstimateMeasure μ repetitions)
           (measurable_finCons repetitions)).aemeasurable
       filter_upwards with estimate
-      exact Measure.isProbabilityMeasure_map
+      exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
         ((measurable_finCons repetitions).comp
           (measurable_const.prodMk measurable_id)).aemeasurable
 

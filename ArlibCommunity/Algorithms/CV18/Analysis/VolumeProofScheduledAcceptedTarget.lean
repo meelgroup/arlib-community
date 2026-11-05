@@ -282,7 +282,7 @@ theorem scheduledBalancedAccuracyGaussianAcceptedTargetLaw_eq
       mu.withDensity
         (scheduledAccuracyGaussianRejectionAcceptance q I sigma2)).map
           scale) Set.univ = _
-  rw [Measure.map_smul]
+  rw [Measure.map_smul (hf := by fun_prop)]
   exact Arlib.MarkovChains.condOn_smul_cv18 _ MeasurableSet.univ
     (by norm_num) (by norm_num)
 
@@ -372,7 +372,7 @@ theorem scheduledAccuracyGaussianAcceptedTargetLaw_eq_kls
       ((Arlib.condOn mu (c • K)).map scale).withDensity g =
         (mu (c • K))⁻¹ •
           (((mu.restrict (c • K)).map scale).withDensity g) := by
-    rw [Arlib.condOn_def, Measure.map_smul, withDensity_smul_measure]
+    rw [Arlib.condOn_def, Measure.map_smul (hf := by fun_prop), withDensity_smul_measure]
   rw [hproposal]
   have hunscaled := map_withDensity_scheduledAccuracyRejectionAcceptance
     q I sigma2 mu

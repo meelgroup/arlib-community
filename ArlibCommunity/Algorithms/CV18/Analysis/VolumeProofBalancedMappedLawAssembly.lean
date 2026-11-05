@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofChronologicalKernelInstantiation
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofCorrectedErrorAllocation
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 open MeasureTheory ProbabilityTheory
 
@@ -631,7 +632,7 @@ theorem approxIndepFun_balancedCompletePhase_history_of_warm_blocks
     balancedAccuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_of_lower
       q I hsigma2 pi hacceptedLower
   let _ : IsProbabilityMeasure target :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   apply approxIndepFun_balancedCompletePhase_of_warm_first
     q I hsigma2 hweight proposalCap properStride (attempts + 1) samples
       history state hstate target herror ?_

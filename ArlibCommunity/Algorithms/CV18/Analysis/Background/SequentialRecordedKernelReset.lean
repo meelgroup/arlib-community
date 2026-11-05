@@ -2,6 +2,7 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.HistoryPreservingReset
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependenceMarkov
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependencePerturbation
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Recorded-output resets for state-dependent sequential kernels
@@ -87,10 +88,10 @@ theorem exists_sequentialRecordedOutputReset_of_tvLe_with_approxIndep
   let reference := reset.map applyUpdate
   have hactualProb : IsProbabilityMeasure actual := by
     dsimp only [actual, sequentialRecordedOutputLaw]
-    exact Measure.isProbabilityMeasure_map hupdate.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hupdate.aemeasurable
   let _ : IsProbabilityMeasure actual := hactualProb
   have hreferenceProb : IsProbabilityMeasure reference :=
-    Measure.isProbabilityMeasure_map hupdate.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hupdate.aemeasurable
   let _ : IsProbabilityMeasure reference := hreferenceProb
   have hresetMapped : Arlib.TVLe actual reference delta := by
     simpa only [actual, reference, raw, applyUpdate,

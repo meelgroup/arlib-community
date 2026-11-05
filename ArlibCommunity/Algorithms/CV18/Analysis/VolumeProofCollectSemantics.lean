@@ -5,6 +5,7 @@ Released under Apache 2.0 license, as described in the file LICENSE.
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofPrimitives
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofStationary
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofMarkovVariance
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Exact law of the executable CV18 weight collector -/
 
@@ -70,7 +71,7 @@ theorem frontMarkovCollectLaw_measurable_and_probability
         dsimp [tailLaw]
         let _ : IsProbabilityMeasure
             (frontMarkovCollectLaw P f samples next) := ih.2 next
-        exact Measure.isProbabilityMeasure_map (by fun_prop)
+        exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
       constructor
       · change Measurable fun current => (P current).bind tailLaw
         exact measurable_measure_bind_param_variable P.measurable

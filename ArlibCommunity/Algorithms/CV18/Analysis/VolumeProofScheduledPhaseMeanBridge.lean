@@ -2,6 +2,7 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledShadowAverageMean
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGaussianPhaseMean
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTerminalEndpointMoments
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Bridges from pre-kill phase histories to complete scheduled targets
@@ -408,7 +409,7 @@ theorem integral_initializedScheduledRetainedHistory_average_sub_target_le_death
   have hsum := retainedSumKernel_measurable_and_probability
     K hK.1 hK.2 weight hweight
   let _ : IsProbabilityMeasure initial :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (hweight.prodMk measurable_some).aemeasurable
   let _ : IsProbabilityMeasure shadow :=
     iteratedKernelLaw_isProbabilityMeasure
@@ -532,7 +533,7 @@ theorem integral_initializedScheduledRetainedHistory_terminal_average_sub_target
   have hsum := retainedSumKernel_measurable_and_probability
     K hK.1 hK.2 weight hweight
   let _ : IsProbabilityMeasure initial :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (hweight.prodMk measurable_some).aemeasurable
   let _ : IsProbabilityMeasure shadow :=
     iteratedKernelLaw_isProbabilityMeasure
@@ -732,7 +733,7 @@ theorem integral_figureOneScheduledTerminalPhaseTarget_liveRaw_lower
   have hinitialMap : Measurable initialMap := hweight.prodMk measurable_some
   let _ : IsProbabilityMeasure exact := inferInstance
   let _ : IsProbabilityMeasure initial :=
-    Measure.isProbabilityMeasure_map hinitialMap.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hinitialMap.aemeasurable
   let _ : IsProbabilityMeasure shadow :=
     iteratedKernelLaw_isProbabilityMeasure
       (fun _ => retainedSumKernel K weight) initial inferInstance
@@ -761,7 +762,7 @@ theorem integral_figureOneScheduledTerminalPhaseTarget_liveRaw_lower
     rw [hinitialState]
     let endpoint := iteratedKernelLaw (fun _ => K) (exact.map some) (i + 1)
     let _ : IsProbabilityMeasure (exact.map some) :=
-      Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+      ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
     let _ : IsProbabilityMeasure endpoint :=
       iteratedKernelLaw_isProbabilityMeasure (fun _ => K) (exact.map some)
         inferInstance (fun _ => hK.1) (fun _ => hK.2) (i + 1)

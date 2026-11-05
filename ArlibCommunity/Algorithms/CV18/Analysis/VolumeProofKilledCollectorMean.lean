@@ -2,6 +2,7 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledCollectorEndpoint
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBoundedObservableAETransfer
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledAcceptedMean
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Marginal means of a killed retained collector
@@ -27,8 +28,6 @@ theorem measurable_retainedOptionWeight {S : Type*} [MeasurableSpace S]
     Measurable (retainedOptionWeight weight) := by
   unfold retainedOptionWeight
   convert Measurable.optionElim (0 : ℝ) hweight using 1
-  funext state
-  cases state <;> rfl
 
 /-- Shadow one-step kernel.  Unlike the public optional collector, a killed
 state retains the total accumulated before death. -/
@@ -60,7 +59,7 @@ theorem retainedSumKernel_measurable_and_probability
   · intro state
     unfold retainedSumKernel
     let _ : IsProbabilityMeasure (K state.2) := hKprob state.2
-    exact Measure.isProbabilityMeasure_map
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       ((measurable_const.add hwopt).prodMk measurable_id).aemeasurable
 
 /-- Forget the shadow total. -/
@@ -405,7 +404,7 @@ theorem integral_iterated_retainedSumKernel_total_eq_sum_marginals
     dsimp only [endpoint]
     exact iteratedKernelLaw_isProbabilityMeasure
       (fun _ => K) (initial.map retainedSumState)
-      (Measure.isProbabilityMeasure_map measurable_snd.aemeasurable)
+      (ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_snd.aemeasurable)
       (fun _ => hK) (fun _ => hKprob) (i + 1)
   have hendpointInt : ∀ i,
       Integrable (retainedOptionWeight weight) (endpoint i) := by

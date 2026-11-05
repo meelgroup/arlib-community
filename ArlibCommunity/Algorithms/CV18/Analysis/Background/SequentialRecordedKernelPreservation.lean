@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.SequentialRecordedKernelReset
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependenceTransport
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Structural invariants preserved by a sequential recorded reset
@@ -250,10 +251,10 @@ theorem exists_sequentialRecordedOutputReset_of_tvLe_with_approxIndep_ae
   let reference := reset.map applyUpdate
   have hactualProb : IsProbabilityMeasure actual := by
     dsimp only [actual, sequentialRecordedOutputLaw]
-    exact Measure.isProbabilityMeasure_map hupdate.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hupdate.aemeasurable
   let _ : IsProbabilityMeasure actual := hactualProb
   have hreferenceProb : IsProbabilityMeasure reference :=
-    Measure.isProbabilityMeasure_map hupdate.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hupdate.aemeasurable
   let _ : IsProbabilityMeasure reference := hreferenceProb
   have hresetMapped : Arlib.TVLe actual reference delta := by
     simpa only [actual, reference, raw, applyUpdate,

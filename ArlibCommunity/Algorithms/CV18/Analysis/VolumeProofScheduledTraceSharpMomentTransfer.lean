@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofKilledCollectorSecondMoment
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceSlackMoments
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Sharp scalar-law moment transfer to an executable trace coordinate
@@ -179,10 +180,10 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_mapped_tv
   let _ : IsProbabilityMeasure idealLaw :=
     figureOneIdealPhaseLaw_isProbabilityMeasure q I phase
   let _ : IsProbabilityMeasure actualScalar :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (measurable_scheduledBalancedTracePhaseVariable q j).aemeasurable
   let _ : IsProbabilityMeasure idealScalar :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (figureOneIdealPhaseEstimator_measurable q phase).aemeasurable
   have hactual0 : ∀ᵐ y ∂actualScalar, 0 ≤ y :=
     (ae_map_iff

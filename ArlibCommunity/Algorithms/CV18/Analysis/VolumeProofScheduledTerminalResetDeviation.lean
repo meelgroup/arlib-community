@@ -2,6 +2,7 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledResetAverageSecond
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTerminalEndpointMoments
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFixedThirdMoment
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Terminal equation-(6) on a fixed-reset reference
@@ -51,7 +52,7 @@ theorem approxIndepFun_initializedScheduledRetainedHistory_prefix_next_of_weight
       initializedScheduledRetainedHistoryLaw_isProbabilityMeasure q I phase i
   have hexactSome : IsProbabilityMeasure exactSome := by
     dsimp [exactSome]
-    exact Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   let _ : IsProbabilityMeasure rho := hrho
   let _ : IsProbabilityMeasure exactSome := hexactSome
   have hbaseEndpoint : MeasureLeUpTo

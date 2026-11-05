@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.RecordedKernelReset
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependencePerturbation
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Approximate independence after a recorded-output reset
@@ -94,7 +95,7 @@ theorem exists_historyRecordedOutputReset_of_tvLe_with_approxIndep
         (hnextState.comp measurable_snd)
   have hactualProb : IsProbabilityMeasure actual := by
     dsimp only [actual, historyRecordedOutputLaw]
-    exact Measure.isProbabilityMeasure_map hupdate.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hupdate.aemeasurable
   let _ : IsProbabilityMeasure actual := hactualProb
   let _ : IsProbabilityMeasure reference := hreferenceProb
   refine ⟨reference, hreferenceProb, hreset, hnew, hstate, hold, ?_⟩

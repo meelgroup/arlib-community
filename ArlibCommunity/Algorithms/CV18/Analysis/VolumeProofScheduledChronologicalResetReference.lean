@@ -7,6 +7,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofResetReferenceBaseCaps
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGaussianResetJoint
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTerminalResetJoint
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledOuterPhaseIndependence
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # A chronological reset reference for the scheduled trace
@@ -220,7 +221,7 @@ def scheduledResetPrefixCoordinates (q : VolumeParams) (phase : ℕ)
 theorem measurable_scheduledResetPrefixCoordinates
     (q : VolumeParams) (phase : ℕ) :
     Measurable (scheduledResetPrefixCoordinates q phase) := by
-  exact measurable_pi_lambda _ fun j =>
+  exact Measurable.of_eval fun j =>
     measurable_scheduledBalancedTracePhaseVariable q (j + 1)
 
 /-- Support invariant for a reset score/endpoint pair.  It says that the
@@ -358,7 +359,7 @@ theorem exists_scheduledTraceRecordedReset
     hpairProb
   have hrawProb : IsProbabilityMeasure raw := by
     dsimp only [raw]
-    exact Measure.isProbabilityMeasure_map hrawMap.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hrawMap.aemeasurable
   let _ : IsProbabilityMeasure raw := hrawProb
   obtain ⟨reset, hresetProb, hresetOld, hresetTarget, hresetTV⟩ :=
     exists_historyPreservingReset_of_tvLe raw target hnext
@@ -366,7 +367,7 @@ theorem exists_scheduledTraceRecordedReset
   let reference := reset.map (scheduledResetTraceAppend (n := q.n))
   have happend := measurable_scheduledResetTraceAppend (n := q.n)
   have hreferenceProb : IsProbabilityMeasure reference :=
-    Measure.isProbabilityMeasure_map happend.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable happend.aemeasurable
   have hrawOld : raw.map Prod.fst = source := by
     calc
       raw.map Prod.fst =
@@ -515,11 +516,11 @@ theorem exists_acceptedEndpointResetJoint
   let paired := joint.map (scheduledResetPairOutput (n := q.n))
   let accepted := (figureOneScheduledAcceptedTargetAt q I phase).map some
   let _ : IsProbabilityMeasure paired :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (measurable_scheduledResetPairOutput (n := q.n)).aemeasurable
   let _ : IsProbabilityMeasure accepted :=
     let _ := figureOneScheduledAcceptedTargetAt_isProbabilityMeasure q I phase
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   have hpairedState : paired.map Prod.snd =
       scheduledRetainedExactSome q I phase := by
     calc
@@ -827,7 +828,7 @@ theorem exists_scheduledGaussianExactPairTarget
   let target := joint.map (scheduledResetPairOutput (n := q.n))
   have houtput := measurable_scheduledResetPairOutput (n := q.n)
   have htargetProb : IsProbabilityMeasure target :=
-    Measure.isProbabilityMeasure_map houtput.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable houtput.aemeasurable
   have hstateTarget : target.map Prod.snd =
       scheduledRetainedExactSome q I phase := by
     calc
@@ -909,7 +910,7 @@ theorem exists_scheduledTerminalPairTarget
   let target := joint.map (scheduledResetPairOutput (n := q.n))
   have houtput := measurable_scheduledResetPairOutput (n := q.n)
   have htargetProb : IsProbabilityMeasure target :=
-    Measure.isProbabilityMeasure_map houtput.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable houtput.aemeasurable
   have hstateTarget : target.map Prod.snd =
       scheduledRetainedExactSome q I (terminalPhaseSteps q) := by
     calc

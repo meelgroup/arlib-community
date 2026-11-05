@@ -3,6 +3,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceMomentTr
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofProductAccuracy
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceFullGoodBad
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceFuture
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Raw phase-mean comparison for the executable scheduled trace
@@ -380,10 +381,10 @@ theorem scheduledFigureOneTraceRawMean_abs_sub_ideal_le_of_mapped_tv
   let _ : IsProbabilityMeasure idealLaw :=
     figureOneIdealPhaseLaw_isProbabilityMeasure q I phase
   let _ : IsProbabilityMeasure actualScalar :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (measurable_scheduledBalancedTracePhaseVariable q j).aemeasurable
   let _ : IsProbabilityMeasure idealScalar :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (figureOneIdealPhaseEstimator_measurable q phase).aemeasurable
   have hactual0 : ∀ᵐ y ∂actualScalar, 0 ≤ y := by
     exact (ae_map_iff
@@ -469,7 +470,7 @@ theorem scheduledFigureOneTraceRawMeanProduct_relativeApprox_ideal_of_phasewise
         rw [Finset.prod_mul_distrib]
         simp
       _ ≤ _ := by
-        apply Finset.prod_le_prod
+        apply Finset.prod_le_prod₀
         · intro j hj
           exact mul_nonneg honeSub (hidealTerms (j + 1))
         · intro j hj
@@ -485,7 +486,7 @@ theorem scheduledFigureOneTraceRawMeanProduct_relativeApprox_ideal_of_phasewise
           scheduledFigureOneTraceRawMean q I (j + 1)) ≤
           ∏ j ∈ Finset.range m,
             ((1 + delta) * figureOneChronologicalRawMean q I (j + 1)) := by
-        apply Finset.prod_le_prod
+        apply Finset.prod_le_prod₀
         · intro j hj
           unfold scheduledFigureOneTraceRawMean
           exact integral_nonneg fun trace =>

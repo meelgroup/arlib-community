@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofInitialSpeedyWarmStart
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledRetainedWarm
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Initial warm start for the schedule-targeted speedy body
 
@@ -377,7 +378,7 @@ private theorem initialContractedAcceptedTarget_isProbabilityMeasure_aux
         q I sigma2 pi) :=
     scheduledBalancedAccuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_of_lower
       q I hsigma2 pi haccepted
-  exact Measure.isProbabilityMeasure_map (by fun_prop)
+  exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
 
 theorem initialScaledScheduled_leUpTo_contractedAcceptedTarget
     (q : VolumeParams) (I : VolumeInput q.n) :

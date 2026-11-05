@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledResetAverageSecond
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledResetEventTransfer
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Joint Gaussian phase reset targets
@@ -150,7 +151,7 @@ theorem exists_figureOneScheduledGaussianResetJointTarget
   have houtput : Measurable output :=
     measurable_scheduledGaussianResetJointOutput q phase count
   let _ : IsProbabilityMeasure target :=
-    Measure.isProbabilityMeasure_map houtput.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable houtput.aemeasurable
   have hlive : ∀ᵐ history ∂reference,
       retainedSampleHistoryState history ≠ none := by
     have hset : MeasurableSet

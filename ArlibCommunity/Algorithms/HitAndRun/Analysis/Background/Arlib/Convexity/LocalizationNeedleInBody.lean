@@ -389,7 +389,8 @@ theorem exists_setIntegral_between_of_iInter_subsingleton
     have hxp : x = p := hsub hx
     rw [hxp]
     exact ⟨by linarith, by linarith⟩
-  obtain ⟨k, hk⟩ := exists_subset_nhds_of_isCompact hdir hCcomp hmem
+  obtain ⟨k, hk⟩ := exists_subset_nhds_of_isCompact hdir hCcomp
+    (mem_nhdsSet_iff_forall.mpr hmem)
   have hms : MeasurableSet (C k) := (hCcomp k).measurableSet
   have hfin : volume (C k) ≠ ⊤ := (hCcomp k).measure_lt_top.ne
   have hint : IntegrableOn g (C k) volume := hg.continuousOn.integrableOn_compact (hCcomp k)

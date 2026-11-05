@@ -4,6 +4,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofChronologicalKernelIns
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofPhaseMomentAssembly
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofSharpMoments
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceDependentAssembly
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Moment transfer for one scheduled trace coordinate
@@ -93,10 +94,10 @@ theorem scheduledPhase_raw_moments_of_mapped_tv
     exact figureOneIdealPhaseLaw_isProbabilityMeasure q I phase
   let _ : IsProbabilityMeasure actualScalar := by
     dsimp only [actualScalar]
-    exact Measure.isProbabilityMeasure_map hW.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hW.aemeasurable
   let _ : IsProbabilityMeasure idealScalar := by
     dsimp only [idealScalar, idealLaw, estimator]
-    exact Measure.isProbabilityMeasure_map
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (figureOneIdealPhaseEstimator_measurable q phase).aemeasurable
   have hWmem : MemLp W 2 mu :=
     memLp_two_of_ae_nonnegative_le hW hB.le hW0 hWB

@@ -173,7 +173,7 @@ theorem snoc_linear {n : ℕ} (a b : ℝ) (x y : Fin n → ℝ) (s u : ℝ) :
 /-- Appending a coordinate is measurable in the appended coordinate. -/
 theorem measurable_snoc {n : ℕ} (x : Fin n → ℝ) :
     Measurable fun t : ℝ => (Fin.snoc x t : Fin (n + 1) → ℝ) := by
-  refine measurable_pi_lambda _ fun i => ?_
+  refine Measurable.of_eval fun i => ?_
   induction i using Fin.lastCases with
   | last => simp only [Fin.snoc_last]; exact measurable_id
   | cast j => simp

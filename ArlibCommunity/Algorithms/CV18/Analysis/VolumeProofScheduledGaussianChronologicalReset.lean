@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledChronologicalResetStep
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledLocalResetDependenceBudget
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Gaussian phases of the chronological reset reference
@@ -249,7 +250,7 @@ theorem exists_scheduledGaussianTraceRecordedReset
   let _ : IsProbabilityMeasure
       ((sequentialPairLaw source
         (scheduledResetPairKernel q I phase)).map Prod.snd) :=
-    Measure.isProbabilityMeasure_map measurable_snd.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_snd.aemeasurable
   have hrawInd := approxIndepFun_gaussian_phase_of_accepted_retained
     q I phase hphase source accepted hretained hgood
   have hind := approxIndepFun_scheduledResetPairKernel_of_observation

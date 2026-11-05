@@ -828,7 +828,7 @@ theorem scheduledFigureOneTrace_rawMeanProduct_le_pow_mul_truncatedMeanProduct
         ∏ j ∈ Finset.range i,
           ((1 + 1 / figureOneDependentAlpha q) *
             scheduledFigureOneTraceTruncatedMean q I (j + 1)) := by
-      apply Finset.prod_le_prod
+      apply Finset.prod_le_prod₀
       · intro j hj
         exact (hrawPos (j + 1) (by omega) (by
           have := Finset.mem_range.mp hj
@@ -869,7 +869,7 @@ theorem scheduledFigureOneTrace_truncatedSecondProduct_le_factor_mul_rawMeanProd
         dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I) i ^ 2 := by
   unfold dependentPhaseMeanProduct
   rw [← Finset.prod_pow, ← Finset.prod_mul_distrib]
-  apply Finset.prod_le_prod
+  apply Finset.prod_le_prod₀
   · intro j hj
     exact integral_nonneg fun _ => sq_nonneg _
   · intro j hj
@@ -1101,7 +1101,7 @@ theorem scheduledFigureOneTrace_truncatedMeanProduct_le_rawMeanProduct
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I _
   unfold dependentPhaseMeanProduct
-  apply Finset.prod_le_prod
+  apply Finset.prod_le_prod₀
   · intro j hj
     apply scheduledFigureOneTraceTruncatedMean_nonnegative q I (j + 1)
     exact (hrawPos (j + 1) (by omega) (by

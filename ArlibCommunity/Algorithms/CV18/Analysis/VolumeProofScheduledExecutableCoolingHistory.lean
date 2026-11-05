@@ -3,6 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license, as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledExecutableHistory
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Exact joint history law of scheduled Gaussian cooling -/
 
@@ -112,7 +113,7 @@ theorem scheduledExecutableCoolingHistoryLaw_measurable_and_probability
                 let _ : IsProbabilityMeasure
                     (scheduledExecutableCoolingHistoryLaw parameters q I
                       (tau2 :: rest) value.2) := htail.2 value.2
-                exact Measure.isProbabilityMeasure_map <|
+                exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable <|
                   (measurable_balancedCoolingHistoryCons (n := q.n)).comp
                     (measurable_const.prodMk measurable_id) |>.aemeasurable
           have hlaw : scheduledExecutableCoolingHistoryLaw parameters q I

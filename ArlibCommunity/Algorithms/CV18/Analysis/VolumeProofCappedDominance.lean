@@ -4,6 +4,7 @@ Released under Apache 2.0 license, as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyImportanceLaw
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofCollectSemantics
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Successful-law domination for capped proper collectors -/
 
@@ -147,7 +148,7 @@ theorem idealProperCollectLawAux_measurable_and_probability
         dsimp only [tail]
         let _ : IsProbabilityMeasure (frontMarkovCollectLaw B f samples first) :=
           hfront.2 first
-        exact Measure.isProbabilityMeasure_map (by fun_prop)
+        exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
       simp only [idealProperCollectLawAux]
       constructor
       · change Measurable fun state : ℝ × S =>

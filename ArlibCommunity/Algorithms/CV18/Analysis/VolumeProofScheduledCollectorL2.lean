@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledHistoryNonnegative
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBoundedObservableAETransfer
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Finite L² bounds for the executable scheduled phase collector
@@ -173,7 +174,7 @@ theorem memLp_scheduledBalancedTransitionCollect_average
       q I hsigma2 hweight proposalCap properStride retryLimit samples).2 0 current
   let _ : IsProbabilityMeasure law := by
     dsimp only [law]
-    exact Measure.isProbabilityMeasure_map
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (measurable_balancedCoolingAverage samples).aemeasurable
   have htotal0 := scheduledBalancedTransitionCollectLaw_ae_total_nonnegative
     q I hsigma2 hweight hweight0 proposalCap properStride retryLimit

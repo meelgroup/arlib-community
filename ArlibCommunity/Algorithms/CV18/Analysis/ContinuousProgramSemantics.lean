@@ -7,6 +7,7 @@ import Mathlib.MeasureTheory.Measure.GiryMonad
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
 import Mathlib.Probability.Kernel.MeasurableLIntegral
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 open MeasureTheory
 
@@ -45,7 +46,7 @@ theorem MembershipOracleProgram.run_isProbabilityMeasure
       change ExecutionMeasurable oracle (next (oracle point)) at hmeas
       have hprob := ih (oracle point) hmeas
       let _ : IsProbabilityMeasure (run oracle (next (oracle point))) := hprob
-      exact Measure.isProbabilityMeasure_map (by fun_prop)
+      exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
   | randomNat law next ih =>
       simp only [ExecutionMeasurable] at hmeas
       simp only [MembershipOracleProgram.run]
@@ -94,7 +95,7 @@ instance uniformClosedBallMeasure_isProbabilityMeasure
     (n : ℕ) (center : AmbientSpace n) (radius : ℝ) :
     IsProbabilityMeasure (uniformClosedBallMeasure n center radius) := by
   unfold uniformClosedBallMeasure
-  exact Measure.isProbabilityMeasure_map (by fun_prop)
+  exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
 
 /-- Lebesgue measure on `[0,1]`, packaged with its finiteness proof. -/
 noncomputable def uniformUnitIntervalFiniteMeasure : FiniteMeasure ℝ :=
@@ -404,7 +405,7 @@ theorem continuousMetropolisProposalLaw_isProbabilityMeasure {n : ℕ}
             then proposal else current), 1) :=
       (Measurable.ite (measurableSet_le measurable_id measurable_const)
         measurable_const measurable_const).prodMk measurable_const
-    exact Measure.isProbabilityMeasure_map hcoin.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hcoin.aemeasurable
   · infer_instance
 
 theorem run_continuousMetropolisProposalProgram {n : ℕ}

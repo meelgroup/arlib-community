@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.SequentialRecordedKernelPreservation
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledChronologicalResetReference
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # One chronological CV18 reset step with local independence
@@ -43,7 +44,7 @@ theorem scheduledResetPairKernel_measurable_and_probability
         (scheduledBalancedTracePhaseObservationLaw
           figureOneFinalScheduledBalancedParameters q I phase trace) :=
       hobs.2 trace
-    exact Measure.isProbabilityMeasure_map
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       measurable_scheduledResetPairOutput.aemeasurable
 
 theorem scheduledResetPairKernel_ae_good

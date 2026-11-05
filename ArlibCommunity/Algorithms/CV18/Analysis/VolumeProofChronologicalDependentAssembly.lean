@@ -318,7 +318,7 @@ theorem figureOneChronologicalMomentFactor_partialProduct_le_exp
     (q : VolumeParams) {i : ℕ} (hi : i ≤ figureOneDependentPhaseCount q) :
     dependentPhaseMeanProduct (figureOneChronologicalMomentFactor q) i ≤
       Real.exp (13 * q.eps ^ 2 / 512) := by
-  have hmono := Finset.prod_mono_set_of_one_le
+  have hmono := Finset.prod_mono_set_of_one_le₀
     (f := fun j => figureOneChronologicalMomentFactor q (j + 1))
     (fun j => figureOneChronologicalMomentFactor_one_le q (j + 1))
     (Finset.range_mono hi)
@@ -350,7 +350,7 @@ theorem figureOneChronologicalRawMeanProduct_le
         ∏ j ∈ Finset.range i,
           ((1 + 1 / figureOneDependentAlpha q) *
             figureOneChronologicalTruncatedMean q I mu Wbar (j + 1)) := by
-      apply Finset.prod_le_prod
+      apply Finset.prod_le_prod₀
       · intro j hj
         exact (figureOneChronologicalRawMean_pos q I (j + 1)).le
       · intro j hj
@@ -375,7 +375,7 @@ theorem figureOneChronologicalTruncatedMeanProduct_le_raw
         (figureOneChronologicalTruncatedMean q I mu Wbar) i ≤
       dependentPhaseMeanProduct (figureOneChronologicalRawMean q I) i := by
   unfold dependentPhaseMeanProduct
-  apply Finset.prod_le_prod
+  apply Finset.prod_le_prod₀
   · intro j hj
     exact integral_nonneg fun omega =>
       figureOneChronologicalTruncatedPhase_nonneg q I Wbar hW0 (j + 1) omega
@@ -399,7 +399,7 @@ theorem figureOneChronologicalTruncatedSecondProduct_le
         dependentPhaseMeanProduct (figureOneChronologicalRawMean q I) i ^ 2 := by
   unfold dependentPhaseMeanProduct
   rw [← Finset.prod_pow, ← Finset.prod_mul_distrib]
-  apply Finset.prod_le_prod
+  apply Finset.prod_le_prod₀
   · intro j hj
     exact integral_nonneg fun _ => sq_nonneg _
   · intro j hj

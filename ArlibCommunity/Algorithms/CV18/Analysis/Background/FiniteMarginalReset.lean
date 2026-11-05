@@ -1,5 +1,6 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.HistoryPreservingReset
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Finite coordinate-marginal resets
@@ -43,7 +44,7 @@ theorem exists_coordinateMarginalReset_of_tvLe
   have hpair : Measurable pair :=
     measurable_id.prodMk (measurable_pi_apply coordinate)
   let _ : IsProbabilityMeasure paired :=
-    Measure.isProbabilityMeasure_map hpair.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hpair.aemeasurable
   have hpairedSnd : paired.map Prod.snd =
       mu.map (fun value => value coordinate) := by
     rw [show paired = mu.map pair by rfl,
@@ -60,7 +61,7 @@ theorem exists_coordinateMarginalReset_of_tvLe
   have hreplace : Measurable replace := by
     exact measurable_update'
   have hreferenceProb : IsProbabilityMeasure reference :=
-    Measure.isProbabilityMeasure_map hreplace.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hreplace.aemeasurable
   have hpairedReplace : paired.map replace = mu := by
     rw [show paired = mu.map pair by rfl,
       Measure.map_map hreplace hpair]

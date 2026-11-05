@@ -3,6 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofProductAccuracy
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 open MeasureTheory ProbabilityTheory
 
@@ -288,7 +289,7 @@ theorem figureOneIdealEstimateLaw_isProbabilityMeasure
   unfold figureOneIdealEstimateLaw
   let _ : IsProbabilityMeasure (figureOneIdealExperimentLaw q I) :=
     figureOneIdealExperimentLaw_isProbabilityMeasure q I
-  exact Measure.isProbabilityMeasure_map
+  exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
     (figureOneIdealScaledProduct_measurable q).aemeasurable
 
 theorem figureOneIdealEstimateLaw_apply

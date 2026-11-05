@@ -6,6 +6,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependenceBala
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyPhaseMixing
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofSpeedyWarmStart
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofDependentSchedule
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Concrete CV18 phase-wise independence premises
@@ -250,7 +251,7 @@ theorem approxIndepFun_balancedTransition_history_figureOnePerSample
   have hblockError : blockError ≠ ⊤ := by
     exact ENNReal.ofReal_ne_top
   let _ : IsProbabilityMeasure (history.map state) :=
-    Measure.isProbabilityMeasure_map hstate.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hstate.aemeasurable
   have hfirstBlock :=
     balancedAccuracyFirstBlock_leUpTo_figureOnePerSample
       q I hsigma2 proposalCap properStride hproposalCap

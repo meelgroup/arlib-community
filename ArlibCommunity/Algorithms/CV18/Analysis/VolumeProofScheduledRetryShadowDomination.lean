@@ -438,8 +438,6 @@ theorem scheduledBalancedAccuracyRetryCollectAux_countedQueryCost_le_shadow
                   trialCost current + ∫⁻ state, envelope state ∂nextLaw current := by
                     rw [scheduledBalancedAccuracyRetryCollectAux]
                     convert hstep using 1
-                    simp only [next]
-                    rfl
                 _ = finiteKilledChainExpectedCost nextLaw trialCost remaining
                     current := by
                       rw [hremaining]

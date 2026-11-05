@@ -228,7 +228,7 @@ axis with first coordinate `t`. -/
 private theorem measurable_axis {f : (Fin (m + 1) → ℝ) → ℝ} (hf : Measurable f) :
     Measurable fun x : Fin (m + 1) → ℝ => f (Fin.cons (x 0) (0 : Fin m → ℝ)) := by
   have h1 : Measurable fun t : ℝ => (Fin.cons t (0 : Fin m → ℝ) : Fin (m + 1) → ℝ) := by
-    refine measurable_pi_lambda _ fun i => ?_
+    refine Measurable.of_eval fun i => ?_
     refine Fin.cases ?_ ?_ i
     · simp only [Fin.cons_zero]; exact measurable_id'
     · intro j; simp only [Fin.cons_succ]; exact measurable_const
@@ -302,7 +302,7 @@ theorem abs_setIntegral_sub_slice_profile_le {K : Set (Fin (m + 1) → ℝ)} (hK
 /-- The map `t ↦ (t, 0, …, 0)` onto the first coordinate axis is measurable. -/
 theorem measurable_consAxis (m : ℕ) :
     Measurable fun t : ℝ => (Fin.cons t (0 : Fin m → ℝ) : Fin (m + 1) → ℝ) := by
-  refine measurable_pi_lambda _ fun i => ?_
+  refine Measurable.of_eval fun i => ?_
   refine Fin.cases ?_ ?_ i
   · simp only [Fin.cons_zero]; exact measurable_id'
   · intro j; simp only [Fin.cons_succ]; exact measurable_const

@@ -592,7 +592,7 @@ theorem measurableSet_comap_frestrictLe_le_properCount (k m : ℕ) :
   set e : ((_i : ↥(Finset.Iic m)) → Om) → (ℕ → Om) :=
     fun h i => h ⟨min i m, Finset.mem_Iic.2 (min_le_right _ _)⟩ with he
   have hemeas : Measurable e :=
-    measurable_pi_lambda _ fun i => measurable_pi_apply _
+    Measurable.of_eval fun i => measurable_pi_apply _
   have hcoord : ∀ ω : ℕ → Om, ∀ i ≤ m, e (Preorder.frestrictLe m ω) i = ω i := by
     intro ω i hi
     simp only [he, Preorder.frestrictLe_apply, Nat.min_eq_left hi]

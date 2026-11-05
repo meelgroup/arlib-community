@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceMarginal
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledAdjacentTransition
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Warmness of the retained scheduled accepted state
 
@@ -94,7 +95,7 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge_one_eighth
   let _ : IsProbabilityMeasure (Arlib.condOn pi core) :=
     Arlib.isProbabilityMeasure_condOn pi hcore0 hcoretop
   let _ : IsProbabilityMeasure source :=
-    Measure.isProbabilityMeasure_map (by fun_prop)
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
   have hscaled : 0 < sigma2 / c ^ 2 := by positivity
   have hprop0 :
       ((volume : Measure (AmbientSpace q.n)).withDensity
@@ -144,7 +145,7 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge_one_eighth
   have hsourceScale :
       ((pi.restrict core).map scale).withDensity g =
         pi core • (source.withDensity g) := by
-    rw [hrestrict, Measure.map_smul, withDensity_smul_measure]
+    rw [hrestrict, Measure.map_smul (hf := by fun_prop), withDensity_smul_measure]
   have hmeasure := map_withDensity_scheduledAccuracyRejectionAcceptance
     q I sigma2 pi
   have htotal := congrArg
@@ -218,7 +219,7 @@ theorem map_scheduledBalancedAcceptedTarget_scale_eq
   have hc0 : accuracyScaleFactor q ≠ 0 := (accuracyScaleFactor_pos q).ne'
   unfold scheduledBalancedAccuracyGaussianAcceptedTargetLaw
   change (Arlib.condOn (accepted.map expand) Set.univ).map contract = _
-  rw [Arlib.condOn_def, Measure.map_smul,
+  rw [Arlib.condOn_def, Measure.map_smul (hf := by fun_prop),
     Measure.map_apply hexpand MeasurableSet.univ, Set.preimage_univ,
     Measure.restrict_univ,
     Measure.map_map hcontract hexpand]
@@ -534,7 +535,7 @@ theorem bind_figureOneFinalScheduledAcceptedTarget_retainedOptionKernel_leUpTo
     exact ENNReal.ofReal_le_ofReal <| by
       nlinarith [speedyAdjacentWarmConstant_one_le q]
   let _ : IsProbabilityMeasure (target.map contract) :=
-    Measure.isProbabilityMeasure_map (by fun_prop : Measurable contract).aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop : Measurable contract).aemeasurable
   have hstep :=
     bind_figureOneFinalScheduledBalancedTransition_leUpTo_acceptedTarget
       q I hsigma2 (target.map contract) hcontractWarm

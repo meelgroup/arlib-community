@@ -2,6 +2,7 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofCountedChronologicalContinuation
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledCostChain
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledAbortAccuracy
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Exact ideal-prefix inputs for counted scheduled phases -/
 
@@ -27,11 +28,11 @@ theorem figureOneFinalScheduledIdealPhaseStart_isProbabilityMeasure
   split_ifs
   · let _ : IsProbabilityMeasure (figureOneScheduledAcceptedTargetAt q I 0) :=
       figureOneScheduledAcceptedTargetAt_isProbabilityMeasure q I 0
-    exact Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   · let _ : IsProbabilityMeasure
         (figureOneScheduledAcceptedTargetAt q I (phase - 1)) :=
       figureOneScheduledAcceptedTargetAt_isProbabilityMeasure q I (phase - 1)
-    exact Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
 
 private theorem finalIdealWarmConstant_le_ninetySix (q : VolumeParams) :
     8 * ENNReal.ofReal (speedyAdjacentWarmConstant q) ≤ 96 := by
@@ -214,10 +215,10 @@ theorem figureOneAbortInitialRetained_leUpTo_truncated
   let target := (truncatedGaussianProbability q I (initialVariance q)
     (initialVariance_pos q) : Measure (AmbientSpace q.n)).map some
   let _ : IsProbabilityMeasure actual :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (measurable_initialTruncatedOption q I).aemeasurable
   let _ : IsProbabilityMeasure target :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   apply MeasureLeUpTo.of_tvLe
   apply Arlib.tvLe_of_forall_le
   intro event hevent
@@ -867,7 +868,7 @@ theorem exists_figureOneFinalScheduledGaussianCountedReference
         MembershipOracleProgram.run_isProbabilityMeasure oracle.query _
           ((figureOneFinalScheduledRetainedGaussianPhaseProgram_countedMeasurable
             q I oracle phase).2 state.1).executionMeasurable
-      exact Measure.isProbabilityMeasure_map (by fun_prop))
+      exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop))
     (fun phase rho _hrho hmarginal => by
       have hprogram :=
         figureOneFinalScheduledRetainedGaussianPhaseProgram_countedMeasurable
@@ -1045,7 +1046,7 @@ theorem exists_figureOneFinalScheduledRetainedComplete_countedReference
               oracle.query) :=
           MembershipOracleProgram.run_isProbabilityMeasure oracle.query _
             (hterminal.2 state.1).executionMeasurable
-        exact Measure.isProbabilityMeasure_map (by fun_prop))
+        exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop))
     unfold figureOneFinalScheduledRetainedCompleteProgram
     rw [MembershipOracleProgram.run_bind_counted oracle.query _ _
       (figureOneFinalScheduledRetainedGaussianPrefixProgram_countedMeasurable

@@ -173,7 +173,7 @@ theorem prod_mem_Icc_of_mem_unitBox {m : ℕ} {v : Fin m → ℝ} (hv : v ∈ un
   have hv' : ∀ i : Fin m, v i ∈ Set.Icc (0 : ℝ) 1 := fun i => hv i (Set.mem_univ i)
   constructor
   · exact Finset.prod_nonneg fun i _ => (hv' i).1
-  · exact Finset.prod_le_one (fun i _ => (hv' i).1) (fun i _ => (hv' i).2)
+  · exact Finset.prod_le_one₀ (fun i _ => (hv' i).1) (fun i _ => (hv' i).2)
 
 /-- **The event is null when the first factor is too small.**  If `0 ≤ t ≤ c`
 then no point of the unit box satisfies `c < t · ∏ vᵢ`, since the product is at

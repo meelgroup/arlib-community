@@ -1,5 +1,6 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledConcreteTransition
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Scheduled transitions from a good/bad phase-start decomposition
 
@@ -213,7 +214,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe_of_good_bad
   let _ : IsProbabilityMeasure
       ((truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n)).map some) :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   exact (bind_figureOneFinalScheduledBalancedTransition_leUpTo_of_good_bad
     q I hsigma2 rho mu good bad hmuWarm hrho hgood hbad hM).to_tvLe
 

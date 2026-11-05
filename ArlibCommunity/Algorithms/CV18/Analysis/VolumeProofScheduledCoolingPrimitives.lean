@@ -4,6 +4,7 @@ Released under Apache 2.0 license, as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledParameters
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledRetrySemantics
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Executable cooling primitives at schedule-targeted geometry
 
@@ -43,7 +44,7 @@ theorem scheduledBalancedAccuracyRetryCollectLaw_measurable_and_probability
     letI : IsProbabilityMeasure
         (balancedRetryCollectLawAux B R weight retryLimit retryLimit samples
           0 current) := hraw.2 0 current
-    exact Measure.isProbabilityMeasure_map hout.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hout.aemeasurable
 
 /-- One averaged Gaussian cooling phase driven by the scheduled-body sampler. -/
 noncomputable def scheduledBalancedCoolingRatioEstimate

@@ -3,6 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license, as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBalancedCoolingHistory
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Full balanced Figure-One history and structural cost
@@ -180,7 +181,7 @@ theorem balancedCoolingUniformLawWithState_measurable_and_probability
         (balancedAccuracyTransitionCollectLaw q I sigma2 weight cap stride retries
           samples 0 (accuracyScaleFactor q • current)) :=
       htransition.2 0 (accuracyScaleFactor q • current)
-    exact Measure.isProbabilityMeasure_map havg.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable havg.aemeasurable
 
 /-- Append the terminal phase to a successful Gaussian history. -/
 noncomputable def balancedCoolingHistorySnocTerminal
@@ -205,7 +206,7 @@ theorem measurable_balancedCoolingHistorySnocTerminal :
     have hsequence : Measurable fun value : BalancedCoolingHistory n ×
         (ℝ × AmbientSpace n) =>
         fun k => if k = value.1.2.1 then value.2.1 else value.1.1 k := by
-      refine measurable_pi_lambda _ fun k => ?_
+      refine Measurable.of_eval fun k => ?_
       apply Measurable.ite
       · exact measurableSet_eq_fun measurable_const
           (measurable_fst.comp (measurable_snd.comp measurable_fst))
@@ -279,7 +280,7 @@ theorem balancedFigureOneFullHistoryLaw_measurable_and_probability
         let _ : IsProbabilityMeasure
             (balancedCoolingUniformLawWithState parameters q I
               (terminalVariance q) value.2.2.2) := hterminal.2 value.2.2.2
-        exact Measure.isProbabilityMeasure_map <|
+        exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable <|
           (measurable_balancedCoolingHistorySnocTerminal.comp
             (measurable_const.prodMk measurable_id)).aemeasurable
   constructor

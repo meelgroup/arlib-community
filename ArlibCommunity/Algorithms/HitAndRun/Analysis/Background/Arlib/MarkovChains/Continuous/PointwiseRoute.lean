@@ -285,7 +285,7 @@ theorem prodTent_le_one (x p : EuclideanSpace ℝ (Fin n)) : prodTent x p ≤ 1 
     simp only [tent]
     exact max_le (by linarith) zero_le_one
   simp only [prodTent]
-  exact Finset.prod_le_one (fun i _ => tent_nonneg _) fun i _ => h i
+  exact Finset.prod_le_one₀ (fun i _ => tent_nonneg _) fun i _ => h i
 
 /-- The uniform average of the rounding kernel is the set integral over `S`, scaled by the
 volume.  `Arlib.integral_uniformOn_real`, specialised. -/

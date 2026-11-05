@@ -8,6 +8,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledCoolingPrimit
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledParameters
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledCounted
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofLocalCapPrefix
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Chronological complete-phase law at the schedule-targeted geometry
@@ -302,7 +303,7 @@ theorem scheduledBalancedCoolingRatioTransitionLaw_measurable_and_probability
         (scheduledBalancedTransitionCollectLaw q I sigma2 weight cap stride
           retries samples 0 (accuracyScaleFactor q • current)) :=
       hcollect.2 0 (accuracyScaleFactor q • current)
-    exact Measure.isProbabilityMeasure_map havg.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable havg.aemeasurable
 
 /-- Scheduled terminal phase at the measure level. -/
 noncomputable def scheduledBalancedCoolingUniformTransitionLaw
@@ -354,7 +355,7 @@ theorem scheduledBalancedCoolingUniformTransitionLaw_measurable_and_probability
         (scheduledBalancedTransitionCollectLaw q I sigma2 weight cap stride
           retries samples 0 (accuracyScaleFactor q • current)) :=
       hcollect.2 0 (accuracyScaleFactor q • current)
-    exact Measure.isProbabilityMeasure_map havg.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable havg.aemeasurable
 
 /-- One schedule-targeted phase appended to a chronological history. -/
 noncomputable def scheduledBalancedForwardPhaseKernel
@@ -430,13 +431,13 @@ theorem scheduledBalancedForwardPhaseKernel_measurable_and_probability
               (scheduledBalancedCoolingRatioTransitionLaw parameters q I
                 (scheduleValue q phase) (scheduleValue q (phase + 1))
                 history.2.2.2) := hgaussian.2 _
-          exact Measure.isProbabilityMeasure_map
+          exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
             ((measurable_balancedCoolingHistorySnocTerminal (n := q.n)).comp
               (measurable_const.prodMk measurable_id)).aemeasurable
         · let _ : IsProbabilityMeasure
               (scheduledBalancedCoolingUniformTransitionLaw parameters q I
                 (terminalVariance q) history.2.2.2) := hterminal.2 _
-          exact Measure.isProbabilityMeasure_map
+          exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
             ((measurable_balancedCoolingHistorySnocTerminal (n := q.n)).comp
               (measurable_const.prodMk measurable_id)).aemeasurable
 
@@ -458,7 +459,7 @@ theorem scheduledBalancedForwardHistoryLaw_isProbabilityMeasure
       (scheduledBalancedForwardHistoryLaw parameters q I phases) := by
   unfold scheduledBalancedForwardHistoryLaw
   apply iteratedKernelLaw_isProbabilityMeasure
-  · exact Measure.isProbabilityMeasure_map
+  · exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       measurable_balancedCoolingInitialHistory.aemeasurable
   · intro i
     exact (scheduledBalancedForwardPhaseKernel_measurable_and_probability
@@ -701,7 +702,7 @@ theorem carryHistoryKernel_measurable_and_probability
   · intro state
     unfold carryHistoryKernel
     let _ : IsProbabilityMeasure (K phase state.2) := hKprob phase state.2
-    exact Measure.isProbabilityMeasure_map
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (measurable_const.prodMk measurable_id).aemeasurable
 
 theorem map_snd_bind_carryHistoryKernel
@@ -1074,7 +1075,7 @@ theorem figureOneIdealChronologicalIteration_map_output
       unfold scheduledChronologicalCommonInitial
       let _ : IsProbabilityMeasure initialHistory := by
         dsimp only [initialHistory]
-        exact Measure.isProbabilityMeasure_map
+        exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
           measurable_balancedCoolingInitialHistory.aemeasurable
       rw [Measure.map_fst_prod, measure_univ, one_smul]
 

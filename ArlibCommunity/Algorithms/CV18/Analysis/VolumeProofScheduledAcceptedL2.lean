@@ -265,7 +265,7 @@ theorem truncatedGaussianProbability_scheduledAcceptance_map_le_self
     q I sigma2 nu
   change (nu.withDensity
       (scheduledAccuracyGaussianRejectionAcceptance q I sigma2)).map scale ≤ nu
-  rw [hsource, hrestrict, Measure.map_smul, withDensity_smul_measure,
+  rw [hsource, hrestrict, Measure.map_smul (hf := by fun_prop), withDensity_smul_measure,
     hmapCond]
   have hproposalDensity :
       (Arlib.condOn proposalGaussian K).withDensity g =
@@ -387,7 +387,7 @@ theorem stationary_scheduledAcceptedSubmeasure_le_four_target
     change Measurable scale
     exact (measurable_const : Measurable fun _ : AmbientSpace q.n =>
       (accuracyScaleFactor q)⁻¹).smul measurable_id)
-  rw [Measure.map_smul] at hmap
+  rw [Measure.map_smul (hf := by fun_prop)] at hmap
   have hself := truncatedGaussianProbability_scheduledAcceptance_map_le_self
     q I hsigma2
   change (pi.withDensity accept).map scale ≤ 4 • nu

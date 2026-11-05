@@ -3,6 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBalancedMappedLawAssembly
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Chronological prefix laws for the balanced CV18 cooling program
@@ -146,7 +147,7 @@ theorem balancedCoolingForwardGaussianPhaseKernel_isProbabilityMeasure
             history.2.2.2) :=
         (balancedCoolingRatioLaw_measurable_and_probability parameters q I
           (scheduleValue_pos q phase) (scheduleValue q (phase + 1))).2 _
-      exact Measure.isProbabilityMeasure_map
+      exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
         ((measurable_balancedCoolingHistorySnocTerminal (n := q.n)).comp
           (measurable_const.prodMk measurable_id)).aemeasurable
 
@@ -202,7 +203,7 @@ theorem balancedCoolingForwardTerminalPhaseKernel_isProbabilityMeasure
             (terminalVariance q) history.2.2.2) :=
         (balancedCoolingUniformLawWithState_measurable_and_probability
           parameters q I (terminalVariance_pos' q)).2 _
-      exact Measure.isProbabilityMeasure_map
+      exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
         ((measurable_balancedCoolingHistorySnocTerminal (n := q.n)).comp
           (measurable_const.prodMk measurable_id)).aemeasurable
 
@@ -258,7 +259,7 @@ theorem balancedFigureOneForwardHistoryLaw_isProbabilityMeasure
       (balancedFigureOneForwardHistoryLaw parameters q I phases) := by
   unfold balancedFigureOneForwardHistoryLaw
   apply iteratedKernelLaw_isProbabilityMeasure
-  · exact Measure.isProbabilityMeasure_map
+  · exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       measurable_balancedCoolingInitialHistory.aemeasurable
   · exact balancedFigureOneForwardPhaseKernel_measurable parameters q I
   · exact balancedFigureOneForwardPhaseKernel_isProbabilityMeasure parameters q I

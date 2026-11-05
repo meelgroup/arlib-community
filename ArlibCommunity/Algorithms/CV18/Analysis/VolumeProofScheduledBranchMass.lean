@@ -1,4 +1,5 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledAcceptanceMass
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 namespace ArlibCommunity.Algorithms.CV18
 
@@ -59,7 +60,7 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge
   let _ : IsProbabilityMeasure (Arlib.condOn pi core) :=
     Arlib.isProbabilityMeasure_condOn pi hcore0 hcoretop
   let _ : IsProbabilityMeasure source :=
-    Measure.isProbabilityMeasure_map (by fun_prop)
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
   have hscaled : 0 < sigma2 / c ^ 2 := by positivity
   have hprop0 :
       ((volume : Measure (AmbientSpace q.n)).withDensity
@@ -108,7 +109,7 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge
   have hsourceScale :
       ((pi.restrict core).map scale).withDensity g =
         pi core • (source.withDensity g) := by
-    rw [hrestrict, Measure.map_smul, withDensity_smul_measure]
+    rw [hrestrict, Measure.map_smul (hf := by fun_prop), withDensity_smul_measure]
   have hmeasure := map_withDensity_scheduledAccuracyRejectionAcceptance
     q I sigma2 pi
   have htotal := congrArg

@@ -66,7 +66,7 @@ theorem setIntegral_mono_set_of_nonneg {h : EuclideanSpace ℝ (Fin n) → ℝ}
     {A B : Set (EuclideanSpace ℝ (Fin n))} (hAB : A ⊆ B) :
     ∫ x in A, h x ≤ ∫ x in B, h x :=
   setIntegral_mono_set hhi.integrableOn (Filter.Eventually.of_forall fun x => hh0 x)
-    (HasSubset.Subset.eventuallyLE hAB)
+    (LE.le.eventuallyLE hAB)
 
 /-- The mass of `S` outside a compact `C ⊆ S` that already carries all but `ε`. -/
 theorem setIntegral_sdiff_le_of_compact_ge {h : EuclideanSpace ℝ (Fin n) → ℝ}

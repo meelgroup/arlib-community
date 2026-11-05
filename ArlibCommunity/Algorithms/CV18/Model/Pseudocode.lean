@@ -153,8 +153,8 @@ theorem MembershipOracleProgram.QueryBound.toMembershipCostBoundFrom
   induction h with
   | pure result budget =>
       intro drawIndex oracle choices
-      change 0 ≤ budget
-      exact Nat.zero_le budget
+      simp only [chargedMembershipRunFrom]
+      exact (Arlib.Computation.Charged.steps_pure _ result).trans_le (Nat.zero_le budget)
   | query point next budget hnext ih =>
       intro drawIndex oracle choices
       simp only [chargedMembershipRunFrom, Arlib.Computation.Charged.steps_bind,

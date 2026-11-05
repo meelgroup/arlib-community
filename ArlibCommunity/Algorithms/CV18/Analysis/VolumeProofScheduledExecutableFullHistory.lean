@@ -4,6 +4,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license, as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledExecutableCoolingHistory
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Exact full scheduled Figure-One history law -/
 
@@ -72,7 +73,7 @@ theorem scheduledExecutableFigureOneFullHistoryLaw_measurable_and_probability
         let _ : IsProbabilityMeasure
             (scheduledBalancedCoolingUniformCollectorLawWithState parameters q I
               (terminalVariance q) value.2.2.2) := hterminal.2 value.2.2.2
-        exact Measure.isProbabilityMeasure_map <|
+        exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable <|
           (measurable_balancedCoolingHistorySnocTerminal.comp
             (measurable_const.prodMk measurable_id)).aemeasurable
   constructor

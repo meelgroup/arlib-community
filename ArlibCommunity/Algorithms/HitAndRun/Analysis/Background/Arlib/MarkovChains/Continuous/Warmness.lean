@@ -195,7 +195,7 @@ theorem isWarm_step {M : ℝ≥0∞} {μ pi : Measure Ω} {P : Kernel Ω Ω} (h 
     (hpi : step P pi = pi) : IsWarm M (step P μ) pi := by
   refine (isWarm_iff_le_smul _ _).2 ?_
   have hle : step P μ ≤ step P (M • pi) := step_mono P ((isWarm_iff_le_smul _ _).1 h)
-  have hsm : step P (M • pi) = M • pi := by rw [step, Measure.bind_smul, ← step, hpi]
+  have hsm : step P (M • pi) = M • pi := by rw [step, Measure.bind_smul _ _ P.aemeasurable, ← step, hpi]
   rwa [hsm] at hle
 
 /-- **Warmness is preserved forever.**  A chain started from an `M`-warm law is `M`-warm at

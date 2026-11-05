@@ -3,6 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license, as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledCapAllocation
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Finite-retry approximation at scheduled geometry
 
@@ -77,7 +78,7 @@ theorem scheduledBalancedAccuracyGaussianRejectionKernel_map_recover
     scheduledBalancedAccuracyDecisionLaw q I sigma2 current
   unfold scheduledBalancedAccuracyGaussianRejectionLaw
     scheduledBalancedAccuracyDecisionLaw
-  rw [Measure.map_add _ _ hrecover, Measure.map_smul, Measure.map_smul,
+  rw [Measure.map_add _ _ hrecover, Measure.map_smul (hf := by fun_prop), Measure.map_smul (hf := by fun_prop),
     Measure.map_dirac' hrecover, Measure.map_dirac' hrecover]
   have hcancel : accuracyScaleFactor q •
       ((accuracyScaleFactor q)⁻¹ • current) = current := by
@@ -448,7 +449,7 @@ theorem bind_scheduledBalancedAccuracyTransitionLawAux_succ_eq_pipeline
   have hBMprob : ∀ current, IsProbabilityMeasure (BM current) := by
     intro current
     dsimp only [BM]
-    exact Measure.isProbabilityMeasure_map measurable_optionSnd.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_optionSnd.aemeasurable
   let BD : AmbientSpace q.n →
       Measure (Option (Bool × AmbientSpace q.n)) :=
     fun current => (BM current).bind (optionKernel D)
@@ -593,7 +594,7 @@ theorem bind_scheduledBalancedRejectedTransition_leUpTo_acceptedTarget
       q I hsigma2 pi hacceptedLower
     change (accepted.map
       (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some = _
-    rw [hbase, Measure.map_smul]
+    rw [hbase, Measure.map_smul (hf := measurable_some.aemeasurable)]
   have hrejectedNormalize : rejected = rejectMass • rejectedProb := by
     exact measure_eq_mass_smul_condOn_univ rejected hrejected0 hrejectedTop
   intro attempts
@@ -616,7 +617,8 @@ theorem bind_scheduledBalancedRejectedTransition_leUpTo_acceptedTarget
       have hrejectedBind :
           rejected.bind (E attempts) =
             rejectMass • (rejectedProb.bind (E attempts)) := by
-        rw [hrejectedNormalize, Measure.bind_smul]
+        rw [hrejectedNormalize, Measure.bind_smul (hf := (scheduledBalancedAccuracyTransitionLawAux_measurable_and_probability
+          q I hsigma2 proposalCap properStride attempts).1.aemeasurable)]
       rw [← hrejectedBind] at hscaled
       have hadd := hscaled.add_left
         ((accepted.map
@@ -695,7 +697,7 @@ theorem bind_scheduledBalancedTransition_leUpTo_acceptedTarget
       q I hsigma2 pi hacceptedLower
     change (accepted.map
       (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some = _
-    rw [hbase, Measure.map_smul]
+    rw [hbase, Measure.map_smul (hf := measurable_some.aemeasurable)]
   have hrejectedNormalize : rejected = rejectMass • rejectedProb :=
     measure_eq_mass_smul_condOn_univ rejected hrejected0 hrejectedTop
   have hretry := bind_scheduledBalancedRejectedTransition_leUpTo_acceptedTarget
@@ -704,7 +706,8 @@ theorem bind_scheduledBalancedTransition_leUpTo_acceptedTarget
   have hscaled := hretry.smul (c := rejectMass)
   have hrejectedBind : rejected.bind (E attempts) =
       rejectMass • (rejectedProb.bind (E attempts)) := by
-    rw [hrejectedNormalize, Measure.bind_smul]
+    rw [hrejectedNormalize, Measure.bind_smul (hf := (scheduledBalancedAccuracyTransitionLawAux_measurable_and_probability
+          q I hsigma2 proposalCap properStride attempts).1.aemeasurable)]
   rw [← hrejectedBind] at hscaled
   have hadd := hscaled.add_left
     ((accepted.map (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some)
@@ -802,7 +805,7 @@ theorem bind_scheduledBalancedTransition_tvLe_acceptedTarget
     scheduledBalancedAccuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_of_lower
       q I hsigma2 pi hacceptedLower
   let _ : IsProbabilityMeasure (target.map some) :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   have hdom := bind_scheduledBalancedTransition_leUpTo_acceptedTarget
     q I hsigma2 proposalCap properStride attempts rho pi
       hacceptedLower hrejectedLower hfirstBlock hretryBlock

@@ -3,6 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofExpectedQueryCost
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Inequality interface for compositional expected query cost -/
 
@@ -60,7 +61,7 @@ theorem MembershipOracleProgram.countedQueryCost_bind_le_add
       hprogram.executionMeasurable
   have hprob : IsProbabilityMeasure (program.runEstimate oracle) := by
     rw [program.runEstimate_eq_map_fst_run oracle hprogram.executionMeasurable]
-    exact Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_fst.aemeasurable
   let _ : IsProbabilityMeasure (program.runEstimate oracle) := hprob
   calc
     (∫⁻ result, countedQueryCost ((next result).run oracle)

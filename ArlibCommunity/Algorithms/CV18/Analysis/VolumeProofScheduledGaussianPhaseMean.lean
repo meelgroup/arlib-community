@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGaussianEndpointMean
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceRawMeanApprox
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # First moment of the complete scheduled Gaussian phase
@@ -186,7 +187,7 @@ theorem integral_iterated_retainedSumKernel_total_eq_sum_marginals_of_memLp
     dsimp only [endpoint]
     exact iteratedKernelLaw_isProbabilityMeasure
       (fun _ => K) (initial.map retainedSumState)
-      (Measure.isProbabilityMeasure_map measurable_snd.aemeasurable)
+      (ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_snd.aemeasurable)
       (fun _ => hK) (fun _ => hKprob) (i + 1)
   have hshadow0 : ∀ᵐ state ∂shadow, 0 ≤ state.1 :=
     iterated_retainedSumKernel_ae_total_nonnegative
@@ -475,7 +476,7 @@ theorem integral_figureOneScheduledGaussianShadow_average_lower
   have hinitialMap : Measurable initialMap := hweight.prodMk measurable_some
   let _ : IsProbabilityMeasure exact := inferInstance
   let _ : IsProbabilityMeasure initial :=
-    Measure.isProbabilityMeasure_map hinitialMap.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hinitialMap.aemeasurable
   have hinitial0 : ∀ᵐ state ∂initial, 0 ≤ state.1 := by
     apply (ae_map_iff hinitialMap.aemeasurable
       (measurableSet_le measurable_const measurable_fst)).2
@@ -671,7 +672,7 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower
     K hK.1 hK.2 weight hweight
   let _ : IsProbabilityMeasure exact := inferInstance
   let _ : IsProbabilityMeasure initial :=
-    Measure.isProbabilityMeasure_map
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (hweight.prodMk measurable_some).aemeasurable
   let _ : IsProbabilityMeasure shadow :=
     iteratedKernelLaw_isProbabilityMeasure

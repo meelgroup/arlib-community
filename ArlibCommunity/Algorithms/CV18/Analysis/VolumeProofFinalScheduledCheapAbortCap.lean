@@ -1,6 +1,7 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledIdealPhase
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofCountedHybridCap
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # The cheap initial-abort branch and the final global query cap
 
@@ -80,7 +81,7 @@ theorem exists_figureOneFinalScheduledIdealGaussianCountedReference
     let _ : IsProbabilityMeasure
         (figureOneFinalScheduledIdealPhaseStart q I 0) :=
       figureOneFinalScheduledIdealPhaseStart_isProbabilityMeasure q I 0
-    exact Measure.isProbabilityMeasure_map (by fun_prop)
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
   have hreference := exists_countedReference_iteratedKernelLaw
     (figureOneFinalScheduledGaussianCountedKernel q oracle.query)
     (figureOneFinalScheduledIdealCountedInitial q I) ideal
@@ -110,7 +111,7 @@ theorem exists_figureOneFinalScheduledIdealGaussianCountedReference
         MembershipOracleProgram.run_isProbabilityMeasure oracle.query _
           ((figureOneFinalScheduledRetainedGaussianPhaseProgram_countedMeasurable
             q I oracle phase).2 state.1).executionMeasurable
-      exact Measure.isProbabilityMeasure_map (by fun_prop))
+      exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop))
     (fun phase rho _hrho hmarginal => by
       have hprogram :=
         figureOneFinalScheduledRetainedGaussianPhaseProgram_countedMeasurable
@@ -192,7 +193,7 @@ theorem exists_figureOneFinalScheduledIdealCompleteCountedReference
               oracle.query) :=
           MembershipOracleProgram.run_isProbabilityMeasure oracle.query _
             (hterminal.2 state.1).executionMeasurable
-        exact Measure.isProbabilityMeasure_map (by fun_prop))
+        exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop))
   · have hcostEq :=
       MembershipOracleProgram.countedQueryCost_bind_countedContinuation
         oracle.query gaussianReference
@@ -240,7 +241,7 @@ theorem figureOneFinalScheduledCountedLawFromInitial_measurable_and_probability
       MembershipOracleProgram.run_isProbabilityMeasure oracle.query _
         ((figureOneFinalScheduledRetainedGaussianPhaseProgram_countedMeasurable
           q I oracle phase).2 state.1).executionMeasurable
-    exact Measure.isProbabilityMeasure_map (by fun_prop)
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
   have hterminal :=
     figureOneFinalScheduledRetainedTerminalProgram_countedMeasurable q I oracle
   have hterminalMeas : Measurable terminalK := by
@@ -254,7 +255,7 @@ theorem figureOneFinalScheduledCountedLawFromInitial_measurable_and_probability
           oracle.query) :=
       MembershipOracleProgram.run_isProbabilityMeasure oracle.query _
         (hterminal.2 state.1).executionMeasurable
-    exact Measure.isProbabilityMeasure_map (by fun_prop)
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
   have hiter := iteratedKernelLaw_dirac_measurable_and_probability
     phaseK hphaseMeas hphaseProb (terminalPhaseSteps q)
   constructor
@@ -304,7 +305,7 @@ theorem bind_figureOneFinalScheduledCountedLawFromInitial
       MembershipOracleProgram.run_isProbabilityMeasure oracle.query _
         ((figureOneFinalScheduledRetainedGaussianPhaseProgram_countedMeasurable
           q I oracle phase).2 state.1).executionMeasurable
-    exact Measure.isProbabilityMeasure_map (by fun_prop)
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
   have hterminal :=
     figureOneFinalScheduledRetainedTerminalProgram_countedMeasurable q I oracle
   have hterminalMeas : Measurable terminalK := by

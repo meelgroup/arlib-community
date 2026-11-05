@@ -5,6 +5,7 @@ Released under Apache 2.0 license, as described in the file LICENSE.
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBalancedFullHistory
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBalancedPhaseInstantiation
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofPhaseMomentAssembly
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Ordered balanced-history variables for the CV18 moment argument
@@ -438,7 +439,7 @@ theorem balancedFigureOneFullHistoryRetainedLaw_isProbabilityMeasure
       (balancedFigureOneFullHistoryLaw parameters q I point) :=
     (balancedFigureOneFullHistoryLaw_measurable_and_probability
       parameters q I).2 point
-  exact Measure.isProbabilityMeasure_map
+  exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
     (measurable_balancedCoolingHistoryRetainedState q).aemeasurable
 
 theorem memLp_balancedFigureOneFullHistory_chronologicalPhaseVariableClamped

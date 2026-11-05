@@ -1,5 +1,6 @@
 /- Copyright (c) 2026. All rights reserved. Released under Apache 2.0. -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceRetainedInduction
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Accepted-target reference for the initial scheduled trace
@@ -34,7 +35,7 @@ theorem scheduledBalancedInitialAcceptedTraceReference_isProbabilityMeasure
   let _ : IsProbabilityMeasure (figureOneScheduledAcceptedTargetAt q I 0) :=
     figureOneScheduledAcceptedTargetAt_isProbabilityMeasure q I 0
   unfold scheduledBalancedInitialAcceptedTraceReference
-  exact Measure.isProbabilityMeasure_map
+  exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
     measurable_scheduledBalancedInitialTrace.aemeasurable
 
 /-- The executable exact-Gaussian initial trace is dominated by the accepted

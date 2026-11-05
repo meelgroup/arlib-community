@@ -38,7 +38,7 @@ theorem measurable_balancedCoolingHistoryConcat_left
     Measurable (balancedCoolingHistoryConcat head) := by
   unfold balancedCoolingHistoryConcat
   apply Measurable.prodMk
-  · refine measurable_pi_lambda _ fun k => ?_
+  · refine Measurable.of_eval fun k => ?_
     by_cases hk : k < head.2.1
     · simp only [hk, if_true]
       exact measurable_const

@@ -3,6 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofChronologicalDependentAssembly
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Concrete chronological ideal coordinates for the CV18 exact-chance argument
@@ -818,7 +819,7 @@ theorem balancedFigureOneBase_failure_le_of_directPostInitial
         parameters q I oracle point]
     let _ : IsProbabilityMeasure
         (balancedFigureOneFullHistoryLaw parameters q I point) := hfull.2 point
-    exact Measure.isProbabilityMeasure_map hestimate.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hestimate.aemeasurable
   have hbaseLaw :
       (baseVolumeCooling (balancedCoolingPrimitives parameters)
           explicitVolumeCoolingSchedule q).runEstimate oracle.query =

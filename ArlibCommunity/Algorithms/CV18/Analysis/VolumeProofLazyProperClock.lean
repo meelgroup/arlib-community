@@ -326,7 +326,7 @@ noncomputable def lazyProperProposalTrajectoryKernel
     (Kernel.traj (X := fun _ : ℕ => Bool × GaussianState n)
       (chainKernel (lazyProperProposalGaussianLift K hK delta s)) 0)
     (fun x (_ : ↥(Finset.Iic 0)) => (false, x))
-    (measurable_pi_lambda _ fun _ => measurable_const.prodMk measurable_id)
+    (Measurable.of_eval fun _ => measurable_const.prodMk measurable_id)
 
 instance (K : Set (GaussianState n)) (hK : MeasurableSet K) (delta s : ℝ) :
     IsMarkovKernel (lazyProperProposalTrajectoryKernel K hK delta s) := by

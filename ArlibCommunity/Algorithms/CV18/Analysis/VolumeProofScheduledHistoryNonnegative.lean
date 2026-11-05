@@ -1,5 +1,6 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledChronologicalPhase
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledConcreteTransition
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 open MeasureTheory ProbabilityTheory
 
@@ -368,9 +369,9 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_warm
     (truncatedGaussianProbability q I sigma2 hsigma2 :
       Measure (AmbientSpace q.n)).map some
   let _ : IsProbabilityMeasure target :=
-    Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   let _ : IsProbabilityMeasure (history.map state) :=
-    Measure.isProbabilityMeasure_map hstate.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hstate.aemeasurable
   let delta := figureOneCorrectedTransitionBudget q
   have hdelta : delta ≠ ⊤ := by
     simp [delta, figureOneCorrectedTransitionBudget]

@@ -5,6 +5,7 @@ Released under Apache 2.0 license, as described in the file LICENSE.
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependence
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofMeasureApproximation
 import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Probability.Rejection
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Sequential laws and CV18 approximate independence
@@ -66,7 +67,7 @@ theorem sequentialPairLaw_isProbabilityMeasure
   unfold sequentialPairLaw
   have hpair := measurable_sequentialPairKernel (rho := rho) hK hKprob
   exact isProbabilityMeasure_bind hpair.aemeasurable <|
-    ae_of_all rho fun h => Measure.isProbabilityMeasure_map (by fun_prop)
+    ae_of_all rho fun h => ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
 
 /-- A measurable rectangle in the sequential pair law is the next kernel
 integrated over the restricted previous law. -/
@@ -129,7 +130,7 @@ theorem real_restrict_bind_eq_mul_condOn_bind
   have hAtop : rho A ≠ ⊤ := measure_ne_top rho A
   have hbind : (Arlib.condOn rho A).bind K =
       (rho A)⁻¹ • ((rho.restrict A).bind K) := by
-    rw [Arlib.condOn_def, Measure.bind_smul]
+    rw [Arlib.condOn_def, Measure.bind_smul (hf := by fun_prop)]
   have hENN : rho A * ((Arlib.condOn rho A).bind K B) =
       (rho.restrict A).bind K B := by
     rw [hbind, Measure.smul_apply, smul_eq_mul, ← mul_assoc,
@@ -306,7 +307,7 @@ theorem approxIndepFun_history_next_of_state_warm_leUpTo
   intro mu hmu hwarm
   let _ : IsProbabilityMeasure mu := hmu
   let hmuMapProb : IsProbabilityMeasure (mu.map state) :=
-    Measure.isProbabilityMeasure_map hstate.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hstate.aemeasurable
   have hprojected := happrox (mu.map state) hmuMapProb
     (isWarm_map hwarm hstate)
   rw [map_bind_eq_bind_comp_state mu hstate hK] at hprojected

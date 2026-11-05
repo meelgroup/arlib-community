@@ -3,6 +3,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofKilledCollectorInitial
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofKilledCollectorConditionedTransition
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGaussianEndpointMean
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofKilledCollectorDependenceArithmetic
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Prefix independence for the scheduled initialized collector
@@ -57,7 +58,7 @@ theorem approxIndepFun_history_next_of_state_warm_base_leUpTo
       (ae_of_all _ fun history => hKprob (state history))
   have hprojectedProb : IsProbabilityMeasure
       ((Arlib.condOn rho A).map state) :=
-    Measure.isProbabilityMeasure_map hstate.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hstate.aemeasurable
   have hcond := hconditioned ((Arlib.condOn rho A).map state)
     hprojectedProb (isWarm_map (isWarm_condOn_two_of_half rho hA hhalf) hstate)
   rw [map_bind_eq_bind_comp_state (Arlib.condOn rho A) hstate hK] at hcond
@@ -137,7 +138,7 @@ theorem initializedScheduledRetainedHistoryLaw_isProbabilityMeasure
       q I (scheduleValue_pos q phase)
   have hinitial : IsProbabilityMeasure initial := by
     dsimp [initial]
-    exact Measure.isProbabilityMeasure_map
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       measurable_retainedSampleHistoryWithFirst.aemeasurable
   simpa [initializedScheduledRetainedHistoryLaw, exact, initial, K] using
     (iteratedKernelLaw_isProbabilityMeasure
@@ -212,7 +213,7 @@ theorem approxIndepFun_initializedScheduledRetainedHistory_prefix_next
         q I phase i
   have hexactSome : IsProbabilityMeasure exactSome := by
     dsimp [exactSome]
-    exact Measure.isProbabilityMeasure_map measurable_some.aemeasurable
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   let _ : IsProbabilityMeasure rho := hrho
   let _ : IsProbabilityMeasure exactSome := hexactSome
   have hbaseEndpoint : MeasureLeUpTo

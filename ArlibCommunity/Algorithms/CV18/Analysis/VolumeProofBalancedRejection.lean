@@ -376,7 +376,7 @@ theorem balancedAccuracyGaussianAcceptedTargetLaw_eq
   change Arlib.condOn (((2 : ENNReal)⁻¹ •
       mu.withDensity (accuracyGaussianRejectionAcceptance q I sigma2)).map
         scale) Set.univ = _
-  rw [Measure.map_smul]
+  rw [Measure.map_smul (hf := by fun_prop)]
   exact Arlib.MarkovChains.condOn_smul_cv18 _ MeasurableSet.univ
     (by norm_num) (by norm_num)
 

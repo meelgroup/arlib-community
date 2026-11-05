@@ -1,4 +1,5 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofBalancedRetryProgram
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 open MeasureTheory ProbabilityTheory
 
@@ -112,7 +113,7 @@ theorem lossTraceKernel_measurable_and_probability
     | true =>
         unfold lossTraceKernel
         let _ : IsProbabilityMeasure (K current) := hKprob current
-        exact Measure.isProbabilityMeasure_map
+        exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
           ((measurable_lossTraceResult onFailure honFailure).comp
             (measurable_const.prodMk measurable_id)).aemeasurable
 

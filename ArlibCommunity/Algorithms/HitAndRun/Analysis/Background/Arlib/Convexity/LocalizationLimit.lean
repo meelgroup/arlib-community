@@ -212,7 +212,7 @@ theorem exists_subseq_tendsto_hausdorffDist {K : Set E} (hK : IsCompact K) {C : 
     (NonemptyCompacts.isCompact_subsets_of_isCompact hK).tendsto_subseq hmem
   refine ⟨φ, hφ, (a : Set E), a.nonempty, a.isCompact, ha, ?_⟩
   have h := tendsto_iff_dist_tendsto_zero.mp htend
-  simpa only [Function.comp_apply, NonemptyCompacts.dist_eq, hcoe] using h
+  simpa only [Function.comp_apply, TopologicalSpace.NonemptyCompacts.dist_eq, hcoe] using h
 
 /-- **Blaschke selection theorem for convex bodies.**  A sequence of nonempty compact convex
 subsets of a fixed compact set has a subsequence converging in Hausdorff distance to a nonempty

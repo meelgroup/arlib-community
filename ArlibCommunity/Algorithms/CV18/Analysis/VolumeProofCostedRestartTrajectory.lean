@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofProperStoppedTrajectory
 import Mathlib.Probability.Kernel.MeasurableLIntegral
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Finite independently restarted costed Markov executions
@@ -62,7 +63,7 @@ noncomputable def zeroCostLaw (μ : Measure S) : Measure (ℝ≥0∞ × S) :=
 
 instance (μ : Measure S) [IsProbabilityMeasure μ] : IsProbabilityMeasure (zeroCostLaw μ) := by
   unfold zeroCostLaw
-  exact Measure.isProbabilityMeasure_map (by fun_prop)
+  exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
 
 /-- Infinite path law of independently restarted costed experiments.  Consumers use only a
 finite prefix, indexed by their requested number of steps. -/

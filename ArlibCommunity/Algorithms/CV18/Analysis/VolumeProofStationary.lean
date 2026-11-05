@@ -150,7 +150,7 @@ theorem centeredClosedBallMeasure_map_neg (n : ℕ) {radius : ℝ}
   change Measure.map (fun x : AmbientSpace n => -x)
       (finite.normalize : Measure (AmbientSpace n)) =
     (finite.normalize : Measure (AmbientSpace n))
-  rw [finite.toMeasure_normalize_eq_of_nonzero hfinite, Measure.map_smul]
+  rw [finite.toMeasure_normalize_eq_of_nonzero hfinite, Measure.map_smul (hf := by fun_prop)]
   exact congrArg (fun μ : Measure (AmbientSpace n) => finite.mass⁻¹ • μ)
     (volume_restrict_centeredClosedBall_map_neg n radius)
 

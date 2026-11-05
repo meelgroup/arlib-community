@@ -1,4 +1,5 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledHistoryNonnegative
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 open MeasureTheory ProbabilityTheory
 
@@ -47,7 +48,7 @@ theorem measurable_balancedCoolingHistoryAppend :
   have hsequence : Measurable fun value :
       BalancedCoolingHistory n × (ℝ × AmbientSpace n) =>
       fun k => if k = value.1.2.1 then value.2.1 else value.1.1 k := by
-    refine measurable_pi_lambda _ fun k => ?_
+    refine Measurable.of_eval fun k => ?_
     apply Measurable.ite
     · exact measurableSet_eq_fun measurable_const
         (measurable_fst.comp (measurable_snd.comp measurable_fst))
@@ -201,7 +202,7 @@ theorem scheduledBalancedTracePhaseKernel_measurable_and_probability
     let _ : IsProbabilityMeasure
         (scheduledBalancedTracePhaseObservationLaw parameters q I phase trace) :=
       hobs.2 trace
-    exact Measure.isProbabilityMeasure_map
+    exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       ((measurable_scheduledBalancedCoolingTraceAppend (n := q.n)).comp
         (measurable_const.prodMk measurable_id)).aemeasurable
 
@@ -488,7 +489,7 @@ theorem scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       (scheduledBalancedForwardTraceLaw parameters q I phases) := by
   unfold scheduledBalancedForwardTraceLaw
   apply iteratedKernelLaw_isProbabilityMeasure
-  · exact Measure.isProbabilityMeasure_map
+  · exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       measurable_scheduledBalancedInitialTrace.aemeasurable
   · intro phase
     exact (scheduledBalancedTracePhaseKernel_measurable_and_probability

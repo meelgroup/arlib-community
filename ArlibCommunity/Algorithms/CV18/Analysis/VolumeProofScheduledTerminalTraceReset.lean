@@ -3,6 +3,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledChronological
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledChronologicalResetStep
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.SequentialRecordedKernelPreservation
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.RecordedKernelResetIndependence
+import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
 # Terminal specialization of the chronological trace reset
@@ -318,14 +319,14 @@ theorem exists_scheduledTerminalTraceRecordedReset
   let _ : IsProbabilityMeasure raw := hrawProb
   have hpairedProb : IsProbabilityMeasure (raw.map
       (fun state => (state.1, scheduledResetPairOutput state.2))) :=
-    Measure.isProbabilityMeasure_map hpairMap.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hpairMap.aemeasurable
   let _ : IsProbabilityMeasure (raw.map
       (fun state => (state.1, scheduledResetPairOutput state.2))) := hpairedProb
   have hpairedSndProb : IsProbabilityMeasure
       ((raw.map
         (fun state => (state.1, scheduledResetPairOutput state.2))).map
           Prod.snd) :=
-    Measure.isProbabilityMeasure_map measurable_snd.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_snd.aemeasurable
   let _ : IsProbabilityMeasure
       ((raw.map
         (fun state => (state.1, scheduledResetPairOutput state.2))).map
@@ -522,7 +523,7 @@ theorem exists_scheduledTerminalTraceRecordedReset_with_prefix
   let _ : IsProbabilityMeasure
       ((sequentialPairLaw source
         (scheduledResetPairKernel q I phase)).map Prod.snd) :=
-    Measure.isProbabilityMeasure_map measurable_snd.aemeasurable
+    ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_snd.aemeasurable
   obtain ⟨reference, hreferenceProb, hcomparison, hnewLaw, holdLaw,
       hindReference, hsupport⟩ :=
     exists_scheduledTraceRecordedReset_with_approxIndep

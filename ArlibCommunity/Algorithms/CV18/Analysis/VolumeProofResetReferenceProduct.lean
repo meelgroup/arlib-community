@@ -61,7 +61,7 @@ theorem figureOneResetReferenceMomentFactor_budget
       (figureOneResetReferenceMomentFactor q) i ≤
       dependentPhaseMeanProduct (figureOneExecutableMomentFactor q) i := by
     unfold dependentPhaseMeanProduct
-    apply Finset.prod_le_prod
+    apply Finset.prod_le_prod₀
     · intro j hj
       exact figureOneResetReferenceMomentFactor_nonneg q (j + 1)
     · intro j hj
@@ -378,7 +378,7 @@ theorem figureOneChronologicalRawMeanProduct_le_of_two
         ∏ j ∈ Finset.range i,
           ((1 + 1 / figureOneDependentAlpha q) *
             figureOneChronologicalTruncatedMean q I mu W (j + 1)) := by
-      apply Finset.prod_le_prod
+      apply Finset.prod_le_prod₀
       · intro j hj
         exact (figureOneChronologicalRawMean_pos q I (j + 1)).le
       · intro j hj
@@ -406,7 +406,7 @@ theorem figureOneChronologicalTruncatedSecondProduct_le_of_factor
         dependentPhaseMeanProduct (figureOneChronologicalRawMean q I) i ^ 2 := by
   unfold dependentPhaseMeanProduct
   rw [← Finset.prod_pow, ← Finset.prod_mul_distrib]
-  apply Finset.prod_le_prod
+  apply Finset.prod_le_prod₀
   · intro j hj
     exact integral_nonneg fun _ => sq_nonneg _
   · intro j hj

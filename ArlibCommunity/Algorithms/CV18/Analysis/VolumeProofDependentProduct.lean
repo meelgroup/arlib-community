@@ -343,7 +343,7 @@ theorem dependentPhaseMeanProduct_sq_le (mean second : ℕ → ℝ)
       dependentPhaseMeanProduct second i := by
   rw [dependentPhaseMeanProduct, dependentPhaseMeanProduct,
     ← Finset.prod_pow]
-  exact Finset.prod_le_prod
+  exact Finset.prod_le_prod₀
     (fun j _ => sq_nonneg (mean (j + 1)))
     (fun j _ => hmeanSecond (j + 1))
 

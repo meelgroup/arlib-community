@@ -24,7 +24,7 @@ theorem prod_one_add_le_exp_sum {ι : Type*} [Fintype ι]
     (∏ i, (1 + delta i)) ≤ Real.exp (∑ i, delta i) := by
   calc
     (∏ i, (1 + delta i)) ≤ ∏ i, Real.exp (delta i) := by
-      apply Finset.prod_le_prod
+      apply Finset.prod_le_prod₀
       · intro i _
         linarith [hdelta i]
       · intro i _
@@ -859,13 +859,13 @@ theorem measure_independent_product_relativeDeviation_le
   have hmoments := iIndepFun_product_moments μ hind hmeas
   have htarget : 0 < ∏ i, mean i := Finset.prod_pos fun i _ => hmeanpos i
   have hfactorprod : 1 ≤ ∏ i, factor i := by
-    exact Finset.one_le_prod fun i _ => hfactor i
+    exact Finset.one_le_prod₀ fun i _ => hfactor i
   have hsecondprod : (∫ ω, (∏ i, X i ω) ^ 2 ∂μ) ≤
       (∏ i, factor i) * (∏ i, mean i) ^ 2 := by
     rw [hmoments.2]
     calc
       (∏ i, ∫ ω, X i ω ^ 2 ∂μ) ≤ ∏ i, factor i * mean i ^ 2 := by
-        apply Finset.prod_le_prod
+        apply Finset.prod_le_prod₀
         · intro i _
           exact integral_nonneg fun _ => sq_nonneg _
         · intro i _
