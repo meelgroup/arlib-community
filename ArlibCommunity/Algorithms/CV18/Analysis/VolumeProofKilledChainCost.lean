@@ -109,12 +109,12 @@ theorem bind_scheduledSuccessfulBlockEndpointLaw_isWarm
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
     (hwarm : _root_.Arlib.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)) :
+        (proposalRadius q sigma2) sigma2)) :
     _root_.Arlib.IsWarm M
       (mu.bind (scheduledSuccessfulBlockEndpointLaw q I sigma2 proposalCap
         properStride))
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2) := by
+        (proposalRadius q sigma2) sigma2) := by
   let B := scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
     properStride
   have h :=
@@ -124,7 +124,7 @@ theorem bind_scheduledSuccessfulBlockEndpointLaw_isWarm
   change _root_.Arlib.IsWarm M
     (mu.bind fun current => (B current).bind successfulEndpointKernel)
     (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2)
+      (proposalRadius q sigma2) sigma2)
   have heq : (mu.bind B).bind successfulEndpointKernel =
       mu.bind (fun current => (B current).bind successfulEndpointKernel) :=
     Measure.bind_bind B.aemeasurable
@@ -160,7 +160,7 @@ theorem lintegral_scheduledPaddedTrialCost_le_of_isWarm
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
     (hwarm : _root_.Arlib.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (proposalCap properStride : ℕ) :
     ∫⁻ current, scheduledPaddedTrialCost q I oracle sigma2 proposalCap
         properStride current ∂mu ≤
@@ -190,7 +190,7 @@ theorem lintegral_scheduledFixedLiveTrialShadowCost_le_of_isWarm
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
     (hwarm : _root_.Arlib.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (proposalCap properStride trials : ℕ) :
     let next := scheduledSuccessfulBlockEndpointLaw q I sigma2 proposalCap
       properStride
@@ -202,9 +202,9 @@ theorem lintegral_scheduledFixedLiveTrialShadowCost_le_of_isWarm
         ((properStride : ENNReal) * (M * 2) + 2 * M) := by
   dsimp only
   let pi := ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
-  have hdelta : 0 < figureOneScheduledProposalRadius q sigma2 :=
-    figureOneScheduledProposalRadius_pos q hsigma2
+    (proposalRadius q sigma2) sigma2
+  have hdelta : 0 < proposalRadius q sigma2 :=
+    proposalRadius_pos q hsigma2
   have hmass0 := ellGaussianMeasure_univ_ne_zero
     (figureOneScheduledPhaseBody_measurable q I sigma2)
     (figureOneScheduledPhaseBody_convex q I sigma2)
@@ -213,7 +213,7 @@ theorem lintegral_scheduledFixedLiveTrialShadowCost_le_of_isWarm
     hdelta sigma2
   have hmasstop := ellGaussianMeasure_ne_top_cv18
     (figureOneScheduledPhaseBody_volume_ne_top q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) hsigma2
+    (proposalRadius q sigma2) hsigma2
   let _ : IsProbabilityMeasure pi :=
     isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   let next := scheduledSuccessfulBlockEndpointLaw q I sigma2 proposalCap
@@ -252,7 +252,7 @@ theorem lintegral_scheduledFixedPaddedTrialShadowCost_le_of_isWarm
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
     (hwarm : _root_.Arlib.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (proposalCap properStride trials : ℕ) :
     ∫⁻ current, finiteKilledChainExpectedCost
         (scheduledSuccessfulBlockEndpointLaw q I sigma2 proposalCap properStride)
@@ -261,9 +261,9 @@ theorem lintegral_scheduledFixedPaddedTrialShadowCost_le_of_isWarm
       (trials : ENNReal) *
         ((properStride : ENNReal) * (M * 2) + 2 * M) := by
   let pi := ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
-  have hdelta : 0 < figureOneScheduledProposalRadius q sigma2 :=
-    figureOneScheduledProposalRadius_pos q hsigma2
+    (proposalRadius q sigma2) sigma2
+  have hdelta : 0 < proposalRadius q sigma2 :=
+    proposalRadius_pos q hsigma2
   have hmass0 := ellGaussianMeasure_univ_ne_zero
     (figureOneScheduledPhaseBody_measurable q I sigma2)
     (figureOneScheduledPhaseBody_convex q I sigma2)
@@ -272,7 +272,7 @@ theorem lintegral_scheduledFixedPaddedTrialShadowCost_le_of_isWarm
     hdelta sigma2
   have hmasstop := ellGaussianMeasure_ne_top_cv18
     (figureOneScheduledPhaseBody_volume_ne_top q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) hsigma2
+    (proposalRadius q sigma2) hsigma2
   let _ : IsProbabilityMeasure pi :=
     isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   apply lintegral_finiteKilledChainExpectedCost_le

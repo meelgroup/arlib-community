@@ -50,7 +50,7 @@ theorem accuracyPhase_stationaryCoreMap_tv_proposal
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     let K := accuracyPhaseTruncatedBody q I sigma2
     let delta := figureOneProposalRadius q sigma2
-    let c := accuracyScaleFactor q
+    let c := scaleFactor q
     let pi := ellGaussianProb K delta sigma2
     let proposal := Arlib.condOn
       ((volume : Measure (AmbientSpace q.n)).withDensity
@@ -61,16 +61,16 @@ theorem accuracyPhase_stationaryCoreMap_tv_proposal
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   let pi := ellGaussianProb K delta sigma2
   let proposal := Arlib.condOn
     ((volume : Measure (AmbientSpace q.n)).withDensity
       (gaussianWeight (sigma2 / c ^ 2))) K
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
   have hdelta : 0 < delta := figureOneProposalRadius_pos q hsigma2
-  have hc0 : 0 < c := by simpa [c] using accuracyScaleFactor_pos q
+  have hc0 : 0 < c := by simpa [c] using scaleFactor_pos q
   have hc1 : c < 1 := by
-    dsimp [c, accuracyScaleFactor]
+    dsimp [c, scaleFactor]
     have : 0 < 1 / (2 * (q.n : ℝ)) := by positivity
     linarith
   have hKmeas : MeasurableSet K := accuracyPhaseTruncatedBody_measurable q I sigma2
@@ -92,7 +92,7 @@ theorem accuracyPhase_stationaryCoreMap_tv_proposal
           delta ≤ accuracyPhaseInradius q sigma2 / (2 * (q.n : ℝ)) :=
             figureOneProposalRadius_le_accuracyPhaseCoreStep q hsigma2 hsmall
           _ = (1 - c) * accuracyPhaseInradius q sigma2 := by
-            dsimp [c, accuracyScaleFactor]
+            dsimp [c, scaleFactor]
             ring)
       hmass0 hmasstop
     have hmap := congrArg
@@ -138,11 +138,11 @@ theorem accuracyPhase_stationaryCoreMap_tv_proposal
       (figureOneProposalRadius_le_accuracyCoreErrorStep q hsigma2)
       (by
         convert hgaussCore0 using 1 <;>
-          simp [c, accuracyScaleFactor, div_eq_mul_inv, mul_comm,
+          simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
             Real.sq_sqrt hsigma2.le])
       (by
         convert hgaussCoretop using 1 <;>
-          simp [c, accuracyScaleFactor, div_eq_mul_inv, mul_comm,
+          simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
             Real.sq_sqrt hsigma2.le])
       (by simpa [Real.sq_sqrt hsigma2.le] using hmass0)
       (by simpa [Real.sq_sqrt hsigma2.le] using hmasstop)
@@ -151,7 +151,7 @@ theorem accuracyPhase_stationaryCoreMap_tv_proposal
       ENNReal.ofReal_ne_top
       (ENNReal.ofReal_le_ofReal
         ((accuracyCoreError_le_one_div_sixteen q).trans (by norm_num)))
-      (by simpa [c, accuracyScaleFactor, Real.sq_sqrt hsigma2.le] using hpaper.1)
+      (by simpa [c, scaleFactor, Real.sq_sqrt hsigma2.le] using hpaper.1)
     have hgaussRestrict :
         Arlib.condOn
             (((volume : Measure (AmbientSpace q.n)).withDensity
@@ -181,7 +181,7 @@ theorem accuracyPhase_stationary_acceptance_ge
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   let pi := ellGaussianProb K delta sigma2
   let core := c • K
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
@@ -192,7 +192,7 @@ theorem accuracyPhase_stationary_acceptance_ge
       (gaussianWeight (sigma2 / c ^ 2))) K
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
   have hdelta : 0 < delta := figureOneProposalRadius_pos q hsigma2
-  have hc0 : 0 < c := by simpa [c] using accuracyScaleFactor_pos q
+  have hc0 : 0 < c := by simpa [c] using scaleFactor_pos q
   have hKmeas : MeasurableSet K := accuracyPhaseTruncatedBody_measurable q I sigma2
   have hKconv : Convex ℝ K := accuracyPhaseTruncatedBody_convex q I sigma2
   have hKcompact : IsCompact K := accuracyPhaseTruncatedBody_isCompact q I sigma2
@@ -246,8 +246,8 @@ theorem accuracyPhase_stationary_acceptance_ge
           (Metric.mem_closedBall_self zero_le_one), ?_⟩
         simpa [Metric.mem_closedBall] using
           (accuracyPhaseRadius_pos q hsigma2).le)
-      (by simpa [c, accuracyScaleFactor] using hprop0)
-      (by simpa [c, accuracyScaleFactor] using hproptop)
+      (by simpa [c, scaleFactor] using hprop0)
+      (by simpa [c, scaleFactor] using hproptop)
   have hg : Measurable g := by
     dsimp [g]
     exact measurable_gaussianScaleAcceptance sigma2 c
@@ -255,7 +255,7 @@ theorem accuracyPhase_stationary_acceptance_ge
     intro x
     dsimp [g]
     exact gaussianScaleAcceptance_le_one hsigma2 hc0
-      (accuracyScaleFactor_le_one q) x
+      (scaleFactor_le_one q) x
   have hsourceAccept : ENNReal.ofReal (1 / 4 : ℝ) ≤
       (source.withDensity g) Set.univ :=
     TVLe.withDensity_mass_ge_quarter_cv18 hsourceTv herr hg hg1 hhalf

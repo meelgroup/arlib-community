@@ -21,7 +21,7 @@ namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory ProbabilityTheory
 
 noncomputable def figureOneChronologicalPhaseOfFin (q : VolumeParams) :
-    Fin (figureOneDependentPhaseCount q) → FigureOneIdealPhase q := fun i =>
+    Fin (numPhases q) → FigureOneIdealPhase q := fun i =>
   if hi : i.1 < terminalPhaseSteps q then
     let k : Fin (terminalPhaseSteps q) := ⟨i.1, hi⟩
     if hk : scheduleValue q k ≤ 1 then
@@ -32,15 +32,15 @@ noncomputable def figureOneChronologicalPhaseOfFin (q : VolumeParams) :
     .terminal
 
 noncomputable def figureOneChronologicalFinOfPhase (q : VolumeParams) :
-    FigureOneIdealPhase q → Fin (figureOneDependentPhaseCount q)
+    FigureOneIdealPhase q → Fin (numPhases q)
   | .fixed k => ⟨k.1.1, by
-      rw [figureOneDependentPhaseCount]
+      rw [numPhases]
       omega⟩
   | .accelerated k => ⟨k.1.1, by
-      rw [figureOneDependentPhaseCount]
+      rw [numPhases]
       omega⟩
   | .terminal => ⟨terminalPhaseSteps q, by
-      rw [figureOneDependentPhaseCount]
+      rw [numPhases]
       omega⟩
 
 theorem figureOneChronologicalPhaseOfFin_leftInverse (q : VolumeParams) :
@@ -76,7 +76,7 @@ theorem figureOneChronologicalPhaseOfFin_rightInverse (q : VolumeParams) :
 /-- Explicit chronological ordering: scheduled transition `k` occupies
 position `k`, and the terminal Gaussian-to-uniform phase is last. -/
 noncomputable def figureOneChronologicalPhaseOrder (q : VolumeParams) :
-    Fin (figureOneDependentPhaseCount q) ≃ FigureOneIdealPhase q where
+    Fin (numPhases q) ≃ FigureOneIdealPhase q where
   toFun := figureOneChronologicalPhaseOfFin q
   invFun := figureOneChronologicalFinOfPhase q
   left_inv := figureOneChronologicalPhaseOfFin_leftInverse q
@@ -85,7 +85,7 @@ noncomputable def figureOneChronologicalPhaseOrder (q : VolumeParams) :
 @[simp] theorem figureOneChronologicalPhaseOrder_apply_transition
     (q : VolumeParams) (k : Fin (terminalPhaseSteps q)) :
     figureOneChronologicalPhaseOrder q
-        ⟨k, by rw [figureOneDependentPhaseCount]; omega⟩ =
+        ⟨k, by rw [numPhases]; omega⟩ =
       if hk : scheduleValue q k ≤ 1 then
         FigureOneIdealPhase.fixed ⟨k, hk⟩
       else FigureOneIdealPhase.accelerated ⟨k, hk⟩ := by
@@ -96,7 +96,7 @@ noncomputable def figureOneChronologicalPhaseOrder (q : VolumeParams) :
     (q : VolumeParams) :
     figureOneChronologicalPhaseOrder q
         ⟨terminalPhaseSteps q, by
-          rw [figureOneDependentPhaseCount]
+          rw [numPhases]
           omega⟩ = FigureOneIdealPhase.terminal := by
   simp [figureOneChronologicalPhaseOrder,
     figureOneChronologicalPhaseOfFin]
@@ -105,8 +105,8 @@ noncomputable def figureOneChronologicalPhaseOrder (q : VolumeParams) :
 noncomputable def figureOneChronologicalPhaseAt (q : VolumeParams) (j : ℕ) :
     FigureOneIdealPhase q :=
   figureOneChronologicalPhaseOrder q
-    ⟨(j - 1) % figureOneDependentPhaseCount q,
-      Nat.mod_lt _ (figureOneDependentPhaseCount_pos q)⟩
+    ⟨(j - 1) % numPhases q,
+      Nat.mod_lt _ (numPhases_pos q)⟩
 
 /-- The ideal first moment in chronological (one-based) phase order. -/
 noncomputable def figureOneChronologicalRawMean
@@ -131,19 +131,19 @@ theorem figureOneChronologicalMomentFactor_one_le
 theorem figureOneChronologicalRawMean_product
     (q : VolumeParams) (I : VolumeInput q.n) :
     dependentPhaseMeanProduct (figureOneChronologicalRawMean q I)
-        (figureOneDependentPhaseCount q) =
+        (numPhases q) =
       ∏ phase, figureOneIdealPhaseMean q I phase := by
   rw [dependentPhaseMeanProduct]
   calc
-    (∏ j ∈ Finset.range (figureOneDependentPhaseCount q),
+    (∏ j ∈ Finset.range (numPhases q),
         figureOneChronologicalRawMean q I (j + 1)) =
-        ∏ j ∈ Finset.range (figureOneDependentPhaseCount q),
+        ∏ j ∈ Finset.range (numPhases q),
           figureOneIdealPhaseMean q I
             (figureOneChronologicalPhaseAt q (j + 1)) := by
       apply Finset.prod_congr rfl
       intro j hj
       rfl
-    _ = ∏ i : Fin (figureOneDependentPhaseCount q),
+    _ = ∏ i : Fin (numPhases q),
           figureOneIdealPhaseMean q I (figureOneChronologicalPhaseOrder q i) := by
       rw [← Fin.prod_univ_eq_prod_range
         (fun j => figureOneIdealPhaseMean q I
@@ -159,19 +159,19 @@ theorem figureOneChronologicalRawMean_product
 theorem figureOneChronologicalMomentFactor_product
     (q : VolumeParams) :
     dependentPhaseMeanProduct (figureOneChronologicalMomentFactor q)
-        (figureOneDependentPhaseCount q) =
+        (numPhases q) =
       ∏ phase, figureOneIdealPhaseFactor q phase := by
   rw [dependentPhaseMeanProduct]
   calc
-    (∏ j ∈ Finset.range (figureOneDependentPhaseCount q),
+    (∏ j ∈ Finset.range (numPhases q),
         figureOneChronologicalMomentFactor q (j + 1)) =
-        ∏ j ∈ Finset.range (figureOneDependentPhaseCount q),
+        ∏ j ∈ Finset.range (numPhases q),
           figureOneIdealPhaseFactor q
             (figureOneChronologicalPhaseAt q (j + 1)) := by
       apply Finset.prod_congr rfl
       intro j hj
       rfl
-    _ = ∏ i : Fin (figureOneDependentPhaseCount q),
+    _ = ∏ i : Fin (numPhases q),
           figureOneIdealPhaseFactor q (figureOneChronologicalPhaseOrder q i) := by
       rw [← Fin.prod_univ_eq_prod_range
         (fun j => figureOneIdealPhaseFactor q
@@ -192,7 +192,7 @@ noncomputable def figureOneIdealPhaseHistoryIndex (q : VolumeParams) :
   | .terminal => terminalPhaseSteps q
 
 theorem figureOneIdealPhaseHistoryIndex_chronologicalOrder
-    (q : VolumeParams) (i : Fin (figureOneDependentPhaseCount q)) :
+    (q : VolumeParams) (i : Fin (numPhases q)) :
     figureOneIdealPhaseHistoryIndex q
         (figureOneChronologicalPhaseOrder q i) = i.1 := by
   by_cases hi : i.1 < terminalPhaseSteps q
@@ -238,7 +238,7 @@ theorem measurable_balancedCoolingChronologicalPhaseVariable
   measurable_balancedCoolingHistoryPhaseCoordinate q _
 
 theorem balancedCoolingChronologicalPhaseVariable_apply_succ
-    (q : VolumeParams) (j : ℕ) (hj : j < figureOneDependentPhaseCount q)
+    (q : VolumeParams) (j : ℕ) (hj : j < numPhases q)
     (history : Option (BalancedCoolingHistory q.n)) :
     balancedCoolingChronologicalPhaseVariable q (j + 1) history =
       match history with
@@ -527,10 +527,10 @@ theorem BalancedCoolingHistoryHasProduct.snocTerminal
 theorem dependentPhaseSampleProduct_balancedCoolingChronological_eq
     (q : VolumeParams) (history : Option (BalancedCoolingHistory q.n))
     (hproduct : BalancedCoolingHistoryHasProduct
-      (figureOneDependentPhaseCount q) history) :
+      (numPhases q) history) :
     dependentPhaseSampleProduct
         (balancedCoolingChronologicalPhaseVariable q)
-        (figureOneDependentPhaseCount q) history =
+        (numPhases q) history =
       balancedCoolingHistoryProduct q history := by
   cases history with
   | none =>
@@ -538,16 +538,16 @@ theorem dependentPhaseSampleProduct_balancedCoolingChronological_eq
         balancedCoolingChronologicalPhaseVariable_apply_succ,
         balancedCoolingHistoryProduct]
       rw [Finset.prod_eq_zero (Finset.mem_range.mpr
-        (figureOneDependentPhaseCount_pos q))]
+        (numPhases_pos q))]
       rfl
   | some history =>
       simp only [BalancedCoolingHistoryHasProduct] at hproduct
       rw [dependentPhaseSampleProduct]
       calc
-        (∏ j ∈ Finset.range (figureOneDependentPhaseCount q),
+        (∏ j ∈ Finset.range (numPhases q),
             balancedCoolingChronologicalPhaseVariable q (j + 1)
               (some history)) =
-            ∏ j ∈ Finset.range (figureOneDependentPhaseCount q),
+            ∏ j ∈ Finset.range (numPhases q),
               history.1 j := by
           apply Finset.prod_congr rfl
           intro j hj
@@ -559,12 +559,12 @@ theorem dependentPhaseSampleProduct_balancedCoolingChronological_eq
 theorem balancedFigureOneHistoryEstimate_eq_sampleProduct
     (q : VolumeParams) (history : Option (BalancedCoolingHistory q.n))
     (hproduct : BalancedCoolingHistoryHasProduct
-      (figureOneDependentPhaseCount q) history) :
+      (numPhases q) history) :
     balancedFigureOneHistoryEstimate q history =
       initialGaussianIntegral q *
         dependentPhaseSampleProduct
           (balancedCoolingChronologicalPhaseVariable q)
-          (figureOneDependentPhaseCount q) history := by
+          (numPhases q) history := by
   rw [dependentPhaseSampleProduct_balancedCoolingChronological_eq
     q history hproduct]
   cases history <;>

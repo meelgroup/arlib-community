@@ -136,12 +136,12 @@ theorem accuracyPhase_speedy_inverseSpectralGap_le_figureOneWalkSteps
 inverse spectral gap; the second is exactly the paper's empirical count. -/
 noncomputable def accuracyPairedPhaseSampleCount
     (q : VolumeParams) (sigma2 : ℝ) : ℕ :=
-  figureOneWalkSteps q sigma2 * figureOnePhaseSampleCount q sigma2
+  figureOneWalkSteps q sigma2 * phaseSampleCount q sigma2
 
 /-- Correlated observations in the terminal Gaussian-to-uniform phase. -/
 noncomputable def accuracyPairedTerminalSampleCount
     (q : VolumeParams) : ℕ :=
-  figureOneWalkSteps q (terminalVariance q) * figureOneSampleCount q
+  figureOneWalkSteps q (terminalVariance q) * sampleCount q
 
 /-- A deliberately generous syntax-level retry cutoff.  The outer global
 query cap controls worst-case execution; this local cutoff only makes every
@@ -159,23 +159,23 @@ theorem figureOneWalkSteps_pos (q : VolumeParams) {sigma2 : ℝ}
     lt_of_lt_of_le zero_lt_one (le_max_left _ _)
   positivity
 
-theorem figureOnePhaseSampleCount_pos (q : VolumeParams) (sigma2 : ℝ) :
-    0 < figureOnePhaseSampleCount q sigma2 := by
-  unfold figureOnePhaseSampleCount
+theorem phaseSampleCount_pos (q : VolumeParams) (sigma2 : ℝ) :
+    0 < phaseSampleCount q sigma2 := by
+  unfold phaseSampleCount
   split_ifs
-  · exact figureOneFixedSampleCount_pos q
-  · exact figureOneSampleCount_pos q
+  · exact fixedRateSampleCount_pos q
+  · exact sampleCount_pos q
 
 theorem accuracyPairedPhaseSampleCount_pos
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     0 < accuracyPairedPhaseSampleCount q sigma2 := by
   exact Nat.mul_pos (figureOneWalkSteps_pos q hsigma2)
-    (figureOnePhaseSampleCount_pos q sigma2)
+    (phaseSampleCount_pos q sigma2)
 
 theorem accuracyPairedTerminalSampleCount_pos (q : VolumeParams) :
     0 < accuracyPairedTerminalSampleCount q := by
   exact Nat.mul_pos (figureOneWalkSteps_pos q (terminalVariance_pos' q))
-    (figureOneSampleCount_pos q)
+    (sampleCount_pos q)
 
 /-- Postprocessing of a paired Gaussian-phase sum. -/
 noncomputable def accuracyPairedRatioOutput {n : ℕ} :

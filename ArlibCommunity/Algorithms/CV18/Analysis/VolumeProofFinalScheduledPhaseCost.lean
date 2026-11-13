@@ -28,8 +28,8 @@ noncomputable def figureOneFinalScheduledGaussianPhaseExpectedCost
               (scheduleValue q phase))
             (figureOneFinalScheduledBalancedParameters.retryLimit q
               (scheduleValue q phase))
-            (figureOnePhaseSampleCount q (scheduleValue q phase))
-            (accuracyScaleFactor q • point)).run oracle.query)
+            (phaseSampleCount q (scheduleValue q phase))
+            (scaleFactor q • point)).run oracle.query)
     ∂((scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I phase).map
         scheduledBalancedTraceRetainedOption)
@@ -50,34 +50,34 @@ noncomputable def figureOneFinalScheduledTerminalExpectedCost
               (terminalVariance q))
             (figureOneFinalScheduledBalancedParameters.retryLimit q
               (terminalVariance q))
-            (figureOneSampleCount q)
-            (accuracyScaleFactor q • point)).run oracle.query)
+            (sampleCount q)
+            (scaleFactor q • point)).run oracle.query)
     ∂((scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I
         (terminalPhaseSteps q)).map scheduledBalancedTraceRetainedOption)
 
 private theorem initialAcceptedTarget_scaled_isWarm_final
     (q : VolumeParams) (I : VolumeInput q.n) :
-    IsWarm (8 * ENNReal.ofReal (speedyAdjacentWarmConstant q))
+    IsWarm (8 * ENNReal.ofReal (warmConstant q))
       ((figureOneScheduledAcceptedTargetAt q I 0).map fun point =>
-        accuracyScaleFactor q • point)
+        scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I 0) := by
   have hwarm8 := initialContractedAcceptedTarget_isWarm_eight q I
   apply hwarm8.mono
-  have hC : (1 : ENNReal) ≤ ENNReal.ofReal (speedyAdjacentWarmConstant q) := by
+  have hC : (1 : ENNReal) ≤ ENNReal.ofReal (warmConstant q) := by
     rw [← ENNReal.ofReal_one]
-    exact ENNReal.ofReal_le_ofReal (speedyAdjacentWarmConstant_one_le q)
+    exact ENNReal.ofReal_le_ofReal (warmConstant_one_le q)
   calc
     (8 : ENNReal) = 8 * 1 := by norm_num
-    _ ≤ 8 * ENNReal.ofReal (speedyAdjacentWarmConstant q) := by gcongr
+    _ ≤ 8 * ENNReal.ofReal (warmConstant q) := by gcongr
 
 private theorem finalWarmConstant_le_ninetySix (q : VolumeParams) :
-    8 * ENNReal.ofReal (speedyAdjacentWarmConstant q) ≤ 96 := by
+    8 * ENNReal.ofReal (warmConstant q) ≤ 96 := by
   calc
-    8 * ENNReal.ofReal (speedyAdjacentWarmConstant q) ≤ 8 * 12 := by
+    8 * ENNReal.ofReal (warmConstant q) ≤ 8 * 12 := by
       gcongr
       rw [← ENNReal.ofReal_ofNat 12]
-      exact ENNReal.ofReal_le_ofReal (speedyAdjacentWarmConstant_le_twelve q)
+      exact ENNReal.ofReal_le_ofReal (warmConstant_le_twelve q)
     _ = 96 := by norm_num
 
 /-- Sharp expected-cost envelope for every Gaussian cooling phase. -/
@@ -85,12 +85,12 @@ theorem figureOneFinalScheduledGaussianPhaseExpectedCost_le
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
     (phase : ℕ) (hphase : phase < terminalPhaseSteps q) :
     figureOneFinalScheduledGaussianPhaseExpectedCost q I oracle phase ≤
-      ((384 * (figureOnePhaseSampleCount q (scheduleValue q phase) *
+      ((384 * (phaseSampleCount q (scheduleValue q phase) *
         figureOneFinalScheduledBalancedParameters.retryLimit q
           (scheduleValue q phase) *
         figureOneFinalScheduledBalancedParameters.properStride q
           (scheduleValue q phase)) : ℕ) : ENNReal) +
-      ((figureOnePhaseSampleCount q (scheduleValue q phase) *
+      ((phaseSampleCount q (scheduleValue q phase) *
         figureOneFinalScheduledBalancedParameters.retryLimit q
           (scheduleValue q phase) *
         (figureOneFinalScheduledBalancedParameters.proposalCap q
@@ -120,8 +120,8 @@ theorem figureOneFinalScheduledGaussianPhaseExpectedCost_le
       simpa [mu, target] using
         scheduledBalancedForwardTraceLaw_retained_leUpTo_target
           q I previous hprevious
-  have hwarm : IsWarm (8 * ENNReal.ofReal (speedyAdjacentWarmConstant q))
-      (target.map fun point => accuracyScaleFactor q • point)
+  have hwarm : IsWarm (8 * ENNReal.ofReal (warmConstant q))
+      (target.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase) := by
     by_cases hzero : phase = 0
     · subst phase
@@ -144,20 +144,20 @@ theorem figureOneFinalScheduledGaussianPhaseExpectedCost_le
         (scheduleValue q phase))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (scheduleValue q phase))
-      (figureOnePhaseSampleCount q (scheduleValue q phase))
-      (figureOneScheduledCorrectedProperStride_pos q (scheduleValue q phase)
-        (figureOneSafeRetryCount q - 1))
+      (phaseSampleCount q (scheduleValue q phase))
+      (strideFor_pos q (scheduleValue q phase)
+        (maxRetries q - 1))
 
 /-- Sharp expected-cost envelope for the terminal Gaussian-to-uniform phase. -/
 theorem figureOneFinalScheduledTerminalExpectedCost_le
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I) :
     figureOneFinalScheduledTerminalExpectedCost q I oracle ≤
-      ((384 * (figureOneSampleCount q *
+      ((384 * (sampleCount q *
         figureOneFinalScheduledBalancedParameters.retryLimit q
           (terminalVariance q) *
         figureOneFinalScheduledBalancedParameters.properStride q
           (terminalVariance q)) : ℕ) : ENNReal) +
-      ((figureOneSampleCount q *
+      ((sampleCount q *
         figureOneFinalScheduledBalancedParameters.retryLimit q
           (terminalVariance q) *
         (figureOneFinalScheduledBalancedParameters.proposalCap q
@@ -177,11 +177,11 @@ theorem figureOneFinalScheduledTerminalExpectedCost_le
     simpa [mu, target, hpreviousEq] using
       scheduledBalancedForwardTraceLaw_retained_leUpTo_target
         q I previous hprevious
-  have hwarm : IsWarm (8 * ENNReal.ofReal (speedyAdjacentWarmConstant q))
-      (target.map fun point => accuracyScaleFactor q • point)
+  have hwarm : IsWarm (8 * ENNReal.ofReal (warmConstant q))
+      (target.map fun point => scaleFactor q • point)
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I (terminalVariance q))
-        (figureOneScheduledProposalRadius q (terminalVariance q))
+        (proposalRadius q (terminalVariance q))
         (terminalVariance q)) := by
     have h := map_scheduledBalancedAcceptedTarget_scale_adjacent_isWarm
       q I previous
@@ -203,9 +203,9 @@ theorem figureOneFinalScheduledTerminalExpectedCost_le
         (terminalVariance q))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (terminalVariance q))
-      (figureOneSampleCount q)
-      (figureOneScheduledCorrectedProperStride_pos q (terminalVariance q)
-        (figureOneSafeRetryCount q - 1))
+      (sampleCount q)
+      (strideFor_pos q (terminalVariance q)
+        (maxRetries q - 1))
 
 #print axioms figureOneFinalScheduledGaussianPhaseExpectedCost_le
 #print axioms figureOneFinalScheduledTerminalExpectedCost_le

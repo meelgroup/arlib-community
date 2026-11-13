@@ -32,7 +32,7 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_good_bad
     (bad : Measure (AmbientSpace q.n)) [IsFiniteMeasure bad]
     {eta : ENNReal} (heta : eta ≠ ⊤)
     (hstateDom :
-      history.map (fun h => accuracyScaleFactor q • state h) ≤
+      history.map (fun h => scaleFactor q • state h) ≤
         figureOneScheduledSpeedyPiAt q I phase + bad)
     (hbad : bad Set.univ ≤ eta)
     (pastProduct : H → ℝ)
@@ -42,8 +42,8 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_good_bad
     (hbudget :
       ((figureOneCorrectedTransitionBudget q + 2 * eta) +
         (figureOneCorrectedTransitionBudget q + 2 * eta)).toReal ≤
-          figureOneDependentEpsilon q) :
-    ApproxIndepFun (figureOneDependentEpsilon q)
+          dependenceError q) :
+    ApproxIndepFun (dependenceError q)
       (pastProduct ∘ Prod.fst) (nextEstimator ∘ Prod.snd)
       (sequentialPairLaw history
         ((fun current =>
@@ -57,11 +57,11 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_good_bad
               (scheduleValue q (phase + 1)))
             (figureOneFinalScheduledBalancedParameters.retryLimit q
               (scheduleValue q (phase + 1)))
-            (figureOnePhaseSampleCount q (scheduleValue q (phase + 1)))
+            (phaseSampleCount q (scheduleValue q (phase + 1)))
             0 current) ∘
-          (fun h => accuracyScaleFactor q • state h))) := by
+          (fun h => scaleFactor q • state h))) := by
   let scaledState : H → AmbientSpace q.n := fun h =>
-    accuracyScaleFactor q • state h
+    scaleFactor q • state h
   have hscaledState : Measurable scaledState := by
     dsimp only [scaledState]
     fun_prop
@@ -112,21 +112,21 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_good_bad
         (scheduleValue q (phase + 1)))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (scheduleValue q (phase + 1)))
-      (figureOnePhaseSampleCount q (scheduleValue q (phase + 1)) - 1)
+      (phaseSampleCount q (scheduleValue q (phase + 1)) - 1)
       history scaledState hscaledState target hdelta hfirst pastProduct
       nextEstimator hpastProduct hnextEstimator
-      (figureOneDependentMaxSampleCount q)
-      (figureOneDependentPhaseCount q)
-      (figureOnePerSampleMixingError q)
+      (largestSampleCount q)
+      (numPhases q)
+      (sampleMixingError q)
       (by
         rw [figureOne_lemma717c_budget q]
         exact hbudget)
-  have hcount : 0 < figureOnePhaseSampleCount q
+  have hcount : 0 < phaseSampleCount q
       (scheduleValue q (phase + 1)) := by
-    unfold figureOnePhaseSampleCount
+    unfold phaseSampleCount
     split_ifs
-    · exact figureOneFixedSampleCount_pos q
-    · exact figureOneSampleCount_pos q
+    · exact fixedRateSampleCount_pos q
+    · exact sampleCount_pos q
   rw [Nat.sub_add_cancel hcount] at hresult
   rw [figureOne_lemma717c_budget q] at hresult
   simpa [scaledState] using hresult
@@ -142,9 +142,9 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_accepted_good_bad
     (bad : Measure (AmbientSpace q.n)) [IsFiniteMeasure bad]
     {eta : ENNReal} (heta : eta ≠ ⊤)
     (hstateDom :
-      history.map (fun h => accuracyScaleFactor q • state h) ≤
+      history.map (fun h => scaleFactor q • state h) ≤
         (figureOneScheduledAcceptedTargetAt q I phase).map
-          (fun x => accuracyScaleFactor q • x) + bad)
+          (fun x => scaleFactor q • x) + bad)
     (hbad : bad Set.univ ≤ eta)
     (pastProduct : H → ℝ)
     (nextEstimator : Option (ℝ × AmbientSpace q.n) → ℝ)
@@ -153,8 +153,8 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_accepted_good_bad
     (hbudget :
       ((figureOneCorrectedTransitionBudget q + 2 * eta) +
         (figureOneCorrectedTransitionBudget q + 2 * eta)).toReal ≤
-          figureOneDependentEpsilon q) :
-    ApproxIndepFun (figureOneDependentEpsilon q)
+          dependenceError q) :
+    ApproxIndepFun (dependenceError q)
       (pastProduct ∘ Prod.fst) (nextEstimator ∘ Prod.snd)
       (sequentialPairLaw history
         ((fun current =>
@@ -168,11 +168,11 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_accepted_good_bad
               (scheduleValue q (phase + 1)))
             (figureOneFinalScheduledBalancedParameters.retryLimit q
               (scheduleValue q (phase + 1)))
-            (figureOnePhaseSampleCount q (scheduleValue q (phase + 1)))
+            (phaseSampleCount q (scheduleValue q (phase + 1)))
             0 current) ∘
-          (fun h => accuracyScaleFactor q • state h))) := by
+          (fun h => scaleFactor q • state h))) := by
   let scaledState : H → AmbientSpace q.n := fun h =>
-    accuracyScaleFactor q • state h
+    scaleFactor q • state h
   have hscaledState : Measurable scaledState := by
     dsimp only [scaledState]
     fun_prop
@@ -180,7 +180,7 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_accepted_good_bad
   let _ : IsProbabilityMeasure rho :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hscaledState.aemeasurable
   let good := (figureOneScheduledAcceptedTargetAt q I phase).map
-    (fun x => accuracyScaleFactor q • x)
+    (fun x => scaleFactor q • x)
   let target : Measure (Option (AmbientSpace q.n)) :=
     (truncatedGaussianProbability q I (scheduleValue q (phase + 1))
       (scheduleValue_pos q (phase + 1)) :
@@ -194,10 +194,10 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_accepted_good_bad
     · simp [figureOneCorrectedTransitionBudget]
     · exact ENNReal.mul_ne_top (by norm_num) heta
   have hgood : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) good
+      (ENNReal.ofReal (8 * warmConstant q)) good
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I (scheduleValue q (phase + 1)))
-        (figureOneScheduledProposalRadius q (scheduleValue q (phase + 1)))
+        (proposalRadius q (scheduleValue q (phase + 1)))
         (scheduleValue q (phase + 1))) := by
     simpa [good, figureOneScheduledAcceptedTargetAt,
       figureOneScheduledSpeedyPiAt] using
@@ -231,21 +231,21 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_accepted_good_bad
         (scheduleValue q (phase + 1)))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (scheduleValue q (phase + 1)))
-      (figureOnePhaseSampleCount q (scheduleValue q (phase + 1)) - 1)
+      (phaseSampleCount q (scheduleValue q (phase + 1)) - 1)
       history scaledState hscaledState target hdelta hfirst pastProduct
       nextEstimator hpastProduct hnextEstimator
-      (figureOneDependentMaxSampleCount q)
-      (figureOneDependentPhaseCount q)
-      (figureOnePerSampleMixingError q)
+      (largestSampleCount q)
+      (numPhases q)
+      (sampleMixingError q)
       (by
         rw [figureOne_lemma717c_budget q]
         exact hbudget)
-  have hcount : 0 < figureOnePhaseSampleCount q
+  have hcount : 0 < phaseSampleCount q
       (scheduleValue q (phase + 1)) := by
-    unfold figureOnePhaseSampleCount
+    unfold phaseSampleCount
     split_ifs
-    · exact figureOneFixedSampleCount_pos q
-    · exact figureOneSampleCount_pos q
+    · exact fixedRateSampleCount_pos q
+    · exact sampleCount_pos q
   rw [Nat.sub_add_cancel hcount] at hresult
   rw [figureOne_lemma717c_budget q] at hresult
   simpa [scaledState] using hresult

@@ -61,7 +61,7 @@ theorem globallyCappedValueProgram_failure_le
     (hmeas : (base q).CountedStronglyMeasurable oracle.query)
     (hcost : ∫⁻ outcome, (outcome.2 : ENNReal) ∂((base q).run oracle.query) ≤
       ENNReal.ofReal (figureOneGlobalExpectedCostConstant *
-        volumeBaseComplexityRate q))
+        baseRate q))
     (hbase : (base q).runEstimate oracle.query (accurateOutcome q I)ᶜ ≤
       ENNReal.ofReal (13 / 64 : ℝ)) :
     (globallyCappedValueProgram base q).runEstimate oracle.query
@@ -69,7 +69,7 @@ theorem globallyCappedValueProgram_failure_le
   let capped := (base q).withQueryCap (figureOneGlobalQueryBudget q)
   let bad := (accurateOutcome q I)ᶜ
   let R := ENNReal.ofReal (figureOneGlobalExpectedCostConstant *
-    volumeBaseComplexityRate q)
+    baseRate q)
   let failure := capped.runEstimate oracle.query {none}
   have hbad : MeasurableSet bad := (accurateOutcome_measurable q I).compl
   have hsubset : (fun result : Option ℝ => result.getD 0) ⁻¹' bad ⊆
@@ -80,7 +80,7 @@ theorem globallyCappedValueProgram_failure_le
     | some value => simpa [optionSomeEvent] using hresult
   have hR0 : R ≠ 0 := ENNReal.ofReal_ne_zero_iff.mpr <|
     mul_pos figureOneGlobalExpectedCostConstant_pos
-      (volumeBaseComplexityRate_pos_balanced q)
+      (baseRate_pos_balanced q)
   have hbudget : ENNReal.ofReal (64 : ℝ) * R ≤
       (figureOneGlobalQueryBudget q + 1 : ENNReal) := by
     rw [← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 64)]
@@ -141,7 +141,7 @@ theorem volumeTheorem_of_baseProgram
       (oracle : MembershipOracle I),
       ∫⁻ outcome, (outcome.2 : ENNReal) ∂((base q).run oracle.query) ≤
         ENNReal.ofReal (figureOneGlobalExpectedCostConstant *
-          volumeBaseComplexityRate q)) :
+          baseRate q)) :
     ∃ C : ℝ, 0 < C ∧
       ∀ (q : VolumeParams) (I : VolumeInput q.n)
         (oracle : MembershipOracle I), WellRounded q I →

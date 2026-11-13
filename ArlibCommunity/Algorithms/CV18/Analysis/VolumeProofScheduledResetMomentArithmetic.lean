@@ -60,7 +60,7 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_ideal_bounds
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         (figureOneChronologicalMomentFactor q j +
             figureOneExecutableMomentSlack q / 4) *
           figureOneIdealPhaseMean q I
@@ -68,7 +68,7 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_ideal_bounds
     (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
       ∂scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)) ≤
+        (numPhases q)) ≤
       figureOneExecutableMomentFactor q j *
         scheduledFigureOneTraceRawMean q I j ^ 2 := by
   let slack := figureOneExecutableMomentSlack q
@@ -94,7 +94,7 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_ideal_bounds
     (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         (factor + slack / 4) * idealMean ^ 2 := hsecondUpper
     _ ≤ (factor * (1 + slack) * (1 - slack / 8) ^ 2) *
           idealMean ^ 2 :=

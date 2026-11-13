@@ -3,61 +3,53 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Model.Pseudocode
+import ArlibCommunity.Algorithms.CV18.Analysis.PseudocodeBridge
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGlobalResetReferenceExists
 
 /-!
 # CV18 Theorem 1.1
 
-This is the headline audit surface.  The statement below mentions only
-objects defined under `Model/`: the input promise, oracle-program semantics,
-success event, the concrete algorithm `cv18Program` (`Pseudocode.lean`),
-and the exact parameter-only query rate.  Its proof is developed under
-`Analysis/`.
+The statement mentions only objects defined under `Model/`: the input promise
+and parameters (`Prelude.lean`), the program `cv18Program` and its cost model
+`queryCost` (`Pseudocode.lean`), and the explicit query rate
+`queryRate` with its constant `queryConstant`
+(`Prelude.lean`).  The proof is developed under `Analysis/`.
 
-The exact displayed rate retains all protected logarithmic factors.  Removing
-them gives the paper's `O*(roundness * n^3 / eps^2)` notation; for a
-well-rounded body with universal `roundness`, this is `O*(n^3 / eps^2)`.
-The deterministic cooling schedule is part of the algorithm's definition and
-is not a parameter of the public theorem statement.
+The rate keeps every logarithmic factor.  Dropping them gives the paper's
+`O*(roundness · n³ / ε²)`; for a well-rounded body with constant `roundness`
+this is `O*(n³ / ε²)`.
 -/
 
 namespace ArlibCommunity.Algorithms.CV18
 
-/-- The explicit constant in front of the query rate. -/
-noncomputable def volumeQueryConstant : ℝ := 9 * (64 * 10 ^ 30 + 1)
+/-- What Theorem 1.1 asserts about a volume algorithm, at query rate `rate`:
+for every admissible parameter choice and every well-rounded body with a
+correct membership oracle,
 
-/-- Accuracy and worst-case membership-query guarantee for one uniform
-volume algorithm at a specified model-level rate, with the explicit constant
-`volumeQueryConstant`.  The membership cost is computed from the program by
-`Arlib.Computation.Charged`, using the roster carrier's membership
-operation. -/
+* **accuracy**: the estimate is within `1 ± ε` of the volume with probability
+  at least `1 - p`, and
+* **cost**: every execution makes at most `⌈queryConstant · rate q⌉`
+  membership calls. -/
 def VolumeGuarantee (algorithm : VolumeAlgorithm)
     (rate : VolumeParams → ℝ) : Prop :=
   ∀ (q : VolumeParams) (I : VolumeInput q.n)
     (oracle : MembershipOracle I), WellRounded q I →
       1 - q.p ≤ outcomeProbability
         (volumeAlgorithmLaw algorithm q I oracle) (accurateOutcome q I) ∧
-      (algorithm q).MembershipCostBound
-        (Nat.ceil (volumeQueryConstant * rate q))
+      (algorithm q).queryCost ≤ Nat.ceil (queryConstant * rate q)
 
-/-- Cousins--Vempala 2018, Theorem 1.1, for the concrete membership-oracle
-program `cv18Program`: it succeeds with probability at least `1-p`, with the
-exact polylogarithmic refinement of the paper's `O*` query bound.
-
-The program is fixed before the body and its membership oracle are
-quantified, and its rate is a model-level function only of the public
-parameters. -/
+/-- **Cousins–Vempala 2018, Theorem 1.1**, for the program `cv18Program`. -/
 theorem cv18TheoremOneOne :
-    VolumeGuarantee cv18Program volumeTheoremOneOneRate := by
+    VolumeGuarantee cv18Program queryRate := by
   intro q I oracle hrounded
+  rw [cv18Program_eq]
   obtain ⟨haccuracy, calls, hcalls, hle⟩ :=
     volumeTheorem_finalScheduled q I oracle hrounded
-  have hconst : figureOneFinalScheduledQueryConstant = volumeQueryConstant := by
+  have hconst : figureOneFinalScheduledQueryConstant = queryConstant := by
     norm_num [figureOneFinalScheduledQueryConstant,
-      figureOneFinalScheduledExpectedCostConstant, volumeQueryConstant]
+      runCostConstant, queryConstant]
   rw [hconst] at hle
-  refine ⟨haccuracy, fun oracle' choices => ?_⟩
-  exact (hcalls.toMembershipCostBound oracle' choices).trans hle
+  exact ⟨haccuracy, hcalls.queryCost_le.trans (by exact_mod_cast hle)⟩
 
 #modelClosureOfType cv18TheoremOneOne
 #print axioms cv18TheoremOneOne

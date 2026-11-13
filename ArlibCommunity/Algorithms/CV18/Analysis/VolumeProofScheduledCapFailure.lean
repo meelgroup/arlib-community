@@ -16,18 +16,18 @@ theorem half_mul_natCast_mul_bind_scheduledCappedProperCollectLaw_none_le
     (hwarm : Arlib.IsWarm M mu
       (Arlib.MarkovChains.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (rawCap properStride samples : ℕ) :
     ENNReal.ofReal (1 / 2) * (rawCap : ENNReal) *
         (mu.bind fun current => cappedProperCollectLaw
           (Arlib.MarkovChains.lazyProperProposalGaussianAux
             (figureOneScheduledPhaseBody q I sigma2)
             (figureOneScheduledPhaseBody_measurable q I sigma2)
-            (figureOneScheduledProposalRadius q sigma2) sigma2)
+            (proposalRadius q sigma2) sigma2)
           weight rawCap properStride samples current) {none} ≤
       ((properStride * samples : ℕ) : ENNReal) * M := by
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux K
     (figureOneScheduledPhaseBody_measurable q I sigma2) delta sigma2
   have hK : MeasurableSet K :=
@@ -38,7 +38,7 @@ theorem half_mul_natCast_mul_bind_scheduledCappedProperCollectLaw_none_le
   have hKb : Bornology.IsBounded K := hKcompact.isBounded
   have hK0 : volume K ≠ 0 :=
     figureOneScheduledPhaseBody_volume_ne_zero q I hsigma2
-  have hdelta : 0 < delta := figureOneScheduledProposalRadius_pos q hsigma2
+  have hdelta : 0 < delta := proposalRadius_pos q hsigma2
   have hZ0 : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 :=
     Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
       hK hKc hKb hK0 hdelta sigma2
@@ -87,7 +87,7 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_none_le_of_isWarm
     (hwarm : Arlib.IsWarm M mu
       (Arlib.MarkovChains.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (proposalCap properStride : ℕ) (hproposalCap : 0 < proposalCap)
     {capError : ENNReal}
     (hbudget : (properStride : ENNReal) * M ≤

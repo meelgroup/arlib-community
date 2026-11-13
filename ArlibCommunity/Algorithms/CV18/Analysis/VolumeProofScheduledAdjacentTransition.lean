@@ -16,17 +16,17 @@ open _root_.Arlib _root_.Arlib.MarkovChains
 
 theorem two_speedyAdjacentWarmConstant_add_one_le_eight
     (q : VolumeParams) :
-    2 * ENNReal.ofReal (speedyAdjacentWarmConstant q) + 1 ≤
-      ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) := by
+    2 * ENNReal.ofReal (warmConstant q) + 1 ≤
+      ENNReal.ofReal (8 * warmConstant q) := by
   rw [show (2 : ENNReal) = ENNReal.ofReal (2 : ℝ) by norm_num,
     ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 2),
     show (1 : ENNReal) = ENNReal.ofReal (1 : ℝ) by norm_num,
     ← ENNReal.ofReal_add
-      (by positivity [speedyAdjacentWarmConstant_pos q] :
-        0 ≤ 2 * speedyAdjacentWarmConstant q)
+      (by positivity [warmConstant_pos q] :
+        0 ≤ 2 * warmConstant q)
       (by norm_num : (0 : ℝ) ≤ 1)]
   apply ENNReal.ofReal_le_ofReal
-  nlinarith [speedyAdjacentWarmConstant_one_le q]
+  nlinarith [warmConstant_one_le q]
 
 /-- Consecutive scheduled phases need only an additive bad submeasure in the
 retained marginal.  The actual final executable transition then pays exactly
@@ -40,7 +40,7 @@ theorem bind_figureOneFinalScheduledAdjacentTransition_leUpTo_of_good_bad
     (hrho : rho ≤
       ellGaussianProb
           (figureOneScheduledPhaseBody q I (scheduleValue q phase))
-          (figureOneScheduledProposalRadius q (scheduleValue q phase))
+          (proposalRadius q (scheduleValue q phase))
           (scheduleValue q phase) + bad)
     (hbad : bad Set.univ ≤ eta) :
     MeasureLeUpTo
@@ -60,7 +60,7 @@ theorem bind_figureOneFinalScheduledAdjacentTransition_leUpTo_of_good_bad
     q I (scheduleValue_pos q (phase + 1)) rho mu
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I (scheduleValue q phase))
-        (figureOneScheduledProposalRadius q (scheduleValue q phase))
+        (proposalRadius q (scheduleValue q phase))
         (scheduleValue q phase)) bad hmuWarm hrho
   · exact scheduledPhase_speedyStationary_adjacent_isWarm q I phase
   · exact hbad

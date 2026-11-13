@@ -9,7 +9,7 @@ import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Probability
 import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 import Mathlib.Analysis.InnerProductSpace.PiL2
-import ArlibCommunity.Algorithms.CV18.Model.Pseudocode
+import ArlibCommunity.Algorithms.CV18.Analysis.ScheduledProgram
 
 /-!
 # The Metropolis-filtered ball walk for the Gaussian-restricted density

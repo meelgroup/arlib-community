@@ -21,7 +21,7 @@ coefficient. -/
 theorem exists_scheduledRetainedResetReference_average_secondMoment_with_state
     (q : VolumeParams) (I : VolumeInput q.n) (phase count : ℕ)
     (hcount : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q)
+    (hcountMax : count ≤ largestSampleCount q)
     {A mean factor : ℝ} (hA : 0 < A) (hmean0 : 0 ≤ mean)
     (hcoordinateMean :
       (∫ x, gaussianRatioWeight (n := q.n) (scheduleValue q phase)
@@ -69,7 +69,7 @@ theorem exists_scheduledRetainedResetReference_average_secondMoment_with_state
                 (scheduleValue q (phase + 1)))) count history /
               (count : ℝ)) ^ 2 ∂reference) ≤
         (1 + (factor - 1) / (count : ℝ)) * mean ^ 2 +
-          3 * (figureOneDependentEpsilon q +
+          3 * (dependenceError q +
               3 * (scheduledResetReferenceError q (count - 1)).toReal) ^
                 (1 / 3 : ℝ) *
             (1 - 1 / (count : ℝ)) * A ^ 2 := by
@@ -81,7 +81,7 @@ theorem exists_scheduledRetainedResetReference_average_secondMoment_with_state
     (scheduleValue q (phase + 1))
   let Y : ℕ → RetainedSampleHistory (AmbientSpace q.n) → ℝ :=
     retainedSampleObservation weight
-  let epsilon := figureOneDependentEpsilon q +
+  let epsilon := dependenceError q +
     3 * (scheduledResetReferenceError q (count - 1)).toReal
   have hweight : Measurable weight :=
     measurable_gaussianRatioWeight (scheduleValue q phase)
@@ -139,13 +139,13 @@ theorem exists_scheduledRetainedResetReference_average_secondMoment_with_state
     q I phase count hcount reference hcoordinates
   have hepsilon : 0 < epsilon := by
     dsimp [epsilon]
-    have hdependent : 0 < figureOneDependentEpsilon q := by
-      unfold figureOneDependentEpsilon
-      have hm : (0 : ℝ) < figureOneDependentPhaseCount q := by
-        exact_mod_cast figureOneDependentPhaseCount_pos q
+    have hdependent : 0 < dependenceError q := by
+      unfold dependenceError
+      have hm : (0 : ℝ) < numPhases q := by
+        exact_mod_cast numPhases_pos q
       exact div_pos (sq_pos_of_pos q.heps.1)
         (mul_pos
-          (mul_pos (by norm_num) (pow_pos (figureOneDependentAlpha_pos q) 4)) hm)
+          (mul_pos (by norm_num) (pow_pos (truncationLevel_pos q) 4)) hm)
     positivity
   have havg := sequentialAverage_secondMoment_le_of_approxIndepPrefix_thirdMoment
     reference hYmeas count hcount hA hmean0 hepsilon hY0 hY3 hYmean
@@ -162,7 +162,7 @@ retained-state marginal is not needed by the caller. -/
 theorem exists_scheduledRetainedResetReference_average_secondMoment
     (q : VolumeParams) (I : VolumeInput q.n) (phase count : ℕ)
     (hcount : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q)
+    (hcountMax : count ≤ largestSampleCount q)
     {A mean factor : ℝ} (hA : 0 < A) (hmean0 : 0 ≤ mean)
     (hcoordinateMean :
       (∫ x, gaussianRatioWeight (n := q.n) (scheduleValue q phase)
@@ -208,7 +208,7 @@ theorem exists_scheduledRetainedResetReference_average_secondMoment
                 (scheduleValue q (phase + 1)))) count history /
               (count : ℝ)) ^ 2 ∂reference) ≤
         (1 + (factor - 1) / (count : ℝ)) * mean ^ 2 +
-          3 * (figureOneDependentEpsilon q +
+          3 * (dependenceError q +
               3 * (scheduledResetReferenceError q (count - 1)).toReal) ^
                 (1 / 3 : ℝ) *
             (1 - 1 / (count : ℝ)) * A ^ 2 := by

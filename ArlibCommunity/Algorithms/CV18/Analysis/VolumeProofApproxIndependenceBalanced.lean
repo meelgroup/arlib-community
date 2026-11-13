@@ -33,12 +33,12 @@ theorem balancedAccuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_of_lower
       (balancedAccuracyGaussianAcceptedTargetLaw q I sigma2 pi) := by
   let accepted := balancedAcceptedStateMeasure q I sigma2 pi
   let scale : AmbientSpace q.n -> AmbientSpace q.n := fun x =>
-    (accuracyScaleFactor q)⁻¹ • x
+    (scaleFactor q)⁻¹ • x
   let acceptedTarget := accepted.map scale
   have hscale : Measurable scale := by
     dsimp only [scale]
     exact (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id
+      (scaleFactor q)⁻¹).smul measurable_id
   have haccepted0 : accepted Set.univ ≠ 0 := ne_of_gt <|
     (by norm_num : 0 < ENNReal.ofReal (7 / 128 : ℝ)).trans_le
       (by simpa [accepted] using hacceptedLower)

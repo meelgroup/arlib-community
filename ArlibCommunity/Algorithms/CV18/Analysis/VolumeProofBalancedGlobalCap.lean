@@ -25,9 +25,9 @@ open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 
 /-- Positivity of the exact unrestricted base-complexity rate. -/
-theorem volumeBaseComplexityRate_pos_balanced (q : VolumeParams) :
-    0 < volumeBaseComplexityRate q := by
-  unfold volumeBaseComplexityRate
+theorem baseRate_pos_balanced (q : VolumeParams) :
+    0 < baseRate q := by
+  unfold baseRate
   have hn : (0 : ℝ) < q.n := by
     exact_mod_cast (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)
   have heps : 0 < q.eps := q.heps.1
@@ -37,7 +37,7 @@ theorem volumeBaseComplexityRate_pos_balanced (q : VolumeParams) :
     lt_of_lt_of_le zero_lt_one (le_max_left _ _)
   have hlogNEps : 0 < protectedLog ((q.n : ℝ) / q.eps) :=
     lt_of_lt_of_le zero_lt_one (le_max_left _ _)
-  have hlogTerminal : 0 < protectedLog (volumeTerminalScale q) :=
+  have hlogTerminal : 0 < protectedLog (terminalScale q) :=
     lt_of_lt_of_le zero_lt_one (le_max_left _ _)
   positivity
 
@@ -45,9 +45,9 @@ theorem volumeBaseComplexityRate_pos_balanced (q : VolumeParams) :
 cooling phase. -/
 noncomputable def figureOneGlobalFirstWalkRequirement
     (q : VolumeParams) (sigma2 : ℝ) : ℝ :=
-  let M := speedyAdjacentWarmConstant q
+  let M := warmConstant q
   4 * ((Real.log (2 * M) +
-      2 * Real.log (1 / (figureOnePerSampleMixingError q / 2))) /
+      2 * Real.log (1 / (sampleMixingError q / 2))) /
     (figureOneProposalRadius q sigma2 * Real.log 2 /
       (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1
 
@@ -55,7 +55,7 @@ noncomputable def figureOneGlobalFirstWalkRequirement
 noncomputable def figureOneGlobalRetryWalkRequirement
     (q : VolumeParams) (sigma2 : ℝ) : ℝ :=
   4 * ((Real.log 2 +
-      2 * Real.log (1 / (figureOnePerSampleMixingError q / 2))) /
+      2 * Real.log (1 / (sampleMixingError q / 2))) /
     (figureOneProposalRadius q sigma2 * Real.log 2 /
       (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1
 
@@ -100,13 +100,13 @@ theorem figureOneGlobalExpectedCostConstant_pos :
 `1/64` failure probability to exhausting the complete-run budget. -/
 noncomputable def figureOneGlobalQueryBudget (q : VolumeParams) : ℕ :=
   Nat.ceil (64 * figureOneGlobalExpectedCostConstant *
-    volumeBaseComplexityRate q)
+    baseRate q)
 
 theorem figureOneGlobalQueryBudget_pos (q : VolumeParams) :
     0 < figureOneGlobalQueryBudget q := by
   apply Nat.ceil_pos.mpr
   positivity [figureOneGlobalExpectedCostConstant_pos,
-    volumeBaseComplexityRate_pos_balanced q]
+    baseRate_pos_balanced q]
 
 /-- Finite local syntax parameters.  Each one-block collector internally
 uses `proposalCap + 1` raw proposals.  This places its intended exhaustion
@@ -118,7 +118,7 @@ noncomputable def figureOneGlobalBalancedParameters :
   proposalCap := fun q _ => figureOneGlobalQueryBudget q
   properStride := figureOneGlobalProperStride
   retryLimit := fun q _ =>
-    figureOneDependentMaxSampleCount q * figureOneDependentPhaseCount q
+    largestSampleCount q * numPhases q
 
 /-- The finite base syntax before installing the one shared cutoff. -/
 noncomputable def figureOneGlobalBalancedBaseProgram (q : VolumeParams) :
@@ -182,7 +182,7 @@ def FigureOneBalancedExpectedQueryCost
   ∫⁻ outcome, (outcome.2 : ENNReal)
       ∂((figureOneGlobalBalancedBaseProgram q).run oracle.query) ≤
     ENNReal.ofReal (figureOneGlobalExpectedCostConstant *
-      volumeBaseComplexityRate q)
+      baseRate q)
 
 /-- The global cutoff failure satisfies the raw multiplicative Markov bound.
 No phase count or sample count is paid in its probability budget. -/
@@ -201,10 +201,10 @@ theorem figureOneGloballyCappedBalancedBaseProgram_mul_failure_le_cost
 
 theorem figureOneGlobalQueryBudget_rate_lower (q : VolumeParams) :
     ENNReal.ofReal (64 * figureOneGlobalExpectedCostConstant *
-      volumeBaseComplexityRate q) ≤
+      baseRate q) ≤
       (figureOneGlobalQueryBudget q + 1 : ENNReal) := by
   have hceil : 64 * figureOneGlobalExpectedCostConstant *
-      volumeBaseComplexityRate q ≤
+      baseRate q ≤
       (figureOneGlobalQueryBudget q : ℝ) := Nat.le_ceil _
   have h := ENNReal.ofReal_le_ofReal hceil
   rw [ENNReal.ofReal_natCast] at h
@@ -224,13 +224,13 @@ theorem figureOneGloballyCappedBalancedBaseProgram_failure_le
     (figureOneGloballyCappedBalancedBaseProgram q).runEstimate
         oracle.query {none} ≤ ENNReal.ofReal (1 / 64 : ℝ) := by
   let R := ENNReal.ofReal (figureOneGlobalExpectedCostConstant *
-    volumeBaseComplexityRate q)
+    baseRate q)
   let failure := (figureOneGloballyCappedBalancedBaseProgram q).runEstimate
     oracle.query {none}
   have hR0 : R ≠ 0 := by
     exact ENNReal.ofReal_ne_zero_iff.mpr
       (mul_pos figureOneGlobalExpectedCostConstant_pos
-        (volumeBaseComplexityRate_pos_balanced q))
+        (baseRate_pos_balanced q))
   have hRtop : R ≠ ⊤ := ENNReal.ofReal_ne_top
   have hbudget : ENNReal.ofReal (64 : ℝ) * R ≤
       (figureOneGlobalQueryBudget q + 1 : ENNReal) := by

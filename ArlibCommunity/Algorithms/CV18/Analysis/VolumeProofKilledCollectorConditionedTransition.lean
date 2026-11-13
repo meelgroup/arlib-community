@@ -151,7 +151,7 @@ theorem bind_figureOneFinalScheduledRetainedOptionKernel_eq_live_dead
     (mu : Measure (Option (AmbientSpace q.n))) :
     mu.bind (figureOneFinalScheduledRetainedOptionKernel q I sigma2) =
       (retainedOptionScaledLiveLaw mu
-        (fun x => accuracyScaleFactor q • x)).bind
+        (fun x => scaleFactor q • x)).bind
           (scheduledBalancedAccuracyTransitionLawAux q I sigma2
             (figureOneFinalScheduledBalancedParameters.proposalCap q sigma2)
             (figureOneFinalScheduledBalancedParameters.properStride q sigma2)
@@ -160,7 +160,7 @@ theorem bind_figureOneFinalScheduledRetainedOptionKernel_eq_live_dead
   let someSet := scheduledRetainedSomeSet q.n
   let deadSet : Set (Option (AmbientSpace q.n)) := {none}
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let state : Option (AmbientSpace q.n) → AmbientSpace q.n :=
     scale ∘ scheduledRetainedGetDZero
   let transition := scheduledBalancedAccuracyTransitionLawAux q I sigma2
@@ -254,7 +254,7 @@ theorem bind_figureOneFinalScheduledRetainedOptionKernel_leUpTo_of_warm_iterated
       (fun _ => figureOneFinalScheduledRetainedOptionKernel q I sigma2)
       (exact.map some) i
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let good := target.map scale
   let eta := scheduledBalancedStationaryTargetError q +
     i • figureOneCorrectedTransitionBudget q
@@ -342,7 +342,7 @@ theorem bind_figureOneFinalScheduledRetainedOptionKernel_leUpTo_of_warm_iterated
       figureOneScheduledAcceptedTargetAt, figureOneScheduledSpeedyPiAt] using
       map_scheduledBalancedAcceptedTarget_scale_isWarm_eight q I hsigma2
   have hgood2 : Arlib.IsWarm
-      (ENNReal.ofReal (16 * speedyAdjacentWarmConstant q)) good2 pi := by
+      (ENNReal.ofReal (16 * warmConstant q)) good2 pi := by
     intro S hS
     rw [show good2 = (2 : ENNReal) • good by rfl,
       Measure.smul_apply, smul_eq_mul]
@@ -352,11 +352,11 @@ theorem bind_figureOneFinalScheduledRetainedOptionKernel_leUpTo_of_warm_iterated
         calc
           2 * good S ≤ 2 * (8 * pi S) := by gcongr
           _ = 16 * pi S := by ring
-      _ ≤ ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) * pi S := by
+      _ ≤ ENNReal.ofReal (16 * warmConstant q) * pi S := by
         gcongr
         rw [← ENNReal.ofReal_ofNat 16]
         exact ENNReal.ofReal_le_ofReal <| by
-          nlinarith [speedyAdjacentWarmConstant_one_le q]
+          nlinarith [warmConstant_one_le q]
   have hdead2 := retainedOptionDeadLaw_mass_mono_smul mu rho 2 hmule
   have herror2 : bad2 Set.univ + dead Set.univ ≤ 2 * eta := by
     rw [show bad2 = (2 : ENNReal) • bad by rfl,
@@ -377,10 +377,10 @@ theorem bind_figureOneFinalScheduledRetainedOptionKernel_leUpTo_of_warm_iterated
       (figureOneFinalScheduledBalancedParameters.properStride q sigma2)
       (figureOneFinalScheduledBalancedParameters.retryLimit q sigma2)
   have hM16 : (1 : ENNReal) ≤
-      ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+      ENNReal.ofReal (16 * warmConstant q) := by
     rw [← ENNReal.ofReal_one]
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
+      nlinarith [warmConstant_one_le q]
   have hmlu := measureLeUpTo_live_dead_bind_of_good_bad
     live dead good2 bad2 pi hM16 ENNReal.ofReal_ne_top hmass hlive2 hgood2
     herror2 transition htransition.1 htransition.2 (Measure.dirac none)

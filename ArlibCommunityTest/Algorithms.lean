@@ -83,7 +83,7 @@ example (q : VolumeParams) (I : VolumeInput q.n)
 
 /-- The headline: the concrete program `cv18Program`, defined under `Model/`,
 meets the Theorem 1.1 accuracy and membership-query guarantee. -/
-example : VolumeGuarantee cv18Program volumeTheoremOneOneRate :=
+example : VolumeGuarantee cv18Program queryRate :=
   cv18TheoremOneOne
 
 end ArlibCommunityTest.CV18

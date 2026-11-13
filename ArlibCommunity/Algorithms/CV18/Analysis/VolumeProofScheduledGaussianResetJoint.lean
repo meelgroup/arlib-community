@@ -40,12 +40,12 @@ theorem measurable_scheduledGaussianResetJointOutput
 
 theorem map_initializedScheduledRetainedHistory_jointOutput
     (q : VolumeParams) (I : VolumeInput q.n) (phase count : ℕ)
-    (hcount : count = figureOnePhaseSampleCount q (scheduleValue q phase)) :
+    (hcount : count = phaseSampleCount q (scheduleValue q phase)) :
     (initializedScheduledRetainedHistoryLaw q I phase (count - 1)).map
         (scheduledGaussianResetJointOutput q phase count) =
       figureOneScheduledGaussianPhaseTarget q I phase := by
   subst count
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
     (scheduleValue q (phase + 1))
   let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -61,7 +61,7 @@ theorem map_initializedScheduledRetainedHistory_jointOutput
   have hsum := map_iterated_initializedRetainedSampleHistoryKernel_sum
     K hK.1 hK.2 weight hweight exact (count - 1)
   have htail : count - 1 + 1 = count := by
-    have hcountPos := figureOnePhaseSampleCount_pos q (scheduleValue q phase)
+    have hcountPos := phaseSampleCount_pos q (scheduleValue q phase)
     omega
   rw [htail] at hsum
   rw [figureOneScheduledGaussianPhaseTarget_eq_map_retainedSumKernel]
@@ -103,9 +103,9 @@ theorem map_scheduledGaussianResetJointOutput_optionSnd
 state and the reference Eq.(6) bounds for its live empirical average. -/
 theorem exists_figureOneScheduledGaussianResetJointTarget
     (q : VolumeParams) (I : VolumeInput q.n) (phase count : ℕ)
-    (hcount : count = figureOnePhaseSampleCount q (scheduleValue q phase))
+    (hcount : count = phaseSampleCount q (scheduleValue q phase))
     (hcountPos : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q)
+    (hcountMax : count ≤ largestSampleCount q)
     {A mean factor : ℝ} (hA : 0 < A) (hmean0 : 0 ≤ mean)
     (hcoordinateMean :
       (∫ x, gaussianRatioWeight (n := q.n) (scheduleValue q phase)
@@ -136,7 +136,7 @@ theorem exists_figureOneScheduledGaussianResetJointTarget
             (scheduleValue_pos q phase) : Measure (AmbientSpace q.n)) ∧
       (∫ result, figureOneScheduledTraceLiveRawOutput result ^ 2 ∂target) ≤
         (1 + (factor - 1) / (count : ℝ)) * mean ^ 2 +
-          3 * (figureOneDependentEpsilon q +
+          3 * (dependenceError q +
               3 * (scheduledResetReferenceError q (count - 1)).toReal) ^
                 (1 / 3 : ℝ) *
             (1 - 1 / (count : ℝ)) * A ^ 2 := by

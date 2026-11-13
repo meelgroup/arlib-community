@@ -23,7 +23,7 @@ theorem scheduledPhase_ellGaussianMeasure_le_truncatedGaussianMeasure
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ) :
     ellGaussianMeasure
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2 ≤
+        (proposalRadius q sigma2) sigma2 ≤
       truncatedGaussianMeasure q I sigma2 := by
   apply Measure.le_iff.mpr
   intro A hA
@@ -35,7 +35,7 @@ theorem scheduledPhase_ellGaussianMeasure_le_truncatedGaussianMeasure
   calc
     (∫⁻ x in A ∩ figureOneScheduledPhaseBody q I sigma2,
         ell (figureOneScheduledPhaseBody q I sigma2)
-            (figureOneScheduledProposalRadius q sigma2) x *
+            (proposalRadius q sigma2) x *
           gaussianWeight sigma2 x) ≤
       ∫⁻ x in A ∩ figureOneScheduledPhaseBody q I sigma2,
         gaussianWeight sigma2 x := by
@@ -43,7 +43,7 @@ theorem scheduledPhase_ellGaussianMeasure_le_truncatedGaussianMeasure
       intro x
       simpa using mul_le_mul'
         (ell_le_one (figureOneScheduledPhaseBody q I sigma2)
-          (figureOneScheduledProposalRadius q sigma2) x) le_rfl
+          (proposalRadius q sigma2) x) le_rfl
     _ ≤ ∫⁻ x in A ∩ truncatedBody q I,
         gaussianWeight sigma2 x :=
       lintegral_mono' (Measure.restrict_mono hsub le_rfl) le_rfl
@@ -61,9 +61,9 @@ theorem scheduledPhase_gaussianMass_le_four_ellGaussianMass
     truncatedGaussianMeasure q I sigma2 Set.univ ≤
       4 * ellGaussianMeasure
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2 Set.univ := by
+        (proposalRadius q sigma2) sigma2 Set.univ := by
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let full : ENNReal := ∫⁻ x in truncatedBody q I, gaussianWeight sigma2 x
   let core : ENNReal := ∫⁻ x in K, gaussianWeight sigma2 x
   let speedy : ENNReal := ellGaussianMeasure K delta sigma2 Set.univ
@@ -109,15 +109,15 @@ theorem scheduledPhase_speedyStationary_isWarm_target
     IsWarm 4
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)
+        (proposalRadius q sigma2) sigma2)
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n)) := by
   let mu := ellGaussianMeasure
     (figureOneScheduledPhaseBody q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
+    (proposalRadius q sigma2) sigma2
   let nu := truncatedGaussianMeasure q I sigma2
-  have hdelta : 0 < figureOneScheduledProposalRadius q sigma2 :=
-    figureOneScheduledProposalRadius_pos q hsigma2
+  have hdelta : 0 < proposalRadius q sigma2 :=
+    proposalRadius_pos q hsigma2
   have hmu0 : mu Set.univ ≠ 0 := by
     dsimp [mu]
     exact ellGaussianMeasure_univ_ne_zero
@@ -130,7 +130,7 @@ theorem scheduledPhase_speedyStationary_isWarm_target
     dsimp [mu]
     exact ellGaussianMeasure_ne_top_cv18
       (figureOneScheduledPhaseBody_volume_ne_top q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) hsigma2
+      (proposalRadius q sigma2) hsigma2
   have hnu0 : nu Set.univ ≠ 0 := by
     intro hzero
     have hmeasure : nu = 0 := Measure.measure_univ_eq_zero.mp hzero
@@ -161,10 +161,10 @@ theorem truncatedGaussianProbability_scheduledAcceptance_map_le_self
       truncatedGaussianProbability q I sigma2 hsigma2
     (nu.withDensity
       (scheduledAccuracyGaussianRejectionAcceptance q I sigma2)).map
-        (fun x => (accuracyScaleFactor q)⁻¹ • x) ≤ nu := by
+        (fun x => (scaleFactor q)⁻¹ • x) ≤ nu := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   let core := c • K
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
   let g : AmbientSpace q.n → ENNReal := gaussianScaleAcceptance sigma2 c
@@ -175,8 +175,8 @@ theorem truncatedGaussianProbability_scheduledAcceptance_map_le_self
       (gaussianWeight (sigma2 / c ^ 2))
   let nu : Measure (AmbientSpace q.n) :=
     truncatedGaussianProbability q I sigma2 hsigma2
-  have hc0 : 0 < c := by simpa [c] using accuracyScaleFactor_pos q
-  have hc1 : c ≤ 1 := by simpa [c] using accuracyScaleFactor_le_one q
+  have hc0 : 0 < c := by simpa [c] using scaleFactor_pos q
+  have hc1 : c ≤ 1 := by simpa [c] using scaleFactor_le_one q
   have hK : MeasurableSet K :=
     figureOneScheduledPhaseBody_measurable q I sigma2
   have hcore : MeasurableSet core := by
@@ -187,7 +187,7 @@ theorem truncatedGaussianProbability_scheduledAcceptance_map_le_self
     refine ⟨unitBall_subset_truncatedBody q I
       (Metric.mem_closedBall_self zero_le_one), ?_⟩
     exact Metric.mem_closedBall_self
-      (figureOneScheduledPhaseRadius_pos q hsigma2).le
+      (phaseRadius_pos q hsigma2).le
   have hcoreK : core ⊆ K := by
     rintro _ ⟨x, hx, rfl⟩
     exact (figureOneScheduledPhaseBody_convex q I sigma2).smul_mem_of_zero_mem
@@ -349,22 +349,22 @@ theorem stationary_scheduledAcceptedSubmeasure_le_four_target
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     let pi := ellGaussianProb
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2
+      (proposalRadius q sigma2) sigma2
     let nu : Measure (AmbientSpace q.n) :=
       truncatedGaussianProbability q I sigma2 hsigma2
     (pi.withDensity
       (scheduledAccuracyGaussianRejectionAcceptance q I sigma2)).map
-        (fun x => (accuracyScaleFactor q)⁻¹ • x) ≤
+        (fun x => (scaleFactor q)⁻¹ • x) ≤
           (4 : ENNReal) • nu := by
   dsimp only
   let pi := ellGaussianProb
     (figureOneScheduledPhaseBody q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
+    (proposalRadius q sigma2) sigma2
   let nu : Measure (AmbientSpace q.n) :=
     truncatedGaussianProbability q I sigma2 hsigma2
   let accept := scheduledAccuracyGaussianRejectionAcceptance q I sigma2
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    (accuracyScaleFactor q)⁻¹ • x
+    (scaleFactor q)⁻¹ • x
   have hpi : pi ≤ (4 : ENNReal) • nu := by
     apply Measure.le_iff.mpr
     intro A hA
@@ -386,7 +386,7 @@ theorem stationary_scheduledAcceptedSubmeasure_le_four_target
   have hmap := Measure.map_mono hdensity (by
     change Measurable scale
     exact (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id)
+      (scaleFactor q)⁻¹).smul measurable_id)
   rw [Measure.map_smul (hf := by fun_prop)] at hmap
   have hself := truncatedGaussianProbability_scheduledAcceptance_map_le_self
     q I hsigma2
@@ -407,23 +407,23 @@ theorem stationary_scheduledAcceptedTarget_isWarm
       (scheduledBalancedAccuracyGaussianAcceptedTargetLaw q I sigma2
         (ellGaussianProb
           (figureOneScheduledPhaseBody q I sigma2)
-          (figureOneScheduledProposalRadius q sigma2) sigma2))
+          (proposalRadius q sigma2) sigma2))
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n)) := by
   let pi := ellGaussianProb
     (figureOneScheduledPhaseBody q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
+    (proposalRadius q sigma2) sigma2
   let nu : Measure (AmbientSpace q.n) :=
     truncatedGaussianProbability q I sigma2 hsigma2
   let accepted :=
     (pi.withDensity
       (scheduledAccuracyGaussianRejectionAcceptance q I sigma2)).map
-        (fun x => (accuracyScaleFactor q)⁻¹ • x)
-  have hdelta : 0 < figureOneScheduledProposalRadius q sigma2 :=
-    figureOneScheduledProposalRadius_pos q hsigma2
+        (fun x => (scaleFactor q)⁻¹ • x)
+  have hdelta : 0 < proposalRadius q sigma2 :=
+    proposalRadius_pos q hsigma2
   have hmass0 : ellGaussianMeasure
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2 Set.univ ≠ 0 :=
+      (proposalRadius q sigma2) sigma2 Set.univ ≠ 0 :=
     ellGaussianMeasure_univ_ne_zero
       (figureOneScheduledPhaseBody_measurable q I sigma2)
       (figureOneScheduledPhaseBody_convex q I sigma2)
@@ -432,10 +432,10 @@ theorem stationary_scheduledAcceptedTarget_isWarm
       hdelta sigma2
   have hmassTop : ellGaussianMeasure
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2 Set.univ ≠ ⊤ :=
+      (proposalRadius q sigma2) sigma2 Set.univ ≠ ⊤ :=
     ellGaussianMeasure_ne_top_cv18
       (figureOneScheduledPhaseBody_volume_ne_top q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) hsigma2
+      (proposalRadius q sigma2) hsigma2
   let _ : IsProbabilityMeasure pi :=
     isProbabilityMeasure_ellGaussianProb hmass0 hmassTop
   have hacceptedLower : ENNReal.ofReal (1 / 8 : ℝ) ≤

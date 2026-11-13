@@ -185,11 +185,11 @@ the stationary-target correction. -/
 theorem scheduledRetainedEndpointError_one_toReal_le
     (q : VolumeParams) :
     (scheduledRetainedEndpointError q 1).toReal ≤
-      (3 / 2 : ℝ) * figureOnePerSampleMixingError q := by
+      (3 / 2 : ℝ) * sampleMixingError q := by
   let delta := figureOneCorrectedTransitionBudget q
   let stationary := scheduledBalancedStationaryTargetError q
-  have hnu : 0 < figureOnePerSampleMixingError q :=
-    figureOnePerSampleMixingError_pos q
+  have hnu : 0 < sampleMixingError q :=
+    sampleMixingError_pos q
   have hdeltaTop : delta ≠ ⊤ := by
     simp [delta, figureOneCorrectedTransitionBudget]
   have htargetTop : figureOneCorrectedTargetBudget q ≠ ⊤ :=
@@ -200,7 +200,7 @@ theorem scheduledRetainedEndpointError_one_toReal_le
   have htwiceTop : 2 * stationary ≠ ⊤ :=
     ENNReal.mul_ne_top (by norm_num) hstationaryTop
   have hstationaryReal : stationary.toReal ≤
-      figureOnePerSampleMixingError q / 4 := by
+      sampleMixingError q / 4 := by
     have hreal := ENNReal.toReal_mono htargetTop
       (scheduledBalancedStationaryTargetError_le_targetBudget q)
     simpa [stationary, figureOneCorrectedTargetBudget, delta,
@@ -219,7 +219,7 @@ theorem scheduledResetReferenceError_toReal_le
     (q : VolumeParams) (tail : ℕ) :
     (scheduledResetReferenceError q tail).toReal ≤
       (3 / 2 : ℝ) * (tail : ℝ) *
-        figureOnePerSampleMixingError q := by
+        sampleMixingError q := by
   rw [scheduledResetReferenceError_eq_nsmul, ENNReal.toReal_nsmul]
   have htail : 0 ≤ (tail : ℝ) := Nat.cast_nonneg tail
   have hone := scheduledRetainedEndpointError_one_toReal_le q
@@ -231,35 +231,35 @@ fixed-cost reference, its coefficient grows by at most a factor `5/2`.
 This uses the global sample/phase allocation from Lemma 7.17(c). -/
 theorem scheduledResetReference_transportEpsilon_le
     (q : VolumeParams) {count : ℕ}
-    (hcount : count ≤ figureOneDependentMaxSampleCount q) :
-    figureOneDependentEpsilon q +
+    (hcount : count ≤ largestSampleCount q) :
+    dependenceError q +
         3 * (scheduledResetReferenceError q (count - 1)).toReal ≤
-      (5 / 2 : ℝ) * figureOneDependentEpsilon q := by
-  have hnu : 0 < figureOnePerSampleMixingError q :=
-    figureOnePerSampleMixingError_pos q
-  have htailNat : count - 1 ≤ figureOneDependentMaxSampleCount q :=
+      (5 / 2 : ℝ) * dependenceError q := by
+  have hnu : 0 < sampleMixingError q :=
+    sampleMixingError_pos q
+  have htailNat : count - 1 ≤ largestSampleCount q :=
     (Nat.sub_le count 1).trans hcount
   have htail : ((count - 1 : ℕ) : ℝ) ≤
-      (figureOneDependentMaxSampleCount q : ℝ) := by
+      (largestSampleCount q : ℝ) := by
     exact_mod_cast htailNat
   have hreset := scheduledResetReferenceError_toReal_le q (count - 1)
   have hresetMax :
       (scheduledResetReferenceError q (count - 1)).toReal ≤
         (3 / 2 : ℝ) *
-          (figureOneDependentMaxSampleCount q : ℝ) *
-            figureOnePerSampleMixingError q := by
+          (largestSampleCount q : ℝ) *
+            sampleMixingError q := by
     exact hreset.trans (mul_le_mul_of_nonneg_right
       (mul_le_mul_of_nonneg_left htail (by norm_num)) hnu.le)
-  have hm : (1 : ℝ) ≤ figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
-  have hk0 : 0 ≤ (figureOneDependentMaxSampleCount q : ℝ) := by
+  have hm : (1 : ℝ) ≤ numPhases q := by
+    exact_mod_cast numPhases_pos q
+  have hk0 : 0 ≤ (largestSampleCount q : ℝ) := by
     positivity
   have hkm :
-      (figureOneDependentMaxSampleCount q : ℝ) *
-          figureOnePerSampleMixingError q ≤
-        (figureOneDependentMaxSampleCount q : ℝ) *
-          (figureOneDependentPhaseCount q : ℝ) *
-            figureOnePerSampleMixingError q := by
+      (largestSampleCount q : ℝ) *
+          sampleMixingError q ≤
+        (largestSampleCount q : ℝ) *
+          (numPhases q : ℝ) *
+            sampleMixingError q := by
     have := mul_le_mul_of_nonneg_left hm hk0
     nlinarith
   have hbudget := figureOne_lemma717c_budget q
@@ -567,7 +567,7 @@ history-level comparison costs three times its total reset error. -/
 theorem exists_scheduledRetainedResetReference_all_approxIndep_with_state
     (q : VolumeParams) (I : VolumeInput q.n) (phase count : ℕ)
     (hcount0 : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q) :
+    (hcountMax : count ≤ largestSampleCount q) :
     ∃ reference : Measure (RetainedSampleHistory (AmbientSpace q.n)),
       IsProbabilityMeasure reference ∧
       MeasureLeUpTo
@@ -580,7 +580,7 @@ theorem exists_scheduledRetainedResetReference_all_approxIndep_with_state
         scheduledRetainedExactSome q I phase ∧
       (∀ r, r < count →
         ApproxIndepFun
-          (figureOneDependentEpsilon q +
+          (dependenceError q +
             3 * (scheduledResetReferenceError q (count - 1)).toReal)
           (sequentialPrefixSum
             (retainedSampleObservation
@@ -631,7 +631,7 @@ state marginal is not needed by the caller. -/
 theorem exists_scheduledRetainedResetReference_all_approxIndep
     (q : VolumeParams) (I : VolumeInput q.n) (phase count : ℕ)
     (hcount0 : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q) :
+    (hcountMax : count ≤ largestSampleCount q) :
     ∃ reference : Measure (RetainedSampleHistory (AmbientSpace q.n)),
       IsProbabilityMeasure reference ∧
       MeasureLeUpTo
@@ -642,7 +642,7 @@ theorem exists_scheduledRetainedResetReference_all_approxIndep
           scheduledRetainedExactSome q I phase) ∧
       (∀ r, r < count →
         ApproxIndepFun
-          (figureOneDependentEpsilon q +
+          (dependenceError q +
             3 * (scheduledResetReferenceError q (count - 1)).toReal)
           (sequentialPrefixSum
             (retainedSampleObservation
@@ -748,7 +748,7 @@ term is the cost of transporting the joint rectangle and its two marginals.
 theorem exists_initializedScheduledRetainedShadowReference_all_approxIndep
     (q : VolumeParams) (I : VolumeInput q.n) (phase count : ℕ)
     (hcount0 : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q) :
+    (hcountMax : count ≤ largestSampleCount q) :
     ∃ reference : Measure (RetainedSampleHistory (AmbientSpace q.n)),
       IsProbabilityMeasure reference ∧
       MeasureLeUpTo
@@ -759,7 +759,7 @@ theorem exists_initializedScheduledRetainedShadowReference_all_approxIndep
           scheduledRetainedExactSome q I phase) ∧
       (∀ r, r < count →
         ApproxIndepFun
-          (figureOneDependentEpsilon q +
+          (dependenceError q +
             3 * (scheduledShadowReferenceError q (count - 1)).toReal)
           (sequentialPrefixSum
             (retainedSampleObservation

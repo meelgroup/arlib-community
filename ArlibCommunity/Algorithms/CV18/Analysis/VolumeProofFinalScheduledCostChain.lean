@@ -27,8 +27,8 @@ noncomputable def figureOneFinalScheduledRetainedGaussianPhaseProgram
           (scheduleValue q phase))
         (figureOneFinalScheduledBalancedParameters.retryLimit q
           (scheduleValue q phase))
-        (figureOnePhaseSampleCount q (scheduleValue q phase))
-        (accuracyScaleFactor q • point)).bind fun result =>
+        (phaseSampleCount q (scheduleValue q phase))
+        (scaleFactor q • point)).bind fun result =>
           .pure (optionSnd result)
 
 theorem figureOneFinalScheduledRetainedGaussianPhaseProgram_countedMeasurable
@@ -50,10 +50,10 @@ theorem figureOneFinalScheduledRetainedGaussianPhaseProgram_countedMeasurable
         (scheduleValue q phase))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (scheduleValue q phase))
-      (figureOnePhaseSampleCount q (scheduleValue q phase))
-      (accuracyScaleFactor q • point)
+      (phaseSampleCount q (scheduleValue q phase))
+      (scaleFactor q • point)
   have hscale : Measurable fun point : AmbientSpace q.n =>
-      accuracyScaleFactor q • point := by fun_prop
+      scaleFactor q • point := by fun_prop
   have hcollectBase := scheduledBalancedAccuracyRetryCollect_countedMeasurable
     q I oracle (scheduleValue_pos q phase)
       (measurable_gaussianRatioWeight (scheduleValue q phase)
@@ -64,11 +64,11 @@ theorem figureOneFinalScheduledRetainedGaussianPhaseProgram_countedMeasurable
         (scheduleValue q phase))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (scheduleValue q phase))
-      (figureOnePhaseSampleCount q (scheduleValue q phase))
+      (phaseSampleCount q (scheduleValue q phase))
   have hcollectMeas : Measurable fun point => (collect point).run oracle.query :=
     hcollectBase.1.comp hscale
   have hcollect : ∀ point, (collect point).CountedStronglyMeasurable oracle.query :=
-    fun point => hcollectBase.2 (accuracyScaleFactor q • point)
+    fun point => hcollectBase.2 (scaleFactor q • point)
   have hsome := MembershipOracleProgram.countedMeasurable_bind_pure
     oracle.query collect (fun z : AmbientSpace q.n ×
       Option (ℝ × AmbientSpace q.n) => optionSnd z.2)
@@ -101,8 +101,8 @@ theorem figureOneFinalScheduledRetainedGaussianPhaseProgram_cost
               (scheduleValue q phase))
             (figureOneFinalScheduledBalancedParameters.retryLimit q
               (scheduleValue q phase))
-            (figureOnePhaseSampleCount q (scheduleValue q phase))
-            (accuracyScaleFactor q • point)).run oracle.query) := by
+            (phaseSampleCount q (scheduleValue q phase))
+            (scaleFactor q • point)).run oracle.query) := by
   cases state with
   | none =>
       exact MembershipOracleProgram.countedQueryCost_pure oracle.query none
@@ -120,7 +120,7 @@ theorem figureOneFinalScheduledRetainedGaussianPhaseProgram_cost
                 (scheduleValue q phase))
               (figureOneFinalScheduledBalancedParameters.retryLimit q
                 (scheduleValue q phase))
-              (figureOnePhaseSampleCount q (scheduleValue q phase))).2 _)
+              (phaseSampleCount q (scheduleValue q phase))).2 _)
 
 theorem figureOneFinalScheduledRetainedGaussianPhaseProgram_runEstimate
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
@@ -131,7 +131,7 @@ theorem figureOneFinalScheduledRetainedGaussianPhaseProgram_runEstimate
         (scheduleValue q phase)
         (gaussianRatioWeight (scheduleValue q phase)
           (scheduleValue q (phase + 1)))
-        (figureOnePhaseSampleCount q (scheduleValue q phase) - 1) state := by
+        (phaseSampleCount q (scheduleValue q phase) - 1) state := by
   cases state with
   | none => rfl
   | some point =>
@@ -145,14 +145,14 @@ theorem figureOneFinalScheduledRetainedGaussianPhaseProgram_runEstimate
             (scheduleValue q phase))
           (figureOneFinalScheduledBalancedParameters.retryLimit q
             (scheduleValue q phase))
-          (figureOnePhaseSampleCount q (scheduleValue q phase))).2
-            (accuracyScaleFactor q • point)
+          (phaseSampleCount q (scheduleValue q phase))).2
+            (scaleFactor q • point)
       unfold figureOneFinalScheduledRetainedGaussianPhaseProgram
-      have hcount : 0 < figureOnePhaseSampleCount q (scheduleValue q phase) := by
-        unfold figureOnePhaseSampleCount
+      have hcount : 0 < phaseSampleCount q (scheduleValue q phase) := by
+        unfold phaseSampleCount
         split_ifs
-        · exact figureOneFixedSampleCount_pos q
-        · exact figureOneSampleCount_pos q
+        · exact fixedRateSampleCount_pos q
+        · exact sampleCount_pos q
       rw [MembershipOracleProgram.runEstimate_bind oracle.query _ _
         hcollect.stronglyMeasurable]
       · rw [scheduledBalancedAccuracyRetryCollect_runEstimate_eq_transitionCollectLaw
@@ -185,13 +185,13 @@ theorem lintegral_optionSnd_scheduledRatioTransition_eq_retainedKernel
           (scheduleValue q phase)
           (gaussianRatioWeight (scheduleValue q phase)
             (scheduleValue q (phase + 1)))
-          (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)
+          (phaseSampleCount q (scheduleValue q phase) - 1)
           (some point)) := by
-  have hcount : 0 < figureOnePhaseSampleCount q (scheduleValue q phase) := by
-    unfold figureOnePhaseSampleCount
+  have hcount : 0 < phaseSampleCount q (scheduleValue q phase) := by
+    unfold phaseSampleCount
     split_ifs
-    · exact figureOneFixedSampleCount_pos q
-    · exact figureOneSampleCount_pos q
+    · exact fixedRateSampleCount_pos q
+    · exact sampleCount_pos q
   let collect := scheduledBalancedTransitionCollectLaw q I
     (scheduleValue q phase)
     (gaussianRatioWeight (scheduleValue q phase) (scheduleValue q (phase + 1)))
@@ -201,10 +201,10 @@ theorem lintegral_optionSnd_scheduledRatioTransition_eq_retainedKernel
       (scheduleValue q phase))
     (figureOneFinalScheduledBalancedParameters.retryLimit q
       (scheduleValue q phase))
-    (figureOnePhaseSampleCount q (scheduleValue q phase)) 0
-    (accuracyScaleFactor q • point)
+    (phaseSampleCount q (scheduleValue q phase)) 0
+    (scaleFactor q • point)
   let average := balancedCoolingAverage
-    (n := q.n) (figureOnePhaseSampleCount q (scheduleValue q phase))
+    (n := q.n) (phaseSampleCount q (scheduleValue q phase))
   have havg : Measurable average := measurable_balancedCoolingAverage _
   have hcollect : IsProbabilityMeasure collect :=
     (scheduledBalancedTransitionCollectLaw_measurable_and_probability
@@ -217,7 +217,7 @@ theorem lintegral_optionSnd_scheduledRatioTransition_eq_retainedKernel
           (scheduleValue q phase))
         (figureOneFinalScheduledBalancedParameters.retryLimit q
           (scheduleValue q phase))
-        (figureOnePhaseSampleCount q (scheduleValue q phase))).2 _ _
+        (phaseSampleCount q (scheduleValue q phase))).2 _ _
   unfold scheduledBalancedCoolingRatioTransitionLaw
     figureOneFinalScheduledCompleteRetainedKernel
   rw [Nat.sub_add_cancel hcount]
@@ -230,7 +230,7 @@ theorem lintegral_optionSnd_scheduledRatioTransition_eq_retainedKernel
   apply lintegral_congr
   intro result
   change f (optionSnd (balancedCoolingAverage
-    (figureOnePhaseSampleCount q (scheduleValue q phase)) result)) = _
+    (phaseSampleCount q (scheduleValue q phase)) result)) = _
   rw [optionSnd_balancedCoolingAverage]
 
 /-- Execute a consecutive block of Gaussian phases while retaining only the
@@ -306,13 +306,13 @@ theorem lintegral_figureOneFinalScheduledRetainedGaussianChain_succ
           (scheduleValue q phase)
           (gaussianRatioWeight (scheduleValue q phase)
             (scheduleValue q (phase + 1)))
-          (figureOnePhaseSampleCount q (scheduleValue q phase) - 1))) := by
+          (phaseSampleCount q (scheduleValue q phase) - 1))) := by
   let phaseProgram := figureOneFinalScheduledRetainedGaussianPhaseProgram q phase
   let tailProgram := figureOneFinalScheduledRetainedGaussianChain q (phase + 1) steps
   let retainedKernel := figureOneFinalScheduledCompleteRetainedKernel q I
     (scheduleValue q phase)
     (gaussianRatioWeight (scheduleValue q phase) (scheduleValue q (phase + 1)))
-    (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)
+    (phaseSampleCount q (scheduleValue q phase) - 1)
   have hphase :=
     figureOneFinalScheduledRetainedGaussianPhaseProgram_countedMeasurable
       q I oracle phase
@@ -349,7 +349,7 @@ theorem lintegral_figureOneFinalScheduledRetainedGaussianChain_succ
       q I (scheduleValue_pos q phase)
         (measurable_gaussianRatioWeight (scheduleValue q phase)
           (scheduleValue q (phase + 1)))
-        (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)).1.aemeasurable
+        (phaseSampleCount q (scheduleValue q phase) - 1)).1.aemeasurable
   · exact htailCost.aemeasurable
 
 /-- The retained law after one more Gaussian phase is exactly the next trace
@@ -364,7 +364,7 @@ theorem figureOneFinalScheduledTraceRetained_succ
         (scheduleValue q phase)
         (gaussianRatioWeight (scheduleValue q phase)
           (scheduleValue q (phase + 1)))
-        (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)) =
+        (phaseSampleCount q (scheduleValue q phase) - 1)) =
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I (phase + 1)).map
           scheduledBalancedTraceRetainedOption := by
@@ -445,7 +445,7 @@ theorem bind_figureOneFinalScheduledRetainedGaussianChain_runEstimate_eq_trace
         (scheduleValue q phase)
         (gaussianRatioWeight (scheduleValue q phase)
           (scheduleValue q (phase + 1)))
-        (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)
+        (phaseSampleCount q (scheduleValue q phase) - 1)
       have hphase :=
         figureOneFinalScheduledRetainedGaussianPhaseProgram_countedMeasurable
           q I oracle phase
@@ -534,7 +534,7 @@ noncomputable def figureOneFinalScheduledRetainedTerminalProgram
           (terminalVariance q))
         (figureOneFinalScheduledBalancedParameters.retryLimit q
           (terminalVariance q))
-        (figureOneSampleCount q) (accuracyScaleFactor q • point)).bind
+        (sampleCount q) (scaleFactor q • point)).bind
           fun result => .pure (optionSnd result)
 
 theorem figureOneFinalScheduledRetainedTerminalProgram_countedMeasurable
@@ -553,7 +553,7 @@ theorem figureOneFinalScheduledRetainedTerminalProgram_countedMeasurable
         (terminalVariance q))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (terminalVariance q))
-      (figureOneSampleCount q) (accuracyScaleFactor q • point)
+      (sampleCount q) (scaleFactor q • point)
   have hbase := scheduledBalancedAccuracyRetryCollect_countedMeasurable
     q I oracle (terminalVariance_pos' q)
       (measurable_uniformRatioWeight (terminalVariance q))
@@ -562,13 +562,13 @@ theorem figureOneFinalScheduledRetainedTerminalProgram_countedMeasurable
       (figureOneFinalScheduledBalancedParameters.properStride q
         (terminalVariance q))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
-        (terminalVariance q)) (figureOneSampleCount q)
+        (terminalVariance q)) (sampleCount q)
   have hscale : Measurable fun point : AmbientSpace q.n =>
-      accuracyScaleFactor q • point := by fun_prop
+      scaleFactor q • point := by fun_prop
   have hcollectMeas : Measurable fun point => (collect point).run oracle.query :=
     hbase.1.comp hscale
   have hcollect : ∀ point, (collect point).CountedStronglyMeasurable oracle.query :=
-    fun point => hbase.2 (accuracyScaleFactor q • point)
+    fun point => hbase.2 (scaleFactor q • point)
   have hsome := MembershipOracleProgram.countedMeasurable_bind_pure
     oracle.query collect (fun z : AmbientSpace q.n ×
       Option (ℝ × AmbientSpace q.n) => optionSnd z.2)
@@ -600,7 +600,7 @@ theorem figureOneFinalScheduledRetainedTerminalProgram_cost
               (terminalVariance q))
             (figureOneFinalScheduledBalancedParameters.retryLimit q
               (terminalVariance q))
-            (figureOneSampleCount q) (accuracyScaleFactor q • point)).run
+            (sampleCount q) (scaleFactor q • point)).run
               oracle.query) := by
   cases state with
   | none =>
@@ -617,7 +617,7 @@ theorem figureOneFinalScheduledRetainedTerminalProgram_cost
               (figureOneFinalScheduledBalancedParameters.properStride q
                 (terminalVariance q))
               (figureOneFinalScheduledBalancedParameters.retryLimit q
-                (terminalVariance q)) (figureOneSampleCount q)).2 _)
+                (terminalVariance q)) (sampleCount q)).2 _)
 
 /-- Retained-state cost interpreter for all Gaussian phases followed by the
 terminal uniform phase. -/
@@ -1148,7 +1148,7 @@ theorem lintegral_figureOneFinalScheduledCoolingProduct_cost_eq_costTail
           ∂target := by
       apply lintegral_congr
       intro point
-      rw [explicitScheduleVariances_eq_scheduledVarianceSegment]
+      rw [coolingSchedule_eq_scheduledVarianceSegment]
       exact figureOneFinalScheduledCoolingProduct_cost_eq_retainedChain
         q I oracle 0 (terminalPhaseSteps q) point
     _ = ∫⁻ state, countedQueryCost ((retained state).run oracle.query)

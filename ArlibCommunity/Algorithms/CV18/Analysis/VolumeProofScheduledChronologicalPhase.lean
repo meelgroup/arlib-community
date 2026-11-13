@@ -30,11 +30,11 @@ theorem figureOneIdealPhaseSampleCount_pos
     0 < figureOneIdealPhaseSampleCount q phase := by
   cases phase with
   | fixed k =>
-      exact figureOneFixedSampleCount_pos q
+      exact fixedRateSampleCount_pos q
   | accelerated k =>
-      exact figureOneSampleCount_pos q
+      exact sampleCount_pos q
   | terminal =>
-      exact figureOneSampleCount_pos q
+      exact sampleCount_pos q
 
 /-- A canonical retained target point from a nonempty ideal phase block. -/
 noncomputable def figureOneIdealPhaseRetainedPoint
@@ -49,7 +49,7 @@ theorem measurable_figureOneIdealPhaseRetainedPoint
 
 theorem figureOneChronologicalPhaseAt_succ
     (q : VolumeParams) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q) :
+    (hphase : phase < numPhases q) :
     figureOneChronologicalPhaseAt q (phase + 1) =
       figureOneChronologicalPhaseOrder q ⟨phase, hphase⟩ := by
   simp [figureOneChronologicalPhaseAt, Nat.mod_eq_of_lt hphase]
@@ -58,7 +58,7 @@ theorem figureOneChronologicalPhaseAt_succ
 while retaining one stationary point from that same ideal block. -/
 noncomputable def figureOneIdealChronologicalAppend
     (q : VolumeParams) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q) :
+    (hphase : phase < numPhases q) :
     FigureOneIdealExperimentSpace q × Option (BalancedCoolingHistory q.n) →
       FigureOneIdealExperimentSpace q × Option (BalancedCoolingHistory q.n) :=
   let p := figureOneChronologicalPhaseOrder q ⟨phase, hphase⟩
@@ -72,7 +72,7 @@ noncomputable def figureOneIdealChronologicalAppend
 
 theorem measurable_figureOneIdealChronologicalAppend
     (q : VolumeParams) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q) :
+    (hphase : phase < numPhases q) :
     Measurable (figureOneIdealChronologicalAppend q phase hphase) := by
   let p := figureOneChronologicalPhaseOrder q ⟨phase, hphase⟩
   have hsample : Measurable fun state :
@@ -113,7 +113,7 @@ theorem measurable_figureOneIdealChronologicalAppend
 
 theorem figureOneIdealChronologicalAppend_coordinate
     (q : VolumeParams) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     (samples : FigureOneIdealExperimentSpace q)
     (history : BalancedCoolingHistory q.n)
     (hcount : history.2.1 = phase) :
@@ -145,7 +145,7 @@ noncomputable def scheduledBalancedTransitionCollectLaw
     ℕ → ℝ → AmbientSpace q.n →
       Measure (Option (ℝ × AmbientSpace q.n))
   | 0, total, current =>
-      Measure.dirac (some (total, (accuracyScaleFactor q)⁻¹ • current))
+      Measure.dirac (some (total, (scaleFactor q)⁻¹ • current))
   | samples + 1, total, current =>
       (scheduledBalancedAccuracyTransitionLawAux q I sigma2 proposalCap
         properStride retryLimit current).bind fun result =>
@@ -154,7 +154,7 @@ noncomputable def scheduledBalancedTransitionCollectLaw
           | some target =>
               scheduledBalancedTransitionCollectLaw q I sigma2 weight
                 proposalCap properStride retryLimit samples
-                (total + weight target) (accuracyScaleFactor q • target)
+                (total + weight target) (scaleFactor q • target)
 
 theorem scheduledBalancedTransitionCollectLaw_measurable_and_probability
     (q : VolumeParams) (I : VolumeInput q.n)
@@ -178,12 +178,12 @@ theorem scheduledBalancedTransitionCollectLaw_measurable_and_probability
       · exact Measure.measurable_dirac.comp <|
           measurable_some.comp <| measurable_fst.prodMk <|
             (measurable_const : Measurable fun _ :
-              ℝ × AmbientSpace q.n => (accuracyScaleFactor q)⁻¹).smul
+              ℝ × AmbientSpace q.n => (scaleFactor q)⁻¹).smul
                 measurable_snd
       · intro total current
         change IsProbabilityMeasure
           (Measure.dirac
-            (some (total, (accuracyScaleFactor q)⁻¹ • current)))
+            (some (total, (scaleFactor q)⁻¹ • current)))
         infer_instance
   | succ samples ih =>
       let tail : (ℝ × AmbientSpace q.n) × Option (AmbientSpace q.n) →
@@ -193,19 +193,19 @@ theorem scheduledBalancedTransitionCollectLaw_measurable_and_probability
         | some target =>
             scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
               properStride retryLimit samples
-              (value.1.1 + weight target) (accuracyScaleFactor q • target)
+              (value.1.1 + weight target) (scaleFactor q • target)
       have hsome : Measurable fun value :
           (ℝ × AmbientSpace q.n) × AmbientSpace q.n =>
             scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
               properStride retryLimit samples
               (value.1.1 + weight value.2)
-              (accuracyScaleFactor q • value.2) := by
+              (scaleFactor q • value.2) := by
         exact ih.1.comp <|
           ((measurable_fst.comp measurable_fst).add
             (hweight.comp measurable_snd)).prodMk <|
               (measurable_const : Measurable fun _ :
                 (ℝ × AmbientSpace q.n) × AmbientSpace q.n =>
-                  accuracyScaleFactor q).smul measurable_snd
+                  scaleFactor q).smul measurable_snd
       have htail : Measurable tail := by
         dsimp only [tail]
         convert Measurable.optionElimParam
@@ -215,7 +215,7 @@ theorem scheduledBalancedTransitionCollectLaw_measurable_and_probability
             scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
               properStride retryLimit samples
               (value.1.1 + weight value.2)
-              (accuracyScaleFactor q • value.2))
+              (scaleFactor q • value.2))
           (Measure.measurable_dirac.comp measurable_const) hsome using 1
         ext value
         cases value.2 <;> rfl
@@ -263,9 +263,9 @@ noncomputable def scheduledBalancedCoolingRatioTransitionLaw
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOnePhaseSampleCount q sigma2) 0
-      (accuracyScaleFactor q • current)).map
-    (balancedCoolingAverage (figureOnePhaseSampleCount q sigma2))
+      (phaseSampleCount q sigma2) 0
+      (scaleFactor q • current)).map
+    (balancedCoolingAverage (phaseSampleCount q sigma2))
 
 theorem scheduledBalancedCoolingRatioTransitionLaw_measurable_and_probability
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
@@ -279,19 +279,19 @@ theorem scheduledBalancedCoolingRatioTransitionLaw_measurable_and_probability
   let cap := parameters.proposalCap q sigma2
   let stride := parameters.properStride q sigma2
   let retries := parameters.retryLimit q sigma2
-  let samples := figureOnePhaseSampleCount q sigma2
+  let samples := phaseSampleCount q sigma2
   let weight : AmbientSpace q.n → ℝ := gaussianRatioWeight sigma2 tau2
   have hcollect :=
     scheduledBalancedTransitionCollectLaw_measurable_and_probability
       q I hsigma2 (measurable_gaussianRatioWeight sigma2 tau2)
         cap stride retries samples
   have hscale : Measurable fun current : AmbientSpace q.n =>
-      accuracyScaleFactor q • current :=
+      scaleFactor q • current :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id
+      scaleFactor q).smul measurable_id
   have hsource : Measurable fun current =>
       scheduledBalancedTransitionCollectLaw q I sigma2 weight cap stride retries
-        samples 0 (accuracyScaleFactor q • current) :=
+        samples 0 (scaleFactor q • current) :=
     hcollect.1.comp (measurable_const.prodMk hscale)
   have havg := measurable_balancedCoolingAverage (n := q.n) samples
   constructor
@@ -301,8 +301,8 @@ theorem scheduledBalancedCoolingRatioTransitionLaw_measurable_and_probability
     unfold scheduledBalancedCoolingRatioTransitionLaw
     let _ : IsProbabilityMeasure
         (scheduledBalancedTransitionCollectLaw q I sigma2 weight cap stride
-          retries samples 0 (accuracyScaleFactor q • current)) :=
-      hcollect.2 0 (accuracyScaleFactor q • current)
+          retries samples 0 (scaleFactor q • current)) :=
+      hcollect.2 0 (scaleFactor q • current)
     exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable havg.aemeasurable
 
 /-- Scheduled terminal phase at the measure level. -/
@@ -316,9 +316,9 @@ noncomputable def scheduledBalancedCoolingUniformTransitionLaw
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOneSampleCount q) 0
-      (accuracyScaleFactor q • current)).map
-    (balancedCoolingAverage (figureOneSampleCount q))
+      (sampleCount q) 0
+      (scaleFactor q • current)).map
+    (balancedCoolingAverage (sampleCount q))
 
 theorem scheduledBalancedCoolingUniformTransitionLaw_measurable_and_probability
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
@@ -331,19 +331,19 @@ theorem scheduledBalancedCoolingUniformTransitionLaw_measurable_and_probability
   let cap := parameters.proposalCap q sigma2
   let stride := parameters.properStride q sigma2
   let retries := parameters.retryLimit q sigma2
-  let samples := figureOneSampleCount q
+  let samples := sampleCount q
   let weight : AmbientSpace q.n → ℝ := uniformRatioWeight sigma2
   have hcollect :=
     scheduledBalancedTransitionCollectLaw_measurable_and_probability
       q I hsigma2 (measurable_uniformRatioWeight sigma2)
         cap stride retries samples
   have hscale : Measurable fun current : AmbientSpace q.n =>
-      accuracyScaleFactor q • current :=
+      scaleFactor q • current :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id
+      scaleFactor q).smul measurable_id
   have hsource : Measurable fun current =>
       scheduledBalancedTransitionCollectLaw q I sigma2 weight cap stride retries
-        samples 0 (accuracyScaleFactor q • current) :=
+        samples 0 (scaleFactor q • current) :=
     hcollect.1.comp (measurable_const.prodMk hscale)
   have havg := measurable_balancedCoolingAverage (n := q.n) samples
   constructor
@@ -353,8 +353,8 @@ theorem scheduledBalancedCoolingUniformTransitionLaw_measurable_and_probability
     unfold scheduledBalancedCoolingUniformTransitionLaw
     let _ : IsProbabilityMeasure
         (scheduledBalancedTransitionCollectLaw q I sigma2 weight cap stride
-          retries samples 0 (accuracyScaleFactor q • current)) :=
-      hcollect.2 0 (accuracyScaleFactor q • current)
+          retries samples 0 (scaleFactor q • current)) :=
+      hcollect.2 0 (scaleFactor q • current)
     exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable havg.aemeasurable
 
 /-- One schedule-targeted phase appended to a chronological history. -/
@@ -574,7 +574,7 @@ theorem bind_scheduledBalancedFigureOnePointContinuation_eq_forwardHistory_map_o
       MembershipOracleProgram.runEstimate oracle.query
           (scheduledBalancedFigureOnePointContinuation parameters q point) =
         (scheduledBalancedForwardHistoryLawFromPoint parameters q I
-          (figureOneDependentPhaseCount q) point).map
+          (numPhases q) point).map
             (balancedFigureOneHistoryEstimate q)) :
     (truncatedGaussianProbability q I (initialVariance q)
         (initialVariance_pos q) : Measure (AmbientSpace q.n)).bind
@@ -582,12 +582,12 @@ theorem bind_scheduledBalancedFigureOnePointContinuation_eq_forwardHistory_map_o
           MembershipOracleProgram.runEstimate oracle.query
             (scheduledBalancedFigureOnePointContinuation parameters q point)) =
       (scheduledBalancedForwardHistoryLaw parameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (balancedFigureOneHistoryEstimate q) := by
   let target := (truncatedGaussianProbability q I (initialVariance q)
     (initialVariance_pos q) : Measure (AmbientSpace q.n))
   let fromPoint := scheduledBalancedForwardHistoryLawFromPoint parameters q I
-    (figureOneDependentPhaseCount q)
+    (numPhases q)
   have hfromPoint : Measurable fromPoint := by
     unfold fromPoint scheduledBalancedForwardHistoryLawFromPoint
     exact (iteratedKernelLaw_dirac_measurable_and_probability
@@ -598,7 +598,7 @@ theorem bind_scheduledBalancedFigureOnePointContinuation_eq_forwardHistory_map_o
       (fun phase history =>
         (scheduledBalancedForwardPhaseKernel_measurable_and_probability
           parameters q I phase).2 history)
-      (figureOneDependentPhaseCount q)).1.comp
+      (numPhases q)).1.comp
         measurable_balancedCoolingInitialHistory
   rw [show (fun point =>
       MembershipOracleProgram.runEstimate oracle.query
@@ -805,7 +805,7 @@ noncomputable def figureOneIdealChronologicalPhaseKernel
     FigureOneIdealExperimentSpace q × Option (BalancedCoolingHistory q.n) →
       Measure (FigureOneIdealExperimentSpace q ×
         Option (BalancedCoolingHistory q.n)) := fun phase state =>
-  if hphase : phase < figureOneDependentPhaseCount q then
+  if hphase : phase < numPhases q then
     Measure.dirac (figureOneIdealChronologicalAppend q phase hphase state)
   else Measure.dirac state
 
@@ -858,7 +858,7 @@ noncomputable def figureOneIdealChronologicalState
   | 0, state => state
   | phases + 1, state =>
       let previous := figureOneIdealChronologicalState q phases state
-      if hphase : phases < figureOneDependentPhaseCount q then
+      if hphase : phases < numPhases q then
         figureOneIdealChronologicalAppend q phases hphase previous
       else previous
 
@@ -893,7 +893,7 @@ theorem figureOneIdealChronologicalState_product
     (initialHistory : BalancedCoolingHistory q.n)
     (hinitialCount : initialHistory.2.1 = 0)
     (hinitialProduct : initialHistory.2.2.1 = 1) :
-    ∀ phases, phases ≤ figureOneDependentPhaseCount q →
+    ∀ phases, phases ≤ numPhases q →
       ∃ history,
         (figureOneIdealChronologicalState q phases
           (samples, some initialHistory)).2 = some history ∧
@@ -907,7 +907,7 @@ theorem figureOneIdealChronologicalState_product
       refine ⟨initialHistory, rfl, hinitialCount, ?_⟩
       simpa [dependentPhaseSampleProduct_zero] using hinitialProduct
   | succ phases ih =>
-      have hphase : phases < figureOneDependentPhaseCount q := by omega
+      have hphase : phases < numPhases q := by omega
       obtain ⟨history, hstate, hcount, hproduct⟩ :=
         ih (Nat.le_of_succ_le hphases)
       let next := balancedCoolingHistorySnocTerminal history <| some
@@ -998,14 +998,14 @@ theorem figureOneIdealChronologicalIteration_map_output
     (q : VolumeParams) (I : VolumeInput q.n) :
     (iteratedKernelLaw (figureOneIdealChronologicalPhaseKernel q)
         (scheduledChronologicalCommonInitial q I)
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (scheduledChronologicalCommonOutput q) =
       (figureOneIdealExperimentLaw q I).map
         (fun samples => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (figureOneChronologicalIdealCoordinate q)
-            (figureOneDependentPhaseCount q) samples) := by
-  let phases := figureOneDependentPhaseCount q
+            (numPhases q) samples) := by
+  let phases := numPhases q
   let source := (truncatedGaussianProbability q I (initialVariance q)
     (initialVariance_pos q) : Measure (AmbientSpace q.n))
   let initialHistory := source.map balancedCoolingInitialHistory
@@ -1125,7 +1125,7 @@ kernel.  This makes the exact-chance premise honestly finite. -/
 noncomputable def figureOneFiniteScheduledActualChronologicalPhaseKernel
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
     (I : VolumeInput q.n) :=
-  finiteHorizonKernel (figureOneDependentPhaseCount q)
+  finiteHorizonKernel (numPhases q)
     (figureOneScheduledActualChronologicalPhaseKernel parameters q I)
     (figureOneIdealChronologicalPhaseKernel q)
 
@@ -1152,10 +1152,10 @@ theorem figureOneFiniteScheduledActualChronologicalIteration_map_output
     (iteratedKernelLaw
         (figureOneFiniteScheduledActualChronologicalPhaseKernel parameters q I)
         (scheduledChronologicalCommonInitial q I)
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (scheduledChronologicalCommonOutput q) =
       (scheduledBalancedForwardHistoryLaw parameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (balancedFigureOneHistoryEstimate q) := by
   rw [iteratedKernelLaw_congr_finiteHorizon
     (figureOneFiniteScheduledActualChronologicalPhaseKernel parameters q I)
@@ -1164,7 +1164,7 @@ theorem figureOneFiniteScheduledActualChronologicalIteration_map_output
     (fun phase hphase => by
       simp [figureOneFiniteScheduledActualChronologicalPhaseKernel,
         finiteHorizonKernel, hphase])
-    (figureOneDependentPhaseCount q) le_rfl]
+    (numPhases q) le_rfl]
   exact figureOneScheduledActualChronologicalIteration_map_output
     parameters q I _
 
@@ -1180,9 +1180,9 @@ theorem scheduledPostInitialDirectFailureBound_of_phaseIteration
           (initialVariance_pos q) : Measure (AmbientSpace q.n)).bind
           continuation =
         (scheduledBalancedForwardHistoryLaw parameters q I
-          (figureOneDependentPhaseCount q)).map
+          (numPhases q)).map
             (balancedFigureOneHistoryEstimate q))
-    (hphase : ∀ phase, phase < figureOneDependentPhaseCount q →
+    (hphase : ∀ phase, phase < numPhases q →
       MeasureLeUpTo
         ((iteratedKernelLaw (figureOneIdealChronologicalPhaseKernel q)
           (scheduledChronologicalCommonInitial q I) phase).bind
@@ -1202,7 +1202,7 @@ theorem scheduledPostInitialDirectFailureBound_of_phaseIteration
       (iteratedKernelLaw idealK initial (phase + 1))
       (figureOnePhaseReplacementBudget q) := by
     intro phase
-    by_cases hp : phase < figureOneDependentPhaseCount q
+    by_cases hp : phase < numPhases q
     · simpa [actualK, figureOneFiniteScheduledActualChronologicalPhaseKernel,
         finiteHorizonKernel, hp, idealK, initial] using hphase phase hp
     · have hrefl : MeasureLeUpTo
@@ -1222,25 +1222,25 @@ theorem scheduledPostInitialDirectFailureBound_of_phaseIteration
         parameters q I phase).2 state)
     hphaseAll output (measurable_scheduledChronologicalCommonOutput q)
   rw [show (iteratedKernelLaw actualK initial
-          (figureOneDependentPhaseCount q)).map output =
+          (numPhases q)).map output =
         (scheduledBalancedForwardHistoryLaw parameters q I
-          (figureOneDependentPhaseCount q)).map
+          (numPhases q)).map
             (balancedFigureOneHistoryEstimate q) by
       exact figureOneFiniteScheduledActualChronologicalIteration_map_output
         parameters q I,
     show (iteratedKernelLaw idealK initial
-          (figureOneDependentPhaseCount q)).map output =
+          (numPhases q)).map output =
         (figureOneIdealExperimentLaw q I).map
           (fun samples => initialGaussianIntegral q *
             dependentPhaseSampleProduct
               (figureOneChronologicalIdealCoordinate q)
-              (figureOneDependentPhaseCount q) samples) by
+              (numPhases q) samples) by
       exact figureOneIdealChronologicalIteration_map_output q I] at htransfer
   let W := figureOneChronologicalIdealCoordinate q
   let mu := figureOneIdealExperimentLaw q I
   let mean := dependentPhaseMeanProduct
     (figureOneChronologicalTruncatedMean q I mu W)
-    (figureOneDependentPhaseCount q)
+    (numPhases q)
   let _ : IsProbabilityMeasure mu :=
     figureOneIdealExperimentLaw_isProbabilityMeasure q I
   have hmeas : ∀ j, Measurable (W j) :=
@@ -1258,15 +1258,15 @@ theorem scheduledPostInitialDirectFailureBound_of_phaseIteration
         figureOneChronologicalRawMean q I j ^ 2 :=
     fun j => figureOneChronologicalIdealCoordinate_secondMoment_le
       q I hsharp j
-  have hind : ∀ i, i < figureOneDependentPhaseCount q →
-      ApproxIndepFun (figureOneDependentEpsilon q)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+  have hind : ∀ i, i < numPhases q →
+      ApproxIndepFun (dependenceError q)
+        (dependentTruncatedProduct (truncationLevel q)
           (figureOneChronologicalTruncatedMean q I mu W)
           (figureOneChronologicalTruncatedPhase q I W) i)
         (figureOneChronologicalTruncatedPhase q I W (i + 1)) mu := by
     intro i hi
     exact (figureOneChronologicalIdeal_exactIndependence q I i hi).mono
-      (figureOneDependentEpsilon_nonneg q)
+      (dependenceError_nonneg q)
   have htail := measure_chronologicalIdealPhaseSampleProduct_figureOne_le
     q I mu W hmeas hnonneg hmem hmean hsecond hind
   have hmeanApprox :=
@@ -1281,13 +1281,13 @@ theorem scheduledPostInitialDirectFailureBound_of_phaseIteration
   apply figureOnePostInitialDirectFailureBoundFor_of_mappedProductLe
     q I continuation (figureOneRadialTruncationBound q I hrounded)
     (scheduledBalancedForwardHistoryLaw parameters q I
-      (figureOneDependentPhaseCount q)) mu
+      (numPhases q)) mu
     (balancedCoolingHistoryProduct q)
-    (dependentPhaseSampleProduct W (figureOneDependentPhaseCount q))
+    (dependentPhaseSampleProduct W (numPhases q))
     (measurable_balancedCoolingHistoryProduct q)
     (by
       unfold dependentPhaseSampleProduct
-      exact (Finset.range (figureOneDependentPhaseCount q)).measurable_fun_prod
+      exact (Finset.range (numPhases q)).measurable_fun_prod
         fun j _ => hmeas (j + 1))
     mean hmeanApprox htail
   · simpa [W, mu, actualK, idealK, initial, output] using htransfer
@@ -1307,13 +1307,13 @@ theorem figureOneFinalScheduledBalancedBase_failure_le_of_phaseIteration
           continuation =
         (scheduledBalancedForwardHistoryLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)).map
+          (numPhases q)).map
             (balancedFigureOneHistoryEstimate q))
     (hbaseLaw :
       (figureOneFinalScheduledBalancedBaseProgram q).runEstimate oracle.query =
-        ((initialGaussianSamplingMeasure q).map
+        ((initialGaussianLaw q).map
           (initialTruncatedFallback q I)).bind continuation)
-    (hphase : ∀ phase, phase < figureOneDependentPhaseCount q →
+    (hphase : ∀ phase, phase < numPhases q →
       MeasureLeUpTo
         ((iteratedKernelLaw (figureOneIdealChronologicalPhaseKernel q)
           (scheduledChronologicalCommonInitial q I) phase).bind
@@ -1333,7 +1333,7 @@ theorem figureOneFinalScheduledBalancedBase_failure_le_of_phaseIteration
   unfold FigureOnePostInitialDirectFailureBoundFor at hpost
   rw [hbaseLaw]
   calc
-    ((initialGaussianSamplingMeasure q).map
+    ((initialGaussianLaw q).map
         (initialTruncatedFallback q I)).bind continuation
           (accurateOutcome q I)ᶜ ≤
       ((truncatedGaussianProbability q I (initialVariance q)
@@ -1356,7 +1356,7 @@ theorem figureOneFinalScheduledBalancedBaseProgram_runEstimate_eq_initial_bind
     (q : VolumeParams) (I : VolumeInput q.n)
     (oracle : MembershipOracle I) :
     (figureOneFinalScheduledBalancedBaseProgram q).runEstimate oracle.query =
-      ((initialGaussianSamplingMeasure q).map
+      ((initialGaussianLaw q).map
         (initialTruncatedFallback q I)).bind fun point =>
           (scheduledBalancedFigureOnePointContinuation
             figureOneFinalScheduledBalancedParameters q point).runEstimate
@@ -1432,9 +1432,9 @@ theorem figureOneFinalScheduledBalancedBase_failure_le_of_postHistory_phaseItera
                 oracle.query) =
         (scheduledBalancedForwardHistoryLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)).map
+          (numPhases q)).map
             (balancedFigureOneHistoryEstimate q))
-    (hphase : ∀ phase, phase < figureOneDependentPhaseCount q →
+    (hphase : ∀ phase, phase < numPhases q →
       MeasureLeUpTo
         ((iteratedKernelLaw (figureOneIdealChronologicalPhaseKernel q)
           (scheduledChronologicalCommonInitial q I) phase).bind
@@ -1508,7 +1508,7 @@ theorem figureOneFinalScheduledBalancedBase_failure_le_of_directPostInitial
   rw [figureOneFinalScheduledBalancedBaseProgram_runEstimate_eq_initial_bind]
   unfold FigureOnePostInitialDirectFailureBoundFor at hpost
   calc
-    ((initialGaussianSamplingMeasure q).map
+    ((initialGaussianLaw q).map
         (initialTruncatedFallback q I)).bind continuation
           (accurateOutcome q I)ᶜ ≤
       ((truncatedGaussianProbability q I (initialVariance q)
@@ -1552,13 +1552,13 @@ noncomputable def scheduledFigureOneActualRawMean
     (I : VolumeInput q.n) (j : ℕ) : ℝ :=
   ∫ history, scheduledBalancedChronologicalPhaseVariable q j history
     ∂scheduledBalancedForwardHistoryLaw parameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
 
 noncomputable def scheduledFigureOneActualTruncatedPhase
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
     (I : VolumeInput q.n) :
     ℕ → Option (BalancedCoolingHistory q.n) → ℝ :=
-  dependentTruncatedPhase (figureOneDependentAlpha q)
+  dependentTruncatedPhase (truncationLevel q)
     (scheduledFigureOneActualRawMean parameters q I)
     (scheduledBalancedChronologicalPhaseVariable q)
 
@@ -1567,7 +1567,7 @@ noncomputable def scheduledFigureOneActualTruncatedMean
     (I : VolumeInput q.n) (j : ℕ) : ℝ :=
   ∫ history, scheduledFigureOneActualTruncatedPhase parameters q I j history
     ∂scheduledBalancedForwardHistoryLaw parameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
 
 noncomputable def scheduledFigureOneActualTruncatedSecond
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
@@ -1575,7 +1575,7 @@ noncomputable def scheduledFigureOneActualTruncatedSecond
   ∫ history,
       scheduledFigureOneActualTruncatedPhase parameters q I j history ^ 2
     ∂scheduledBalancedForwardHistoryLaw parameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
 
 /-- Scheduled, law-correct form of the CV18 Lemma 7.15 assembly.  All
 integral identities and both interpreter transports are discharged here.
@@ -1590,18 +1590,18 @@ theorem figureOneFinalScheduledBalancedBase_failure_le_of_lemma717bc
             figureOneFinalScheduledBalancedParameters q point) =
         (scheduledBalancedForwardHistoryLawFromPoint
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q) point).map
+          (numPhases q) point).map
             (balancedFigureOneHistoryEstimate q))
     (hWnonneg : ∀ᵐ history ∂scheduledBalancedForwardHistoryLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q),
-      ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+        (numPhases q),
+      ∀ j, 1 ≤ j → j ≤ numPhases q →
         0 ≤ balancedCoolingChronologicalPhaseVariable q j history)
-    (hWint : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hWint : ∀ j, 1 ≤ j → j ≤ numPhases q →
       Integrable (scheduledBalancedChronologicalPhaseVariable q j)
         (scheduledBalancedForwardHistoryLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)))
+          (numPhases q)))
     (hmeanPos : ∀ j,
       0 < scheduledFigureOneActualTruncatedMean
         figureOneFinalScheduledBalancedParameters q I j)
@@ -1623,9 +1623,9 @@ theorem figureOneFinalScheduledBalancedBase_failure_le_of_lemma717bc
           figureOneFinalScheduledBalancedParameters q I j ^ 2 ≤
         2 * scheduledFigureOneActualTruncatedSecond
           figureOneFinalScheduledBalancedParameters q I j)
-    (hind : ∀ i, i < figureOneDependentPhaseCount q →
-      ApproxIndepFun (figureOneDependentEpsilon q)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+    (hind : ∀ i, i < numPhases q →
+      ApproxIndepFun (dependenceError q)
+        (dependentTruncatedProduct (truncationLevel q)
           (scheduledFigureOneActualTruncatedMean
             figureOneFinalScheduledBalancedParameters q I)
           (scheduledFigureOneActualTruncatedPhase
@@ -1634,10 +1634,10 @@ theorem figureOneFinalScheduledBalancedBase_failure_le_of_lemma717bc
           figureOneFinalScheduledBalancedParameters q I (i + 1))
         (scheduledBalancedForwardHistoryLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)))
-    (hrelative : ∀ i, i ≤ figureOneDependentPhaseCount q →
-      (1 + 2 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 4 * i) *
+          (numPhases q)))
+    (hrelative : ∀ i, i ≤ numPhases q →
+      (1 + 2 * dependenceError q *
+          truncationLevel q ^ 4 * i) *
           dependentPhaseMeanProduct
             (scheduledFigureOneActualTruncatedSecond
               figureOneFinalScheduledBalancedParameters q I) i ≤
@@ -1645,29 +1645,29 @@ theorem figureOneFinalScheduledBalancedBase_failure_le_of_lemma717bc
           (scheduledFigureOneActualTruncatedMean
             figureOneFinalScheduledBalancedParameters q I) i ^ 2)
     (htailSecond :
-      (1 + 2 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 4 *
-            figureOneDependentPhaseCount q) *
+      (1 + 2 * dependenceError q *
+          truncationLevel q ^ 4 *
+            numPhases q) *
           dependentPhaseMeanProduct
             (scheduledFigureOneActualTruncatedSecond
               figureOneFinalScheduledBalancedParameters q I)
-            (figureOneDependentPhaseCount q) ≤
+            (numPhases q) ≤
         (1 + q.eps ^ 2 / 16) *
           dependentPhaseMeanProduct
             (scheduledFigureOneActualTruncatedMean
               figureOneFinalScheduledBalancedParameters q I)
-            (figureOneDependentPhaseCount q) ^ 2)
+            (numPhases q) ^ 2)
     (hmeanApprox : RelativeApprox (q.eps / 32)
       (∏ phase, figureOneIdealPhaseMean q I phase)
       (dependentPhaseMeanProduct
         (scheduledFigureOneActualTruncatedMean
           figureOneFinalScheduledBalancedParameters q I)
-        (figureOneDependentPhaseCount q))) :
+        (numPhases q))) :
     (figureOneFinalScheduledBalancedBaseProgram q).runEstimate oracle.query
         (accurateOutcome q I)ᶜ ≤ ENNReal.ofReal (13 / 64 : ℝ) := by
   let parameters := figureOneFinalScheduledBalancedParameters
   let mu := scheduledBalancedForwardHistoryLaw parameters q I
-    (figureOneDependentPhaseCount q)
+    (numPhases q)
   let W := scheduledBalancedChronologicalPhaseVariable q
   let rawMean := scheduledFigureOneActualRawMean parameters q I
   let V := scheduledFigureOneActualTruncatedPhase parameters q I
@@ -1687,10 +1687,10 @@ theorem figureOneFinalScheduledBalancedBase_failure_le_of_lemma717bc
   have hV0 : ∀ j history, 0 ≤ V j history := by
     intro j history
     exact le_min (hW0 j history)
-      (mul_nonneg (figureOneDependentAlpha_pos q).le
+      (mul_nonneg (truncationLevel_pos q).le
         (hrawMeanPos j).le)
   have hVcap : ∀ j history,
-      V j history ≤ figureOneDependentAlpha q * rawMean j := fun j history =>
+      V j history ≤ truncationLevel q * rawMean j := fun j history =>
     min_le_right _ _
   have htail := measure_dependentPhaseSampleProduct_figureOne_le
     q mu mean rawMean second V W
@@ -1710,11 +1710,11 @@ theorem figureOneFinalScheduledBalancedBase_failure_le_of_lemma717bc
           continuation =
         mu.map fun history => initialGaussianIntegral q *
           dependentPhaseSampleProduct W
-            (figureOneDependentPhaseCount q) history := by
+            (numPhases q) history := by
     rw [hhistory]
     apply Measure.map_congr
     filter_upwards [scheduledBalancedForwardHistoryLaw_ae_hasProduct
-      parameters q I (figureOneDependentPhaseCount q), hWnonneg]
+      parameters q I (numPhases q), hWnonneg]
       with history hproduct hnonneg
     rw [balancedFigureOneHistoryEstimate_eq_sampleProduct q history hproduct]
     congr 1
@@ -1725,13 +1725,13 @@ theorem figureOneFinalScheduledBalancedBase_failure_le_of_lemma717bc
     rw [max_eq_right (hnonneg (j + 1) (by omega)
       (Nat.succ_le_iff.mpr (Finset.mem_range.mp hj)))]
   have hX : Measurable
-      (dependentPhaseSampleProduct W (figureOneDependentPhaseCount q)) := by
+      (dependentPhaseSampleProduct W (numPhases q)) := by
     unfold dependentPhaseSampleProduct
-    exact (Finset.range (figureOneDependentPhaseCount q)).measurable_fun_prod
+    exact (Finset.range (numPhases q)).measurable_fun_prod
       fun j _ => hWmeas (j + 1)
   have hpost := figureOnePostInitialDirectFailureBoundFor_of_dependentProduct
     q I continuation (figureOneRadialTruncationBound q I hrounded) mu
-      (dependentPhaseSampleProduct W (figureOneDependentPhaseCount q))
+      (dependentPhaseSampleProduct W (numPhases q))
       hX hmeanApprox hlaw htail
   exact figureOneFinalScheduledBalancedBase_failure_le_of_directPostInitial
     q I oracle hpost
@@ -1759,7 +1759,7 @@ theorem MeasureLeUpTo.bind_scheduledBalancedTransitionCollectLaw_of_first
         | some point =>
             scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
               properStride retryLimit samples (weight point)
-                (accuracyScaleFactor q • point))
+                (scaleFactor q • point))
       delta := by
   let tail : Option (AmbientSpace q.n) →
       Measure (Option (ℝ × AmbientSpace q.n)) := fun result =>
@@ -1768,7 +1768,7 @@ theorem MeasureLeUpTo.bind_scheduledBalancedTransitionCollectLaw_of_first
     | some point =>
         scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
           properStride retryLimit samples (weight point)
-            (accuracyScaleFactor q • point)
+            (scaleFactor q • point)
   have hcollect :=
     scheduledBalancedTransitionCollectLaw_measurable_and_probability
       q I hsigma2 hweight proposalCap properStride retryLimit samples
@@ -1776,10 +1776,10 @@ theorem MeasureLeUpTo.bind_scheduledBalancedTransitionCollectLaw_of_first
     have hsome : Measurable fun point : AmbientSpace q.n =>
         scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
           properStride retryLimit samples (weight point)
-            (accuracyScaleFactor q • point) := by
+            (scaleFactor q • point) := by
       exact hcollect.1.comp <| hweight.prodMk <|
         (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-          accuracyScaleFactor q).smul measurable_id
+          scaleFactor q).smul measurable_id
     convert Measurable.optionElim
       (Measure.dirac (none : Option (ℝ × AmbientSpace q.n))) hsome using 1
     funext result
@@ -1846,7 +1846,7 @@ theorem approxIndepFun_scheduledBalancedCompletePhase_of_warm_first
       | some point =>
           scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
             properStride retryLimit samples (weight point)
-              (accuracyScaleFactor q • point)
+              (scaleFactor q • point)
     ApproxIndepFun (3 * (k : ℝ) * (m : ℝ) * nu)
       (pastProduct ∘ Prod.fst) (nextEstimator ∘ Prod.snd)
       (sequentialPairLaw history
@@ -1865,7 +1865,7 @@ theorem approxIndepFun_scheduledBalancedCompletePhase_of_warm_first
       | some point =>
           scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
             properStride retryLimit samples (weight point)
-              (accuracyScaleFactor q • point)
+              (scaleFactor q • point)
   have hphase :=
     scheduledBalancedTransitionCollectLaw_measurable_and_probability
       q I hsigma2 hweight proposalCap properStride retryLimit (samples + 1)
@@ -1879,15 +1879,15 @@ theorem approxIndepFun_scheduledBalancedCompletePhase_of_warm_first
     | some point =>
         scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
           properStride retryLimit samples (weight point)
-            (accuracyScaleFactor q • point)
+            (scaleFactor q • point)
   have htailMeas : Measurable tail := by
     have hsome : Measurable fun point : AmbientSpace q.n =>
         scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
           properStride retryLimit samples (weight point)
-            (accuracyScaleFactor q • point) := by
+            (scaleFactor q • point) := by
       exact htail.1.comp <| hweight.prodMk <|
         (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-          accuracyScaleFactor q).smul measurable_id
+          scaleFactor q).smul measurable_id
     convert Measurable.optionElim
       (Measure.dirac (none : Option (ℝ × AmbientSpace q.n))) hsome using 1
     funext result

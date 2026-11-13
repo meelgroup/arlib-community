@@ -227,7 +227,7 @@ theorem exists_accuracyImportanceWeight_abs_sub_le
     (abs_nonneg (weight 0)).trans (hC <| Set.mem_image_of_mem _ hzero)
   refine ⟨C + |m|, add_nonneg hC0 (abs_nonneg m), ?_⟩
   intro x
-  let target : AmbientSpace q.n := (accuracyScaleFactor q)⁻¹ • x
+  let target : AmbientSpace q.n := (scaleFactor q)⁻¹ • x
   by_cases ht : target ∈ K
   · have hwC : |weight target| ≤ C :=
       hC (Set.mem_image_of_mem (fun y => |weight y|) ht)

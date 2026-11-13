@@ -21,17 +21,17 @@ CV18 Lemma 7.17(c) by the retained-state good/bad coupling. -/
 theorem figureOneFinalScheduledAbortBase_failure_le_of_trace_moments
     (q : VolumeParams) (I : VolumeInput q.n)
     (oracle : MembershipOracle I) (hrounded : WellRounded q I)
-    (hsecond : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hsecond : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         figureOneChronologicalMomentFactor q j *
           scheduledFigureOneTraceRawMean q I j ^ 2)
     (hrawApprox : RelativeApprox (q.eps / 64)
       (∏ phase, figureOneIdealPhaseMean q I phase)
       (dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I)
-        (figureOneDependentPhaseCount q))) :
+        (numPhases q))) :
     (figureOneFinalScheduledAbortBaseProgram q).runEstimate oracle.query
         (accurateOutcome q I)ᶜ ≤ ENNReal.ofReal (13 / 64 : ℝ) := by
   exact
@@ -44,19 +44,19 @@ discharged.  These are the two remaining quantitative phase obligations. -/
 theorem figureOneFinalScheduledAbortBase_failure_le_of_centered_moments
     (q : VolumeParams) (I : VolumeInput q.n)
     (oracle : MembershipOracle I) (hrounded : WellRounded q I)
-    (hcenter : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hcenter : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace,
           (scheduledBalancedTracePhaseVariable q j trace -
             scheduledFigureOneTraceRawMean q I j) ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         (figureOneChronologicalMomentFactor q j - 1) *
           scheduledFigureOneTraceRawMean q I j ^ 2)
     (hrawApprox : RelativeApprox (q.eps / 64)
       (∏ phase, figureOneIdealPhaseMean q I phase)
       (dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I)
-        (figureOneDependentPhaseCount q))) :
+        (numPhases q))) :
     (figureOneFinalScheduledAbortBaseProgram q).runEstimate oracle.query
         (accurateOutcome q I)ᶜ ≤ ENNReal.ofReal (13 / 64 : ℝ) := by
   exact

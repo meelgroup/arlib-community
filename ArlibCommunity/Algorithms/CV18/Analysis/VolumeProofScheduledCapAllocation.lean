@@ -43,12 +43,12 @@ theorem figureOneCorrected_components_with_double_block_le
     figureOneCorrectedTransitionBudget, ENNReal.toReal_div,
     ENNReal.toReal_ofNat, nsmul_eq_mul, Nat.cast_add, Nat.cast_one]
   rw [ENNReal.toReal_ofReal
-    (figureOneCorrectedBlockMixingError_pos q attempts).le]
-  rw [ENNReal.toReal_ofReal (figureOnePerSampleMixingError_pos q).le]
-  unfold figureOneCorrectedBlockMixingError
+    (blockMixingError_pos q attempts).le]
+  rw [ENNReal.toReal_ofReal (sampleMixingError_pos q).le]
+  unfold blockMixingError
   have hden : (0 : ℝ) < attempts + 1 := by positivity
   field_simp
-  nlinarith [figureOnePerSampleMixingError_pos q]
+  nlinarith [sampleMixingError_pos q]
 
 /-- One cap budget plus one mixing budget per proper block, followed by the
 retry tail and scheduled KLS target correction, still fits the exact-chance

@@ -20,7 +20,7 @@ bounds. -/
 theorem integral_initializedScheduledGaussianShadow_average_sq_le_of_coordinate_moments
     (q : VolumeParams) (I : VolumeInput q.n) (phase count : ℕ)
     (hcount0 : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q)
+    (hcountMax : count ≤ largestSampleCount q)
     {B mean factor : ℝ}
     (hB0 : 0 ≤ B) (hmean0 : 0 ≤ mean)
     (hobs0 : ∀ r, r < count →
@@ -57,7 +57,7 @@ theorem integral_initializedScheduledGaussianShadow_average_sq_le_of_coordinate_
       ∂iteratedKernelLaw (fun _ => retainedSumKernel K weight)
         initial (count - 1)) ≤
       (1 + (factor - 1) / (count : ℝ)) * mean ^ 2 +
-        figureOneDependentEpsilon q * (1 - 1 / (count : ℝ)) * B ^ 2 := by
+        dependenceError q * (1 - 1 / (count : ℝ)) * B ^ 2 := by
   dsimp only
   let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
     (scheduleValue q (phase + 1))
@@ -79,7 +79,7 @@ theorem integral_initializedScheduledGaussianShadow_average_sq_le_of_coordinate_
   have havg := sequentialAverage_secondMoment_le_of_approxIndepPrefix
     historyLaw
     (fun r => measurable_retainedSampleObservation hweight r)
-    count hcount0 hB0 hmean0 (figureOneDependentEpsilon_nonneg q)
+    count hcount0 hB0 hmean0 (dependenceError_nonneg q)
     hobs0 hobsB hmean hsecond
     (approxIndepFun_initializedScheduledRetainedHistory_all
       q I phase count hcountMax)

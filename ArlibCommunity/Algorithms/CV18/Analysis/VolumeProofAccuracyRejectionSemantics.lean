@@ -23,11 +23,11 @@ theorem accuracyGaussianRejectionKernel_true_prod
     (mu.bind (accuracyGaussianRejectionKernel q I sigma2))
         ({true} ×ˢ B) =
       ((mu.withDensity (accuracyGaussianRejectionAcceptance q I sigma2)).map
-        (fun x => (accuracyScaleFactor q)⁻¹ • x)) B := by
+        (fun x => (scaleFactor q)⁻¹ • x)) B := by
   have hscale : Measurable (fun x : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹ • x) :=
+      (scaleFactor q)⁻¹ • x) :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id
+      (scaleFactor q)⁻¹).smul measurable_id
   have hprod : MeasurableSet ({true} ×ˢ B) :=
     (measurableSet_singleton true).prod hB
   rw [Measure.bind_apply hprod
@@ -40,7 +40,7 @@ theorem accuracyGaussianRejectionKernel_true_prod
   change (accuracyGaussianRejectionLaw q I sigma2 current) ({true} ×ˢ B) = _
   simp only [accuracyGaussianRejectionLaw, Measure.add_apply,
     Measure.smul_apply, smul_eq_mul, Measure.dirac_apply' _ hprod]
-  by_cases ht : (accuracyScaleFactor q)⁻¹ • current ∈ B
+  by_cases ht : (scaleFactor q)⁻¹ • current ∈ B
   · simp [ht, Set.indicator_of_mem, hprod]
   · simp [ht, Set.indicator_of_notMem, hprod]
 
@@ -50,18 +50,18 @@ theorem map_withDensity_accuracyRejectionAcceptance
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (mu : Measure (AmbientSpace q.n)) :
     let K := accuracyPhaseTruncatedBody q I sigma2
-    let c := accuracyScaleFactor q
+    let c := scaleFactor q
     (mu.withDensity (accuracyGaussianRejectionAcceptance q I sigma2)).map
         (fun x => c⁻¹ • x) =
       ((mu.restrict (c • K)).map (fun x => c⁻¹ • x)).withDensity
         (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c) := by
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
   let g : AmbientSpace q.n → ENNReal :=
     Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c
-  have hc0 : 0 < c := by simpa [c] using accuracyScaleFactor_pos q
+  have hc0 : 0 < c := by simpa [c] using scaleFactor_pos q
   have hK : MeasurableSet K := accuracyPhaseTruncatedBody_measurable q I sigma2
   have hcore : MeasurableSet (c • K) :=
     ((isClosedMap_smul_of_ne_zero hc0.ne') K
@@ -78,13 +78,13 @@ theorem map_withDensity_accuracyRejectionAcceptance
     funext x
     unfold accuracyGaussianRejectionAcceptance
     dsimp only [c, K, scale, g]
-    by_cases hx : (accuracyScaleFactor q)⁻¹ • x ∈
+    by_cases hx : (scaleFactor q)⁻¹ • x ∈
         accuracyPhaseTruncatedBody q I sigma2
-    · have hxcore : x ∈ accuracyScaleFactor q •
+    · have hxcore : x ∈ scaleFactor q •
           accuracyPhaseTruncatedBody q I sigma2 :=
         (Set.mem_smul_set_iff_inv_smul_mem₀ hc0.ne' _ _).2 hx
       simp [hx, hxcore]
-    · have hxcore : x ∉ accuracyScaleFactor q •
+    · have hxcore : x ∉ scaleFactor q •
           accuracyPhaseTruncatedBody q I sigma2 := fun h =>
         hx ((Set.mem_smul_set_iff_inv_smul_mem₀ hc0.ne' _ _).1 h)
       simp [hx, hxcore]
@@ -111,26 +111,26 @@ noncomputable def accuracyGaussianAcceptedTargetLaw
     (mu : Measure (AmbientSpace q.n)) : Measure (AmbientSpace q.n) :=
   Arlib.condOn
     ((mu.withDensity (accuracyGaussianRejectionAcceptance q I sigma2)).map
-      (fun x => (accuracyScaleFactor q)⁻¹ • x)) Set.univ
+      (fun x => (scaleFactor q)⁻¹ • x)) Set.univ
 
 /-- The normalized executable accepted-output law is definitionally the same
 probability law analyzed by the two-stage KLS phase theorem. -/
 theorem accuracyGaussianAcceptedTargetLaw_eq_kls
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (mu : Measure (AmbientSpace q.n))
-    (hcore0 : mu (accuracyScaleFactor q •
+    (hcore0 : mu (scaleFactor q •
       accuracyPhaseTruncatedBody q I sigma2) ≠ 0)
-    (hcoretop : mu (accuracyScaleFactor q •
+    (hcoretop : mu (scaleFactor q •
       accuracyPhaseTruncatedBody q I sigma2) ≠ ⊤) :
     accuracyGaussianAcceptedTargetLaw q I sigma2 mu =
       let K := accuracyPhaseTruncatedBody q I sigma2
-      let c := accuracyScaleFactor q
+      let c := scaleFactor q
       Arlib.condOn
         (((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
           (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c)) Set.univ := by
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
   let g : AmbientSpace q.n → ENNReal :=
     Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c
@@ -187,7 +187,7 @@ theorem accuracyGaussianAcceptedTargetLaw_tv_cv18
   let P := Arlib.MarkovChains.lazy
     (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2)
   let mu := Arlib.MarkovChains.iterate P mu0 t
-  have hcore0 : mu (accuracyScaleFactor q • K) ≠ 0 := by
+  have hcore0 : mu (scaleFactor q • K) ≠ 0 := by
     simpa [mu, P, K, delta] using
       accuracyPhase_iterate_core_ne_zero q I hsigma2 hM hwarm
         hmixError0 hmixError64 ht
@@ -197,10 +197,10 @@ theorem accuracyGaussianAcceptedTargetLaw_tv_cv18
   let _ : IsProbabilityMeasure mu := by
     dsimp [mu]
     infer_instance
-  have hcoretop : mu (accuracyScaleFactor q • K) ≠ ⊤ :=
+  have hcoretop : mu (scaleFactor q • K) ≠ ⊤ :=
     measure_ne_top mu _
   rw [accuracyGaussianAcceptedTargetLaw_eq_kls q I sigma2 _ hcore0 hcoretop]
-  simpa only [accuracyScaleFactor] using
+  simpa only [scaleFactor] using
     accuracyPhaseSampleToGaussian_cv18 q I hsigma2 hM hwarm
       hmixError0 hmixError64 ht
 

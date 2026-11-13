@@ -255,7 +255,7 @@ theorem lintegral_scheduledBalancedAccuracyLiveTrial_countedQueryCost_le_of_isWa
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
     (hwarm : _root_.Arlib.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (proposalCap properStride : ℕ) :
     ∫⁻ current, countedQueryCost
         ((scheduledBalancedAccuracyLiveTrial q sigma2 proposalCap properStride
@@ -295,7 +295,7 @@ theorem lintegral_scheduledBalancedAccuracyLiveTrial_countedQueryCost_le_of_le_w
     (hle : mu ≤ good + bad)
     (hwarm : _root_.Arlib.IsWarm M good
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (hbad : bad Set.univ ≤ error)
     (proposalCap properStride : ℕ) :
     ∫⁻ current, countedQueryCost
@@ -372,19 +372,19 @@ theorem scheduledPhaseLazySpeedyPow_invariant
     Kernel.Invariant
       ((lazy (speedyMetropolisGaussian
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)) ^ properStride)
+        (proposalRadius q sigma2) sigma2)) ^ properStride)
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2) := by
+        (proposalRadius q sigma2) sigma2) := by
   let pi := ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
+    (proposalRadius q sigma2) sigma2
   have hinvOne : Kernel.Invariant
       (lazy (speedyMetropolisGaussian
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)) pi :=
+        (proposalRadius q sigma2) sigma2)) pi :=
     (isReversible_lazy
       (isReversible_speedyMetropolisGaussian_prob
         (figureOneScheduledPhaseBody_measurable q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)).invariant
+        (proposalRadius q sigma2) sigma2)).invariant
   induction properStride with
   | zero =>
       rw [pow_zero, Kernel.Invariant]
@@ -406,25 +406,25 @@ theorem scheduledBalancedRetryBranches_isWarm
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
     (hwarm : _root_.Arlib.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)) :
+        (proposalRadius q sigma2) sigma2)) :
     let endpoint := successfulEndpointLaw
       (mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
         proposalCap properStride))
     _root_.Arlib.IsWarm M
         (scheduledBalancedAcceptedStateMeasure q I sigma2 endpoint)
         (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-          (figureOneScheduledProposalRadius q sigma2) sigma2) ∧
+          (proposalRadius q sigma2) sigma2) ∧
       _root_.Arlib.IsWarm M
         (scheduledBalancedRejectedStateMeasure q I sigma2 endpoint)
         (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-          (figureOneScheduledProposalRadius q sigma2) sigma2) := by
+          (proposalRadius q sigma2) sigma2) := by
   dsimp only
   let pi := ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
+    (proposalRadius q sigma2) sigma2
   have hinv : Kernel.Invariant
       ((lazy (speedyMetropolisGaussian
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)) ^ properStride) pi :=
+        (proposalRadius q sigma2) sigma2)) ^ properStride) pi :=
     scheduledPhaseLazySpeedyPow_invariant q I sigma2 properStride
   have hend : _root_.Arlib.IsWarm M
       (successfulEndpointLaw

@@ -153,7 +153,7 @@ set_option maxHeartbeats 800000 in
 independence perturbation. -/
 theorem exists_scheduledTraceRecordedReset_with_approxIndep
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     (source : Measure (ScheduledBalancedCoolingTrace q.n))
     [IsProbabilityMeasure source]
     (hvalid : ∀ᵐ trace ∂source,

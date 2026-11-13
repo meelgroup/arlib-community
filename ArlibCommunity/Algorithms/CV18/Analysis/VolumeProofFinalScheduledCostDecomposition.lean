@@ -18,7 +18,7 @@ theorem figureOneFinalScheduledBalancedBaseProgram_countedQueryCost_le_initial_a
       1 + ∫⁻ point, countedQueryCost
           ((scheduledBalancedFigureOnePointContinuation
             figureOneFinalScheduledBalancedParameters q point).run oracle.query)
-        ∂((initialGaussianSamplingMeasure q).map
+        ∂((initialGaussianLaw q).map
           (initialTruncatedFallback q I)) := by
   let continuation (point : AmbientSpace q.n) :=
     scheduledBalancedFigureOnePointContinuation
@@ -65,21 +65,21 @@ theorem figureOneFinalScheduledBalancedBaseProgram_countedQueryCost_le_initial_a
     cases initialPoint <;> rfl
   have hintegral :
       (∫⁻ initialPoint, countedQueryCost ((tail initialPoint).run oracle.query)
-          ∂((initialGaussianSamplingMeasure q).map
+          ∂((initialGaussianLaw q).map
             (some ∘ initialTruncatedFallback q I))) =
         ∫⁻ point, countedQueryCost ((continuation point).run oracle.query)
-          ∂((initialGaussianSamplingMeasure q).map
+          ∂((initialGaussianLaw q).map
             (initialTruncatedFallback q I)) := by
     calc
       _ = ∫⁻ point, countedQueryCost
           ((tail (some (initialTruncatedFallback q I point))).run oracle.query)
-            ∂(initialGaussianSamplingMeasure q) := by
+            ∂(initialGaussianLaw q) := by
         simpa only [Function.comp_apply] using
-          (lintegral_map (μ := initialGaussianSamplingMeasure q) htailCostMeas
+          (lintegral_map (μ := initialGaussianLaw q) htailCostMeas
             (measurable_some.comp (measurable_initialTruncatedFallback q I)))
       _ = ∫⁻ point, countedQueryCost
           ((continuation (initialTruncatedFallback q I point)).run oracle.query)
-            ∂(initialGaussianSamplingMeasure q) := by rfl
+            ∂(initialGaussianLaw q) := by rfl
       _ = _ := (lintegral_map hcostMeas
         (measurable_initialTruncatedFallback q I)).symm
   rw [hbase, MembershipOracleProgram.countedQueryCost_bind_eq_add oracle.query

@@ -49,7 +49,7 @@ theorem balancedCoolingHistorySnocTerminal_average_coordinate
     (q : VolumeParams) (m samples : ℕ)
     (history : BalancedCoolingHistory q.n) (hcount : history.2.1 = m)
     (result : Option (ℝ × AmbientSpace q.n))
-    (hm : m < figureOneDependentPhaseCount q) :
+    (hm : m < numPhases q) :
     balancedCoolingChronologicalPhaseVariable q (m + 1)
         (balancedCoolingHistorySnocTerminal history
           (balancedCoolingAverage samples result)) =
@@ -68,7 +68,7 @@ theorem balancedCoolingHistorySnocTerminal_coordinate
     (q : VolumeParams) (m : ℕ)
     (history : BalancedCoolingHistory q.n) (hcount : history.2.1 = m)
     (value : ℝ × AmbientSpace q.n)
-    (hm : m < figureOneDependentPhaseCount q) :
+    (hm : m < numPhases q) :
     balancedCoolingChronologicalPhaseVariable q (m + 1)
         (balancedCoolingHistorySnocTerminal history (some value)) =
       value.1 := by

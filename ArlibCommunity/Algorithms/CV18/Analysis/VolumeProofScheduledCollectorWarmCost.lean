@@ -21,7 +21,7 @@ theorem lintegral_scheduledBalancedAccuracyRetryCollect_countedQueryCost_le_of_l
     (hle : mu ≤ good + bad)
     (hwarm : _root_.Arlib.IsWarm M good
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (hbad : bad Set.univ ≤ error)
     (proposalCap properStride retryLimit samples : ℕ) :
     ∫⁻ current, countedQueryCost
@@ -77,7 +77,7 @@ theorem lintegral_scheduledBalancedAccuracyRetryCollect_countedQueryCost_le_fina
     (hle : mu ≤ good + bad)
     (hwarm : _root_.Arlib.IsWarm M good
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (hM : M ≤ 96) (hbad : bad Set.univ ≤ error)
     (proposalCap properStride retryLimit samples : ℕ)
     (hstride : 0 < properStride) :

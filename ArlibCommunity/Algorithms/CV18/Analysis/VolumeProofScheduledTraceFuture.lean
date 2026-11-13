@@ -14,7 +14,7 @@ theorem scheduledBalancedTracePhaseVariable_append_eq
     (q : VolumeParams) {m j : ℕ}
     {trace : ScheduledBalancedCoolingTrace q.n}
     (hvalid : ScheduledBalancedCoolingTraceValid m trace)
-    (hmphase : m ≤ figureOneDependentPhaseCount q)
+    (hmphase : m ≤ numPhases q)
     (hj1 : 1 ≤ j) (hjm : j ≤ m)
     (result : Option (ℝ × AmbientSpace q.n)) :
     scheduledBalancedTracePhaseVariable q j
@@ -29,7 +29,7 @@ theorem scheduledFigureOneTraceTruncatedPhase_append_eq
     (q : VolumeParams) (I : VolumeInput q.n) {m j : ℕ}
     {trace : ScheduledBalancedCoolingTrace q.n}
     (hvalid : ScheduledBalancedCoolingTraceValid m trace)
-    (hmphase : m ≤ figureOneDependentPhaseCount q)
+    (hmphase : m ≤ numPhases q)
     (hj1 : 1 ≤ j) (hjm : j ≤ m)
     (result : Option (ℝ × AmbientSpace q.n)) :
     scheduledFigureOneTraceTruncatedPhase q I j
@@ -45,14 +45,14 @@ theorem scheduledFigureOneTraceTruncatedProduct_append_eq
     (q : VolumeParams) (I : VolumeInput q.n) {m i : ℕ}
     {trace : ScheduledBalancedCoolingTrace q.n}
     (hvalid : ScheduledBalancedCoolingTraceValid m trace)
-    (hmphase : m ≤ figureOneDependentPhaseCount q)
+    (hmphase : m ≤ numPhases q)
     (him : i ≤ m)
     (result : Option (ℝ × AmbientSpace q.n)) :
-    dependentTruncatedProduct (figureOneDependentAlpha q)
+    dependentTruncatedProduct (truncationLevel q)
         (scheduledFigureOneTraceTruncatedMean q I)
         (scheduledFigureOneTraceTruncatedPhase q I) i
         (scheduledBalancedCoolingTraceAppend trace result) =
-      dependentTruncatedProduct (figureOneDependentAlpha q)
+      dependentTruncatedProduct (truncationLevel q)
         (scheduledFigureOneTraceTruncatedMean q I)
         (scheduledFigureOneTraceTruncatedPhase q I) i trace := by
   induction i with
@@ -70,8 +70,8 @@ loss-preserving trace rather than on an immediate one-phase pair law. -/
 theorem map_pair_scheduledBalancedForwardTraceLaw_eq_prefix
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
     (I : VolumeInput q.n) (i future : ℕ)
-    (horizon : i + 1 + future ≤ figureOneDependentPhaseCount q) :
-    let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+    (horizon : i + 1 + future ≤ numPhases q) :
+    let X := dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) i
     let Y := scheduledFigureOneTraceTruncatedPhase q I (i + 1)
@@ -80,7 +80,7 @@ theorem map_pair_scheduledBalancedForwardTraceLaw_eq_prefix
       (scheduledBalancedForwardTraceLaw parameters q I (i + 1)).map
         (fun trace => (X trace, Y trace)) := by
   dsimp only
-  let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+  let X := dependentTruncatedProduct (truncationLevel q)
     (scheduledFigureOneTraceTruncatedMean q I)
     (scheduledFigureOneTraceTruncatedPhase q I) i
   let Y := scheduledFigureOneTraceTruncatedPhase q I (i + 1)
@@ -88,7 +88,7 @@ theorem map_pair_scheduledBalancedForwardTraceLaw_eq_prefix
       (scheduledFigureOneTraceTruncatedPhase q I j) := fun j =>
     (measurable_scheduledBalancedTracePhaseVariable q j).min measurable_const
   have hX : Measurable X :=
-    measurable_dependentTruncatedProduct (figureOneDependentAlpha q)
+    measurable_dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) hV i
   have hY : Measurable Y := hV (i + 1)
@@ -98,7 +98,7 @@ theorem map_pair_scheduledBalancedForwardTraceLaw_eq_prefix
       let m := i + 1 + future
       let law := scheduledBalancedForwardTraceLaw parameters q I m
       let K := scheduledBalancedTracePhaseKernel parameters q I m
-      have hmphase : m ≤ figureOneDependentPhaseCount q := by
+      have hmphase : m ≤ numPhases q := by
         dsimp only [m]
         omega
       have hK := scheduledBalancedTracePhaseKernel_measurable_and_probability

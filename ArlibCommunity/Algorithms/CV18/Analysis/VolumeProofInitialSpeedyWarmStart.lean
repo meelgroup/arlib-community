@@ -144,12 +144,12 @@ theorem initial_accuracyPhase_ell_floor (q : VolumeParams) (I : VolumeInput q.n)
 
 /-! ## Mass discarded by the initial inball restriction -/
 
-theorem initialGaussianSamplingMeasure_unitBall_compl_le
+theorem initialGaussianLaw_unitBall_compl_le
     (q : VolumeParams) :
-    initialGaussianSamplingMeasure q (unitBall q.n)ᶜ ≤
+    initialGaussianLaw q (unitBall q.n)ᶜ ≤
       ENNReal.ofReal (q.eps / 64) := by
   simp only [unitBall]
-  rw [initialGaussianSamplingMeasure_apply q
+  rw [initialGaussianLaw_apply q
     (measurableSet_closedBall : MeasurableSet
       (Metric.closedBall (0 : AmbientSpace q.n) 1)).compl]
   apply ENNReal.ofReal_le_ofReal
@@ -163,15 +163,15 @@ theorem initialTruncatedGaussian_unitBall_compl_le
     (truncatedGaussianProbability q I (initialVariance q)
       (initialVariance_pos q) : Measure (AmbientSpace q.n))
         (unitBall q.n)ᶜ ≤ ENNReal.ofReal (q.eps / 32) := by
-  let mu : Measure (AmbientSpace q.n) := initialGaussianSamplingMeasure q
+  let mu : Measure (AmbientSpace q.n) := initialGaussianLaw q
   let nu : Measure (AmbientSpace q.n) :=
     truncatedGaussianProbability q I (initialVariance q) (initialVariance_pos q)
   let c : ENNReal := ENNReal.ofReal
     (gaussianIntegral (truncatedBody q I) (initialVariance q) /
       initialGaussianIntegral q)
-  have hrel := initialGaussianSamplingMeasure_restrict_truncatedBody q I
+  have hrel := initialGaussianLaw_restrict_truncatedBody q I
   have htailK : mu (truncatedBody q I)ᶜ ≤ ENNReal.ofReal (q.eps / 64) := by
-    simpa [mu] using initialGaussianSamplingMeasure_truncatedBody_compl_le q I
+    simpa [mu] using initialGaussianLaw_truncatedBody_compl_le q I
   have hhalf_ofReal : (1 / 2 : ENNReal) = ENNReal.ofReal (1 / 2 : ℝ) := by
     rw [ENNReal.ofReal_div_of_pos (by norm_num : (0 : ℝ) < 2)]
     norm_num
@@ -202,7 +202,7 @@ theorem initialTruncatedGaussian_unitBall_compl_le
   have hprod : c * nu A ≤ ENNReal.ofReal (q.eps / 64) := by
     rw [← hAK]
     exact (measure_mono Set.inter_subset_left).trans (by
-      simpa [A, mu] using initialGaussianSamplingMeasure_unitBall_compl_le q)
+      simpa [A, mu] using initialGaussianLaw_unitBall_compl_le q)
   have htwoHalf : (2 : ENNReal) * ENNReal.ofReal (1 / 2 : ℝ) = 1 := by
     rw [show (2 : ENNReal) = ENNReal.ofReal 2 by norm_num,
       ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 2)]

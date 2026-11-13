@@ -100,7 +100,7 @@ theorem exists_globalResetReferenceWitness_of_gaussianStep
   have htrace : MeasureLeUpTo
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q))
+          (numPhases q))
       reference (figureOneScheduledGlobalOuterStepError q) := by
     rw [iteratedKernelLaw_scheduledGaussian_bind_terminal_eq_forwardTraceLaw
       q I] at hcombined
@@ -134,7 +134,7 @@ theorem volumeTheorem_finalScheduled :
               figureOneFinalScheduledCappedValueProgram q).QueryBound calls ∧
             calls ≤ Nat.ceil
               (figureOneFinalScheduledQueryConstant *
-                (volumeScheduledBaseComplexityRate q *
+                (runRate q *
                 protectedLog (1 / q.p))) :=
   volumeTheorem_finalScheduled_of_globalResetReferenceExists
     globalResetReferenceExists

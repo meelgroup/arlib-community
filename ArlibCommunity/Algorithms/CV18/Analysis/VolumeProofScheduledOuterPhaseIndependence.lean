@@ -85,8 +85,8 @@ theorem bind_gaussian_observation_leUpTo_of_warm_two_accepted_retained
     (hretained : rho.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
     (hgood : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
-      (accepted.map fun point => accuracyScaleFactor q • point)
+      (ENNReal.ofReal (8 * warmConstant q))
+      (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase))
     (hwarm : Arlib.IsWarm 2 mu rho) :
     MeasureLeUpTo
@@ -95,7 +95,7 @@ theorem bind_gaussian_observation_leUpTo_of_warm_two_accepted_retained
       (figureOneScheduledGaussianPhaseTarget q I phase)
       (figureOneCorrectedTransitionBudget q) := by
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun point =>
-    accuracyScaleFactor q • point
+    scaleFactor q • point
   let good : Measure (AmbientSpace q.n) :=
     (2 : ENNReal) • accepted.map scale
   let bad : Measure (AmbientSpace q.n) := 0
@@ -120,24 +120,24 @@ theorem bind_gaussian_observation_leUpTo_of_warm_two_accepted_retained
           q mu rho 2 scale hscale hmule
       _ = good := by rw [hliveRho]
   have hgood16 : Arlib.IsWarm
-      (ENNReal.ofReal (16 * speedyAdjacentWarmConstant q)) good
+      (ENNReal.ofReal (16 * warmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I phase) := by
     intro S hS
     rw [show good = (2 : ENNReal) • accepted.map scale by rfl,
       Measure.smul_apply, smul_eq_mul]
     have hg := hgood S hS
     have hcoef : (2 : ENNReal) *
-        ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) =
-          ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+        ENNReal.ofReal (8 * warmConstant q) =
+          ENNReal.ofReal (16 * warmConstant q) := by
       rw [show (2 : ENNReal) = ENNReal.ofReal (2 : ℝ) by norm_num,
         ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 2)]
       congr 1
       ring
     calc
       2 * (accepted.map scale) S ≤
-          2 * (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) *
+          2 * (ENNReal.ofReal (8 * warmConstant q) *
             (figureOneScheduledSpeedyPiAt q I phase) S) := by gcongr
-      _ = ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) *
+      _ = ENNReal.ofReal (16 * warmConstant q) *
           (figureOneScheduledSpeedyPiAt q I phase) S := by
         rw [← mul_assoc, hcoef]
   have hdeadRho : scheduledBalancedTraceDeadStateLaw rho scale Set.univ = 0 :=
@@ -154,10 +154,10 @@ theorem bind_gaussian_observation_leUpTo_of_warm_two_accepted_retained
           2 * scheduledBalancedTraceDeadStateLaw rho scale Set.univ := hdead
       _ = 0 := by rw [hdeadRho, mul_zero]
   have hM : (1 : ENNReal) ≤
-      ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+      ENNReal.ofReal (16 * warmConstant q) := by
     rw [← ENNReal.ofReal_one]
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
+      nlinarith [warmConstant_one_le q]
   simpa only [add_zero] using
     (bind_scheduledBalancedTracePhaseObservationLaw_leUpTo_of_live_good_bad
       q I phase hphase mu good bad hM ENNReal.ofReal_ne_top le_rfl
@@ -173,8 +173,8 @@ theorem approxIndepFun_gaussian_phase_of_accepted_retained
     (hretained : rho.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
     (hgood : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
-      (accepted.map fun point => accuracyScaleFactor q • point)
+      (ENNReal.ofReal (8 * warmConstant q))
+      (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase)) :
     ApproxIndepFun
       (figureOneCorrectedTransitionBudget q +
@@ -206,7 +206,7 @@ theorem approxIndepFun_gaussian_phase_of_accepted_retained
     have h := sequentialPairLaw_gaussian_output_leUpTo_of_retainedSome_warm
       q I phase hphase rho accepted hretained
       (hgood.mono <| ENNReal.ofReal_le_ofReal <| by
-        nlinarith [speedyAdjacentWarmConstant_one_le q])
+        nlinarith [warmConstant_one_le q])
     rw [map_sequentialPairLaw_snd rho K hK.1 hK.2] at h
     exact h
   have hind := approxIndepFun_history_next_of_state_warm_base_leUpTo
@@ -226,8 +226,8 @@ theorem approxIndepFun_oldStatistic_gaussian_liveRaw_of_accepted_retained
     (hretained : rho.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
     (hgood : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
-      (accepted.map fun point => accuracyScaleFactor q • point)
+      (ENNReal.ofReal (8 * warmConstant q))
+      (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase))
     (oldStatistic : ScheduledBalancedCoolingTrace q.n → ℝ)
     (hold : Measurable oldStatistic) :
@@ -271,7 +271,7 @@ theorem approxIndepFun_oldStatistic_gaussian_liveRaw_of_accepted_same
     apply h.mono
     rw [show (8 : ENNReal) = ENNReal.ofReal (8 : ℝ) by norm_num]
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
+      nlinarith [warmConstant_one_le q]
   · exact hold
 
 /-- Noninitial adjacent-phase specialization to the accepted target of the
@@ -312,8 +312,8 @@ theorem bind_terminal_observation_leUpTo_of_warm_two_accepted_retained
     (hretained : rho.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
     (hgood : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
-      (accepted.map fun point => accuracyScaleFactor q • point)
+      (ENNReal.ofReal (8 * warmConstant q))
+      (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q)))
     (hwarm : Arlib.IsWarm 2 mu rho) :
     MeasureLeUpTo
@@ -323,7 +323,7 @@ theorem bind_terminal_observation_leUpTo_of_warm_two_accepted_retained
       (figureOneScheduledTerminalPhaseTarget q I)
       (figureOneCorrectedTransitionBudget q) := by
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun point =>
-    accuracyScaleFactor q • point
+    scaleFactor q • point
   let good : Measure (AmbientSpace q.n) :=
     (2 : ENNReal) • accepted.map scale
   let bad : Measure (AmbientSpace q.n) := 0
@@ -348,25 +348,25 @@ theorem bind_terminal_observation_leUpTo_of_warm_two_accepted_retained
           q mu rho 2 scale hscale hmule
       _ = good := by rw [hliveRho]
   have hgood16 : Arlib.IsWarm
-      (ENNReal.ofReal (16 * speedyAdjacentWarmConstant q)) good
+      (ENNReal.ofReal (16 * warmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q)) := by
     intro S hS
     rw [show good = (2 : ENNReal) • accepted.map scale by rfl,
       Measure.smul_apply, smul_eq_mul]
     have hg := hgood S hS
     have hcoef : (2 : ENNReal) *
-        ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) =
-          ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+        ENNReal.ofReal (8 * warmConstant q) =
+          ENNReal.ofReal (16 * warmConstant q) := by
       rw [show (2 : ENNReal) = ENNReal.ofReal (2 : ℝ) by norm_num,
         ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 2)]
       congr 1
       ring
     calc
       2 * (accepted.map scale) S ≤
-          2 * (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) *
+          2 * (ENNReal.ofReal (8 * warmConstant q) *
             (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q)) S) := by
         gcongr
-      _ = ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) *
+      _ = ENNReal.ofReal (16 * warmConstant q) *
           (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q)) S := by
         rw [← mul_assoc, hcoef]
   have hdeadRho : scheduledBalancedTraceDeadStateLaw rho scale Set.univ = 0 :=
@@ -383,10 +383,10 @@ theorem bind_terminal_observation_leUpTo_of_warm_two_accepted_retained
           2 * scheduledBalancedTraceDeadStateLaw rho scale Set.univ := hdead
       _ = 0 := by rw [hdeadRho, mul_zero]
   have hM : (1 : ENNReal) ≤
-      ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+      ENNReal.ofReal (16 * warmConstant q) := by
     rw [← ENNReal.ofReal_one]
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
+      nlinarith [warmConstant_one_le q]
   have hout :=
     bind_scheduledBalancedTerminalTracePhaseOutputLaw_leUpTo_of_live_good_bad
       q I mu good bad hM ENNReal.ofReal_ne_top le_rfl hlive hgood16 herror
@@ -412,8 +412,8 @@ theorem approxIndepFun_terminal_phase_of_accepted_retained
     (hretained : rho.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
     (hgood : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
-      (accepted.map fun point => accuracyScaleFactor q • point)
+      (ENNReal.ofReal (8 * warmConstant q))
+      (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q))) :
     ApproxIndepFun
       (figureOneCorrectedTransitionBudget q +
@@ -446,7 +446,7 @@ theorem approxIndepFun_terminal_phase_of_accepted_retained
     have h := sequentialPairLaw_terminal_output_leUpTo_of_retainedSome_warm
       q I rho accepted hretained
       (hgood.mono <| ENNReal.ofReal_le_ofReal <| by
-        nlinarith [speedyAdjacentWarmConstant_one_le q])
+        nlinarith [warmConstant_one_le q])
     rw [map_sequentialPairLaw_snd rho K hK.1 hK.2] at h
     exact h
   have hind := approxIndepFun_history_next_of_state_warm_base_leUpTo

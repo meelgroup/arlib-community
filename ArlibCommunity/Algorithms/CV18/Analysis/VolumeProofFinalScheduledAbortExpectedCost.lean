@@ -34,12 +34,12 @@ theorem figureOneFinalScheduledAbortBaseProgram_cost_le_retained
 decomposition for one Gaussian phase. -/
 noncomputable def figureOneFinalScheduledGaussianPhaseCostEnvelope
     (q : VolumeParams) (phase : ℕ) : ENNReal :=
-  ((384 * (figureOnePhaseSampleCount q (scheduleValue q phase) *
-    figureOneSafeRetryCount q *
+  ((384 * (phaseSampleCount q (scheduleValue q phase) *
+    maxRetries q *
     figureOneFinalScheduledBalancedParameters.properStride q
       (scheduleValue q phase)) : ℕ) : ENNReal) +
-  ((figureOnePhaseSampleCount q (scheduleValue q phase) *
-    figureOneSafeRetryCount q *
+  ((phaseSampleCount q (scheduleValue q phase) *
+    maxRetries q *
     (figureOneFinalScheduledBalancedParameters.proposalCap q
       (scheduleValue q phase) + 2) : ℕ) : ENNReal) *
     figureOneScheduledRetainedError q phase
@@ -47,10 +47,10 @@ noncomputable def figureOneFinalScheduledGaussianPhaseCostEnvelope
 /-- The analogous terminal Gaussian-to-uniform envelope. -/
 noncomputable def figureOneFinalScheduledTerminalCostEnvelope
     (q : VolumeParams) : ENNReal :=
-  ((384 * (figureOneSampleCount q * figureOneSafeRetryCount q *
+  ((384 * (sampleCount q * maxRetries q *
     figureOneFinalScheduledBalancedParameters.properStride q
       (terminalVariance q)) : ℕ) : ENNReal) +
-  ((figureOneSampleCount q * figureOneSafeRetryCount q *
+  ((sampleCount q * maxRetries q *
     (figureOneFinalScheduledBalancedParameters.proposalCap q
       (terminalVariance q) + 2) : ℕ) : ENNReal) *
     figureOneScheduledRetainedError q (terminalPhaseSteps q)
@@ -61,12 +61,12 @@ sum is extracted. -/
 noncomputable def figureOneFinalScheduledRetainedErrorCost
     (q : VolumeParams) : ENNReal :=
   (∑ phase ∈ Finset.range (terminalPhaseSteps q),
-    ((figureOnePhaseSampleCount q (scheduleValue q phase) *
-      figureOneSafeRetryCount q *
+    ((phaseSampleCount q (scheduleValue q phase) *
+      maxRetries q *
       (figureOneFinalScheduledBalancedParameters.proposalCap q
         (scheduleValue q phase) + 2) : ℕ) : ENNReal) *
       figureOneScheduledRetainedError q phase) +
-  ((figureOneSampleCount q * figureOneSafeRetryCount q *
+  ((sampleCount q * maxRetries q *
     (figureOneFinalScheduledBalancedParameters.proposalCap q
       (terminalVariance q) + 2) : ℕ) : ENNReal) *
     figureOneScheduledRetainedError q (terminalPhaseSteps q)
@@ -78,7 +78,7 @@ theorem figureOneFinalScheduledCostEnvelopes_eq_warm_add_error
     (∑ phase ∈ Finset.range (terminalPhaseSteps q),
         figureOneFinalScheduledGaussianPhaseCostEnvelope q phase) +
       figureOneFinalScheduledTerminalCostEnvelope q =
-    ((384 * (figureOneSafeRetryCount q *
+    ((384 * (maxRetries q *
       figureOneScheduledProperWork q) : ℕ) : ENNReal) +
       figureOneFinalScheduledRetainedErrorCost q := by
   simp only [figureOneFinalScheduledGaussianPhaseCostEnvelope,
@@ -162,7 +162,7 @@ theorem figureOneFinalScheduledAbortBaseProgram_cost_le_warm_add_error
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I) :
     countedQueryCost
         ((figureOneFinalScheduledAbortBaseProgram q).run oracle.query) ≤
-      1 + (((384 * (figureOneSafeRetryCount q *
+      1 + (((384 * (maxRetries q *
           figureOneScheduledProperWork q) : ℕ) : ENNReal) +
         figureOneFinalScheduledRetainedErrorCost q) := by
   rw [← figureOneFinalScheduledCostEnvelopes_eq_warm_add_error q]
@@ -171,10 +171,10 @@ theorem figureOneFinalScheduledAbortBaseProgram_cost_le_warm_add_error
 /-- The extracted live/warm work occupies at most nine tenths of the selected
 `10^30` scheduled-rate constant. -/
 theorem figureOneFinalScheduledWarmCost_le_rate (q : VolumeParams) :
-    ((384 * (figureOneSafeRetryCount q *
+    ((384 * (maxRetries q *
       figureOneScheduledProperWork q) : ℕ) : ENNReal) ≤
       ENNReal.ofReal ((9 * 10 ^ 29) *
-        volumeScheduledBaseComplexityRate q) := by
+        runRate q) := by
   simpa only [ENNReal.ofReal_natCast] using
     ENNReal.ofReal_le_ofReal (figureOneWarmShadowScheduledWork_cast_le q)
 

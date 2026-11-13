@@ -18,46 +18,46 @@ namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory Metric Set
 open scoped ENNReal Pointwise
 
-theorem figureOneScheduledCoreError_pos (q : VolumeParams) :
-    0 < figureOneScheduledCoreError q := by
-  unfold figureOneScheduledCoreError
-  positivity [figureOnePerSampleMixingError_pos q]
+theorem coreMixingError_pos (q : VolumeParams) :
+    0 < coreMixingError q := by
+  unfold coreMixingError
+  positivity [sampleMixingError_pos q]
 
-theorem figureOneScheduledRadialError_pos (q : VolumeParams) :
-    0 < figureOneScheduledRadialError q := by
-  unfold figureOneScheduledRadialError
-  positivity [figureOnePerSampleMixingError_pos q]
+theorem radialError_pos (q : VolumeParams) :
+    0 < radialError q := by
+  unfold radialError
+  positivity [sampleMixingError_pos q]
 
-theorem figureOneScheduledCoreError_le_one_div_sixteen (q : VolumeParams) :
-    figureOneScheduledCoreError q ≤ 1 / 16 := by
-  unfold figureOneScheduledCoreError
-  nlinarith [figureOnePerSampleMixingError_le_one q]
+theorem coreMixingError_le_one_div_sixteen (q : VolumeParams) :
+    coreMixingError q ≤ 1 / 16 := by
+  unfold coreMixingError
+  nlinarith [sampleMixingError_le_one q]
 
 theorem figureOneScheduledCore_combined_le (q : VolumeParams) :
-    8 * ENNReal.ofReal (figureOneScheduledCoreError q) +
-        4 * ENNReal.ofReal (figureOneScheduledCoreError q) ≤
+    8 * ENNReal.ofReal (coreMixingError q) +
+        4 * ENNReal.ofReal (coreMixingError q) ≤
       ENNReal.ofReal (1 / 4 : ℝ) := by
-  have hcore := figureOneScheduledCoreError_pos q
+  have hcore := coreMixingError_pos q
   rw [← ENNReal.ofReal_ofNat 8, ← ENNReal.ofReal_ofNat 4,
     ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 8),
     ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 4),
     ← ENNReal.ofReal_add (by positivity :
-      0 ≤ 8 * figureOneScheduledCoreError q)
-      (by positivity : 0 ≤ 4 * figureOneScheduledCoreError q)]
+      0 ≤ 8 * coreMixingError q)
+      (by positivity : 0 ≤ 4 * coreMixingError q)]
   apply ENNReal.ofReal_le_ofReal
-  unfold figureOneScheduledCoreError
-  nlinarith [figureOnePerSampleMixingError_le_one q]
+  unfold coreMixingError
+  nlinarith [sampleMixingError_le_one q]
 
 /-- The stationary accepted-target correction now fits the quarter reserved
 for it, uniformly in the schedule length and hence in `q.roundness`. -/
 theorem figureOneScheduledTargetError_le (q : VolumeParams) :
-    96 * ENNReal.ofReal (figureOneScheduledCoreError q) +
-        ENNReal.ofReal (figureOneScheduledRadialError q) ≤
+    96 * ENNReal.ofReal (coreMixingError q) +
+        ENNReal.ofReal (radialError q) ≤
       figureOneCorrectedTargetBudget q := by
-  have hnu := figureOnePerSampleMixingError_pos q
+  have hnu := sampleMixingError_pos q
   have hleftTop :
-      96 * ENNReal.ofReal (figureOneScheduledCoreError q) +
-          ENNReal.ofReal (figureOneScheduledRadialError q) ≠ ∞ := by
+      96 * ENNReal.ofReal (coreMixingError q) +
+          ENNReal.ofReal (radialError q) ≠ ∞ := by
     exact ENNReal.add_ne_top.2 ⟨
       ENNReal.mul_ne_top (by norm_num) ENNReal.ofReal_ne_top,
       ENNReal.ofReal_ne_top⟩
@@ -72,16 +72,16 @@ theorem figureOneScheduledTargetError_le (q : VolumeParams) :
   simp only [ENNReal.toReal_mul, ENNReal.toReal_ofNat,
     figureOneCorrectedTargetBudget, figureOneCorrectedTransitionBudget,
     ENNReal.toReal_div]
-  rw [ENNReal.toReal_ofReal (figureOneScheduledCoreError_pos q).le,
-    ENNReal.toReal_ofReal (figureOneScheduledRadialError_pos q).le,
+  rw [ENNReal.toReal_ofReal (coreMixingError_pos q).le,
+    ENNReal.toReal_ofReal (radialError_pos q).le,
     ENNReal.toReal_ofReal hnu.le]
-  unfold figureOneScheduledCoreError figureOneScheduledRadialError
+  unfold coreMixingError radialError
   ring_nf
   exact le_rfl
 
-theorem figureOneScheduledAccuracyLog_one_le (q : VolumeParams) :
-    1 ≤ figureOneScheduledAccuracyLog q := by
-  unfold figureOneScheduledAccuracyLog
+theorem accuracyLog_one_le (q : VolumeParams) :
+    1 ≤ accuracyLog q := by
+  unfold accuracyLog
   exact le_trans (le_max_left _ _)
     (le_max_left _ _)
 
@@ -89,27 +89,27 @@ noncomputable def figureOneScheduledPhaseBody
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ) :
     Set (AmbientSpace q.n) :=
   truncatedBody q I ∩
-    Metric.closedBall 0 (figureOneScheduledPhaseRadius q sigma2)
+    Metric.closedBall 0 (phaseRadius q sigma2)
 
 noncomputable def figureOneScheduledPhaseInradius
     (q : VolumeParams) (sigma2 : ℝ) : ℝ :=
-  min 1 (figureOneScheduledPhaseRadius q sigma2)
+  min 1 (phaseRadius q sigma2)
 
-theorem figureOneScheduledPhaseRadius_pos
+theorem phaseRadius_pos
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    0 < figureOneScheduledPhaseRadius q sigma2 := by
-  unfold figureOneScheduledPhaseRadius
+    0 < phaseRadius q sigma2 := by
+  unfold phaseRadius
   have hn : (0 : ℝ) < q.n := by
     exact_mod_cast (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)
-  positivity [figureOneScheduledAccuracyLog_one_le q]
+  positivity [accuracyLog_one_le q]
 
-theorem figureOneScheduledProposalRadius_pos
+theorem proposalRadius_pos
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    0 < figureOneScheduledProposalRadius q sigma2 := by
-  unfold figureOneScheduledProposalRadius
+    0 < proposalRadius q sigma2 := by
+  unfold proposalRadius
   have hn : (0 : ℝ) < q.n := by
     exact_mod_cast (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)
-  positivity [figureOneScheduledAccuracyLog_one_le q]
+  positivity [accuracyLog_one_le q]
 
 theorem figureOneScheduledPhaseBody_measurable
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ) :
@@ -130,7 +130,7 @@ theorem figureOneScheduledPhaseInradius_pos
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     0 < figureOneScheduledPhaseInradius q sigma2 := by
   unfold figureOneScheduledPhaseInradius
-  exact lt_min one_pos (figureOneScheduledPhaseRadius_pos q hsigma2)
+  exact lt_min one_pos (phaseRadius_pos q hsigma2)
 
 theorem ball_scheduledPhaseInradius_subset
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ) :
@@ -161,19 +161,19 @@ theorem figureOneScheduledPhaseBody_volume_ne_top
     volume (figureOneScheduledPhaseBody q I sigma2) ≠ ∞ :=
   (figureOneScheduledPhaseBody_isCompact q I sigma2).measure_lt_top.ne
 
-theorem figureOneScheduledProposalRadius_le_inradiusStep
+theorem proposalRadius_le_inradiusStep
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
-    (hsmall : figureOneScheduledPhaseRadius q sigma2 ≤ 1) :
-    figureOneScheduledProposalRadius q sigma2 ≤
+    (hsmall : phaseRadius q sigma2 ≤ 1) :
+    proposalRadius q sigma2 ≤
       figureOneScheduledPhaseInradius q sigma2 / (2 * (q.n : ℝ)) := by
   let sigma := Real.sqrt sigma2
-  let L := figureOneScheduledAccuracyLog q
+  let L := accuracyLog q
   let b := Real.sqrt ((q.n : ℝ) * L)
   have hsigma : 0 < sigma := Real.sqrt_pos.2 hsigma2
   have hn : (0 : ℝ) < q.n := by
     exact_mod_cast (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)
   have hL : 1 ≤ L := by
-    simpa [L] using figureOneScheduledAccuracyLog_one_le q
+    simpa [L] using accuracyLog_one_le q
   have hb : 0 < b := by dsimp [b]; positivity
   have hb2 : b ^ 2 = (q.n : ℝ) * L := by
     dsimp [b]
@@ -183,7 +183,7 @@ theorem figureOneScheduledProposalRadius_le_inradiusStep
       32 * sigma * b := by
     rw [figureOneScheduledPhaseInradius, min_eq_right hsmall]
     rfl
-  unfold figureOneScheduledProposalRadius
+  unfold proposalRadius
   change min sigma 1 / (4096 * b) ≤
     figureOneScheduledPhaseInradius q sigma2 / (2 * (q.n : ℝ))
   rw [hrho]
@@ -203,20 +203,20 @@ theorem figureOneScheduledProposalRadius_le_inradiusStep
 the old polynomial mixing-rate proof only acquires the new logarithm. -/
 theorem figureOneScheduledRadius_mul_proposal_le
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    figureOneScheduledPhaseRadius q sigma2 *
-        figureOneScheduledProposalRadius q sigma2 ≤ sigma2 / 9 := by
-  let b := Real.sqrt ((q.n : ℝ) * figureOneScheduledAccuracyLog q)
+    phaseRadius q sigma2 *
+        proposalRadius q sigma2 ≤ sigma2 / 9 := by
+  let b := Real.sqrt ((q.n : ℝ) * accuracyLog q)
   have hn : (0 : ℝ) < q.n := by
     exact_mod_cast (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)
   have hb : 0 < b := by
     dsimp [b]
-    positivity [figureOneScheduledAccuracyLog_one_le q]
+    positivity [accuracyLog_one_le q]
   have hmin : min (Real.sqrt sigma2) 1 ≤ Real.sqrt sigma2 := min_le_left _ _
   have hcancel :
-      figureOneScheduledPhaseRadius q sigma2 *
-          figureOneScheduledProposalRadius q sigma2 =
+      phaseRadius q sigma2 *
+          proposalRadius q sigma2 =
         Real.sqrt sigma2 * min (Real.sqrt sigma2) 1 / 128 := by
-    unfold figureOneScheduledPhaseRadius figureOneScheduledProposalRadius
+    unfold phaseRadius proposalRadius
     change (32 * Real.sqrt sigma2 * b) *
       (min (Real.sqrt sigma2) 1 / (4096 * b)) = _
     field_simp [hb.ne']
@@ -234,35 +234,35 @@ theorem figureOneScheduledRadius_mul_proposal_le
 in `figureOneScheduledTargetError_le`. -/
 theorem figureOneScheduled_tail_coefficient_le
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    Real.exp (-(figureOneScheduledPhaseRadius q sigma2) ^ 2 /
+    Real.exp (-(phaseRadius q sigma2) ^ 2 /
         (4 * sigma2)) * Real.sqrt 2 ^ q.n ≤
-      figureOneScheduledRadialError q := by
-  let L := figureOneScheduledAccuracyLog q
-  let radial := figureOneScheduledRadialError q
+      radialError q := by
+  let L := accuracyLog q
+  let radial := radialError q
   let ratio := (q.n : ℝ) / radial
   have hn : (0 : ℝ) < q.n := by
     exact_mod_cast (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)
   have hn1 : (1 : ℝ) ≤ q.n := by
     exact_mod_cast (le_trans (by norm_num : 1 ≤ 3) q.dim_ok)
   have hr : 0 < radial := by
-    simpa [radial] using figureOneScheduledRadialError_pos q
+    simpa [radial] using radialError_pos q
   have hrle : radial ≤ 1 / 8 := by
-    dsimp [radial, figureOneScheduledRadialError]
-    nlinarith [figureOnePerSampleMixingError_le_one q]
+    dsimp [radial, radialError]
+    nlinarith [sampleMixingError_le_one q]
   have hratio : 1 < ratio := by
     dsimp [ratio]
     rw [lt_div_iff₀ hr]
     nlinarith
   have hlog : 0 < Real.log ratio := Real.log_pos hratio
   have hL1 : 1 ≤ L := by
-    simpa [L] using figureOneScheduledAccuracyLog_one_le q
+    simpa [L] using accuracyLog_one_le q
   have hLlog : Real.log ratio ≤ L := by
-    dsimp [L, ratio, radial, figureOneScheduledAccuracyLog]
+    dsimp [L, ratio, radial, accuracyLog]
     exact (le_max_right _ _).trans (le_max_right _ _)
   have hradius :
-      (figureOneScheduledPhaseRadius q sigma2) ^ 2 / (4 * sigma2) =
+      (phaseRadius q sigma2) ^ 2 / (4 * sigma2) =
         256 * (q.n : ℝ) * L := by
-    unfold figureOneScheduledPhaseRadius
+    unfold phaseRadius
     change (32 * Real.sqrt sigma2 *
       Real.sqrt ((q.n : ℝ) * L)) ^ 2 / (4 * sigma2) = _
     rw [mul_pow, mul_pow, Real.sq_sqrt hsigma2.le,
@@ -290,9 +290,9 @@ theorem figureOneScheduled_tail_coefficient_le
     rw [Real.exp_neg, Real.exp_log (lt_trans zero_lt_one hratio)]
     dsimp [ratio]
     field_simp
-  rw [show -(figureOneScheduledPhaseRadius q sigma2) ^ 2 /
+  rw [show -(phaseRadius q sigma2) ^ 2 /
       (4 * sigma2) =
-        -((figureOneScheduledPhaseRadius q sigma2) ^ 2 /
+        -((phaseRadius q sigma2) ^ 2 /
           (4 * sigma2)) by ring, hradius]
   calc
     Real.exp (-(256 * (q.n : ℝ) * L)) * Real.sqrt 2 ^ q.n ≤
@@ -304,19 +304,19 @@ theorem figureOneScheduled_tail_coefficient_le
     _ = radial / (q.n : ℝ) := hinv
     _ ≤ radial := by
       exact div_le_self hr.le hn1
-    _ = figureOneScheduledRadialError q := rfl
+    _ = radialError q := rfl
 
 theorem figureOneScheduled_gaussianIntegral_tail_le
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     (∫ x in truncatedBody q I \
-        Metric.closedBall 0 (figureOneScheduledPhaseRadius q sigma2),
+        Metric.closedBall 0 (phaseRadius q sigma2),
         gaussianDensity sigma2 x) ≤
-      figureOneScheduledRadialError q *
+      radialError q *
         gaussianIntegral (truncatedBody q I) sigma2 := by
   have hK := truncatedBody_measurable q I
   have htail := gaussianIntegral_tail_radius_le hK hsigma2
-    (figureOneScheduledPhaseRadius_pos q hsigma2).le
+    (phaseRadius_pos q hsigma2).le
   have hscale := gaussianIntegral_scaling_le (truncatedBody q I) hK
     (truncatedVolumeInput q I).body.convex
     (unitBall_subset_truncatedBody q I (by simp [unitBall]))
@@ -326,17 +326,17 @@ theorem figureOneScheduled_gaussianIntegral_tail_le
     field_simp [hsigma2.ne']
   rw [hsqrt] at hscale
   calc
-    _ ≤ Real.exp (-(figureOneScheduledPhaseRadius q sigma2) ^ 2 /
+    _ ≤ Real.exp (-(phaseRadius q sigma2) ^ 2 /
           (4 * sigma2)) *
         gaussianIntegral (truncatedBody q I) (2 * sigma2) := htail
-    _ ≤ Real.exp (-(figureOneScheduledPhaseRadius q sigma2) ^ 2 /
+    _ ≤ Real.exp (-(phaseRadius q sigma2) ^ 2 /
           (4 * sigma2)) *
         (Real.sqrt 2 ^ q.n *
           gaussianIntegral (truncatedBody q I) sigma2) := by gcongr
-    _ = (Real.exp (-(figureOneScheduledPhaseRadius q sigma2) ^ 2 /
+    _ = (Real.exp (-(phaseRadius q sigma2) ^ 2 /
           (4 * sigma2)) * Real.sqrt 2 ^ q.n) *
         gaussianIntegral (truncatedBody q I) sigma2 := by ring
-    _ ≤ figureOneScheduledRadialError q *
+    _ ≤ radialError q *
         gaussianIntegral (truncatedBody q I) sigma2 := by
       exact mul_le_mul_of_nonneg_right
         (figureOneScheduled_tail_coefficient_le q hsigma2)
@@ -348,16 +348,16 @@ theorem truncatedGaussianProbability_scheduledPhase_compl_le
     (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n))
       (figureOneScheduledPhaseBody q I sigma2)ᶜ ≤
-        ENNReal.ofReal (figureOneScheduledRadialError q) := by
+        ENNReal.ofReal (radialError q) := by
   let K : Set (AmbientSpace q.n) := truncatedBody q I
-  let R : ℝ := figureOneScheduledPhaseRadius q sigma2
+  let R : ℝ := phaseRadius q sigma2
   let Z : ℝ := gaussianIntegral K sigma2
-  let nu : ℝ := figureOneScheduledRadialError q
+  let nu : ℝ := radialError q
   have hZ : 0 < Z := by
     dsimp [Z, K]
     exact gaussianIntegral_pos q (truncatedVolumeInput q I) hsigma2
   have hnu : 0 ≤ nu := by
-    exact (figureOneScheduledRadialError_pos q).le
+    exact (radialError_pos q).le
   have hset : (figureOneScheduledPhaseBody q I sigma2)ᶜ ∩ K =
       K \ Metric.closedBall 0 R := by
     ext x
@@ -409,18 +409,18 @@ theorem TVLe.scheduledPhase_condOn_truncatedGaussian
         (figureOneScheduledPhaseBody q I sigma2))
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n))
-      (ENNReal.ofReal (figureOneScheduledRadialError q)) := by
+      (ENNReal.ofReal (radialError q)) := by
   let mu : Measure (AmbientSpace q.n) :=
     truncatedGaussianProbability q I sigma2 hsigma2
   let S : Set (AmbientSpace q.n) :=
     figureOneScheduledPhaseBody q I sigma2
-  let epsilon := ENNReal.ofReal (figureOneScheduledRadialError q)
+  let epsilon := ENNReal.ofReal (radialError q)
   have hS : MeasurableSet S := figureOneScheduledPhaseBody_measurable q I sigma2
   have hepsilon : epsilon < 1 := by
     rw [ENNReal.ofReal_lt_one]
-    unfold figureOneScheduledRadialError
-    nlinarith [figureOnePerSampleMixingError_pos q,
-      figureOnePerSampleMixingError_le_one q]
+    unfold radialError
+    nlinarith [sampleMixingError_pos q,
+      sampleMixingError_le_one q]
   have hcompl : mu Sᶜ ≤ epsilon := by
     simpa [mu, S, epsilon] using
       truncatedGaussianProbability_scheduledPhase_compl_le q I hsigma2
@@ -434,34 +434,34 @@ theorem TVLe.scheduledPhase_condOn_truncatedGaussian
 
 /-- The smaller proposal satisfies KLS's paper-step condition at the
 schedule-targeted core error. -/
-theorem figureOneScheduledProposalRadius_le_coreStep
+theorem proposalRadius_le_coreStep
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    figureOneScheduledProposalRadius q sigma2 ≤
+    proposalRadius q sigma2 ≤
       1 / (8 * Real.sqrt ((q.n : ℝ) *
-        Real.log ((q.n : ℝ) / figureOneScheduledCoreError q))) := by
-  let L := figureOneScheduledAccuracyLog q
+        Real.log ((q.n : ℝ) / coreMixingError q))) := by
+  let L := accuracyLog q
   let d := Real.sqrt ((q.n : ℝ) *
-    Real.log ((q.n : ℝ) / figureOneScheduledCoreError q))
+    Real.log ((q.n : ℝ) / coreMixingError q))
   let b := Real.sqrt ((q.n : ℝ) * L)
   have hn : (0 : ℝ) < q.n := by
     exact_mod_cast (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)
-  have hcore := figureOneScheduledCoreError_pos q
-  have hratio : 1 < (q.n : ℝ) / figureOneScheduledCoreError q := by
+  have hcore := coreMixingError_pos q
+  have hratio : 1 < (q.n : ℝ) / coreMixingError q := by
     rw [lt_div_iff₀ hcore]
     have hn3 : (3 : ℝ) ≤ q.n := by exact_mod_cast q.dim_ok
-    nlinarith [figureOneScheduledCoreError_le_one_div_sixteen q]
+    nlinarith [coreMixingError_le_one_div_sixteen q]
   have hlog : 0 < Real.log ((q.n : ℝ) /
-      figureOneScheduledCoreError q) := Real.log_pos hratio
-  have hLlog : Real.log ((q.n : ℝ) / figureOneScheduledCoreError q) ≤ L := by
+      coreMixingError q) := Real.log_pos hratio
+  have hLlog : Real.log ((q.n : ℝ) / coreMixingError q) ≤ L := by
     exact (le_max_right _ _).trans (le_max_left _ _)
   have hd : 0 < d := by dsimp [d]; positivity
   have hb : 0 < b := by
     dsimp [b, L]
-    positivity [figureOneScheduledAccuracyLog_one_le q]
+    positivity [accuracyLog_one_le q]
   have hdb : d ≤ b := by
     apply Real.sqrt_le_sqrt
     exact mul_le_mul_of_nonneg_left hLlog hn.le
-  unfold figureOneScheduledProposalRadius
+  unfold proposalRadius
   change min (Real.sqrt sigma2) 1 / (4096 * b) ≤ 1 / (8 * d)
   calc
     _ ≤ 1 / (4096 * b) := by
@@ -476,6 +476,6 @@ theorem figureOneScheduledProposalRadius_le_coreStep
 #print axioms figureOneScheduledRadius_mul_proposal_le
 #print axioms figureOneScheduled_tail_coefficient_le
 #print axioms TVLe.scheduledPhase_condOn_truncatedGaussian
-#print axioms figureOneScheduledProposalRadius_le_coreStep
+#print axioms proposalRadius_le_coreStep
 
 end ArlibCommunity.Algorithms.CV18

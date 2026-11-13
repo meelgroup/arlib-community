@@ -52,7 +52,7 @@ theorem figureOneFinalScheduledRetainedOptionKernel_ae_mem_truncatedBody
           (figureOneFinalScheduledBalancedParameters.proposalCap q sigma2)
           (figureOneFinalScheduledBalancedParameters.properStride q sigma2)
           (figureOneFinalScheduledBalancedParameters.retryLimit q sigma2)
-          (accuracyScaleFactor q • current)] with result hresult
+          (scaleFactor q • current)] with result hresult
       cases result with
       | none => trivial
       | some target => exact hresult.1

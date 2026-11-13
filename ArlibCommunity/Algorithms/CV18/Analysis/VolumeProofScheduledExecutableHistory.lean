@@ -93,9 +93,9 @@ noncomputable def scheduledBalancedCoolingUniformCollectorLawWithState
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOneSampleCount q)
-      (accuracyScaleFactor q • current)).map
-    (balancedCoolingAverage (figureOneSampleCount q))
+      (sampleCount q)
+      (scaleFactor q • current)).map
+    (balancedCoolingAverage (sampleCount q))
 
 /-- Terminal counterpart of
 `scheduledBalancedCoolingRatioLaw_eq_transitionLaw`. -/
@@ -141,9 +141,9 @@ theorem scheduledBalancedCoolingUniformEstimateWithState_runEstimate_eq_transiti
   let cap := parameters.proposalCap q sigma2
   let stride := parameters.properStride q sigma2
   let retries := parameters.retryLimit q sigma2
-  let samples := figureOneSampleCount q
+  let samples := sampleCount q
   let weight : AmbientSpace q.n → ℝ := uniformRatioWeight sigma2
-  let start := accuracyScaleFactor q • current
+  let start := scaleFactor q • current
   have hcollector := scheduledBalancedAccuracyRetryCollect_countedMeasurable
     q I oracle hsigma2 (measurable_uniformRatioWeight sigma2)
       cap stride retries samples
@@ -152,9 +152,9 @@ theorem scheduledBalancedCoolingUniformEstimateWithState_runEstimate_eq_transiti
         retries samples start).StronglyMeasurable oracle.query :=
     (hcollector.2 start).stronglyMeasurable
   have havg := measurable_balancedCoolingAverage
-    (n := q.n) (figureOneSampleCount q)
+    (n := q.n) (sampleCount q)
   have hpure : Measurable fun result : Option (ℝ × AmbientSpace q.n) =>
-      (.pure (balancedCoolingAverage (figureOneSampleCount q) result) :
+      (.pure (balancedCoolingAverage (sampleCount q) result) :
         MembershipOracleProgram q.n
           (Option (ℝ × AmbientSpace q.n))).runEstimate oracle.query := by
     simp only [MembershipOracleProgram.runEstimate]
@@ -167,7 +167,7 @@ theorem scheduledBalancedCoolingUniformEstimateWithState_runEstimate_eq_transiti
   change (scheduledBalancedAccuracyTransitionCollectLaw q I sigma2 weight cap
     stride retries samples 0 start).bind
       (fun result => Measure.dirac
-        (balancedCoolingAverage (figureOneSampleCount q) result)) = _
+        (balancedCoolingAverage (sampleCount q) result)) = _
   rw [Measure.bind_dirac_eq_map _ havg]
   unfold scheduledBalancedCoolingUniformTransitionLaw
   rw [scheduledBalancedAccuracyTransitionCollectLaw_eq_chronological]

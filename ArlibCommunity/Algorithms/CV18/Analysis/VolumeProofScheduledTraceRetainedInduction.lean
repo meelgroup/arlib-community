@@ -55,14 +55,14 @@ theorem map_scheduledBalancedTracePhaseKernel_retainedOption
         (scheduleValue q phase)
         (gaussianRatioWeight (scheduleValue q phase)
           (scheduleValue q (phase + 1)))
-        (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)
+        (phaseSampleCount q (scheduleValue q phase) - 1)
         (scheduledBalancedTraceRetainedOption trace) := by
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   have hcount : 0 < count := by
-    unfold count figureOnePhaseSampleCount
+    unfold count phaseSampleCount
     split_ifs
-    · exact figureOneFixedSampleCount_pos q
-    · exact figureOneSampleCount_pos q
+    · exact fixedRateSampleCount_pos q
+    · exact sampleCount_pos q
   have hcountEq : count - 1 + 1 = count := Nat.sub_add_cancel hcount
   rcases trace with ⟨history, live⟩
   cases live with
@@ -96,7 +96,7 @@ theorem map_scheduledBalancedTracePhaseKernel_retainedOption
           (scheduleValue q phase))
         (figureOneFinalScheduledBalancedParameters.retryLimit q
           (scheduleValue q phase)) count 0
-          (accuracyScaleFactor q • history.2.2.2)
+          (scaleFactor q • history.2.2.2)
       have hcollect : IsProbabilityMeasure collect :=
         (scheduledBalancedTransitionCollectLaw_measurable_and_probability
           q I (scheduleValue_pos q phase)
@@ -113,8 +113,8 @@ theorem map_scheduledBalancedTracePhaseKernel_retainedOption
       unfold scheduledBalancedCoolingRatioTransitionLaw
       unfold figureOneFinalScheduledCompleteRetainedKernel
       simp only [scheduledBalancedTraceRetainedOption, if_true]
-      rw [show figureOnePhaseSampleCount q (scheduleValue q phase) - 1 + 1 =
-          figureOnePhaseSampleCount q (scheduleValue q phase) by
+      rw [show phaseSampleCount q (scheduleValue q phase) - 1 + 1 =
+          phaseSampleCount q (scheduleValue q phase) by
         simpa [count] using hcountEq]
       change ((collect.map avg).map append).map
           scheduledBalancedTraceRetainedOption =
@@ -143,14 +143,14 @@ theorem map_bind_scheduledBalancedTracePhaseKernel_retainedOption
           (scheduleValue q phase)
           (gaussianRatioWeight (scheduleValue q phase)
             (scheduleValue q (phase + 1)))
-          (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)) := by
+          (phaseSampleCount q (scheduleValue q phase) - 1)) := by
   let traceK := scheduledBalancedTracePhaseKernel
     figureOneFinalScheduledBalancedParameters q I phase
   let retainedK := figureOneFinalScheduledCompleteRetainedKernel q I
     (scheduleValue q phase)
     (gaussianRatioWeight (scheduleValue q phase)
       (scheduleValue q (phase + 1)))
-    (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)
+    (phaseSampleCount q (scheduleValue q phase) - 1)
   have htraceK := scheduledBalancedTracePhaseKernel_measurable_and_probability
     figureOneFinalScheduledBalancedParameters q I phase
   have hretainedK :=
@@ -160,7 +160,7 @@ theorem map_bind_scheduledBalancedTracePhaseKernel_retainedOption
           (scheduleValue q (phase + 1)))
         (measurable_gaussianRatioWeight (scheduleValue q phase)
           (scheduleValue q (phase + 1)))
-        (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)
+        (phaseSampleCount q (scheduleValue q phase) - 1)
   calc
     (law.bind traceK).map scheduledBalancedTraceRetainedOption =
         law.bind fun trace =>
@@ -185,7 +185,7 @@ noncomputable def figureOneScheduledSpeedyPiAt
     Measure (AmbientSpace q.n) :=
   ellGaussianProb
     (figureOneScheduledPhaseBody q I (scheduleValue q phase))
-    (figureOneScheduledProposalRadius q (scheduleValue q phase))
+    (proposalRadius q (scheduleValue q phase))
     (scheduleValue q phase)
 
 /-- The normalized accepted target retained after chronological Gaussian
@@ -201,9 +201,9 @@ theorem figureOneScheduledSpeedyPiAt_isProbabilityMeasure
     IsProbabilityMeasure (figureOneScheduledSpeedyPiAt q I phase) := by
   let sigma2 := scheduleValue q phase
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   have hsigma2 : 0 < sigma2 := scheduleValue_pos q phase
-  have hdelta : 0 < delta := figureOneScheduledProposalRadius_pos q hsigma2
+  have hdelta : 0 < delta := proposalRadius_pos q hsigma2
   have hmass0 : ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 :=
     ellGaussianMeasure_univ_ne_zero
       (figureOneScheduledPhaseBody_measurable q I sigma2)
@@ -238,7 +238,7 @@ noncomputable def figureOneScheduledRetainedError
     (q : VolumeParams) (phases : ℕ) : ENNReal :=
   scheduledBalancedStationaryTargetError q +
     ∑ phase ∈ Finset.range phases,
-      figureOnePhaseSampleCount q (scheduleValue q phase) •
+      phaseSampleCount q (scheduleValue q phase) •
         figureOneCorrectedTransitionBudget q
 
 theorem map_scheduledBalancedInitialTrace_retainedOption
@@ -271,7 +271,7 @@ theorem scheduledBalancedInitialRetained_leUpTo_target
         (initialVariance q)
         (ellGaussianProb
           (figureOneScheduledPhaseBody q I (initialVariance q))
-          (figureOneScheduledProposalRadius q (initialVariance q))
+          (proposalRadius q (initialVariance q))
           (initialVariance q))) := by
     simpa [figureOneScheduledAcceptedTargetAt,
       figureOneScheduledSpeedyPiAt, scheduleValue] using
@@ -305,19 +305,19 @@ theorem scheduledBalancedForwardTraceLaw_retained_leUpTo_target
       have hstart := scheduledBalancedInitialRetained_leUpTo_target q I
       have hwarm8 := initialContractedAcceptedTarget_isWarm_eight q I
       have hwarm : IsWarm
-          (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
-          (target.map fun x => accuracyScaleFactor q • x)
+          (ENNReal.ofReal (8 * warmConstant q))
+          (target.map fun x => scaleFactor q • x)
           (figureOneScheduledSpeedyPiAt q I 0) := by
         apply hwarm8.mono
         rw [← ENNReal.ofReal_ofNat 8]
         exact ENNReal.ofReal_le_ofReal <| by
-          nlinarith [speedyAdjacentWarmConstant_one_le q]
+          nlinarith [warmConstant_one_le q]
       have hstep :=
         bind_figureOneFinalScheduledCompleteRetainedKernel_leUpTo
           q I (scheduleValue_pos q 0)
           (measurable_gaussianRatioWeight (scheduleValue q 0)
             (scheduleValue q 1))
-          (figureOnePhaseSampleCount q (scheduleValue q 0) - 1)
+          (phaseSampleCount q (scheduleValue q 0) - 1)
           (((truncatedGaussianProbability q I (initialVariance q)
             (initialVariance_pos q) : Measure (AmbientSpace q.n)).map
               scheduledBalancedInitialTrace).map
@@ -331,11 +331,11 @@ theorem scheduledBalancedForwardTraceLaw_retained_leUpTo_target
                 figureOneFinalScheduledBalancedParameters q I 0) by rfl]
       rw [map_bind_scheduledBalancedTracePhaseKernel_retainedOption
         q I 0 (terminalPhaseSteps_pos q)]
-      have hcount : 0 < figureOnePhaseSampleCount q (scheduleValue q 0) := by
-        unfold figureOnePhaseSampleCount
+      have hcount : 0 < phaseSampleCount q (scheduleValue q 0) := by
+        unfold phaseSampleCount
         split_ifs
-        · exact figureOneFixedSampleCount_pos q
-        · exact figureOneSampleCount_pos q
+        · exact fixedRateSampleCount_pos q
+        · exact sampleCount_pos q
       rw [Nat.sub_add_cancel hcount] at hstep
       rw [show scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I 0 =
@@ -354,8 +354,8 @@ theorem scheduledBalancedForwardTraceLaw_retained_leUpTo_target
       let _ : IsProbabilityMeasure target :=
         figureOneScheduledAcceptedTargetAt_isProbabilityMeasure q I phase
       have hwarm : IsWarm
-          (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
-          (target.map fun x => accuracyScaleFactor q • x)
+          (ENNReal.ofReal (8 * warmConstant q))
+          (target.map fun x => scaleFactor q • x)
           (figureOneScheduledSpeedyPiAt q I (phase + 1)) := by
         simpa [target, figureOneScheduledAcceptedTargetAt,
           figureOneScheduledSpeedyPiAt] using
@@ -365,7 +365,7 @@ theorem scheduledBalancedForwardTraceLaw_retained_leUpTo_target
           q I (scheduleValue_pos q (phase + 1))
           (measurable_gaussianRatioWeight (scheduleValue q (phase + 1))
             (scheduleValue q (phase + 2)))
-          (figureOnePhaseSampleCount q (scheduleValue q (phase + 1)) - 1)
+          (phaseSampleCount q (scheduleValue q (phase + 1)) - 1)
           ((scheduledBalancedForwardTraceLaw
             figureOneFinalScheduledBalancedParameters q I (phase + 1)).map
               scheduledBalancedTraceRetainedOption)
@@ -378,15 +378,15 @@ theorem scheduledBalancedForwardTraceLaw_retained_leUpTo_target
                 figureOneFinalScheduledBalancedParameters q I (phase + 1)) by rfl]
       rw [map_bind_scheduledBalancedTracePhaseKernel_retainedOption
         q I (phase + 1) hphase]
-      have hcount : 0 < figureOnePhaseSampleCount q
+      have hcount : 0 < phaseSampleCount q
           (scheduleValue q (phase + 1)) := by
-        unfold figureOnePhaseSampleCount
+        unfold phaseSampleCount
         split_ifs
-        · exact figureOneFixedSampleCount_pos q
-        · exact figureOneSampleCount_pos q
+        · exact fixedRateSampleCount_pos q
+        · exact sampleCount_pos q
       rw [Nat.sub_add_cancel hcount] at hstep
       have herr : figureOneScheduledRetainedError q (phase + 1) +
-          figureOnePhaseSampleCount q (scheduleValue q (phase + 1)) •
+          phaseSampleCount q (scheduleValue q (phase + 1)) •
             figureOneCorrectedTransitionBudget q =
           figureOneScheduledRetainedError q (phase + 1 + 1) := by
         simp only [figureOneScheduledRetainedError, Finset.sum_range_succ]
@@ -522,18 +522,18 @@ theorem exists_figureOneScheduledTraceScaledLiveRetained_good_bad
     let law := scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I (phase + 1)
     let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-      accuracyScaleFactor q • x
+      scaleFactor q • x
     let good := (figureOneScheduledAcceptedTargetAt q I phase).map scale
     ∃ bad : Measure (AmbientSpace q.n),
       scheduledBalancedTraceLiveStateLaw law scale ≤ good + bad ∧
-      IsWarm (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) good
+      IsWarm (ENNReal.ofReal (8 * warmConstant q)) good
         (figureOneScheduledSpeedyPiAt q I (phase + 1)) ∧
       bad Set.univ ≤ figureOneScheduledRetainedError q (phase + 1) := by
   dsimp only
   obtain ⟨bad, hle, hbad⟩ :=
     exists_figureOneScheduledTraceLiveRetained_good_bad q I phase hphase
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   have hscale : Measurable scale := by fun_prop
   let scaledBad := bad.map scale
   refine ⟨scaledBad, ?_, ?_, ?_⟩

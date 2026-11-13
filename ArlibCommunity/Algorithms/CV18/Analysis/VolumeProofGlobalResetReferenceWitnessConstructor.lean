@@ -26,12 +26,12 @@ noncomputable def GlobalResetReferenceWitness.of_finite_trace_reference
     (q : VolumeParams) (I : VolumeInput q.n)
     (reference : Measure (ScheduledBalancedCoolingTrace q.n))
     (hreference : IsProbabilityMeasure reference)
-    (hmem : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hmem : ∀ j, 1 ≤ j → j ≤ numPhases q →
       MemLp (scheduledBalancedTracePhaseVariable q j) 2 reference)
-    (hmean : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hmean : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ∂reference) =
         figureOneChronologicalRawMean q I j)
-    (hsecond : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hsecond : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
           ∂reference) ≤
         (figureOneChronologicalMomentFactor q j +
@@ -39,10 +39,10 @@ noncomputable def GlobalResetReferenceWitness.of_finite_trace_reference
           figureOneChronologicalRawMean q I j ^ 2)
     {epsilon : ℝ} (hepsilon0 : 0 ≤ epsilon)
     (hepsilon : epsilon ≤
-      (5 / 2 : ℝ) * figureOneDependentEpsilon q)
-    (hind : ∀ i, i < figureOneDependentPhaseCount q →
+      (5 / 2 : ℝ) * dependenceError q)
+    (hind : ∀ i, i < numPhases q →
       ApproxIndepFun epsilon
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+        (dependentTruncatedProduct (truncationLevel q)
           (figureOneChronologicalTruncatedMean q I reference
             (figureOneScheduledReferenceCoordinateExtension q I))
           (figureOneChronologicalTruncatedPhase q I
@@ -53,14 +53,14 @@ noncomputable def GlobalResetReferenceWitness.of_finite_trace_reference
     (htrace : MeasureLeUpTo
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q))
+          (numPhases q))
       reference (figureOneScheduledGlobalOuterStepError q)) :
     GlobalResetReferenceWitness q I := by
   let _ : IsProbabilityMeasure reference := hreference
   let W := figureOneScheduledReferenceCoordinateExtension q I
   let boundary := scheduledBalancedStationaryTargetError q +
     ∑ phase ∈ Finset.range (terminalPhaseSteps q),
-      figureOnePhaseSampleCount q (scheduleValue q phase) •
+      phaseSampleCount q (scheduleValue q phase) •
         figureOneCorrectedTransitionBudget q
   have hWmeas : ∀ j, Measurable (W j) := fun j =>
     measurable_figureOneScheduledReferenceCoordinateExtension q I j
@@ -68,7 +68,7 @@ noncomputable def GlobalResetReferenceWitness.of_finite_trace_reference
     figureOneScheduledReferenceCoordinateExtension_nonnegative q I j trace
   have hWmem : ∀ j, MemLp (W j) 2 reference := by
     intro j
-    by_cases hj : 1 ≤ j ∧ j ≤ figureOneDependentPhaseCount q
+    by_cases hj : 1 ≤ j ∧ j ≤ numPhases q
     · change MemLp
         (figureOneScheduledReferenceCoordinateExtension q I j) 2 reference
       rw [figureOneScheduledReferenceCoordinateExtension_eq_of_used
@@ -80,7 +80,7 @@ noncomputable def GlobalResetReferenceWitness.of_finite_trace_reference
   have hWmean : ∀ j, (∫ trace, W j trace ∂reference) =
       figureOneChronologicalRawMean q I j := by
     intro j
-    by_cases hj : 1 ≤ j ∧ j ≤ figureOneDependentPhaseCount q
+    by_cases hj : 1 ≤ j ∧ j ≤ numPhases q
     · change (∫ trace,
           figureOneScheduledReferenceCoordinateExtension q I j trace
             ∂reference) = _
@@ -95,7 +95,7 @@ noncomputable def GlobalResetReferenceWitness.of_finite_trace_reference
           figureOneExecutableMomentSlack q / 8) *
         figureOneChronologicalRawMean q I j ^ 2 := by
     intro j
-    by_cases hj : 1 ≤ j ∧ j ≤ figureOneDependentPhaseCount q
+    by_cases hj : 1 ≤ j ∧ j ≤ numPhases q
     · change (∫ trace,
           figureOneScheduledReferenceCoordinateExtension q I j trace ^ 2
             ∂reference) ≤ _
@@ -107,31 +107,31 @@ noncomputable def GlobalResetReferenceWitness.of_finite_trace_reference
           q I reference hj
   have hproductMeas : Measurable (fun trace => initialGaussianIntegral q *
       dependentPhaseSampleProduct W
-        (figureOneDependentPhaseCount q) trace) := by
+        (numPhases q) trace) := by
     apply measurable_const.mul
     unfold dependentPhaseSampleProduct
-    exact (Finset.range (figureOneDependentPhaseCount q)).measurable_fun_prod
+    exact (Finset.range (numPhases q)).measurable_fun_prod
       fun j _ => hWmeas (j + 1)
   have hproduct : MeasureLeUpTo
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)).map
+          (numPhases q)).map
         (fun trace => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (scheduledBalancedTracePhaseVariable q)
-            (figureOneDependentPhaseCount q) trace))
+            (numPhases q) trace))
       (reference.map (fun trace => initialGaussianIntegral q *
         dependentPhaseSampleProduct W
-          (figureOneDependentPhaseCount q) trace))
+          (numPhases q) trace))
       (figureOneScheduledGlobalOuterStepError q) := by
     have hmapped := htrace.map hproductMeas
     have hfun : (fun trace => initialGaussianIntegral q *
         dependentPhaseSampleProduct W
-          (figureOneDependentPhaseCount q) trace) =
+          (numPhases q) trace) =
       (fun trace => initialGaussianIntegral q *
         dependentPhaseSampleProduct
           (scheduledBalancedTracePhaseVariable q)
-          (figureOneDependentPhaseCount q) trace) := by
+          (numPhases q) trace) := by
       funext trace
       rw [dependentPhaseSampleProduct_referenceCoordinateExtension_eq q I]
     rw [← hfun]

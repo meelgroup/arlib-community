@@ -12,7 +12,7 @@ open scoped BigOperators
 private theorem figureOneCoolingQueryBudget_ofFn
     (q : VolumeParams) : ∀ (N : ℕ) (f : Fin (N + 1) → ℝ),
     figureOneCoolingQueryBudget q (List.ofFn f) =
-      ∑ k : Fin N, figureOnePhaseSampleCount q (f k.castSucc) *
+      ∑ k : Fin N, phaseSampleCount q (f k.castSucc) *
         figureOneWalkSteps q (f k.castSucc) := by
   intro N
   induction N with
@@ -36,9 +36,9 @@ theorem figureOneCoolingQueryBudget_explicit (q : VolumeParams) :
     figureOneCoolingQueryBudget q
         (explicitVolumeCoolingSchedule q).variances =
       ∑ k ∈ Finset.range (terminalPhaseSteps q),
-        figureOnePhaseSampleCount q (scheduleValue q k) *
+        phaseSampleCount q (scheduleValue q k) *
           figureOneWalkSteps q (scheduleValue q k) := by
-  simp only [explicitVolumeCoolingSchedule, explicitScheduleVariances]
+  simp only [explicitVolumeCoolingSchedule, coolingSchedule]
   rw [figureOneCoolingQueryBudget_ofFn]
   rw [Finset.sum_fin_eq_sum_range]
   apply Finset.sum_congr rfl
@@ -135,7 +135,7 @@ theorem sum_figureOneWalkSteps_explicit_le (q : VolumeParams) :
 
 theorem dimension_le_terminalVariance (q : VolumeParams) :
     (q.n : ℝ) ≤ terminalVariance q := by
-  unfold terminalVariance volumeTerminalScale
+  unfold terminalVariance terminalScale
   exact le_trans (le_max_left _ _) (le_max_right _ _)
 
 theorem protectedLog_dimension_le_terminal (q : VolumeParams) :
@@ -201,7 +201,7 @@ theorem terminalVariance_le_roundness_scale (q : VolumeParams) :
   have hmul : ∀ {a b : ℝ}, 1 ≤ a → 1 ≤ b → 1 ≤ a * b := by
     intro a b ha hb
     nlinarith [mul_nonneg (sub_nonneg.mpr ha) (sub_nonneg.mpr hb)]
-  unfold terminalVariance volumeTerminalScale
+  unfold terminalVariance terminalScale
   apply max_le
   · have : 1 ≤ M * n * Le ^ 2 := by
       have hn' : 1 ≤ n := le_trans (by norm_num) hn
@@ -381,9 +381,9 @@ query rate. -/
 theorem figureOne_base_query_cost_sharp (q : VolumeParams) :
     1 + (figureOneCoolingQueryBudget q
             (explicitVolumeCoolingSchedule q).variances +
-          figureOneSampleCount q *
+          sampleCount q *
             figureOneWalkSteps q (terminalVariance q)) ≤
-      Nat.ceil ((2 * 10 ^ 24) * volumeBaseComplexityRate q) := by
+      Nat.ceil ((2 * 10 ^ 24) * baseRate q) := by
   let n : ℝ := q.n
   let M : ℝ := max 1 q.roundness
   let L : ℝ := protectedLog (n / q.eps)
@@ -417,10 +417,10 @@ theorem figureOne_base_query_cost_sharp (q : VolumeParams) :
       nlinarith [mul_nonneg (sub_nonneg.mpr ha) (sub_nonneg.mpr hb)]
     exact hmul (hmul (hmul hfirst (one_le_pow₀ hLe))
       (one_le_pow₀ hL)) (one_le_pow₀ hH)
-  have hsample : (figureOneSampleCount q : ℝ) ≤ 513 * H / q.eps ^ 2 := by
+  have hsample : (sampleCount q : ℝ) ≤ 513 * H / q.eps ^ 2 := by
     have hraw_nonneg : 0 ≤ 512 * H / q.eps ^ 2 := by positivity
     have hceil := Nat.ceil_lt_add_one hraw_nonneg
-    change (figureOneSampleCount q : ℝ) <
+    change (sampleCount q : ℝ) <
       512 * H / q.eps ^ 2 + 1 at hceil
     have hone : 1 ≤ H / q.eps ^ 2 := by
       rw [le_div_iff₀ he2pos]
@@ -459,12 +459,12 @@ theorem figureOne_base_query_cost_sharp (q : VolumeParams) :
           nlinarith [mul_nonneg hnonneg (sub_nonneg.mpr hME)]
         linarith
   have hproduct :
-      (figureOneSampleCount q : ℝ) * (W : ℝ) ≤
+      (sampleCount q : ℝ) * (W : ℝ) ≤
         (100893249 * 10 ^ 16) * R := by
-    have hsample0 : 0 ≤ (figureOneSampleCount q : ℝ) := by positivity
+    have hsample0 : 0 ≤ (sampleCount q : ℝ) := by positivity
     have hW0 : 0 ≤ (W : ℝ) := by positivity
     calc
-      (figureOneSampleCount q : ℝ) * (W : ℝ) ≤
+      (sampleCount q : ℝ) * (W : ℝ) ≤
           (513 * H / q.eps ^ 2) *
             (10 ^ 16 * n ^ 2 * L ^ 2 *
               (31 * n * L + 196611 * M * n * Le ^ 2 * H)) :=
@@ -476,11 +476,11 @@ theorem figureOne_base_query_cost_sharp (q : VolumeParams) :
       _ ≤ 513 * 10 ^ 16 * (31 * (2 * R) + 196611 * R) := by
         gcongr
       _ = (100893249 * 10 ^ 16) * R := by ring
-  have hfixedSample : (figureOneFixedSampleCount q : ℝ) ≤
+  have hfixedSample : (fixedRateSampleCount q : ℝ) ≤
       4097 * L / q.eps ^ 2 := by
     have hraw_nonneg : 0 ≤ 4096 * L / q.eps ^ 2 := by positivity
     have hceil := Nat.ceil_lt_add_one hraw_nonneg
-    change (figureOneFixedSampleCount q : ℝ) <
+    change (fixedRateSampleCount q : ℝ) <
       4096 * L / q.eps ^ 2 + 1 at hceil
     have hone : 1 ≤ L / q.eps ^ 2 := by
       rw [le_div_iff₀ he2pos]
@@ -531,11 +531,11 @@ theorem figureOne_base_query_cost_sharp (q : VolumeParams) :
             dsimp [R, X]
             ring
   have hfixedProduct :
-      (figureOneFixedSampleCount q : ℝ) * (slowPhaseSteps q : ℝ) *
+      (fixedRateSampleCount q : ℝ) * (slowPhaseSteps q : ℝ) *
           (figureOneWalkSteps q 1 : ℝ) ≤
         (491640 * 10 ^ 16) * R := by
     calc
-      (figureOneFixedSampleCount q : ℝ) * (slowPhaseSteps q : ℝ) *
+      (fixedRateSampleCount q : ℝ) * (slowPhaseSteps q : ℝ) *
           (figureOneWalkSteps q 1 : ℝ) ≤
         (4097 * L / q.eps ^ 2) * (15 * n * L) *
           (2 * 10 ^ 16 * n ^ 2 * L ^ 2) := by
@@ -546,61 +546,61 @@ theorem figureOne_base_query_cost_sharp (q : VolumeParams) :
   have hbudgetUpper :
       figureOneCoolingQueryBudget q
           (explicitVolumeCoolingSchedule q).variances +
-        figureOneSampleCount q * figureOneWalkSteps q (terminalVariance q) ≤
-      figureOneSampleCount q * W +
-        figureOneFixedSampleCount q *
+        sampleCount q * figureOneWalkSteps q (terminalVariance q) ≤
+      sampleCount q * W +
+        fixedRateSampleCount q *
           (slowPhaseSteps q * figureOneWalkSteps q 1) := by
     rw [figureOneCoolingQueryBudget_explicit]
     have hterm : ∀ k ∈ Finset.range (terminalPhaseSteps q),
-        figureOnePhaseSampleCount q (scheduleValue q k) *
+        phaseSampleCount q (scheduleValue q k) *
             figureOneWalkSteps q (scheduleValue q k) ≤
-          figureOneSampleCount q * figureOneWalkSteps q (scheduleValue q k) +
-            figureOneFixedSampleCount q *
+          sampleCount q * figureOneWalkSteps q (scheduleValue q k) +
+            fixedRateSampleCount q *
               (if scheduleValue q k ≤ 1 then
                 figureOneWalkSteps q (scheduleValue q k) else 0) := by
       intro k _
       by_cases hk : scheduleValue q k ≤ 1
-      · simp [figureOnePhaseSampleCount, hk]
-      · simp [figureOnePhaseSampleCount, hk]
+      · simp [phaseSampleCount, hk]
+      · simp [phaseSampleCount, hk]
     calc
       (∑ k ∈ Finset.range (terminalPhaseSteps q),
-          figureOnePhaseSampleCount q (scheduleValue q k) *
+          phaseSampleCount q (scheduleValue q k) *
             figureOneWalkSteps q (scheduleValue q k)) +
-          figureOneSampleCount q * figureOneWalkSteps q (terminalVariance q) ≤
+          sampleCount q * figureOneWalkSteps q (terminalVariance q) ≤
         (∑ k ∈ Finset.range (terminalPhaseSteps q),
-          (figureOneSampleCount q * figureOneWalkSteps q (scheduleValue q k) +
-            figureOneFixedSampleCount q *
+          (sampleCount q * figureOneWalkSteps q (scheduleValue q k) +
+            fixedRateSampleCount q *
               (if scheduleValue q k ≤ 1 then
                 figureOneWalkSteps q (scheduleValue q k) else 0))) +
-          figureOneSampleCount q * figureOneWalkSteps q (terminalVariance q) := by
+          sampleCount q * figureOneWalkSteps q (terminalVariance q) := by
         gcongr with k hk
         exact hterm k hk
-      _ = figureOneSampleCount q * W +
-          figureOneFixedSampleCount q *
+      _ = sampleCount q * W +
+          fixedRateSampleCount q *
             (∑ k ∈ Finset.range (terminalPhaseSteps q),
               if scheduleValue q k ≤ 1 then
                 figureOneWalkSteps q (scheduleValue q k) else 0) := by
         dsimp [W]
         rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
         ring
-      _ ≤ figureOneSampleCount q * W +
-          figureOneFixedSampleCount q *
+      _ ≤ sampleCount q * W +
+          fixedRateSampleCount q *
             (slowPhaseSteps q * figureOneWalkSteps q 1) := by
         gcongr
         exact sum_fixedPhaseWalkSteps_le q
   have hreal :
       ((1 + (figureOneCoolingQueryBudget q
               (explicitVolumeCoolingSchedule q).variances +
-            figureOneSampleCount q *
+            sampleCount q *
               figureOneWalkSteps q (terminalVariance q)) : ℕ) : ℝ) ≤
-        (2 * 10 ^ 24) * volumeBaseComplexityRate q := by
+        (2 * 10 ^ 24) * baseRate q := by
     have hbudgetCast :
         (((figureOneCoolingQueryBudget q
             (explicitVolumeCoolingSchedule q).variances +
-          figureOneSampleCount q *
+          sampleCount q *
             figureOneWalkSteps q (terminalVariance q) : ℕ) : ℝ)) ≤
-          (figureOneSampleCount q : ℝ) * (W : ℝ) +
-            (figureOneFixedSampleCount q : ℝ) *
+          (sampleCount q : ℝ) * (W : ℝ) +
+            (fixedRateSampleCount q : ℝ) *
               ((slowPhaseSteps q : ℝ) * (figureOneWalkSteps q 1 : ℝ)) := by
       exact_mod_cast hbudgetUpper
     rw [Nat.cast_add, Nat.cast_one]
@@ -608,17 +608,17 @@ theorem figureOne_base_query_cost_sharp (q : VolumeParams) :
     have hleft : 1 +
         ((figureOneCoolingQueryBudget q
             (explicitVolumeCoolingSchedule q).variances +
-          figureOneSampleCount q *
+          sampleCount q *
             figureOneWalkSteps q (terminalVariance q) : ℕ) : ℝ) ≤
         ((101384889 : ℝ) * 10 ^ 16 + 1) * R := by
       have hfixedProduct' :
-          (figureOneFixedSampleCount q : ℝ) *
+          (fixedRateSampleCount q : ℝ) *
               ((slowPhaseSteps q : ℝ) * (figureOneWalkSteps q 1 : ℝ)) ≤
             (491640 * 10 ^ 16) * R := by
         simpa [mul_assoc] using hfixedProduct
       calc
-        _ ≤ 1 + ((figureOneSampleCount q : ℝ) * (W : ℝ) +
-            (figureOneFixedSampleCount q : ℝ) *
+        _ ≤ 1 + ((sampleCount q : ℝ) * (W : ℝ) +
+            (fixedRateSampleCount q : ℝ) *
               ((slowPhaseSteps q : ℝ) * (figureOneWalkSteps q 1 : ℝ))) := by
           gcongr
         _ ≤ 1 + ((100893249 * 10 ^ 16) * R + (491640 * 10 ^ 16) * R) := by
@@ -626,23 +626,23 @@ theorem figureOne_base_query_cost_sharp (q : VolumeParams) :
             (add_le_add hproduct hfixedProduct') 1
         _ = ((101384889 : ℝ) * 10 ^ 16 + 1) * R - (R - 1) := by ring
         _ ≤ ((101384889 : ℝ) * 10 ^ 16 + 1) * R := by linarith
-    have hrate : volumeBaseComplexityRate q = R := by
-      dsimp [volumeBaseComplexityRate, R, M, n, Le, L, H, terminalVariance]
+    have hrate : baseRate q = R := by
+      dsimp [baseRate, R, M, n, Le, L, H, terminalVariance]
     rw [hrate]
     exact hleft.trans <| mul_le_mul_of_nonneg_right hconstant (le_trans zero_le_one hR)
   exact_mod_cast le_trans hreal
-    (Nat.le_ceil ((2 * 10 ^ 24) * volumeBaseComplexityRate q))
+    (Nat.le_ceil ((2 * 10 ^ 24) * baseRate q))
 
 /-- Convenient decimal envelope used by the public existential statement. -/
 theorem figureOne_base_query_cost_explicit (q : VolumeParams) :
     1 + (figureOneCoolingQueryBudget q
             (explicitVolumeCoolingSchedule q).variances +
-          figureOneSampleCount q *
+          sampleCount q *
             figureOneWalkSteps q (terminalVariance q)) ≤
-      Nat.ceil (10 ^ 25 * volumeBaseComplexityRate q) := by
+      Nat.ceil (10 ^ 25 * baseRate q) := by
   refine (figureOne_base_query_cost_sharp q).trans (Nat.ceil_mono ?_)
-  have hrate : 0 ≤ volumeBaseComplexityRate q := by
-    unfold volumeBaseComplexityRate
+  have hrate : 0 ≤ baseRate q := by
+    unfold baseRate
     positivity
   nlinarith
 
@@ -650,9 +650,9 @@ theorem figureOne_base_query_cost :
     ∃ C : ℝ, 0 < C ∧ ∀ q : VolumeParams,
       1 + (figureOneCoolingQueryBudget q
               (explicitVolumeCoolingSchedule q).variances +
-            figureOneSampleCount q *
+            sampleCount q *
               figureOneWalkSteps q (terminalVariance q)) ≤
-        Nat.ceil (C * volumeBaseComplexityRate q) := by
+        Nat.ceil (C * baseRate q) := by
   exact ⟨10 ^ 25, by positivity, figureOne_base_query_cost_explicit⟩
 
 end ArlibCommunity.Algorithms.CV18

@@ -156,10 +156,10 @@ theorem accuracyPhase_speedy_core_mass
       Arlib.MarkovChains.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2
-        (accuracyScaleFactor q • accuracyPhaseTruncatedBody q I sigma2) := by
+        (scaleFactor q • accuracyPhaseTruncatedBody q I sigma2) := by
   let K := accuracyPhaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
   have hdelta : 0 < delta := figureOneProposalRadius_pos q hsigma2
   have hKmeas : MeasurableSet K := accuracyPhaseTruncatedBody_measurable q I sigma2
@@ -181,7 +181,7 @@ theorem accuracyPhase_speedy_core_mass
         hsigma2 hmass0 hmasstop
     exact (by norm_num : ENNReal.ofReal (7 / 16 : ℝ) ≤
       ENNReal.ofReal (1 / 2 : ℝ)).trans (by simpa [K, delta, c,
-        accuracyScaleFactor] using hhalf)
+        scaleFactor] using hhalf)
   · have hlarge : 1 ≤ accuracyPhaseRadius q sigma2 := le_of_not_ge hsmall
     have hunit : Metric.closedBall (0 : AmbientSpace q.n) 1 ⊆ K := by
       intro x hx
@@ -191,9 +191,9 @@ theorem accuracyPhase_speedy_core_mass
         have hx1 : ‖x‖ ≤ 1 := by
           simpa [Metric.mem_closedBall, dist_zero_right] using hx
         exact hx1.trans hlarge
-    have hc0 : 0 < c := by simpa [c] using accuracyScaleFactor_pos q
+    have hc0 : 0 < c := by simpa [c] using scaleFactor_pos q
     have hc1 : c < 1 := by
-      dsimp [c, accuracyScaleFactor]
+      dsimp [c, scaleFactor]
       have : 0 < 1 / (2 * (q.n : ℝ)) := by positivity
       linarith
     have hcoreM : MeasurableSet (c • K) :=
@@ -226,15 +226,15 @@ theorem accuracyPhase_speedy_core_mass
       (figureOneProposalRadius_le_accuracyCoreErrorStep q hsigma2)
       (by
         convert hgaussCore0 using 1 <;>
-          simp [c, accuracyScaleFactor, div_eq_mul_inv, mul_comm,
+          simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
             Real.sq_sqrt hsigma2.le])
       (by
         convert hgaussCoretop using 1 <;>
-          simp [c, accuracyScaleFactor, div_eq_mul_inv, mul_comm,
+          simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
             Real.sq_sqrt hsigma2.le])
       (by simpa [Real.sq_sqrt hsigma2.le] using hmass0)
       (by simpa [Real.sq_sqrt hsigma2.le] using hmasstop)
-    simpa [K, delta, c, accuracyScaleFactor, Real.sq_sqrt hsigma2.le] using hpaper.2
+    simpa [K, delta, c, scaleFactor, Real.sq_sqrt hsigma2.le] using hpaper.2
 
 /-- After the advertised mixing block, the homothetic core has nonzero mass.
 This discharges the normalization guard of the executable rejection sampler. -/
@@ -256,7 +256,7 @@ theorem accuracyPhase_iterate_core_ne_zero
         (Arlib.MarkovChains.speedyMetropolisGaussian
           (accuracyPhaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2)) mu0 t)
-      (accuracyScaleFactor q • accuracyPhaseTruncatedBody q I sigma2) ≠ 0 := by
+      (scaleFactor q • accuracyPhaseTruncatedBody q I sigma2) ≠ 0 := by
   let K := accuracyPhaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
   let P := Arlib.MarkovChains.lazy
@@ -268,15 +268,15 @@ theorem accuracyPhase_iterate_core_ne_zero
   have hmix : Arlib.TVLe mu pi (ENNReal.ofReal mixError) := by
     simpa [Arlib.MarkovChains.MixesWithin, mu, pi, P, K, delta] using hmixPhase
   have hcoreM : MeasurableSet
-      (accuracyScaleFactor q • accuracyPhaseTruncatedBody q I sigma2) :=
-    ((isClosedMap_smul_of_ne_zero (accuracyScaleFactor_pos q).ne')
+      (scaleFactor q • accuracyPhaseTruncatedBody q I sigma2) :=
+    ((isClosedMap_smul_of_ne_zero (scaleFactor_pos q).ne')
       (accuracyPhaseTruncatedBody q I sigma2)
       (accuracyPhaseTruncatedBody_isCompact q I sigma2).isClosed).measurableSet
   have hmass := accuracyPhase_speedy_core_mass q I hsigma2
   intro hzero
   have hupper := hmix.right hcoreM
-  change pi (accuracyScaleFactor q • K) ≤
-      mu (accuracyScaleFactor q • K) + ENNReal.ofReal mixError at hupper
+  change pi (scaleFactor q • K) ≤
+      mu (scaleFactor q • K) + ENNReal.ofReal mixError at hupper
   rw [hzero, zero_add] at hupper
   have herr : ENNReal.ofReal mixError ≤ ENNReal.ofReal (1 / 64 : ℝ) :=
     ENNReal.ofReal_le_ofReal hmixError64

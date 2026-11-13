@@ -485,7 +485,7 @@ theorem lintegral_scheduledBalancedAccuracyRetryCollect_countedQueryCost_le_of_i
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
     (hwarm : _root_.Arlib.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (proposalCap properStride retryLimit samples : ℕ) :
     ∫⁻ current,
         countedQueryCost

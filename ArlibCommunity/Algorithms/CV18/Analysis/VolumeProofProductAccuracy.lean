@@ -77,50 +77,50 @@ theorem measure_tuple_event_le_add_of_coordinate_coupling
   gcongr with i
   exact herror i
 
-theorem figureOneFixedSampleCount_cast_lower (q : VolumeParams) :
+theorem fixedRateSampleCount_cast_lower (q : VolumeParams) :
     4096 * protectedLog ((q.n : ℝ) / q.eps) / q.eps ^ 2 ≤
-      (figureOneFixedSampleCount q : ℝ) := by
-  unfold figureOneFixedSampleCount
+      (fixedRateSampleCount q : ℝ) := by
+  unfold fixedRateSampleCount
   exact Nat.le_ceil _
 
-theorem figureOneSampleCount_cast_lower (q : VolumeParams) :
+theorem sampleCount_cast_lower (q : VolumeParams) :
     512 * protectedLog (terminalVariance q) / q.eps ^ 2 ≤
-      (figureOneSampleCount q : ℝ) := by
-  unfold figureOneSampleCount
+      (sampleCount q : ℝ) := by
+  unfold sampleCount
   exact Nat.le_ceil _
 
-theorem figureOneSampleCount_pos (q : VolumeParams) :
-    0 < figureOneSampleCount q := by
+theorem sampleCount_pos (q : VolumeParams) :
+    0 < sampleCount q := by
   have hH : 1 ≤ protectedLog (terminalVariance q) := le_max_left _ _
-  have hlower := figureOneSampleCount_cast_lower q
+  have hlower := sampleCount_cast_lower q
   have hraw : (0 : ℝ) <
       512 * protectedLog (terminalVariance q) / q.eps ^ 2 := by
     exact div_pos
       (mul_pos (by norm_num) (lt_of_lt_of_le zero_lt_one hH))
       (sq_pos_of_pos q.heps.1)
-  have : (0 : ℝ) < figureOneSampleCount q := hraw.trans_le hlower
+  have : (0 : ℝ) < sampleCount q := hraw.trans_le hlower
   exact_mod_cast this
 
-theorem figureOneFixedSampleCount_pos (q : VolumeParams) :
-    0 < figureOneFixedSampleCount q := by
+theorem fixedRateSampleCount_pos (q : VolumeParams) :
+    0 < fixedRateSampleCount q := by
   have hL : 1 ≤ protectedLog ((q.n : ℝ) / q.eps) := le_max_left _ _
-  have hlower := figureOneFixedSampleCount_cast_lower q
+  have hlower := fixedRateSampleCount_cast_lower q
   have hraw : (0 : ℝ) <
       4096 * protectedLog ((q.n : ℝ) / q.eps) / q.eps ^ 2 := by
     exact div_pos
       (mul_pos (by norm_num) (lt_of_lt_of_le zero_lt_one hL))
       (sq_pos_of_pos q.heps.1)
-  have : (0 : ℝ) < figureOneFixedSampleCount q := hraw.trans_le hlower
+  have : (0 : ℝ) < fixedRateSampleCount q := hraw.trans_le hlower
   exact_mod_cast this
 
 /-- The longer all-epsilon fixed-rate chain is exactly compensated by its
 phase-sensitive sample count. -/
 theorem fixedPhase_empiricalExcess_sum_le (q : VolumeParams) :
     ((slowPhaseSteps q : ℝ) * (2 / (q.n : ℝ))) /
-        (figureOneFixedSampleCount q : ℝ) ≤ q.eps ^ 2 / 128 := by
+        (fixedRateSampleCount q : ℝ) ≤ q.eps ^ 2 / 128 := by
   let n : ℝ := q.n
   let L : ℝ := protectedLog (n / q.eps)
-  let k : ℝ := figureOneFixedSampleCount q
+  let k : ℝ := fixedRateSampleCount q
   have hn : 3 ≤ n := by
     dsimp [n]
     exact_mod_cast q.dim_ok
@@ -128,7 +128,7 @@ theorem fixedPhase_empiricalExcess_sum_le (q : VolumeParams) :
   have hL : 1 ≤ L := le_max_left _ _
   have he2 : 0 < q.eps ^ 2 := sq_pos_of_pos q.heps.1
   have hkLower : 4096 * L / q.eps ^ 2 ≤ k := by
-    simpa [n, L, k] using figureOneFixedSampleCount_cast_lower q
+    simpa [n, L, k] using fixedRateSampleCount_cast_lower q
   have hk : 0 < k := (by positivity : 0 < 4096 * L / q.eps ^ 2).trans_le hkLower
   have hsteps : (slowPhaseSteps q : ℝ) ≤ 15 * n * L := by
     simpa [n, L] using slowPhaseSteps_cast_le q
@@ -151,15 +151,15 @@ theorem fixedPhase_empiricalFactors_product_le
     (q : VolumeParams) {ι : Type*} [Fintype ι]
     (hcard : Fintype.card ι ≤ slowPhaseSteps q) :
     (∏ _i : ι, (1 +
-        (2 / (q.n : ℝ)) / (figureOneFixedSampleCount q : ℝ))) ≤
+        (2 / (q.n : ℝ)) / (fixedRateSampleCount q : ℝ))) ≤
       Real.exp (q.eps ^ 2 / 128) := by
   let delta : ι → ℝ := fun _ =>
-    (2 / (q.n : ℝ)) / (figureOneFixedSampleCount q : ℝ)
+    (2 / (q.n : ℝ)) / (fixedRateSampleCount q : ℝ)
   have hn0 : (0 : ℝ) < q.n := by
     exact_mod_cast (lt_of_lt_of_le (by omega : 0 < 3) q.dim_ok)
-  have hk0 : (0 : ℝ) < figureOneFixedSampleCount q := by
+  have hk0 : (0 : ℝ) < fixedRateSampleCount q := by
     have hL : 1 ≤ protectedLog ((q.n : ℝ) / q.eps) := le_max_left _ _
-    have hlower := figureOneFixedSampleCount_cast_lower q
+    have hlower := fixedRateSampleCount_cast_lower q
     have hraw : 0 <
         4096 * protectedLog ((q.n : ℝ) / q.eps) / q.eps ^ 2 := by
       exact div_pos
@@ -171,7 +171,7 @@ theorem fixedPhase_empiricalFactors_product_le
     positivity
   calc
     (∏ _i : ι, (1 +
-        (2 / (q.n : ℝ)) / (figureOneFixedSampleCount q : ℝ))) =
+        (2 / (q.n : ℝ)) / (fixedRateSampleCount q : ℝ))) =
         ∏ i, (1 + delta i) := rfl
     _ ≤ Real.exp (∑ i, delta i) := prod_one_add_le_exp_sum delta hdelta
     _ ≤ Real.exp (q.eps ^ 2 / 128) := by
@@ -181,20 +181,20 @@ theorem fixedPhase_empiricalFactors_product_le
       calc
         (∑ i, delta i) =
             (Fintype.card ι : ℝ) *
-              ((2 / (q.n : ℝ)) / (figureOneFixedSampleCount q : ℝ)) := by
+              ((2 / (q.n : ℝ)) / (fixedRateSampleCount q : ℝ)) := by
           simp [delta]
         _ ≤ (slowPhaseSteps q : ℝ) *
-              ((2 / (q.n : ℝ)) / (figureOneFixedSampleCount q : ℝ)) := by
+              ((2 / (q.n : ℝ)) / (fixedRateSampleCount q : ℝ)) := by
           gcongr
         _ = ((slowPhaseSteps q : ℝ) * (2 / (q.n : ℝ))) /
-              (figureOneFixedSampleCount q : ℝ) := by ring
+              (fixedRateSampleCount q : ℝ) := by ring
         _ ≤ q.eps ^ 2 / 128 := fixedPhase_empiricalExcess_sum_le q
 
 theorem scheduledFixedPhase_empiricalFactors_product_le (q : VolumeParams) :
     (∏ k ∈ Finset.range (terminalPhaseSteps q),
         if scheduleValue q k ≤ 1 then
           1 + (2 / (q.n : ℝ)) /
-            (figureOneFixedSampleCount q : ℝ)
+            (fixedRateSampleCount q : ℝ)
         else 1) ≤ Real.exp (q.eps ^ 2 / 128) := by
   classical
   let indices := (Finset.range (terminalPhaseSteps q)).filter
@@ -210,11 +210,11 @@ theorem scheduledFixedPhase_empiricalFactors_product_le (q : VolumeParams) :
     (∏ k ∈ Finset.range (terminalPhaseSteps q),
         if scheduleValue q k ≤ 1 then
           1 + (2 / (q.n : ℝ)) /
-            (figureOneFixedSampleCount q : ℝ)
+            (fixedRateSampleCount q : ℝ)
         else 1) =
       ∏ k ∈ indices,
         (1 + (2 / (q.n : ℝ)) /
-          (figureOneFixedSampleCount q : ℝ)) := by
+          (fixedRateSampleCount q : ℝ)) := by
         change (∏ k ∈ Finset.range (terminalPhaseSteps q),
             if scheduleValue q k ≤ 1 then _ else 1) =
           ∏ k ∈ (Finset.range (terminalPhaseSteps q)).filter
@@ -222,7 +222,7 @@ theorem scheduledFixedPhase_empiricalFactors_product_le (q : VolumeParams) :
         rw [Finset.prod_filter]
     _ = ∏ _k : indices,
         (1 + (2 / (q.n : ℝ)) /
-          (figureOneFixedSampleCount q : ℝ)) := by
+          (fixedRateSampleCount q : ℝ)) := by
       simp
     _ ≤ Real.exp (q.eps ^ 2 / 128) := hbound
 
@@ -232,18 +232,18 @@ theorem acceleratedPhase_empiricalExcess_sum_le (q : VolumeParams) :
     (∑ k ∈ Finset.range (terminalPhaseSteps q),
         if 1 < scheduleValue q k then
           (scheduleValue q k / terminalVariance q) /
-            (figureOneSampleCount q : ℝ)
+            (sampleCount q : ℝ)
         else 0) ≤ q.eps ^ 2 / 64 := by
   let T : ℝ := terminalVariance q
   let H : ℝ := protectedLog T
-  let samples : ℝ := figureOneSampleCount q
+  let samples : ℝ := sampleCount q
   have hT : 0 < T := by
     dsimp [T]
     exact terminalVariance_pos' q
   have hH : 1 ≤ H := le_max_left _ _
   have he2 : 0 < q.eps ^ 2 := sq_pos_of_pos q.heps.1
   have hsamplesLower : 512 * H / q.eps ^ 2 ≤ samples := by
-    simpa [T, H, samples] using figureOneSampleCount_cast_lower q
+    simpa [T, H, samples] using sampleCount_cast_lower q
   have hsamples : 0 < samples := by
     have hraw : 0 < 512 * H / q.eps ^ 2 := by positivity
     exact hraw.trans_le hsamplesLower
@@ -288,16 +288,16 @@ theorem acceleratedPhase_empiricalFactors_product_le (q : VolumeParams) :
     (∏ k ∈ Finset.range (terminalPhaseSteps q),
         if 1 < scheduleValue q k then
           1 + (scheduleValue q k / terminalVariance q) /
-            (figureOneSampleCount q : ℝ)
+            (sampleCount q : ℝ)
         else 1) ≤ Real.exp (q.eps ^ 2 / 64) := by
   let delta : ℕ → ℝ := fun k =>
     if 1 < scheduleValue q k then
       (scheduleValue q k / terminalVariance q) /
-        (figureOneSampleCount q : ℝ)
+        (sampleCount q : ℝ)
     else 0
-  have hsamples : (0 : ℝ) < figureOneSampleCount q := by
+  have hsamples : (0 : ℝ) < sampleCount q := by
     have hH : 1 ≤ protectedLog (terminalVariance q) := le_max_left _ _
-    have hlower := figureOneSampleCount_cast_lower q
+    have hlower := sampleCount_cast_lower q
     have hraw : 0 <
         512 * protectedLog (terminalVariance q) / q.eps ^ 2 := by
       exact div_pos
@@ -317,7 +317,7 @@ theorem acceleratedPhase_empiricalFactors_product_le (q : VolumeParams) :
     (∏ k ∈ Finset.range (terminalPhaseSteps q),
         if 1 < scheduleValue q k then
           1 + (scheduleValue q k / terminalVariance q) /
-            (figureOneSampleCount q : ℝ)
+            (sampleCount q : ℝ)
         else 1) =
       ∏ k ∈ Finset.range (terminalPhaseSteps q), (1 + delta k) := by
         apply Finset.prod_congr rfl
@@ -341,13 +341,13 @@ theorem exp_half_sub_one_le_one : Real.exp (1 / 2) - 1 ≤ (1 : ℝ) := by
   linarith
 
 theorem terminalPhase_empiricalExcess_le (q : VolumeParams) :
-    (Real.exp (1 / 2) - 1) / (figureOneSampleCount q : ℝ) ≤
+    (Real.exp (1 / 2) - 1) / (sampleCount q : ℝ) ≤
       q.eps ^ 2 / 512 := by
   let H : ℝ := protectedLog (terminalVariance q)
-  let samples : ℝ := figureOneSampleCount q
+  let samples : ℝ := sampleCount q
   have hH : 1 ≤ H := le_max_left _ _
   have hsamplesLower : 512 * H / q.eps ^ 2 ≤ samples := by
-    simpa [H, samples] using figureOneSampleCount_cast_lower q
+    simpa [H, samples] using sampleCount_cast_lower q
   have hraw : 0 < 512 * H / q.eps ^ 2 := by
     exact div_pos (mul_pos (by norm_num) (lt_of_lt_of_le zero_lt_one hH))
       (sq_pos_of_pos q.heps.1)
@@ -377,30 +377,30 @@ theorem idealEmpiricalProduct_factor_le (q : VolumeParams) :
     ((∏ k ∈ Finset.range (terminalPhaseSteps q),
         if scheduleValue q k ≤ 1 then
           1 + (2 / (q.n : ℝ)) /
-            (figureOneFixedSampleCount q : ℝ)
+            (fixedRateSampleCount q : ℝ)
         else
           1 + (scheduleValue q k / terminalVariance q) /
-            (figureOneSampleCount q : ℝ)) *
+            (sampleCount q : ℝ)) *
       (1 + (Real.exp (1 / 2) - 1) /
-        (figureOneSampleCount q : ℝ))) ≤
+        (sampleCount q : ℝ))) ≤
       Real.exp (13 * q.eps ^ 2 / 512) := by
   let fixed : ℕ → ℝ := fun k =>
     if scheduleValue q k ≤ 1 then
-      1 + (2 / (q.n : ℝ)) / (figureOneFixedSampleCount q : ℝ)
+      1 + (2 / (q.n : ℝ)) / (fixedRateSampleCount q : ℝ)
     else 1
   let accelerated : ℕ → ℝ := fun k =>
     if 1 < scheduleValue q k then
       1 + (scheduleValue q k / terminalVariance q) /
-        (figureOneSampleCount q : ℝ)
+        (sampleCount q : ℝ)
     else 1
   have hsplit :
       (∏ k ∈ Finset.range (terminalPhaseSteps q),
         if scheduleValue q k ≤ 1 then
           1 + (2 / (q.n : ℝ)) /
-            (figureOneFixedSampleCount q : ℝ)
+            (fixedRateSampleCount q : ℝ)
         else
           1 + (scheduleValue q k / terminalVariance q) /
-            (figureOneSampleCount q : ℝ)) =
+            (sampleCount q : ℝ)) =
       (∏ k ∈ Finset.range (terminalPhaseSteps q), fixed k) *
         (∏ k ∈ Finset.range (terminalPhaseSteps q), accelerated k) := by
     rw [← Finset.prod_mul_distrib]
@@ -422,10 +422,10 @@ theorem idealEmpiricalProduct_factor_le (q : VolumeParams) :
       (∏ k ∈ Finset.range (terminalPhaseSteps q),
         if scheduleValue q k ≤ 1 then
           1 + (2 / (q.n : ℝ)) /
-            (figureOneFixedSampleCount q : ℝ)
+            (fixedRateSampleCount q : ℝ)
         else
           1 + (scheduleValue q k / terminalVariance q) /
-            (figureOneSampleCount q : ℝ)) ≤
+            (sampleCount q : ℝ)) ≤
         Real.exp (3 * q.eps ^ 2 / 128) := by
     rw [hsplit]
     have haccelerated0 : 0 ≤
@@ -434,11 +434,11 @@ theorem idealEmpiricalProduct_factor_le (q : VolumeParams) :
       intro k hk
       dsimp [accelerated]
       split_ifs
-      · have hsamples : (0 : ℝ) < figureOneSampleCount q := by
-          exact_mod_cast figureOneSampleCount_pos q
+      · have hsamples : (0 : ℝ) < sampleCount q := by
+          exact_mod_cast sampleCount_pos q
         have hratio : 0 ≤
             (scheduleValue q k / terminalVariance q) /
-              (figureOneSampleCount q : ℝ) :=
+              (sampleCount q : ℝ) :=
           div_nonneg
             (div_nonneg (scheduleValue_pos q k).le
               (terminalVariance_pos' q).le) hsamples.le
@@ -455,11 +455,11 @@ theorem idealEmpiricalProduct_factor_le (q : VolumeParams) :
         congr 1
         ring
   let terminalDelta := (Real.exp (1 / 2) - 1) /
-    (figureOneSampleCount q : ℝ)
+    (sampleCount q : ℝ)
   have hterminalDelta0 : 0 ≤ terminalDelta := by
     dsimp [terminalDelta]
-    have hsamples : (0 : ℝ) < figureOneSampleCount q := by
-      exact_mod_cast figureOneSampleCount_pos q
+    have hsamples : (0 : ℝ) < sampleCount q := by
+      exact_mod_cast sampleCount_pos q
     exact div_nonneg
       (sub_nonneg.mpr (Real.one_le_exp (by norm_num))) hsamples.le
   have hterminal : 1 + terminalDelta ≤ Real.exp (q.eps ^ 2 / 512) := by
@@ -702,7 +702,7 @@ theorem scheduledFixedIdealEmpiricalAverage_moments
     let ν : Measure (AmbientSpace q.n) :=
       truncatedGaussianProbability q I (scheduleValue q k)
         (scheduleValue_pos q k)
-    let count := figureOneFixedSampleCount q
+    let count := fixedRateSampleCount q
     let weight := gaussianRatioWeight (n := q.n)
       (scheduleValue q k) (scheduleValue q (k + 1))
     let mean := gaussianIntegral (truncatedBody q I) (scheduleValue q (k + 1)) /
@@ -715,7 +715,7 @@ theorem scheduledFixedIdealEmpiricalAverage_moments
   let ν : Measure (AmbientSpace q.n) :=
     truncatedGaussianProbability q I (scheduleValue q k)
       (scheduleValue_pos q k)
-  let count := figureOneFixedSampleCount q
+  let count := fixedRateSampleCount q
   let weight := gaussianRatioWeight (n := q.n)
     (scheduleValue q k) (scheduleValue q (k + 1))
   let mean := gaussianIntegral (truncatedBody q I) (scheduleValue q (k + 1)) /
@@ -737,7 +737,7 @@ theorem scheduledFixedIdealEmpiricalAverage_moments
     simpa [ν, weight] using hrel
   have hbase := idealEmpiricalAverage_moments_of_relativeSecondMoment
     ν (show 0 < count by
-      simpa [count] using figureOneFixedSampleCount_pos q)
+      simpa [count] using fixedRateSampleCount_pos q)
     (gaussianRatioWeight_memLp q I (scheduleValue_pos q k) ht 2)
     hmeanpos hmean hrel'
   simpa [ν, count, weight, mean] using hbase
@@ -761,7 +761,7 @@ theorem scheduledAcceleratedIdealEmpiricalAverage_moments_of_relativeSecondMomen
     let ν : Measure (AmbientSpace q.n) :=
       truncatedGaussianProbability q I (scheduleValue q k)
         (scheduleValue_pos q k)
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     let weight := gaussianRatioWeight (n := q.n)
       (scheduleValue q k) (scheduleValue q (k + 1))
     let mean := gaussianIntegral (truncatedBody q I) (scheduleValue q (k + 1)) /
@@ -775,7 +775,7 @@ theorem scheduledAcceleratedIdealEmpiricalAverage_moments_of_relativeSecondMomen
   let ν : Measure (AmbientSpace q.n) :=
     truncatedGaussianProbability q I (scheduleValue q k)
       (scheduleValue_pos q k)
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let weight := gaussianRatioWeight (n := q.n)
     (scheduleValue q k) (scheduleValue q (k + 1))
   let mean := gaussianIntegral (truncatedBody q I) (scheduleValue q (k + 1)) /
@@ -795,7 +795,7 @@ theorem scheduledAcceleratedIdealEmpiricalAverage_moments_of_relativeSecondMomen
     rw [← hmean]
     simpa [ν, weight] using hrelative
   have hbase := idealEmpiricalAverage_moments_of_relativeSecondMoment
-    ν (show 0 < count by simpa [count] using figureOneSampleCount_pos q)
+    ν (show 0 < count by simpa [count] using sampleCount_pos q)
     (gaussianRatioWeight_memLp q I (scheduleValue_pos q k) ht 2)
     hmeanpos hmean hrel'
   simpa [ν, count, weight, mean] using hbase
@@ -808,7 +808,7 @@ theorem terminalIdealEmpiricalAverage_moments
     let ν : Measure (AmbientSpace q.n) :=
       truncatedGaussianProbability q I (terminalVariance q)
         (terminalVariance_pos' q)
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
     let mean := euclideanVolume (truncatedVolumeInput q I) /
       gaussianIntegral (truncatedBody q I) (terminalVariance q)
@@ -820,7 +820,7 @@ theorem terminalIdealEmpiricalAverage_moments
   let ν : Measure (AmbientSpace q.n) :=
     truncatedGaussianProbability q I (terminalVariance q)
       (terminalVariance_pos' q)
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
   let mean := euclideanVolume (truncatedVolumeInput q I) /
     gaussianIntegral (truncatedBody q I) (terminalVariance q)
@@ -838,7 +838,7 @@ theorem terminalIdealEmpiricalAverage_moments
     rw [← hmean]
     simpa [ν, weight] using hrelative
   have hbase := idealEmpiricalAverage_moments_of_relativeSecondMoment
-    ν (show 0 < count by simpa [count] using figureOneSampleCount_pos q)
+    ν (show 0 < count by simpa [count] using sampleCount_pos q)
     (uniformRatioWeight_memLp q I (terminalVariance_pos' q) 2)
     hmeanpos hmean hrel'
   simpa [ν, count, weight, mean] using hbase

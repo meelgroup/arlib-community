@@ -35,7 +35,7 @@ def FigureOneBalancedExpectedQueryCostFor
   ∫⁻ outcome, (outcome.2 : ENNReal)
       ∂((figureOneBalancedBaseProgramFor parameters q).run oracle.query) ≤
     ENNReal.ofReal (figureOneGlobalExpectedCostConstant *
-      volumeBaseComplexityRate q)
+      baseRate q)
 
 theorem figureOneBalancedBaseProgramFor_countedStronglyMeasurable
     (parameters : BalancedCoolingParameters)
@@ -104,14 +104,14 @@ theorem figureOneGloballyCappedBalancedBaseProgramFor_failure_le
   let base := figureOneBalancedBaseProgramFor parameters q
   let capped := figureOneGloballyCappedBalancedBaseProgramFor parameters q
   let R := ENNReal.ofReal (figureOneGlobalExpectedCostConstant *
-    volumeBaseComplexityRate q)
+    baseRate q)
   let failure := capped.runEstimate oracle.query {none}
   have hmeas := figureOneBalancedBaseProgramFor_countedStronglyMeasurable
     parameters q I oracle
   have hR0 : R ≠ 0 := by
     exact ENNReal.ofReal_ne_zero_iff.mpr
       (mul_pos figureOneGlobalExpectedCostConstant_pos
-        (volumeBaseComplexityRate_pos_balanced q))
+        (baseRate_pos_balanced q))
   have hRtop : R ≠ ⊤ := ENNReal.ofReal_ne_top
   have hbudget : ENNReal.ofReal (64 : ℝ) * R ≤
       (figureOneGlobalQueryBudget q + 1 : ENNReal) := by

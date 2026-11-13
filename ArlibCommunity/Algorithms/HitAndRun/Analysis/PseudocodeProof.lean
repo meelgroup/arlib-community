@@ -7,9 +7,9 @@ import ArlibCommunity.Algorithms.HitAndRun.Model.Pseudocode
 /-!
 # Proofs that the pseudocode denotes hit-and-run
 
-This file proves the semantic facts exposed beside the headline theorem: the
-direction/chord formula, the Markov property, stationarity, and equivalence of
-the finite-facet implementation.
+This file proves the semantic facts that support the headline theorem in
+`Model/Theorem.lean`: the direction/chord formula, the Markov property,
+stationarity, and equivalence of the finite-facet implementation.
 -/
 
 namespace ArlibCommunity.Algorithms.HitAndRun.PseudocodeProof

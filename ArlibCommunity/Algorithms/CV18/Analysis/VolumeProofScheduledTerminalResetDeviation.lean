@@ -89,10 +89,10 @@ theorem approxIndepFun_initializedScheduledRetainedHistory_prefix_next_of_weight
 observable. -/
 theorem approxIndepFun_initializedScheduledRetainedHistory_all_of_weight
     (q : VolumeParams) (I : VolumeInput q.n) (phase count : ℕ)
-    (hcount : count ≤ figureOneDependentMaxSampleCount q)
+    (hcount : count ≤ largestSampleCount q)
     (weight : AmbientSpace q.n → ℝ) (hweight : Measurable weight)
     (r : ℕ) (hr : r < count) :
-    ApproxIndepFun (figureOneDependentEpsilon q)
+    ApproxIndepFun (dependenceError q)
       (sequentialPrefixSum (retainedSampleObservation weight) r)
       (retainedSampleObservation weight r)
       (initializedScheduledRetainedHistoryLaw q I phase (count - 1)) := by
@@ -102,13 +102,13 @@ theorem approxIndepFun_initializedScheduledRetainedHistory_all_of_weight
           (initializedScheduledRetainedHistoryLaw q I phase (count - 1)) :=
         initializedScheduledRetainedHistoryLaw_isProbabilityMeasure
           q I phase (count - 1)
-      change ApproxIndepFun (figureOneDependentEpsilon q)
+      change ApproxIndepFun (dependenceError q)
         (fun _ => (0 : ℝ)) (retainedSampleObservation weight 0)
         (initializedScheduledRetainedHistoryLaw q I phase (count - 1))
       exact approxIndepFun_const_left_of_nonneg
         (initializedScheduledRetainedHistoryLaw q I phase (count - 1))
         (0 : ℝ) (retainedSampleObservation weight 0)
-        (figureOneDependentEpsilon_nonneg q)
+        (dependenceError_nonneg q)
   | succ i =>
       have hiTail : i < count - 1 := by omega
       have hpair :=
@@ -125,7 +125,7 @@ prefix independence. -/
 theorem exists_terminalScheduledRetainedResetReference_all_approxIndep
     (q : VolumeParams) (I : VolumeInput q.n) (count : ℕ)
     (hcount0 : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q) :
+    (hcountMax : count ≤ largestSampleCount q) :
     ∃ reference : Measure (RetainedSampleHistory (AmbientSpace q.n)),
       IsProbabilityMeasure reference ∧
       MeasureLeUpTo
@@ -137,7 +137,7 @@ theorem exists_terminalScheduledRetainedResetReference_all_approxIndep
           scheduledRetainedExactSome q I (terminalPhaseSteps q)) ∧
       (∀ r, r < count →
         ApproxIndepFun
-          (figureOneDependentEpsilon q +
+          (dependenceError q +
             3 * (scheduledResetReferenceError q (count - 1)).toReal)
           (sequentialPrefixSum
             (retainedSampleObservation
@@ -426,7 +426,7 @@ theorem terminalExactShadowHistory_prefix_thirdMoment_le
 theorem exists_terminalScheduledRetainedResetReference_average_secondMoment
     (q : VolumeParams) (I : VolumeInput q.n) (count : ℕ)
     (hcount : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q) :
+    (hcountMax : count ≤ largestSampleCount q) :
     ∃ reference : Measure (RetainedSampleHistory (AmbientSpace q.n)),
       IsProbabilityMeasure reference ∧
       MeasureLeUpTo
@@ -449,7 +449,7 @@ theorem exists_terminalScheduledRetainedResetReference_average_secondMoment
           (count : ℝ)) ^ 2 ∂reference) ≤
         (1 + (Real.exp (1 / 2) - 1) / (count : ℝ)) *
             (figureOneIdealPhaseMean q I .terminal) ^ 2 +
-          3 * (figureOneDependentEpsilon q +
+          3 * (dependenceError q +
               3 * (scheduledResetReferenceError q (count - 1)).toReal) ^
                 (1 / 3 : ℝ) *
             (1 - 1 / (count : ℝ)) * (Real.exp (1 / 2)) ^ 2 := by
@@ -462,7 +462,7 @@ theorem exists_terminalScheduledRetainedResetReference_average_secondMoment
     retainedSampleObservation weight
   let mean := figureOneIdealPhaseMean q I .terminal
   let B : ℝ := Real.exp (1 / 2)
-  let epsilon := figureOneDependentEpsilon q +
+  let epsilon := dependenceError q +
     3 * (scheduledResetReferenceError q (count - 1)).toReal
   have hweight : Measurable weight := measurable_uniformRatioWeight _
   have hYmeas : ∀ j, Measurable (Y j) := fun j =>
@@ -499,13 +499,13 @@ theorem exists_terminalScheduledRetainedResetReference_average_secondMoment
   have hmean0 : 0 ≤ mean := (figureOneIdealPhaseMean_pos q I .terminal).le
   have hepsilon : 0 < epsilon := by
     dsimp [epsilon]
-    have hdependent : 0 < figureOneDependentEpsilon q := by
-      unfold figureOneDependentEpsilon
-      have hm : (0 : ℝ) < figureOneDependentPhaseCount q := by
-        exact_mod_cast figureOneDependentPhaseCount_pos q
+    have hdependent : 0 < dependenceError q := by
+      unfold dependenceError
+      have hm : (0 : ℝ) < numPhases q := by
+        exact_mod_cast numPhases_pos q
       exact div_pos (sq_pos_of_pos q.heps.1)
         (mul_pos
-          (mul_pos (by norm_num) (pow_pos (figureOneDependentAlpha_pos q) 4)) hm)
+          (mul_pos (by norm_num) (pow_pos (truncationLevel_pos q) 4)) hm)
     positivity
   have havg := sequentialAverage_secondMoment_le_of_approxIndepPrefix_thirdMoment
     reference hYmeas count hcount (Real.exp_pos ((1 : ℝ) / 2)) hmean0
@@ -539,12 +539,12 @@ deviation event. -/
 theorem initializedScheduledRetainedHistory_terminal_relativeDeviation_le
     (q : VolumeParams) (I : VolumeInput q.n) (count : ℕ)
     (hcount : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q)
+    (hcountMax : count ≤ largestSampleCount q)
     {delta eps : ℝ} (hdelta : 0 ≤ delta) (heps : 0 < eps)
     (hmomentBudget :
       (1 + (Real.exp (1 / 2) - 1) / (count : ℝ)) *
           (figureOneIdealPhaseMean q I .terminal) ^ 2 +
-        3 * (figureOneDependentEpsilon q +
+        3 * (dependenceError q +
             3 * (scheduledResetReferenceError q (count - 1)).toReal) ^
               (1 / 3 : ℝ) *
           (1 - 1 / (count : ℝ)) * (Real.exp (1 / 2)) ^ 2 ≤
@@ -595,13 +595,13 @@ theorem initializedScheduledRetainedHistory_terminal_relativeDeviation_le
 term for the bounded terminal weight fits one eighth of executable slack. -/
 theorem figureOne_terminalResetReference_average_dependence_le_slack_div_eight
     (q : VolumeParams) {count : ℕ} (hcount : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q) :
-    3 * (figureOneDependentEpsilon q +
+    (hcountMax : count ≤ largestSampleCount q) :
+    3 * (dependenceError q +
           3 * (scheduledResetReferenceError q (count - 1)).toReal) ^
             (1 / 3 : ℝ) *
         (1 - 1 / (count : ℝ)) * (Real.exp (1 / 2)) ^ 2 ≤
       figureOneExecutableMomentSlack q / 8 := by
-  let epsilon := figureOneDependentEpsilon q +
+  let epsilon := dependenceError q +
     3 * (scheduledResetReferenceError q (count - 1)).toReal
   let finiteFactor := 1 - 1 / (count : ℝ)
   have hcountR : (1 : ℝ) ≤ count := by exact_mod_cast hcount
@@ -615,10 +615,10 @@ theorem figureOne_terminalResetReference_average_dependence_le_slack_div_eight
     linarith [one_div_nonneg.mpr hcountPos.le]
   have hepsilon0 : 0 ≤ epsilon := by
     dsimp [epsilon]
-    exact add_nonneg (figureOneDependentEpsilon_nonneg q)
+    exact add_nonneg (dependenceError_nonneg q)
       (mul_nonneg (by norm_num) ENNReal.toReal_nonneg)
   have htransport : epsilon ≤
-      (5 / 2 : ℝ) * figureOneDependentEpsilon q := by
+      (5 / 2 : ℝ) * dependenceError q := by
     simpa [epsilon] using
       scheduledResetReference_transportEpsilon_le q hcountMax
   have hcoeff :=
@@ -647,7 +647,7 @@ moment arithmetic discharged.  Only the chosen deviation threshold remains
 as a parameter. -/
 theorem initializedScheduledRetainedHistory_terminal_relativeDeviation_le_final
     (q : VolumeParams) (I : VolumeInput q.n) {eps : ℝ} (heps : 0 < eps) :
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     let delta := (Real.exp (1 / 2) - 1) / (count : ℝ) +
       figureOneExecutableMomentSlack q / 8
     (initializedScheduledRetainedHistoryLaw q I
@@ -660,12 +660,12 @@ theorem initializedScheduledRetainedHistory_terminal_relativeDeviation_le_final
       ENNReal.ofReal (delta / eps ^ 2) +
         scheduledResetReferenceError q (count - 1) := by
   dsimp only
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let mean := figureOneIdealPhaseMean q I .terminal
   let delta := (Real.exp (1 / 2) - 1) / (count : ℝ) +
     figureOneExecutableMomentSlack q / 8
-  have hcount : 0 < count := figureOneSampleCount_pos q
-  have hcountMax : count ≤ figureOneDependentMaxSampleCount q :=
+  have hcount : 0 < count := sampleCount_pos q
+  have hcountMax : count ≤ largestSampleCount q :=
     figureOneTerminalSampleCount_le_dependentMax q
   have hdelta : 0 ≤ delta := by
     dsimp [delta]

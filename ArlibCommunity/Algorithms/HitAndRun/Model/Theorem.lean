@@ -8,11 +8,13 @@ import ArlibCommunity.Algorithms.HitAndRun.Analysis.PseudocodeProof
 import ArlibCommunity.Algorithms.HitAndRun.Analysis.TheoremProof
 
 /-!
-# Hit-and-run: audited statements
+# Hit-and-run: headline results
 
-The first three statements pin the formal kernel to the paper's pseudocode and
-to a finite-facet implementation.  The last is the fully discharged mixing
-theorem.
+`hitAndRun_mixes` is the fully discharged mixing theorem for the lazy walk
+`run`.  `finiteFacetStep_eq_step` is the implementation bridge for polytopes:
+the facet-scan walk used with polytope membership queries is the same kernel.
+Other facts about the kernel (the direction/chord formula and stationarity) are
+in `Analysis/PseudocodeProof.lean`.
 
 The paper [Lov99] prints a substantially smaller coefficient.  Its proof of
 Lemma 8 uses incompatible cap-volume and chord-length constants, so this file
@@ -25,24 +27,13 @@ namespace ArlibCommunity.Algorithms.HitAndRun
 open MeasureTheory ProbabilityTheory Set
 open scoped ENNReal
 
-/-- A proposal is exactly a uniform sphere direction followed by a uniform
-point on the resulting chord. -/
-theorem proposal_apply {n : ℕ} {K : Body n} (hK : MeasurableSet K)
-    (u : State n) {A : Set (State n)} (hA : MeasurableSet A) :
-    proposal K u A =
-      ∫⁻ theta, Arlib.uniformOn (volume : Measure ℝ)
-        (Arlib.MarkovChains.chordSet K u (theta : State n))
-        {t : ℝ | u + t • (theta : State n) ∈ A}
-        ∂(Arlib.MarkovChains.unifSphere n) :=
-  PseudocodeProof.proposal_apply hK u hA
+/-- Implementation bridge for polytopes given by facets.
 
-/-- The uniform distribution on the body is stationary. -/
-theorem target_invariant {n : ℕ} [NeZero n] {K : Body n} (hK : MeasurableSet K) :
-    Kernel.Invariant (step K) (target K) :=
-  PseudocodeProof.target_invariant hK
-
-/-- Scanning a bounded polytope's facets computes exactly the same kernel as
-the denotational direction/chord definition. -/
+On `{x | ∀ i, ⟪A i, x⟫ ≤ b i}`, the walk can compute each chord by scanning the
+facets (the same facet scan that answers a polytope membership query), and this
+computes exactly the kernel `step` that `hitAndRun_mixes` is about.  Clients
+that run `finiteFacetStep` and charge one facet scan per step use this to
+transfer the mixing bound to the walk they execute. -/
 theorem finiteFacetStep_eq_step {n : ℕ} {ι : Type*} [Fintype ι]
     (A : ι → State n) (b : ι → ℝ)
     (hK : Bornology.IsBounded (Arlib.Polytope.body A b)) [NeZero n] :

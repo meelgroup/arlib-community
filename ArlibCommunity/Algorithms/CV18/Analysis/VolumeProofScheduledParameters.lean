@@ -18,9 +18,9 @@ noncomputable def figureOneScheduledBalancedParameters :
     BalancedCoolingParameters where
   proposalCap := fun q _ => figureOneGlobalQueryBudget q
   properStride := fun q sigma2 =>
-    figureOneScheduledCorrectedProperStride q sigma2
-      (figureOneSafeRetryCount q - 1)
-  retryLimit := fun q _ => figureOneSafeRetryCount q
+    strideFor q sigma2
+      (maxRetries q - 1)
+  retryLimit := fun q _ => maxRetries q
 
 @[simp] theorem figureOneScheduledBalancedParameters_proposalCap
     (q : VolumeParams) (sigma2 : ℝ) :
@@ -30,13 +30,13 @@ noncomputable def figureOneScheduledBalancedParameters :
 @[simp] theorem figureOneScheduledBalancedParameters_properStride
     (q : VolumeParams) (sigma2 : ℝ) :
     figureOneScheduledBalancedParameters.properStride q sigma2 =
-      figureOneScheduledCorrectedProperStride q sigma2
-        (figureOneSafeRetryCount q - 1) := rfl
+      strideFor q sigma2
+        (maxRetries q - 1) := rfl
 
 @[simp] theorem figureOneScheduledBalancedParameters_retryLimit
     (q : VolumeParams) (sigma2 : ℝ) :
     figureOneScheduledBalancedParameters.retryLimit q sigma2 =
-      figureOneSafeRetryCount q := rfl
+      maxRetries q := rfl
 
 theorem figureOneScheduledBalancedParameters_proposalCap_pos
     (q : VolumeParams) (sigma2 : ℝ) :
@@ -48,20 +48,20 @@ theorem figureOneScheduledBalancedParameters_properStride_pos
     (q : VolumeParams) (sigma2 : ℝ) :
     0 < figureOneScheduledBalancedParameters.properStride q sigma2 := by
   simp only [figureOneScheduledBalancedParameters_properStride]
-  exact figureOneScheduledCorrectedProperStride_pos q sigma2 _
+  exact strideFor_pos q sigma2 _
 
 theorem figureOneScheduledBalancedParameters_retryLimit_pos
     (q : VolumeParams) (sigma2 : ℝ) :
     0 < figureOneScheduledBalancedParameters.retryLimit q sigma2 := by
   simp only [figureOneScheduledBalancedParameters_retryLimit]
-  exact figureOneSafeRetryCount_pos q
+  exact maxRetries_pos q
 
 theorem figureOneScheduledBalancedParameters_attempts_add_one
     (q : VolumeParams) (sigma2 : ℝ) :
     figureOneScheduledBalancedParameters.retryLimit q sigma2 - 1 + 1 =
-      figureOneSafeRetryCount q := by
+      maxRetries q := by
   simp only [figureOneScheduledBalancedParameters_retryLimit]
-  exact Nat.sub_add_cancel (figureOneSafeRetryCount_pos q)
+  exact Nat.sub_add_cancel (maxRetries_pos q)
 
 /-- Local proper blocks request one query beyond the shared cap.  Therefore
 local exhaustion remains invisible until the outer globally capped execution

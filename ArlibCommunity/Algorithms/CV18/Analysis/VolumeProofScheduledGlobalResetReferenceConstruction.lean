@@ -45,8 +45,8 @@ structure ScheduledGlobalResetPrefixInvariant
         figureOneChronologicalRawMean q I j ^ 2
   approxIndep : ∀ i, i < phase →
     ApproxIndepFun
-      ((5 / 2 : ℝ) * figureOneDependentEpsilon q)
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+      ((5 / 2 : ℝ) * dependenceError q)
+      (dependentTruncatedProduct (truncationLevel q)
         (figureOneChronologicalTruncatedMean q I reference
           (figureOneScheduledReferenceCoordinateExtension q I))
         (figureOneChronologicalTruncatedPhase q I
@@ -98,7 +98,7 @@ preservation carries every earlier moment and independence fact; the caller
 only supplies the newly created coordinate facts and the new support. -/
 theorem ScheduledGlobalResetPrefixInvariant.extend
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     (source reference : Measure (ScheduledBalancedCoolingTrace q.n))
     (hsource : ScheduledGlobalResetPrefixInvariant q I phase source)
     (hprefix : reference.map (scheduledResetPrefixCoordinates q phase) =
@@ -115,8 +115,8 @@ theorem ScheduledGlobalResetPrefixInvariant.extend
           figureOneExecutableMomentSlack q / 8) *
         figureOneChronologicalRawMean q I (phase + 1) ^ 2)
     (hnewInd : ApproxIndepFun
-      ((5 / 2 : ℝ) * figureOneDependentEpsilon q)
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+      ((5 / 2 : ℝ) * dependenceError q)
+      (dependentTruncatedProduct (truncationLevel q)
         (figureOneChronologicalTruncatedMean q I reference
           (figureOneScheduledReferenceCoordinateExtension q I))
         (figureOneChronologicalTruncatedPhase q I
@@ -207,23 +207,23 @@ theorem exists_scheduledTerminalReference_of_gaussianPrefixInvariant
             (terminalPhaseSteps q)))
         reference
         (figureOneCorrectedTransitionBudget q +
-          scheduledResetReferenceError q (figureOneSampleCount q - 1)) ∧
+          scheduledResetReferenceError q (sampleCount q - 1)) ∧
       ScheduledGlobalResetPrefixInvariant q I
-        (figureOneDependentPhaseCount q) reference := by
+        (numPhases q) reference := by
   let phase := terminalPhaseSteps q
   let W := figureOneScheduledReferenceCoordinateExtension q I
   let mean := figureOneChronologicalTruncatedMean q I source W
   let oldStatistic := dependentTruncatedProduct
-    (figureOneDependentAlpha q) mean
+    (truncationLevel q) mean
       (figureOneChronologicalTruncatedPhase q I W) phase
-  have hphase : phase < figureOneDependentPhaseCount q := by
+  have hphase : phase < numPhases q := by
     dsimp only [phase]
-    rw [figureOneDependentPhaseCount]
+    rw [numPhases]
     omega
   have holdMeas : Measurable oldStatistic := by
     dsimp only [oldStatistic]
     exact measurable_dependentTruncatedProduct
-      (figureOneDependentAlpha q) mean
+      (truncationLevel q) mean
       (figureOneChronologicalTruncatedPhase q I W)
       (fun j => figureOneChronologicalTruncatedPhase_measurable q I W
         (fun k => measurable_figureOneScheduledReferenceCoordinateExtension
@@ -238,7 +238,7 @@ theorem exists_scheduledTerminalReference_of_gaussianPrefixInvariant
       dependentTruncatedProduct_chronological_extension_factor_prefix
         q I phase phase hphase.le le_rfl mean
     have hfactor' :
-        dependentTruncatedProduct (figureOneDependentAlpha q) mean
+        dependentTruncatedProduct (truncationLevel q) mean
             (figureOneChronologicalTruncatedPhase q I W) phase =
           scheduledResetPrefixChronologicalTruncatedProduct
               q I phase mean phase ∘
@@ -262,8 +262,8 @@ theorem exists_scheduledTerminalReference_of_gaussianPrefixInvariant
       q I phase hphase source reference (by simpa only [phase] using hprefix)
       (by simpa only [oldStatistic, mean, W, phase] using hnewRawInd)
   have hnewInd : ApproxIndepFun
-      ((5 / 2 : ℝ) * figureOneDependentEpsilon q)
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+      ((5 / 2 : ℝ) * dependenceError q)
+      (dependentTruncatedProduct (truncationLevel q)
         (figureOneChronologicalTruncatedMean q I reference W)
         (figureOneChronologicalTruncatedPhase q I W) phase)
       (figureOneChronologicalTruncatedPhase q I W (phase + 1))
@@ -281,7 +281,7 @@ theorem exists_scheduledTerminalReference_of_gaussianPrefixInvariant
       (by simpa only [phase] using hsupport)
   refine ⟨reference, hreferenceProb, ?_, ?_⟩
   · simpa only [phase] using hcomparison
-  · simpa only [phase, figureOneDependentPhaseCount] using hinvariant
+  · simpa only [phase, numPhases] using hinvariant
 
 /-- Once the finite recurrence has supplied all chronological coordinates,
 the remaining global trace comparison is exactly the input expected by the
@@ -291,17 +291,17 @@ noncomputable def GlobalResetReferenceWitness.of_completed_prefixInvariant
     (reference : Measure (ScheduledBalancedCoolingTrace q.n))
     (hreference : IsProbabilityMeasure reference)
     (hinvariant : ScheduledGlobalResetPrefixInvariant q I
-      (figureOneDependentPhaseCount q) reference)
+      (numPhases q) reference)
     (htrace : MeasureLeUpTo
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q))
+          (numPhases q))
       reference (figureOneScheduledGlobalOuterStepError q)) :
     GlobalResetReferenceWitness q I := by
   exact GlobalResetReferenceWitness.of_finite_trace_reference
     q I reference hreference hinvariant.coordinate_memLp
       hinvariant.coordinate_mean hinvariant.coordinate_second
-      (mul_nonneg (by norm_num) (figureOneDependentEpsilon_nonneg q))
+      (mul_nonneg (by norm_num) (dependenceError_nonneg q))
       le_rfl hinvariant.approxIndep htrace
 
 #print axioms

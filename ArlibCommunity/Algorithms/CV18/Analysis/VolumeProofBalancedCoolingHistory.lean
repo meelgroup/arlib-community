@@ -26,17 +26,17 @@ open MeasureTheory ProbabilityTheory
 
 /-- The phase count is bounded by the common sample-count parameter appearing
 in the dependent-product error budget. -/
-theorem figureOnePhaseSampleCount_le_dependentMax
+theorem phaseSampleCount_le_dependentMax
     (q : VolumeParams) (sigma2 : ℝ) :
-    figureOnePhaseSampleCount q sigma2 ≤
-      figureOneDependentMaxSampleCount q := by
-  unfold figureOnePhaseSampleCount figureOneDependentMaxSampleCount
+    phaseSampleCount q sigma2 ≤
+      largestSampleCount q := by
+  unfold phaseSampleCount largestSampleCount
   split_ifs
   · exact le_max_left _ _
   · exact le_max_right _ _
 
 theorem figureOneTerminalSampleCount_le_dependentMax (q : VolumeParams) :
-    figureOneSampleCount q ≤ figureOneDependentMaxSampleCount q :=
+    sampleCount q ≤ largestSampleCount q :=
   le_max_right _ _
 
 theorem measurable_balancedCoolingAverage (samples : ℕ) :
@@ -59,9 +59,9 @@ noncomputable def balancedCoolingRatioEstimate
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOnePhaseSampleCount q sigma2)
-      (accuracyScaleFactor q • current)).bind fun result =>
-    .pure (balancedCoolingAverage (figureOnePhaseSampleCount q sigma2) result)
+      (phaseSampleCount q sigma2)
+      (scaleFactor q • current)).bind fun result =>
+    .pure (balancedCoolingAverage (phaseSampleCount q sigma2) result)
 
 /-- The terminal Gaussian-to-uniform estimator, before forgetting the final
 retained state. -/
@@ -73,9 +73,9 @@ noncomputable def balancedCoolingUniformEstimateWithState
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOneSampleCount q)
-      (accuracyScaleFactor q • current)).bind fun result =>
-    .pure (balancedCoolingAverage (figureOneSampleCount q) result)
+      (sampleCount q)
+      (scaleFactor q • current)).bind fun result =>
+    .pure (balancedCoolingAverage (sampleCount q) result)
 
 theorem measurable_balancedCoolingForgetState :
     Measurable (balancedCoolingForgetState (n := n)) := by
@@ -111,9 +111,9 @@ noncomputable def balancedCoolingRatioLaw
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOnePhaseSampleCount q sigma2) 0
-      (accuracyScaleFactor q • current)).map
-    (balancedCoolingAverage (figureOnePhaseSampleCount q sigma2))
+      (phaseSampleCount q sigma2) 0
+      (scaleFactor q • current)).map
+    (balancedCoolingAverage (phaseSampleCount q sigma2))
 
 theorem balancedCoolingRatioEstimate_measurable_strong_and_law
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
@@ -132,10 +132,10 @@ theorem balancedCoolingRatioEstimate_measurable_strong_and_law
   let cap := parameters.proposalCap q sigma2
   let stride := parameters.properStride q sigma2
   let retries := parameters.retryLimit q sigma2
-  let samples := figureOnePhaseSampleCount q sigma2
+  let samples := phaseSampleCount q sigma2
   let weight : AmbientSpace q.n → ℝ := gaussianRatioWeight sigma2 tau2
   let scalePoint : AmbientSpace q.n → AmbientSpace q.n :=
-    fun current => accuracyScaleFactor q • current
+    fun current => scaleFactor q • current
   have hweight : Measurable weight :=
     measurable_gaussianRatioWeight sigma2 tau2
   have htransition :=
@@ -143,7 +143,7 @@ theorem balancedCoolingRatioEstimate_measurable_strong_and_law
       q I hsigma2 hweight cap stride retries samples
   have hscale : Measurable scalePoint :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id
+      scaleFactor q).smul measurable_id
   have hsource : Measurable fun current =>
       balancedAccuracyTransitionCollectLaw q I sigma2 weight cap stride retries
         samples 0 (scalePoint current) :=
@@ -311,24 +311,24 @@ theorem balancedCoolingRatioLaw_measurable_and_probability
   let cap := parameters.proposalCap q sigma2
   let stride := parameters.properStride q sigma2
   let retries := parameters.retryLimit q sigma2
-  let samples := figureOnePhaseSampleCount q sigma2
+  let samples := phaseSampleCount q sigma2
   let weight : AmbientSpace q.n → ℝ := gaussianRatioWeight sigma2 tau2
   have htransition :=
     balancedAccuracyTransitionCollectLaw_measurable_and_probability
       q I hsigma2 (measurable_gaussianRatioWeight sigma2 tau2)
         cap stride retries samples
   have hscale : Measurable fun current : AmbientSpace q.n =>
-      accuracyScaleFactor q • current :=
+      scaleFactor q • current :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id
+      scaleFactor q).smul measurable_id
   have hsource : Measurable fun current =>
       balancedAccuracyTransitionCollectLaw q I sigma2 weight cap stride retries
-        samples 0 (accuracyScaleFactor q • current) :=
+        samples 0 (scaleFactor q • current) :=
     htransition.1.comp (measurable_const.prodMk hscale)
   have hsourceProb : ∀ current, IsProbabilityMeasure
       (balancedAccuracyTransitionCollectLaw q I sigma2 weight cap stride retries
-        samples 0 (accuracyScaleFactor q • current)) :=
-    fun current => htransition.2 0 (accuracyScaleFactor q • current)
+        samples 0 (scaleFactor q • current)) :=
+    fun current => htransition.2 0 (scaleFactor q • current)
   have havg := measurable_balancedCoolingAverage (n := q.n) samples
   constructor
   · unfold balancedCoolingRatioLaw
@@ -337,7 +337,7 @@ theorem balancedCoolingRatioLaw_measurable_and_probability
     unfold balancedCoolingRatioLaw
     let _ : IsProbabilityMeasure
         (balancedAccuracyTransitionCollectLaw q I sigma2 weight cap stride retries
-          samples 0 (accuracyScaleFactor q • current)) := hsourceProb current
+          samples 0 (scaleFactor q • current)) := hsourceProb current
     exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable havg.aemeasurable
 
 /-- The cooling history is a measurable probability kernel of its initial

@@ -14,6 +14,12 @@ conclusion and the explicit membership-query bound for the executable
 scheduled program.  Its chronological reset-reference witness is the
 unconditional theorem `globalResetReferenceExists`.
 
+The analysis is phrased for the program as defined in `ScheduledProgram.lean`
+(constructor form, sampling subroutines passed as a `VolumeCoolingPrimitives`
+record).  `PseudocodeBridge.lean` proves that it equals the readable
+`cv18Program` of `Model/Pseudocode.lean`, and that `QueryBound` bounds the
+model's cost `queryCost`.
+
 `FigureOneRadialTruncationBound` is now proved from `WellRounded` by
 `figureOneRadialTruncationBound`.  Thus radial truncation is no longer an
 assumption of the assembled theorem.

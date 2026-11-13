@@ -82,9 +82,9 @@ theorem approxIndepFun_oldStatistic_terminal_traceAppend_of_accepted
       Option (ℝ × AmbientSpace q.n) →
         ScheduledBalancedCoolingTrace q.n := fun state =>
     scheduledResetTraceAppend (state.1, scheduledResetPairOutput state.2)
-  have hphase : phase < figureOneDependentPhaseCount q := by
+  have hphase : phase < numPhases q := by
     dsimp only [phase]
-    rw [figureOneDependentPhaseCount]
+    rw [numPhases]
     omega
   have hK :=
     scheduledBalancedTracePhaseObservationLaw_measurable_and_probability
@@ -259,7 +259,7 @@ theorem exists_scheduledTerminalTraceRecordedReset
             (terminalPhaseSteps q)))
         reference
         (figureOneCorrectedTransitionBudget q +
-          scheduledResetReferenceError q (figureOneSampleCount q - 1)) ∧
+          scheduledResetReferenceError q (sampleCount q - 1)) ∧
       reference.map scheduledBalancedTraceRetainedOption =
         scheduledRetainedExactSome q I (terminalPhaseSteps q) ∧
       MemLp (scheduledBalancedTracePhaseVariable q
@@ -281,7 +281,7 @@ theorem exists_scheduledTerminalTraceRecordedReset
         ((2 * figureOneCorrectedTransitionBudget q).toReal + 3 *
           (figureOneCorrectedTransitionBudget q +
             scheduledResetReferenceError q
-              (figureOneSampleCount q - 1)).toReal)
+              (sampleCount q - 1)).toReal)
         oldStatistic
         (scheduledBalancedTracePhaseVariable q
           (terminalPhaseSteps q + 1)) reference := by
@@ -291,17 +291,17 @@ theorem exists_scheduledTerminalTraceRecordedReset
   let _ : IsProbabilityMeasure target := htargetProb
   let phase := terminalPhaseSteps q
   let delta := figureOneCorrectedTransitionBudget q +
-    scheduledResetReferenceError q (figureOneSampleCount q - 1)
-  have hphase : phase < figureOneDependentPhaseCount q := by
+    scheduledResetReferenceError q (sampleCount q - 1)
+  have hphase : phase < numPhases q := by
     dsimp only [phase]
-    rw [figureOneDependentPhaseCount]
+    rw [numPhases]
     omega
   have hdelta : delta ≠ ⊤ := by
     apply ENNReal.add_ne_top.mpr
     constructor
     · simp [figureOneCorrectedTransitionBudget]
     · exact scheduledResetReferenceError_ne_top q
-        (figureOneSampleCount q - 1)
+        (sampleCount q - 1)
   have houtput := measurable_scheduledResetPairOutput (n := q.n)
   have hpairMap : Measurable
       (fun state : ScheduledBalancedCoolingTrace q.n ×
@@ -436,7 +436,7 @@ theorem exists_scheduledTerminalTraceRecordedReset_with_prefix
             (terminalPhaseSteps q)))
         reference
         (figureOneCorrectedTransitionBudget q +
-          scheduledResetReferenceError q (figureOneSampleCount q - 1)) ∧
+          scheduledResetReferenceError q (sampleCount q - 1)) ∧
       reference.map scheduledBalancedTraceRetainedOption =
         scheduledRetainedExactSome q I (terminalPhaseSteps q) ∧
       reference.map
@@ -459,7 +459,7 @@ theorem exists_scheduledTerminalTraceRecordedReset_with_prefix
         ((2 * figureOneCorrectedTransitionBudget q).toReal + 3 *
           (figureOneCorrectedTransitionBudget q +
             scheduledResetReferenceError q
-              (figureOneSampleCount q - 1)).toReal)
+              (sampleCount q - 1)).toReal)
         oldStatistic
         (scheduledBalancedTracePhaseVariable q
           (terminalPhaseSteps q + 1)) reference ∧
@@ -474,17 +474,17 @@ theorem exists_scheduledTerminalTraceRecordedReset_with_prefix
   let _ : IsProbabilityMeasure target := htargetProb
   let phase := terminalPhaseSteps q
   let delta := figureOneCorrectedTransitionBudget q +
-    scheduledResetReferenceError q (figureOneSampleCount q - 1)
-  have hphase : phase < figureOneDependentPhaseCount q := by
+    scheduledResetReferenceError q (sampleCount q - 1)
+  have hphase : phase < numPhases q := by
     dsimp only [phase]
-    rw [figureOneDependentPhaseCount]
+    rw [numPhases]
     omega
   have hdelta : delta ≠ ⊤ := by
     apply ENNReal.add_ne_top.mpr
     constructor
     · simp [figureOneCorrectedTransitionBudget]
     · exact scheduledResetReferenceError_ne_top q
-        (figureOneSampleCount q - 1)
+        (sampleCount q - 1)
   have htargetGood : ∀ᵐ result ∂target,
       ScheduledResetPairGood result :=
     ae_scheduledResetPairGood_of_map_snd_eq_map_some target

@@ -257,9 +257,9 @@ initialized collector.  Coordinate zero has a constant empty prefix; every
 successor coordinate uses the conditioned transition estimate above. -/
 theorem approxIndepFun_initializedScheduledRetainedHistory_all
     (q : VolumeParams) (I : VolumeInput q.n) (phase count : ℕ)
-    (hcount : count ≤ figureOneDependentMaxSampleCount q)
+    (hcount : count ≤ largestSampleCount q)
     (r : ℕ) (hr : r < count) :
-    ApproxIndepFun (figureOneDependentEpsilon q)
+    ApproxIndepFun (dependenceError q)
       (sequentialPrefixSum
         (retainedSampleObservation
           (gaussianRatioWeight (n := q.n) (scheduleValue q phase)
@@ -274,7 +274,7 @@ theorem approxIndepFun_initializedScheduledRetainedHistory_all
           (initializedScheduledRetainedHistoryLaw q I phase (count - 1)) :=
         initializedScheduledRetainedHistoryLaw_isProbabilityMeasure
           q I phase (count - 1)
-      change ApproxIndepFun (figureOneDependentEpsilon q)
+      change ApproxIndepFun (dependenceError q)
         (fun _ => (0 : ℝ))
         (retainedSampleObservation
           (gaussianRatioWeight (n := q.n) (scheduleValue q phase)
@@ -286,7 +286,7 @@ theorem approxIndepFun_initializedScheduledRetainedHistory_all
         (retainedSampleObservation
           (gaussianRatioWeight (n := q.n) (scheduleValue q phase)
             (scheduleValue q (phase + 1))) 0)
-        (figureOneDependentEpsilon_nonneg q)
+        (dependenceError_nonneg q)
   | succ i =>
       have hiTail : i < count - 1 := by omega
       have hpair :=

@@ -94,7 +94,7 @@ theorem cappedScheduledAccuracyProperBlockAux_countedMeasurable
   let Q := lazyProperProposalGaussianAux
     (figureOneScheduledPhaseBody q I sigma2)
     (figureOneScheduledPhaseBody_measurable q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
+    (proposalRadius q sigma2) sigma2
   intro rawCap
   induction rawCap with
   | zero =>
@@ -277,18 +277,18 @@ theorem cappedScheduledAccuracyProperBlockAux_countedQueryCost_le
       totalLazyProperExpectedRawCost
         (figureOneScheduledPhaseBody q I sigma2)
         (figureOneScheduledPhaseBody_measurable q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2
+        (proposalRadius q sigma2) sigma2
         remainingProper current + 1 := by
   let K := figureOneScheduledPhaseBody q I sigma2
   let hK : MeasurableSet K := figureOneScheduledPhaseBody_measurable q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let E := totalLazyProperExpectedRawCost K hK delta sigma2
   let Q := lazyProperProposalGaussianAux K hK delta sigma2
   have hstep := one_add_lintegral_totalLazyProperExpectedRawCost_le
     K hK (figureOneScheduledPhaseBody_convex q I sigma2)
       (figureOneScheduledPhaseBody_isCompact q I sigma2).isBounded
       (figureOneScheduledPhaseBody_volume_ne_zero q I hsigma2)
-      (figureOneScheduledProposalRadius_pos q hsigma2) sigma2
+      (proposalRadius_pos q hsigma2) sigma2
   intro rawCap
   induction rawCap with
   | zero =>
@@ -470,7 +470,7 @@ theorem cappedScheduledAccuracyProperBlock_countedQueryCost_le
       totalLazyProperExpectedRawCost
         (figureOneScheduledPhaseBody q I sigma2)
         (figureOneScheduledPhaseBody_measurable q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2
+        (proposalRadius q sigma2) sigma2
         properStride current + 1 := by
   unfold cappedScheduledAccuracyProperBlock
   exact cappedScheduledAccuracyProperBlockAux_countedQueryCost_le
@@ -478,23 +478,23 @@ theorem cappedScheduledAccuracyProperBlock_countedQueryCost_le
 
 /-- The scheduled proposal remains below the Lovász--Vempala average local
 conductance scale of its actual (possibly sub-unit) phase body. -/
-theorem figureOneScheduledProposalRadius_le_phaseLVStep
+theorem proposalRadius_le_phaseLVStep
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    figureOneScheduledProposalRadius q sigma2 ≤
+    proposalRadius q sigma2 ≤
       min (Real.sqrt sigma2) (figureOneScheduledPhaseInradius q sigma2) /
         (4096 * Real.sqrt q.n) := by
   let sigma : ℝ := Real.sqrt sigma2
-  let L : ℝ := figureOneScheduledAccuracyLog q
+  let L : ℝ := accuracyLog q
   have hsigma : 0 < sigma := Real.sqrt_pos.2 hsigma2
   have hnR : (1 : ℝ) ≤ q.n := by
     exact_mod_cast (le_trans (by norm_num : 1 ≤ 3) q.dim_ok)
   have hL : 1 ≤ L := by
-    simpa [L] using figureOneScheduledAccuracyLog_one_le q
+    simpa [L] using accuracyLog_one_le q
   have hnL : 1 ≤ (q.n : ℝ) * L := by nlinarith
   have hsqrt1 : 1 ≤ Real.sqrt ((q.n : ℝ) * L) := by
     simpa using Real.sqrt_le_sqrt hnL
-  have hsigmaR : sigma ≤ figureOneScheduledPhaseRadius q sigma2 := by
-    unfold figureOneScheduledPhaseRadius
+  have hsigmaR : sigma ≤ phaseRadius q sigma2 := by
+    unfold phaseRadius
     change sigma ≤ 32 * sigma * Real.sqrt ((q.n : ℝ) * L)
     nlinarith
   have hmin : min sigma (figureOneScheduledPhaseInradius q sigma2) =
@@ -505,7 +505,7 @@ theorem figureOneScheduledProposalRadius_le_phaseLVStep
     · apply le_min (min_le_left _ _)
       exact le_min (min_le_right _ _) ((min_le_left _ _).trans hsigmaR)
   rw [hmin]
-  unfold figureOneScheduledProposalRadius
+  unfold proposalRadius
   change min sigma 1 / (4096 * Real.sqrt ((q.n : ℝ) * L)) ≤
     min sigma 1 / (4096 * Real.sqrt q.n)
   apply div_le_div_of_nonneg_left (le_min hsigma.le zero_le_one)
@@ -521,11 +521,11 @@ theorem half_mul_gaussianWeight_le_scheduledPhaseEllGaussian
           gaussianWeight sigma2 x) ≤
       ellGaussianMeasure
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2 Set.univ := by
+        (proposalRadius q sigma2) sigma2 Set.univ := by
   have hn2 : 2 ≤ q.n := le_trans (by norm_num) q.dim_ok
   have hsigma : 0 < Real.sqrt sigma2 := Real.sqrt_pos.2 hsigma2
-  have hdelta : 0 < figureOneScheduledProposalRadius q sigma2 :=
-    figureOneScheduledProposalRadius_pos q hsigma2
+  have hdelta : 0 < proposalRadius q sigma2 :=
+    proposalRadius_pos q hsigma2
   have h :=
     half_mul_lintegral_gaussianWeight_le_ellGaussianMeasure_univ_direct_radius
       hn2 (figureOneScheduledPhaseBody_convex q I sigma2)
@@ -533,7 +533,7 @@ theorem half_mul_gaussianWeight_le_scheduledPhaseEllGaussian
       (figureOneScheduledPhaseBody_volume_ne_top q I sigma2)
       (figureOneScheduledPhaseInradius_pos q hsigma2)
       (ball_scheduledPhaseInradius_subset q I sigma2)
-      hsigma hdelta (figureOneScheduledProposalRadius_le_phaseLVStep q hsigma2)
+      hsigma hdelta (proposalRadius_le_phaseLVStep q hsigma2)
   simpa [Real.sq_sqrt hsigma2.le] using h
 
 /-- Warm-subprobability cost bound for the executable scheduled block.  This
@@ -544,7 +544,7 @@ theorem lintegral_cappedScheduledAccuracyProperBlock_countedQueryCost_le_of_isWa
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
     (hwarm : _root_.Arlib.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (rawCap properStride : ℕ) :
     ∫⁻ current, countedQueryCost
         ((cappedScheduledAccuracyProperBlock q sigma2 rawCap properStride
@@ -552,7 +552,7 @@ theorem lintegral_cappedScheduledAccuracyProperBlock_countedQueryCost_le_of_isWa
       (properStride : ENNReal) * (M * 2) + mu Set.univ := by
   let K := figureOneScheduledPhaseBody q I sigma2
   let hKm : MeasurableSet K := figureOneScheduledPhaseBody_measurable q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let pi := ellGaussianProb K delta sigma2
   have hpoint : ∀ current, countedQueryCost
       ((cappedScheduledAccuracyProperBlock q sigma2 rawCap properStride
@@ -568,7 +568,7 @@ theorem lintegral_cappedScheduledAccuracyProperBlock_countedQueryCost_le_of_isWa
       (figureOneScheduledPhaseBody_isCompact q I sigma2).isBounded
     have hK0 : volume K ≠ 0 :=
       figureOneScheduledPhaseBody_volume_ne_zero q I hsigma2
-    have hdelta : 0 < delta := figureOneScheduledProposalRadius_pos q hsigma2
+    have hdelta : 0 < delta := proposalRadius_pos q hsigma2
     have hZ0 : ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 :=
       ellGaussianMeasure_univ_ne_zero hKm hKc hKb hK0 hdelta sigma2
     have hZtop : ellGaussianMeasure K delta sigma2 Set.univ ≠ ⊤ :=

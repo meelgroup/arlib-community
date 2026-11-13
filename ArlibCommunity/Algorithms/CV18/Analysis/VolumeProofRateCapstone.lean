@@ -10,7 +10,7 @@ noncomputable def globallyCappedValueProgramOfRate
     (costConstant : ℝ) (rate : VolumeParams → ℝ)
     (base : (q : VolumeParams) → MembershipOracleProgram q.n ℝ)
     (q : VolumeParams) : MembershipOracleProgram q.n ℝ :=
-  ((base q).withQueryCap (globalQueryBudgetOfRate costConstant rate q)).bind
+  ((base q).withQueryCap (budgetOfRate costConstant rate q)).bind
     fun estimate => .pure (estimate.getD 0)
 
 theorem globallyCappedValueProgramOfRate_queryBound
@@ -18,10 +18,10 @@ theorem globallyCappedValueProgramOfRate_queryBound
     (base : (q : VolumeParams) → MembershipOracleProgram q.n ℝ)
     (q : VolumeParams) :
     (globallyCappedValueProgramOfRate costConstant rate base q).QueryBound
-      (globalQueryBudgetOfRate costConstant rate q) := by
+      (budgetOfRate costConstant rate q) := by
   unfold globallyCappedValueProgramOfRate
   exact ((base q).withQueryCap_queryBound
-    (globalQueryBudgetOfRate costConstant rate q)).bind fun _ => .pure _ 0
+    (budgetOfRate costConstant rate q)).bind fun _ => .pure _ 0
 
 theorem globallyCappedValueProgramOfRate_stronglyMeasurable
     (costConstant : ℝ) (rate : VolumeParams → ℝ)
@@ -32,7 +32,7 @@ theorem globallyCappedValueProgramOfRate_stronglyMeasurable
       oracle.query := by
   unfold globallyCappedValueProgramOfRate
   apply (hmeas.withQueryCap_stronglyMeasurable
-    (globalQueryBudgetOfRate costConstant rate q)).bind (fun _ => by trivial)
+    (budgetOfRate costConstant rate q)).bind (fun _ => by trivial)
   simp only [MembershipOracleProgram.runEstimate]
   exact Measure.measurable_dirac.comp measurable_optionGetD_zero
 
@@ -44,13 +44,13 @@ theorem runEstimate_globallyCappedValueProgramOfRate
     (globallyCappedValueProgramOfRate costConstant rate base q).runEstimate
         oracle.query =
       (((base q).withQueryCap
-        (globalQueryBudgetOfRate costConstant rate q)).runEstimate
+        (budgetOfRate costConstant rate q)).runEstimate
           oracle.query).map (fun result => result.getD 0) := by
   let capP := (base q).withQueryCap
-    (globalQueryBudgetOfRate costConstant rate q)
+    (budgetOfRate costConstant rate q)
   have hcap : capP.StronglyMeasurable oracle.query :=
     hmeas.withQueryCap_stronglyMeasurable
-      (globalQueryBudgetOfRate costConstant rate q)
+      (budgetOfRate costConstant rate q)
   unfold globallyCappedValueProgramOfRate
   change ((capP.bind fun estimate => .pure (estimate.getD 0)).runEstimate
     oracle.query) = (capP.runEstimate oracle.query).map fun result => result.getD 0
@@ -73,7 +73,7 @@ theorem globallyCappedValueProgramOfRate_failure_le
       ENNReal.ofReal (13 / 64 : ℝ)) :
     (globallyCappedValueProgramOfRate costConstant rate base q).runEstimate
         oracle.query (accurateOutcome q I)ᶜ ≤ ENNReal.ofReal (1 / 4 : ℝ) := by
-  let budget := globalQueryBudgetOfRate costConstant rate q
+  let budget := budgetOfRate costConstant rate q
   let capped := (base q).withQueryCap budget
   let bad := (accurateOutcome q I)ᶜ
   let R := ENNReal.ofReal (costConstant * rate q)
@@ -185,7 +185,7 @@ theorem volumeTheorem_of_baseProgram_and_rate
         (hmeas q I oracle) (hcost q I oracle) (hbase q I oracle hrounded)
   · exact globallyCappedValueProgramOfRate_stronglyMeasurable
       costConstant rate base q I oracle (hmeas q I oracle)
-  · refine ⟨globalQueryBudgetOfRate costConstant rate q,
+  · refine ⟨budgetOfRate costConstant rate q,
       globallyCappedValueProgramOfRate_queryBound costConstant rate base q, ?_⟩
     exact le_rfl
 

@@ -61,7 +61,7 @@ theorem scheduledBalancedTransitionCollectLaw_ae_total_nonnegative
         | some target =>
             scheduledBalancedTransitionCollectLaw q I sigma2 weight
               proposalCap properStride retryLimit samples
-              (total + weight target) (accuracyScaleFactor q • target)
+              (total + weight target) (scaleFactor q • target)
       have htail : Measurable tail := by
         dsimp only [tail]
         have hcollect :=
@@ -70,11 +70,11 @@ theorem scheduledBalancedTransitionCollectLaw_ae_total_nonnegative
         have hsome : Measurable fun target : AmbientSpace q.n =>
             scheduledBalancedTransitionCollectLaw q I sigma2 weight
               proposalCap properStride retryLimit samples
-              (total + weight target) (accuracyScaleFactor q • target) :=
+              (total + weight target) (scaleFactor q • target) :=
           hcollect.comp <|
             (measurable_const.add hweight).prodMk <|
               (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-                accuracyScaleFactor q).smul measurable_id
+                scaleFactor q).smul measurable_id
         convert Measurable.optionElim
           (Measure.dirac (none : Option (ℝ × AmbientSpace q.n)))
             hsome using 1
@@ -102,7 +102,7 @@ theorem scheduledBalancedTransitionCollectLaw_ae_total_nonnegative
           simp [good, ScheduledCollectedTotalNonnegative]
       | some target =>
           exact MeasureTheory.mem_ae_iff.mp <|
-            ih (total + weight target) (accuracyScaleFactor q • target)
+            ih (total + weight target) (scaleFactor q • target)
               (add_nonneg htotal (hweight0 target))
 
 theorem gaussianRatioWeight_nonnegative (sigma2 tau2 : ℝ)
@@ -128,7 +128,7 @@ theorem scheduledBalancedCoolingRatioTransitionLaw_ae_ratio_nonnegative
   unfold scheduledBalancedCoolingRatioTransitionLaw
   apply (ae_map_iff
     (measurable_balancedCoolingAverage
-      (n := q.n) (figureOnePhaseSampleCount q sigma2)).aemeasurable
+      (n := q.n) (phaseSampleCount q sigma2)).aemeasurable
     measurableSet_scheduledCollectedTotalNonnegative).2
   filter_upwards [scheduledBalancedTransitionCollectLaw_ae_total_nonnegative
     q I hsigma2 (measurable_gaussianRatioWeight sigma2 tau2)
@@ -136,8 +136,8 @@ theorem scheduledBalancedCoolingRatioTransitionLaw_ae_ratio_nonnegative
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOnePhaseSampleCount q sigma2) 0
-      (accuracyScaleFactor q • current) (by positivity)] with result hresult
+      (phaseSampleCount q sigma2) 0
+      (scaleFactor q • current) (by positivity)] with result hresult
   cases result with
   | none => trivial
   | some result =>
@@ -156,7 +156,7 @@ theorem scheduledBalancedCoolingUniformTransitionLaw_ae_ratio_nonnegative
   unfold scheduledBalancedCoolingUniformTransitionLaw
   apply (ae_map_iff
     (measurable_balancedCoolingAverage
-      (n := q.n) (figureOneSampleCount q)).aemeasurable
+      (n := q.n) (sampleCount q)).aemeasurable
     measurableSet_scheduledCollectedTotalNonnegative).2
   filter_upwards [scheduledBalancedTransitionCollectLaw_ae_total_nonnegative
     q I hsigma2 (measurable_uniformRatioWeight sigma2)
@@ -164,8 +164,8 @@ theorem scheduledBalancedCoolingUniformTransitionLaw_ae_ratio_nonnegative
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOneSampleCount q) 0
-      (accuracyScaleFactor q • current) (by positivity)] with result hresult
+      (sampleCount q) 0
+      (scaleFactor q • current) (by positivity)] with result hresult
   cases result with
   | none => trivial
   | some result =>
@@ -316,13 +316,13 @@ theorem figureOneFinalScheduledForwardHistoryLaw_ae_phaseVariable_nonnegative
     (q : VolumeParams) (I : VolumeInput q.n) :
     ∀ᵐ history ∂scheduledBalancedForwardHistoryLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q),
-      ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+        (numPhases q),
+      ∀ j, 1 ≤ j → j ≤ numPhases q →
         0 ≤ balancedCoolingChronologicalPhaseVariable q j history := by
   filter_upwards [
     scheduledBalancedForwardHistoryLaw_ae_nonnegativeCoordinates
       figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)] with history hhistory
+        (numPhases q)] with history hhistory
   intro j hj1 hjm
   cases history with
   | none =>
@@ -347,16 +347,16 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_warm
     (history : Measure H) [IsProbabilityMeasure history]
     (state : H → AmbientSpace q.n) (hstate : Measurable state)
     (hbaseWarm : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
+      (ENNReal.ofReal (8 * warmConstant q))
       (history.map state)
       (Arlib.MarkovChains.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (pastProduct : H → ℝ)
     (nextEstimator : Option (ℝ × AmbientSpace q.n) → ℝ)
     (hpastProduct : Measurable pastProduct)
     (hnextEstimator : Measurable nextEstimator) :
-    ApproxIndepFun (figureOneDependentEpsilon q)
+    ApproxIndepFun (dependenceError q)
       (pastProduct ∘ Prod.fst) (nextEstimator ∘ Prod.snd)
       (sequentialPairLaw history
         ((fun current =>
@@ -402,35 +402,35 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_warm
       bind_figureOneFinalScheduledBalancedTransition_tvLe
         q I hsigma2 (history.map state) hbaseWarm mu hmu hwarm
   have hbudget : (delta + delta).toReal ≤
-      3 * (figureOneDependentMaxSampleCount q : ℝ) *
-        (figureOneDependentPhaseCount q : ℝ) *
-          figureOnePerSampleMixingError q := by
-    have hk : (1 : ℝ) ≤ figureOneDependentMaxSampleCount q := by
-      exact_mod_cast figureOneDependentMaxSampleCount_pos q
-    have hm : (1 : ℝ) ≤ figureOneDependentPhaseCount q := by
-      exact_mod_cast figureOneDependentPhaseCount_pos q
-    have hnu := figureOnePerSampleMixingError_pos q
+      3 * (largestSampleCount q : ℝ) *
+        (numPhases q : ℝ) *
+          sampleMixingError q := by
+    have hk : (1 : ℝ) ≤ largestSampleCount q := by
+      exact_mod_cast largestSampleCount_pos q
+    have hm : (1 : ℝ) ≤ numPhases q := by
+      exact_mod_cast numPhases_pos q
+    have hnu := sampleMixingError_pos q
     rw [ENNReal.toReal_add hdelta hdelta]
     simp only [delta, figureOneCorrectedTransitionBudget,
       ENNReal.toReal_ofReal hnu.le]
     have hkm : (1 : ℝ) ≤
-        figureOneDependentMaxSampleCount q *
-          figureOneDependentPhaseCount q := by
+        largestSampleCount q *
+          numPhases q := by
       calc
         (1 : ℝ) = 1 * 1 := by ring
-        _ ≤ figureOneDependentMaxSampleCount q *
-            figureOneDependentPhaseCount q :=
+        _ ≤ largestSampleCount q *
+            numPhases q :=
           mul_le_mul hk hm (by positivity) (by positivity)
     have hcoef : (2 : ℝ) ≤
-        3 * figureOneDependentMaxSampleCount q *
-          figureOneDependentPhaseCount q := by nlinarith
+        3 * largestSampleCount q *
+          numPhases q := by nlinarith
     calc
-      figureOnePerSampleMixingError q +
-          figureOnePerSampleMixingError q =
-        2 * figureOnePerSampleMixingError q := by ring
-      _ ≤ (3 * figureOneDependentMaxSampleCount q *
-          figureOneDependentPhaseCount q) *
-            figureOnePerSampleMixingError q :=
+      sampleMixingError q +
+          sampleMixingError q =
+        2 * sampleMixingError q := by ring
+      _ ≤ (3 * largestSampleCount q *
+          numPhases q) *
+            sampleMixingError q :=
         mul_le_mul_of_nonneg_right hcoef hnu.le
       _ = _ := by ring
   have hresult :=
@@ -441,9 +441,9 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_warm
       (figureOneFinalScheduledBalancedParameters.retryLimit q sigma2)
       samples history state hstate target hdelta hfirst pastProduct
       nextEstimator hpastProduct hnextEstimator
-      (figureOneDependentMaxSampleCount q)
-      (figureOneDependentPhaseCount q)
-      (figureOnePerSampleMixingError q) hbudget
+      (largestSampleCount q)
+      (numPhases q)
+      (sampleMixingError q) hbudget
   rw [figureOne_lemma717c_budget q] at hresult
   exact hresult
 

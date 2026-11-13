@@ -21,52 +21,52 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 
-theorem figureOnePerSampleMixingError_le_one (q : VolumeParams) :
-    figureOnePerSampleMixingError q ≤ 1 := by
+theorem sampleMixingError_le_one (q : VolumeParams) :
+    sampleMixingError q ≤ 1 := by
   have he2 : q.eps ^ 2 ≤ 1 := by nlinarith [q.heps.1, q.heps.2]
-  have ha : 1 ≤ figureOneDependentAlpha q :=
-    figureOneDependentAlpha_one_le q
-  have hk : (1 : ℝ) ≤ figureOneDependentMaxSampleCount q := by
-    exact_mod_cast figureOneDependentMaxSampleCount_pos q
-  have hm : (1 : ℝ) ≤ figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
-  unfold figureOnePerSampleMixingError figureOneDependentEpsilon
+  have ha : 1 ≤ truncationLevel q :=
+    truncationLevel_one_le q
+  have hk : (1 : ℝ) ≤ largestSampleCount q := by
+    exact_mod_cast largestSampleCount_pos q
+  have hm : (1 : ℝ) ≤ numPhases q := by
+    exact_mod_cast numPhases_pos q
+  unfold sampleMixingError dependenceError
   have hden1 : 1 ≤
-      4096 * figureOneDependentAlpha q ^ 4 *
-        (figureOneDependentPhaseCount q : ℝ) := by
-    have ha4 : 1 ≤ figureOneDependentAlpha q ^ 4 := one_le_pow₀ ha
+      4096 * truncationLevel q ^ 4 *
+        (numPhases q : ℝ) := by
+    have ha4 : 1 ≤ truncationLevel q ^ 4 := one_le_pow₀ ha
     nlinarith
   have hden2 : 1 ≤
-      3 * (figureOneDependentMaxSampleCount q : ℝ) *
-        (figureOneDependentPhaseCount q : ℝ) := by nlinarith
+      3 * (largestSampleCount q : ℝ) *
+        (numPhases q : ℝ) := by nlinarith
   have hden1pos : 0 <
-      4096 * figureOneDependentAlpha q ^ 4 *
-        (figureOneDependentPhaseCount q : ℝ) := lt_of_lt_of_le zero_lt_one hden1
+      4096 * truncationLevel q ^ 4 *
+        (numPhases q : ℝ) := lt_of_lt_of_le zero_lt_one hden1
   have hden2pos : 0 <
-      3 * (figureOneDependentMaxSampleCount q : ℝ) *
-        (figureOneDependentPhaseCount q : ℝ) := lt_of_lt_of_le zero_lt_one hden2
+      3 * (largestSampleCount q : ℝ) *
+        (numPhases q : ℝ) := lt_of_lt_of_le zero_lt_one hden2
   have hfirst : q.eps ^ 2 /
-      (4096 * figureOneDependentAlpha q ^ 4 *
-        (figureOneDependentPhaseCount q : ℝ)) ≤ 1 := by
+      (4096 * truncationLevel q ^ 4 *
+        (numPhases q : ℝ)) ≤ 1 := by
     rw [div_le_one hden1pos]
     exact he2.trans hden1
   rw [div_le_one hden2pos]
   exact hfirst.trans hden2
 
 theorem figureOneHalfPerSampleMixingError_pos (q : VolumeParams) :
-    0 < figureOnePerSampleMixingError q / 2 := by
-  positivity [figureOnePerSampleMixingError_pos q]
+    0 < sampleMixingError q / 2 := by
+  positivity [sampleMixingError_pos q]
 
 theorem figureOneHalfPerSampleMixingError_le_one (q : VolumeParams) :
-    figureOnePerSampleMixingError q / 2 ≤ 1 := by
-  have h := figureOnePerSampleMixingError_le_one q
-  nlinarith [figureOnePerSampleMixingError_pos q]
+    sampleMixingError q / 2 ≤ 1 := by
+  have h := sampleMixingError_le_one q
+  nlinarith [sampleMixingError_pos q]
 
-theorem speedyAdjacentWarmConstant_one_le (q : VolumeParams) :
-    1 ≤ speedyAdjacentWarmConstant q := by
+theorem warmConstant_one_le (q : VolumeParams) :
+    1 ≤ warmConstant q := by
   have he : 1 ≤ Real.exp (1 / 2 : ℝ) := Real.one_le_exp (by norm_num)
   have hep : 0 < Real.exp (1 / 2 : ℝ) := Real.exp_pos _
-  unfold speedyAdjacentWarmConstant
+  unfold warmConstant
   nlinarith
 
 /-- Every `2`-warm conditioning of a base law that is `M`-warm for the
@@ -83,14 +83,14 @@ theorem balancedAccuracyFirstBlock_leUpTo_figureOnePerSample
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (hwalk : 4 * ((Real.log (2 * M) +
-        2 * Real.log (1 / (figureOnePerSampleMixingError q / 2))) /
+        2 * Real.log (1 / (sampleMixingError q / 2))) /
       (figureOneProposalRadius q sigma2 * Real.log 2 /
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤
           (properStride : ℝ))
     (hcapBudget : ((properStride : ℕ) : ENNReal) *
         ENNReal.ofReal (2 * M) ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) *
-        ENNReal.ofReal (figureOnePerSampleMixingError q / 2)) :
+        ENNReal.ofReal (sampleMixingError q / 2)) :
     ∀ mu : Measure (AmbientSpace q.n),
       IsProbabilityMeasure mu → Arlib.IsWarm 2 mu rho →
       MeasureLeUpTo
@@ -100,7 +100,7 @@ theorem balancedAccuracyFirstBlock_leUpTo_figureOnePerSample
         ((Arlib.MarkovChains.ellGaussianProb
           (accuracyPhaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2).map some)
-        (ENNReal.ofReal (figureOnePerSampleMixingError q)) := by
+        (ENNReal.ofReal (sampleMixingError q)) := by
   intro mu hmu hwarm
   let _ : IsProbabilityMeasure mu := hmu
   let pi := Arlib.MarkovChains.ellGaussianProb
@@ -123,17 +123,17 @@ theorem balancedAccuracyFirstBlock_leUpTo_figureOnePerSample
             (accuracyPhaseTruncatedBody q I sigma2)
             (figureOneProposalRadius q sigma2) sigma2))
         mu properStride) pi
-      (ENNReal.ofReal (figureOnePerSampleMixingError q / 2)) := by
+      (ENNReal.ofReal (sampleMixingError q / 2)) := by
     simpa [Arlib.MarkovChains.MixesWithin, pi] using hmixWithin
   have hblock :=
     bind_balancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationary_of_isWarm
       q I hsigma2 proposalCap properStride hproposalCap mu hwarmPi
         hcapBudget hmix
-  have hhalf : 0 ≤ figureOnePerSampleMixingError q / 2 :=
+  have hhalf : 0 ≤ sampleMixingError q / 2 :=
     (figureOneHalfPerSampleMixingError_pos q).le
-  have hadd : figureOnePerSampleMixingError q / 2 +
-      figureOnePerSampleMixingError q / 2 =
-        figureOnePerSampleMixingError q := by ring
+  have hadd : sampleMixingError q / 2 +
+      sampleMixingError q / 2 =
+        sampleMixingError q := by ring
   simpa only [pi, ← ENNReal.ofReal_add hhalf hhalf, hadd] using hblock
 
 /-- The normalized stationary rejection branch satisfies the same concrete
@@ -143,13 +143,13 @@ theorem balancedAccuracyRetryBlock_leUpTo_figureOnePerSample
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (proposalCap properStride : ℕ) (hproposalCap : 0 < proposalCap)
     (hwalk : 4 * ((Real.log 2 +
-        2 * Real.log (1 / (figureOnePerSampleMixingError q / 2))) /
+        2 * Real.log (1 / (sampleMixingError q / 2))) /
       (figureOneProposalRadius q sigma2 * Real.log 2 /
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤
           (properStride : ℝ))
     (hcapBudget : ((properStride : ℕ) : ENNReal) * 2 ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) *
-        ENNReal.ofReal (figureOnePerSampleMixingError q / 2)) :
+        ENNReal.ofReal (sampleMixingError q / 2)) :
     let pi := Arlib.MarkovChains.ellGaussianProb
       (accuracyPhaseTruncatedBody q I sigma2)
       (figureOneProposalRadius q sigma2) sigma2
@@ -160,17 +160,17 @@ theorem balancedAccuracyRetryBlock_leUpTo_figureOnePerSample
         (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
           properStride)).map optionSnd)
       (pi.map some)
-      (ENNReal.ofReal (figureOnePerSampleMixingError q)) := by
+      (ENNReal.ofReal (sampleMixingError q)) := by
   have hblock := balancedRejectedRetryBlock_leUpTo_stationary
     q I hsigma2 proposalCap properStride hproposalCap
       (figureOneHalfPerSampleMixingError_pos q)
       (figureOneHalfPerSampleMixingError_le_one q)
       hwalk hcapBudget
-  have hhalf : 0 ≤ figureOnePerSampleMixingError q / 2 :=
+  have hhalf : 0 ≤ sampleMixingError q / 2 :=
     (figureOneHalfPerSampleMixingError_pos q).le
-  have hadd : figureOnePerSampleMixingError q / 2 +
-      figureOnePerSampleMixingError q / 2 =
-        figureOnePerSampleMixingError q := by ring
+  have hadd : sampleMixingError q / 2 +
+      sampleMixingError q / 2 =
+        sampleMixingError q := by ring
   simpa only [← ENNReal.ofReal_add hhalf hhalf, hadd] using hblock
 
 /-- Fully concrete phase-wise form of CV18 Lemma 7.17(c).  KLS acceptance
@@ -191,22 +191,22 @@ theorem approxIndepFun_balancedTransition_history_figureOnePerSample
         (figureOneProposalRadius q sigma2) sigma2))
     (hproposalCap : 0 < proposalCap)
     (hfirstWalk : 4 * ((Real.log (2 * M) +
-        2 * Real.log (1 / (figureOnePerSampleMixingError q / 2))) /
+        2 * Real.log (1 / (sampleMixingError q / 2))) /
       (figureOneProposalRadius q sigma2 * Real.log 2 /
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤
           (properStride : ℝ))
     (hfirstCap : ((properStride : ℕ) : ENNReal) *
         ENNReal.ofReal (2 * M) ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) *
-        ENNReal.ofReal (figureOnePerSampleMixingError q / 2))
+        ENNReal.ofReal (sampleMixingError q / 2))
     (hretryWalk : 4 * ((Real.log 2 +
-        2 * Real.log (1 / (figureOnePerSampleMixingError q / 2))) /
+        2 * Real.log (1 / (sampleMixingError q / 2))) /
       (figureOneProposalRadius q sigma2 * Real.log 2 /
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤
           (properStride : ℝ))
     (hretryCap : ((properStride : ℕ) : ENNReal) * 2 ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) *
-        ENNReal.ofReal (figureOnePerSampleMixingError q / 2))
+        ENNReal.ofReal (sampleMixingError q / 2))
     (pastProduct : H → ℝ)
     (nextEstimator : Option (AmbientSpace q.n) → ℝ)
     (hpastProduct : Measurable pastProduct)
@@ -216,11 +216,11 @@ theorem approxIndepFun_balancedTransition_history_figureOnePerSample
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2
       let rejectMass := balancedRejectedStateMeasure q I sigma2 pi Set.univ
-      let blockError := ENNReal.ofReal (figureOnePerSampleMixingError q)
+      let blockError := ENNReal.ofReal (sampleMixingError q)
       let error := blockError + rejectMass *
         balancedRetryError blockError rejectMass attempts
-      (error + error).toReal ≤ figureOneDependentEpsilon q) :
-    ApproxIndepFun (figureOneDependentEpsilon q)
+      (error + error).toReal ≤ dependenceError q) :
+    ApproxIndepFun (dependenceError q)
       (pastProduct ∘ Prod.fst) (nextEstimator ∘ Prod.snd)
       (sequentialPairLaw history
         (balancedAccuracyTransitionLawAux q I sigma2 proposalCap
@@ -247,7 +247,7 @@ theorem approxIndepFun_balancedTransition_history_figureOnePerSample
   have hrejectedLower : (2 : ENNReal)⁻¹ ≤
       balancedRejectedStateMeasure q I sigma2 pi Set.univ :=
     balancedRejectedStateMeasure_mass_ge_half q I hsigma2 pi
-  let blockError := ENNReal.ofReal (figureOnePerSampleMixingError q)
+  let blockError := ENNReal.ofReal (sampleMixingError q)
   have hblockError : blockError ≠ ⊤ := by
     exact ENNReal.ofReal_ne_top
   let _ : IsProbabilityMeasure (history.map state) :=
@@ -266,9 +266,9 @@ theorem approxIndepFun_balancedTransition_history_figureOnePerSample
       let error := blockError + rejectMass *
         balancedRetryError blockError rejectMass attempts
       (error + error).toReal ≤
-        3 * (figureOneDependentMaxSampleCount q : ℝ) *
-          (figureOneDependentPhaseCount q : ℝ) *
-            figureOnePerSampleMixingError q := by
+        3 * (largestSampleCount q : ℝ) *
+          (numPhases q : ℝ) *
+            sampleMixingError q := by
     rw [figureOne_lemma717c_budget]
     simpa only [pi, blockError] using hretryAccuracy
   have hresult :=
@@ -276,9 +276,9 @@ theorem approxIndepFun_balancedTransition_history_figureOnePerSample
       q I hsigma2 proposalCap properStride attempts history state hstate pi
         hblockError hblockError hacceptedLower hrejectedLower
         hfirstBlock hretryBlock pastProduct nextEstimator hpastProduct
-        hnextEstimator (figureOneDependentMaxSampleCount q)
-        (figureOneDependentPhaseCount q)
-        (figureOnePerSampleMixingError q) hbudget
+        hnextEstimator (largestSampleCount q)
+        (numPhases q)
+        (sampleMixingError q) hbudget
   rw [figureOne_lemma717c_budget] at hresult
   simpa only [pi, blockError] using hresult
 
@@ -299,28 +299,28 @@ theorem approxIndepFun_balancedTransition_history_adjacent_figureOnePerSample
         (scheduleValue q phase))
     (hproposalCap : 0 < proposalCap)
     (hfirstWalk :
-      let M := speedyAdjacentWarmConstant q
+      let M := warmConstant q
       let sigma2 := scheduleValue q (phase + 1)
       4 * ((Real.log (2 * M) +
-          2 * Real.log (1 / (figureOnePerSampleMixingError q / 2))) /
+          2 * Real.log (1 / (sampleMixingError q / 2))) /
         (figureOneProposalRadius q sigma2 * Real.log 2 /
           (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤
             (properStride : ℝ))
     (hfirstCap :
-      let M := speedyAdjacentWarmConstant q
+      let M := warmConstant q
       ((properStride : ℕ) : ENNReal) * ENNReal.ofReal (2 * M) ≤
         (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) *
-          ENNReal.ofReal (figureOnePerSampleMixingError q / 2))
+          ENNReal.ofReal (sampleMixingError q / 2))
     (hretryWalk :
       let sigma2 := scheduleValue q (phase + 1)
       4 * ((Real.log 2 +
-          2 * Real.log (1 / (figureOnePerSampleMixingError q / 2))) /
+          2 * Real.log (1 / (sampleMixingError q / 2))) /
         (figureOneProposalRadius q sigma2 * Real.log 2 /
           (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤
             (properStride : ℝ))
     (hretryCap : ((properStride : ℕ) : ENNReal) * 2 ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) *
-        ENNReal.ofReal (figureOnePerSampleMixingError q / 2))
+        ENNReal.ofReal (sampleMixingError q / 2))
     (pastProduct : H → ℝ)
     (nextEstimator : Option (AmbientSpace q.n) → ℝ)
     (hpastProduct : Measurable pastProduct)
@@ -331,18 +331,18 @@ theorem approxIndepFun_balancedTransition_history_adjacent_figureOnePerSample
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2
       let rejectMass := balancedRejectedStateMeasure q I sigma2 pi Set.univ
-      let blockError := ENNReal.ofReal (figureOnePerSampleMixingError q)
+      let blockError := ENNReal.ofReal (sampleMixingError q)
       let error := blockError + rejectMass *
         balancedRetryError blockError rejectMass attempts
-      (error + error).toReal ≤ figureOneDependentEpsilon q) :
+      (error + error).toReal ≤ dependenceError q) :
     let sigma2 := scheduleValue q (phase + 1)
-    ApproxIndepFun (figureOneDependentEpsilon q)
+    ApproxIndepFun (dependenceError q)
       (pastProduct ∘ Prod.fst) (nextEstimator ∘ Prod.snd)
       (sequentialPairLaw history
         (balancedAccuracyTransitionLawAux q I sigma2 proposalCap
           properStride (attempts + 1) ∘ state)) := by
   dsimp only
-  let M := speedyAdjacentWarmConstant q
+  let M := warmConstant q
   let sigma2 := scheduleValue q (phase + 1)
   have hsigma2 : 0 < sigma2 := scheduleValue_pos q (phase + 1)
   have hbaseWarm : Arlib.IsWarm (ENNReal.ofReal M) (history.map state)
@@ -354,11 +354,11 @@ theorem approxIndepFun_balancedTransition_history_adjacent_figureOnePerSample
       accuracyPhase_speedyStationary_adjacent_isWarm q I phase
   exact approxIndepFun_balancedTransition_history_figureOnePerSample
     q I hsigma2 proposalCap properStride attempts history state hstate
-      (speedyAdjacentWarmConstant_one_le q) hbaseWarm hproposalCap
+      (warmConstant_one_le q) hbaseWarm hproposalCap
       hfirstWalk hfirstCap hretryWalk hretryCap pastProduct nextEstimator
       hpastProduct hnextEstimator hretryAccuracy
 
-#print axioms figureOnePerSampleMixingError_le_one
+#print axioms sampleMixingError_le_one
 #print axioms balancedAccuracyFirstBlock_leUpTo_figureOnePerSample
 #print axioms balancedAccuracyRetryBlock_leUpTo_figureOnePerSample
 #print axioms approxIndepFun_balancedTransition_history_figureOnePerSample

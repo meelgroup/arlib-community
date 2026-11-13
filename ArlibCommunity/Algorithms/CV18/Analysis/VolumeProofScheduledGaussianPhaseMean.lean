@@ -267,7 +267,7 @@ set_option maxHeartbeats 1000000 in
 shadow, followed by the public output and averaging maps. -/
 theorem figureOneScheduledGaussianPhaseTarget_eq_map_retainedSumKernel
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ) :
-    let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+    let count := phaseSampleCount q (scheduleValue q phase)
     let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
       (scheduleValue q (phase + 1))
     let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -281,7 +281,7 @@ theorem figureOneScheduledGaussianPhaseTarget_eq_map_retainedSumKernel
         initial (count - 1)).map
           (balancedCoolingAverage count ∘ retainedSumOutput) := by
   dsimp only
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let s := scheduleValue q phase
   let t := scheduleValue q (phase + 1)
   let weight := gaussianRatioWeight (n := q.n) s t
@@ -303,7 +303,7 @@ theorem figureOneScheduledGaussianPhaseTarget_eq_map_retainedSumKernel
           (figureOneFinalScheduledBalancedParameters.proposalCap q s)
           (figureOneFinalScheduledBalancedParameters.properStride q s)
           (figureOneFinalScheduledBalancedParameters.retryLimit q s)
-          (count - 1) (weight point) (accuracyScaleFactor q • point)
+          (count - 1) (weight point) (scaleFactor q • point)
   have hs : 0 < s := scheduleValue_pos q phase
   have hweight : Measurable weight := measurable_gaussianRatioWeight s t
   have hK := figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
@@ -330,10 +330,10 @@ theorem figureOneScheduledGaussianPhaseTarget_eq_map_retainedSumKernel
           (figureOneFinalScheduledBalancedParameters.proposalCap q s)
           (figureOneFinalScheduledBalancedParameters.properStride q s)
           (figureOneFinalScheduledBalancedParameters.retryLimit q s)
-          (count - 1) (weight point) (accuracyScaleFactor q • point) := by
+          (count - 1) (weight point) (scaleFactor q • point) := by
       exact htailCollect.1.comp <| hweight.prodMk <|
         (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-          accuracyScaleFactor q).smul measurable_id
+          scaleFactor q).smul measurable_id
     convert Measurable.optionElim
       (Measure.dirac (none : Option (ℝ × AmbientSpace q.n))) hsome using 1
     funext result
@@ -402,11 +402,11 @@ theorem integral_figureOneScheduledGaussianShadow_average_lower
     {eta R : ℝ} (heta : 0 < eta) (hR : 0 < R)
     (hepsilonTop :
       2 * scheduledBalancedStationaryTargetError q +
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q ≠ ⊤)
     (hepsEta :
       (2 * scheduledBalancedStationaryTargetError q +
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q).toReal ≤ eta ^ 2)
     (hsecond :
       (∫ x, gaussianRatioWeight (n := q.n) (scheduleValue q phase)
@@ -414,7 +414,7 @@ theorem integral_figureOneScheduledGaussianShadow_average_lower
         ∂(truncatedGaussianProbability q I (scheduleValue q phase)
           (scheduleValue_pos q phase) : Measure (AmbientSpace q.n))) ≤ R ^ 2)
     (hshadowMem :
-      let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+      let count := phaseSampleCount q (scheduleValue q phase)
       let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
         (scheduleValue q (phase + 1))
       let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -431,7 +431,7 @@ theorem integral_figureOneScheduledGaussianShadow_average_lower
         ∂(truncatedGaussianProbability q I (scheduleValue q phase)
           (scheduleValue_pos q phase) : Measure (AmbientSpace q.n))) -
         2 * eta * R ≤
-      let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+      let count := phaseSampleCount q (scheduleValue q phase)
       let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
         (scheduleValue q (phase + 1))
       let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -444,7 +444,7 @@ theorem integral_figureOneScheduledGaussianShadow_average_lower
         ∂iteratedKernelLaw (fun _ => retainedSumKernel K weight)
           initial (count - 1) := by
   dsimp only
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let steps := count - 1
   let s := scheduleValue q phase
   let t := scheduleValue q (phase + 1)
@@ -461,10 +461,10 @@ theorem integral_figureOneScheduledGaussianShadow_average_lower
   have ht : 0 < t := scheduleValue_pos q (phase + 1)
   have hcount : 0 < count := by
     dsimp only [count]
-    unfold figureOnePhaseSampleCount
+    unfold phaseSampleCount
     split_ifs
-    · exact figureOneFixedSampleCount_pos q
-    · exact figureOneSampleCount_pos q
+    · exact fixedRateSampleCount_pos q
+    · exact sampleCount_pos q
   have hcountR : (0 : ℝ) < count := by exact_mod_cast hcount
   have hweight : Measurable weight := measurable_gaussianRatioWeight s t
   have hweight0 : ∀ x, 0 ≤ weight x := by
@@ -587,11 +587,11 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower
     {eta R A : ℝ} (heta : 0 < eta) (hR : 0 < R) (hA : 0 ≤ A)
     (hepsilonTop :
       2 * scheduledBalancedStationaryTargetError q +
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q ≠ ⊤)
     (hepsEta :
       (2 * scheduledBalancedStationaryTargetError q +
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q).toReal ≤ eta ^ 2)
     (hsecond :
       (∫ x, gaussianRatioWeight (n := q.n) (scheduleValue q phase)
@@ -599,7 +599,7 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower
         ∂(truncatedGaussianProbability q I (scheduleValue q phase)
           (scheduleValue_pos q phase) : Measure (AmbientSpace q.n))) ≤ R ^ 2)
     (hshadowMem :
-      let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+      let count := phaseSampleCount q (scheduleValue q phase)
       let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
         (scheduleValue q (phase + 1))
       let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -612,7 +612,7 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower
         (iteratedKernelLaw (fun _ => retainedSumKernel K weight)
           initial (count - 1)))
     (hshadowSecond :
-      let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+      let count := phaseSampleCount q (scheduleValue q phase)
       let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
         (scheduleValue q (phase + 1))
       let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -641,11 +641,11 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower
                 (fun x =>
                   (gaussianRatioWeight (n := q.n) (scheduleValue q phase)
                     (scheduleValue q (phase + 1)) x, some x)))
-            (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)).real
+            (phaseSampleCount q (scheduleValue q phase) - 1)).real
               {state | state.2 = none}) ≤
       ∫ result, figureOneScheduledTraceLiveRawOutput result
         ∂figureOneScheduledGaussianPhaseTarget q I phase := by
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let steps := count - 1
   let s := scheduleValue q phase
   let t := scheduleValue q (phase + 1)
@@ -660,10 +660,10 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower
     (fun _ => retainedSumKernel K weight) initial steps
   have hcount : 0 < count := by
     dsimp only [count]
-    unfold figureOnePhaseSampleCount
+    unfold phaseSampleCount
     split_ifs
-    · exact figureOneFixedSampleCount_pos q
-    · exact figureOneSampleCount_pos q
+    · exact fixedRateSampleCount_pos q
+    · exact sampleCount_pos q
   have hcountR : (0 : ℝ) < count := by exact_mod_cast hcount
   have hweight : Measurable weight := measurable_gaussianRatioWeight s t
   have hK := figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
@@ -747,9 +747,9 @@ theorem figureOneScheduledGaussianShadow_dead_real_le
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
     (hepsilonTop :
       2 * scheduledBalancedStationaryTargetError q +
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q ≠ ⊤) :
-    let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+    let count := phaseSampleCount q (scheduleValue q phase)
     let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
       (scheduleValue q (phase + 1))
     let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -763,7 +763,7 @@ theorem figureOneScheduledGaussianShadow_dead_real_le
       (scheduledBalancedStationaryTargetError q +
         (count - 1) • figureOneCorrectedTransitionBudget q).toReal := by
   dsimp only
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let steps := count - 1
   let s := scheduleValue q phase
   let t := scheduleValue q (phase + 1)
@@ -841,11 +841,11 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower_explicit
     {eta R A : ℝ} (heta : 0 < eta) (hR : 0 < R) (hA : 0 ≤ A)
     (hepsilonTop :
       2 * scheduledBalancedStationaryTargetError q +
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q ≠ ⊤)
     (hepsEta :
       (2 * scheduledBalancedStationaryTargetError q +
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q).toReal ≤ eta ^ 2)
     (hsecond :
       (∫ x, gaussianRatioWeight (n := q.n) (scheduleValue q phase)
@@ -853,7 +853,7 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower_explicit
         ∂(truncatedGaussianProbability q I (scheduleValue q phase)
           (scheduleValue_pos q phase) : Measure (AmbientSpace q.n))) ≤ R ^ 2)
     (hshadowMem :
-      let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+      let count := phaseSampleCount q (scheduleValue q phase)
       let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
         (scheduleValue q (phase + 1))
       let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -866,7 +866,7 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower_explicit
         (iteratedKernelLaw (fun _ => retainedSumKernel K weight)
           initial (count - 1)))
     (hshadowSecond :
-      let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+      let count := phaseSampleCount q (scheduleValue q phase)
       let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
         (scheduleValue q (phase + 1))
       let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -885,7 +885,7 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower_explicit
         2 * eta * R -
         A * Real.sqrt
           ((scheduledBalancedStationaryTargetError q +
-            (figureOnePhaseSampleCount q (scheduleValue q phase) - 1) •
+            (phaseSampleCount q (scheduleValue q phase) - 1) •
               figureOneCorrectedTransitionBudget q).toReal) ≤
       ∫ result, figureOneScheduledTraceLiveRawOutput result
         ∂figureOneScheduledGaussianPhaseTarget q I phase := by

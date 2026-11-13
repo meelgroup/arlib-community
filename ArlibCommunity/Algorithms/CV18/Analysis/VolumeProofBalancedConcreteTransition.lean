@@ -139,7 +139,7 @@ noncomputable def figureOneGlobalBalancedTransitionError
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   let rejectMass := balancedRejectedStateMeasure q I sigma2 pi Set.univ
-  let blockError := ENNReal.ofReal (figureOnePerSampleMixingError q)
+  let blockError := ENNReal.ofReal (sampleMixingError q)
   let attempts := figureOneGlobalBalancedParameters.retryLimit q sigma2 - 1
   blockError + rejectMass * balancedRetryError blockError rejectMass attempts +
     balancedStationaryTargetError q
@@ -152,21 +152,21 @@ theorem bind_figureOneGlobalBalancedTransition_tvLe_truncatedGaussian
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (rho : Measure (AmbientSpace q.n)) [IsProbabilityMeasure rho]
-    (hbaseWarm : Arlib.IsWarm (ENNReal.ofReal (speedyAdjacentWarmConstant q)) rho
+    (hbaseWarm : Arlib.IsWarm (ENNReal.ofReal (warmConstant q)) rho
       (Arlib.MarkovChains.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (hfirstCap :
       ((figureOneGlobalProperStride q sigma2 : ℕ) : ENNReal) *
-          ENNReal.ofReal (2 * speedyAdjacentWarmConstant q) ≤
+          ENNReal.ofReal (2 * warmConstant q) ≤
         (ENNReal.ofReal (1 / 2) *
             (figureOneGlobalQueryBudget q : ENNReal)) *
-          ENNReal.ofReal (figureOnePerSampleMixingError q / 2))
+          ENNReal.ofReal (sampleMixingError q / 2))
     (hretryCap :
       ((figureOneGlobalProperStride q sigma2 : ℕ) : ENNReal) * 2 ≤
         (ENNReal.ofReal (1 / 2) *
             (figureOneGlobalQueryBudget q : ENNReal)) *
-          ENNReal.ofReal (figureOnePerSampleMixingError q / 2)) :
+          ENNReal.ofReal (sampleMixingError q / 2)) :
     Arlib.TVLe
       (rho.bind
         (balancedAccuracyTransitionLawAux q I sigma2
@@ -178,19 +178,19 @@ theorem bind_figureOneGlobalBalancedTransition_tvLe_truncatedGaussian
       (figureOneGlobalBalancedTransitionError q I sigma2) := by
   let cap := figureOneGlobalQueryBudget q
   let stride := figureOneGlobalProperStride q sigma2
-  let retries := figureOneDependentMaxSampleCount q *
-    figureOneDependentPhaseCount q
+  let retries := largestSampleCount q *
+    numPhases q
   let attempts := retries - 1
   let pi := Arlib.MarkovChains.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
-  let blockError := ENNReal.ofReal (figureOnePerSampleMixingError q)
+  let blockError := ENNReal.ofReal (sampleMixingError q)
   have hcapPos : 0 < cap := figureOneGlobalQueryBudget_pos q
-  have hM : 1 ≤ speedyAdjacentWarmConstant q :=
-    speedyAdjacentWarmConstant_one_le q
+  have hM : 1 ≤ warmConstant q :=
+    warmConstant_one_le q
   have hfirstWalk :
-      4 * ((Real.log (2 * speedyAdjacentWarmConstant q) +
-          2 * Real.log (1 / (figureOnePerSampleMixingError q / 2))) /
+      4 * ((Real.log (2 * warmConstant q) +
+          2 * Real.log (1 / (sampleMixingError q / 2))) /
         (figureOneProposalRadius q sigma2 * Real.log 2 /
           (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤
         (stride : ℝ) := by
@@ -198,7 +198,7 @@ theorem bind_figureOneGlobalBalancedTransition_tvLe_truncatedGaussian
       figureOneGlobalFirstWalkRequirement_le_stride q sigma2
   have hretryWalk :
       4 * ((Real.log 2 +
-          2 * Real.log (1 / (figureOnePerSampleMixingError q / 2))) /
+          2 * Real.log (1 / (sampleMixingError q / 2))) /
         (figureOneProposalRadius q sigma2 * Real.log 2 /
           (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤
         (stride : ℝ) := by
@@ -225,8 +225,8 @@ theorem bind_figureOneGlobalBalancedTransition_tvLe_truncatedGaussian
         q I hsigma2 cap stride hcapPos hretryWalk
           (by simpa [cap, stride] using hretryCap)
   have hretriesPos : 0 < retries := by
-    exact Nat.mul_pos (figureOneDependentMaxSampleCount_pos q)
-      (figureOneDependentPhaseCount_pos q)
+    exact Nat.mul_pos (largestSampleCount_pos q)
+      (numPhases_pos q)
   have hretriesEq : attempts + 1 = retries := by
     exact Nat.sub_add_cancel (Nat.one_le_iff_ne_zero.mpr hretriesPos.ne')
   have htransition := bind_balancedTransition_tvLe_truncatedGaussian
@@ -243,16 +243,16 @@ theorem bind_figureOneGlobalBalancedTransition_adjacent_tvLe
     (hfirstCap :
       let sigma2 := scheduleValue q (phase + 1)
       ((figureOneGlobalProperStride q sigma2 : ℕ) : ENNReal) *
-          ENNReal.ofReal (2 * speedyAdjacentWarmConstant q) ≤
+          ENNReal.ofReal (2 * warmConstant q) ≤
         (ENNReal.ofReal (1 / 2) *
             (figureOneGlobalQueryBudget q : ENNReal)) *
-          ENNReal.ofReal (figureOnePerSampleMixingError q / 2))
+          ENNReal.ofReal (sampleMixingError q / 2))
     (hretryCap :
       let sigma2 := scheduleValue q (phase + 1)
       ((figureOneGlobalProperStride q sigma2 : ℕ) : ENNReal) * 2 ≤
         (ENNReal.ofReal (1 / 2) *
             (figureOneGlobalQueryBudget q : ENNReal)) *
-          ENNReal.ofReal (figureOnePerSampleMixingError q / 2)) :
+          ENNReal.ofReal (sampleMixingError q / 2)) :
     let previousSigma2 := scheduleValue q phase
     let sigma2 := scheduleValue q (phase + 1)
     let previousPi := Arlib.MarkovChains.ellGaussianProb
@@ -292,7 +292,7 @@ theorem bind_figureOneGlobalBalancedTransition_adjacent_tvLe
     Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb
       hpreviousMass0 hpreviousMassTop
   have hwarm : Arlib.IsWarm
-      (ENNReal.ofReal (speedyAdjacentWarmConstant q)) previousPi
+      (ENNReal.ofReal (warmConstant q)) previousPi
       (Arlib.MarkovChains.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2) := by
@@ -306,11 +306,11 @@ theorem bind_figureOneGlobalBalancedTransition_adjacent_tvLe
 /-- The currently available composed transition error is strictly larger
 than the entire one-per-sample exact-chance allocation, even before using the
 positive retry contribution.  Consequently a theorem bounding this expression
-by `figureOnePerSampleMixingError` cannot hold with the present allocation. -/
-theorem figureOnePerSampleMixingError_lt_globalBalancedTransitionError
+by `sampleMixingError` cannot hold with the present allocation. -/
+theorem sampleMixingError_lt_globalBalancedTransitionError
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    ENNReal.ofReal (figureOnePerSampleMixingError q) <
+    ENNReal.ofReal (sampleMixingError q) <
       figureOneGlobalBalancedTransitionError q I sigma2 := by
   unfold figureOneGlobalBalancedTransitionError
   dsimp only
@@ -320,7 +320,7 @@ theorem figureOnePerSampleMixingError_lt_globalBalancedTransitionError
           (Arlib.MarkovChains.ellGaussianProb
             (accuracyPhaseTruncatedBody q I sigma2)
             (figureOneProposalRadius q sigma2) sigma2) Set.univ *
-        balancedRetryError (ENNReal.ofReal (figureOnePerSampleMixingError q))
+        balancedRetryError (ENNReal.ofReal (sampleMixingError q))
           (balancedRejectedStateMeasure q I sigma2
             (Arlib.MarkovChains.ellGaussianProb
               (accuracyPhaseTruncatedBody q I sigma2)
@@ -328,31 +328,31 @@ theorem figureOnePerSampleMixingError_lt_globalBalancedTransitionError
           (figureOneGlobalBalancedParameters.retryLimit q sigma2 - 1) :=
     bot_le
   calc
-    ENNReal.ofReal (figureOnePerSampleMixingError q) <
-      ENNReal.ofReal (figureOnePerSampleMixingError q) +
+    ENNReal.ofReal (sampleMixingError q) <
+      ENNReal.ofReal (sampleMixingError q) +
           balancedStationaryTargetError q :=
       ENNReal.lt_add_right (by simp) htarget.ne'
-    _ ≤ ENNReal.ofReal (figureOnePerSampleMixingError q) +
+    _ ≤ ENNReal.ofReal (sampleMixingError q) +
           balancedRejectedStateMeasure q I sigma2
               (Arlib.MarkovChains.ellGaussianProb
                 (accuracyPhaseTruncatedBody q I sigma2)
                 (figureOneProposalRadius q sigma2) sigma2) Set.univ *
             balancedRetryError
-              (ENNReal.ofReal (figureOnePerSampleMixingError q))
+              (ENNReal.ofReal (sampleMixingError q))
               (balancedRejectedStateMeasure q I sigma2
                 (Arlib.MarkovChains.ellGaussianProb
                   (accuracyPhaseTruncatedBody q I sigma2)
                   (figureOneProposalRadius q sigma2) sigma2) Set.univ)
               (figureOneGlobalBalancedParameters.retryLimit q sigma2 - 1) +
           balancedStationaryTargetError q := by
-      have hbase : ENNReal.ofReal (figureOnePerSampleMixingError q) ≤
-          ENNReal.ofReal (figureOnePerSampleMixingError q) +
+      have hbase : ENNReal.ofReal (sampleMixingError q) ≤
+          ENNReal.ofReal (sampleMixingError q) +
             balancedRejectedStateMeasure q I sigma2
                 (Arlib.MarkovChains.ellGaussianProb
                   (accuracyPhaseTruncatedBody q I sigma2)
                   (figureOneProposalRadius q sigma2) sigma2) Set.univ *
               balancedRetryError
-                (ENNReal.ofReal (figureOnePerSampleMixingError q))
+                (ENNReal.ofReal (sampleMixingError q))
                 (balancedRejectedStateMeasure q I sigma2
                   (Arlib.MarkovChains.ellGaussianProb
                     (accuracyPhaseTruncatedBody q I sigma2)
@@ -365,6 +365,6 @@ theorem figureOnePerSampleMixingError_lt_globalBalancedTransitionError
 #print axioms balancedAccuracyGaussianAcceptedTargetLaw_tv_truncatedGaussian
 #print axioms bind_balancedTransition_tvLe_truncatedGaussian
 #print axioms bind_figureOneGlobalBalancedTransition_adjacent_tvLe
-#print axioms figureOnePerSampleMixingError_lt_globalBalancedTransitionError
+#print axioms sampleMixingError_lt_globalBalancedTransitionError
 
 end ArlibCommunity.Algorithms.CV18

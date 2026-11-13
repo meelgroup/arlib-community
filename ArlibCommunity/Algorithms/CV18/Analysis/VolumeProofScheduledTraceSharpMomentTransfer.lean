@@ -17,15 +17,15 @@ namespace ArlibCommunity.Algorithms.CV18
 
 theorem figureOneExecutableMomentSlack_le_one (q : VolumeParams) :
     figureOneExecutableMomentSlack q ≤ 1 := by
-  have hm : (1 : ℝ) ≤ figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
+  have hm : (1 : ℝ) ≤ numPhases q := by
+    exact_mod_cast numPhases_pos q
   have he2 : q.eps ^ 2 ≤ 1 := by nlinarith [q.heps.1, q.heps.2]
   unfold figureOneExecutableMomentSlack
   apply (div_le_one (by positivity :
-    (0 : ℝ) < 4096 * figureOneDependentPhaseCount q)).2
+    (0 : ℝ) < 4096 * numPhases q)).2
   calc
     q.eps ^ 2 ≤ 1 := he2
-    _ ≤ 4096 * (figureOneDependentPhaseCount q : ℝ) := by nlinarith
+    _ ≤ 4096 * (numPhases q : ℝ) := by nlinarith
 
 /-- Reserving one eighth of the executable slack for the mean perturbation
 and one eighth for the second-moment perturbation still fits the enlarged
@@ -76,7 +76,7 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_ideal_bounds
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         (figureOneChronologicalMomentFactor q j +
             figureOneExecutableMomentSlack q / 8) *
           figureOneIdealPhaseMean q I
@@ -84,7 +84,7 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_ideal_bounds
     (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
       ∂scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)) ≤
+        (numPhases q)) ≤
       figureOneExecutableMomentFactor q j *
         scheduledFigureOneTraceRawMean q I j ^ 2 := by
   let slack := figureOneExecutableMomentSlack q
@@ -110,7 +110,7 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_ideal_bounds
     (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         (factor + slack / 8) * idealMean ^ 2 := hsecondUpper
     _ ≤ (factor * (1 + slack) * (1 - slack / 8) ^ 2) *
           idealMean ^ 2 :=
@@ -135,14 +135,14 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_mapped_tv
     (hscalar : Arlib.TVLe
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (scheduledBalancedTracePhaseVariable q j))
       ((figureOneIdealPhaseLaw q I (figureOneChronologicalPhaseAt q j)).map
         (figureOneIdealPhaseEstimator q
           (figureOneChronologicalPhaseAt q j))) epsilon)
     (hWB : ∀ᵐ trace ∂scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q),
+        (numPhases q),
       scheduledBalancedTracePhaseVariable q j trace ≤ B)
     (hidealB : ∀ᵐ samples
         ∂figureOneIdealPhaseLaw q I (figureOneChronologicalPhaseAt q j),
@@ -162,12 +162,12 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_mapped_tv
     (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
       ∂scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)) ≤
+        (numPhases q)) ≤
       figureOneExecutableMomentFactor q j *
         scheduledFigureOneTraceRawMean q I j ^ 2 := by
   let mu := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   let phase := figureOneChronologicalPhaseAt q j
   let idealLaw := figureOneIdealPhaseLaw q I phase
   let W := scheduledBalancedTracePhaseVariable q j
@@ -252,14 +252,14 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_mapped_tv_ei
     (hscalar : Arlib.TVLe
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (scheduledBalancedTracePhaseVariable q j))
       ((figureOneIdealPhaseLaw q I (figureOneChronologicalPhaseAt q j)).map
         (figureOneIdealPhaseEstimator q
           (figureOneChronologicalPhaseAt q j))) epsilon)
     (hWB : ∀ᵐ trace ∂scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q),
+        (numPhases q),
       scheduledBalancedTracePhaseVariable q j trace ≤ B)
     (hidealB : ∀ᵐ samples
         ∂figureOneIdealPhaseLaw q I (figureOneChronologicalPhaseAt q j),
@@ -276,7 +276,7 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_mapped_tv_ei
     (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
       ∂scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)) ≤
+        (numPhases q)) ≤
       figureOneExecutableMomentFactor q j *
         scheduledFigureOneTraceRawMean q I j ^ 2 := by
   apply scheduledFigureOneTrace_second_le_executableMomentFactor_of_mapped_tv

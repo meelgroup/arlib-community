@@ -59,9 +59,9 @@ def figureOneIdealPhaseEquiv (q : VolumeParams) :
 
 noncomputable def figureOneIdealPhaseSampleCount (q : VolumeParams) :
     FigureOneIdealPhase q → ℕ
-  | .fixed _ => figureOneFixedSampleCount q
-  | .accelerated _ => figureOneSampleCount q
-  | .terminal => figureOneSampleCount q
+  | .fixed _ => fixedRateSampleCount q
+  | .accelerated _ => sampleCount q
+  | .terminal => sampleCount q
 
 abbrev FigureOneIdealPhaseSampleSpace (q : VolumeParams)
     (i : FigureOneIdealPhase q) :=
@@ -107,11 +107,11 @@ theorem idealEmpiricalAverage_memLp
 
 noncomputable def figureOneIdealPhaseEstimator (q : VolumeParams) :
     (i : FigureOneIdealPhase q) → FigureOneIdealPhaseSampleSpace q i → ℝ
-  | .fixed k => idealEmpiricalAverage (figureOneFixedSampleCount q)
+  | .fixed k => idealEmpiricalAverage (fixedRateSampleCount q)
       (gaussianRatioWeight (scheduleValue q k) (scheduleValue q (k + 1)))
-  | .accelerated k => idealEmpiricalAverage (figureOneSampleCount q)
+  | .accelerated k => idealEmpiricalAverage (sampleCount q)
       (gaussianRatioWeight (scheduleValue q k) (scheduleValue q (k + 1)))
-  | .terminal => idealEmpiricalAverage (figureOneSampleCount q)
+  | .terminal => idealEmpiricalAverage (sampleCount q)
       (uniformRatioWeight (terminalVariance q))
 
 theorem figureOneIdealPhaseEstimator_measurable
@@ -177,11 +177,11 @@ noncomputable def figureOneIdealPhaseMean
 noncomputable def figureOneIdealPhaseFactor (q : VolumeParams) :
     FigureOneIdealPhase q → ℝ
   | .fixed _ =>
-      1 + (2 / (q.n : ℝ)) / (figureOneFixedSampleCount q : ℝ)
+      1 + (2 / (q.n : ℝ)) / (fixedRateSampleCount q : ℝ)
   | .accelerated k => 1 + (scheduleValue q k / terminalVariance q) /
-      (figureOneSampleCount q : ℝ)
+      (sampleCount q : ℝ)
   | .terminal => 1 + (Real.exp (1 / 2) - 1) /
-      (figureOneSampleCount q : ℝ)
+      (sampleCount q : ℝ)
 
 /-- The sole geometric moment input still missing from the ideal product: the
 paper's sharp accelerated localization estimate on every accelerated
@@ -417,48 +417,48 @@ theorem figureOneIdealPhaseFactor_one_le
       simp only [figureOneIdealPhaseFactor]
       have hn : (0 : ℝ) < q.n := by exact_mod_cast
         (lt_of_lt_of_le (by omega : 0 < 3) q.dim_ok)
-      have hc : (0 : ℝ) < figureOneFixedSampleCount q := by
-        exact_mod_cast figureOneFixedSampleCount_pos q
+      have hc : (0 : ℝ) < fixedRateSampleCount q := by
+        exact_mod_cast fixedRateSampleCount_pos q
       have hdelta : 0 ≤ (2 / (q.n : ℝ)) /
-          (figureOneFixedSampleCount q : ℝ) := by positivity
+          (fixedRateSampleCount q : ℝ) := by positivity
       linarith
   | accelerated k =>
       simp only [figureOneIdealPhaseFactor]
-      have hc : (0 : ℝ) < figureOneSampleCount q := by
-        exact_mod_cast figureOneSampleCount_pos q
+      have hc : (0 : ℝ) < sampleCount q := by
+        exact_mod_cast sampleCount_pos q
       have hs : 0 ≤ scheduleValue q (k : Fin (terminalPhaseSteps q)) :=
         (scheduleValue_pos q k).le
       have hT : 0 ≤ terminalVariance q := (terminalVariance_pos' q).le
       have hdelta : 0 ≤ (scheduleValue q ↑k / terminalVariance q) /
-          (figureOneSampleCount q : ℝ) := div_nonneg (div_nonneg hs hT) hc.le
+          (sampleCount q : ℝ) := div_nonneg (div_nonneg hs hT) hc.le
       linarith
   | terminal =>
       simp only [figureOneIdealPhaseFactor]
-      have hc : (0 : ℝ) < figureOneSampleCount q := by
-        exact_mod_cast figureOneSampleCount_pos q
+      have hc : (0 : ℝ) < sampleCount q := by
+        exact_mod_cast sampleCount_pos q
       have he : 1 ≤ Real.exp (1 / 2) := Real.one_le_exp (by norm_num)
       have hdelta : 0 ≤ (Real.exp (1 / 2) - 1) /
-          (figureOneSampleCount q : ℝ) := div_nonneg (sub_nonneg.mpr he) hc.le
+          (sampleCount q : ℝ) := div_nonneg (sub_nonneg.mpr he) hc.le
       linarith
 
 theorem figureOneIdealPhaseFactor_product_eq (q : VolumeParams) :
     (∏ i, figureOneIdealPhaseFactor q i) =
       (∏ k : Fin (terminalPhaseSteps q),
         if scheduleValue q k ≤ 1 then
-          1 + (2 / (q.n : ℝ)) / (figureOneFixedSampleCount q : ℝ)
+          1 + (2 / (q.n : ℝ)) / (fixedRateSampleCount q : ℝ)
         else
           1 + (scheduleValue q k / terminalVariance q) /
-            (figureOneSampleCount q : ℝ)) *
+            (sampleCount q : ℝ)) *
       (1 + (Real.exp (1 / 2) - 1) /
-        (figureOneSampleCount q : ℝ)) := by
+        (sampleCount q : ℝ)) := by
   classical
   let fixedFactor : Fin (terminalPhaseSteps q) → ℝ := fun _ =>
-    1 + (2 / (q.n : ℝ)) / (figureOneFixedSampleCount q : ℝ)
+    1 + (2 / (q.n : ℝ)) / (fixedRateSampleCount q : ℝ)
   let acceleratedFactor : Fin (terminalPhaseSteps q) → ℝ := fun k =>
     1 + (scheduleValue q k / terminalVariance q) /
-      (figureOneSampleCount q : ℝ)
+      (sampleCount q : ℝ)
   let terminalFactor : ℝ := 1 + (Real.exp (1 / 2) - 1) /
-    (figureOneSampleCount q : ℝ)
+    (sampleCount q : ℝ)
   have hreindex :
       (∏ i, figureOneIdealPhaseFactor q i) =
         (∏ j :
@@ -509,21 +509,21 @@ theorem figureOneIdealPhaseFactor_product_le (q : VolumeParams) :
   rw [figureOneIdealPhaseFactor_product_eq]
   let f : ℕ → ℝ := fun k =>
     if scheduleValue q k ≤ 1 then
-      1 + (2 / (q.n : ℝ)) / (figureOneFixedSampleCount q : ℝ)
+      1 + (2 / (q.n : ℝ)) / (fixedRateSampleCount q : ℝ)
     else
       1 + (scheduleValue q k / terminalVariance q) /
-        (figureOneSampleCount q : ℝ)
+        (sampleCount q : ℝ)
   change (∏ k : Fin (terminalPhaseSteps q), f k) * _ ≤ _
   rw [Fin.prod_univ_eq_prod_range f]
   change
     ((∏ k ∈ Finset.range (terminalPhaseSteps q),
         if scheduleValue q k ≤ 1 then
-          1 + (2 / (q.n : ℝ)) / (figureOneFixedSampleCount q : ℝ)
+          1 + (2 / (q.n : ℝ)) / (fixedRateSampleCount q : ℝ)
         else
           1 + (scheduleValue q k / terminalVariance q) /
-            (figureOneSampleCount q : ℝ)) *
+            (sampleCount q : ℝ)) *
       (1 + (Real.exp (1 / 2) - 1) /
-        (figureOneSampleCount q : ℝ))) ≤ _
+        (sampleCount q : ℝ))) ≤ _
   exact idealEmpiricalProduct_factor_le q
 
 /-- The ideal independent Figure-1 product obeys the exact Chebyshev bound;

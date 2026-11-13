@@ -2,7 +2,7 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import ArlibCommunity.Algorithms.CV18.Model.Pseudocode
+import ArlibCommunity.Algorithms.CV18.Analysis.ScheduledProgram
 
 /-!
 # Model-adjacent definitions used only by the analysis
@@ -127,7 +127,7 @@ noncomputable def uniformRatioSample {n : ℕ} (K : Set (AmbientSpace n))
 
 /-- The general well-rounded rate after median confidence amplification. -/
 noncomputable def volumeComplexityRate (q : VolumeParams) : ℝ :=
-  volumeBaseComplexityRate q * protectedLog (1 / q.p)
+  baseRate q * protectedLog (1 / q.p)
 
 /-! ## Execution with query counts and the syntax-level query bound -/
 
@@ -164,49 +164,6 @@ inductive MembershipOracleProgram.QueryBound {n : ℕ} {Result : Type} :
       (next : ℝ → MembershipOracleProgram n Result)
       (budget : ℕ) (hnext : ∀ value, QueryBound (next value) budget) :
       QueryBound (.randomReal law hprob next) budget
-
-/-- The syntax-directed bound controls the charged cost from every draw index. -/
-theorem MembershipOracleProgram.QueryBound.toMembershipCostBoundFrom
-    {n : ℕ} {Result : Type} {program : MembershipOracleProgram n Result}
-    {budget : ℕ} (h : program.QueryBound budget) :
-    ∀ (drawIndex : ℕ) (oracle : AmbientSpace n → Bool)
-      (choices : MembershipCostChoices n),
-      Arlib.Computation.Charged.steps
-        (Arlib.Computation.Rate.unit Arlib.Computation.StdOp)
-        (chargedMembershipRunFrom oracle choices drawIndex program) ≤ budget := by
-  induction h with
-  | pure result budget =>
-      intro drawIndex oracle choices
-      simp only [chargedMembershipRunFrom]
-      exact (Arlib.Computation.Charged.steps_pure _ result).trans_le (Nat.zero_le budget)
-  | query point next budget hnext ih =>
-      intro drawIndex oracle choices
-      simp only [chargedMembershipRunFrom, Arlib.Computation.Charged.steps_bind,
-        Arlib.Computation.Charged.steps_op, Arlib.Computation.Charged.val_op,
-        Arlib.Computation.Rate.unit_cost]
-      have htail := ih (oracle point) drawIndex oracle choices
-      omega
-  | randomNat law next budget hnext ih =>
-      intro drawIndex oracle choices
-      simp only [chargedMembershipRunFrom]
-      exact ih (choices.randomNat drawIndex law) (drawIndex + 1) oracle choices
-  | randomPoint law hprob next budget hnext ih =>
-      intro drawIndex oracle choices
-      simp only [chargedMembershipRunFrom]
-      exact ih (choices.randomPoint drawIndex law) (drawIndex + 1) oracle choices
-  | randomReal law hprob next budget hnext ih =>
-      intro drawIndex oracle choices
-      simp only [chargedMembershipRunFrom]
-      exact ih (choices.randomReal drawIndex law) (drawIndex + 1) oracle choices
-
-/-- The existing syntax-directed bound is a certificate for the cost derived
-from Arlib's charged roster-membership operation. -/
-theorem MembershipOracleProgram.QueryBound.toMembershipCostBound
-    {n : ℕ} {Result : Type} {program : MembershipOracleProgram n Result}
-    {budget : ℕ} (h : program.QueryBound budget) :
-    program.MembershipCostBound budget := by
-  intro oracle choices
-  exact h.toMembershipCostBoundFrom 0 oracle choices
 
 /-! ## Truncated body and the general Figure 1 skeleton -/
 

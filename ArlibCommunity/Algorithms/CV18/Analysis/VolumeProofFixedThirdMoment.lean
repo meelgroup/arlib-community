@@ -347,7 +347,7 @@ theorem scheduleValue_fixedRate_thirdMoment_le_rational_mean_cube_dim_three
 This elementary lower bound supplies the factor four in the global
 dependence truncation parameter. -/
 theorem four_le_figureOneDependentPhaseCount (q : VolumeParams) :
-    4 ≤ figureOneDependentPhaseCount q := by
+    4 ≤ numPhases q := by
   have hn : (3 : ℝ) ≤ q.n := by exact_mod_cast q.dim_ok
   have hstep : ∀ {s : ℝ}, 0 ≤ s → s ≤ 1 →
       nextVariance q s ≤ s * (4 / 3 : ℝ) := by
@@ -391,14 +391,14 @@ theorem four_le_figureOneDependentPhaseCount (q : VolumeParams) :
     have heq := scheduleValue_terminal_persists q hle
       (scheduleValue_terminalPhaseSteps q)
     linarith
-  simpa [figureOneDependentPhaseCount] using Nat.add_le_add_right hterminalSteps 1
+  simpa [numPhases] using Nat.add_le_add_right hterminalSteps 1
 
 /-- A slightly longer explicit prefix is still below variance one.  This
 strengthening is useful when approximate independence has first been
 transported to the exact-coordinate reset reference, which inflates its
 coefficient by `5/2`. -/
 theorem eight_le_figureOneDependentPhaseCount (q : VolumeParams) :
-    8 ≤ figureOneDependentPhaseCount q := by
+    8 ≤ numPhases q := by
   have hn : (3 : ℝ) ≤ q.n := by exact_mod_cast q.dim_ok
   have hstep : ∀ {s : ℝ}, 0 ≤ s → s ≤ 1 →
       nextVariance q s ≤ s * (4 / 3 : ℝ) := by
@@ -450,25 +450,25 @@ theorem eight_le_figureOneDependentPhaseCount (q : VolumeParams) :
     have heq := scheduleValue_terminal_persists q hle
       (scheduleValue_terminalPhaseSteps q)
     linarith
-  simpa [figureOneDependentPhaseCount] using Nat.add_le_add_right hterminalSteps 1
+  simpa [numPhases] using Nat.add_le_add_right hterminalSteps 1
 
 /-- The final CV18 truncation parameter is at least `4096`.  This is the
 numerical threshold at which the dimension-three `L³` covariance loss fits
 one eighth of the executable moment slack. -/
-theorem figureOneDependentAlpha_ge_4096 (q : VolumeParams) :
-    (4096 : ℝ) ≤ figureOneDependentAlpha q := by
-  have hm : (4 : ℝ) ≤ figureOneDependentPhaseCount q := by
+theorem truncationLevel_ge_4096 (q : VolumeParams) :
+    (4096 : ℝ) ≤ truncationLevel q := by
+  have hm : (4 : ℝ) ≤ numPhases q := by
     exact_mod_cast four_le_figureOneDependentPhaseCount q
   have he2 : q.eps ^ 2 ≤ 1 := by nlinarith [q.heps.1, q.heps.2]
-  rw [figureOneDependentAlpha, le_div_iff₀ (sq_pos_of_pos q.heps.1)]
+  rw [truncationLevel, le_div_iff₀ (sq_pos_of_pos q.heps.1)]
   nlinarith
 
-theorem figureOneDependentAlpha_ge_8192 (q : VolumeParams) :
-    (8192 : ℝ) ≤ figureOneDependentAlpha q := by
-  have hm : (8 : ℝ) ≤ figureOneDependentPhaseCount q := by
+theorem truncationLevel_ge_8192 (q : VolumeParams) :
+    (8192 : ℝ) ≤ truncationLevel q := by
+  have hm : (8 : ℝ) ≤ numPhases q := by
     exact_mod_cast eight_le_figureOneDependentPhaseCount q
   have he2 : q.eps ^ 2 ≤ 1 := by nlinarith [q.heps.1, q.heps.2]
-  rw [figureOneDependentAlpha, le_div_iff₀ (sq_pos_of_pos q.heps.1)]
+  rw [truncationLevel, le_div_iff₀ (sq_pos_of_pos q.heps.1)]
   nlinarith
 
 /-- At the final CV18 parameters, the optimized `p = 3` covariance loss
@@ -476,23 +476,23 @@ with dimension-three fixed-phase norm constant `129/64` fits exactly in the
 `slack/8` reserve used by the phasewise capstone. -/
 theorem figureOne_fixedThirdMoment_dependence_le_slack_div_eight
     (q : VolumeParams) :
-    3 * figureOneDependentEpsilon q ^ (1 / 3 : ℝ) *
+    3 * dependenceError q ^ (1 / 3 : ℝ) *
         (129 / 64 : ℝ) ^ 2 ≤
       figureOneExecutableMomentSlack q / 8 := by
-  let d := figureOneDependentEpsilon q ^ (1 / 3 : ℝ)
-  let alpha := figureOneDependentAlpha q
+  let d := dependenceError q ^ (1 / 3 : ℝ)
+  let alpha := truncationLevel q
   let slack := figureOneExecutableMomentSlack q
-  have hepsilon : 0 < figureOneDependentEpsilon q := by
-    unfold figureOneDependentEpsilon
-    have hm : (0 : ℝ) < figureOneDependentPhaseCount q := by
-      exact_mod_cast figureOneDependentPhaseCount_pos q
+  have hepsilon : 0 < dependenceError q := by
+    unfold dependenceError
+    have hm : (0 : ℝ) < numPhases q := by
+      exact_mod_cast numPhases_pos q
     exact div_pos (sq_pos_of_pos q.heps.1)
       (mul_pos
-        (mul_pos (by norm_num) (pow_pos (figureOneDependentAlpha_pos q) 4)) hm)
+        (mul_pos (by norm_num) (pow_pos (truncationLevel_pos q) 4)) hm)
   have hd0 : 0 ≤ d := by dsimp [d]; positivity
   have hslack0 : 0 ≤ slack / 8 := by
     exact div_nonneg (figureOneExecutableMomentSlack_nonneg q) (by norm_num)
-  have hdcube : d ^ 3 = figureOneDependentEpsilon q := by
+  have hdcube : d ^ 3 = dependenceError q := by
     dsimp [d]
     convert Real.rpow_inv_natCast_pow hepsilon.le
       (by norm_num : (3 : ℕ) ≠ 0) using 1
@@ -501,16 +501,16 @@ theorem figureOne_fixedThirdMoment_dependence_le_slack_div_eight
     (mul_nonneg (mul_nonneg (by norm_num) hd0) (sq_nonneg _))
     hslack0 (by norm_num : (3 : ℕ) ≠ 0)).mp
   have halpha : (4096 : ℝ) ≤ alpha := by
-    simpa [alpha] using figureOneDependentAlpha_ge_4096 q
+    simpa [alpha] using truncationLevel_ge_4096 q
   have halphaPos : 0 < alpha := lt_of_lt_of_le (by norm_num) halpha
   have halphaSq : (4096 : ℝ) ^ 2 ≤ alpha ^ 2 :=
     pow_le_pow_left₀ (by norm_num) halpha 2
   rw [show (3 * d * (129 / 64 : ℝ) ^ 2) ^ 3 =
       3 ^ 3 * d ^ 3 * (129 / 64 : ℝ) ^ 6 by ring,
     hdcube]
-  have hdependent : figureOneDependentEpsilon q = slack / alpha ^ 4 := by
+  have hdependent : dependenceError q = slack / alpha ^ 4 := by
     simpa [slack, alpha] using
-      figureOneDependentEpsilon_eq_slack_div_alpha_four q
+      dependenceError_eq_slack_div_alpha_four q
   have hslack : slack = 1 / (4 * alpha) := by
     simpa [slack, alpha] using
       figureOneExecutableMomentSlack_eq_inv_four_alpha q
@@ -523,20 +523,20 @@ theorem figureOne_fixedThirdMoment_dependence_le_slack_div_eight
 reference. -/
 theorem figureOne_fixedThirdMoment_reset_dependence_le_slack_div_eight
     (q : VolumeParams) :
-    3 * ((5 / 2 : ℝ) * figureOneDependentEpsilon q) ^ (1 / 3 : ℝ) *
+    3 * ((5 / 2 : ℝ) * dependenceError q) ^ (1 / 3 : ℝ) *
         (129 / 64 : ℝ) ^ 2 ≤
       figureOneExecutableMomentSlack q / 8 := by
-  let epsilon := (5 / 2 : ℝ) * figureOneDependentEpsilon q
+  let epsilon := (5 / 2 : ℝ) * dependenceError q
   let d := epsilon ^ (1 / 3 : ℝ)
-  let alpha := figureOneDependentAlpha q
+  let alpha := truncationLevel q
   let slack := figureOneExecutableMomentSlack q
-  have hdependentPos : 0 < figureOneDependentEpsilon q := by
-    unfold figureOneDependentEpsilon
-    have hm : (0 : ℝ) < figureOneDependentPhaseCount q := by
-      exact_mod_cast figureOneDependentPhaseCount_pos q
+  have hdependentPos : 0 < dependenceError q := by
+    unfold dependenceError
+    have hm : (0 : ℝ) < numPhases q := by
+      exact_mod_cast numPhases_pos q
     exact div_pos (sq_pos_of_pos q.heps.1)
       (mul_pos
-        (mul_pos (by norm_num) (pow_pos (figureOneDependentAlpha_pos q) 4)) hm)
+        (mul_pos (by norm_num) (pow_pos (truncationLevel_pos q) 4)) hm)
   have hepsilon : 0 < epsilon := mul_pos (by norm_num) hdependentPos
   have hd0 : 0 ≤ d := by dsimp [d]; positivity
   have hslack0 : 0 ≤ slack / 8 := by
@@ -551,16 +551,16 @@ theorem figureOne_fixedThirdMoment_reset_dependence_le_slack_div_eight
     (mul_nonneg (mul_nonneg (by norm_num) hd0) (sq_nonneg _))
     hslack0 (by norm_num : (3 : ℕ) ≠ 0)).mp
   have halpha : (8192 : ℝ) ≤ alpha := by
-    simpa [alpha] using figureOneDependentAlpha_ge_8192 q
+    simpa [alpha] using truncationLevel_ge_8192 q
   have halphaPos : 0 < alpha := lt_of_lt_of_le (by norm_num) halpha
   have halphaSq : (8192 : ℝ) ^ 2 ≤ alpha ^ 2 :=
     pow_le_pow_left₀ (by norm_num) halpha 2
   rw [show (3 * d * (129 / 64 : ℝ) ^ 2) ^ 3 =
       3 ^ 3 * d ^ 3 * (129 / 64 : ℝ) ^ 6 by ring,
     hdcube]
-  have hdependent : figureOneDependentEpsilon q = slack / alpha ^ 4 := by
+  have hdependent : dependenceError q = slack / alpha ^ 4 := by
     simpa [slack, alpha] using
-      figureOneDependentEpsilon_eq_slack_div_alpha_four q
+      dependenceError_eq_slack_div_alpha_four q
   have hslack : slack = 1 / (4 * alpha) := by
     simpa [slack, alpha] using
       figureOneExecutableMomentSlack_eq_inv_four_alpha q
@@ -573,7 +573,7 @@ theorem figureOne_fixedThirdMoment_reset_dependence_le_slack_div_eight
 dependence coefficient is bounded by `5/2` of the original allocation. -/
 theorem figureOne_fixedThirdMoment_dependence_le_slack_div_eight_of_le_reset
     (q : VolumeParams) {epsilon : ℝ} (hepsilon : 0 ≤ epsilon)
-    (hle : epsilon ≤ (5 / 2 : ℝ) * figureOneDependentEpsilon q) :
+    (hle : epsilon ≤ (5 / 2 : ℝ) * dependenceError q) :
     3 * epsilon ^ (1 / 3 : ℝ) * (129 / 64 : ℝ) ^ 2 ≤
       figureOneExecutableMomentSlack q / 8 := by
   have hrpow := Real.rpow_le_rpow hepsilon hle (by norm_num : (0 : ℝ) ≤ 1 / 3)
@@ -585,7 +585,7 @@ theorem figureOne_fixedThirdMoment_dependence_le_slack_div_eight_of_le_reset
 moment (including the finite-count factor) fits the capstone reserve. -/
 theorem figureOne_fixedThirdMoment_average_dependence_le_slack_div_eight
     (q : VolumeParams) {count : ℕ} (hcount : 0 < count) (mean : ℝ) :
-    3 * figureOneDependentEpsilon q ^ (1 / 3 : ℝ) *
+    3 * dependenceError q ^ (1 / 3 : ℝ) *
         (1 - 1 / (count : ℝ)) *
           ((129 / 64 : ℝ) * mean) ^ 2 ≤
       figureOneExecutableMomentSlack q / 8 * mean ^ 2 := by
@@ -602,9 +602,9 @@ theorem figureOne_fixedThirdMoment_average_dependence_le_slack_div_eight
   have hslack0 : 0 ≤ figureOneExecutableMomentSlack q / 8 :=
     div_nonneg (figureOneExecutableMomentSlack_nonneg q) (by norm_num)
   calc
-    3 * figureOneDependentEpsilon q ^ (1 / 3 : ℝ) *
+    3 * dependenceError q ^ (1 / 3 : ℝ) *
           (1 - 1 / (count : ℝ)) * ((129 / 64 : ℝ) * mean) ^ 2 =
-        (3 * figureOneDependentEpsilon q ^ (1 / 3 : ℝ) *
+        (3 * dependenceError q ^ (1 / 3 : ℝ) *
           (129 / 64 : ℝ) ^ 2) *
             (1 - 1 / (count : ℝ)) * mean ^ 2 := by ring
     _ ≤ (figureOneExecutableMomentSlack q / 8) * 1 * mean ^ 2 := by
@@ -624,8 +624,8 @@ theorem figureOne_fixedThirdMoment_average_dependence_le_slack_div_eight
   scheduleValue_fixedRate_thirdMoment_le_rational_mean_cube_dim_three
 #print axioms four_le_figureOneDependentPhaseCount
 #print axioms eight_le_figureOneDependentPhaseCount
-#print axioms figureOneDependentAlpha_ge_4096
-#print axioms figureOneDependentAlpha_ge_8192
+#print axioms truncationLevel_ge_4096
+#print axioms truncationLevel_ge_8192
 #print axioms figureOne_fixedThirdMoment_dependence_le_slack_div_eight
 #print axioms figureOne_fixedThirdMoment_reset_dependence_le_slack_div_eight
 #print axioms

@@ -514,7 +514,7 @@ theorem scheduledBalancedTransitionCollectLaw_eq_map_retainedSumKernel
     (proposalCap properStride retryLimit : ℕ) : ∀ samples total current,
     scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
         properStride retryLimit samples total
-          (accuracyScaleFactor q • current) =
+          (scaleFactor q • current) =
       (iteratedKernelLaw
         (fun _ => retainedSumKernel
           (scheduledBalancedRetainedOptionKernel q I sigma2 proposalCap
@@ -546,7 +546,7 @@ theorem scheduledBalancedTransitionCollectLaw_eq_map_retainedSumKernel
         iteratedKernelLaw_zero]
       rw [Measure.map_dirac' hout]
       congr 3
-      exact inv_smul_smul₀ (accuracyScaleFactor_pos q).ne' current
+      exact inv_smul_smul₀ (scaleFactor_pos q).ne' current
   | succ samples ih =>
       intro total current
       let R := retainedSumKernel K weight
@@ -563,7 +563,7 @@ theorem scheduledBalancedTransitionCollectLaw_eq_map_retainedSumKernel
       have hmix := bind_iteratedKernelLaw_dirac_eq_iteratedKernelLaw_map
         (fun _ => R) (fun _ => hsum.1) (fun _ _ => hsum.2 _)
         (scheduledBalancedAccuracyTransitionLawAux q I sigma2 proposalCap
-          properStride retryLimit (accuracyScaleFactor q • current))
+          properStride retryLimit (scaleFactor q • current))
         (fun next => update ((total, some current), next))
         (hupdate.comp (measurable_const.prodMk measurable_id)) samples
       rw [scheduledBalancedTransitionCollectLaw]
@@ -576,11 +576,11 @@ theorem scheduledBalancedTransitionCollectLaw_eq_map_retainedSumKernel
         (R (total, some current)) samples).map retainedSumOutput
       have hRstart : R (total, some current) =
           (scheduledBalancedAccuracyTransitionLawAux q I sigma2 proposalCap
-            properStride retryLimit (accuracyScaleFactor q • current)).map
+            properStride retryLimit (scaleFactor q • current)).map
               (fun next => update ((total, some current), next)) := by rfl
       rw [hRstart, ← hmix]
       let T := scheduledBalancedAccuracyTransitionLawAux q I sigma2 proposalCap
-        properStride retryLimit (accuracyScaleFactor q • current)
+        properStride retryLimit (scaleFactor q • current)
       let F : Option (AmbientSpace q.n) →
           Measure (ℝ × Option (AmbientSpace q.n)) := fun next =>
         iteratedKernelLaw (fun _ => R)
@@ -594,7 +594,7 @@ theorem scheduledBalancedTransitionCollectLaw_eq_map_retainedSumKernel
           | some target =>
               scheduledBalancedTransitionCollectLaw q I sigma2 weight
                 proposalCap properStride retryLimit samples
-                (total + weight target) (accuracyScaleFactor q • target)) =
+                (total + weight target) (scaleFactor q • target)) =
         (T.bind F).map retainedSumOutput
       calc
         _ = T.bind (fun next => (F next).map retainedSumOutput) := by

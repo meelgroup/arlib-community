@@ -170,15 +170,15 @@ noncomputable def continuousMetropolisProposalProgram {n : ℕ}
     MembershipOracleProgram n (AmbientSpace n) :=
   .query proposal fun inside =>
     if inside then
-      .randomReal uniformUnitIntervalMeasure inferInstance fun coin =>
-        .pure <| if coin ≤ gaussianMetropolisAcceptance sigma2 current proposal
+      .randomReal uniformUnit inferInstance fun coin =>
+        .pure <| if coin ≤ metropolisAcceptance sigma2 current proposal
           then proposal else current
     else .pure current
 
 noncomputable def continuousMetropolisBallStep {n : ℕ}
     (sigma2 delta : ℝ) (current : AmbientSpace n) :
     MembershipOracleProgram n (AmbientSpace n) :=
-  .randomPoint (uniformClosedBallMeasure n current delta) inferInstance fun proposal =>
+  .randomPoint (uniformBall n current delta) inferInstance fun proposal =>
     continuousMetropolisProposalProgram sigma2 current proposal
 
 theorem continuousMetropolisBallStep_fixedQueryCount {n : ℕ}
@@ -300,8 +300,8 @@ theorem measurable_measure_bind_param_variable
 
 theorem measurable_uniformClosedBallMeasure (n : ℕ) (radius : ℝ) :
     Measurable fun center : AmbientSpace n =>
-      uniformClosedBallMeasure n center radius := by
-  unfold uniformClosedBallMeasure
+      uniformBall n center radius := by
+  unfold uniformBall
   apply measurable_measure_map_param
   fun_prop
 
@@ -310,8 +310,8 @@ noncomputable def continuousMetropolisProposalLaw {n : ℕ}
     (oracle : AmbientSpace n → Bool) (sigma2 : ℝ)
     (current proposal : AmbientSpace n) : Measure (AmbientSpace n × ℕ) :=
   if oracle proposal then
-    uniformUnitIntervalMeasure.map fun coin =>
-      ((if coin ≤ gaussianMetropolisAcceptance sigma2 current proposal
+    uniformUnit.map fun coin =>
+      ((if coin ≤ metropolisAcceptance sigma2 current proposal
           then proposal else current), 1)
   else Measure.dirac (current, 1)
 
@@ -320,16 +320,16 @@ theorem measurable_continuousMetropolisProposalLaw {n : ℕ}
     Measurable fun p : AmbientSpace n × AmbientSpace n =>
       continuousMetropolisProposalLaw oracle.query sigma2 p.1 p.2 := by
   have haccept : Measurable fun p : AmbientSpace n × AmbientSpace n =>
-      gaussianMetropolisAcceptance sigma2 p.1 p.2 := by
-    unfold gaussianMetropolisAcceptance
+      metropolisAcceptance sigma2 p.1 p.2 := by
+    unfold metropolisAcceptance
     fun_prop
   have hout : Measurable fun p :
       (AmbientSpace n × AmbientSpace n) × ℝ =>
-      ((if p.2 ≤ gaussianMetropolisAcceptance sigma2 p.1.1 p.1.2
+      ((if p.2 ≤ metropolisAcceptance sigma2 p.1.1 p.1.2
           then p.1.2 else p.1.1), 1) := by
     have hpoint : Measurable fun p :
         (AmbientSpace n × AmbientSpace n) × ℝ =>
-        if p.2 ≤ gaussianMetropolisAcceptance sigma2 p.1.1 p.1.2
+        if p.2 ≤ metropolisAcceptance sigma2 p.1.1 p.1.2
           then p.1.2 else p.1.1 := Measurable.ite
       (measurableSet_le measurable_snd (haccept.comp measurable_fst))
       (measurable_snd.comp measurable_fst)
@@ -339,7 +339,7 @@ theorem measurable_continuousMetropolisProposalLaw {n : ℕ}
   apply Measurable.ite
   · change MeasurableSet ((oracle.query ∘ Prod.snd) ⁻¹' {true})
     exact (oracle.measurable_query.comp measurable_snd) (measurableSet_singleton true)
-  · exact measurable_measure_map_param uniformUnitIntervalMeasure hout
+  · exact measurable_measure_map_param uniformUnit hout
   · exact Measure.measurable_dirac.comp (measurable_fst.prodMk measurable_const)
 
 theorem continuousMetropolisProposalLaw_isProbabilityMeasure {n : ℕ}
@@ -350,7 +350,7 @@ theorem continuousMetropolisProposalLaw_isProbabilityMeasure {n : ℕ}
   unfold continuousMetropolisProposalLaw
   split
   · have hcoin : Measurable fun coin : ℝ =>
-        ((if coin ≤ gaussianMetropolisAcceptance sigma2 current proposal
+        ((if coin ≤ metropolisAcceptance sigma2 current proposal
             then proposal else current), 1) :=
       (Measurable.ite (measurableSet_le measurable_id measurable_const)
         measurable_const measurable_const).prodMk measurable_const
@@ -366,19 +366,19 @@ theorem run_continuousMetropolisProposalProgram {n : ℕ}
   simp only [MembershipOracleProgram.run, apply_ite]
   split
   · have hcoin : Measurable fun coin : ℝ =>
-        ((if coin ≤ gaussianMetropolisAcceptance sigma2 current proposal
+        ((if coin ≤ metropolisAcceptance sigma2 current proposal
             then proposal else current), 0) :=
       (Measurable.ite (measurableSet_le measurable_id measurable_const)
         measurable_const measurable_const).prodMk measurable_const
     rw [show (fun value : ℝ =>
-        if value ≤ gaussianMetropolisAcceptance sigma2 current proposal
+        if value ≤ metropolisAcceptance sigma2 current proposal
           then Measure.dirac (proposal, 0) else Measure.dirac (current, 0)) =
         (fun value => Measure.dirac
-          ((if value ≤ gaussianMetropolisAcceptance sigma2 current proposal
+          ((if value ≤ metropolisAcceptance sigma2 current proposal
               then proposal else current), 0)) by
       funext value
       split_ifs <;> rfl]
-    rw [Measure.bind_dirac_eq_map uniformUnitIntervalMeasure hcoin]
+    rw [Measure.bind_dirac_eq_map uniformUnit hcoin]
     rw [Measure.map_map (by fun_prop) hcoin]
     congr 1
   · rw [Measure.map_dirac]
@@ -388,7 +388,7 @@ as centered offsets avoids a parameter-dependent source measure. -/
 noncomputable def continuousMetropolisBallStepLaw {n : ℕ}
     (oracle : AmbientSpace n → Bool) (sigma2 delta : ℝ)
     (current : AmbientSpace n) : Measure (AmbientSpace n × ℕ) :=
-  (centeredClosedBallMeasure n delta).bind fun offset =>
+  (centeredBall n delta).bind fun offset =>
     continuousMetropolisProposalLaw oracle sigma2 current (current + offset)
 
 theorem measurable_continuousMetropolisBallStepLaw {n : ℕ}
@@ -435,7 +435,7 @@ theorem run_continuousMetropolisBallStep {n : ℕ}
   have hoffset : Measurable fun offset : AmbientSpace n =>
       continuousMetropolisProposalLaw oracle.query sigma2 current (current + offset) :=
     hproposal.comp (measurable_const.add measurable_id)
-  unfold continuousMetropolisBallStepLaw uniformClosedBallMeasure
+  unfold continuousMetropolisBallStepLaw uniformBall
   rw [Measure.bind_apply hs hproposal.aemeasurable,
     Measure.bind_apply hs hoffset.aemeasurable]
   exact lintegral_map (Measure.measurable_coe hs |>.comp hproposal)
@@ -455,36 +455,36 @@ theorem continuousMetropolisBallStep_executionMeasurable
     · change MeasurableSet (oracle.query ⁻¹' {true})
       exact oracle.measurable_query (measurableSet_singleton true)
     · have haccept : Measurable fun point : AmbientSpace n =>
-          gaussianMetropolisAcceptance sigma2 current point := by
-        unfold gaussianMetropolisAcceptance
+          metropolisAcceptance sigma2 current point := by
+        unfold metropolisAcceptance
         fun_prop
       have hout : Measurable fun p : AmbientSpace n × ℝ =>
-          ((if p.2 ≤ gaussianMetropolisAcceptance sigma2 current p.1
+          ((if p.2 ≤ metropolisAcceptance sigma2 current p.1
               then p.1 else current), 1) := by
         exact (Measurable.ite
           (measurableSet_le measurable_snd (haccept.comp measurable_fst))
           measurable_fst measurable_const).prodMk measurable_const
       have hmap : Measurable fun point : AmbientSpace n =>
-          uniformUnitIntervalMeasure.map fun coin =>
-            ((if coin ≤ gaussianMetropolisAcceptance sigma2 current point
+          uniformUnit.map fun coin =>
+            ((if coin ≤ metropolisAcceptance sigma2 current point
                 then point else current), 1) :=
-        measurable_measure_map_param uniformUnitIntervalMeasure hout
+        measurable_measure_map_param uniformUnit hout
       convert hmap using 1
       funext point
       have hcoin : Measurable fun coin : ℝ =>
-          ((if coin ≤ gaussianMetropolisAcceptance sigma2 current point
+          ((if coin ≤ metropolisAcceptance sigma2 current point
               then point else current), 0) :=
         (Measurable.ite (measurableSet_le measurable_id measurable_const)
           measurable_const measurable_const).prodMk measurable_const
       rw [show (fun value : ℝ =>
-          if value ≤ gaussianMetropolisAcceptance sigma2 current point
+          if value ≤ metropolisAcceptance sigma2 current point
             then Measure.dirac (point, 0) else Measure.dirac (current, 0)) =
           (fun value => Measure.dirac
-            ((if value ≤ gaussianMetropolisAcceptance sigma2 current point
+            ((if value ≤ metropolisAcceptance sigma2 current point
                 then point else current), 0)) by
         funext value
         split_ifs <;> rfl]
-      rw [Measure.bind_dirac_eq_map uniformUnitIntervalMeasure hcoin]
+      rw [Measure.bind_dirac_eq_map uniformUnit hcoin]
       rw [Measure.map_map (by fun_prop) hcoin]
       congr 1
     · fun_prop
@@ -492,8 +492,8 @@ theorem continuousMetropolisBallStep_executionMeasurable
     change MembershipOracleProgram.ExecutionMeasurable oracle.query
       (.query proposal fun inside =>
         if inside then
-          .randomReal uniformUnitIntervalMeasure inferInstance fun coin =>
-            .pure <| if coin ≤ gaussianMetropolisAcceptance sigma2 current proposal
+          .randomReal uniformUnit inferInstance fun coin =>
+            .pure <| if coin ≤ metropolisAcceptance sigma2 current proposal
               then proposal else current
         else .pure current)
     simp only [MembershipOracleProgram.ExecutionMeasurable]

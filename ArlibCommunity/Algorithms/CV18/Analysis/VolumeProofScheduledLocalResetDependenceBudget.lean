@@ -21,38 +21,38 @@ noncomputable section
 selected for Lemma 7.17(c). -/
 theorem five_mul_figureOnePerSampleMixingError_le_dependentEpsilon
     (q : VolumeParams) :
-    5 * figureOnePerSampleMixingError q ≤
-      figureOneDependentEpsilon q := by
-  have hnu : 0 < figureOnePerSampleMixingError q :=
-    figureOnePerSampleMixingError_pos q
-  have hsampleLower := figureOneSampleCount_cast_lower q
+    5 * sampleMixingError q ≤
+      dependenceError q := by
+  have hnu : 0 < sampleMixingError q :=
+    sampleMixingError_pos q
+  have hsampleLower := sampleCount_cast_lower q
   have hlog : (1 : ℝ) ≤ protectedLog (terminalVariance q) :=
     le_max_left _ _
   have hepsSqPos : 0 < q.eps ^ 2 := sq_pos_of_pos q.heps.1
   have hepsSqOne : q.eps ^ 2 ≤ 1 := by
     nlinarith [q.heps.1, q.heps.2]
-  have htwoSampleReal : (2 : ℝ) ≤ figureOneSampleCount q := by
+  have htwoSampleReal : (2 : ℝ) ≤ sampleCount q := by
     apply le_trans (b :=
       512 * protectedLog (terminalVariance q) / q.eps ^ 2)
     · rw [le_div_iff₀ hepsSqPos]
       nlinarith
     · exact hsampleLower
-  have htwoMax : (2 : ℝ) ≤ figureOneDependentMaxSampleCount q := by
+  have htwoMax : (2 : ℝ) ≤ largestSampleCount q := by
     exact htwoSampleReal.trans <| by
       exact_mod_cast (le_max_right
-        (figureOneFixedSampleCount q) (figureOneSampleCount q))
-  have hphase : (1 : ℝ) ≤ figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
-  have hmax0 : (0 : ℝ) ≤ figureOneDependentMaxSampleCount q := by positivity
+        (fixedRateSampleCount q) (sampleCount q))
+  have hphase : (1 : ℝ) ≤ numPhases q := by
+    exact_mod_cast numPhases_pos q
+  have hmax0 : (0 : ℝ) ≤ largestSampleCount q := by positivity
   have hmaxPhase :
-      (figureOneDependentMaxSampleCount q : ℝ) ≤
-        figureOneDependentMaxSampleCount q *
-          figureOneDependentPhaseCount q := by
+      (largestSampleCount q : ℝ) ≤
+        largestSampleCount q *
+          numPhases q := by
     simpa only [mul_one] using
       mul_le_mul_of_nonneg_left hphase hmax0
   have hfactor : (5 : ℝ) ≤
-      3 * figureOneDependentMaxSampleCount q *
-        figureOneDependentPhaseCount q := by
+      3 * largestSampleCount q *
+        numPhases q := by
     nlinarith
   have hscaled := mul_le_mul_of_nonneg_right hfactor hnu.le
   rw [figureOne_lemma717c_budget q] at hscaled
@@ -62,24 +62,24 @@ theorem five_mul_figureOnePerSampleMixingError_le_dependentEpsilon
 chronological phases and at least one sample in the uniform bound. -/
 theorem six_mul_figureOnePerSampleMixingError_le_dependentEpsilon
     (q : VolumeParams) :
-    6 * figureOnePerSampleMixingError q ≤
-      figureOneDependentEpsilon q := by
-  have hnu : 0 < figureOnePerSampleMixingError q :=
-    figureOnePerSampleMixingError_pos q
-  have hmax : (1 : ℝ) ≤ figureOneDependentMaxSampleCount q := by
-    exact_mod_cast figureOneDependentMaxSampleCount_pos q
-  have hphase : (2 : ℝ) ≤ figureOneDependentPhaseCount q := by
-    rw [figureOneDependentPhaseCount]
+    6 * sampleMixingError q ≤
+      dependenceError q := by
+  have hnu : 0 < sampleMixingError q :=
+    sampleMixingError_pos q
+  have hmax : (1 : ℝ) ≤ largestSampleCount q := by
+    exact_mod_cast largestSampleCount_pos q
+  have hphase : (2 : ℝ) ≤ numPhases q := by
+    rw [numPhases]
     exact_mod_cast Nat.succ_le_succ (terminalPhaseSteps_pos q)
   have hproduct : (2 : ℝ) ≤
-      figureOneDependentMaxSampleCount q *
-        figureOneDependentPhaseCount q := by
+      largestSampleCount q *
+        numPhases q := by
     have := mul_le_mul hmax hphase (by norm_num : (0 : ℝ) ≤ 2)
-      (by positivity : (0 : ℝ) ≤ figureOneDependentMaxSampleCount q)
+      (by positivity : (0 : ℝ) ≤ largestSampleCount q)
     simpa only [one_mul] using this
   have hfactor : (6 : ℝ) ≤
-      3 * figureOneDependentMaxSampleCount q *
-        figureOneDependentPhaseCount q := by
+      3 * largestSampleCount q *
+        numPhases q := by
     nlinarith
   have hscaled := mul_le_mul_of_nonneg_right hfactor hnu.le
   rw [figureOne_lemma717c_budget q] at hscaled
@@ -90,15 +90,15 @@ phase with at most the global maximum number of samples fits in the `5/2`
 reference-side Lemma 7.17(c) allowance. -/
 theorem figureOne_localTransitionReset_dependence_le
     (q : VolumeParams) {count : ℕ}
-    (hcount : count ≤ figureOneDependentMaxSampleCount q) :
+    (hcount : count ≤ largestSampleCount q) :
     (2 * figureOneCorrectedTransitionBudget q).toReal +
         3 * (figureOneCorrectedTransitionBudget q +
           scheduledResetReferenceError q (count - 1)).toReal ≤
-      (5 / 2 : ℝ) * figureOneDependentEpsilon q := by
+      (5 / 2 : ℝ) * dependenceError q := by
   let delta := figureOneCorrectedTransitionBudget q
   let reset := scheduledResetReferenceError q (count - 1)
-  have hnu : 0 < figureOnePerSampleMixingError q :=
-    figureOnePerSampleMixingError_pos q
+  have hnu : 0 < sampleMixingError q :=
+    sampleMixingError_pos q
   have hdeltaTop : delta ≠ ⊤ := by
     simp [delta, figureOneCorrectedTransitionBudget]
   have hresetTop : reset ≠ ⊤ := by
@@ -121,17 +121,17 @@ not change the score-history law.  Even if it is retained syntactically
 inside the perturbation term, the same `5/2` coefficient still suffices. -/
 theorem figureOne_localTransitionResetStationary_dependence_le
     (q : VolumeParams) {count : ℕ}
-    (hcount : count ≤ figureOneDependentMaxSampleCount q) :
+    (hcount : count ≤ largestSampleCount q) :
     (2 * figureOneCorrectedTransitionBudget q).toReal +
         3 * (figureOneCorrectedTransitionBudget q +
           scheduledResetReferenceError q (count - 1) +
             scheduledBalancedStationaryTargetError q).toReal ≤
-      (5 / 2 : ℝ) * figureOneDependentEpsilon q := by
+      (5 / 2 : ℝ) * dependenceError q := by
   let delta := figureOneCorrectedTransitionBudget q
   let reset := scheduledResetReferenceError q (count - 1)
   let stationary := scheduledBalancedStationaryTargetError q
-  have hnu : 0 < figureOnePerSampleMixingError q :=
-    figureOnePerSampleMixingError_pos q
+  have hnu : 0 < sampleMixingError q :=
+    sampleMixingError_pos q
   have hdeltaTop : delta ≠ ⊤ := by
     simp [delta, figureOneCorrectedTransitionBudget]
   have hresetTop : reset ≠ ⊤ :=
@@ -144,7 +144,7 @@ theorem figureOne_localTransitionResetStationary_dependence_le
     ne_top_of_le_ne_top htargetTop
       (scheduledBalancedStationaryTargetError_le_targetBudget q)
   have hstationaryReal : stationary.toReal ≤
-      figureOnePerSampleMixingError q / 4 := by
+      sampleMixingError q / 4 := by
     have hreal := ENNReal.toReal_mono htargetTop
       (scheduledBalancedStationaryTargetError_le_targetBudget q)
     simpa [stationary, figureOneCorrectedTargetBudget, delta,
@@ -174,15 +174,15 @@ noncomputable def figureOneScheduledGlobalOuterStepError
     (∑ phase ∈ Finset.range (terminalPhaseSteps q),
       ((figureOneCorrectedTransitionBudget q +
           scheduledResetReferenceError q
-            (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)) +
+            (phaseSampleCount q (scheduleValue q phase) - 1)) +
         scheduledBalancedStationaryTargetError q)) +
       (figureOneCorrectedTransitionBudget q +
-        scheduledResetReferenceError q (figureOneSampleCount q - 1))
+        scheduledResetReferenceError q (sampleCount q - 1))
 
 /-- Both phase-sensitive sample counts are at least three. -/
-theorem figureOnePhaseSampleCount_three_le
+theorem phaseSampleCount_three_le
     (q : VolumeParams) (sigma2 : ℝ) :
-    3 ≤ figureOnePhaseSampleCount q sigma2 := by
+    3 ≤ phaseSampleCount q sigma2 := by
   have hlogTerminal : (1 : ℝ) ≤ protectedLog (terminalVariance q) :=
     le_max_left _ _
   have hlogFixed : (1 : ℝ) ≤
@@ -190,19 +190,19 @@ theorem figureOnePhaseSampleCount_three_le
   have hepsSqPos : 0 < q.eps ^ 2 := sq_pos_of_pos q.heps.1
   have hepsSqOne : q.eps ^ 2 ≤ 1 := by
     nlinarith [q.heps.1, q.heps.2]
-  have hsample : (3 : ℝ) ≤ figureOneSampleCount q := by
+  have hsample : (3 : ℝ) ≤ sampleCount q := by
     apply le_trans (b :=
       512 * protectedLog (terminalVariance q) / q.eps ^ 2)
     · rw [le_div_iff₀ hepsSqPos]
       nlinarith
-    · exact figureOneSampleCount_cast_lower q
-  have hfixed : (3 : ℝ) ≤ figureOneFixedSampleCount q := by
+    · exact sampleCount_cast_lower q
+  have hfixed : (3 : ℝ) ≤ fixedRateSampleCount q := by
     apply le_trans (b :=
       4096 * protectedLog ((q.n : ℝ) / q.eps) / q.eps ^ 2)
     · rw [le_div_iff₀ hepsSqPos]
       nlinarith
-    · exact figureOneFixedSampleCount_cast_lower q
-  unfold figureOnePhaseSampleCount
+    · exact fixedRateSampleCount_cast_lower q
+  unfold phaseSampleCount
   split_ifs
   · exact_mod_cast hfixed
   · exact_mod_cast hsample
@@ -215,16 +215,16 @@ theorem figureOneScheduledGlobalOuterStepError_le_reset_add_boundary
       figureOneScheduledGlobalResetReferenceError q +
         (scheduledBalancedStationaryTargetError q +
           ∑ phase ∈ Finset.range (terminalPhaseSteps q),
-            figureOnePhaseSampleCount q (scheduleValue q phase) •
+            phaseSampleCount q (scheduleValue q phase) •
               figureOneCorrectedTransitionBudget q) := by
   let steps := terminalPhaseSteps q
   let delta := figureOneCorrectedTransitionBudget q
   let stationary := scheduledBalancedStationaryTargetError q
   let reset : ℕ → ENNReal := fun phase =>
     scheduledResetReferenceError q
-      (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)
+      (phaseSampleCount q (scheduleValue q phase) - 1)
   let terminalReset :=
-    scheduledResetReferenceError q (figureOneSampleCount q - 1)
+    scheduledResetReferenceError q (sampleCount q - 1)
   have hstationary : stationary ≤ delta :=
     (scheduledBalancedStationaryTargetError_le_targetBudget q).trans <| by
       unfold figureOneCorrectedTargetBudget
@@ -232,13 +232,13 @@ theorem figureOneScheduledGlobalOuterStepError_le_reset_add_boundary
       simpa only [one_mul, mul_comm] using
         mul_le_mul_left (by norm_num : (1 : ENNReal) ≤ (4 : ENNReal)) delta
   have hphaseCount : ∀ phase, phase ∈ Finset.range steps →
-      3 ≤ figureOnePhaseSampleCount q (scheduleValue q phase) := by
+      3 ≤ phaseSampleCount q (scheduleValue q phase) := by
     intro phase hphase
-    exact figureOnePhaseSampleCount_three_le q _
+    exact phaseSampleCount_three_le q _
   have hnonreset :
       (∑ _phase ∈ Finset.range steps, (delta + stationary)) + delta ≤
         ∑ phase ∈ Finset.range steps,
-          figureOnePhaseSampleCount q (scheduleValue q phase) • delta := by
+          phaseSampleCount q (scheduleValue q phase) • delta := by
     have hdeltaSteps : delta ≤ steps • delta := by
       have hsteps : 1 ≤ steps := by
         exact terminalPhaseSteps_pos q
@@ -297,12 +297,12 @@ theorem figureOneScheduledGlobalOuterStepError_le_reset_add_boundary
     _ ≤ ((∑ phase ∈ Finset.range steps, reset phase) + terminalReset) +
         (stationary +
           ∑ phase ∈ Finset.range steps,
-            figureOnePhaseSampleCount q (scheduleValue q phase) • delta) := by
+            phaseSampleCount q (scheduleValue q phase) • delta) := by
       exact add_le_add_right (add_le_add_right hnonreset stationary) _
 
 #print axioms
   figureOne_localTransitionResetStationary_dependence_le
-#print axioms figureOnePhaseSampleCount_three_le
+#print axioms phaseSampleCount_three_le
 #print axioms
   figureOneScheduledGlobalOuterStepError_le_reset_add_boundary
 

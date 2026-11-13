@@ -26,7 +26,7 @@ the exact final operational-state marginal. -/
 theorem exists_terminalScheduledRetainedResetReference_all_approxIndep_with_state
     (q : VolumeParams) (I : VolumeInput q.n) (count : ℕ)
     (hcount0 : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q) :
+    (hcountMax : count ≤ largestSampleCount q) :
     ∃ reference : Measure (RetainedSampleHistory (AmbientSpace q.n)),
       IsProbabilityMeasure reference ∧
       MeasureLeUpTo
@@ -40,7 +40,7 @@ theorem exists_terminalScheduledRetainedResetReference_all_approxIndep_with_stat
         scheduledRetainedExactSome q I (terminalPhaseSteps q) ∧
       (∀ r, r < count →
         ApproxIndepFun
-          (figureOneDependentEpsilon q +
+          (dependenceError q +
             3 * (scheduledResetReferenceError q (count - 1)).toReal)
           (sequentialPrefixSum
             (retainedSampleObservation
@@ -85,7 +85,7 @@ kept in the same existential witness. -/
 theorem exists_terminalScheduledRetainedResetReference_average_secondMoment_with_state
     (q : VolumeParams) (I : VolumeInput q.n) (count : ℕ)
     (hcount : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q) :
+    (hcountMax : count ≤ largestSampleCount q) :
     ∃ reference : Measure (RetainedSampleHistory (AmbientSpace q.n)),
       IsProbabilityMeasure reference ∧
       MeasureLeUpTo
@@ -110,7 +110,7 @@ theorem exists_terminalScheduledRetainedResetReference_average_secondMoment_with
           (count : ℝ)) ^ 2 ∂reference) ≤
         (1 + (Real.exp (1 / 2) - 1) / (count : ℝ)) *
             (figureOneIdealPhaseMean q I .terminal) ^ 2 +
-          3 * (figureOneDependentEpsilon q +
+          3 * (dependenceError q +
               3 * (scheduledResetReferenceError q (count - 1)).toReal) ^
                 (1 / 3 : ℝ) *
             (1 - 1 / (count : ℝ)) * (Real.exp (1 / 2)) ^ 2 := by
@@ -123,7 +123,7 @@ theorem exists_terminalScheduledRetainedResetReference_average_secondMoment_with
     retainedSampleObservation weight
   let mean := figureOneIdealPhaseMean q I .terminal
   let B : ℝ := Real.exp (1 / 2)
-  let epsilon := figureOneDependentEpsilon q +
+  let epsilon := dependenceError q +
     3 * (scheduledResetReferenceError q (count - 1)).toReal
   have hweight : Measurable weight := measurable_uniformRatioWeight _
   have hYmeas : ∀ j, Measurable (Y j) := fun j =>
@@ -160,13 +160,13 @@ theorem exists_terminalScheduledRetainedResetReference_average_secondMoment_with
   have hmean0 : 0 ≤ mean := (figureOneIdealPhaseMean_pos q I .terminal).le
   have hepsilon : 0 < epsilon := by
     dsimp [epsilon]
-    have hdependent : 0 < figureOneDependentEpsilon q := by
-      unfold figureOneDependentEpsilon
-      have hm : (0 : ℝ) < figureOneDependentPhaseCount q := by
-        exact_mod_cast figureOneDependentPhaseCount_pos q
+    have hdependent : 0 < dependenceError q := by
+      unfold dependenceError
+      have hm : (0 : ℝ) < numPhases q := by
+        exact_mod_cast numPhases_pos q
       exact div_pos (sq_pos_of_pos q.heps.1)
         (mul_pos
-          (mul_pos (by norm_num) (pow_pos (figureOneDependentAlpha_pos q) 4)) hm)
+          (mul_pos (by norm_num) (pow_pos (truncationLevel_pos q) 4)) hm)
     positivity
   have havg := sequentialAverage_secondMoment_le_of_approxIndepPrefix_thirdMoment
     reference hYmeas count hcount (Real.exp_pos ((1 : ℝ) / 2)) hmean0
@@ -202,15 +202,15 @@ noncomputable def terminalScheduledResetJointOutput
     (q : VolumeParams) :
     RetainedSampleHistory (AmbientSpace q.n) →
       Option (ℝ × AmbientSpace q.n) :=
-  balancedCoolingAverage (figureOneSampleCount q) ∘
+  balancedCoolingAverage (sampleCount q) ∘
     retainedSumOutput ∘
       retainedSampleHistoryToSum
         (uniformRatioWeight (n := q.n) (terminalVariance q))
-        (figureOneSampleCount q)
+        (sampleCount q)
 
 theorem measurable_terminalScheduledResetJointOutput (q : VolumeParams) :
     Measurable (terminalScheduledResetJointOutput q) := by
-  exact (measurable_balancedCoolingAverage (figureOneSampleCount q)).comp <|
+  exact (measurable_balancedCoolingAverage (sampleCount q)).comp <|
     measurable_retainedSumOutput.comp <|
       measurable_retainedSampleHistoryToSum
         (measurable_uniformRatioWeight (terminalVariance q)) _
@@ -220,10 +220,10 @@ terminal phase target. -/
 theorem map_initializedScheduledRetainedHistory_terminalJointOutput
     (q : VolumeParams) (I : VolumeInput q.n) :
     (initializedScheduledRetainedHistoryLaw q I (terminalPhaseSteps q)
-      (figureOneSampleCount q - 1)).map
+      (sampleCount q - 1)).map
         (terminalScheduledResetJointOutput q) =
       figureOneScheduledTerminalPhaseTarget q I := by
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
   let K := figureOneFinalScheduledRetainedOptionKernel q I
     (terminalVariance q)
@@ -238,7 +238,7 @@ theorem map_initializedScheduledRetainedHistory_terminalJointOutput
   have hsum := map_iterated_initializedRetainedSampleHistoryKernel_sum
     K hK.1 hK.2 weight hweight exact (count - 1)
   have htail : count - 1 + 1 = count := by
-    have hcountPos := figureOneSampleCount_pos q
+    have hcountPos := sampleCount_pos q
     omega
   rw [htail] at hsum
   rw [figureOneScheduledTerminalPhaseTarget_eq_map_retainedSumKernel]
@@ -272,8 +272,8 @@ theorem terminalScheduledResetJointOutput_liveRawOutput
       sequentialPrefixSum
           (retainedSampleObservation
             (uniformRatioWeight (n := q.n) (terminalVariance q)))
-          (figureOneSampleCount q) history /
-        (figureOneSampleCount q : ℝ) := by
+          (sampleCount q) history /
+        (sampleCount q : ℝ) := by
   rcases history with ⟨coordinates, state⟩
   cases state with
   | none => exact (hlive rfl).elim
@@ -342,7 +342,7 @@ and the exact retained-state marginal required by
 `exists_historyRecordedOutputReset_of_tvLe`. -/
 theorem exists_terminalScheduledResetJointTarget
     (q : VolumeParams) (I : VolumeInput q.n) :
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     ∃ target : Measure (Option (ℝ × AmbientSpace q.n)),
       IsProbabilityMeasure target ∧
       MeasureLeUpTo
@@ -358,11 +358,11 @@ theorem exists_terminalScheduledResetJointTarget
             figureOneExecutableMomentSlack q / 8) *
           (figureOneIdealPhaseMean q I .terminal) ^ 2 := by
   dsimp only
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   obtain ⟨reference, hreferenceProb, hmlu, hstate, havgMem, havgMean,
       havgSecond⟩ :=
     exists_terminalScheduledRetainedResetReference_average_secondMoment_with_state
-      q I count (figureOneSampleCount_pos q)
+      q I count (sampleCount_pos q)
         (figureOneTerminalSampleCount_le_dependentMax q)
   let _ : IsProbabilityMeasure reference := hreferenceProb
   let output := terminalScheduledResetJointOutput q
@@ -414,7 +414,7 @@ theorem exists_terminalScheduledResetJointTarget
     rw [integral_congr_ae hscalarSq]
     have hdependence :=
       figureOne_terminalResetReference_average_dependence_le_slack_div_eight
-        q (figureOneSampleCount_pos q)
+        q (sampleCount_pos q)
           (figureOneTerminalSampleCount_le_dependentMax q)
     have hmeanOne : 1 ≤ figureOneIdealPhaseMean q I .terminal :=
       figureOneIdealPhaseMean_one_le q I .terminal

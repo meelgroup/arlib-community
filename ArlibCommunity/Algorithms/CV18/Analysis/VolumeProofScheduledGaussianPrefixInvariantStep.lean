@@ -36,18 +36,18 @@ theorem exists_scheduledGlobalGaussianPrefixInvariant_succ
   let W := figureOneScheduledReferenceCoordinateExtension q I
   let mean := figureOneChronologicalTruncatedMean q I source W
   let oldStatistic := dependentTruncatedProduct
-    (figureOneDependentAlpha q) mean
+    (truncationLevel q) mean
       (figureOneChronologicalTruncatedPhase q I W) phase
   let accepted := figureOneScheduledAcceptedTargetAt q I (phase - 1)
   let _ : IsProbabilityMeasure accepted :=
     figureOneScheduledAcceptedTargetAt_isProbabilityMeasure q I (phase - 1)
-  have hphaseDependent : phase < figureOneDependentPhaseCount q := by
-    rw [figureOneDependentPhaseCount]
+  have hphaseDependent : phase < numPhases q := by
+    rw [numPhases]
     omega
   have holdMeas : Measurable oldStatistic := by
     dsimp only [oldStatistic]
     exact measurable_dependentTruncatedProduct
-      (figureOneDependentAlpha q) mean
+      (truncationLevel q) mean
       (figureOneChronologicalTruncatedPhase q I W)
       (fun j => figureOneChronologicalTruncatedPhase_measurable q I W
         (fun k => measurable_figureOneScheduledReferenceCoordinateExtension
@@ -62,7 +62,7 @@ theorem exists_scheduledGlobalGaussianPrefixInvariant_succ
       dependentTruncatedProduct_chronological_extension_factor_prefix
         q I phase phase hphaseDependent.le le_rfl mean
     have hfactor' :
-        dependentTruncatedProduct (figureOneDependentAlpha q) mean
+        dependentTruncatedProduct (truncationLevel q) mean
             (figureOneChronologicalTruncatedPhase q I W) phase =
           scheduledResetPrefixChronologicalTruncatedProduct
               q I phase mean phase ∘
@@ -74,8 +74,8 @@ theorem exists_scheduledGlobalGaussianPrefixInvariant_succ
     rw [scheduledResetPrefixCoordinates_resetAppend_eq q phase
       hphaseDependent trace hvalid result]
   have hwarm : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
-      (accepted.map fun point => accuracyScaleFactor q • point)
+      (ENNReal.ofReal (8 * warmConstant q))
+      (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase) := by
     cases phase with
     | zero =>
@@ -84,7 +84,7 @@ theorem exists_scheduledGlobalGaussianPrefixInvariant_succ
         apply h.mono
         rw [show (8 : ENNReal) = ENNReal.ofReal (8 : ℝ) by norm_num]
         exact ENNReal.ofReal_le_ofReal <| by
-          nlinarith [speedyAdjacentWarmConstant_one_le q]
+          nlinarith [warmConstant_one_le q]
     | succ previous =>
         simpa [accepted, figureOneScheduledAcceptedTargetAt,
           figureOneScheduledSpeedyPiAt] using
@@ -104,12 +104,12 @@ theorem exists_scheduledGlobalGaussianPrefixInvariant_succ
       q I phase hphaseDependent source reference hprefix
       (by simpa only [oldStatistic, mean, W] using hnewRawInd)
   have hcount :
-      figureOnePhaseSampleCount q (scheduleValue q phase) ≤
-        figureOneDependentMaxSampleCount q :=
-    figureOnePhaseSampleCount_le_dependentMax q (scheduleValue q phase)
+      phaseSampleCount q (scheduleValue q phase) ≤
+        largestSampleCount q :=
+    phaseSampleCount_le_dependentMax q (scheduleValue q phase)
   have hnewInd : ApproxIndepFun
-      ((5 / 2 : ℝ) * figureOneDependentEpsilon q)
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+      ((5 / 2 : ℝ) * dependenceError q)
+      (dependentTruncatedProduct (truncationLevel q)
         (figureOneChronologicalTruncatedMean q I reference W)
         (figureOneChronologicalTruncatedPhase q I W) phase)
       (figureOneChronologicalTruncatedPhase q I W (phase + 1))

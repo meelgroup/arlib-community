@@ -20,7 +20,7 @@ noncomputable def radialLazyMetropolisAcceptance {n : ℕ}
     (K : Set (AmbientSpace n)) (sigma2 : ℝ)
     (current proposal : AmbientSpace n) : ℝ :=
   K.indicator (fun y =>
-    lazyGaussianMetropolisAcceptance sigma2 current y) proposal
+    lazyAcceptance sigma2 current y) proposal
 
 theorem radialLazyMetropolisAcceptance_nonneg {n : ℕ}
     (K : Set (AmbientSpace n)) (sigma2 : ℝ)
@@ -29,7 +29,7 @@ theorem radialLazyMetropolisAcceptance_nonneg {n : ℕ}
   unfold radialLazyMetropolisAcceptance
   by_cases hp : proposal ∈ K
   · rw [Set.indicator_of_mem hp]
-    exact lazyGaussianMetropolisAcceptance_nonneg sigma2 current proposal
+    exact lazyAcceptance_nonneg sigma2 current proposal
   · rw [Set.indicator_of_notMem hp]
 
 theorem radialLazyMetropolisAcceptance_le_one {n : ℕ}
@@ -39,7 +39,7 @@ theorem radialLazyMetropolisAcceptance_le_one {n : ℕ}
   unfold radialLazyMetropolisAcceptance
   by_cases hp : proposal ∈ K
   · rw [Set.indicator_of_mem hp]
-    exact lazyGaussianMetropolisAcceptance_le_one sigma2 current proposal
+    exact lazyAcceptance_le_one sigma2 current proposal
   · rw [Set.indicator_of_notMem hp]
     norm_num
 
@@ -49,7 +49,7 @@ theorem measurable_radialLazyMetropolisAcceptance {n : ℕ}
       radialLazyMetropolisAcceptance K sigma2 p.1 p.2 := by
   unfold radialLazyMetropolisAcceptance
   apply Measurable.indicator
-  · unfold lazyGaussianMetropolisAcceptance gaussianMetropolisAcceptance
+  · unfold lazyAcceptance metropolisAcceptance
     fun_prop
   · exact hK.preimage measurable_snd
 
@@ -63,7 +63,7 @@ theorem ofReal_radialLazyMetropolisAcceptance_eq_half_metropolisAccept
   · rw [Set.indicator_of_mem hp]
     unfold radialLazyMetropolisAcceptance
     rw [Set.indicator_of_mem hp, metropolisAccept_eq_ofReal]
-    unfold lazyGaussianMetropolisAcceptance gaussianMetropolisAcceptance
+    unfold lazyAcceptance metropolisAcceptance
       gaussianWeightReal
     rw [ENNReal.ofReal_div_of_pos (by norm_num : (0 : ℝ) < 2)]
     norm_num
@@ -78,7 +78,7 @@ body. -/
 noncomputable def radialLazyMetropolisLaw {n : ℕ}
     (K : Set (AmbientSpace n)) (delta sigma2 : ℝ)
     (current : AmbientSpace n) : Measure (AmbientSpace n) :=
-  (uniformClosedBallMeasure n current delta).bind fun proposal =>
+  (uniformBall n current delta).bind fun proposal =>
     ENNReal.ofReal (radialLazyMetropolisAcceptance K sigma2 current proposal) •
         Measure.dirac proposal +
       ENNReal.ofReal
@@ -101,7 +101,7 @@ theorem measurable_radialLazyMetropolisProposalLaw {n : ℕ}
       radialLazyMetropolisAcceptance K sigma2 current proposal := by
     unfold radialLazyMetropolisAcceptance
     apply Measurable.indicator
-    · unfold lazyGaussianMetropolisAcceptance gaussianMetropolisAcceptance
+    · unfold lazyAcceptance metropolisAcceptance
       fun_prop
     · exact hK
   exact ((ENNReal.measurable_ofReal.comp hacc).mul
@@ -158,10 +158,10 @@ theorem radialLazyMetropolisLaw_eq_lazy_metropolisGaussian
       ofReal_radialLazyMetropolisAcceptance_eq_half_metropolisAccept]
   simp_rw [ofReal_radialLazyMetropolisAcceptance_eq_half_metropolisAccept,
     hreject]
-  let ν : Measure (AmbientSpace n) := uniformClosedBallMeasure n current delta
+  let ν : Measure (AmbientSpace n) := uniformBall n current delta
   have hν : ν = (volume (Metric.ball current delta))⁻¹ •
       volume.restrict (Metric.ball current delta) :=
-    uniformClosedBallMeasure_eq_openBall current hdelta
+    uniformBall_eq_openBall current hdelta
   have haBall : (∫⁻ y, a y ∂ν) = metropolisMove K delta sigma2 current := by
     rw [hν, lintegral_smul_measure]
     unfold metropolisMove
@@ -272,12 +272,12 @@ noncomputable def accuracyMetropolisMarkedProposalProgram (q : VolumeParams)
     (sigma2 : ℝ) (current proposal : AmbientSpace q.n) :
     MembershipOracleProgram q.n (Bool × AmbientSpace q.n) :=
   .query proposal fun inside =>
-    .randomReal uniformUnitIntervalMeasure inferInstance fun coin =>
+    .randomReal uniformUnit inferInstance fun coin =>
       if inside = true ∧
           ‖proposal‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖proposal‖ ≤ accuracyPhaseRadius q sigma2 then
         .pure (true,
-          if coin ≤ lazyGaussianMetropolisAcceptance sigma2 current proposal
+          if coin ≤ lazyAcceptance sigma2 current proposal
           then proposal else current)
       else .pure (false, current)
 
@@ -286,7 +286,7 @@ noncomputable def accuracyMetropolisMarkedBallStep (q : VolumeParams)
     (sigma2 : ℝ) (current : AmbientSpace q.n) :
     MembershipOracleProgram q.n (Bool × AmbientSpace q.n) :=
   .randomPoint
-    (uniformClosedBallMeasure q.n current (figureOneProposalRadius q sigma2))
+    (uniformBall q.n current (figureOneProposalRadius q sigma2))
     inferInstance fun proposal =>
       accuracyMetropolisMarkedProposalProgram q sigma2 current proposal
 
@@ -322,32 +322,32 @@ theorem accuracyMetropolisMarkedBallStep_queryBound
 
 /-- The proposal probability of the executable phase membership test is the
 abstract local conductance used by the proper clock. -/
-theorem uniformClosedBallMeasure_accuracyPhaseTruncatedBody
+theorem uniformBall_accuracyPhaseTruncatedBody
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (current : AmbientSpace q.n) {radius : ℝ} (hradius : 0 < radius) :
-    uniformClosedBallMeasure q.n current radius
+    uniformBall q.n current radius
         (accuracyPhaseTruncatedBody q I sigma2) =
       Arlib.MarkovChains.ell (accuracyPhaseTruncatedBody q I sigma2)
         radius current := by
   let _ : NeZero q.n :=
     ⟨Nat.ne_of_gt (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)⟩
-  rw [uniformClosedBallMeasure_eq_openBall current hradius,
+  rw [uniformBall_eq_openBall current hradius,
     Measure.smul_apply, smul_eq_mul, Measure.restrict_apply
       (accuracyPhaseTruncatedBody_measurable q I sigma2),
     Arlib.MarkovChains.ell_apply, ENNReal.div_eq_inv_mul]
   congr 1
   rw [Set.inter_comm]
 
-theorem uniformClosedBallMeasure_accuracyPhaseTruncatedBody_compl
+theorem uniformBall_accuracyPhaseTruncatedBody_compl
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (current : AmbientSpace q.n) {radius : ℝ} (hradius : 0 < radius) :
-    uniformClosedBallMeasure q.n current radius
+    uniformBall q.n current radius
         (accuracyPhaseTruncatedBody q I sigma2)ᶜ =
       1 - Arlib.MarkovChains.ell (accuracyPhaseTruncatedBody q I sigma2)
         radius current := by
   rw [measure_compl (accuracyPhaseTruncatedBody_measurable q I sigma2)
       (measure_ne_top _ _), measure_univ,
-    uniformClosedBallMeasure_accuracyPhaseTruncatedBody
+    uniformBall_accuracyPhaseTruncatedBody
       q I sigma2 current hradius]
 
 theorem accuracyMetropolisMarkedProposalProgram_stronglyMeasurable
@@ -383,7 +383,7 @@ theorem accuracyMetropolisMarkedBallStep_stronglyMeasurable
       if oracle.query point = true ∧
           ‖point‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖point‖ ≤ accuracyPhaseRadius q sigma2 then
-        (true, if coin ≤ lazyGaussianMetropolisAcceptance sigma2 current point
+        (true, if coin ≤ lazyAcceptance sigma2 current point
           then point else current)
       else (false, current)
   have horacle : Measurable fun p : AmbientSpace q.n × ℝ =>
@@ -391,8 +391,8 @@ theorem accuracyMetropolisMarkedBallStep_stronglyMeasurable
   have hnorm : Measurable fun p : AmbientSpace q.n × ℝ => ‖p.1‖ := by
     fun_prop
   have haccept : Measurable fun p : AmbientSpace q.n × ℝ =>
-      lazyGaussianMetropolisAcceptance sigma2 current p.1 := by
-    unfold lazyGaussianMetropolisAcceptance gaussianMetropolisAcceptance
+      lazyAcceptance sigma2 current p.1 := by
+    unfold lazyAcceptance metropolisAcceptance
     fun_prop
   have hterminal : MeasurableSet {p : AmbientSpace q.n × ℝ |
       ‖p.1‖ ≤ Real.sqrt (terminalVariance q)} :=
@@ -416,7 +416,7 @@ theorem accuracyMetropolisMarkedBallStep_stronglyMeasurable
   · rw [show (fun point =>
         (accuracyMetropolisMarkedProposalProgram q sigma2 current point).runEstimate
           oracle.query) =
-        fun point => uniformUnitIntervalMeasure.map (output point) by
+        fun point => uniformUnit.map (output point) by
       funext point
       simp only [accuracyMetropolisMarkedProposalProgram,
         MembershipOracleProgram.runEstimate]
@@ -426,7 +426,7 @@ theorem accuracyMetropolisMarkedBallStep_stronglyMeasurable
                 ‖point‖ ≤ Real.sqrt (terminalVariance q) ∧
                 ‖point‖ ≤ accuracyPhaseRadius q sigma2 then
               .pure (true, if coin ≤
-                lazyGaussianMetropolisAcceptance sigma2 current point
+                lazyAcceptance sigma2 current point
                 then point else current)
             else .pure (false, current))) =
           fun coin => Measure.dirac (output point coin) := by
@@ -437,9 +437,9 @@ theorem accuracyMetropolisMarkedBallStep_stronglyMeasurable
         · simp [hproper, output, MembershipOracleProgram.runEstimate]
         · simp [hproper, output, MembershipOracleProgram.runEstimate]
       rw [hinner]
-      exact Measure.bind_dirac_eq_map uniformUnitIntervalMeasure
+      exact Measure.bind_dirac_eq_map uniformUnit
         (hout.comp (measurable_const.prodMk measurable_id))]
-    exact measurable_measure_map_param uniformUnitIntervalMeasure hout
+    exact measurable_measure_map_param uniformUnit hout
   · intro proposal
     exact accuracyMetropolisMarkedProposalProgram_stronglyMeasurable
       q I oracle sigma2 current proposal
@@ -463,17 +463,17 @@ theorem map_snd_runEstimate_accuracyMetropolisMarkedProposalProgram
     simp only [accuracyMetropolisMarkedProposalProgram,
       MembershipOracleProgram.runEstimate, heligible, true_and, if_true]
     have hpair : Measurable fun coin : ℝ =>
-        (true, if coin ≤ lazyGaussianMetropolisAcceptance sigma2 current proposal
+        (true, if coin ≤ lazyAcceptance sigma2 current proposal
           then proposal else current) :=
       measurable_const.prodMk <|
         Measurable.ite measurableSet_Iic measurable_const measurable_const
-    rw [Measure.bind_dirac_eq_map uniformUnitIntervalMeasure hpair,
+    rw [Measure.bind_dirac_eq_map uniformUnit hpair,
       Measure.map_map measurable_snd hpair]
     unfold radialLazyMetropolisAcceptance
     rw [Set.indicator_of_mem hp]
     exact uniformUnitInterval_map_threshold
-      (lazyGaussianMetropolisAcceptance_nonneg sigma2 current proposal)
-      (lazyGaussianMetropolisAcceptance_le_one sigma2 current proposal)
+      (lazyAcceptance_nonneg sigma2 current proposal)
+      (lazyAcceptance_le_one sigma2 current proposal)
       proposal current
   · have hineligible : ¬ (oracle.query proposal = true ∧
         ‖proposal‖ ≤ Real.sqrt (terminalVariance q) ∧
@@ -495,7 +495,7 @@ theorem map_snd_runEstimate_accuracyMetropolisMarkedBallStep_eq_radialLaw
       oracle.query).map Prod.snd =
       radialLazyMetropolisLaw (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2 current := by
-  let U := uniformClosedBallMeasure q.n current
+  let U := uniformBall q.n current
     (figureOneProposalRadius q sigma2)
   have hproposal : AEMeasurable (fun proposal =>
       (accuracyMetropolisMarkedProposalProgram q sigma2 current proposal).runEstimate
@@ -547,7 +547,7 @@ theorem runEstimate_accuracyMetropolisMarkedBallStep_apply_false_prod
         ({false} ×ˢ t) =
       (1 - Arlib.MarkovChains.ell (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) current) * t.indicator 1 current := by
-  let U := uniformClosedBallMeasure q.n current
+  let U := uniformBall q.n current
     (figureOneProposalRadius q sigma2)
   have hset : MeasurableSet ({false} ×ˢ t) :=
     (measurableSet_singleton false).prod ht
@@ -573,9 +573,9 @@ theorem runEstimate_accuracyMetropolisMarkedBallStep_apply_false_prod
       rw [Measure.bind_apply hset]
       · rw [Set.indicator_of_notMem (by simpa using hp)]
         change (∫⁻ coin, Measure.dirac
-            (true, if coin ≤ lazyGaussianMetropolisAcceptance sigma2 current proposal
+            (true, if coin ≤ lazyAcceptance sigma2 current proposal
               then proposal else current) ({false} ×ˢ t)
-          ∂uniformUnitIntervalMeasure) = 0
+          ∂uniformUnit) = 0
         simp [Measure.dirac_apply' _ hset]
       · exact (Measure.measurable_dirac.comp <|
           measurable_const.prodMk <|
@@ -596,7 +596,7 @@ theorem runEstimate_accuracyMetropolisMarkedBallStep_apply_false_prod
   rw [lintegral_indicator
     (accuracyPhaseTruncatedBody_measurable q I sigma2).compl]
   rw [setLIntegral_const]
-  rw [uniformClosedBallMeasure_accuracyPhaseTruncatedBody_compl
+  rw [uniformBall_accuracyPhaseTruncatedBody_compl
     q I sigma2 current (figureOneProposalRadius_pos q hsigma2)]
   ring
 
@@ -675,19 +675,19 @@ theorem runEstimate_accuracyMetropolisMarkedBallStep_eq_lazyProperAux
       rw [hfalse t ht] at hadd
       exact WithTop.add_left_cancel (measure_ne_top nu ({false} ×ˢ t)) hadd
 
-theorem accuracyScaleFactor_pos (q : VolumeParams) :
-    0 < accuracyScaleFactor q := by
+theorem scaleFactor_pos (q : VolumeParams) :
+    0 < scaleFactor q := by
   have hn : (1 : ℝ) ≤ q.n := by
     exact_mod_cast (le_trans (by norm_num : 1 ≤ 3) q.dim_ok)
-  unfold accuracyScaleFactor
+  unfold scaleFactor
   have hle : 1 / (2 * (q.n : ℝ)) ≤ 1 / 2 := by
     rw [div_le_div_iff₀ (by positivity) (by norm_num)]
     nlinarith
   linarith
 
-theorem accuracyScaleFactor_le_one (q : VolumeParams) :
-    accuracyScaleFactor q ≤ 1 := by
-  unfold accuracyScaleFactor
+theorem scaleFactor_le_one (q : VolumeParams) :
+    scaleFactor q ≤ 1 := by
+  unfold scaleFactor
   exact sub_le_self 1 (by positivity)
 
 /-- One executable KLS speedy-to-Gaussian rejection test.  The returned point
@@ -695,10 +695,10 @@ is the homothetically expanded candidate; the Boolean records acceptance. -/
 noncomputable def accuracyGaussianRejectionAttempt (q : VolumeParams)
     (sigma2 : ℝ) (current : AmbientSpace q.n) :
     MembershipOracleProgram q.n (Bool × AmbientSpace q.n) :=
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   let target := c⁻¹ • current
   .query target fun inside =>
-    .randomReal uniformUnitIntervalMeasure inferInstance fun coin =>
+    .randomReal uniformUnit inferInstance fun coin =>
       if inside = true ∧
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
@@ -725,13 +725,13 @@ theorem accuracyGaussianRejectionAttempt_stronglyMeasurable
       oracle.query := by
   simp only [accuracyGaussianRejectionAttempt,
     MembershipOracleProgram.StronglyMeasurable]
-  let target : AmbientSpace q.n := (accuracyScaleFactor q)⁻¹ • current
+  let target : AmbientSpace q.n := (scaleFactor q)⁻¹ • current
   let output : ℝ → Bool × AmbientSpace q.n := fun coin =>
     if oracle.query target = true ∧
         ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
         ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
         ENNReal.ofReal coin ≤ Arlib.MarkovChains.gaussianScaleAcceptance
-          sigma2 (accuracyScaleFactor q) target then
+          sigma2 (scaleFactor q) target then
       (true, target)
     else (false, target)
   have hout : Measurable output := by
@@ -747,7 +747,7 @@ theorem accuracyGaussianRejectionAttempt_stronglyMeasurable
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ Arlib.MarkovChains.gaussianScaleAcceptance
-            sigma2 (accuracyScaleFactor q) target) := by
+            sigma2 (scaleFactor q) target) := by
         intro coin h
         exact heligible ⟨h.1, h.2.1, h.2.2.1⟩
       simp only [output, hfalse, if_false]
@@ -758,7 +758,7 @@ theorem accuracyGaussianRejectionAttempt_stronglyMeasurable
             ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
             ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
             ENNReal.ofReal coin ≤ Arlib.MarkovChains.gaussianScaleAcceptance
-              sigma2 (accuracyScaleFactor q) target then
+              sigma2 (scaleFactor q) target then
           .pure (true, target) else .pure (false, target))) =
         fun coin => Measure.dirac (output coin) by
       funext coin
@@ -766,7 +766,7 @@ theorem accuracyGaussianRejectionAttempt_stronglyMeasurable
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ Arlib.MarkovChains.gaussianScaleAcceptance
-            sigma2 (accuracyScaleFactor q) target
+            sigma2 (scaleFactor q) target
       · simp [h, output, MembershipOracleProgram.runEstimate]
       · simp [h, output, MembershipOracleProgram.runEstimate]]
     exact Measure.measurable_dirac.comp hout
@@ -776,7 +776,7 @@ theorem accuracyGaussianRejectionAttempt_stronglyMeasurable
 noncomputable def accuracyGaussianRejectionAcceptance
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (current : AmbientSpace q.n) : ENNReal :=
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   let target := c⁻¹ • current
   (accuracyPhaseTruncatedBody q I sigma2).indicator
     (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c) target
@@ -786,11 +786,11 @@ theorem accuracyGaussianRejectionAcceptance_le_one
     (hsigma2 : 0 < sigma2) (current : AmbientSpace q.n) :
     accuracyGaussianRejectionAcceptance q I sigma2 current ≤ 1 := by
   unfold accuracyGaussianRejectionAcceptance
-  by_cases ht : (accuracyScaleFactor q)⁻¹ • current ∈
+  by_cases ht : (scaleFactor q)⁻¹ • current ∈
       accuracyPhaseTruncatedBody q I sigma2
   · rw [Set.indicator_of_mem ht]
     exact Arlib.MarkovChains.gaussianScaleAcceptance_le_one hsigma2
-      (accuracyScaleFactor_pos q) (accuracyScaleFactor_le_one q) _
+      (scaleFactor_pos q) (scaleFactor_le_one q) _
   · rw [Set.indicator_of_notMem ht]
     exact bot_le
 
@@ -799,15 +799,15 @@ theorem measurable_accuracyGaussianRejectionAcceptance
     Measurable (accuracyGaussianRejectionAcceptance q I sigma2) := by
   unfold accuracyGaussianRejectionAcceptance
   exact ((Arlib.MarkovChains.measurable_gaussianScaleAcceptance sigma2
-      (accuracyScaleFactor q)).indicator
+      (scaleFactor q)).indicator
         (accuracyPhaseTruncatedBody_measurable q I sigma2)).comp
           ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
-            (accuracyScaleFactor q)⁻¹).smul measurable_id)
+            (scaleFactor q)⁻¹).smul measurable_id)
 
 noncomputable def accuracyGaussianRejectionLaw
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (current : AmbientSpace q.n) : Measure (Bool × AmbientSpace q.n) :=
-  let target := (accuracyScaleFactor q)⁻¹ • current
+  let target := (scaleFactor q)⁻¹ • current
   let accept := accuracyGaussianRejectionAcceptance q I sigma2 current
   accept • Measure.dirac (true, target) +
     (1 - accept) • Measure.dirac (false, target)
@@ -820,16 +820,16 @@ theorem measurable_accuracyGaussianRejectionLaw
   simp only [accuracyGaussianRejectionLaw, Measure.add_apply,
     Measure.smul_apply, smul_eq_mul, Measure.dirac_apply' _ hS]
   have htarget : Measurable fun current : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹ • current :=
+      (scaleFactor q)⁻¹ • current :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id
+      (scaleFactor q)⁻¹).smul measurable_id
   have htrue : Measurable fun current : AmbientSpace q.n =>
       S.indicator (1 : Bool × AmbientSpace q.n → ENNReal)
-        (true, (accuracyScaleFactor q)⁻¹ • current) :=
+        (true, (scaleFactor q)⁻¹ • current) :=
     (measurable_one.indicator hS).comp (measurable_const.prodMk htarget)
   have hfalse : Measurable fun current : AmbientSpace q.n =>
       S.indicator (1 : Bool × AmbientSpace q.n → ENNReal)
-        (false, (accuracyScaleFactor q)⁻¹ • current) :=
+        (false, (scaleFactor q)⁻¹ • current) :=
     (measurable_one.indicator hS).comp (measurable_const.prodMk htarget)
   have hacc := measurable_accuracyGaussianRejectionAcceptance q I sigma2
   exact (hacc.mul htrue).add ((measurable_const.sub hacc).mul hfalse)
@@ -839,7 +839,7 @@ theorem runEstimate_accuracyGaussianRejectionAttempt
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) (current : AmbientSpace q.n) :
     (accuracyGaussianRejectionAttempt q sigma2 current).runEstimate oracle.query =
       accuracyGaussianRejectionLaw q I sigma2 current := by
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   let target : AmbientSpace q.n := c⁻¹ • current
   let accept := accuracyGaussianRejectionAcceptance q I sigma2 current
   have haccept : accept ≤ 1 :=
@@ -877,19 +877,19 @@ theorem runEstimate_accuracyGaussianRejectionAttempt
         if coin ≤ accept.toReal then (true, target) else (false, target) :=
       Measurable.ite measurableSet_Iic measurable_const measurable_const
     have hbind :
-        (uniformUnitIntervalMeasure.bind fun value =>
+        (uniformUnit.bind fun value =>
           MembershipOracleProgram.runEstimate oracle.query
             (if value ≤ accept.toReal then
               MembershipOracleProgram.pure (true, target)
             else MembershipOracleProgram.pure (false, target))) =
-          uniformUnitIntervalMeasure.bind fun value =>
+          uniformUnit.bind fun value =>
             Measure.dirac (if value ≤ accept.toReal then
               (true, target) else (false, target)) := by
       apply Measure.bind_congr_right
       filter_upwards with value
       split <;> simp [MembershipOracleProgram.runEstimate]
     rw [hbind]
-    rw [Measure.bind_dirac_eq_map uniformUnitIntervalMeasure hout]
+    rw [Measure.bind_dirac_eq_map uniformUnit hout]
     rw [uniformUnitInterval_map_threshold hacceptReal0 hacceptReal1
       (true, target) (false, target)]
     unfold accuracyGaussianRejectionLaw

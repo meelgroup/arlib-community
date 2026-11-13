@@ -165,10 +165,10 @@ theorem truncatedGaussianProbability_acceptance_map_le_self
       truncatedGaussianProbability q I sigma2 hsigma2
     (nu.withDensity
       (accuracyGaussianRejectionAcceptance q I sigma2)).map
-        (fun x => (accuracyScaleFactor q)⁻¹ • x) ≤ nu := by
+        (fun x => (scaleFactor q)⁻¹ • x) ≤ nu := by
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   let core := c • K
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
   let g : AmbientSpace q.n → ENNReal := gaussianScaleAcceptance sigma2 c
@@ -179,8 +179,8 @@ theorem truncatedGaussianProbability_acceptance_map_le_self
       (gaussianWeight (sigma2 / c ^ 2))
   let nu : Measure (AmbientSpace q.n) :=
     truncatedGaussianProbability q I sigma2 hsigma2
-  have hc0 : 0 < c := by simpa [c] using accuracyScaleFactor_pos q
-  have hc1 : c ≤ 1 := by simpa [c] using accuracyScaleFactor_le_one q
+  have hc0 : 0 < c := by simpa [c] using scaleFactor_pos q
+  have hc1 : c ≤ 1 := by simpa [c] using scaleFactor_le_one q
   have hK : MeasurableSet K := accuracyPhaseTruncatedBody_measurable q I sigma2
   have hcore : MeasurableSet core := by
     dsimp [core]
@@ -362,7 +362,7 @@ theorem stationary_accuracyAcceptedSubmeasure_le_four_target
       truncatedGaussianProbability q I sigma2 hsigma2
     (pi.withDensity
       (accuracyGaussianRejectionAcceptance q I sigma2)).map
-        (fun x => (accuracyScaleFactor q)⁻¹ • x) ≤
+        (fun x => (scaleFactor q)⁻¹ • x) ≤
           (4 : ENNReal) • nu := by
   dsimp only
   let pi := ellGaussianProb
@@ -372,7 +372,7 @@ theorem stationary_accuracyAcceptedSubmeasure_le_four_target
     truncatedGaussianProbability q I sigma2 hsigma2
   let accept := accuracyGaussianRejectionAcceptance q I sigma2
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    (accuracyScaleFactor q)⁻¹ • x
+    (scaleFactor q)⁻¹ • x
   have hpi : pi ≤ (4 : ENNReal) • nu := by
     apply Measure.le_iff.mpr
     intro A hA
@@ -394,7 +394,7 @@ theorem stationary_accuracyAcceptedSubmeasure_le_four_target
   have hmap := Measure.map_mono hdensity (by
     change Measurable scale
     exact (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id)
+      (scaleFactor q)⁻¹).smul measurable_id)
   rw [Measure.map_smul (hf := by fun_prop)] at hmap
   have hself := truncatedGaussianProbability_acceptance_map_le_self
     q I hsigma2
@@ -425,7 +425,7 @@ theorem stationary_accuracyAcceptedTarget_isWarm
     truncatedGaussianProbability q I sigma2 hsigma2
   let accepted :=
     (pi.withDensity (accuracyGaussianRejectionAcceptance q I sigma2)).map
-      (fun x => (accuracyScaleFactor q)⁻¹ • x)
+      (fun x => (scaleFactor q)⁻¹ • x)
   have hdelta : 0 < figureOneProposalRadius q sigma2 :=
     figureOneProposalRadius_pos q hsigma2
   have hmass0 : ellGaussianMeasure
@@ -544,7 +544,7 @@ theorem integral_stationary_accuracyImportance_centered_sq_le_four_target
     truncatedGaussianProbability q I sigma2 hsigma2
   let accept := accuracyGaussianRejectionAcceptance q I sigma2
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    (accuracyScaleFactor q)⁻¹ • x
+    (scaleFactor q)⁻¹ • x
   let u : AmbientSpace q.n → ℝ := fun y => weight y - r
   let accepted := (pi.withDensity accept).map scale
   have haccept : Measurable accept :=
@@ -552,7 +552,7 @@ theorem integral_stationary_accuracyImportance_centered_sq_le_four_target
   have hscale : Measurable scale := by
     dsimp [scale]
     exact (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id
+      (scaleFactor q)⁻¹).smul measurable_id
   have hu : Measurable u := by
     exact hweight.sub measurable_const
   have hdom : accepted ≤ (4 : ENNReal) • nu := by

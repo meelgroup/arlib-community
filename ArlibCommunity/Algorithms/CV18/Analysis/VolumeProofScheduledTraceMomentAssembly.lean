@@ -68,7 +68,7 @@ theorem scheduledBalancedTransitionCollectLaw_ae_total_positive
         | some target =>
             scheduledBalancedTransitionCollectLaw q I sigma2 weight
               proposalCap properStride retryLimit samples
-              (total + weight target) (accuracyScaleFactor q • target)
+              (total + weight target) (scaleFactor q • target)
       have htail : Measurable tail := by
         dsimp only [tail]
         have hcollect :=
@@ -77,11 +77,11 @@ theorem scheduledBalancedTransitionCollectLaw_ae_total_positive
         have hsome : Measurable fun target : AmbientSpace q.n =>
             scheduledBalancedTransitionCollectLaw q I sigma2 weight
               proposalCap properStride retryLimit samples
-              (total + weight target) (accuracyScaleFactor q • target) :=
+              (total + weight target) (scaleFactor q • target) :=
           hcollect.comp <|
             (measurable_const.add hweight).prodMk <|
               (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-                accuracyScaleFactor q).smul measurable_id
+                scaleFactor q).smul measurable_id
         convert Measurable.optionElim
           (Measure.dirac (none : Option (ℝ × AmbientSpace q.n))) hsome using 1
         funext result
@@ -111,14 +111,14 @@ theorem scheduledBalancedTransitionCollectLaw_ae_total_positive
           · subst samples
             change (Measure.dirac (some
               (total + weight target,
-                (accuracyScaleFactor q)⁻¹ •
-                  (accuracyScaleFactor q • target)))) goodᶜ = 0
+                (scaleFactor q)⁻¹ •
+                  (scaleFactor q • target)))) goodᶜ = 0
             rw [Measure.dirac_apply' _ hgood.compl]
             simp [good, ScheduledCollectedTotalPositive,
               add_pos_of_nonneg_of_pos htotal (hweightPos target)]
           · exact MeasureTheory.mem_ae_iff.mp <|
               ih (Nat.pos_of_ne_zero hsamples0)
-                (total + weight target) (accuracyScaleFactor q • target)
+                (total + weight target) (scaleFactor q • target)
                 (add_nonneg htotal (hweightPos target).le)
 
 theorem gaussianRatioWeight_pos (sigma2 tau2 : ℝ)
@@ -139,15 +139,15 @@ theorem scheduledBalancedCoolingRatioTransitionLaw_ae_ratio_positive
     ∀ᵐ result ∂scheduledBalancedCoolingRatioTransitionLaw parameters q I
         sigma2 tau2 current,
       ScheduledCollectedTotalPositive result := by
-  have hsamples : 0 < figureOnePhaseSampleCount q sigma2 := by
-    unfold figureOnePhaseSampleCount
+  have hsamples : 0 < phaseSampleCount q sigma2 := by
+    unfold phaseSampleCount
     split_ifs
-    · exact figureOneFixedSampleCount_pos q
-    · exact figureOneSampleCount_pos q
+    · exact fixedRateSampleCount_pos q
+    · exact sampleCount_pos q
   unfold scheduledBalancedCoolingRatioTransitionLaw
   apply (ae_map_iff
     (measurable_balancedCoolingAverage
-      (n := q.n) (figureOnePhaseSampleCount q sigma2)).aemeasurable
+      (n := q.n) (phaseSampleCount q sigma2)).aemeasurable
     measurableSet_scheduledCollectedTotalPositive).2
   filter_upwards [scheduledBalancedTransitionCollectLaw_ae_total_positive
     q I hsigma2 (measurable_gaussianRatioWeight sigma2 tau2)
@@ -155,8 +155,8 @@ theorem scheduledBalancedCoolingRatioTransitionLaw_ae_ratio_positive
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOnePhaseSampleCount q sigma2) hsamples 0
-      (accuracyScaleFactor q • current) (by norm_num)] with result hresult
+      (phaseSampleCount q sigma2) hsamples 0
+      (scaleFactor q • current) (by norm_num)] with result hresult
   cases result with
   | none => trivial
   | some result =>
@@ -170,11 +170,11 @@ theorem scheduledBalancedCoolingUniformTransitionLaw_ae_ratio_positive
     ∀ᵐ result ∂scheduledBalancedCoolingUniformTransitionLaw parameters q I
         sigma2 current,
       ScheduledCollectedTotalPositive result := by
-  have hsamples : 0 < figureOneSampleCount q := figureOneSampleCount_pos q
+  have hsamples : 0 < sampleCount q := sampleCount_pos q
   unfold scheduledBalancedCoolingUniformTransitionLaw
   apply (ae_map_iff
     (measurable_balancedCoolingAverage
-      (n := q.n) (figureOneSampleCount q)).aemeasurable
+      (n := q.n) (sampleCount q)).aemeasurable
     measurableSet_scheduledCollectedTotalPositive).2
   filter_upwards [scheduledBalancedTransitionCollectLaw_ae_total_positive
     q I hsigma2 (measurable_uniformRatioWeight sigma2)
@@ -182,8 +182,8 @@ theorem scheduledBalancedCoolingUniformTransitionLaw_ae_ratio_positive
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOneSampleCount q) hsamples 0
-      (accuracyScaleFactor q • current) (by norm_num)] with result hresult
+      (sampleCount q) hsamples 0
+      (scaleFactor q • current) (by norm_num)] with result hresult
   cases result with
   | none => trivial
   | some result =>
@@ -385,25 +385,25 @@ theorem scheduledBalancedForwardTraceLaw_ae_liveCoordinatesPositive
 theorem figureOneScheduledRetainedError_toReal_le_for_moments
     (q : VolumeParams) (phases : ℕ) :
     (figureOneScheduledRetainedError q phases).toReal ≤
-      figureOnePerSampleMixingError q / 4 +
-        (phases : ℝ) * (figureOneDependentMaxSampleCount q : ℝ) *
-          figureOnePerSampleMixingError q := by
-  have hnu : 0 ≤ figureOnePerSampleMixingError q :=
-    (figureOnePerSampleMixingError_pos q).le
+      sampleMixingError q / 4 +
+        (phases : ℝ) * (largestSampleCount q : ℝ) *
+          sampleMixingError q := by
+  have hnu : 0 ≤ sampleMixingError q :=
+    (sampleMixingError_pos q).le
   have htarget := scheduledBalancedStationaryTargetError_le_targetBudget q
   have htargetBudgetTop : figureOneCorrectedTargetBudget q ≠ ⊤ :=
     ENNReal.div_ne_top ENNReal.ofReal_ne_top (by norm_num)
   have htargetTop : scheduledBalancedStationaryTargetError q ≠ ⊤ :=
     ne_top_of_le_ne_top htargetBudgetTop htarget
   have htermTop : ∀ phase,
-      figureOnePhaseSampleCount q (scheduleValue q phase) •
+      phaseSampleCount q (scheduleValue q phase) •
           figureOneCorrectedTransitionBudget q ≠ ⊤ := by
     intro phase
     rw [nsmul_eq_mul]
     exact ENNReal.mul_ne_top (ENNReal.natCast_ne_top _)
       ENNReal.ofReal_ne_top
   have hsumTop : (∑ phase ∈ Finset.range phases,
-      figureOnePhaseSampleCount q (scheduleValue q phase) •
+      phaseSampleCount q (scheduleValue q phase) •
         figureOneCorrectedTransitionBudget q) ≠ ⊤ :=
     ENNReal.sum_ne_top.2 fun phase _ => htermTop phase
   rw [figureOneScheduledRetainedError,
@@ -411,12 +411,12 @@ theorem figureOneScheduledRetainedError_toReal_le_for_moments
   calc
     (scheduledBalancedStationaryTargetError q).toReal +
         (∑ phase ∈ Finset.range phases,
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q).toReal ≤
       (figureOneCorrectedTargetBudget q).toReal +
         ∑ phase ∈ Finset.range phases,
-          (figureOnePhaseSampleCount q (scheduleValue q phase) : ℝ) *
-            figureOnePerSampleMixingError q := by
+          (phaseSampleCount q (scheduleValue q phase) : ℝ) *
+            sampleMixingError q := by
       apply add_le_add
       · exact ENNReal.toReal_mono htargetBudgetTop htarget
       · rw [ENNReal.toReal_sum fun phase _ => htermTop phase]
@@ -426,10 +426,10 @@ theorem figureOneScheduledRetainedError_toReal_le_for_moments
           figureOneCorrectedTransitionBudget,
           ENNReal.toReal_ofReal hnu]
         simp [nsmul_eq_mul]
-    _ ≤ figureOnePerSampleMixingError q / 4 +
+    _ ≤ sampleMixingError q / 4 +
         ∑ _phase ∈ Finset.range phases,
-          (figureOneDependentMaxSampleCount q : ℝ) *
-            figureOnePerSampleMixingError q := by
+          (largestSampleCount q : ℝ) *
+            sampleMixingError q := by
       apply add_le_add
       · simp [figureOneCorrectedTargetBudget,
           figureOneCorrectedTransitionBudget, ENNReal.toReal_div,
@@ -437,14 +437,14 @@ theorem figureOneScheduledRetainedError_toReal_le_for_moments
       · apply Finset.sum_le_sum
         intro phase hphase
         have hcount :
-            (figureOnePhaseSampleCount q (scheduleValue q phase) : ℝ) ≤
-              (figureOneDependentMaxSampleCount q : ℝ) := by
-          exact_mod_cast figureOnePhaseSampleCount_le_dependentMax
+            (phaseSampleCount q (scheduleValue q phase) : ℝ) ≤
+              (largestSampleCount q : ℝ) := by
+          exact_mod_cast phaseSampleCount_le_dependentMax
             q (scheduleValue q phase)
         exact mul_le_mul_of_nonneg_right hcount hnu
-    _ = figureOnePerSampleMixingError q / 4 +
-        (phases : ℝ) * (figureOneDependentMaxSampleCount q : ℝ) *
-          figureOnePerSampleMixingError q := by
+    _ = sampleMixingError q / 4 +
+        (phases : ℝ) * (largestSampleCount q : ℝ) *
+          sampleMixingError q := by
       rw [Finset.sum_const, Finset.card_range, nsmul_eq_mul]
       ring
 
@@ -472,8 +472,8 @@ weaker than the accuracy budget and is used only to prove that the live
 branch has positive probability. -/
 theorem figureOneScheduledFullRetainedError_lt_one (q : VolumeParams) :
     figureOneScheduledFullRetainedError q < 1 := by
-  have hnu0 : 0 ≤ figureOnePerSampleMixingError q :=
-    (figureOnePerSampleMixingError_pos q).le
+  have hnu0 : 0 ≤ sampleMixingError q :=
+    (sampleMixingError_pos q).le
   have hretTop : figureOneScheduledRetainedError q
       (terminalPhaseSteps q) ≠ ⊤ := by
     unfold figureOneScheduledRetainedError
@@ -486,39 +486,39 @@ theorem figureOneScheduledFullRetainedError_lt_one (q : VolumeParams) :
         rw [nsmul_eq_mul]
         exact ENNReal.mul_ne_top (ENNReal.natCast_ne_top _)
           ENNReal.ofReal_ne_top
-  have hterminalTop : figureOneSampleCount q •
+  have hterminalTop : sampleCount q •
       figureOneCorrectedTransitionBudget q ≠ ⊤ := by
     rw [nsmul_eq_mul]
     exact ENNReal.mul_ne_top (ENNReal.natCast_ne_top _)
       ENNReal.ofReal_ne_top
   have hret := figureOneScheduledRetainedError_toReal_le_for_moments q
     (terminalPhaseSteps q)
-  have hsample : (figureOneSampleCount q : ℝ) ≤
-      figureOneDependentMaxSampleCount q := by
+  have hsample : (sampleCount q : ℝ) ≤
+      largestSampleCount q := by
     exact_mod_cast figureOneTerminalSampleCount_le_dependentMax q
   have hphase : (terminalPhaseSteps q : ℝ) + 1 =
-      figureOneDependentPhaseCount q := by
-    rw [figureOneDependentPhaseCount]
+      numPhases q := by
+    rw [numPhases]
     norm_num
-  have hdependent : figureOneDependentEpsilon q ≤ 1 / 4 := by
+  have hdependent : dependenceError q ≤ 1 / 4 := by
     have hsmall := figureOneDependent_smallness q
-    have ha3 : 1 ≤ figureOneDependentAlpha q ^ 3 :=
-      one_le_pow₀ (figureOneDependentAlpha_one_le q)
-    have he0 := figureOneDependentEpsilon_nonneg q
-    have hfour : 4 * figureOneDependentEpsilon q ≤
-        4 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 3 := by
+    have ha3 : 1 ≤ truncationLevel q ^ 3 :=
+      one_le_pow₀ (truncationLevel_one_le q)
+    have he0 := dependenceError_nonneg q
+    have hfour : 4 * dependenceError q ≤
+        4 * dependenceError q *
+          truncationLevel q ^ 3 := by
       nlinarith [mul_nonneg he0 (sub_nonneg.mpr ha3)]
     nlinarith
-  have hnu : figureOnePerSampleMixingError q < 1 :=
-    (figureOnePerSampleMixingError_le_eps q).trans_lt q.heps.2
+  have hnu : sampleMixingError q < 1 :=
+    (sampleMixingError_le_eps q).trans_lt q.heps.2
   have hbudget := figureOne_lemma717c_budget q
   have hreal :
       (figureOneScheduledFullRetainedError q).toReal =
         (figureOneScheduledRetainedError q
           (terminalPhaseSteps q)).toReal +
-          (figureOneSampleCount q : ℝ) *
-            figureOnePerSampleMixingError q := by
+          (sampleCount q : ℝ) *
+            sampleMixingError q := by
     rw [figureOneScheduledFullRetainedError,
       ENNReal.toReal_add hretTop hterminalTop,
       ENNReal.toReal_nsmul,
@@ -528,27 +528,27 @@ theorem figureOneScheduledFullRetainedError_lt_one (q : VolumeParams) :
   have hrealLt : (figureOneScheduledFullRetainedError q).toReal < 1 := by
     rw [hreal]
     calc
-      _ ≤ figureOnePerSampleMixingError q / 4 +
+      _ ≤ sampleMixingError q / 4 +
           (terminalPhaseSteps q : ℝ) *
-            (figureOneDependentMaxSampleCount q : ℝ) *
-              figureOnePerSampleMixingError q +
-          (figureOneSampleCount q : ℝ) *
-            figureOnePerSampleMixingError q := by linarith
-      _ ≤ figureOnePerSampleMixingError q / 4 +
+            (largestSampleCount q : ℝ) *
+              sampleMixingError q +
+          (sampleCount q : ℝ) *
+            sampleMixingError q := by linarith
+      _ ≤ sampleMixingError q / 4 +
           (terminalPhaseSteps q : ℝ) *
-            (figureOneDependentMaxSampleCount q : ℝ) *
-              figureOnePerSampleMixingError q +
-          (figureOneDependentMaxSampleCount q : ℝ) *
-            figureOnePerSampleMixingError q := by
+            (largestSampleCount q : ℝ) *
+              sampleMixingError q +
+          (largestSampleCount q : ℝ) *
+            sampleMixingError q := by
         gcongr
-      _ = figureOnePerSampleMixingError q / 4 +
-          (figureOneDependentPhaseCount q : ℝ) *
-            (figureOneDependentMaxSampleCount q : ℝ) *
-              figureOnePerSampleMixingError q := by
+      _ = sampleMixingError q / 4 +
+          (numPhases q : ℝ) *
+            (largestSampleCount q : ℝ) *
+              sampleMixingError q := by
         rw [← hphase]
         ring
-      _ = figureOnePerSampleMixingError q / 4 +
-          figureOneDependentEpsilon q / 3 := by
+      _ = sampleMixingError q / 4 +
+          dependenceError q / 3 := by
         rw [← hbudget]
         ring
       _ < 1 := by nlinarith
@@ -562,12 +562,12 @@ theorem scheduledBalancedFullForwardTraceLaw_dead_mass_le
     (q : VolumeParams) (I : VolumeInput q.n) :
     (scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q))
+        (numPhases q))
         (scheduledBalancedTraceDeadSet q.n) ≤
       figureOneScheduledFullRetainedError q := by
   let law := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   have hevent :=
     (scheduledBalancedFullForwardTraceLaw_retained_leUpTo_target q I).event_le
       ({none} : Set (Option (AmbientSpace q.n)))
@@ -599,11 +599,11 @@ theorem scheduledBalancedFullForwardTraceLaw_live_mass_pos
     (q : VolumeParams) (I : VolumeInput q.n) :
     0 < (scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q))
+        (numPhases q))
         (scheduledBalancedTraceLiveSet q.n) := by
   let law := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   let _ : IsProbabilityMeasure law :=
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I _
@@ -626,11 +626,11 @@ abort; the retained-error bound above guarantees a positive live branch,
 and successful collectors have strictly positive observations there. -/
 theorem scheduledFigureOneTraceRawMean_pos
     (q : VolumeParams) (I : VolumeInput q.n) (j : ℕ)
-    (hj1 : 1 ≤ j) (hjm : j ≤ figureOneDependentPhaseCount q) :
+    (hj1 : 1 ≤ j) (hjm : j ≤ numPhases q) :
     0 < scheduledFigureOneTraceRawMean q I j := by
   let law := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   let W := scheduledBalancedTracePhaseVariable q j
   let _ : IsProbabilityMeasure law :=
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
@@ -645,11 +645,11 @@ theorem scheduledFigureOneTraceRawMean_pos
     apply measure_mono_ae
     filter_upwards [scheduledBalancedForwardTraceLaw_ae_liveCoordinatesPositive
       figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)] with trace hcoordinates
+        (numPhases q)] with trace hcoordinates
     intro htraceLive
     have hliveBool : trace.2 = true := htraceLive
     have hhistory : BalancedCoolingHistoryHasPositiveCoordinates
-        (figureOneDependentPhaseCount q) (some trace.1) := by
+        (numPhases q) (some trace.1) := by
       rcases hcoordinates with hdead | hpositive
       · rw [hliveBool] at hdead
         contradiction
@@ -683,22 +683,22 @@ theorem scheduledFigureOneTrace_truncatedSecond_le_rawSecond
     (hWmem : MemLp (scheduledBalancedTracePhaseVariable q j) 2
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q))) :
+        (numPhases q))) :
     scheduledFigureOneTraceTruncatedSecond q I j ≤
       ∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q) := by
+          (numPhases q) := by
   let mu := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   let raw := scheduledFigureOneTraceRawMean q I j
-  let alpha := figureOneDependentAlpha q
+  let alpha := truncationLevel q
   let W := scheduledBalancedTracePhaseVariable q j
   let _ : IsProbabilityMeasure mu :=
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I _
-  have halpha : 0 < alpha := figureOneDependentAlpha_pos q
+  have halpha : 0 < alpha := truncationLevel_pos q
   have hV0 : ∀ trace, 0 ≤ min (W trace) (alpha * raw) := by
     intro trace
     exact le_min (scheduledBalancedTracePhaseVariable_nonnegative q j trace)
@@ -728,27 +728,27 @@ theorem scheduledFigureOneTrace_rawMean_le_one_add_inv_alpha_mul_truncatedMean
     (hWmem : MemLp (scheduledBalancedTracePhaseVariable q j) 2
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)))
+        (numPhases q)))
     (hsecond :
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         figureOneChronologicalMomentFactor q j *
           scheduledFigureOneTraceRawMean q I j ^ 2) :
     scheduledFigureOneTraceRawMean q I j ≤
-      (1 + 1 / figureOneDependentAlpha q) *
+      (1 + 1 / truncationLevel q) *
         scheduledFigureOneTraceTruncatedMean q I j := by
   let mu := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   let raw := scheduledFigureOneTraceRawMean q I j
-  let alpha := figureOneDependentAlpha q
+  let alpha := truncationLevel q
   let W := scheduledBalancedTracePhaseVariable q j
   let _ : IsProbabilityMeasure mu :=
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I _
-  have halpha : (1024 : ℝ) ≤ alpha := figureOneDependentAlpha_ge_1024 q
+  have halpha : (1024 : ℝ) ≤ alpha := truncationLevel_ge_1024 q
   have hcap : 0 < alpha * raw := mul_pos (by linarith) hrawPos
   have htrunc := integral_min_ge_integral_sub_secondMoment_div_four mu
     (hWmem.integrable (by norm_num)) hWmem.integrable_sq
@@ -802,31 +802,31 @@ theorem scheduledFigureOneTraceTruncatedMean_nonnegative
   intro trace
   unfold scheduledFigureOneTraceTruncatedPhase dependentTruncatedPhase
   exact le_min (scheduledBalancedTracePhaseVariable_nonnegative q j trace)
-    (mul_nonneg (figureOneDependentAlpha_pos q).le hraw0)
+    (mul_nonneg (truncationLevel_pos q).le hraw0)
 
 /-- The product of actual raw means loses at most the same truncation factor
 as in Lemma 7.14. -/
 theorem scheduledFigureOneTrace_rawMeanProduct_le_pow_mul_truncatedMeanProduct
     (q : VolumeParams) (I : VolumeInput q.n)
-    (hrawPos : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hrawPos : ∀ j, 1 ≤ j → j ≤ numPhases q →
       0 < scheduledFigureOneTraceRawMean q I j)
-    (hsecond : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hsecond : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         figureOneChronologicalMomentFactor q j *
           scheduledFigureOneTraceRawMean q I j ^ 2)
-    {i : ℕ} (hi : i ≤ figureOneDependentPhaseCount q) :
+    {i : ℕ} (hi : i ≤ numPhases q) :
     dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I) i ≤
-      (1 + 1 / figureOneDependentAlpha q) ^ i *
+      (1 + 1 / truncationLevel q) ^ i *
         dependentPhaseMeanProduct
           (scheduledFigureOneTraceTruncatedMean q I) i := by
   unfold dependentPhaseMeanProduct
   calc
     (∏ j ∈ Finset.range i, scheduledFigureOneTraceRawMean q I (j + 1)) ≤
         ∏ j ∈ Finset.range i,
-          ((1 + 1 / figureOneDependentAlpha q) *
+          ((1 + 1 / truncationLevel q) *
             scheduledFigureOneTraceTruncatedMean q I (j + 1)) := by
       apply Finset.prod_le_prod₀
       · intro j hj
@@ -834,7 +834,7 @@ theorem scheduledFigureOneTrace_rawMeanProduct_le_pow_mul_truncatedMeanProduct
           have := Finset.mem_range.mp hj
           omega)).le
       · intro j hj
-        have hjm : j + 1 ≤ figureOneDependentPhaseCount q := by
+        have hjm : j + 1 ≤ numPhases q := by
           have := Finset.mem_range.mp hj
           omega
         exact
@@ -843,7 +843,7 @@ theorem scheduledFigureOneTrace_rawMeanProduct_le_pow_mul_truncatedMeanProduct
             (memLp_scheduledBalancedForwardTrace_phaseVariable
               q I (j + 1) (by omega) hjm)
             (hsecond (j + 1) (by omega) hjm)
-    _ = (1 + 1 / figureOneDependentAlpha q) ^ i *
+    _ = (1 + 1 / truncationLevel q) ^ i *
         ∏ j ∈ Finset.range i,
           scheduledFigureOneTraceTruncatedMean q I (j + 1) := by
       rw [Finset.prod_mul_distrib]
@@ -853,16 +853,16 @@ theorem scheduledFigureOneTrace_rawMeanProduct_le_pow_mul_truncatedMeanProduct
 chronological paper factors and the square of the actual raw-mean product. -/
 theorem scheduledFigureOneTrace_truncatedSecondProduct_le_factor_mul_rawMeanProduct_sq
     (q : VolumeParams) (I : VolumeInput q.n)
-    (hrawPos : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hrawPos : ∀ j, 1 ≤ j → j ≤ numPhases q →
       0 < scheduledFigureOneTraceRawMean q I j)
-    (hsecond : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hsecond : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         figureOneChronologicalMomentFactor q j *
           scheduledFigureOneTraceRawMean q I j ^ 2)
-    {i : ℕ} (hi : i ≤ figureOneDependentPhaseCount q) :
+    {i : ℕ} (hi : i ≤ numPhases q) :
     dependentPhaseMeanProduct
         (scheduledFigureOneTraceTruncatedSecond q I) i ≤
       dependentPhaseMeanProduct (figureOneChronologicalMomentFactor q) i *
@@ -873,7 +873,7 @@ theorem scheduledFigureOneTrace_truncatedSecondProduct_le_factor_mul_rawMeanProd
   · intro j hj
     exact integral_nonneg fun _ => sq_nonneg _
   · intro j hj
-    have hjm : j + 1 ≤ figureOneDependentPhaseCount q := by
+    have hjm : j + 1 ≤ numPhases q := by
       have := Finset.mem_range.mp hj
       omega
     exact (scheduledFigureOneTrace_truncatedSecond_le_rawSecond
@@ -886,16 +886,16 @@ theorem scheduledFigureOneTrace_truncatedSecondProduct_le_factor_mul_rawMeanProd
 bound used by both finite CV18 product obligations. -/
 theorem scheduledFigureOneTrace_truncatedSecondProduct_le_one_add_eps_sq_div_32
     (q : VolumeParams) (I : VolumeInput q.n)
-    (hrawPos : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hrawPos : ∀ j, 1 ≤ j → j ≤ numPhases q →
       0 < scheduledFigureOneTraceRawMean q I j)
-    (hsecond : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hsecond : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         figureOneChronologicalMomentFactor q j *
           scheduledFigureOneTraceRawMean q I j ^ 2)
-    {i : ℕ} (hi : i ≤ figureOneDependentPhaseCount q) :
+    {i : ℕ} (hi : i ≤ numPhases q) :
     dependentPhaseMeanProduct
         (scheduledFigureOneTraceTruncatedSecond q I) i ≤
       (1 + q.eps ^ 2 / 32) *
@@ -911,7 +911,7 @@ theorem scheduledFigureOneTrace_truncatedSecondProduct_le_one_add_eps_sq_div_32
     dependentPhaseMeanProduct_nonneg _ (fun j =>
       scheduledFigureOneTraceTruncatedMean_nonnegative q I j <|
         if hj1 : 1 ≤ j then
-          if hjm : j ≤ figureOneDependentPhaseCount q then
+          if hjm : j ≤ numPhases q then
             (hrawPos j hj1 hjm).le
           else by
             unfold scheduledFigureOneTraceRawMean
@@ -978,18 +978,18 @@ theorem scheduledFigureOneTrace_truncatedSecondProduct_le_one_add_eps_sq_div_32
 relative-product premise of the executable capstone. -/
 theorem scheduledFigureOneTrace_relativeProduct_finite_of_sharp_moments
     (q : VolumeParams) (I : VolumeInput q.n)
-    (hrawPos : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hrawPos : ∀ j, 1 ≤ j → j ≤ numPhases q →
       0 < scheduledFigureOneTraceRawMean q I j)
-    (hsecond : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hsecond : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         figureOneChronologicalMomentFactor q j *
           scheduledFigureOneTraceRawMean q I j ^ 2) :
-    ∀ i, i ≤ figureOneDependentPhaseCount q →
-      (1 + 2 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 4 * i) *
+    ∀ i, i ≤ numPhases q →
+      (1 + 2 * dependenceError q *
+          truncationLevel q ^ 4 * i) *
           dependentPhaseMeanProduct
             (scheduledFigureOneTraceTruncatedSecond q I) i ≤
         2 * dependentPhaseMeanProduct
@@ -1002,18 +1002,18 @@ theorem scheduledFigureOneTrace_relativeProduct_finite_of_sharp_moments
     scheduledFigureOneTrace_truncatedSecondProduct_le_one_add_eps_sq_div_32
       q I hrawPos hsecond hi
   have hmult := figureOneDependentMomentMultiplier_le q hi
-  have hmult0 : 0 ≤ 1 + 2 * figureOneDependentEpsilon q *
-      figureOneDependentAlpha q ^ 4 * (i : ℝ) := by
-    have hterm : 0 ≤ 2 * figureOneDependentEpsilon q *
-        figureOneDependentAlpha q ^ 4 * (i : ℝ) :=
+  have hmult0 : 0 ≤ 1 + 2 * dependenceError q *
+      truncationLevel q ^ 4 * (i : ℝ) := by
+    have hterm : 0 ≤ 2 * dependenceError q *
+        truncationLevel q ^ 4 * (i : ℝ) :=
       mul_nonneg
         (mul_nonneg (mul_nonneg (by norm_num)
-          (figureOneDependentEpsilon_nonneg q)) (by positivity))
+          (dependenceError_nonneg q)) (by positivity))
         (by positivity)
     linarith
   calc
-    _ ≤ (1 + 2 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 4 * i) *
+    _ ≤ (1 + 2 * dependenceError q *
+          truncationLevel q ^ 4 * i) *
         ((1 + q.eps ^ 2 / 32) * meanProduct ^ 2) :=
       mul_le_mul_of_nonneg_left hsecondProduct hmult0
     _ ≤ ((1 + q.eps ^ 2 / 2048) * (1 + q.eps ^ 2 / 32)) *
@@ -1032,48 +1032,48 @@ theorem scheduledFigureOneTrace_relativeProduct_finite_of_sharp_moments
 tail premise. -/
 theorem scheduledFigureOneTrace_tailSecond_of_sharp_moments
     (q : VolumeParams) (I : VolumeInput q.n)
-    (hrawPos : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hrawPos : ∀ j, 1 ≤ j → j ≤ numPhases q →
       0 < scheduledFigureOneTraceRawMean q I j)
-    (hsecond : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hsecond : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         figureOneChronologicalMomentFactor q j *
           scheduledFigureOneTraceRawMean q I j ^ 2) :
-    (1 + 2 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 4 *
-            figureOneDependentPhaseCount q) *
+    (1 + 2 * dependenceError q *
+          truncationLevel q ^ 4 *
+            numPhases q) *
           dependentPhaseMeanProduct
             (scheduledFigureOneTraceTruncatedSecond q I)
-            (figureOneDependentPhaseCount q) ≤
+            (numPhases q) ≤
         (1 + q.eps ^ 2 / 16) *
           dependentPhaseMeanProduct
             (scheduledFigureOneTraceTruncatedMean q I)
-            (figureOneDependentPhaseCount q) ^ 2 := by
+            (numPhases q) ^ 2 := by
   let meanProduct := dependentPhaseMeanProduct
     (scheduledFigureOneTraceTruncatedMean q I)
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   have hmeanSq0 : 0 ≤ meanProduct ^ 2 := sq_nonneg _
   have hsecondProduct :=
     scheduledFigureOneTrace_truncatedSecondProduct_le_one_add_eps_sq_div_32
       q I hrawPos hsecond (le_refl _)
   have hmult := figureOneDependentMomentMultiplier_le q (le_refl _)
-  have hmult0 : 0 ≤ 1 + 2 * figureOneDependentEpsilon q *
-      figureOneDependentAlpha q ^ 4 *
-        (figureOneDependentPhaseCount q : ℝ) := by
-    have hterm : 0 ≤ 2 * figureOneDependentEpsilon q *
-        figureOneDependentAlpha q ^ 4 *
-          (figureOneDependentPhaseCount q : ℝ) :=
+  have hmult0 : 0 ≤ 1 + 2 * dependenceError q *
+      truncationLevel q ^ 4 *
+        (numPhases q : ℝ) := by
+    have hterm : 0 ≤ 2 * dependenceError q *
+        truncationLevel q ^ 4 *
+          (numPhases q : ℝ) :=
       mul_nonneg
         (mul_nonneg (mul_nonneg (by norm_num)
-          (figureOneDependentEpsilon_nonneg q)) (by positivity))
+          (dependenceError_nonneg q)) (by positivity))
         (by positivity)
     linarith
   calc
-    _ ≤ (1 + 2 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 4 *
-            figureOneDependentPhaseCount q) *
+    _ ≤ (1 + 2 * dependenceError q *
+          truncationLevel q ^ 4 *
+            numPhases q) *
         ((1 + q.eps ^ 2 / 32) * meanProduct ^ 2) :=
       mul_le_mul_of_nonneg_left hsecondProduct hmult0
     _ ≤ ((1 + q.eps ^ 2 / 2048) * (1 + q.eps ^ 2 / 32)) *
@@ -1088,16 +1088,16 @@ theorem scheduledFigureOneTrace_tailSecond_of_sharp_moments
 /-- Actual-mean truncation decreases each phase mean. -/
 theorem scheduledFigureOneTrace_truncatedMeanProduct_le_rawMeanProduct
     (q : VolumeParams) (I : VolumeInput q.n)
-    (hrawPos : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hrawPos : ∀ j, 1 ≤ j → j ≤ numPhases q →
       0 < scheduledFigureOneTraceRawMean q I j)
-    {i : ℕ} (hi : i ≤ figureOneDependentPhaseCount q) :
+    {i : ℕ} (hi : i ≤ numPhases q) :
     dependentPhaseMeanProduct
         (scheduledFigureOneTraceTruncatedMean q I) i ≤
       dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I) i := by
   let _ : IsProbabilityMeasure
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)) :=
+        (numPhases q)) :=
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I _
   unfold dependentPhaseMeanProduct
@@ -1110,9 +1110,9 @@ theorem scheduledFigureOneTrace_truncatedMeanProduct_le_rawMeanProduct
   · intro j hj
     let mu := scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)
+        (numPhases q)
     let W := scheduledBalancedTracePhaseVariable q (j + 1)
-    have hjm : j + 1 ≤ figureOneDependentPhaseCount q := by
+    have hjm : j + 1 ≤ numPhases q := by
       have := Finset.mem_range.mp hj
       omega
     have hraw := hrawPos (j + 1) (by omega) hjm
@@ -1121,14 +1121,14 @@ theorem scheduledFigureOneTrace_truncatedMeanProduct_le_rawMeanProduct
       apply MemLp.of_bound
         ((measurable_scheduledBalancedTracePhaseVariable q (j + 1)).min
           measurable_const).aestronglyMeasurable
-        (figureOneDependentAlpha q *
+        (truncationLevel q *
           scheduledFigureOneTraceRawMean q I (j + 1))
       filter_upwards with trace
       rw [Real.norm_eq_abs, abs_of_nonneg]
       · exact min_le_right _ _
       · exact le_min
           (scheduledBalancedTracePhaseVariable_nonnegative q (j + 1) trace)
-          (mul_nonneg (figureOneDependentAlpha_pos q).le hraw.le)
+          (mul_nonneg (truncationLevel_pos q).le hraw.le)
     unfold scheduledFigureOneTraceTruncatedMean
       scheduledFigureOneTraceRawMean
     apply integral_mono (hVmem.integrable (by norm_num))
@@ -1142,30 +1142,30 @@ ideal center, Lemma 7.14's truncation loss upgrades this to the capstone's
 `eps/32` comparison. -/
 theorem scheduledFigureOneTrace_truncatedMeanProduct_relativeApprox_ideal
     (q : VolumeParams) (I : VolumeInput q.n)
-    (hrawPos : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hrawPos : ∀ j, 1 ≤ j → j ≤ numPhases q →
       0 < scheduledFigureOneTraceRawMean q I j)
-    (hsecond : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hsecond : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         figureOneChronologicalMomentFactor q j *
           scheduledFigureOneTraceRawMean q I j ^ 2)
     (hrawApprox : RelativeApprox (q.eps / 64)
       (∏ phase, figureOneIdealPhaseMean q I phase)
       (dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I)
-        (figureOneDependentPhaseCount q))) :
+        (numPhases q))) :
     RelativeApprox (q.eps / 32)
       (∏ phase, figureOneIdealPhaseMean q I phase)
       (dependentPhaseMeanProduct
         (scheduledFigureOneTraceTruncatedMean q I)
-        (figureOneDependentPhaseCount q)) := by
+        (numPhases q)) := by
   let ideal := ∏ phase, figureOneIdealPhaseMean q I phase
   let raw := dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I)
-    (figureOneDependentPhaseCount q)
+    (numPhases q)
   let truncated := dependentPhaseMeanProduct
     (scheduledFigureOneTraceTruncatedMean q I)
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   have hidealPos : 0 < ideal := Finset.prod_pos fun phase _ =>
     figureOneIdealPhaseMean_pos q I phase
   have htruncated0 : 0 ≤ truncated :=
@@ -1223,28 +1223,28 @@ proved above. -/
 theorem figureOnePostInitialDirectFailureBoundFor_of_sharp_trace_moments
     (q : VolumeParams) (I : VolumeInput q.n)
     (oracle : MembershipOracle I) (hrounded : WellRounded q I)
-    (hrawPos : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hrawPos : ∀ j, 1 ≤ j → j ≤ numPhases q →
       0 < scheduledFigureOneTraceRawMean q I j)
-    (hsecond : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hsecond : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         figureOneChronologicalMomentFactor q j *
           scheduledFigureOneTraceRawMean q I j ^ 2)
-    (hind : ∀ i, i < figureOneDependentPhaseCount q →
-      ApproxIndepFun (figureOneDependentEpsilon q)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+    (hind : ∀ i, i < numPhases q →
+      ApproxIndepFun (dependenceError q)
+        (dependentTruncatedProduct (truncationLevel q)
           (scheduledFigureOneTraceTruncatedMean q I)
           (scheduledFigureOneTraceTruncatedPhase q I) i)
         (scheduledFigureOneTraceTruncatedPhase q I (i + 1))
         (scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)))
+          (numPhases q)))
     (hrawApprox : RelativeApprox (q.eps / 64)
       (∏ phase, figureOneIdealPhaseMean q I phase)
       (dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I)
-        (figureOneDependentPhaseCount q))) :
+        (numPhases q))) :
     FigureOnePostInitialDirectFailureBoundFor q I fun point =>
       (scheduledBalancedFigureOnePointContinuation
         figureOneFinalScheduledBalancedParameters q point).runEstimate
@@ -1259,7 +1259,7 @@ theorem figureOnePostInitialDirectFailureBoundFor_of_sharp_trace_moments
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
           ∂scheduledBalancedForwardTraceLaw
             figureOneFinalScheduledBalancedParameters q I
-            (figureOneDependentPhaseCount q)) ≤
+            (numPhases q)) ≤
           figureOneChronologicalMomentFactor q j *
             scheduledFigureOneTraceRawMean q I j ^ 2 :=
         hsecond j hj1 hjm
@@ -1280,28 +1280,28 @@ theorem figureOnePostInitialDirectFailureBoundFor_of_sharp_trace_moments
 theorem figureOneFinalScheduledBalancedBase_failure_le_of_sharp_trace_moments
     (q : VolumeParams) (I : VolumeInput q.n)
     (oracle : MembershipOracle I) (hrounded : WellRounded q I)
-    (hrawPos : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hrawPos : ∀ j, 1 ≤ j → j ≤ numPhases q →
       0 < scheduledFigureOneTraceRawMean q I j)
-    (hsecond : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hsecond : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         figureOneChronologicalMomentFactor q j *
           scheduledFigureOneTraceRawMean q I j ^ 2)
-    (hind : ∀ i, i < figureOneDependentPhaseCount q →
-      ApproxIndepFun (figureOneDependentEpsilon q)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+    (hind : ∀ i, i < numPhases q →
+      ApproxIndepFun (dependenceError q)
+        (dependentTruncatedProduct (truncationLevel q)
           (scheduledFigureOneTraceTruncatedMean q I)
           (scheduledFigureOneTraceTruncatedPhase q I) i)
         (scheduledFigureOneTraceTruncatedPhase q I (i + 1))
         (scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)))
+          (numPhases q)))
     (hrawApprox : RelativeApprox (q.eps / 64)
       (∏ phase, figureOneIdealPhaseMean q I phase)
       (dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I)
-        (figureOneDependentPhaseCount q))) :
+        (numPhases q))) :
     (figureOneFinalScheduledBalancedBaseProgram q).runEstimate oracle.query
         (accurateOutcome q I)ᶜ ≤ ENNReal.ofReal (13 / 64 : ℝ) := by
   apply figureOneFinalScheduledBalancedBase_failure_le_of_directPostInitial
@@ -1314,28 +1314,28 @@ actual paper-faithful aborting scheduled implementation. -/
 theorem figureOneFinalScheduledAbortBase_failure_le_of_sharp_trace_moments
     (q : VolumeParams) (I : VolumeInput q.n)
     (oracle : MembershipOracle I) (hrounded : WellRounded q I)
-    (hrawPos : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hrawPos : ∀ j, 1 ≤ j → j ≤ numPhases q →
       0 < scheduledFigureOneTraceRawMean q I j)
-    (hsecond : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hsecond : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         figureOneChronologicalMomentFactor q j *
           scheduledFigureOneTraceRawMean q I j ^ 2)
-    (hind : ∀ i, i < figureOneDependentPhaseCount q →
-      ApproxIndepFun (figureOneDependentEpsilon q)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+    (hind : ∀ i, i < numPhases q →
+      ApproxIndepFun (dependenceError q)
+        (dependentTruncatedProduct (truncationLevel q)
           (scheduledFigureOneTraceTruncatedMean q I)
           (scheduledFigureOneTraceTruncatedPhase q I) i)
         (scheduledFigureOneTraceTruncatedPhase q I (i + 1))
         (scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)))
+          (numPhases q)))
     (hrawApprox : RelativeApprox (q.eps / 64)
       (∏ phase, figureOneIdealPhaseMean q I phase)
       (dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I)
-        (figureOneDependentPhaseCount q))) :
+        (numPhases q))) :
     (figureOneFinalScheduledAbortBaseProgram q).runEstimate oracle.query
         (accurateOutcome q I)ᶜ ≤ ENNReal.ofReal (13 / 64 : ℝ) := by
   apply figureOneFinalScheduledAbortBase_failure_le_of_directPostInitial
@@ -1349,26 +1349,26 @@ second moment, Lemma 7.17(c), and raw-product bias premises. -/
 theorem figureOneFinalScheduledAbortBase_failure_le_of_trace_quantitative_moments
     (q : VolumeParams) (I : VolumeInput q.n)
     (oracle : MembershipOracle I) (hrounded : WellRounded q I)
-    (hsecond : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hsecond : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         figureOneChronologicalMomentFactor q j *
           scheduledFigureOneTraceRawMean q I j ^ 2)
-    (hind : ∀ i, i < figureOneDependentPhaseCount q →
-      ApproxIndepFun (figureOneDependentEpsilon q)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+    (hind : ∀ i, i < numPhases q →
+      ApproxIndepFun (dependenceError q)
+        (dependentTruncatedProduct (truncationLevel q)
           (scheduledFigureOneTraceTruncatedMean q I)
           (scheduledFigureOneTraceTruncatedPhase q I) i)
         (scheduledFigureOneTraceTruncatedPhase q I (i + 1))
         (scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)))
+          (numPhases q)))
     (hrawApprox : RelativeApprox (q.eps / 64)
       (∏ phase, figureOneIdealPhaseMean q I phase)
       (dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I)
-        (figureOneDependentPhaseCount q))) :
+        (numPhases q))) :
     (figureOneFinalScheduledAbortBaseProgram q).runEstimate oracle.query
         (accurateOutcome q I)ᶜ ≤ ENNReal.ofReal (13 / 64 : ℝ) := by
   exact figureOneFinalScheduledAbortBase_failure_le_of_sharp_trace_moments
@@ -1382,28 +1382,28 @@ the CV18 variance calculation. -/
 theorem figureOneFinalScheduledAbortBase_failure_le_of_centered_phase_moments
     (q : VolumeParams) (I : VolumeInput q.n)
     (oracle : MembershipOracle I) (hrounded : WellRounded q I)
-    (hcenter : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hcenter : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ trace,
           (scheduledBalancedTracePhaseVariable q j trace -
             scheduledFigureOneTraceRawMean q I j) ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         (figureOneChronologicalMomentFactor q j - 1) *
           scheduledFigureOneTraceRawMean q I j ^ 2)
-    (hind : ∀ i, i < figureOneDependentPhaseCount q →
-      ApproxIndepFun (figureOneDependentEpsilon q)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+    (hind : ∀ i, i < numPhases q →
+      ApproxIndepFun (dependenceError q)
+        (dependentTruncatedProduct (truncationLevel q)
           (scheduledFigureOneTraceTruncatedMean q I)
           (scheduledFigureOneTraceTruncatedPhase q I) i)
         (scheduledFigureOneTraceTruncatedPhase q I (i + 1))
         (scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)))
+          (numPhases q)))
     (hrawApprox : RelativeApprox (q.eps / 64)
       (∏ phase, figureOneIdealPhaseMean q I phase)
       (dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I)
-        (figureOneDependentPhaseCount q))) :
+        (numPhases q))) :
     (figureOneFinalScheduledAbortBaseProgram q).runEstimate oracle.query
         (accurateOutcome q I)ᶜ ≤ ENNReal.ofReal (13 / 64 : ℝ) := by
   apply figureOneFinalScheduledAbortBase_failure_le_of_trace_quantitative_moments

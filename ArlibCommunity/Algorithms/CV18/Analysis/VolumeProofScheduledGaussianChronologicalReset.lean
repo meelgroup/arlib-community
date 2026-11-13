@@ -96,8 +96,8 @@ theorem scheduledResetPairKernel_gaussian_leUpTo_acceptedTarget
     (hretained : source.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
     (hgood : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
-      (accepted.map fun point => accuracyScaleFactor q • point)
+      (ENNReal.ofReal (8 * warmConstant q))
+      (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase))
     (target : Measure (ℝ × Option (AmbientSpace q.n)))
     [IsProbabilityMeasure target]
@@ -106,7 +106,7 @@ theorem scheduledResetPairKernel_gaussian_leUpTo_acceptedTarget
         scheduledResetPairOutput)
       target
       (scheduledResetReferenceError q
-        (figureOnePhaseSampleCount q (scheduleValue q phase) - 1) +
+        (phaseSampleCount q (scheduleValue q phase) - 1) +
           scheduledBalancedStationaryTargetError q)) :
     MeasureLeUpTo
       ((sequentialPairLaw source
@@ -114,13 +114,13 @@ theorem scheduledResetPairKernel_gaussian_leUpTo_acceptedTarget
       target
       (figureOneCorrectedTransitionBudget q +
         scheduledResetReferenceError q
-          (figureOnePhaseSampleCount q (scheduleValue q phase) - 1) +
+          (phaseSampleCount q (scheduleValue q phase) - 1) +
         scheduledBalancedStationaryTargetError q) := by
   have hphaseRaw :=
     sequentialPairLaw_gaussian_output_leUpTo_of_retainedSome_warm
       q I phase hphase source accepted hretained <| hgood.mono <| by
         apply ENNReal.ofReal_le_ofReal
-        nlinarith [speedyAdjacentWarmConstant_one_le q]
+        nlinarith [warmConstant_one_le q]
   have hmapped := hphaseRaw.map measurable_scheduledResetPairOutput
   have hseq := sequentialPairLaw_scheduledResetPairKernel_eq_map
     q I phase source
@@ -160,8 +160,8 @@ theorem exists_scheduledGaussianTraceRecordedReset
     (hretained : source.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
     (hgood : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
-      (accepted.map fun point => accuracyScaleFactor q • point)
+      (ENNReal.ofReal (8 * warmConstant q))
+      (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase))
     (oldStatistic : ScheduledBalancedCoolingTrace q.n → ℝ)
     (holdMeasurable : Measurable oldStatistic)
@@ -178,7 +178,7 @@ theorem exists_scheduledGaussianTraceRecordedReset
         reference
         (figureOneCorrectedTransitionBudget q +
           scheduledResetReferenceError q
-            (figureOnePhaseSampleCount q (scheduleValue q phase) - 1) +
+            (phaseSampleCount q (scheduleValue q phase) - 1) +
           scheduledBalancedStationaryTargetError q) ∧
       reference.map scheduledBalancedTraceRetainedOption =
         (figureOneScheduledAcceptedTargetAt q I phase).map some ∧
@@ -198,7 +198,7 @@ theorem exists_scheduledGaussianTraceRecordedReset
             figureOneCorrectedTransitionBudget q).toReal +
           3 * (figureOneCorrectedTransitionBudget q +
             scheduledResetReferenceError q
-              (figureOnePhaseSampleCount q (scheduleValue q phase) - 1) +
+              (phaseSampleCount q (scheduleValue q phase) - 1) +
             scheduledBalancedStationaryTargetError q).toReal)
         oldStatistic
         (scheduledBalancedTracePhaseVariable q (phase + 1)) reference ∧
@@ -210,12 +210,12 @@ theorem exists_scheduledGaussianTraceRecordedReset
       htargetNonnegative, htargetMem, htargetMean, htargetSecond⟩ :=
     exists_scheduledGaussianAcceptedPairTarget q I phase hphase
   let _ : IsProbabilityMeasure target := htargetProb
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let delta := figureOneCorrectedTransitionBudget q +
     scheduledResetReferenceError q (count - 1) +
       scheduledBalancedStationaryTargetError q
-  have hphaseDependent : phase < figureOneDependentPhaseCount q := by
-    rw [figureOneDependentPhaseCount]
+  have hphaseDependent : phase < numPhases q := by
+    rw [numPhases]
     omega
   have hdelta : delta ≠ ⊤ := by
     have htransitionTop : figureOneCorrectedTransitionBudget q ≠ ⊤ := by

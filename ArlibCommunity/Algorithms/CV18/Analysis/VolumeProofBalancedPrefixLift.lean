@@ -203,8 +203,8 @@ theorem balancedCoolingRatioEstimate_queryPrefixEq
   apply (balancedAccuracyRetryCollect_queryPrefixEq_of_le q sigma2
     (gaussianRatioWeight sigma2 tau2) (parameters₂.properStride q sigma2)
       (parameters₂.retryLimit q sigma2)
-      (figureOnePhaseSampleCount q sigma2)
-      (accuracyScaleFactor q • current) hcap₁ hcap₂).bind
+      (phaseSampleCount q sigma2)
+      (scaleFactor q • current) hcap₁ hcap₂).bind
   intro result
   exact .pure budget _
 
@@ -225,8 +225,8 @@ theorem balancedCoolingUniformEstimateWithState_queryPrefixEq
   rw [hstride, hretry]
   apply (balancedAccuracyRetryCollect_queryPrefixEq_of_le q sigma2
     (uniformRatioWeight sigma2) (parameters₂.properStride q sigma2)
-      (parameters₂.retryLimit q sigma2) (figureOneSampleCount q)
-      (accuracyScaleFactor q • current) hcap₁ hcap₂).bind
+      (parameters₂.retryLimit q sigma2) (sampleCount q)
+      (scaleFactor q • current) hcap₁ hcap₂).bind
   intro result
   exact .pure budget _
 

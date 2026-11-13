@@ -25,7 +25,7 @@ theorem volume_proof_amplification :
               (baseVolumeCooling P S q).QueryBound calls ∧
               calls ≤
                 Nat.ceil
-                  (C₀ * volumeBaseComplexityRate q)) →
+                  (C₀ * baseRate q)) →
               1 - q.p ≤
                   outcomeProbability
                     (volumeAlgorithmLaw (volumeCoolingAlgorithm P S) q I oracle)
@@ -38,7 +38,7 @@ theorem volume_proof_amplification :
   refine ⟨C, by dsimp [C]; linarith, ?_⟩
   intro P S q I oracle hprob hmeas hcost
   let μ : Measure ℝ := (baseVolumeCooling P S q).runEstimate oracle.query
-  let R : ℝ := volumeBaseComplexityRate q
+  let R : ℝ := baseRate q
   let L : ℝ := protectedLog (1 / q.p)
   let m : ℕ := confidenceRepetitions q
 
@@ -110,7 +110,7 @@ theorem volume_proof_amplification :
         simpa only [one_mul] using h
       have hloge : 1 ≤ protectedLog (1 / q.eps) := le_max_left _ _
       have hlogne : 1 ≤ protectedLog ((q.n : ℝ) / q.eps) := le_max_left _ _
-      have hlogt : 1 ≤ protectedLog (volumeTerminalScale q) := le_max_left _ _
+      have hlogt : 1 ≤ protectedLog (terminalScale q) := le_max_left _ _
       dsimp [R]
       exact hmul (hmul (hmul hfirst (one_le_pow₀ hloge))
         (one_le_pow₀ hlogne)) (one_le_pow₀ hlogt)

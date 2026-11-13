@@ -227,14 +227,14 @@ theorem cappedAccuracyProperCollectWeightsAux_withQueryCap_eq_of_lt
               funext inside
               exact ih rawCap₁ rawCap₂ properStride samples
                 (total + if inside = true ∧
-                    ‖(accuracyScaleFactor q)⁻¹ • current‖ ≤
+                    ‖(scaleFactor q)⁻¹ • current‖ ≤
                       Real.sqrt (terminalVariance q) ∧
-                    ‖(accuracyScaleFactor q)⁻¹ • current‖ ≤
+                    ‖(scaleFactor q)⁻¹ • current‖ ≤
                       accuracyPhaseRadius q sigma2 then
                     (Arlib.MarkovChains.gaussianScaleAcceptance sigma2
-                      (accuracyScaleFactor q)
-                      ((accuracyScaleFactor q)⁻¹ • current)).toReal *
-                        weight ((accuracyScaleFactor q)⁻¹ • current)
+                      (scaleFactor q)
+                      ((scaleFactor q)⁻¹ • current)).toReal *
+                        weight ((scaleFactor q)⁻¹ • current)
                   else 0) current hcap₁' hcap₂'
           | succ remainingProper =>
               cases remainingProper with

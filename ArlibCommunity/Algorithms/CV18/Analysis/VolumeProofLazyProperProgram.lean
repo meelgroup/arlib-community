@@ -23,10 +23,10 @@ noncomputable def truncatedMetropolisMarkedProposalProgram (q : VolumeParams)
     (sigma2 : ℝ) (current proposal : AmbientSpace q.n) :
     MembershipOracleProgram q.n (Bool × AmbientSpace q.n) :=
   .query proposal fun inside =>
-    .randomReal uniformUnitIntervalMeasure inferInstance fun coin =>
+    .randomReal uniformUnit inferInstance fun coin =>
       if inside = true ∧ ‖proposal‖ ≤ Real.sqrt (terminalVariance q) then
         .pure (true,
-          if coin ≤ lazyGaussianMetropolisAcceptance sigma2 current proposal
+          if coin ≤ lazyAcceptance sigma2 current proposal
           then proposal else current)
       else .pure (false, current)
 
@@ -35,7 +35,7 @@ noncomputable def truncatedMetropolisMarkedBallStep (q : VolumeParams)
     (sigma2 : ℝ) (current : AmbientSpace q.n) :
     MembershipOracleProgram q.n (Bool × AmbientSpace q.n) :=
   .randomPoint
-    (uniformClosedBallMeasure q.n current (figureOneProposalRadius q sigma2))
+    (uniformBall q.n current (figureOneProposalRadius q sigma2))
     inferInstance fun proposal =>
       truncatedMetropolisMarkedProposalProgram q sigma2 current proposal
 
@@ -59,7 +59,7 @@ theorem truncatedMetropolisMarkedProposalProgram_map_snd
   · simp [MembershipOracleProgram.bind, hproper]
   · have hfull : ¬ (inside = true ∧
         ‖proposal‖ ≤ Real.sqrt (terminalVariance q) ∧
-        coin ≤ lazyGaussianMetropolisAcceptance sigma2 current proposal) := by
+        coin ≤ lazyAcceptance sigma2 current proposal) := by
       intro h
       exact hproper ⟨h.1, h.2.1⟩
     simp [MembershipOracleProgram.bind, hproper, hfull]
@@ -98,27 +98,27 @@ theorem truncatedMetropolisMarkedBallStep_queryBound
 
 /-- Under the executable proposal law, the probability of landing in the
 truncated body is exactly its abstract local conductance. -/
-theorem uniformClosedBallMeasure_truncatedBody
+theorem uniformBall_truncatedBody
     (q : VolumeParams) (I : VolumeInput q.n) (current : AmbientSpace q.n)
     {radius : ℝ} (hradius : 0 < radius) :
-    uniformClosedBallMeasure q.n current radius (truncatedBody q I) =
+    uniformBall q.n current radius (truncatedBody q I) =
       Arlib.MarkovChains.ell (truncatedBody q I) radius current := by
   let _ : NeZero q.n :=
     ⟨Nat.ne_of_gt (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)⟩
-  rw [uniformClosedBallMeasure_eq_openBall current hradius,
+  rw [uniformBall_eq_openBall current hradius,
     Measure.smul_apply, smul_eq_mul, Measure.restrict_apply
       (truncatedBody_measurable q I), Arlib.MarkovChains.ell_apply,
     ENNReal.div_eq_inv_mul]
   congr 1
   rw [Set.inter_comm]
 
-theorem uniformClosedBallMeasure_truncatedBody_compl
+theorem uniformBall_truncatedBody_compl
     (q : VolumeParams) (I : VolumeInput q.n) (current : AmbientSpace q.n)
     {radius : ℝ} (hradius : 0 < radius) :
-    uniformClosedBallMeasure q.n current radius (truncatedBody q I)ᶜ =
+    uniformBall q.n current radius (truncatedBody q I)ᶜ =
       1 - Arlib.MarkovChains.ell (truncatedBody q I) radius current := by
   rw [measure_compl (truncatedBody_measurable q I) (measure_ne_top _ _),
-    measure_univ, uniformClosedBallMeasure_truncatedBody q I current hradius]
+    measure_univ, uniformBall_truncatedBody q I current hradius]
 
 theorem truncatedMetropolisMarkedProposalProgram_stronglyMeasurable
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
@@ -151,7 +151,7 @@ theorem truncatedMetropolisMarkedBallStep_stronglyMeasurable
       fun point coin =>
         if oracle.query point = true ∧
             ‖point‖ ≤ Real.sqrt (terminalVariance q) then
-          (true, if coin ≤ lazyGaussianMetropolisAcceptance sigma2 current point
+          (true, if coin ≤ lazyAcceptance sigma2 current point
             then point else current)
         else (false, current)
   have horacle : Measurable fun p : AmbientSpace q.n × ℝ =>
@@ -159,8 +159,8 @@ theorem truncatedMetropolisMarkedBallStep_stronglyMeasurable
   have hnorm : Measurable fun p : AmbientSpace q.n × ℝ => ‖p.1‖ := by
     fun_prop
   have haccept : Measurable fun p : AmbientSpace q.n × ℝ =>
-      lazyGaussianMetropolisAcceptance sigma2 current p.1 := by
-    unfold lazyGaussianMetropolisAcceptance gaussianMetropolisAcceptance
+      lazyAcceptance sigma2 current p.1 := by
+    unfold lazyAcceptance metropolisAcceptance
     fun_prop
   have hout : Measurable fun p : AmbientSpace q.n × ℝ =>
       output p.1 p.2 := by
@@ -175,7 +175,7 @@ theorem truncatedMetropolisMarkedBallStep_stronglyMeasurable
   · rw [show (fun point =>
         (truncatedMetropolisMarkedProposalProgram q sigma2 current point).runEstimate
           oracle.query) =
-        fun point => uniformUnitIntervalMeasure.map (output point) by
+        fun point => uniformUnit.map (output point) by
       funext point
       simp only [truncatedMetropolisMarkedProposalProgram,
         MembershipOracleProgram.runEstimate]
@@ -184,7 +184,7 @@ theorem truncatedMetropolisMarkedBallStep_stronglyMeasurable
             (if oracle.query point = true ∧
                 ‖point‖ ≤ Real.sqrt (terminalVariance q) then
               .pure (true, if coin ≤
-                lazyGaussianMetropolisAcceptance sigma2 current point
+                lazyAcceptance sigma2 current point
                 then point else current)
             else .pure (false, current))) =
           fun coin => Measure.dirac (output point coin) := by
@@ -194,9 +194,9 @@ theorem truncatedMetropolisMarkedBallStep_stronglyMeasurable
         · simp [hproper, output, MembershipOracleProgram.runEstimate]
         · simp [hproper, output, MembershipOracleProgram.runEstimate]
       rw [hinner]
-      exact Measure.bind_dirac_eq_map uniformUnitIntervalMeasure
+      exact Measure.bind_dirac_eq_map uniformUnit
         (hout.comp (measurable_const.prodMk measurable_id))]
-    exact measurable_measure_map_param uniformUnitIntervalMeasure hout
+    exact measurable_measure_map_param uniformUnit hout
   · intro proposal
     exact truncatedMetropolisMarkedProposalProgram_stronglyMeasurable
       q I oracle sigma2 current proposal
@@ -234,7 +234,7 @@ theorem runEstimate_truncatedMetropolisMarkedBallStep_apply_false_prod
         ({false} ×ˢ t) =
       (1 - Arlib.MarkovChains.ell (truncatedBody q I)
         (figureOneProposalRadius q sigma2) current) * t.indicator 1 current := by
-  let U := uniformClosedBallMeasure q.n current
+  let U := uniformBall q.n current
     (figureOneProposalRadius q sigma2)
   have hset : MeasurableSet ({false} ×ˢ t) :=
     (measurableSet_singleton false).prod ht
@@ -262,9 +262,9 @@ theorem runEstimate_truncatedMetropolisMarkedBallStep_apply_false_prod
           MembershipOracleProgram.runEstimate]
         rw [Set.indicator_of_notMem (by simpa using hp)]
         change (∫⁻ coin, Measure.dirac
-            (true, if coin ≤ lazyGaussianMetropolisAcceptance sigma2 current proposal
+            (true, if coin ≤ lazyAcceptance sigma2 current proposal
               then proposal else current) ({false} ×ˢ t)
-          ∂uniformUnitIntervalMeasure) = 0
+          ∂uniformUnit) = 0
         simp [Measure.dirac_apply' _ hset]
       · exact (Measure.measurable_dirac.comp <|
           measurable_const.prodMk <|
@@ -281,7 +281,7 @@ theorem runEstimate_truncatedMetropolisMarkedBallStep_apply_false_prod
   simp_rw [hinner]
   rw [lintegral_indicator (truncatedBody_measurable q I).compl]
   rw [setLIntegral_const]
-  rw [uniformClosedBallMeasure_truncatedBody_compl q I current
+  rw [uniformBall_truncatedBody_compl q I current
     (figureOneProposalRadius_pos q hsigma2)]
   ring
 

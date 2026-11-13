@@ -24,7 +24,7 @@ noncomputable section
 retained-sum deviation event. -/
 theorem initializedScheduledRetainedHistory_terminal_deviation_eq_retainedSum
     (q : VolumeParams) (I : VolumeInput q.n) (target eps : ℝ) :
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
     let K := figureOneFinalScheduledRetainedOptionKernel q I
       (terminalVariance q)
@@ -41,7 +41,7 @@ theorem initializedScheduledRetainedHistory_terminal_deviation_eq_retainedSum
         initial (count - 1))
         {state | eps * target ≤ |state.1 / (count : ℝ) - target|} := by
   dsimp only
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
   let K := figureOneFinalScheduledRetainedOptionKernel q I
     (terminalVariance q)
@@ -67,7 +67,7 @@ theorem initializedScheduledRetainedHistory_terminal_deviation_eq_retainedSum
     (measurable_retainedSampleHistoryToSum hweight ((count - 1) + 1))
     hdeviation] at happly
   have hcountEq : count - 1 + 1 = count :=
-    Nat.sub_add_cancel (figureOneSampleCount_pos q)
+    Nat.sub_add_cancel (sampleCount_pos q)
   simpa [initializedScheduledRetainedHistoryLaw, exact, K, weight, toSum,
     deviation, retainedSampleHistoryToSum, sequentialPrefixSum, hcountEq,
     scheduleValue_terminalPhaseSteps] using happly
@@ -76,7 +76,7 @@ theorem initializedScheduledRetainedHistory_terminal_deviation_eq_retainedSum
 shadow's completed live-average event. -/
 theorem figureOneScheduledTerminalPhaseTarget_deviation_eq_retainedSum
     (q : VolumeParams) (I : VolumeInput q.n) (target eps : ℝ) :
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
     let K := figureOneFinalScheduledRetainedOptionKernel q I
       (terminalVariance q)
@@ -92,7 +92,7 @@ theorem figureOneScheduledTerminalPhaseTarget_deviation_eq_retainedSum
         {state | eps * target ≤
           |retainedLiveTotal state / (count : ℝ) - target|} := by
   dsimp only
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
   let K := figureOneFinalScheduledRetainedOptionKernel q I
     (terminalVariance q)
@@ -123,14 +123,14 @@ theorem figureOneScheduledTerminalPhaseTarget_deviation_le_of_initializedHistory
     (q : VolumeParams) (I : VolumeInput q.n)
     (target eps : ℝ) (bound : ENNReal)
     (hhistory :
-      let count := figureOneSampleCount q
+      let count := sampleCount q
       let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
       (initializedScheduledRetainedHistoryLaw q I
         (terminalPhaseSteps q) (count - 1))
           {history | eps * target ≤
             |sequentialPrefixSum (retainedSampleObservation weight) count history /
                 (count : ℝ) - target|} ≤ bound) :
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
     let K := figureOneFinalScheduledRetainedOptionKernel q I
       (terminalVariance q)
@@ -145,7 +145,7 @@ theorem figureOneScheduledTerminalPhaseTarget_deviation_le_of_initializedHistory
           |scheduledBalancedPhaseRatio result - target|} ≤
       bound + shadow {state | state.2 = none} := by
   dsimp only at hhistory ⊢
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
   let K := figureOneFinalScheduledRetainedOptionKernel q I
     (terminalVariance q)
@@ -178,7 +178,7 @@ theorem figureOneScheduledTerminalPhaseTarget_deviation_le_of_initializedHistory
 death mass, hence is controlled by the existing finite-retry endpoint bound. -/
 theorem figureOneScheduledTerminalShadow_dead_le
     (q : VolumeParams) (I : VolumeInput q.n) :
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
     let K := figureOneFinalScheduledRetainedOptionKernel q I
       (terminalVariance q)
@@ -191,7 +191,7 @@ theorem figureOneScheduledTerminalShadow_dead_le
       scheduledBalancedStationaryTargetError q +
         (count - 1) • figureOneCorrectedTransitionBudget q := by
   dsimp only
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let steps := count - 1
   let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
   let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -245,7 +245,7 @@ theorem figureOneScheduledTerminalShadow_dead_le
 completion.  The only new charge is the explicit terminal shadow death mass. -/
 theorem figureOneScheduledTerminalPhaseTarget_relativeDeviation_le_final
     (q : VolumeParams) (I : VolumeInput q.n) {eps : ℝ} (heps : 0 < eps) :
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     let delta := (Real.exp (1 / 2) - 1) / (count : ℝ) +
       figureOneExecutableMomentSlack q / 8
     figureOneScheduledTerminalPhaseTarget q I
@@ -257,7 +257,7 @@ theorem figureOneScheduledTerminalPhaseTarget_relativeDeviation_le_final
         (scheduledBalancedStationaryTargetError q +
           (count - 1) • figureOneCorrectedTransitionBudget q) := by
   dsimp only
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let delta := (Real.exp (1 / 2) - 1) / (count : ℝ) +
     figureOneExecutableMomentSlack q / 8
   let bound := ENNReal.ofReal (delta / eps ^ 2) +
@@ -282,7 +282,7 @@ theorem map_figureOneScheduledTerminalPhaseTarget_liveRaw_eq_ratio
         figureOneScheduledTraceLiveRawOutput =
       (figureOneScheduledTerminalPhaseTarget q I).map
         scheduledBalancedPhaseRatio := by
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
   let K := figureOneFinalScheduledRetainedOptionKernel q I
     (terminalVariance q)
@@ -295,7 +295,7 @@ theorem map_figureOneScheduledTerminalPhaseTarget_liveRaw_eq_ratio
     initial (count - 1)
   let output := balancedCoolingAverage count ∘
     (retainedSumOutput (S := AmbientSpace q.n))
-  have hcount : 0 < count := figureOneSampleCount_pos q
+  have hcount : 0 < count := sampleCount_pos q
   have hcountReal : (0 : ℝ) < count := by exact_mod_cast hcount
   have hweight : Measurable weight :=
     measurable_uniformRatioWeight (terminalVariance q)
@@ -341,12 +341,12 @@ the right side lists exactly the collector-death and terminal boundary MLU
 charges. -/
 theorem scheduledBalancedFinalTraceRawTerminalPhase_relativeDeviation_le_final
     (q : VolumeParams) (I : VolumeInput q.n) {eps : ℝ} (heps : 0 < eps) :
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     let delta := (Real.exp (1 / 2) - 1) / (count : ℝ) +
       figureOneExecutableMomentSlack q / 8
     (scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q))
+        (numPhases q))
       {trace | eps * figureOneIdealPhaseMean q I .terminal ≤
         |scheduledBalancedTracePhaseVariable q
             (terminalPhaseSteps q + 1) trace -
@@ -358,12 +358,12 @@ theorem scheduledBalancedFinalTraceRawTerminalPhase_relativeDeviation_le_final
         (figureOneCorrectedTransitionBudget q +
           figureOneScheduledRetainedError q (terminalPhaseSteps q)) := by
   dsimp only
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let delta := (Real.exp (1 / 2) - 1) / (count : ℝ) +
     figureOneExecutableMomentSlack q / 8
   let finalLaw := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   let W := scheduledBalancedTracePhaseVariable q
     (terminalPhaseSteps q + 1)
   let target := figureOneIdealPhaseMean q I .terminal

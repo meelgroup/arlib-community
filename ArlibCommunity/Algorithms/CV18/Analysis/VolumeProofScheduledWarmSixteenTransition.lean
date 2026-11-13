@@ -18,10 +18,10 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe_of_warmSixteen
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (mu : Measure (AmbientSpace q.n)) [IsProbabilityMeasure mu]
     (hwarm : Arlib.IsWarm
-      (ENNReal.ofReal (16 * speedyAdjacentWarmConstant q)) mu
+      (ENNReal.ofReal (16 * warmConstant q)) mu
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)) :
+        (proposalRadius q sigma2) sigma2)) :
     Arlib.TVLe
       (mu.bind
         (scheduledBalancedAccuracyTransitionLawAux q I sigma2
@@ -31,40 +31,40 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe_of_warmSixteen
       ((truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n)).map some)
       (figureOneCorrectedTransitionBudget q) := by
-  let attempts := figureOneSafeRetryCount q - 1
+  let attempts := maxRetries q - 1
   let proposalCap :=
     figureOneFinalScheduledBalancedParameters.proposalCap q sigma2
   let properStride :=
     figureOneFinalScheduledBalancedParameters.properStride q sigma2
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let pi := ellGaussianProb K delta sigma2
   have hproposalCap : 0 < proposalCap := by
     simpa [proposalCap] using
       figureOneFinalScheduledBalancedParameters_proposalCap_pos q sigma2
   have hmixWithin := mixesWithin_scheduledPhaseBody_figureOne_cv18
-    q I hsigma2 (M := 16 * speedyAdjacentWarmConstant q)
-      (eps := figureOneCorrectedBlockMixingError q attempts)
+    q I hsigma2 (M := 16 * warmConstant q)
+      (eps := blockMixingError q attempts)
       (by
-        have hM := speedyAdjacentWarmConstant_one_le q
+        have hM := warmConstant_one_le q
         nlinarith)
       (by simpa [K, delta, pi] using hwarm)
-      (figureOneCorrectedBlockMixingError_pos q attempts)
-      (figureOneCorrectedBlockMixingError_le_one q attempts)
+      (blockMixingError_pos q attempts)
+      (blockMixingError_le_one q attempts)
       (by
         have hwalk :=
-          figureOneScheduledCorrectedFirstWalkRequirement_le_stride
+          firstWalkRequirement_le_stride
             q sigma2 attempts
-        change figureOneScheduledWalkRequirement q sigma2
-          (16 * speedyAdjacentWarmConstant q)
-            (figureOneCorrectedBlockMixingError q attempts) ≤
+        change walkRequirement q sigma2
+          (16 * warmConstant q)
+            (blockMixingError q attempts) ≤
               (properStride : ℝ)
           at hwalk
-        simpa only [figureOneScheduledWalkRequirement] using hwalk)
+        simpa only [walkRequirement] using hwalk)
   have hmix : Arlib.TVLe
       (iterate (lazy (speedyMetropolisGaussian K delta sigma2))
         mu properStride)
-      pi (ENNReal.ofReal (figureOneCorrectedBlockMixingError q attempts)) := by
+      pi (ENNReal.ofReal (blockMixingError q attempts)) := by
     simpa [MixesWithin, K, delta, pi, properStride, attempts] using hmixWithin
   have hfirst : MeasureLeUpTo
       ((mu.bind
@@ -80,7 +80,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe_of_warmSixteen
               figureOneFinalScheduled_firstCapBudget q sigma2)
           hmix
     have hmixEq : ENNReal.ofReal
-        (figureOneCorrectedBlockMixingError q attempts) =
+        (blockMixingError q attempts) =
           figureOneCorrectedBlockBudget q attempts := rfl
     simpa [hmixEq, two_mul, K, delta, pi] using hblock
   have hretry :
@@ -97,12 +97,12 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe_of_warmSixteen
           (by
             simpa [properStride, attempts,
               figureOneFinalScheduledBalancedParameters_properStride] using
-              figureOneScheduledCorrectedRetryWalkRequirement_le_stride
+              retryWalkRequirement_le_stride
                 q sigma2 attempts)
           (by
             simpa [properStride, proposalCap, attempts] using
               figureOneFinalScheduled_retryCapBudget q sigma2)
-  have hdelta : 0 < delta := figureOneScheduledProposalRadius_pos q hsigma2
+  have hdelta : 0 < delta := proposalRadius_pos q hsigma2
   have hmass0 : ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 := by
     dsimp [K]
     exact ellGaussianMeasure_univ_ne_zero
@@ -134,7 +134,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe_of_warmSixteen
     bind_scheduledBalancedTransition_tvLe_truncatedGaussian_corrected
       q I hsigma2 proposalCap properStride attempts mu hfirst hretry htail
   simpa [proposalCap, properStride, attempts,
-    Nat.sub_add_cancel (figureOneSafeRetryCount_pos q)] using htv
+    Nat.sub_add_cancel (maxRetries_pos q)] using htv
 
 /-- Sharp good/bad entry point for the actual scaled accepted-target
 marginal.  A half-event conditioning doubles its `8 *` warm good component;
@@ -149,10 +149,10 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_of_good_bad_sharp
     (hmuWarm : Arlib.IsWarm 2 mu rho)
     (hrho : rho ≤ good + bad)
     (hgood : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) good
+      (ENNReal.ofReal (8 * warmConstant q)) good
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (hbad : bad Set.univ ≤ eta) :
     MeasureLeUpTo
       (mu.bind
@@ -165,12 +165,12 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_of_good_bad_sharp
       (figureOneCorrectedTransitionBudget q + 2 * eta) := by
   let pi := ellGaussianProb
     (figureOneScheduledPhaseBody q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
-  have hdelta : 0 < figureOneScheduledProposalRadius q sigma2 :=
-    figureOneScheduledProposalRadius_pos q hsigma2
+    (proposalRadius q sigma2) sigma2
+  have hdelta : 0 < proposalRadius q sigma2 :=
+    proposalRadius_pos q hsigma2
   have hmass0 : ellGaussianMeasure
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2 Set.univ ≠ 0 :=
+      (proposalRadius q sigma2) sigma2 Set.univ ≠ 0 :=
     ellGaussianMeasure_univ_ne_zero
       (figureOneScheduledPhaseBody_measurable q I sigma2)
       (figureOneScheduledPhaseBody_convex q I sigma2)
@@ -179,10 +179,10 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_of_good_bad_sharp
       hdelta sigma2
   have hmasstop : ellGaussianMeasure
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2 Set.univ ≠ ⊤ :=
+      (proposalRadius q sigma2) sigma2 Set.univ ≠ ⊤ :=
     ellGaussianMeasure_ne_top_cv18
       (figureOneScheduledPhaseBody_volume_ne_top q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) hsigma2
+      (proposalRadius q sigma2) hsigma2
   let _ : IsProbabilityMeasure pi :=
     isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   let good2 : Measure (AmbientSpace q.n) := (2 : ENNReal) • good
@@ -203,33 +203,33 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_of_good_bad_sharp
         exact Measure.le_iff'.mp hrho S
       _ = 2 * good S + 2 * bad S := mul_add _ _ _
   have hgood2 : Arlib.IsWarm
-      (ENNReal.ofReal (16 * speedyAdjacentWarmConstant q)) good2 pi := by
+      (ENNReal.ofReal (16 * warmConstant q)) good2 pi := by
     intro S hS
     rw [show good2 = (2 : ENNReal) • good by rfl,
       Measure.smul_apply, smul_eq_mul]
     have h := hgood S hS
     have hcoefficient : (2 : ENNReal) *
-        ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) =
-          ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+        ENNReal.ofReal (8 * warmConstant q) =
+          ENNReal.ofReal (16 * warmConstant q) := by
       rw [show (2 : ENNReal) = ENNReal.ofReal (2 : ℝ) by norm_num,
         ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 2)]
       congr 1
       ring
     calc
       2 * good S ≤ 2 *
-          (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) * pi S) :=
+          (ENNReal.ofReal (8 * warmConstant q) * pi S) :=
         by gcongr
-      _ = ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) * pi S := by
+      _ = ENNReal.ofReal (16 * warmConstant q) * pi S := by
         rw [← mul_assoc, hcoefficient]
   have hbad2 : bad2 Set.univ ≤ 2 * eta := by
     rw [show bad2 = (2 : ENNReal) • bad by rfl,
       Measure.smul_apply, smul_eq_mul]
     gcongr
   have hMone : (1 : ENNReal) ≤
-      ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+      ENNReal.ofReal (16 * warmConstant q) := by
     rw [← ENNReal.ofReal_one]
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
+      nlinarith [warmConstant_one_le q]
   obtain ⟨nu, hnuProb, hnuWarm, hmuNu⟩ :=
     exists_warm_probability_measureLeUpTo_of_le_good_add_bad_sharp
       mu good2 bad2 pi hMone ENNReal.ofReal_ne_top hmuSplit hgood2 hbad2

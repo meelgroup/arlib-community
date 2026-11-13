@@ -87,7 +87,7 @@ theorem scheduledBalancedTransitionCollectLaw_ae_total_le
         | some target =>
             scheduledBalancedTransitionCollectLaw q I sigma2 weight
               proposalCap properStride retryLimit samples
-              (total + weight target) (accuracyScaleFactor q • target)
+              (total + weight target) (scaleFactor q • target)
       have htail : Measurable tail := by
         dsimp only [tail]
         have hcollect :=
@@ -96,10 +96,10 @@ theorem scheduledBalancedTransitionCollectLaw_ae_total_le
         have hsome : Measurable fun target : AmbientSpace q.n =>
             scheduledBalancedTransitionCollectLaw q I sigma2 weight
               proposalCap properStride retryLimit samples
-              (total + weight target) (accuracyScaleFactor q • target) :=
+              (total + weight target) (scaleFactor q • target) :=
           hcollect.comp <| (measurable_const.add hweight).prodMk <|
             (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-              accuracyScaleFactor q).smul measurable_id
+              scaleFactor q).smul measurable_id
         convert Measurable.optionElim
           (Measure.dirac (none : Option (ℝ × AmbientSpace q.n))) hsome using 1
         ext result
@@ -129,10 +129,10 @@ theorem scheduledBalancedTransitionCollectLaw_ae_total_le
           have htailBound :
               ∀ᵐ output ∂scheduledBalancedTransitionCollectLaw q I sigma2
                   weight proposalCap properStride retryLimit samples
-                  (total + weight target) (accuracyScaleFactor q • target),
+                  (total + weight target) (scaleFactor q • target),
                 ScheduledCollectedTotalLe total (samples + 1) B output := by
             filter_upwards [ih (total + weight target)
-              (accuracyScaleFactor q • target)] with output houtput
+              (scaleFactor q • target)] with output houtput
             cases output with
             | none => trivial
             | some output =>
@@ -141,7 +141,7 @@ theorem scheduledBalancedTransitionCollectLaw_ae_total_le
                 nlinarith
           change (scheduledBalancedTransitionCollectLaw q I sigma2 weight
             proposalCap properStride retryLimit samples
-            (total + weight target) (accuracyScaleFactor q • target)) goodᶜ = 0
+            (total + weight target) (scaleFactor q • target)) goodᶜ = 0
           exact MeasureTheory.mem_ae_iff.mp htailBound
 
 /-- The executable average of a nonnegative, one-step bounded importance

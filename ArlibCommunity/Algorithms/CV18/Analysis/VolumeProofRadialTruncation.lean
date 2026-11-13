@@ -10,7 +10,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.Background.Ttc.Volume.LVNormTailE
 
 This file instantiates the localization-based norm-tail theorem at the
 uniform law on the input convex body.  The numerical factor in
-`volumeTerminalScale` is an explicit replacement for the unspecified
+`terminalScale` is an explicit replacement for the unspecified
 absolute constant in the paper's `O(log (1 / ε))` truncation radius.
 -/
 
@@ -125,7 +125,7 @@ private theorem explicitDyadicMomentRadius_le_terminalRadius
       terminalVariance q := by
     have hterminal :
         1024 * q.roundness * (q.n : ℝ) * L ^ 2 ≤ terminalVariance q := by
-      unfold terminalVariance volumeTerminalScale
+      unfold terminalVariance terminalScale
       exact le_trans (le_max_right _ _) (le_max_right _ _)
     calc
       (Real.sqrt (q.roundness * (q.n : ℝ)) * (32 * L)) ^ 2 =

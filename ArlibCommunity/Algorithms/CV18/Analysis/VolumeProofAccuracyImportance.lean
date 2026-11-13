@@ -28,7 +28,7 @@ noncomputable def accuracyImportanceWeight
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (weight : AmbientSpace q.n → ℝ) (x : AmbientSpace q.n) : ℝ :=
   accuracyAcceptanceWeight q I sigma2 x *
-    weight ((accuracyScaleFactor q)⁻¹ • x)
+    weight ((scaleFactor q)⁻¹ • x)
 
 theorem measurable_accuracyAcceptanceWeight
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ) :
@@ -55,7 +55,7 @@ theorem measurable_accuracyImportanceWeight
     Measurable (accuracyImportanceWeight q I sigma2 weight) := by
   exact (measurable_accuracyAcceptanceWeight q I sigma2).mul <|
     hweight.comp <| (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id
+      (scaleFactor q)⁻¹).smul measurable_id
 
 theorem accuracyImportanceWeight_nonneg
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
@@ -73,10 +73,10 @@ theorem accuracyImportanceWeight_le_one
     accuracyImportanceWeight q I sigma2 weight x ≤ 1 := by
   calc
     accuracyImportanceWeight q I sigma2 weight x ≤
-        1 * weight ((accuracyScaleFactor q)⁻¹ • x) := by
+        1 * weight ((scaleFactor q)⁻¹ • x) := by
       exact mul_le_mul_of_nonneg_right
         (accuracyAcceptanceWeight_le_one q I hsigma2 x) (hweight0 _)
-    _ ≤ 1 := by simpa using hweight1 ((accuracyScaleFactor q)⁻¹ • x)
+    _ ≤ 1 := by simpa using hweight1 ((scaleFactor q)⁻¹ • x)
 
 /-- The mean of the real acceptance observable is the total mass of the
 corresponding with-density subprobability measure. -/
@@ -115,7 +115,7 @@ theorem integral_accuracyImportanceWeight_eq_acceptance_mul
         ∫ y, weight y ∂accuracyGaussianAcceptedTargetLaw q I sigma2 mu := by
   let accept := accuracyGaussianRejectionAcceptance q I sigma2
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    (accuracyScaleFactor q)⁻¹ • x
+    (scaleFactor q)⁻¹ • x
   let accepted : Measure (AmbientSpace q.n) :=
     (mu.withDensity accept).map scale
   let p := (mu.withDensity accept) Set.univ
@@ -124,7 +124,7 @@ theorem integral_accuracyImportanceWeight_eq_acceptance_mul
   have hscale : Measurable scale := by
     dsimp [scale]
     exact (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id
+      (scaleFactor q)⁻¹).smul measurable_id
   have hpEq : accepted Set.univ = p := by
     dsimp [accepted, p]
     rw [Measure.map_apply hscale MeasurableSet.univ, Set.preimage_univ]
@@ -321,7 +321,7 @@ theorem stationary_accuracyImportance_ratio_target_bias
   let pi := Arlib.MarkovChains.ellGaussianProb K delta sigma2
   let accept := accuracyGaussianRejectionAcceptance q I sigma2
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    (accuracyScaleFactor q)⁻¹ • x
+    (scaleFactor q)⁻¹ • x
   let accepted := (pi.withDensity accept).map scale
   let p := (pi.withDensity accept) Set.univ
   have hdelta : 0 < delta := figureOneProposalRadius_pos q hsigma2

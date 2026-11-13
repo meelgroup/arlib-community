@@ -23,7 +23,7 @@ theorem scheduledBalancedAccuracyGaussianRejectionLaw_ae_true_mem_phaseBody
     ∀ᵐ result ∂scheduledBalancedAccuracyGaussianRejectionLaw
         q I sigma2 current,
       result.1 = true → result.2 ∈ figureOneScheduledPhaseBody q I sigma2 := by
-  let target : AmbientSpace q.n := (accuracyScaleFactor q)⁻¹ • current
+  let target : AmbientSpace q.n := (scaleFactor q)⁻¹ • current
   by_cases htarget : target ∈ figureOneScheduledPhaseBody q I sigma2
   · filter_upwards [scheduledBalancedAccuracyGaussianRejectionLaw_ae_snd
         q I sigma2 current] with result hresult

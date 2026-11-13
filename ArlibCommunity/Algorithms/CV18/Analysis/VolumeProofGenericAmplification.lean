@@ -154,7 +154,7 @@ theorem oracleProgram_proof_amplification :
                 (volumeAlgorithmLaw base q I oracle) (accurateOutcome q I) →
             (base q).StronglyMeasurable oracle.query →
             (∃ calls, (base q).QueryBound calls ∧
-              calls ≤ Nat.ceil (C₀ * volumeBaseComplexityRate q)) →
+              calls ≤ Nat.ceil (C₀ * baseRate q)) →
               1 - q.p ≤
                   outcomeProbability
                     (volumeAlgorithmLaw (amplifyOracleProgram base) q I oracle)
@@ -167,7 +167,7 @@ theorem oracleProgram_proof_amplification :
   refine ⟨C, by dsimp [C]; linarith, ?_⟩
   intro base q I oracle hprob hmeas hcost
   let μ : Measure ℝ := (base q).runEstimate oracle.query
-  let R : ℝ := volumeBaseComplexityRate q
+  let R : ℝ := baseRate q
   let L : ℝ := protectedLog (1 / q.p)
   let m : ℕ := confidenceRepetitions q
   let _ : IsProbabilityMeasure μ :=
@@ -232,7 +232,7 @@ theorem oracleProgram_proof_amplification :
         simpa only [one_mul] using h
       have hloge : 1 ≤ protectedLog (1 / q.eps) := le_max_left _ _
       have hlogne : 1 ≤ protectedLog ((q.n : ℝ) / q.eps) := le_max_left _ _
-      have hlogt : 1 ≤ protectedLog (volumeTerminalScale q) := le_max_left _ _
+      have hlogt : 1 ≤ protectedLog (terminalScale q) := le_max_left _ _
       dsimp [R]
       exact hmul (hmul (hmul hfirst (one_le_pow₀ hloge))
         (one_le_pow₀ hlogne)) (one_le_pow₀ hlogt)

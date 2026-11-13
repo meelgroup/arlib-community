@@ -50,10 +50,10 @@ structure GlobalResetReferenceWitness
   epsilon : ℝ
   epsilon_nonnegative : 0 ≤ epsilon
   epsilon_le : epsilon ≤
-    (5 / 2 : ℝ) * figureOneDependentEpsilon q
-  approxIndep : ∀ i, i < figureOneDependentPhaseCount q →
+    (5 / 2 : ℝ) * dependenceError q
+  approxIndep : ∀ i, i < numPhases q →
     ApproxIndepFun epsilon
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+      (dependentTruncatedProduct (truncationLevel q)
         (figureOneChronologicalTruncatedMean q I reference
           W)
         (figureOneChronologicalTruncatedPhase q I
@@ -65,14 +65,14 @@ structure GlobalResetReferenceWitness
   product_leUpTo : MeasureLeUpTo
     ((scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
       (fun trace => initialGaussianIntegral q *
         dependentPhaseSampleProduct
           (scheduledBalancedTracePhaseVariable q)
-          (figureOneDependentPhaseCount q) trace))
+          (numPhases q) trace))
     (reference.map (fun trace => initialGaussianIntegral q *
       dependentPhaseSampleProduct W
-        (figureOneDependentPhaseCount q) trace)) error
+        (numPhases q) trace)) error
   error_le : error ≤
     figureOneScheduledGlobalResetReferenceError q + boundary
   boundary_le : boundary ≤ ENNReal.ofReal (1 / 128 : ℝ)
@@ -118,7 +118,7 @@ theorem volumeTheorem_finalScheduled_of_globalResetReferenceExists
               figureOneFinalScheduledCappedValueProgram q).QueryBound calls ∧
             calls ≤ Nat.ceil
               (figureOneFinalScheduledQueryConstant *
-                (volumeScheduledBaseComplexityRate q *
+                (runRate q *
                 protectedLog (1 / q.p))) := by
   apply volumeTheorem_finalScheduled_of_baseFailure
   intro q I oracle hrounded

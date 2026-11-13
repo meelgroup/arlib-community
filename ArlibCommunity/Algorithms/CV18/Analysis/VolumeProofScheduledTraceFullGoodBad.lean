@@ -58,25 +58,25 @@ theorem approxIndepFun_sequentialPairLaw_of_asymmetric_leUpTo
 theorem figureOneScheduledRetainedError_toReal_le
     (q : VolumeParams) (phases : ℕ) :
     (figureOneScheduledRetainedError q phases).toReal ≤
-      figureOnePerSampleMixingError q / 4 +
-        (phases : ℝ) * (figureOneDependentMaxSampleCount q : ℝ) *
-          figureOnePerSampleMixingError q := by
-  have hnu : 0 ≤ figureOnePerSampleMixingError q :=
-    (figureOnePerSampleMixingError_pos q).le
+      sampleMixingError q / 4 +
+        (phases : ℝ) * (largestSampleCount q : ℝ) *
+          sampleMixingError q := by
+  have hnu : 0 ≤ sampleMixingError q :=
+    (sampleMixingError_pos q).le
   have htarget := scheduledBalancedStationaryTargetError_le_targetBudget q
   have htargetBudgetTop : figureOneCorrectedTargetBudget q ≠ ⊤ := by
     exact ENNReal.div_ne_top ENNReal.ofReal_ne_top (by norm_num)
   have htargetTop : scheduledBalancedStationaryTargetError q ≠ ⊤ :=
     ne_top_of_le_ne_top htargetBudgetTop htarget
   have htermTop : ∀ phase,
-      figureOnePhaseSampleCount q (scheduleValue q phase) •
+      phaseSampleCount q (scheduleValue q phase) •
           figureOneCorrectedTransitionBudget q ≠ ⊤ := by
     intro phase
     rw [nsmul_eq_mul]
     exact ENNReal.mul_ne_top (ENNReal.natCast_ne_top _)
       ENNReal.ofReal_ne_top
   have hsumTop : (∑ phase ∈ Finset.range phases,
-      figureOnePhaseSampleCount q (scheduleValue q phase) •
+      phaseSampleCount q (scheduleValue q phase) •
         figureOneCorrectedTransitionBudget q) ≠ ⊤ := by
     exact ENNReal.sum_ne_top.2 fun phase _ => htermTop phase
   rw [figureOneScheduledRetainedError,
@@ -84,12 +84,12 @@ theorem figureOneScheduledRetainedError_toReal_le
   calc
     (scheduledBalancedStationaryTargetError q).toReal +
         (∑ phase ∈ Finset.range phases,
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q).toReal ≤
       (figureOneCorrectedTargetBudget q).toReal +
         ∑ phase ∈ Finset.range phases,
-          (figureOnePhaseSampleCount q (scheduleValue q phase) : ℝ) *
-            figureOnePerSampleMixingError q := by
+          (phaseSampleCount q (scheduleValue q phase) : ℝ) *
+            sampleMixingError q := by
       apply add_le_add
       · exact ENNReal.toReal_mono htargetBudgetTop htarget
       · rw [ENNReal.toReal_sum fun phase _ => htermTop phase]
@@ -99,10 +99,10 @@ theorem figureOneScheduledRetainedError_toReal_le
           figureOneCorrectedTransitionBudget,
           ENNReal.toReal_ofReal hnu]
         simp [nsmul_eq_mul]
-    _ ≤ figureOnePerSampleMixingError q / 4 +
+    _ ≤ sampleMixingError q / 4 +
         ∑ _phase ∈ Finset.range phases,
-          (figureOneDependentMaxSampleCount q : ℝ) *
-            figureOnePerSampleMixingError q := by
+          (largestSampleCount q : ℝ) *
+            sampleMixingError q := by
       apply add_le_add
       · simp [figureOneCorrectedTargetBudget,
           figureOneCorrectedTransitionBudget, ENNReal.toReal_div,
@@ -110,14 +110,14 @@ theorem figureOneScheduledRetainedError_toReal_le
       · apply Finset.sum_le_sum
         intro phase hphase
         have hcount :
-            (figureOnePhaseSampleCount q (scheduleValue q phase) : ℝ) ≤
-              (figureOneDependentMaxSampleCount q : ℝ) := by
-          exact_mod_cast figureOnePhaseSampleCount_le_dependentMax
+            (phaseSampleCount q (scheduleValue q phase) : ℝ) ≤
+              (largestSampleCount q : ℝ) := by
+          exact_mod_cast phaseSampleCount_le_dependentMax
             q (scheduleValue q phase)
         exact mul_le_mul_of_nonneg_right hcount hnu
-    _ = figureOnePerSampleMixingError q / 4 +
-        (phases : ℝ) * (figureOneDependentMaxSampleCount q : ℝ) *
-          figureOnePerSampleMixingError q := by
+    _ = sampleMixingError q / 4 +
+        (phases : ℝ) * (largestSampleCount q : ℝ) *
+          sampleMixingError q := by
       rw [Finset.sum_const, Finset.card_range, nsmul_eq_mul]
       ring
 
@@ -125,14 +125,14 @@ theorem figureOneScheduledRetainedError_toReal_le
 the paper's dependence budget at every noninitial chronological phase. -/
 theorem figureOneScheduledRetained_asymmetric_budget
     (q : VolumeParams) (phases : ℕ)
-    (hphases : phases < figureOneDependentPhaseCount q) :
+    (hphases : phases < numPhases q) :
     ((figureOneCorrectedTransitionBudget q +
           2 * figureOneScheduledRetainedError q phases) +
         (figureOneCorrectedTransitionBudget q +
           figureOneScheduledRetainedError q phases)).toReal ≤
-      figureOneDependentEpsilon q := by
-  have hnu : 0 < figureOnePerSampleMixingError q :=
-    figureOnePerSampleMixingError_pos q
+      dependenceError q := by
+  have hnu : 0 < sampleMixingError q :=
+    sampleMixingError_pos q
   have herrTop : figureOneScheduledRetainedError q phases ≠ ⊤ := by
     unfold figureOneScheduledRetainedError
     apply ENNReal.add_ne_top.mpr
@@ -154,7 +154,7 @@ theorem figureOneScheduledRetained_asymmetric_budget
             2 * figureOneScheduledRetainedError q phases) +
           (figureOneCorrectedTransitionBudget q +
             figureOneScheduledRetainedError q phases)).toReal =
-        2 * figureOnePerSampleMixingError q +
+        2 * sampleMixingError q +
           3 * (figureOneScheduledRetainedError q phases).toReal := by
     rw [ENNReal.toReal_add
         (ENNReal.add_ne_top.mpr ⟨htransitionTop, htwoErrorTop⟩)
@@ -167,13 +167,13 @@ theorem figureOneScheduledRetained_asymmetric_budget
     ring
   rw [hreal]
   have hphaseCast : (phases : ℝ) + 1 ≤
-      figureOneDependentPhaseCount q := by
+      numPhases q := by
     exact_mod_cast (Nat.succ_le_iff.mpr hphases)
-  have hk : (1 : ℝ) ≤ figureOneDependentMaxSampleCount q := by
-    exact_mod_cast figureOneDependentMaxSampleCount_pos q
+  have hk : (1 : ℝ) ≤ largestSampleCount q := by
+    exact_mod_cast largestSampleCount_pos q
   have hphaseProduct := mul_le_mul_of_nonneg_right hphaseCast
     (mul_nonneg
-      (show 0 ≤ (figureOneDependentMaxSampleCount q : ℝ) by positivity)
+      (show 0 ≤ (largestSampleCount q : ℝ) by positivity)
       hnu.le)
   have hnuProduct := mul_le_mul_of_nonneg_right hk hnu.le
   rw [← figureOne_lemma717c_budget q]
@@ -342,16 +342,16 @@ noncomputable def figureOneScheduledScaledGaussianPhaseLaw
         (scheduleValue q phase))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (scheduleValue q phase))
-      (figureOnePhaseSampleCount q (scheduleValue q phase)) 0 current).map
+      (phaseSampleCount q (scheduleValue q phase)) 0 current).map
         (balancedCoolingAverage
-          (figureOnePhaseSampleCount q (scheduleValue q phase)))
+          (phaseSampleCount q (scheduleValue q phase)))
 
 theorem figureOneScheduledScaledGaussianPhaseLaw_measurable_and_probability
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ) :
     Measurable (figureOneScheduledScaledGaussianPhaseLaw q I phase) ∧
     ∀ current, IsProbabilityMeasure
       (figureOneScheduledScaledGaussianPhaseLaw q I phase current) := by
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   have hcollect :=
     scheduledBalancedTransitionCollectLaw_measurable_and_probability
       q I (scheduleValue_pos q phase)
@@ -388,7 +388,7 @@ postprocessing. -/
 noncomputable def figureOneScheduledGaussianPhaseTarget
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ) :
     Measure (Option (ℝ × AmbientSpace q.n)) :=
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let first := (truncatedGaussianProbability q I (scheduleValue q phase)
     (scheduleValue_pos q phase) : Measure (AmbientSpace q.n)).map some
   let tail : Option (AmbientSpace q.n) →
@@ -407,14 +407,14 @@ noncomputable def figureOneScheduledGaussianPhaseTarget
             (scheduleValue q phase))
           (count - 1) (gaussianRatioWeight (scheduleValue q phase)
             (scheduleValue q (phase + 1)) point)
-          (accuracyScaleFactor q • point)
+          (scaleFactor q • point)
   (first.bind tail).map (balancedCoolingAverage count)
 
 theorem figureOneScheduledGaussianPhaseTarget_isProbabilityMeasure
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ) :
     IsProbabilityMeasure
       (figureOneScheduledGaussianPhaseTarget q I phase) := by
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let first := (truncatedGaussianProbability q I (scheduleValue q phase)
     (scheduleValue_pos q phase) : Measure (AmbientSpace q.n)).map some
   let tail : Option (AmbientSpace q.n) →
@@ -433,7 +433,7 @@ theorem figureOneScheduledGaussianPhaseTarget_isProbabilityMeasure
             (scheduleValue q phase))
           (count - 1) (gaussianRatioWeight (scheduleValue q phase)
             (scheduleValue q (phase + 1)) point)
-          (accuracyScaleFactor q • point)
+          (scaleFactor q • point)
   have htailCollect :=
     scheduledBalancedTransitionCollectLaw_measurable_and_probability
       q I (scheduleValue_pos q phase)
@@ -458,11 +458,11 @@ theorem figureOneScheduledGaussianPhaseTarget_isProbabilityMeasure
             (scheduleValue q phase))
           (count - 1) (gaussianRatioWeight (scheduleValue q phase)
             (scheduleValue q (phase + 1)) point)
-          (accuracyScaleFactor q • point) := by
+          (scaleFactor q • point) := by
       exact htailCollect.1.comp <|
         (measurable_gaussianRatioWeight _ _).prodMk
           ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
-            accuracyScaleFactor q).smul measurable_id)
+            scaleFactor q).smul measurable_id)
     convert Measurable.optionElim
       (Measure.dirac (none : Option (ℝ × AmbientSpace q.n))) hsome using 1
     funext result
@@ -486,13 +486,13 @@ theorem bind_figureOneScheduledScaledGaussianPhaseLaw_leUpTo_target_of_warmSixte
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
     (mu : Measure (AmbientSpace q.n)) [IsProbabilityMeasure mu]
     (hwarm : Arlib.IsWarm
-      (ENNReal.ofReal (16 * speedyAdjacentWarmConstant q)) mu
+      (ENNReal.ofReal (16 * warmConstant q)) mu
       (figureOneScheduledSpeedyPiAt q I phase)) :
     MeasureLeUpTo
       (mu.bind (figureOneScheduledScaledGaussianPhaseLaw q I phase))
       (figureOneScheduledGaussianPhaseTarget q I phase)
       (figureOneCorrectedTransitionBudget q) := by
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let collect := fun current =>
     scheduledBalancedTransitionCollectLaw q I (scheduleValue q phase)
       (gaussianRatioWeight (scheduleValue q phase)
@@ -562,10 +562,10 @@ theorem bind_figureOneScheduledScaledGaussianPhaseLaw_leUpTo_target_of_warmSixte
         (scheduleValue q phase)) (count - 1) mu _ hfirst
   have hcount : 0 < count := by
     dsimp only [count]
-    unfold figureOnePhaseSampleCount
+    unfold phaseSampleCount
     split_ifs
-    · exact figureOneFixedSampleCount_pos q
-    · exact figureOneSampleCount_pos q
+    · exact fixedRateSampleCount_pos q
+    · exact sampleCount_pos q
   rw [Nat.sub_add_cancel hcount] at hcomplete
   have hmapped := hcomplete.map
     (measurable_balancedCoolingAverage (n := q.n) count)
@@ -590,15 +590,15 @@ theorem bind_scheduledBalancedTracePhaseObservationLaw_eq_live_dead
     law.bind (scheduledBalancedTracePhaseObservationLaw
         figureOneFinalScheduledBalancedParameters q I phase) =
       (scheduledBalancedTraceLiveStateLaw law
-          (fun x => accuracyScaleFactor q • x)).bind
+          (fun x => scaleFactor q • x)).bind
         (figureOneScheduledScaledGaussianPhaseLaw q I phase) +
       (scheduledBalancedTraceDeadStateLaw law
-          (fun x => accuracyScaleFactor q • x)) Set.univ •
+          (fun x => scaleFactor q • x)) Set.univ •
         Measure.dirac none := by
   let liveSet := scheduledBalancedTraceLiveSet q.n
   let deadSet := scheduledBalancedTraceDeadSet q.n
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let state : ScheduledBalancedCoolingTrace q.n → AmbientSpace q.n :=
     scale ∘ scheduledBalancedTraceRetainedState
   let obs := scheduledBalancedTracePhaseObservationLaw
@@ -611,7 +611,7 @@ theorem bind_scheduledBalancedTracePhaseObservationLaw_eq_live_dead
   have hstate : Measurable state := by
     dsimp only [state, scale]
     exact ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id).comp
+      scaleFactor q).smul measurable_id).comp
         measurable_scheduledBalancedTraceRetainedState
   have hsplit : law = law.restrict liveSet + law.restrict deadSet := by
     rw [show deadSet = liveSetᶜ by
@@ -674,20 +674,20 @@ theorem bind_scheduledBalancedTracePhaseObservationLaw_leUpTo_of_live_good_bad
     [IsProbabilityMeasure law]
     (good bad : Measure (AmbientSpace q.n)) [IsFiniteMeasure bad]
     {M eta : ENNReal} (hM : 1 ≤ M) (hMtop : M ≠ ⊤)
-    (hM16 : M ≤ ENNReal.ofReal (16 * speedyAdjacentWarmConstant q))
+    (hM16 : M ≤ ENNReal.ofReal (16 * warmConstant q))
     (hlive : scheduledBalancedTraceLiveStateLaw law
-      (fun x => accuracyScaleFactor q • x) ≤ good + bad)
+      (fun x => scaleFactor q • x) ≤ good + bad)
     (hgood : Arlib.IsWarm M good (figureOneScheduledSpeedyPiAt q I phase))
     (herror : bad Set.univ +
         scheduledBalancedTraceDeadStateLaw law
-          (fun x => accuracyScaleFactor q • x) Set.univ ≤ eta) :
+          (fun x => scaleFactor q • x) Set.univ ≤ eta) :
     MeasureLeUpTo
       (law.bind (scheduledBalancedTracePhaseObservationLaw
         figureOneFinalScheduledBalancedParameters q I phase))
       (figureOneScheduledGaussianPhaseTarget q I phase)
       (figureOneCorrectedTransitionBudget q + eta) := by
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let live := scheduledBalancedTraceLiveStateLaw law scale
   let dead := scheduledBalancedTraceDeadStateLaw law scale
   let pi := figureOneScheduledSpeedyPiAt q I phase
@@ -696,7 +696,7 @@ theorem bind_scheduledBalancedTracePhaseObservationLaw_leUpTo_of_live_good_bad
   have hscale : Measurable scale := by
     dsimp only [scale]
     exact (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id
+      scaleFactor q).smul measurable_id
   have hstate : Measurable
       (scale ∘ scheduledBalancedTraceRetainedState) :=
     hscale.comp measurable_scheduledBalancedTraceRetainedState
@@ -802,17 +802,17 @@ theorem bind_scheduledBalancedTracePhaseOutputLaw_eq_live_dead
         figureOneFinalScheduledBalancedParameters q I phase
         liveOutput deadOutput) =
       (scheduledBalancedTraceLiveStateLaw law
-          (fun x => accuracyScaleFactor q • x)).bind
+          (fun x => scaleFactor q • x)).bind
         (fun current =>
           (figureOneScheduledScaledGaussianPhaseLaw q I phase current).map
             liveOutput) +
       (scheduledBalancedTraceDeadStateLaw law
-          (fun x => accuracyScaleFactor q • x)) Set.univ •
+          (fun x => scaleFactor q • x)) Set.univ •
         Measure.dirac deadOutput := by
   let liveSet := scheduledBalancedTraceLiveSet q.n
   let deadSet := scheduledBalancedTraceDeadSet q.n
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let state : ScheduledBalancedCoolingTrace q.n → AmbientSpace q.n :=
     scale ∘ scheduledBalancedTraceRetainedState
   let outK := scheduledBalancedTracePhaseOutputLaw
@@ -829,7 +829,7 @@ theorem bind_scheduledBalancedTracePhaseOutputLaw_eq_live_dead
   have hstate : Measurable state := by
     dsimp only [state, scale]
     exact ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id).comp
+      scaleFactor q).smul measurable_id).comp
         measurable_scheduledBalancedTraceRetainedState
   have hsplit : law = law.restrict liveSet + law.restrict deadSet := by
     rw [show deadSet = liveSetᶜ by
@@ -854,7 +854,7 @@ theorem bind_scheduledBalancedTracePhaseOutputLaw_eq_live_dead
             figureOneFinalScheduledBalancedParameters q I phase
               (history, true) =
             figureOneScheduledScaledGaussianPhaseLaw q I phase
-              (accuracyScaleFactor q • history.2.2.2) by
+              (scaleFactor q • history.2.2.2) by
           simp only [scheduledBalancedTracePhaseObservationLaw, if_true,
             hphase, figureOneScheduledScaledGaussianPhaseLaw,
             scheduledBalancedCoolingRatioTransitionLaw]
@@ -901,13 +901,13 @@ theorem bind_scheduledBalancedTracePhaseOutputLaw_leUpTo_of_live_good_bad
     [IsProbabilityMeasure law]
     (good bad : Measure (AmbientSpace q.n)) [IsFiniteMeasure bad]
     {M eta : ENNReal} (hM : 1 ≤ M) (hMtop : M ≠ ⊤)
-    (hM16 : M ≤ ENNReal.ofReal (16 * speedyAdjacentWarmConstant q))
+    (hM16 : M ≤ ENNReal.ofReal (16 * warmConstant q))
     (hlive : scheduledBalancedTraceLiveStateLaw law
-      (fun x => accuracyScaleFactor q • x) ≤ good + bad)
+      (fun x => scaleFactor q • x) ≤ good + bad)
     (hgood : Arlib.IsWarm M good (figureOneScheduledSpeedyPiAt q I phase))
     (herror : bad Set.univ +
         scheduledBalancedTraceDeadStateLaw law
-          (fun x => accuracyScaleFactor q • x) Set.univ ≤ eta)
+          (fun x => scaleFactor q • x) Set.univ ≤ eta)
     (liveOutput : Option (ℝ × AmbientSpace q.n) → T)
     (deadOutput : T) (hliveOutput : Measurable liveOutput) :
     MeasureLeUpTo
@@ -932,7 +932,7 @@ theorem bind_scheduledBalancedTracePhaseOutputLaw_leUpTo_of_live_good_bad
     let _ := figureOneScheduledGaussianPhaseTarget_isProbabilityMeasure q I phase
     exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hliveOutput.aemeasurable
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let live := scheduledBalancedTraceLiveStateLaw law scale
   let dead := scheduledBalancedTraceDeadStateLaw law scale
   let pi := figureOneScheduledSpeedyPiAt q I phase
@@ -984,16 +984,16 @@ noncomputable def figureOneScheduledTraceLiveTruncatedOutput
     (q : VolumeParams) (I : VolumeInput q.n) (j : ℕ) :
     Option (ℝ × AmbientSpace q.n) → ℝ
   | none => min 0
-      (figureOneDependentAlpha q * scheduledFigureOneTraceRawMean q I j)
+      (truncationLevel q * scheduledFigureOneTraceRawMean q I j)
   | some result => min (max 0 result.1)
-      (figureOneDependentAlpha q * scheduledFigureOneTraceRawMean q I j)
+      (truncationLevel q * scheduledFigureOneTraceRawMean q I j)
 
 theorem measurable_figureOneScheduledTraceLiveTruncatedOutput
     (q : VolumeParams) (I : VolumeInput q.n) (j : ℕ) :
     Measurable (figureOneScheduledTraceLiveTruncatedOutput q I j) := by
   unfold figureOneScheduledTraceLiveTruncatedOutput
   convert Measurable.optionElim
-    (min 0 (figureOneDependentAlpha q *
+    (min 0 (truncationLevel q *
       scheduledFigureOneTraceRawMean q I j))
     (measurable_const.max measurable_fst |>.min measurable_const) using 1
   funext result
@@ -1001,13 +1001,13 @@ theorem measurable_figureOneScheduledTraceLiveTruncatedOutput
 
 noncomputable def figureOneScheduledTraceDeadTruncatedOutput
     (q : VolumeParams) (I : VolumeInput q.n) (j : ℕ) : ℝ :=
-  min 1 (figureOneDependentAlpha q * scheduledFigureOneTraceRawMean q I j)
+  min 1 (truncationLevel q * scheduledFigureOneTraceRawMean q I j)
 
 /-- The trace-dependent scalar kernel reads exactly the new truncated
 coordinate after appending the phase observation. -/
 theorem scheduledFigureOneTraceTruncatedPhase_append_eq_output
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     (trace : ScheduledBalancedCoolingTrace q.n)
     (hvalid : ScheduledBalancedCoolingTraceValid phase trace)
     (result : Option (ℝ × AmbientSpace q.n)) :
@@ -1033,10 +1033,10 @@ the bridge from the sequential-pair Lemma 7.17(b) calculation to the trace
 law after `i+1` completed phases. -/
 theorem map_pair_sequentialTracePhaseOutput_eq_forwardTrace_succ
     (q : VolumeParams) (I : VolumeInput q.n) (i : ℕ)
-    (hi : i < figureOneDependentPhaseCount q) :
+    (hi : i < numPhases q) :
     let rho := scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I i
-    let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+    let X := dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) i
     let Y := scheduledFigureOneTraceTruncatedPhase q I (i + 1)
@@ -1053,7 +1053,7 @@ theorem map_pair_sequentialTracePhaseOutput_eq_forwardTrace_succ
   let rho : Measure (ScheduledBalancedCoolingTrace q.n) :=
     scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I i
-  let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+  let X := dependentTruncatedProduct (truncationLevel q)
     (scheduledFigureOneTraceTruncatedMean q I)
     (scheduledFigureOneTraceTruncatedPhase q I) i
   let Y := scheduledFigureOneTraceTruncatedPhase q I (i + 1)
@@ -1070,7 +1070,7 @@ theorem map_pair_sequentialTracePhaseOutput_eq_forwardTrace_succ
       (scheduledFigureOneTraceTruncatedPhase q I j) := fun j =>
     (measurable_scheduledBalancedTracePhaseVariable q j).min measurable_const
   have hX : Measurable X :=
-    measurable_dependentTruncatedProduct (figureOneDependentAlpha q)
+    measurable_dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) hV i
   have hY : Measurable Y := hV (i + 1)
@@ -1214,7 +1214,7 @@ theorem exists_figureOneScheduledTraceScaledLive_good_bad
     let law := scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I (phase + 1)
     let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-      accuracyScaleFactor q • x
+      scaleFactor q • x
     let good := (figureOneScheduledAcceptedTargetAt q I phase).map scale
     ∃ liveBad : Measure (AmbientSpace q.n),
       scheduledBalancedTraceLiveStateLaw law scale ≤ good + liveBad ∧
@@ -1225,7 +1225,7 @@ theorem exists_figureOneScheduledTraceScaledLive_good_bad
   let law := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I (phase + 1)
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let good := (figureOneScheduledAcceptedTargetAt q I phase).map scale
   obtain ⟨error, herrorDom, herrorMass⟩ :=
     scheduledBalancedForwardTraceLaw_retained_leUpTo_target
@@ -1318,7 +1318,7 @@ theorem exists_figureOneScheduledTraceScaledState_good_bad
     let law := scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I (phase + 1)
     let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-      accuracyScaleFactor q • x
+      scaleFactor q • x
     let good := (figureOneScheduledAcceptedTargetAt q I phase).map scale
     ∃ bad : Measure (AmbientSpace q.n),
       scheduledBalancedTraceStateLaw law scale ≤ good + bad ∧
@@ -1327,7 +1327,7 @@ theorem exists_figureOneScheduledTraceScaledState_good_bad
   let law := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I (phase + 1)
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let good := (figureOneScheduledAcceptedTargetAt q I phase).map scale
   obtain ⟨error, herrorDom, herrorMass⟩ :=
     scheduledBalancedForwardTraceLaw_retained_leUpTo_target
@@ -1468,21 +1468,21 @@ theorem approxIndepFun_figureOneScheduledTrace_gaussianPhaseOutput
     let i := previous + 1
     let rho := scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I i
-    let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+    let X := dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) i
     let liveOutput := figureOneScheduledTraceLiveTruncatedOutput q I (i + 1)
     let deadOutput := figureOneScheduledTraceDeadTruncatedOutput q I (i + 1)
     let outK := scheduledBalancedTracePhaseOutputLaw
       figureOneFinalScheduledBalancedParameters q I i liveOutput deadOutput
-    ApproxIndepFun (figureOneDependentEpsilon q)
+    ApproxIndepFun (dependenceError q)
       (X ∘ Prod.fst) Prod.snd (sequentialPairLaw rho outK) := by
   dsimp only
   let i := previous + 1
   let rho := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I i
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let good := (figureOneScheduledAcceptedTargetAt q I previous).map scale
   let eta := figureOneScheduledRetainedError q i
   let liveOutput := figureOneScheduledTraceLiveTruncatedOutput q I (i + 1)
@@ -1525,22 +1525,22 @@ theorem approxIndepFun_figureOneScheduledTrace_gaussianPhaseOutput
     let _ := figureOneScheduledGaussianPhaseTarget_isProbabilityMeasure q I i
     exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hliveOutput.aemeasurable
   have hgood : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) good
+      (ENNReal.ofReal (8 * warmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I i) := by
     simpa [good, scale, i, figureOneScheduledAcceptedTargetAt,
       figureOneScheduledSpeedyPiAt] using
       map_scheduledBalancedAcceptedTarget_scale_adjacent_isWarm q I previous
   have hM8 : (1 : ENNReal) ≤
-      ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) := by
+      ENNReal.ofReal (8 * warmConstant q) := by
     rw [← ENNReal.ofReal_one]
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
-  have hM8M16 : ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) ≤
-      ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+      nlinarith [warmConstant_one_le q]
+  have hM8M16 : ENNReal.ofReal (8 * warmConstant q) ≤
+      ENNReal.ofReal (16 * warmConstant q) := by
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
+      nlinarith [warmConstant_one_le q]
   have hM16 : (1 : ENNReal) ≤
-      ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) :=
+      ENNReal.ofReal (16 * warmConstant q) :=
     hM8.trans hM8M16
   have hbase : MeasureLeUpTo (rho.bind outK) target
       (figureOneCorrectedTransitionBudget q + eta) := by
@@ -1581,24 +1581,24 @@ theorem approxIndepFun_figureOneScheduledTrace_gaussianPhaseOutput
         _ = good2 + bad2 := by
           simp only [good2, bad2, smul_add]
     have hgood2 : Arlib.IsWarm
-        (ENNReal.ofReal (16 * speedyAdjacentWarmConstant q)) good2
+        (ENNReal.ofReal (16 * warmConstant q)) good2
         (figureOneScheduledSpeedyPiAt q I i) := by
       intro S hS
       rw [show good2 = (2 : ENNReal) • good by rfl,
         Measure.smul_apply, smul_eq_mul]
       have hg := hgood S hS
       have hcoef : (2 : ENNReal) *
-          ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) =
-            ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+          ENNReal.ofReal (8 * warmConstant q) =
+            ENNReal.ofReal (16 * warmConstant q) := by
         rw [show (2 : ENNReal) = ENNReal.ofReal (2 : ℝ) by norm_num,
           ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 2)]
         congr 1
         ring
       calc
         2 * good S ≤ 2 *
-            (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) *
+            (ENNReal.ofReal (8 * warmConstant q) *
               (figureOneScheduledSpeedyPiAt q I i) S) := by gcongr
-        _ = ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) *
+        _ = ENNReal.ofReal (16 * warmConstant q) *
               (figureOneScheduledSpeedyPiAt q I i) S := by
           rw [← mul_assoc, hcoef]
     have hdead2 := scheduledBalancedTraceDeadStateLaw_mass_mono_smul
@@ -1630,17 +1630,17 @@ theorem approxIndepFun_figureOneScheduledTrace_gaussianPhaseOutput
       ⟨by simp [figureOneCorrectedTransitionBudget], hetaTop⟩)
     hconditioned hbase
   have hX : Measurable (dependentTruncatedProduct
-      (figureOneDependentAlpha q)
+      (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) i) :=
-    measurable_dependentTruncatedProduct (figureOneDependentAlpha q)
+    measurable_dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I)
       (fun j => (measurable_scheduledBalancedTracePhaseVariable q j).min
         measurable_const) i
   apply (hraw.comp hX measurable_id).mono
   exact figureOneScheduledRetained_asymmetric_budget q i (by
-    rw [figureOneDependentPhaseCount]
+    rw [numPhases]
     omega)
 
 /-- The same Gaussian-phase estimate on the trace immediately after the
@@ -1649,18 +1649,18 @@ theorem approxIndepFun_figureOneScheduledForwardTrace_gaussian_succ
     (q : VolumeParams) (I : VolumeInput q.n) (previous : ℕ)
     (hnext : previous + 1 < terminalPhaseSteps q) :
     let i := previous + 1
-    let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+    let X := dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) i
     let Y := scheduledFigureOneTraceTruncatedPhase q I (i + 1)
-    ApproxIndepFun (figureOneDependentEpsilon q) X Y
+    ApproxIndepFun (dependenceError q) X Y
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I (i + 1)) := by
   dsimp only
   let i := previous + 1
   let rho := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I i
-  let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+  let X := dependentTruncatedProduct (truncationLevel q)
     (scheduledFigureOneTraceTruncatedMean q I)
     (scheduledFigureOneTraceTruncatedPhase q I) i
   let Y := scheduledFigureOneTraceTruncatedPhase q I (i + 1)
@@ -1672,7 +1672,7 @@ theorem approxIndepFun_figureOneScheduledForwardTrace_gaussian_succ
       (scheduledFigureOneTraceTruncatedPhase q I j) := fun j =>
     (measurable_scheduledBalancedTracePhaseVariable q j).min measurable_const
   have hX : Measurable X :=
-    measurable_dependentTruncatedProduct (figureOneDependentAlpha q)
+    measurable_dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) hV i
   have hY : Measurable Y := hV (i + 1)
@@ -1684,7 +1684,7 @@ theorem approxIndepFun_figureOneScheduledForwardTrace_gaussian_succ
       Function.comp_def] using
         map_pair_sequentialTracePhaseOutput_eq_forwardTrace_succ
           q I i (by
-            rw [figureOneDependentPhaseCount]
+            rw [numPhases]
             omega)
   · simpa [i, rho, X, outK, liveOutput, deadOutput] using himmediate
 
@@ -1693,33 +1693,33 @@ theorem approxIndepFun_figureOneScheduledFinalTrace_gaussian
     (q : VolumeParams) (I : VolumeInput q.n) (previous : ℕ)
     (hnext : previous + 1 < terminalPhaseSteps q) :
     let i := previous + 1
-    let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+    let X := dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) i
     let Y := scheduledFigureOneTraceTruncatedPhase q I (i + 1)
-    ApproxIndepFun (figureOneDependentEpsilon q) X Y
+    ApproxIndepFun (dependenceError q) X Y
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) := by
+          (numPhases q)) := by
   dsimp only
   let i := previous + 1
-  let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+  let X := dependentTruncatedProduct (truncationLevel q)
     (scheduledFigureOneTraceTruncatedMean q I)
     (scheduledFigureOneTraceTruncatedPhase q I) i
   let Y := scheduledFigureOneTraceTruncatedPhase q I (i + 1)
-  let future := figureOneDependentPhaseCount q - (i + 1)
-  have hcount : i + 1 ≤ figureOneDependentPhaseCount q := by
+  let future := numPhases q - (i + 1)
+  have hcount : i + 1 ≤ numPhases q := by
     dsimp only [i]
-    rw [figureOneDependentPhaseCount]
+    rw [numPhases]
     omega
-  have hhorizon : i + 1 + future = figureOneDependentPhaseCount q := by
+  have hhorizon : i + 1 + future = numPhases q := by
     dsimp only [future]
     omega
   have hV : ∀ j, Measurable
       (scheduledFigureOneTraceTruncatedPhase q I j) := fun j =>
     (measurable_scheduledBalancedTracePhaseVariable q j).min measurable_const
   have hX : Measurable X :=
-    measurable_dependentTruncatedProduct (figureOneDependentAlpha q)
+    measurable_dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) hV i
   have hY : Measurable Y := hV (i + 1)
@@ -1731,7 +1731,7 @@ theorem approxIndepFun_figureOneScheduledFinalTrace_gaussian
           (fun trace => (X trace, Y trace)) =
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)).map
+          (numPhases q)).map
           (fun trace => (X trace, Y trace)) := by
     rw [← hhorizon]
     symm
@@ -1764,26 +1764,26 @@ theorem approxIndepFun_const_left_of_nonneg
 product is the constant one. -/
 theorem approxIndepFun_figureOneScheduledFinalTrace_zero
     (q : VolumeParams) (I : VolumeInput q.n) :
-    ApproxIndepFun (figureOneDependentEpsilon q)
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+    ApproxIndepFun (dependenceError q)
+      (dependentTruncatedProduct (truncationLevel q)
         (scheduledFigureOneTraceTruncatedMean q I)
         (scheduledFigureOneTraceTruncatedPhase q I) 0)
       (scheduledFigureOneTraceTruncatedPhase q I 1)
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) := by
+          (numPhases q)) := by
   let law := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   let _ : IsProbabilityMeasure law :=
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)
-  change ApproxIndepFun (figureOneDependentEpsilon q) (fun _ => (1 : ℝ))
+        (numPhases q)
+  change ApproxIndepFun (dependenceError q) (fun _ => (1 : ℝ))
     (scheduledFigureOneTraceTruncatedPhase q I 1) law
   exact approxIndepFun_const_left_of_nonneg law (1 : ℝ)
     (scheduledFigureOneTraceTruncatedPhase q I 1)
-    (figureOneDependentEpsilon_nonneg q)
+    (dependenceError_nonneg q)
 
 /-! ## The final uniform-ratio phase -/
 
@@ -1799,8 +1799,8 @@ noncomputable def figureOneScheduledScaledTerminalPhaseLaw
         (terminalVariance q))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (terminalVariance q))
-      (figureOneSampleCount q) 0 current).map
-        (balancedCoolingAverage (figureOneSampleCount q))
+      (sampleCount q) 0 current).map
+        (balancedCoolingAverage (sampleCount q))
 
 theorem figureOneScheduledScaledTerminalPhaseLaw_measurable_and_probability
     (q : VolumeParams) (I : VolumeInput q.n) :
@@ -1815,9 +1815,9 @@ theorem figureOneScheduledScaledTerminalPhaseLaw_measurable_and_probability
     (figureOneFinalScheduledBalancedParameters.properStride q
       (terminalVariance q))
     (figureOneFinalScheduledBalancedParameters.retryLimit q
-      (terminalVariance q)) (figureOneSampleCount q)
+      (terminalVariance q)) (sampleCount q)
   have havg := measurable_balancedCoolingAverage (n := q.n)
-    (figureOneSampleCount q)
+    (sampleCount q)
   constructor
   · unfold figureOneScheduledScaledTerminalPhaseLaw
     exact (Measure.measurable_map _ havg).comp
@@ -1830,7 +1830,7 @@ theorem figureOneScheduledScaledTerminalPhaseLaw_measurable_and_probability
 noncomputable def figureOneScheduledTerminalPhaseTarget
     (q : VolumeParams) (I : VolumeInput q.n) :
     Measure (Option (ℝ × AmbientSpace q.n)) :=
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let first := (truncatedGaussianProbability q I (terminalVariance q)
     (terminalVariance_pos' q) : Measure (AmbientSpace q.n)).map some
   let tail : Option (AmbientSpace q.n) →
@@ -1847,13 +1847,13 @@ noncomputable def figureOneScheduledTerminalPhaseTarget
           (figureOneFinalScheduledBalancedParameters.retryLimit q
             (terminalVariance q))
           (count - 1) (uniformRatioWeight (terminalVariance q) point)
-          (accuracyScaleFactor q • point)
+          (scaleFactor q • point)
   (first.bind tail).map (balancedCoolingAverage count)
 
 theorem figureOneScheduledTerminalPhaseTarget_isProbabilityMeasure
     (q : VolumeParams) (I : VolumeInput q.n) :
     IsProbabilityMeasure (figureOneScheduledTerminalPhaseTarget q I) := by
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let first := (truncatedGaussianProbability q I (terminalVariance q)
     (terminalVariance_pos' q) : Measure (AmbientSpace q.n)).map some
   let tail : Option (AmbientSpace q.n) →
@@ -1870,7 +1870,7 @@ theorem figureOneScheduledTerminalPhaseTarget_isProbabilityMeasure
           (figureOneFinalScheduledBalancedParameters.retryLimit q
             (terminalVariance q))
           (count - 1) (uniformRatioWeight (terminalVariance q) point)
-          (accuracyScaleFactor q • point)
+          (scaleFactor q • point)
   have htailCollect :=
     scheduledBalancedTransitionCollectLaw_measurable_and_probability
       q I (terminalVariance_pos' q)
@@ -1892,11 +1892,11 @@ theorem figureOneScheduledTerminalPhaseTarget_isProbabilityMeasure
           (figureOneFinalScheduledBalancedParameters.retryLimit q
             (terminalVariance q))
           (count - 1) (uniformRatioWeight (terminalVariance q) point)
-          (accuracyScaleFactor q • point) :=
+          (scaleFactor q • point) :=
       htailCollect.1.comp <|
         (measurable_uniformRatioWeight _).prodMk
           ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
-            accuracyScaleFactor q).smul measurable_id)
+            scaleFactor q).smul measurable_id)
     convert Measurable.optionElim
       (Measure.dirac (none : Option (ℝ × AmbientSpace q.n))) hsome using 1
     funext result
@@ -1918,13 +1918,13 @@ theorem bind_figureOneScheduledScaledTerminalPhaseLaw_leUpTo_target_of_warmSixte
     (q : VolumeParams) (I : VolumeInput q.n)
     (mu : Measure (AmbientSpace q.n)) [IsProbabilityMeasure mu]
     (hwarm : Arlib.IsWarm
-      (ENNReal.ofReal (16 * speedyAdjacentWarmConstant q)) mu
+      (ENNReal.ofReal (16 * warmConstant q)) mu
       (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q))) :
     MeasureLeUpTo
       (mu.bind (figureOneScheduledScaledTerminalPhaseLaw q I))
       (figureOneScheduledTerminalPhaseTarget q I)
       (figureOneCorrectedTransitionBudget q) := by
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let collect := fun current =>
     scheduledBalancedTransitionCollectLaw q I (terminalVariance q)
       (uniformRatioWeight (terminalVariance q))
@@ -1990,7 +1990,7 @@ theorem bind_figureOneScheduledScaledTerminalPhaseLaw_leUpTo_target_of_warmSixte
         (terminalVariance q))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (terminalVariance q)) (count - 1) mu _ hfirst
-  have hcount : 0 < count := figureOneSampleCount_pos q
+  have hcount : 0 < count := sampleCount_pos q
   rw [Nat.sub_add_cancel hcount] at hcomplete
   have hmapped := hcomplete.map
     (measurable_balancedCoolingAverage (n := q.n) count)
@@ -2015,16 +2015,16 @@ theorem bind_scheduledBalancedTerminalTracePhaseOutputLaw_eq_live_dead
         figureOneFinalScheduledBalancedParameters q I
           (terminalPhaseSteps q) liveOutput deadOutput) =
       (scheduledBalancedTraceLiveStateLaw law
-          (fun x => accuracyScaleFactor q • x)).bind
+          (fun x => scaleFactor q • x)).bind
         (fun current =>
           (figureOneScheduledScaledTerminalPhaseLaw q I current).map liveOutput) +
       (scheduledBalancedTraceDeadStateLaw law
-          (fun x => accuracyScaleFactor q • x)) Set.univ •
+          (fun x => scaleFactor q • x)) Set.univ •
         Measure.dirac deadOutput := by
   let liveSet := scheduledBalancedTraceLiveSet q.n
   let deadSet := scheduledBalancedTraceDeadSet q.n
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let state : ScheduledBalancedCoolingTrace q.n → AmbientSpace q.n :=
     scale ∘ scheduledBalancedTraceRetainedState
   let outK := scheduledBalancedTracePhaseOutputLaw
@@ -2042,7 +2042,7 @@ theorem bind_scheduledBalancedTerminalTracePhaseOutputLaw_eq_live_dead
   have hstate : Measurable state := by
     dsimp only [state, scale]
     exact ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id).comp
+      scaleFactor q).smul measurable_id).comp
         measurable_scheduledBalancedTraceRetainedState
   have hsplit : law = law.restrict liveSet + law.restrict deadSet := by
     rw [show deadSet = liveSetᶜ by
@@ -2107,14 +2107,14 @@ theorem bind_scheduledBalancedTerminalTracePhaseOutputLaw_leUpTo_of_live_good_ba
     [IsProbabilityMeasure law]
     (good bad : Measure (AmbientSpace q.n)) [IsFiniteMeasure bad]
     {M eta : ENNReal} (hM : 1 ≤ M) (hMtop : M ≠ ⊤)
-    (hM16 : M ≤ ENNReal.ofReal (16 * speedyAdjacentWarmConstant q))
+    (hM16 : M ≤ ENNReal.ofReal (16 * warmConstant q))
     (hlive : scheduledBalancedTraceLiveStateLaw law
-      (fun x => accuracyScaleFactor q • x) ≤ good + bad)
+      (fun x => scaleFactor q • x) ≤ good + bad)
     (hgood : Arlib.IsWarm M good
       (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q)))
     (herror : bad Set.univ +
         scheduledBalancedTraceDeadStateLaw law
-          (fun x => accuracyScaleFactor q • x) Set.univ ≤ eta)
+          (fun x => scaleFactor q • x) Set.univ ≤ eta)
     (liveOutput : Option (ℝ × AmbientSpace q.n) → T)
     (deadOutput : T) (hliveOutput : Measurable liveOutput) :
     MeasureLeUpTo
@@ -2139,7 +2139,7 @@ theorem bind_scheduledBalancedTerminalTracePhaseOutputLaw_leUpTo_of_live_good_ba
     let _ := figureOneScheduledTerminalPhaseTarget_isProbabilityMeasure q I
     exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hliveOutput.aemeasurable
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let live := scheduledBalancedTraceLiveStateLaw law scale
   let dead := scheduledBalancedTraceDeadStateLaw law scale
   let pi := figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q)
@@ -2185,14 +2185,14 @@ theorem approxIndepFun_figureOneScheduledTrace_terminalPhaseOutput
     let i := terminalPhaseSteps q
     let rho := scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I i
-    let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+    let X := dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) i
     let liveOutput := figureOneScheduledTraceLiveTruncatedOutput q I (i + 1)
     let deadOutput := figureOneScheduledTraceDeadTruncatedOutput q I (i + 1)
     let outK := scheduledBalancedTracePhaseOutputLaw
       figureOneFinalScheduledBalancedParameters q I i liveOutput deadOutput
-    ApproxIndepFun (figureOneDependentEpsilon q)
+    ApproxIndepFun (dependenceError q)
       (X ∘ Prod.fst) Prod.snd (sequentialPairLaw rho outK) := by
   dsimp only
   let i := terminalPhaseSteps q
@@ -2207,7 +2207,7 @@ theorem approxIndepFun_figureOneScheduledTrace_terminalPhaseOutput
   let rho := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I i
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let good := (figureOneScheduledAcceptedTargetAt q I previous).map scale
   let eta := figureOneScheduledRetainedError q i
   let liveOutput := figureOneScheduledTraceLiveTruncatedOutput q I (i + 1)
@@ -2254,22 +2254,22 @@ theorem approxIndepFun_figureOneScheduledTrace_terminalPhaseOutput
     let _ := figureOneScheduledTerminalPhaseTarget_isProbabilityMeasure q I
     exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hliveOutput.aemeasurable
   have hgood : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) good
+      (ENNReal.ofReal (8 * warmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I i) := by
     simpa [good, scale, i, figureOneScheduledAcceptedTargetAt,
       figureOneScheduledSpeedyPiAt, hpreviousSucc] using
       map_scheduledBalancedAcceptedTarget_scale_adjacent_isWarm q I previous
   have hM8 : (1 : ENNReal) ≤
-      ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) := by
+      ENNReal.ofReal (8 * warmConstant q) := by
     rw [← ENNReal.ofReal_one]
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
-  have hM8M16 : ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) ≤
-      ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+      nlinarith [warmConstant_one_le q]
+  have hM8M16 : ENNReal.ofReal (8 * warmConstant q) ≤
+      ENNReal.ofReal (16 * warmConstant q) := by
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
+      nlinarith [warmConstant_one_le q]
   have hM16 : (1 : ENNReal) ≤
-      ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) :=
+      ENNReal.ofReal (16 * warmConstant q) :=
     hM8.trans hM8M16
   have hbase : MeasureLeUpTo (rho.bind outK) target
       (figureOneCorrectedTransitionBudget q + eta) := by
@@ -2308,24 +2308,24 @@ theorem approxIndepFun_figureOneScheduledTrace_terminalPhaseOutput
           gcongr
         _ = good2 + bad2 := by simp only [good2, bad2, smul_add]
     have hgood2 : Arlib.IsWarm
-        (ENNReal.ofReal (16 * speedyAdjacentWarmConstant q)) good2
+        (ENNReal.ofReal (16 * warmConstant q)) good2
         (figureOneScheduledSpeedyPiAt q I i) := by
       intro S hS
       rw [show good2 = (2 : ENNReal) • good by rfl,
         Measure.smul_apply, smul_eq_mul]
       have hg := hgood S hS
       have hcoef : (2 : ENNReal) *
-          ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) =
-            ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+          ENNReal.ofReal (8 * warmConstant q) =
+            ENNReal.ofReal (16 * warmConstant q) := by
         rw [show (2 : ENNReal) = ENNReal.ofReal (2 : ℝ) by norm_num,
           ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 2)]
         congr 1
         ring
       calc
         2 * good S ≤ 2 *
-            (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) *
+            (ENNReal.ofReal (8 * warmConstant q) *
               (figureOneScheduledSpeedyPiAt q I i) S) := by gcongr
-        _ = ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) *
+        _ = ENNReal.ofReal (16 * warmConstant q) *
               (figureOneScheduledSpeedyPiAt q I i) S := by
           rw [← mul_assoc, hcoef]
     have hdead2 := scheduledBalancedTraceDeadStateLaw_mass_mono_smul
@@ -2356,34 +2356,34 @@ theorem approxIndepFun_figureOneScheduledTrace_terminalPhaseOutput
       ⟨by simp [figureOneCorrectedTransitionBudget], hetaTop⟩)
     hconditioned hbase
   have hX : Measurable (dependentTruncatedProduct
-      (figureOneDependentAlpha q)
+      (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) i) :=
-    measurable_dependentTruncatedProduct (figureOneDependentAlpha q)
+    measurable_dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I)
       (fun j => (measurable_scheduledBalancedTracePhaseVariable q j).min
         measurable_const) i
   apply (hraw.comp hX measurable_id).mono
   exact figureOneScheduledRetained_asymmetric_budget q i (by
-    simp [i, figureOneDependentPhaseCount])
+    simp [i, numPhases])
 
 theorem approxIndepFun_figureOneScheduledFinalTrace_terminal
     (q : VolumeParams) (I : VolumeInput q.n) :
     let i := terminalPhaseSteps q
-    let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+    let X := dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) i
     let Y := scheduledFigureOneTraceTruncatedPhase q I (i + 1)
-    ApproxIndepFun (figureOneDependentEpsilon q) X Y
+    ApproxIndepFun (dependenceError q) X Y
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) := by
+          (numPhases q)) := by
   dsimp only
   let i := terminalPhaseSteps q
   let rho := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I i
-  let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+  let X := dependentTruncatedProduct (truncationLevel q)
     (scheduledFigureOneTraceTruncatedMean q I)
     (scheduledFigureOneTraceTruncatedPhase q I) i
   let Y := scheduledFigureOneTraceTruncatedPhase q I (i + 1)
@@ -2395,34 +2395,34 @@ theorem approxIndepFun_figureOneScheduledFinalTrace_terminal
       (scheduledFigureOneTraceTruncatedPhase q I j) := fun j =>
     (measurable_scheduledBalancedTracePhaseVariable q j).min measurable_const
   have hX : Measurable X :=
-    measurable_dependentTruncatedProduct (figureOneDependentAlpha q)
+    measurable_dependentTruncatedProduct (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I) hV i
   have hY : Measurable Y := hV (i + 1)
   have himmediate :=
     approxIndepFun_figureOneScheduledTrace_terminalPhaseOutput q I
   have hlaw := map_pair_sequentialTracePhaseOutput_eq_forwardTrace_succ
-    q I i (by simp [i, figureOneDependentPhaseCount])
+    q I i (by simp [i, numPhases])
   have htransported := ApproxIndepFun.of_map_pair_eq
     (hX.comp measurable_fst) measurable_snd hX hY
     (by simpa [i, rho, X, Y, outK, liveOutput, deadOutput,
       Function.comp_def] using hlaw)
     (by simpa [i, rho, X, outK, liveOutput, deadOutput] using himmediate)
-  simpa [i, figureOneDependentPhaseCount] using htransported
+  simpa [i, numPhases] using htransported
 
 /-- Fully concrete CV18 Lemma 7.17(c) for every finite phase of the final
 loss-preserving executable trace. -/
 theorem figureOneScheduledTrace_lemma717c
     (q : VolumeParams) (I : VolumeInput q.n) :
-    ∀ i, i < figureOneDependentPhaseCount q →
-      ApproxIndepFun (figureOneDependentEpsilon q)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+    ∀ i, i < numPhases q →
+      ApproxIndepFun (dependenceError q)
+        (dependentTruncatedProduct (truncationLevel q)
           (scheduledFigureOneTraceTruncatedMean q I)
           (scheduledFigureOneTraceTruncatedPhase q I) i)
         (scheduledFigureOneTraceTruncatedPhase q I (i + 1))
         (scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) := by
+          (numPhases q)) := by
   intro i hi
   cases i with
   | zero => exact approxIndepFun_figureOneScheduledFinalTrace_zero q I
@@ -2431,7 +2431,7 @@ theorem figureOneScheduledTrace_lemma717c
       · exact approxIndepFun_figureOneScheduledFinalTrace_gaussian
           q I previous hgaussian
       · have hterminal : previous + 1 = terminalPhaseSteps q := by
-          rw [figureOneDependentPhaseCount] at hi
+          rw [numPhases] at hi
           omega
         simpa [hterminal] using
           approxIndepFun_figureOneScheduledFinalTrace_terminal q I

@@ -2,19 +2,19 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledAcceptedTarge
 
 namespace ArlibCommunity.Algorithms.CV18
 
-theorem figureOneSafeRetryCount_pos (q : VolumeParams) :
-    0 < figureOneSafeRetryCount q := by
+theorem maxRetries_pos (q : VolumeParams) :
+    0 < maxRetries q := by
   apply Nat.ceil_pos.mpr
   have hlog : (1 : ℝ) ≤
-      protectedLog (4 / figureOnePerSampleMixingError q) := le_max_left _ _
+      protectedLog (4 / sampleMixingError q) := le_max_left _ _
   nlinarith
 
 theorem pow_121_div_128_safeRetryCount_le (q : VolumeParams) :
-    ENNReal.ofReal (121 / 128 : ℝ) ^ figureOneSafeRetryCount q ≤
+    ENNReal.ofReal (121 / 128 : ℝ) ^ maxRetries q ≤
       figureOneCorrectedRetryTailBudget q := by
-  let nu := figureOnePerSampleMixingError q
-  let N := figureOneSafeRetryCount q
-  have hnu : 0 < nu := figureOnePerSampleMixingError_pos q
+  let nu := sampleMixingError q
+  let N := maxRetries q
+  have hnu : 0 < nu := sampleMixingError_pos q
   have hb : (121 / 128 : ℝ) ≤ Real.exp (-(1 / 128 : ℝ)) := by
     calc
       (121 / 128 : ℝ) ≤ 1 - 1 / 128 := by norm_num
@@ -59,9 +59,9 @@ theorem pow_121_div_128_safeRetryCount_le (q : VolumeParams) :
 theorem figureOneSafeRetryTail_le (q : VolumeParams)
     {rejectMass : ENNReal}
     (hreject : rejectMass ≤ ENNReal.ofReal (121 / 128 : ℝ)) :
-    rejectMass ^ (figureOneSafeRetryCount q - 1 + 1) ≤
+    rejectMass ^ (maxRetries q - 1 + 1) ≤
       figureOneCorrectedRetryTailBudget q := by
-  rw [Nat.sub_add_cancel (figureOneSafeRetryCount_pos q)]
+  rw [Nat.sub_add_cancel (maxRetries_pos q)]
   exact (pow_le_pow_left₀ bot_le hreject _).trans
     (pow_121_div_128_safeRetryCount_le q)
 

@@ -32,29 +32,29 @@ theorem figureOneFinalScheduled_postInitialLaw_eq_traceProduct
               oracle.query) =
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)).map
+          (numPhases q)).map
         (fun trace => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (scheduledBalancedTracePhaseVariable q)
-            (figureOneDependentPhaseCount q) trace) := by
+            (numPhases q) trace) := by
   let parameters := figureOneFinalScheduledBalancedParameters
   let traceLaw := scheduledBalancedForwardTraceLaw parameters q I
-    (figureOneDependentPhaseCount q)
+    (numPhases q)
   have hhistory :=
     bind_scheduledBalancedFigureOnePointContinuation_eq_forwardHistory_map_of_pointwise
       parameters q I oracle
         (scheduledBalancedFigureOnePointContinuation_runEstimate_eq_forwardHistory_map
           parameters q I oracle)
   have htraceProjection := map_scheduledBalancedForwardTraceLaw_project
-    parameters q I (figureOneDependentPhaseCount q)
+    parameters q I (numPhases q)
   rw [hhistory, ← htraceProjection]
   rw [Measure.map_map (measurable_balancedFigureOneHistoryEstimate q)
     measurable_scheduledBalancedCoolingTraceProject]
   apply Measure.map_congr
   filter_upwards [scheduledBalancedForwardTraceLaw_ae_valid
-    parameters q I (figureOneDependentPhaseCount q),
+    parameters q I (numPhases q),
     scheduledBalancedForwardTraceLaw_ae_coordinatesNonnegative
-      parameters q I (figureOneDependentPhaseCount q)]
+      parameters q I (numPhases q)]
     with trace hvalid hnonnegative
   change balancedFigureOneHistoryEstimate q
     (scheduledBalancedCoolingTraceProject trace) = _
@@ -93,10 +93,10 @@ theorem figureOneFinalScheduledAbortBase_failure_le_of_globalResetReference
         figureOneChronologicalRawMean q I j ^ 2)
     {epsilon : ℝ} (hepsilon0 : 0 ≤ epsilon)
     (hepsilon : epsilon ≤
-      (5 / 2 : ℝ) * figureOneDependentEpsilon q)
-    (hind : ∀ i, i < figureOneDependentPhaseCount q →
+      (5 / 2 : ℝ) * dependenceError q)
+    (hind : ∀ i, i < numPhases q →
       ApproxIndepFun epsilon
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+        (dependentTruncatedProduct (truncationLevel q)
           (figureOneChronologicalTruncatedMean q I reference W)
           (figureOneChronologicalTruncatedPhase q I W) i)
         (figureOneChronologicalTruncatedPhase q I W (i + 1)) reference)
@@ -104,14 +104,14 @@ theorem figureOneFinalScheduledAbortBase_failure_le_of_globalResetReference
     (htransfer : MeasureLeUpTo
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)).map
+          (numPhases q)).map
         (fun trace => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (scheduledBalancedTracePhaseVariable q)
-            (figureOneDependentPhaseCount q) trace))
+            (numPhases q) trace))
       (reference.map (fun state => initialGaussianIntegral q *
         dependentPhaseSampleProduct W
-          (figureOneDependentPhaseCount q) state)) error)
+          (numPhases q) state)) error)
     (herror : error ≤
       figureOneScheduledGlobalResetReferenceError q + boundary)
     (hboundary : boundary ≤ ENNReal.ofReal (1 / 128 : ℝ)) :
@@ -119,24 +119,24 @@ theorem figureOneFinalScheduledAbortBase_failure_le_of_globalResetReference
         (accurateOutcome q I)ᶜ ≤ ENNReal.ofReal (13 / 64 : ℝ) := by
   let actualLaw := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   let actualProduct := dependentPhaseSampleProduct
     (scheduledBalancedTracePhaseVariable q)
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   let continuation : AmbientSpace q.n → Measure ℝ := fun point =>
     (scheduledBalancedFigureOnePointContinuation
       figureOneFinalScheduledBalancedParameters q point).runEstimate
         oracle.query
   have hactualMeas : Measurable actualProduct := by
     unfold actualProduct dependentPhaseSampleProduct
-    exact (Finset.range (figureOneDependentPhaseCount q)).measurable_fun_prod
+    exact (Finset.range (numPhases q)).measurable_fun_prod
       fun j _ => measurable_scheduledBalancedTracePhaseVariable q (j + 1)
   have htransfer64 : MeasureLeUpTo
       (actualLaw.map
         (fun trace => initialGaussianIntegral q * actualProduct trace))
       (reference.map (fun state => initialGaussianIntegral q *
         dependentPhaseSampleProduct W
-          (figureOneDependentPhaseCount q) state))
+          (numPhases q) state))
       (ENNReal.ofReal (1 / 64 : ℝ)) := by
     apply htransfer.mono_resetReference_finalTransfer q herror hboundary
   have hpost : FigureOnePostInitialDirectFailureBoundFor q I continuation := by

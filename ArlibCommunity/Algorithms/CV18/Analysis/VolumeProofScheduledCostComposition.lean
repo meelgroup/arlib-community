@@ -61,8 +61,8 @@ theorem scheduledBalancedCoolingRatioEstimate_countedQueryCost_eq
           (parameters.proposalCap q sigma2)
           (parameters.properStride q sigma2)
           (parameters.retryLimit q sigma2)
-          (figureOnePhaseSampleCount q sigma2)
-          (accuracyScaleFactor q • current)).run oracle.query) := by
+          (phaseSampleCount q sigma2)
+          (scaleFactor q • current)).run oracle.query) := by
   unfold scheduledBalancedCoolingRatioEstimate
   apply MembershipOracleProgram.countedQueryCost_bind_pure_eq
   · exact measurable_balancedCoolingAverage _
@@ -71,7 +71,7 @@ theorem scheduledBalancedCoolingRatioEstimate_countedQueryCost_eq
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOnePhaseSampleCount q sigma2)).2 _
+      (phaseSampleCount q sigma2)).2 _
 
 /-- The terminal averaging wrapper is likewise query-free. -/
 theorem scheduledBalancedCoolingUniformEstimateWithState_countedQueryCost_eq
@@ -88,8 +88,8 @@ theorem scheduledBalancedCoolingUniformEstimateWithState_countedQueryCost_eq
           (parameters.proposalCap q sigma2)
           (parameters.properStride q sigma2)
           (parameters.retryLimit q sigma2)
-          (figureOneSampleCount q)
-          (accuracyScaleFactor q • current)).run oracle.query) := by
+          (sampleCount q)
+          (scaleFactor q • current)).run oracle.query) := by
   unfold scheduledBalancedCoolingUniformEstimateWithState
   apply MembershipOracleProgram.countedQueryCost_bind_pure_eq
   · exact measurable_balancedCoolingAverage _
@@ -98,7 +98,7 @@ theorem scheduledBalancedCoolingUniformEstimateWithState_countedQueryCost_eq
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOneSampleCount q)).2 _
+      (sampleCount q)).2 _
 
 /-- Forgetting the retained terminal state adds no membership queries. -/
 theorem scheduledBalancedCoolingUniformRatioEstimate_countedQueryCost_eq

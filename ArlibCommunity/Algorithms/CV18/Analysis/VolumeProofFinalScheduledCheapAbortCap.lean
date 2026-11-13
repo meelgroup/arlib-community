@@ -58,19 +58,19 @@ theorem exists_figureOneFinalScheduledIdealGaussianCountedReference
           (figureOneFinalScheduledIdealCountedInitial q I) steps)
         reference
         (∑ phase ∈ Finset.range steps,
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q) ∧
       reference.fst = figureOneFinalScheduledIdealPhaseStart q I steps ∧
       countedQueryCost reference ≤
         1 + ∑ phase ∈ Finset.range steps,
-          ((384 * (figureOnePhaseSampleCount q (scheduleValue q phase) *
+          ((384 * (phaseSampleCount q (scheduleValue q phase) *
             figureOneFinalScheduledBalancedParameters.retryLimit q
               (scheduleValue q phase) *
             figureOneFinalScheduledBalancedParameters.properStride q
               (scheduleValue q phase)) : ℕ) : ENNReal) := by
   let ideal := figureOneFinalScheduledIdealPhaseStart q I
   let phaseCost : ℕ → ENNReal := fun phase =>
-    ((384 * (figureOnePhaseSampleCount q (scheduleValue q phase) *
+    ((384 * (phaseSampleCount q (scheduleValue q phase) *
       figureOneFinalScheduledBalancedParameters.retryLimit q
         (scheduleValue q phase) *
       figureOneFinalScheduledBalancedParameters.properStride q
@@ -86,7 +86,7 @@ theorem exists_figureOneFinalScheduledIdealGaussianCountedReference
     (figureOneFinalScheduledGaussianCountedKernel q oracle.query)
     (figureOneFinalScheduledIdealCountedInitial q I) ideal
     (initialError := 0)
-    (fun phase => figureOnePhaseSampleCount q (scheduleValue q phase) •
+    (fun phase => phaseSampleCount q (scheduleValue q phase) •
       figureOneCorrectedTransitionBudget q)
     phaseCost
     (fun phase => by
@@ -159,16 +159,16 @@ theorem exists_figureOneFinalScheduledIdealCompleteCountedReference
         (figureOneFinalScheduledIdealCompleteCountedLaw q I oracle)
         reference
         (∑ phase ∈ Finset.range (terminalPhaseSteps q),
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q) ∧
       countedQueryCost reference ≤
         1 + ∑ phase ∈ Finset.range (terminalPhaseSteps q),
-          ((384 * (figureOnePhaseSampleCount q (scheduleValue q phase) *
+          ((384 * (phaseSampleCount q (scheduleValue q phase) *
             figureOneFinalScheduledBalancedParameters.retryLimit q
               (scheduleValue q phase) *
             figureOneFinalScheduledBalancedParameters.properStride q
               (scheduleValue q phase)) : ℕ) : ENNReal) +
-          ((384 * (figureOneSampleCount q *
+          ((384 * (sampleCount q *
             figureOneFinalScheduledBalancedParameters.retryLimit q
               (terminalVariance q) *
             figureOneFinalScheduledBalancedParameters.properStride q
@@ -336,7 +336,7 @@ theorem bind_figureOneFinalScheduledCountedLawFromInitial
 theorem figureOneFinalScheduledRetainedCompleteProgram_run_eq_initial_bind
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I) :
     (figureOneFinalScheduledRetainedCompleteProgram q).run oracle.query =
-      ((initialGaussianSamplingMeasure q).map
+      ((initialGaussianLaw q).map
         (initialTruncatedOption q I)).bind
           (figureOneFinalScheduledCountedLawFromInitial q I oracle) := by
   have hinitial :=
@@ -360,7 +360,7 @@ theorem figureOneFinalScheduledRetainedCompleteProgram_run_eq_initial_bind
       rw [figureOneFinalScheduledRetainedGaussianPrefixProgram_run]
     _ = (iteratedKernelLaw
           (figureOneFinalScheduledGaussianCountedKernel q oracle.query)
-          (((initialGaussianSamplingMeasure q).map
+          (((initialGaussianLaw q).map
             (initialTruncatedOption q I)).map fun state => (state, 1))
           (terminalPhaseSteps q)).bind
         (countedContinuation oracle.query
@@ -368,7 +368,7 @@ theorem figureOneFinalScheduledRetainedCompleteProgram_run_eq_initial_bind
       rw [(figureOneAbortInitialSample_fixedQueryCount q).run_eq_map_runEstimate
         oracle.query (figureOneAbortInitialSample_stronglyMeasurable q I oracle)]
       rw [runEstimate_figureOneAbortInitialSample q I oracle]
-    _ = ((initialGaussianSamplingMeasure q).map
+    _ = ((initialGaussianLaw q).map
           (initialTruncatedOption q I)).bind
             (figureOneFinalScheduledCountedLawFromInitial q I oracle) := by
       symm
@@ -454,7 +454,7 @@ theorem figureOneFinalScheduledRetainedComplete_expensive_le_ideal
   have hstationaryEvent := hstationaryComplete.event_le E
   have hactual :
       ((figureOneFinalScheduledRetainedCompleteProgram q).run oracle.query) E =
-        ((initialGaussianSamplingMeasure q).map
+        ((initialGaussianLaw q).map
           (initialTruncatedOption q I)).bind
             (figureOneFinalScheduledCountedLawFromInitial q I oracle) E := by
     rw [figureOneFinalScheduledRetainedCompleteProgram_run_eq_initial_bind]
@@ -468,7 +468,7 @@ theorem figureOneFinalScheduledRetainedComplete_expensive_le_ideal
     oracle.query) E ≤ _
   rw [hactual]
   calc
-    (((initialGaussianSamplingMeasure q).map
+    (((initialGaussianLaw q).map
         (initialTruncatedOption q I)).bind
           (figureOneFinalScheduledCountedLawFromInitial q I oracle)) E ≤
         (((truncatedGaussianProbability q I (initialVariance q)
@@ -493,11 +493,11 @@ theorem exists_figureOneFinalScheduledCheapAbortCapReference
         reference {outcome | budget < outcome.2} +
           (scheduledBalancedStationaryTargetError q +
             ∑ phase ∈ Finset.range (terminalPhaseSteps q),
-              figureOnePhaseSampleCount q (scheduleValue q phase) •
+              phaseSampleCount q (scheduleValue q phase) •
                 figureOneCorrectedTransitionBudget q) ∧
       countedQueryCost reference ≤
         ENNReal.ofReal ((9 * 10 ^ 29) *
-          volumeScheduledBaseComplexityRate q) := by
+          runRate q) := by
   obtain ⟨reference, hdom, hcost⟩ :=
     exists_figureOneFinalScheduledIdealCompleteCountedReference q I oracle
   refine ⟨reference, ?_, hcost.trans
@@ -516,13 +516,13 @@ theorem exists_figureOneFinalScheduledCheapAbortCapReference
           scheduledBalancedStationaryTargetError q := hactual
     _ ≤ (reference E +
           ∑ phase ∈ Finset.range (terminalPhaseSteps q),
-            figureOnePhaseSampleCount q (scheduleValue q phase) •
+            phaseSampleCount q (scheduleValue q phase) •
               figureOneCorrectedTransitionBudget q) +
         scheduledBalancedStationaryTargetError q := by gcongr
     _ = reference E +
         (scheduledBalancedStationaryTargetError q +
           ∑ phase ∈ Finset.range (terminalPhaseSteps q),
-            figureOnePhaseSampleCount q (scheduleValue q phase) •
+            phaseSampleCount q (scheduleValue q phase) •
               figureOneCorrectedTransitionBudget q) := by
       ac_rfl
 
@@ -531,45 +531,45 @@ scheduled aborting base program. -/
 theorem figureOneFinalScheduledAbortQueryCap_failure_le
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I) :
     ((figureOneFinalScheduledAbortBaseProgram q).withQueryCap
-        (figureOneFinalScheduledQueryBudget q)).runEstimate oracle.query
+        (queryBudget q)).runEstimate oracle.query
           {none} ≤ ENNReal.ofReal (1 / 64 : ℝ) := by
-  let budget := figureOneFinalScheduledQueryBudget q
+  let budget := queryBudget q
   let delta := scheduledBalancedStationaryTargetError q +
     ∑ phase ∈ Finset.range (terminalPhaseSteps q),
-      figureOnePhaseSampleCount q (scheduleValue q phase) •
+      phaseSampleCount q (scheduleValue q phase) •
         figureOneCorrectedTransitionBudget q
-  have hbudgetNat : 1 ≤ budget := figureOneFinalScheduledQueryBudget_pos q
+  have hbudgetNat : 1 ≤ budget := queryBudget_pos q
   obtain ⟨reference, hactualTail, href⟩ :=
     exists_figureOneFinalScheduledCheapAbortCapReference
       q I oracle budget hbudgetNat
   let tail := reference {outcome | budget < outcome.2}
   let base := ENNReal.ofReal
-    (figureOneFinalScheduledExpectedCostConstant *
-      volumeScheduledBaseComplexityRate q)
+    (runCostConstant *
+      runRate q)
   have hbase0 : base ≠ 0 := by
     exact ENNReal.ofReal_ne_zero_iff.mpr <|
-      mul_pos figureOneFinalScheduledExpectedCostConstant_pos
-        (volumeScheduledBaseComplexityRate_pos q)
+      mul_pos runCostConstant_pos
+        (runRate_pos q)
   have hbaseTop : base ≠ ∞ := ENNReal.ofReal_ne_top
   have hbudget : ENNReal.ofReal (64 : ℝ) * base ≤
       (budget + 1 : ENNReal) := by
-    have hceil : 64 * figureOneFinalScheduledExpectedCostConstant *
-        volumeScheduledBaseComplexityRate q ≤ (budget : ℝ) := by
-      simpa [budget, figureOneFinalScheduledQueryBudget,
-        globalQueryBudgetOfRate] using Nat.le_ceil
-          (64 * figureOneFinalScheduledExpectedCostConstant *
-            volumeScheduledBaseComplexityRate q)
+    have hceil : 64 * runCostConstant *
+        runRate q ≤ (budget : ℝ) := by
+      simpa [budget, queryBudget,
+        budgetOfRate] using Nat.le_ceil
+          (64 * runCostConstant *
+            runRate q)
     have h := ENNReal.ofReal_le_ofReal hceil
     rw [ENNReal.ofReal_natCast] at h
     calc
       ENNReal.ofReal (64 : ℝ) * base =
           ENNReal.ofReal (64 *
-            (figureOneFinalScheduledExpectedCostConstant *
-              volumeScheduledBaseComplexityRate q)) := by
+            (runCostConstant *
+              runRate q)) := by
         rw [ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 64)]
       _ = ENNReal.ofReal (64 *
-          figureOneFinalScheduledExpectedCostConstant *
-            volumeScheduledBaseComplexityRate q) := by ring_nf
+          runCostConstant *
+            runRate q) := by ring_nf
       _ ≤ (budget : ENNReal) := h
       _ ≤ (budget + 1 : ENNReal) := by
         exact_mod_cast Nat.le_add_right budget 1
@@ -585,15 +585,15 @@ theorem figureOneFinalScheduledAbortQueryCap_failure_le
     exact_mod_cast Nat.add_one_le_iff
   rw [← hevent] at hmarkov
   have hwarmEq : ENNReal.ofReal ((9 * 10 ^ 29) *
-      volumeScheduledBaseComplexityRate q) =
+      runRate q) =
       base * ENNReal.ofReal (9 / 10 : ℝ) := by
     rw [← ENNReal.ofReal_mul
-      (by positivity [figureOneFinalScheduledExpectedCostConstant_pos,
-        volumeScheduledBaseComplexityRate_pos q] :
-        0 ≤ figureOneFinalScheduledExpectedCostConstant *
-          volumeScheduledBaseComplexityRate q)]
+      (by positivity [runCostConstant_pos,
+        runRate_pos q] :
+        0 ≤ runCostConstant *
+          runRate q)]
     congr 1
-    simp only [figureOneFinalScheduledExpectedCostConstant]
+    simp only [runCostConstant]
     ring
   have hscaled : base * (tail * ENNReal.ofReal (64 : ℝ)) ≤
       base * ENNReal.ofReal (9 / 10 : ℝ) := by
@@ -603,7 +603,7 @@ theorem figureOneFinalScheduledAbortQueryCap_failure_le
       _ ≤ (budget + 1 : ENNReal) * tail := by gcongr
       _ ≤ ∫⁻ outcome, (outcome.2 : ENNReal) ∂reference := hmarkov
       _ ≤ ENNReal.ofReal ((9 * 10 ^ 29) *
-          volumeScheduledBaseComplexityRate q) := href
+          runRate q) := href
       _ = base * ENNReal.ofReal (9 / 10 : ℝ) := hwarmEq
   have htailScaled : tail * ENNReal.ofReal (64 : ℝ) ≤
       ENNReal.ofReal (9 / 10 : ℝ) := by

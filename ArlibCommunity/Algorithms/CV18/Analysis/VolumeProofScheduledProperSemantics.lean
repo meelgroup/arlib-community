@@ -20,7 +20,7 @@ theorem scheduledAccuracyMetropolisMarkedProposalProgram_stronglyMeasurable
     MembershipOracleProgram.StronglyMeasurable]
   by_cases hproper : oracle.query proposal = true ∧
       ‖proposal‖ ≤ Real.sqrt (terminalVariance q) ∧
-      ‖proposal‖ ≤ figureOneScheduledPhaseRadius q sigma2
+      ‖proposal‖ ≤ phaseRadius q sigma2
   · simp only [if_pos hproper, MembershipOracleProgram.runEstimate,
       MembershipOracleProgram.StronglyMeasurable]
     constructor
@@ -43,22 +43,22 @@ theorem scheduledAccuracyMetropolisMarkedBallStep_stronglyMeasurable
     fun point coin =>
       if oracle.query point = true ∧
           ‖point‖ ≤ Real.sqrt (terminalVariance q) ∧
-          ‖point‖ ≤ figureOneScheduledPhaseRadius q sigma2 then
-        (true, if coin ≤ lazyGaussianMetropolisAcceptance sigma2 current point
+          ‖point‖ ≤ phaseRadius q sigma2 then
+        (true, if coin ≤ lazyAcceptance sigma2 current point
           then point else current)
       else (false, current)
   have horacle : Measurable fun p : AmbientSpace q.n × ℝ =>
       oracle.query p.1 := oracle.measurable_query.comp measurable_fst
   have hnorm : Measurable fun p : AmbientSpace q.n × ℝ => ‖p.1‖ := by fun_prop
   have haccept : Measurable fun p : AmbientSpace q.n × ℝ =>
-      lazyGaussianMetropolisAcceptance sigma2 current p.1 := by
-    unfold lazyGaussianMetropolisAcceptance gaussianMetropolisAcceptance
+      lazyAcceptance sigma2 current p.1 := by
+    unfold lazyAcceptance metropolisAcceptance
     fun_prop
   have hterminal : MeasurableSet {p : AmbientSpace q.n × ℝ |
       ‖p.1‖ ≤ Real.sqrt (terminalVariance q)} :=
     measurableSet_le hnorm measurable_const
   have hphase : MeasurableSet {p : AmbientSpace q.n × ℝ |
-      ‖p.1‖ ≤ figureOneScheduledPhaseRadius q sigma2} :=
+      ‖p.1‖ ≤ phaseRadius q sigma2} :=
     measurableSet_le hnorm measurable_const
   have hout : Measurable fun p : AmbientSpace q.n × ℝ => output p.1 p.2 := by
     apply Measurable.ite
@@ -76,7 +76,7 @@ theorem scheduledAccuracyMetropolisMarkedBallStep_stronglyMeasurable
   · rw [show (fun point =>
         (scheduledAccuracyMetropolisMarkedProposalProgram q sigma2 current point).runEstimate
           oracle.query) =
-        fun point => uniformUnitIntervalMeasure.map (output point) by
+        fun point => uniformUnit.map (output point) by
       funext point
       simp only [scheduledAccuracyMetropolisMarkedProposalProgram,
         MembershipOracleProgram.runEstimate]
@@ -84,22 +84,22 @@ theorem scheduledAccuracyMetropolisMarkedBallStep_stronglyMeasurable
           MembershipOracleProgram.runEstimate oracle.query
             (if oracle.query point = true ∧
                 ‖point‖ ≤ Real.sqrt (terminalVariance q) ∧
-                ‖point‖ ≤ figureOneScheduledPhaseRadius q sigma2 then
+                ‖point‖ ≤ phaseRadius q sigma2 then
               .pure (true, if coin ≤
-                lazyGaussianMetropolisAcceptance sigma2 current point
+                lazyAcceptance sigma2 current point
                 then point else current)
             else .pure (false, current))) =
           fun coin => Measure.dirac (output point coin) := by
         funext coin
         by_cases hproper : oracle.query point = true ∧
             ‖point‖ ≤ Real.sqrt (terminalVariance q) ∧
-            ‖point‖ ≤ figureOneScheduledPhaseRadius q sigma2
+            ‖point‖ ≤ phaseRadius q sigma2
         · simp [hproper, output, MembershipOracleProgram.runEstimate]
         · simp [hproper, output, MembershipOracleProgram.runEstimate]
       rw [hinner]
-      exact Measure.bind_dirac_eq_map uniformUnitIntervalMeasure
+      exact Measure.bind_dirac_eq_map uniformUnit
         (hout.comp (measurable_const.prodMk measurable_id))]
-    exact measurable_measure_map_param uniformUnitIntervalMeasure hout
+    exact measurable_measure_map_param uniformUnit hout
   · intro proposal
     exact scheduledAccuracyMetropolisMarkedProposalProgram_stronglyMeasurable
       q I oracle sigma2 current proposal
@@ -121,21 +121,21 @@ theorem map_snd_runEstimate_scheduledAccuracyMetropolisMarkedProposalProgram
     simp only [scheduledAccuracyMetropolisMarkedProposalProgram,
       MembershipOracleProgram.runEstimate, heligible, true_and, if_true]
     have hpair : Measurable fun coin : ℝ =>
-        (true, if coin ≤ lazyGaussianMetropolisAcceptance sigma2 current proposal
+        (true, if coin ≤ lazyAcceptance sigma2 current proposal
           then proposal else current) :=
       measurable_const.prodMk <|
         Measurable.ite measurableSet_Iic measurable_const measurable_const
-    rw [Measure.bind_dirac_eq_map uniformUnitIntervalMeasure hpair,
+    rw [Measure.bind_dirac_eq_map uniformUnit hpair,
       Measure.map_map measurable_snd hpair]
     unfold radialLazyMetropolisAcceptance
     rw [Set.indicator_of_mem hp]
     exact uniformUnitInterval_map_threshold
-      (lazyGaussianMetropolisAcceptance_nonneg sigma2 current proposal)
-      (lazyGaussianMetropolisAcceptance_le_one sigma2 current proposal)
+      (lazyAcceptance_nonneg sigma2 current proposal)
+      (lazyAcceptance_le_one sigma2 current proposal)
       proposal current
   · have hineligible : ¬ (oracle.query proposal = true ∧
         ‖proposal‖ ≤ Real.sqrt (terminalVariance q) ∧
-        ‖proposal‖ ≤ figureOneScheduledPhaseRadius q sigma2) := by
+        ‖proposal‖ ≤ phaseRadius q sigma2) := by
       rwa [oracle_and_radii_iff_mem_scheduledPhaseBody]
     simp only [scheduledAccuracyMetropolisMarkedProposalProgram,
       MembershipOracleProgram.runEstimate, hineligible, if_false,
@@ -150,9 +150,9 @@ theorem map_snd_runEstimate_scheduledAccuracyMetropolisMarkedBallStep_eq_radialL
     ((scheduledAccuracyMetropolisMarkedBallStep q sigma2 current).runEstimate
       oracle.query).map Prod.snd =
       radialLazyMetropolisLaw (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2 current := by
-  let U := uniformClosedBallMeasure q.n current
-    (figureOneScheduledProposalRadius q sigma2)
+        (proposalRadius q sigma2) sigma2 current := by
+  let U := uniformBall q.n current
+    (proposalRadius q sigma2)
   have hproposal : AEMeasurable (fun proposal =>
       (scheduledAccuracyMetropolisMarkedProposalProgram q sigma2 current proposal).runEstimate
         oracle.query) U :=
@@ -181,38 +181,38 @@ theorem map_snd_runEstimate_scheduledAccuracyMetropolisMarkedBallStep
     ((scheduledAccuracyMetropolisMarkedBallStep q sigma2 current).runEstimate
       oracle.query).map Prod.snd =
       lazy (metropolisGaussian (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2) current := by
+        (proposalRadius q sigma2) sigma2) current := by
   let _ : NeZero q.n :=
     ⟨Nat.ne_of_gt (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)⟩
   rw [map_snd_runEstimate_scheduledAccuracyMetropolisMarkedBallStep_eq_radialLaw]
   exact radialLazyMetropolisLaw_eq_lazy_metropolisGaussian
     (figureOneScheduledPhaseBody_measurable q I sigma2)
-    (figureOneScheduledProposalRadius_pos q hsigma2) sigma2 current
+    (proposalRadius_pos q hsigma2) sigma2 current
 
-theorem uniformClosedBallMeasure_scheduledPhaseBody
+theorem uniformBall_scheduledPhaseBody
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (current : AmbientSpace q.n) {radius : ℝ} (hradius : 0 < radius) :
-    uniformClosedBallMeasure q.n current radius
+    uniformBall q.n current radius
         (figureOneScheduledPhaseBody q I sigma2) =
       ell (figureOneScheduledPhaseBody q I sigma2) radius current := by
   let _ : NeZero q.n :=
     ⟨Nat.ne_of_gt (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)⟩
-  rw [uniformClosedBallMeasure_eq_openBall current hradius,
+  rw [uniformBall_eq_openBall current hradius,
     Measure.smul_apply, smul_eq_mul, Measure.restrict_apply
       (figureOneScheduledPhaseBody_measurable q I sigma2),
     ell_apply, ENNReal.div_eq_inv_mul]
   congr 1
   rw [Set.inter_comm]
 
-theorem uniformClosedBallMeasure_scheduledPhaseBody_compl
+theorem uniformBall_scheduledPhaseBody_compl
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (current : AmbientSpace q.n) {radius : ℝ} (hradius : 0 < radius) :
-    uniformClosedBallMeasure q.n current radius
+    uniformBall q.n current radius
         (figureOneScheduledPhaseBody q I sigma2)ᶜ =
       1 - ell (figureOneScheduledPhaseBody q I sigma2) radius current := by
   rw [measure_compl (figureOneScheduledPhaseBody_measurable q I sigma2)
       (measure_ne_top _ _), measure_univ,
-    uniformClosedBallMeasure_scheduledPhaseBody
+    uniformBall_scheduledPhaseBody
       q I sigma2 current hradius]
 
 theorem runEstimate_scheduledAccuracyMetropolisMarkedBallStep_apply_false_prod
@@ -222,10 +222,10 @@ theorem runEstimate_scheduledAccuracyMetropolisMarkedBallStep_apply_false_prod
     (scheduledAccuracyMetropolisMarkedBallStep q sigma2 current).runEstimate
         oracle.query ({false} ×ˢ t) =
       (1 - ell (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) current) *
+        (proposalRadius q sigma2) current) *
           t.indicator 1 current := by
-  let U := uniformClosedBallMeasure q.n current
-    (figureOneScheduledProposalRadius q sigma2)
+  let U := uniformBall q.n current
+    (proposalRadius q sigma2)
   have hset : MeasurableSet ({false} ×ˢ t) :=
     (measurableSet_singleton false).prod ht
   have hmeas : AEMeasurable (fun proposal =>
@@ -250,9 +250,9 @@ theorem runEstimate_scheduledAccuracyMetropolisMarkedBallStep_apply_false_prod
       rw [Measure.bind_apply hset]
       · rw [Set.indicator_of_notMem (by simpa using hp)]
         change (∫⁻ coin, Measure.dirac
-            (true, if coin ≤ lazyGaussianMetropolisAcceptance sigma2 current proposal
+            (true, if coin ≤ lazyAcceptance sigma2 current proposal
               then proposal else current) ({false} ×ˢ t)
-          ∂uniformUnitIntervalMeasure) = 0
+          ∂uniformUnit) = 0
         simp [Measure.dirac_apply' _ hset]
       · exact (Measure.measurable_dirac.comp <|
           measurable_const.prodMk <|
@@ -260,7 +260,7 @@ theorem runEstimate_scheduledAccuracyMetropolisMarkedBallStep_apply_false_prod
               measurable_const).aemeasurable
     · have hnot : ¬ (oracle.query proposal = true ∧
           ‖proposal‖ ≤ Real.sqrt (terminalVariance q) ∧
-          ‖proposal‖ ≤ figureOneScheduledPhaseRadius q sigma2) := by
+          ‖proposal‖ ≤ phaseRadius q sigma2) := by
         rwa [oracle_and_radii_iff_mem_scheduledPhaseBody]
       simp only [hnot, if_false, MembershipOracleProgram.runEstimate]
       rw [Measure.bind_const, measure_univ, one_smul]
@@ -273,8 +273,8 @@ theorem runEstimate_scheduledAccuracyMetropolisMarkedBallStep_apply_false_prod
   rw [lintegral_indicator
     (figureOneScheduledPhaseBody_measurable q I sigma2).compl]
   rw [setLIntegral_const]
-  rw [uniformClosedBallMeasure_scheduledPhaseBody_compl
-    q I sigma2 current (figureOneScheduledProposalRadius_pos q hsigma2)]
+  rw [uniformBall_scheduledPhaseBody_compl
+    q I sigma2 current (proposalRadius_pos q hsigma2)]
   ring
 
 /-- Exact marked-kernel semantics of the executable scheduled proposal. -/
@@ -286,7 +286,7 @@ theorem runEstimate_scheduledAccuracyMetropolisMarkedBallStep_eq_lazyProperAux
       lazyProperProposalGaussianAux
         (figureOneScheduledPhaseBody q I sigma2)
         (figureOneScheduledPhaseBody_measurable q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2 current := by
+        (proposalRadius q sigma2) sigma2 current := by
   let mu : Measure (Bool × AmbientSpace q.n) :=
     (scheduledAccuracyMetropolisMarkedBallStep q sigma2 current).runEstimate
       oracle.query
@@ -294,7 +294,7 @@ theorem runEstimate_scheduledAccuracyMetropolisMarkedBallStep_eq_lazyProperAux
     lazyProperProposalGaussianAux
       (figureOneScheduledPhaseBody q I sigma2)
       (figureOneScheduledPhaseBody_measurable q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2 current
+      (proposalRadius q sigma2) sigma2 current
   let _ : IsProbabilityMeasure mu :=
     MembershipOracleProgram.runEstimate_isProbabilityMeasure oracle.query _
       (scheduledAccuracyMetropolisMarkedBallStep_stronglyMeasurable
@@ -306,13 +306,13 @@ theorem runEstimate_scheduledAccuracyMetropolisMarkedBallStep_eq_lazyProperAux
     calc
       mu.map Prod.snd = lazy
           (metropolisGaussian (figureOneScheduledPhaseBody q I sigma2)
-            (figureOneScheduledProposalRadius q sigma2) sigma2) current :=
+            (proposalRadius q sigma2) sigma2) current :=
         map_snd_runEstimate_scheduledAccuracyMetropolisMarkedBallStep
           q I oracle hsigma2 current
       _ = nu.map Prod.snd :=
         (map_snd_lazyProperProposalGaussianAux_apply
           (figureOneScheduledPhaseBody_measurable q I sigma2)
-          (figureOneScheduledProposalRadius q sigma2) sigma2 current).symm
+          (proposalRadius q sigma2) sigma2 current).symm
   have hfalse : ∀ (t : Set (AmbientSpace q.n)), MeasurableSet t →
       mu ({false} ×ˢ t) = nu ({false} ×ˢ t) := by
     intro t ht
@@ -321,7 +321,7 @@ theorem runEstimate_scheduledAccuracyMetropolisMarkedBallStep_eq_lazyProperAux
     dsimp [nu]
     rw [lazyProperProposalGaussianAux_apply_set
       (figureOneScheduledPhaseBody_measurable q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2 current
+      (proposalRadius q sigma2) sigma2 current
       ((measurableSet_singleton false).prod ht)]
     by_cases hc : current ∈ t <;> simp [hc]
   apply measure_bool_prod_ext
@@ -385,7 +385,7 @@ theorem cappedScheduledAccuracyProperBlockAux_add_one_semantics
           (lazyProperProposalGaussianAux
             (figureOneScheduledPhaseBody q I sigma2)
             (figureOneScheduledPhaseBody_measurable q I sigma2)
-            (figureOneScheduledProposalRadius q sigma2) sigma2)
+            (proposalRadius q sigma2) sigma2)
           (fun _ => 0) properStride proposalCap remainingProper 1 0 current := by
   intro proposalCap
   induction proposalCap with
@@ -496,20 +496,20 @@ theorem cappedScheduledAccuracyProperBlockAux_add_one_semantics
                   (lazyProperProposalGaussianAux
                     (figureOneScheduledPhaseBody q I sigma2)
                     (figureOneScheduledPhaseBody_measurable q I sigma2)
-                    (figureOneScheduledProposalRadius q sigma2) sigma2)
+                    (proposalRadius q sigma2) sigma2)
                   (fun _ => 0) properStride proposalCap 0 1 0 result.2
               | nextRemaining + 1 => cappedProperCollectLawAux
                   (lazyProperProposalGaussianAux
                     (figureOneScheduledPhaseBody q I sigma2)
                     (figureOneScheduledPhaseBody_measurable q I sigma2)
-                    (figureOneScheduledProposalRadius q sigma2) sigma2)
+                    (proposalRadius q sigma2) sigma2)
                   (fun _ => 0) properStride proposalCap
                     (nextRemaining + 1) 1 0 result.2
             else cappedProperCollectLawAux
               (lazyProperProposalGaussianAux
                 (figureOneScheduledPhaseBody q I sigma2)
                 (figureOneScheduledPhaseBody_measurable q I sigma2)
-                (figureOneScheduledProposalRadius q sigma2) sigma2)
+                (proposalRadius q sigma2) sigma2)
               (fun _ => 0) properStride proposalCap
                 (remainingProper + 1) 1 0 result.2
           have hnextStrong : ∀ result, (next result).StronglyMeasurable
@@ -540,7 +540,7 @@ theorem cappedScheduledAccuracyProperBlockAux_add_one_semantics
                     (lazyProperProposalGaussianAux
                       (figureOneScheduledPhaseBody q I sigma2)
                       (figureOneScheduledPhaseBody_measurable q I sigma2)
-                      (figureOneScheduledProposalRadius q sigma2) sigma2)
+                      (proposalRadius q sigma2) sigma2)
                     measurable_const properStride proposalCap 0 1).1.comp
                       (measurable_const.prodMk measurable_snd)
               | succ nextRemaining =>
@@ -548,7 +548,7 @@ theorem cappedScheduledAccuracyProperBlockAux_add_one_semantics
                     (lazyProperProposalGaussianAux
                       (figureOneScheduledPhaseBody q I sigma2)
                       (figureOneScheduledPhaseBody_measurable q I sigma2)
-                      (figureOneScheduledProposalRadius q sigma2) sigma2)
+                      (proposalRadius q sigma2) sigma2)
                     measurable_const properStride proposalCap
                       (nextRemaining + 1) 1).1.comp
                         (measurable_const.prodMk measurable_snd)
@@ -556,7 +556,7 @@ theorem cappedScheduledAccuracyProperBlockAux_add_one_semantics
                 (lazyProperProposalGaussianAux
                   (figureOneScheduledPhaseBody q I sigma2)
                   (figureOneScheduledPhaseBody_measurable q I sigma2)
-                  (figureOneScheduledProposalRadius q sigma2) sigma2)
+                  (proposalRadius q sigma2) sigma2)
                 measurable_const properStride proposalCap
                   (remainingProper + 1) 1).1.comp
                     (measurable_const.prodMk measurable_snd)
@@ -573,13 +573,13 @@ theorem cappedScheduledAccuracyProperBlockAux_add_one_semantics
                   (lazyProperProposalGaussianAux
                     (figureOneScheduledPhaseBody q I sigma2)
                     (figureOneScheduledPhaseBody_measurable q I sigma2)
-                    (figureOneScheduledProposalRadius q sigma2) sigma2)
+                    (proposalRadius q sigma2) sigma2)
                   (fun _ => 0) properStride (proposalCap + 1)
                     (remainingProper + 1) 1 0 current =
                 (lazyProperProposalGaussianAux
                     (figureOneScheduledPhaseBody q I sigma2)
                     (figureOneScheduledPhaseBody_measurable q I sigma2)
-                    (figureOneScheduledProposalRadius q sigma2) sigma2 current).bind
+                    (proposalRadius q sigma2) sigma2 current).bind
                   nextLaw := by
             intro current
             rw [cappedProperCollectLawAux]
@@ -633,28 +633,28 @@ theorem scheduledBalancedAccuracyGaussianRejectionAttempt_stronglyMeasurable
       oracle.query := by
   simp only [scheduledBalancedAccuracyGaussianRejectionAttempt,
     MembershipOracleProgram.StronglyMeasurable]
-  let target : AmbientSpace q.n := (accuracyScaleFactor q)⁻¹ • current
+  let target : AmbientSpace q.n := (scaleFactor q)⁻¹ • current
   let output : ℝ → Bool × AmbientSpace q.n := fun coin =>
     if oracle.query target = true ∧
         ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
-        ‖target‖ ≤ figureOneScheduledPhaseRadius q sigma2 ∧
+        ‖target‖ ≤ phaseRadius q sigma2 ∧
         ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-          gaussianScaleAcceptance sigma2 (accuracyScaleFactor q) target then
+          gaussianScaleAcceptance sigma2 (scaleFactor q) target then
       (true, target)
     else (false, target)
   have hout : Measurable output := by
     by_cases heligible : oracle.query target = true ∧
         ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
-        ‖target‖ ≤ figureOneScheduledPhaseRadius q sigma2
+        ‖target‖ ≤ phaseRadius q sigma2
     · simp only [output, heligible.1, heligible.2.1, heligible.2.2, true_and]
       exact Measurable.ite
         (measurableSet_le (ENNReal.measurable_ofReal.comp measurable_id)
           measurable_const) measurable_const measurable_const
     · have hfalse : ∀ coin : ℝ, ¬ (oracle.query target = true ∧
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
-          ‖target‖ ≤ figureOneScheduledPhaseRadius q sigma2 ∧
+          ‖target‖ ≤ phaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-            gaussianScaleAcceptance sigma2 (accuracyScaleFactor q) target) := by
+            gaussianScaleAcceptance sigma2 (scaleFactor q) target) := by
         intro coin h
         exact heligible ⟨h.1, h.2.1, h.2.2.1⟩
       simp only [output, hfalse, if_false]
@@ -663,17 +663,17 @@ theorem scheduledBalancedAccuracyGaussianRejectionAttempt_stronglyMeasurable
   · rw [show (fun coin => MembershipOracleProgram.runEstimate oracle.query
         (if oracle.query target = true ∧
             ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
-            ‖target‖ ≤ figureOneScheduledPhaseRadius q sigma2 ∧
+            ‖target‖ ≤ phaseRadius q sigma2 ∧
             ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-              gaussianScaleAcceptance sigma2 (accuracyScaleFactor q) target then
+              gaussianScaleAcceptance sigma2 (scaleFactor q) target then
           .pure (true, target) else .pure (false, target))) =
         fun coin => Measure.dirac (output coin) by
       funext coin
       by_cases h : oracle.query target = true ∧
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
-          ‖target‖ ≤ figureOneScheduledPhaseRadius q sigma2 ∧
+          ‖target‖ ≤ phaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-            gaussianScaleAcceptance sigma2 (accuracyScaleFactor q) target
+            gaussianScaleAcceptance sigma2 (scaleFactor q) target
       · simp [h, output, MembershipOracleProgram.runEstimate]
       · simp [h, output, MembershipOracleProgram.runEstimate]]
     exact Measure.measurable_dirac.comp hout

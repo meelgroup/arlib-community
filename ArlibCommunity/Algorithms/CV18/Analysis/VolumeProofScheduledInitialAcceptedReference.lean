@@ -54,7 +54,7 @@ theorem scheduledBalancedForwardTraceLaw_zero_leUpTo_initialAcceptedReference
         (initialVariance q)
         (Arlib.MarkovChains.ellGaussianProb
           (figureOneScheduledPhaseBody q I (initialVariance q))
-          (figureOneScheduledProposalRadius q (initialVariance q))
+          (proposalRadius q (initialVariance q))
           (initialVariance q))) := by
     simpa [figureOneScheduledAcceptedTargetAt,
       figureOneScheduledSpeedyPiAt, scheduleValue] using

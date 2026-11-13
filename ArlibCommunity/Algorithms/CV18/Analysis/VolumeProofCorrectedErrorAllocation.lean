@@ -35,7 +35,7 @@ theorem MeasureLeUpTo.mono_error
 dependent-product schedule. -/
 noncomputable def figureOneCorrectedTransitionBudget
     (q : VolumeParams) : ENNReal :=
-  ENNReal.ofReal (figureOnePerSampleMixingError q)
+  ENNReal.ofReal (sampleMixingError q)
 
 /-- One quarter is reserved for exhausting the geometric retry loop. -/
 noncomputable def figureOneCorrectedRetryTailBudget
@@ -50,22 +50,22 @@ noncomputable def figureOneCorrectedTargetBudget
 /-- The block-mixing component as a measure-error budget. -/
 noncomputable def figureOneCorrectedBlockBudget
     (q : VolumeParams) (attempts : ℕ) : ENNReal :=
-  ENNReal.ofReal (figureOneCorrectedBlockMixingError q attempts)
+  ENNReal.ofReal (blockMixingError q attempts)
 
-theorem figureOneCorrectedBlockMixingError_pos
+theorem blockMixingError_pos
     (q : VolumeParams) (attempts : ℕ) :
-    0 < figureOneCorrectedBlockMixingError q attempts := by
-  unfold figureOneCorrectedBlockMixingError
-  positivity [figureOnePerSampleMixingError_pos q]
+    0 < blockMixingError q attempts := by
+  unfold blockMixingError
+  positivity [sampleMixingError_pos q]
 
 /-- Retuning the internal components does not change the global
 `exact-chance` accounting: after all phase samples and its factor-three
 transfer loss, the total is exactly the Lemma 7.15 dependence budget. -/
 theorem figureOneCorrected_exactChance_budget (q : VolumeParams) :
-    3 * (((figureOneDependentMaxSampleCount q *
-      figureOneDependentPhaseCount q) •
+    3 * (((largestSampleCount q *
+      numPhases q) •
         figureOneCorrectedTransitionBudget q).toReal) =
-      figureOneDependentEpsilon q := by
+      dependenceError q := by
   simpa [figureOneCorrectedTransitionBudget] using
     figureOne_exactChance_budget q
 
@@ -105,26 +105,26 @@ theorem figureOneCorrected_components_le
     figureOneCorrectedTransitionBudget, ENNReal.toReal_div,
     ENNReal.toReal_ofNat, nsmul_eq_mul, Nat.cast_add, Nat.cast_one]
   rw [ENNReal.toReal_ofReal
-    (figureOneCorrectedBlockMixingError_pos q attempts).le]
-  rw [ENNReal.toReal_ofReal (figureOnePerSampleMixingError_pos q).le]
-  unfold figureOneCorrectedBlockMixingError
+    (blockMixingError_pos q attempts).le]
+  rw [ENNReal.toReal_ofReal (sampleMixingError_pos q).le]
+  unfold blockMixingError
   have hden : (0 : ℝ) < attempts + 1 := by positivity
   field_simp
-  nlinarith [figureOnePerSampleMixingError_pos q]
+  nlinarith [sampleMixingError_pos q]
 
 /-- The first block after a retained accepted state must allow the proved
 `16`-warm accepted branch, followed by adjacent-phase warmness. -/
 noncomputable def figureOneCorrectedFirstWalkRequirement
     (q : VolumeParams) (sigma2 : ℝ) (attempts : ℕ) : ℝ :=
-  4 * ((Real.log (16 * speedyAdjacentWarmConstant q) +
-      2 * Real.log (1 / figureOneCorrectedBlockMixingError q attempts)) /
+  4 * ((Real.log (16 * warmConstant q) +
+      2 * Real.log (1 / blockMixingError q attempts)) /
     (figureOneProposalRadius q sigma2 * Real.log 2 /
       (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1
 
 noncomputable def figureOneCorrectedRetryWalkRequirement
     (q : VolumeParams) (sigma2 : ℝ) (attempts : ℕ) : ℝ :=
   4 * ((Real.log 2 +
-      2 * Real.log (1 / figureOneCorrectedBlockMixingError q attempts)) /
+      2 * Real.log (1 / blockMixingError q attempts)) /
     (figureOneProposalRadius q sigma2 * Real.log 2 /
       (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1
 
@@ -333,12 +333,12 @@ theorem MeasureLeUpTo.map_iteratedKernelLaw_of_figureOne_phase_budget
       ((iteratedKernelLaw idealK initial i).bind (actualK i))
       (iteratedKernelLaw idealK initial (i + 1)) totalBudget)
     (hbudget : totalBudget ≤
-      ENNReal.ofReal (figureOnePerSampleMixingError q))
+      ENNReal.ofReal (sampleMixingError q))
     (k : ℕ) (average : State → Output) (haverage : Measurable average) :
     MeasureLeUpTo
       ((iteratedKernelLaw actualK initial k).map average)
       ((iteratedKernelLaw idealK initial k).map average)
-      (k • ENNReal.ofReal (figureOnePerSampleMixingError q)) :=
+      (k • ENNReal.ofReal (sampleMixingError q)) :=
   MeasureLeUpTo.map_iteratedKernelLaw_of_corrected_phase_budget
     actualK idealK initial hactualMeas hactualProb hstep hbudget
       k average haverage

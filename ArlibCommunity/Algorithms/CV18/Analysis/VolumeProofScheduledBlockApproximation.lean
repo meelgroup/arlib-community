@@ -18,7 +18,7 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_leUpTo_uncapped
     let P := Arlib.MarkovChains.lazy
       (Arlib.MarkovChains.speedyMetropolisGaussian
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)
+        (proposalRadius q sigma2) sigma2)
     MeasureLeUpTo
       (mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
         proposalCap properStride))
@@ -27,7 +27,7 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_leUpTo_uncapped
   dsimp only
   letI : Fact (0 < sigma2) := ⟨hsigma2⟩
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux K
     (figureOneScheduledPhaseBody_measurable q I sigma2) delta sigma2
   let P := Arlib.MarkovChains.lazy
@@ -57,7 +57,7 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_uncapped
     let P := Arlib.MarkovChains.lazy
       (Arlib.MarkovChains.speedyMetropolisGaussian
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)
+        (proposalRadius q sigma2) sigma2)
     MeasureLeUpTo
       ((mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
         proposalCap properStride)).map optionSnd)
@@ -68,7 +68,7 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_uncapped
   let P := Arlib.MarkovChains.lazy
     (Arlib.MarkovChains.speedyMetropolisGaussian
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2)
+      (proposalRadius q sigma2) sigma2)
   let f : AmbientSpace q.n → ℝ := fun _ => 0
   have h := bind_scheduledBalancedAccuracyRetryBlockKernel_leUpTo_uncapped
     q I hsigma2 proposalCap properStride mu hfail
@@ -108,7 +108,7 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationar
         (Arlib.MarkovChains.lazy
           (Arlib.MarkovChains.speedyMetropolisGaussian
             (figureOneScheduledPhaseBody q I sigma2)
-            (figureOneScheduledProposalRadius q sigma2) sigma2))
+            (proposalRadius q sigma2) sigma2))
         mu properStride) pi mixError) :
     MeasureLeUpTo
       ((mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
@@ -117,7 +117,7 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationar
   let P := Arlib.MarkovChains.lazy
     (Arlib.MarkovChains.speedyMetropolisGaussian
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2)
+      (proposalRadius q sigma2) sigma2)
   have hcap :=
     bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_uncapped
       q I hsigma2 proposalCap properStride mu hfail
@@ -139,7 +139,7 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationar
     (hwarm : Arlib.IsWarm M mu
       (Arlib.MarkovChains.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (hbudget : (properStride : ENNReal) * M ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) * capError)
     (hmix : Arlib.TVLe
@@ -147,23 +147,23 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationar
         (Arlib.MarkovChains.lazy
           (Arlib.MarkovChains.speedyMetropolisGaussian
             (figureOneScheduledPhaseBody q I sigma2)
-            (figureOneScheduledProposalRadius q sigma2) sigma2))
+            (proposalRadius q sigma2) sigma2))
         mu properStride)
       (Arlib.MarkovChains.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2) mixError) :
+        (proposalRadius q sigma2) sigma2) mixError) :
     MeasureLeUpTo
       ((mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
         proposalCap properStride)).map optionSnd)
       ((Arlib.MarkovChains.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2).map some)
+        (proposalRadius q sigma2) sigma2).map some)
       (capError + mixError) := by
   let pi := Arlib.MarkovChains.ellGaussianProb
     (figureOneScheduledPhaseBody q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
-  have hdelta : 0 < figureOneScheduledProposalRadius q sigma2 :=
-    figureOneScheduledProposalRadius_pos q hsigma2
+    (proposalRadius q sigma2) sigma2
+  have hdelta : 0 < proposalRadius q sigma2 :=
+    proposalRadius_pos q hsigma2
   have hmass0 := Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
     (figureOneScheduledPhaseBody_measurable q I sigma2)
     (figureOneScheduledPhaseBody_convex q I sigma2)
@@ -172,7 +172,7 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationar
     hdelta sigma2
   have hmasstop := Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
     (figureOneScheduledPhaseBody_volume_ne_top q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) hsigma2
+    (proposalRadius q sigma2) hsigma2
   let _ : IsProbabilityMeasure pi :=
     Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   have hfail := bind_scheduledBalancedAccuracyRetryBlockKernel_none_le_of_isWarm

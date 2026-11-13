@@ -101,12 +101,12 @@ theorem figureOneGloballyCappedBalancedBaseValueProgram_accuracy_of_mappedLaw
         (fun history => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (balancedCoolingChronologicalPhaseVariable q)
-            (figureOneDependentPhaseCount q) history))
+            (numPhases q) history))
       ((figureOneIdealExperimentLaw q I).map
         (fun samples => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (figureOneChronologicalIdealCoordinate q)
-            (figureOneDependentPhaseCount q) samples))
+            (numPhases q) samples))
       (ENNReal.ofReal (1 / 64 : ℝ))) :
     3 / 4 ≤ outcomeProbability
       (volumeAlgorithmLaw figureOneGloballyCappedBalancedBaseValueProgram
@@ -163,12 +163,12 @@ theorem volumeTheorem_balanced_of_mappedLaw_and_expectedCost
           (fun history => initialGaussianIntegral q *
             dependentPhaseSampleProduct
               (balancedCoolingChronologicalPhaseVariable q)
-              (figureOneDependentPhaseCount q) history))
+              (numPhases q) history))
         ((figureOneIdealExperimentLaw q I).map
           (fun samples => initialGaussianIntegral q *
             dependentPhaseSampleProduct
               (figureOneChronologicalIdealCoordinate q)
-              (figureOneDependentPhaseCount q) samples))
+              (numPhases q) samples))
         (ENNReal.ofReal (1 / 64 : ℝ)))
     (hcost : ∀ (q : VolumeParams) (I : VolumeInput q.n)
       (oracle : MembershipOracle I),

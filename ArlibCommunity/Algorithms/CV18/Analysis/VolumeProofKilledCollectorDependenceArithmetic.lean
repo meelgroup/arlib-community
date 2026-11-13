@@ -19,17 +19,17 @@ open scoped ENNReal
 coefficient allocated to CV18 Lemma 7.17(b). -/
 theorem killedCollector_asymmetric_error_le_dependentEpsilon
     (q : VolumeParams) {i count : ℕ} (hi : i < count)
-    (hcount : count ≤ figureOneDependentMaxSampleCount q) :
+    (hcount : count ≤ largestSampleCount q) :
     ((figureOneCorrectedTransitionBudget q +
           2 * (scheduledBalancedStationaryTargetError q +
             i • figureOneCorrectedTransitionBudget q)) +
         (2 * scheduledBalancedStationaryTargetError q +
           (i + 1) • figureOneCorrectedTransitionBudget q)).toReal ≤
-      figureOneDependentEpsilon q := by
+      dependenceError q := by
   let delta := figureOneCorrectedTransitionBudget q
   let stationary := scheduledBalancedStationaryTargetError q
-  have hnu : 0 < figureOnePerSampleMixingError q :=
-    figureOnePerSampleMixingError_pos q
+  have hnu : 0 < sampleMixingError q :=
+    sampleMixingError_pos q
   have hdeltaTop : delta ≠ ⊤ := by
     simp [delta, figureOneCorrectedTransitionBudget]
   have htargetTop : figureOneCorrectedTargetBudget q ≠ ⊤ :=
@@ -54,17 +54,17 @@ theorem killedCollector_asymmetric_error_le_dependentEpsilon
   have hbaseTop : 2 * stationary + (i + 1) • delta ≠ ⊤ :=
     ENNReal.add_ne_top.mpr ⟨htwiceStationaryTop, hisuccDeltaTop⟩
   have hstationaryReal : stationary.toReal ≤
-      figureOnePerSampleMixingError q / 4 := by
+      sampleMixingError q / 4 := by
     have htarget := scheduledBalancedStationaryTargetError_le_targetBudget q
     have hreal := ENNReal.toReal_mono htargetTop htarget
     simpa [stationary, figureOneCorrectedTargetBudget, delta,
       figureOneCorrectedTransitionBudget, ENNReal.toReal_div,
       ENNReal.toReal_ofReal hnu.le] using hreal
   have hcountReal : (i + 1 : ℝ) ≤
-      figureOneDependentMaxSampleCount q := by
+      largestSampleCount q := by
     exact_mod_cast (Nat.succ_le_iff.mpr hi |>.trans hcount)
-  have hm : (1 : ℝ) ≤ figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
+  have hm : (1 : ℝ) ≤ numPhases q := by
+    exact_mod_cast numPhases_pos q
   have htwiceAccumReal :
       (2 * (stationary + i • delta)).toReal =
         2 * (stationary.toReal + (i : ℝ) * delta.toReal) := by
@@ -79,7 +79,7 @@ theorem killedCollector_asymmetric_error_le_dependentEpsilon
       ((delta + 2 * (stationary + i • delta)) +
           (2 * stationary + (i + 1) • delta)).toReal =
         4 * stationary.toReal +
-          (3 * (i : ℝ) + 2) * figureOnePerSampleMixingError q := by
+          (3 * (i : ℝ) + 2) * sampleMixingError q := by
     rw [ENNReal.toReal_add hconditionedTop hbaseTop,
       ENNReal.toReal_add hdeltaTop htwiceAccumTop,
       htwiceAccumReal,
@@ -90,22 +90,22 @@ theorem killedCollector_asymmetric_error_le_dependentEpsilon
     ring
   rw [herrorReal, ← figureOne_lemma717c_budget q]
   have hleft : 4 * stationary.toReal +
-      (3 * (i : ℝ) + 2) * figureOnePerSampleMixingError q ≤
-        3 * ((i : ℝ) + 1) * figureOnePerSampleMixingError q := by
+      (3 * (i : ℝ) + 2) * sampleMixingError q ≤
+        3 * ((i : ℝ) + 1) * sampleMixingError q := by
     nlinarith
   have hsample :
-      3 * ((i : ℝ) + 1) * figureOnePerSampleMixingError q ≤
-        3 * (figureOneDependentMaxSampleCount q : ℝ) *
-          figureOnePerSampleMixingError q := by
+      3 * ((i : ℝ) + 1) * sampleMixingError q ≤
+        3 * (largestSampleCount q : ℝ) *
+          sampleMixingError q := by
     exact mul_le_mul_of_nonneg_right
       (mul_le_mul_of_nonneg_left hcountReal (by norm_num)) hnu.le
   have hphase :
-      3 * (figureOneDependentMaxSampleCount q : ℝ) *
-          figureOnePerSampleMixingError q ≤
-        3 * (figureOneDependentMaxSampleCount q : ℝ) *
-          (figureOneDependentPhaseCount q : ℝ) *
-            figureOnePerSampleMixingError q := by
-    have hk0 : 0 ≤ (3 : ℝ) * figureOneDependentMaxSampleCount q := by positivity
+      3 * (largestSampleCount q : ℝ) *
+          sampleMixingError q ≤
+        3 * (largestSampleCount q : ℝ) *
+          (numPhases q : ℝ) *
+            sampleMixingError q := by
+    have hk0 : 0 ≤ (3 : ℝ) * largestSampleCount q := by positivity
     have hmul := mul_le_mul_of_nonneg_left hm hk0
     nlinarith
   exact hleft.trans (hsample.trans hphase)

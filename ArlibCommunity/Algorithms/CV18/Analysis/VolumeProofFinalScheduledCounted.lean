@@ -24,29 +24,29 @@ theorem scheduledBalancedCoolingRatioEstimate_countedMeasurable
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOnePhaseSampleCount q sigma2)
-      (accuracyScaleFactor q • current)
+      (phaseSampleCount q sigma2)
+      (scaleFactor q • current)
   let average (z : AmbientSpace q.n ×
       Option (ℝ × AmbientSpace q.n)) :=
-    balancedCoolingAverage (figureOnePhaseSampleCount q sigma2) z.2
+    balancedCoolingAverage (phaseSampleCount q sigma2) z.2
   have hscale : Measurable fun current : AmbientSpace q.n =>
-      accuracyScaleFactor q • current :=
+      scaleFactor q • current :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id
+      scaleFactor q).smul measurable_id
   have hsourceBase := scheduledBalancedAccuracyRetryCollect_countedMeasurable
     q I oracle hsigma2 (measurable_gaussianRatioWeight sigma2 tau2)
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOnePhaseSampleCount q sigma2)
+      (phaseSampleCount q sigma2)
   have hsourceMeas : Measurable fun current => (source current).run oracle.query :=
     hsourceBase.1.comp hscale
   have hsource : ∀ current,
       (source current).CountedStronglyMeasurable oracle.query :=
-    fun current => hsourceBase.2 (accuracyScaleFactor q • current)
+    fun current => hsourceBase.2 (scaleFactor q • current)
   have havg : Measurable average :=
     (measurable_balancedCoolingAverage
-      (n := q.n) (figureOnePhaseSampleCount q sigma2)).comp measurable_snd
+      (n := q.n) (phaseSampleCount q sigma2)).comp measurable_snd
   have h := MembershipOracleProgram.countedMeasurable_bind_pure
     oracle.query source average hsourceMeas hsource havg
   simpa only [source, average, scheduledBalancedCoolingRatioEstimate] using h
@@ -66,27 +66,27 @@ theorem scheduledBalancedCoolingUniformEstimateWithState_countedMeasurable
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOneSampleCount q) (accuracyScaleFactor q • current)
+      (sampleCount q) (scaleFactor q • current)
   let average (z : AmbientSpace q.n ×
       Option (ℝ × AmbientSpace q.n)) :=
-    balancedCoolingAverage (figureOneSampleCount q) z.2
+    balancedCoolingAverage (sampleCount q) z.2
   have hscale : Measurable fun current : AmbientSpace q.n =>
-      accuracyScaleFactor q • current :=
+      scaleFactor q • current :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id
+      scaleFactor q).smul measurable_id
   have hsourceBase := scheduledBalancedAccuracyRetryCollect_countedMeasurable
     q I oracle hsigma2 (measurable_uniformRatioWeight sigma2)
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
-      (parameters.retryLimit q sigma2) (figureOneSampleCount q)
+      (parameters.retryLimit q sigma2) (sampleCount q)
   have hsourceMeas : Measurable fun current => (source current).run oracle.query :=
     hsourceBase.1.comp hscale
   have hsource : ∀ current,
       (source current).CountedStronglyMeasurable oracle.query :=
-    fun current => hsourceBase.2 (accuracyScaleFactor q • current)
+    fun current => hsourceBase.2 (scaleFactor q • current)
   have havg : Measurable average :=
     (measurable_balancedCoolingAverage
-      (n := q.n) (figureOneSampleCount q)).comp measurable_snd
+      (n := q.n) (sampleCount q)).comp measurable_snd
   have h := MembershipOracleProgram.countedMeasurable_bind_pure
     oracle.query source average hsourceMeas hsource havg
   simpa only [source, average, scheduledBalancedCoolingUniformEstimateWithState] using h

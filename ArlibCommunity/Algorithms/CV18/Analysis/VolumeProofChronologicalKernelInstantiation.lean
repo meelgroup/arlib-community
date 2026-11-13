@@ -10,7 +10,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 This module instantiates the ideal side of the chronological dependent-product
 argument on the existing finite Figure-One product law.  The explicit phase
-equivalence ensures that the first `figureOneDependentPhaseCount q` coordinates
+equivalence ensures that the first `numPhases q` coordinates
 are distinct and hence independent.
 -/
 
@@ -89,8 +89,8 @@ horizon.  The bound is essential because `figureOneChronologicalPhaseAt` is
 defined periodically outside that horizon. -/
 theorem figureOneChronologicalIdealCoordinate_indepFun
     (q : VolumeParams) (I : VolumeInput q.n) {j k : ℕ}
-    (hj : 1 ≤ j) (hj' : j ≤ figureOneDependentPhaseCount q)
-    (hk : 1 ≤ k) (hk' : k ≤ figureOneDependentPhaseCount q)
+    (hj : 1 ≤ j) (hj' : j ≤ numPhases q)
+    (hk : 1 ≤ k) (hk' : k ≤ numPhases q)
     (hjk : j ≠ k) :
     IndepFun (figureOneChronologicalIdealCoordinate q j)
       (figureOneChronologicalIdealCoordinate q k)
@@ -98,11 +98,11 @@ theorem figureOneChronologicalIdealCoordinate_indepFun
   apply (figureOneIdealCoordinates_iIndepFun q I).indepFun
   intro heq
   apply hjk
-  have hjmod : (j - 1) % figureOneDependentPhaseCount q = j - 1 :=
+  have hjmod : (j - 1) % numPhases q = j - 1 :=
     Nat.mod_eq_of_lt (by omega)
-  have hkmod : (k - 1) % figureOneDependentPhaseCount q = k - 1 :=
+  have hkmod : (k - 1) % numPhases q = k - 1 :=
     Nat.mod_eq_of_lt (by omega)
-  have hfin : (⟨j - 1, by omega⟩ : Fin (figureOneDependentPhaseCount q)) =
+  have hfin : (⟨j - 1, by omega⟩ : Fin (numPhases q)) =
       ⟨k - 1, by omega⟩ := by
     apply (figureOneChronologicalPhaseOrder q).injective
     simpa [figureOneChronologicalPhaseAt, hjmod, hkmod] using heq
@@ -114,12 +114,12 @@ independent, not merely pairwise independent. -/
 theorem figureOneChronologicalIdealFinCoordinates_iIndepFun
     (q : VolumeParams) (I : VolumeInput q.n) :
     iIndepFun
-      (fun i : Fin (figureOneDependentPhaseCount q) =>
+      (fun i : Fin (numPhases q) =>
         figureOneChronologicalIdealCoordinate q (i.1 + 1))
       (figureOneIdealExperimentLaw q I) := by
   have h := iIndepFun.precomp (figureOneChronologicalPhaseOrder q).injective
     (figureOneIdealCoordinates_iIndepFun q I)
-  rw [show (fun i : Fin (figureOneDependentPhaseCount q) =>
+  rw [show (fun i : Fin (numPhases q) =>
       figureOneChronologicalIdealCoordinate q (i.1 + 1)) =
       fun i => figureOneIdealCoordinate q
         (figureOneChronologicalPhaseOrder q i) by
@@ -136,33 +136,33 @@ set_option maxHeartbeats 800000 in
 theorem figureOneChronologicalIdealTruncatedFinCoordinates_iIndepFun
     (q : VolumeParams) (I : VolumeInput q.n) :
     iIndepFun
-      (fun i : Fin (figureOneDependentPhaseCount q) =>
+      (fun i : Fin (numPhases q) =>
         figureOneChronologicalTruncatedPhase q I
           (figureOneChronologicalIdealCoordinate q) (i.1 + 1))
       (figureOneIdealExperimentLaw q I) := by
   have h := figureOneChronologicalIdealFinCoordinates_iIndepFun q I
-  let truncate : ∀ _i : Fin (figureOneDependentPhaseCount q), ℝ → ℝ :=
+  let truncate : ∀ _i : Fin (numPhases q), ℝ → ℝ :=
     fun i value => min value
-      (figureOneDependentAlpha q *
+      (truncationLevel q *
         figureOneChronologicalRawMean q I (i.1 + 1))
   have htruncate : ∀ i, Measurable (truncate i) := fun _ =>
     measurable_id.min measurable_const
   have hc := h.comp truncate htruncate
-  change iIndepFun (fun (i : Fin (figureOneDependentPhaseCount q)) samples => min
+  change iIndepFun (fun (i : Fin (numPhases q)) samples => min
       (figureOneChronologicalIdealCoordinate q (i.1 + 1) samples)
-      (figureOneDependentAlpha q *
+      (truncationLevel q *
         figureOneChronologicalRawMean q I (i.1 + 1)))
     (figureOneIdealExperimentLaw q I)
   convert hc using 1 <;> rfl
 
 noncomputable def figureOneChronologicalPrefixIndices
     (q : VolumeParams) (i : ℕ) :
-    Finset (Fin (figureOneDependentPhaseCount q)) :=
+    Finset (Fin (numPhases q)) :=
   Finset.univ.filter fun k => k.1 < i
 
 noncomputable def figureOneChronologicalPrefixValue
     (q : VolumeParams) (i : ℕ)
-    (hi : i < figureOneDependentPhaseCount q)
+    (hi : i < numPhases q)
     (values : (k : figureOneChronologicalPrefixIndices q i) → ℝ)
     (j : ℕ) : ℝ :=
   if hj : 1 ≤ j ∧ j ≤ i then
@@ -174,7 +174,7 @@ noncomputable def figureOneChronologicalPrefixValue
 
 theorem measurable_figureOneChronologicalPrefixValue
     (q : VolumeParams) (i : ℕ)
-    (hi : i < figureOneDependentPhaseCount q) (j : ℕ) :
+    (hi : i < numPhases q) (j : ℕ) :
     Measurable (fun values =>
       figureOneChronologicalPrefixValue q i hi values j) := by
   unfold figureOneChronologicalPrefixValue
@@ -184,9 +184,9 @@ theorem measurable_figureOneChronologicalPrefixValue
 
 noncomputable def figureOneChronologicalTruncatedProductFromPrefix
     (q : VolumeParams) (I : VolumeInput q.n) (i : ℕ)
-    (hi : i < figureOneDependentPhaseCount q) :
+    (hi : i < numPhases q) :
     ((k : figureOneChronologicalPrefixIndices q i) → ℝ) → ℝ :=
-  dependentTruncatedProduct (figureOneDependentAlpha q)
+  dependentTruncatedProduct (truncationLevel q)
     (figureOneChronologicalTruncatedMean q I
       (figureOneIdealExperimentLaw q I)
       (figureOneChronologicalIdealCoordinate q))
@@ -194,19 +194,19 @@ noncomputable def figureOneChronologicalTruncatedProductFromPrefix
 
 theorem measurable_figureOneChronologicalTruncatedProductFromPrefix
     (q : VolumeParams) (I : VolumeInput q.n) (i : ℕ)
-    (hi : i < figureOneDependentPhaseCount q) :
+    (hi : i < numPhases q) :
     Measurable (figureOneChronologicalTruncatedProductFromPrefix q I i hi) := by
   exact measurable_dependentTruncatedProduct _ _ _
     (measurable_figureOneChronologicalPrefixValue q i hi) i
 
 theorem figureOneChronologicalTruncatedProductFromPrefix_apply
     (q : VolumeParams) (I : VolumeInput q.n) (i : ℕ)
-    (hi : i < figureOneDependentPhaseCount q)
+    (hi : i < numPhases q)
     (samples : FigureOneIdealExperimentSpace q) :
     figureOneChronologicalTruncatedProductFromPrefix q I i hi
         (fun k => figureOneChronologicalTruncatedPhase q I
           (figureOneChronologicalIdealCoordinate q) (k.1.1 + 1) samples) =
-      dependentTruncatedProduct (figureOneDependentAlpha q)
+      dependentTruncatedProduct (truncationLevel q)
         (figureOneChronologicalTruncatedMean q I
           (figureOneIdealExperimentLaw q I)
           (figureOneChronologicalIdealCoordinate q))
@@ -218,10 +218,10 @@ theorem figureOneChronologicalTruncatedProductFromPrefix_apply
   let V := figureOneChronologicalTruncatedPhase q I
     (figureOneChronologicalIdealCoordinate q)
   have haux : ∀ m, m ≤ i →
-      dependentTruncatedProduct (figureOneDependentAlpha q) mean
+      dependentTruncatedProduct (truncationLevel q) mean
           (fun j values => figureOneChronologicalPrefixValue q i hi values j) m
           (fun k => V (k.1.1 + 1) samples) =
-        dependentTruncatedProduct (figureOneDependentAlpha q) mean V m samples := by
+        dependentTruncatedProduct (truncationLevel q) mean V m samples := by
     intro m hm
     induction m with
     | zero => rfl
@@ -236,9 +236,9 @@ theorem figureOneChronologicalTruncatedProductFromPrefix_apply
 
 theorem figureOneChronologicalIdealTruncatedProduct_indepFun
     (q : VolumeParams) (I : VolumeInput q.n) (i : ℕ)
-    (hi : i < figureOneDependentPhaseCount q) :
+    (hi : i < numPhases q) :
     IndepFun
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+      (dependentTruncatedProduct (truncationLevel q)
         (figureOneChronologicalTruncatedMean q I
           (figureOneIdealExperimentLaw q I)
           (figureOneChronologicalIdealCoordinate q))
@@ -250,7 +250,7 @@ theorem figureOneChronologicalIdealTruncatedProduct_indepFun
   let V := figureOneChronologicalTruncatedPhase q I
     (figureOneChronologicalIdealCoordinate q)
   let S := figureOneChronologicalPrefixIndices q i
-  let next : Fin (figureOneDependentPhaseCount q) := ⟨i, hi⟩
+  let next : Fin (numPhases q) := ⟨i, hi⟩
   have hind := figureOneChronologicalIdealTruncatedFinCoordinates_iIndepFun q I
   have hdisjoint : Disjoint S ({next} : Finset _) := by
     rw [Finset.disjoint_singleton_right]
@@ -268,7 +268,7 @@ theorem figureOneChronologicalIdealTruncatedProduct_indepFun
   have hleft :
       figureOneChronologicalTruncatedProductFromPrefix q I i hi ∘
           (fun samples (k : S) => V (k.1.1 + 1) samples) =
-        dependentTruncatedProduct (figureOneDependentAlpha q)
+        dependentTruncatedProduct (truncationLevel q)
           (figureOneChronologicalTruncatedMean q I
             (figureOneIdealExperimentLaw q I)
             (figureOneChronologicalIdealCoordinate q)) V i := by
@@ -301,9 +301,9 @@ theorem IndepFun.approxIndepFun_zero
 
 theorem figureOneChronologicalIdeal_exactIndependence
     (q : VolumeParams) (I : VolumeInput q.n) (i : ℕ)
-    (hi : i < figureOneDependentPhaseCount q) :
+    (hi : i < numPhases q) :
     ApproxIndepFun 0
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+      (dependentTruncatedProduct (truncationLevel q)
         (figureOneChronologicalTruncatedMean q I
           (figureOneIdealExperimentLaw q I)
           (figureOneChronologicalIdealCoordinate q))
@@ -467,7 +467,7 @@ theorem balancedFigureOneFullHistoryLaw_ae_hasProduct
     (I : VolumeInput q.n) (point : AmbientSpace q.n) :
     ∀ᵐ history ∂balancedFigureOneFullHistoryLaw parameters q I point,
       BalancedCoolingHistoryHasProduct
-        (figureOneDependentPhaseCount q) history := by
+        (numPhases q) history := by
   let m := terminalPhaseSteps q
   have hcooling0 := balancedCoolingHistoryLaw_ae_hasProduct
     parameters q I (explicitVolumeCoolingSchedule q).variances
@@ -476,7 +476,7 @@ theorem balancedFigureOneFullHistoryLaw_ae_hasProduct
       balancedFigureOneCoolingHistoryLaw parameters q I point,
       BalancedCoolingHistoryHasProduct m history := by
     simpa [balancedFigureOneCoolingHistoryLaw, explicitVolumeCoolingSchedule,
-      explicitScheduleVariances, m] using hcooling0
+      coolingSchedule, m] using hcooling0
   let continuation : Option (BalancedCoolingHistory q.n) →
       Measure (Option (BalancedCoolingHistory q.n)) := fun history =>
     match history with
@@ -507,7 +507,7 @@ theorem balancedFigureOneFullHistoryLaw_ae_hasProduct
   let source := balancedFigureOneCoolingHistoryLaw parameters q I point
   let good : Set (Option (BalancedCoolingHistory q.n)) :=
     {history | BalancedCoolingHistoryHasProduct
-      (figureOneDependentPhaseCount q) history}
+      (numPhases q) history}
   have hgood : MeasurableSet good :=
     measurableSet_balancedCoolingHistoryHasProduct _
   unfold balancedFigureOneFullHistoryLaw
@@ -526,13 +526,13 @@ theorem balancedFigureOneFullHistoryLaw_ae_hasProduct
             (terminalVariance q) value.2.2.2).map
               (balancedCoolingHistorySnocTerminal value),
           BalancedCoolingHistoryHasProduct
-            (figureOneDependentPhaseCount q) result := by
+            (numPhases q) result := by
         apply (ae_map_iff
           (measurable_balancedCoolingHistorySnocTerminal.comp
             (measurable_const.prodMk measurable_id)).aemeasurable
           (measurableSet_balancedCoolingHistoryHasProduct _)).2
         filter_upwards with terminal
-        simpa [figureOneDependentPhaseCount, m] using
+        simpa [numPhases, m] using
           hhistory.snocTerminal terminal
       exact MeasureTheory.mem_ae_iff.mp htarget
 
@@ -563,13 +563,13 @@ theorem balancedFigureOnePostInitialHistoryLaw_ae_hasProduct
     (I : VolumeInput q.n) :
     ∀ᵐ history ∂balancedFigureOnePostInitialHistoryLaw parameters q I,
       BalancedCoolingHistoryHasProduct
-        (figureOneDependentPhaseCount q) history := by
+        (numPhases q) history := by
   let source := (truncatedGaussianProbability q I (initialVariance q)
     (initialVariance_pos q) : Measure (AmbientSpace q.n))
   let kernel := balancedFigureOneFullHistoryLaw parameters q I
   let good : Set (Option (BalancedCoolingHistory q.n)) :=
     {history | BalancedCoolingHistoryHasProduct
-      (figureOneDependentPhaseCount q) history}
+      (numPhases q) history}
   have hgood : MeasurableSet good :=
     measurableSet_balancedCoolingHistoryHasProduct _
   have hkernel : Measurable kernel :=
@@ -617,7 +617,7 @@ theorem bind_balancedFigureOnePointContinuation_eq_sampleProduct_map
     (I : VolumeInput q.n) (oracle : MembershipOracle I)
     (hproduct : ∀ᵐ history ∂balancedFigureOnePostInitialHistoryLaw parameters q I,
       BalancedCoolingHistoryHasProduct
-        (figureOneDependentPhaseCount q) history) :
+        (numPhases q) history) :
     (truncatedGaussianProbability q I (initialVariance q)
         (initialVariance_pos q) : Measure (AmbientSpace q.n)).bind
         (fun point =>
@@ -627,7 +627,7 @@ theorem bind_balancedFigureOnePointContinuation_eq_sampleProduct_map
         (fun history => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (balancedCoolingChronologicalPhaseVariable q)
-            (figureOneDependentPhaseCount q) history) := by
+            (numPhases q) history) := by
   rw [bind_balancedFigureOnePointContinuation_eq_postInitialHistory_map]
   apply Measure.map_congr
   filter_upwards [hproduct] with history hhistory
@@ -650,13 +650,13 @@ theorem balancedFigureOnePostInitialDirectFailureBound_of_mappedProductLe
       |idealProduct state - mean|} ≤ ENNReal.ofReal (11 / 64 : ℝ))
     (hproduct : ∀ᵐ history ∂balancedFigureOnePostInitialHistoryLaw parameters q I,
       BalancedCoolingHistoryHasProduct
-        (figureOneDependentPhaseCount q) history)
+        (numPhases q) history)
     (htransfer : MeasureLeUpTo
       ((balancedFigureOnePostInitialHistoryLaw parameters q I).map
         (fun history => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (balancedCoolingChronologicalPhaseVariable q)
-            (figureOneDependentPhaseCount q) history))
+            (numPhases q) history))
       (idealLaw.map
         (fun state => initialGaussianIntegral q * idealProduct state))
       (ENNReal.ofReal (1 / 64 : ℝ))) :
@@ -671,10 +671,10 @@ theorem balancedFigureOnePostInitialDirectFailureBound_of_mappedProductLe
     htrunc (balancedFigureOnePostInitialHistoryLaw parameters q I) idealLaw
     (dependentPhaseSampleProduct
       (balancedCoolingChronologicalPhaseVariable q)
-      (figureOneDependentPhaseCount q))
+      (numPhases q))
     idealProduct
   · unfold dependentPhaseSampleProduct
-    exact (Finset.range (figureOneDependentPhaseCount q)).measurable_fun_prod
+    exact (Finset.range (numPhases q)).measurable_fun_prod
       fun j _ => measurable_balancedCoolingChronologicalPhaseVariable q (j + 1)
   · exact hidealMeas
   · exact hmeanApprox
@@ -694,18 +694,18 @@ theorem balancedFigureOnePostInitialDirectFailureBound_of_idealMappedProductLe
     (hsharp : FigureOneSharpAcceleratedMoments q I)
     (hproduct : ∀ᵐ history ∂balancedFigureOnePostInitialHistoryLaw parameters q I,
       BalancedCoolingHistoryHasProduct
-        (figureOneDependentPhaseCount q) history)
+        (numPhases q) history)
     (htransfer : MeasureLeUpTo
       ((balancedFigureOnePostInitialHistoryLaw parameters q I).map
         (fun history => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (balancedCoolingChronologicalPhaseVariable q)
-            (figureOneDependentPhaseCount q) history))
+            (numPhases q) history))
       ((figureOneIdealExperimentLaw q I).map
         (fun samples => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (figureOneChronologicalIdealCoordinate q)
-            (figureOneDependentPhaseCount q) samples))
+            (numPhases q) samples))
       (ENNReal.ofReal (1 / 64 : ℝ))) :
     FigureOnePostInitialDirectFailureBoundFor q I
       (fun point =>
@@ -715,7 +715,7 @@ theorem balancedFigureOnePostInitialDirectFailureBound_of_idealMappedProductLe
   let mu := figureOneIdealExperimentLaw q I
   let mean := dependentPhaseMeanProduct
     (figureOneChronologicalTruncatedMean q I mu W)
-    (figureOneDependentPhaseCount q)
+    (numPhases q)
   let _ : IsProbabilityMeasure mu :=
     figureOneIdealExperimentLaw_isProbabilityMeasure q I
   have hmeas : ∀ j, Measurable (W j) :=
@@ -731,15 +731,15 @@ theorem balancedFigureOnePostInitialDirectFailureBound_of_idealMappedProductLe
       figureOneChronologicalMomentFactor q j *
         figureOneChronologicalRawMean q I j ^ 2 :=
     fun j => figureOneChronologicalIdealCoordinate_secondMoment_le q I hsharp j
-  have hind : ∀ i, i < figureOneDependentPhaseCount q →
-      ApproxIndepFun (figureOneDependentEpsilon q)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+  have hind : ∀ i, i < numPhases q →
+      ApproxIndepFun (dependenceError q)
+        (dependentTruncatedProduct (truncationLevel q)
           (figureOneChronologicalTruncatedMean q I mu W)
           (figureOneChronologicalTruncatedPhase q I W) i)
         (figureOneChronologicalTruncatedPhase q I W (i + 1)) mu := by
     intro i hi
     exact (figureOneChronologicalIdeal_exactIndependence q I i hi).mono
-      (figureOneDependentEpsilon_nonneg q)
+      (dependenceError_nonneg q)
   have htail := measure_chronologicalIdealPhaseSampleProduct_figureOne_le
     q I mu W hmeas hnonneg hmem hmean hsecond hind
   have hmeanApprox :=
@@ -747,10 +747,10 @@ theorem balancedFigureOnePostInitialDirectFailureBound_of_idealMappedProductLe
       q I mu W hmeas hnonneg hmem hmean hsecond
   apply balancedFigureOnePostInitialDirectFailureBound_of_mappedProductLe
     parameters q I oracle htrunc mu
-      (dependentPhaseSampleProduct W (figureOneDependentPhaseCount q))
+      (dependentPhaseSampleProduct W (numPhases q))
       (by
         unfold dependentPhaseSampleProduct
-        exact (Finset.range (figureOneDependentPhaseCount q)).measurable_fun_prod
+        exact (Finset.range (numPhases q)).measurable_fun_prod
           fun j _ => hmeas (j + 1))
       mean hmeanApprox htail hproduct
   simpa [W, mu] using htransfer
@@ -766,12 +766,12 @@ theorem balancedFigureOnePostInitialDirectFailureBound_of_mappedLaw
         (fun history => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (balancedCoolingChronologicalPhaseVariable q)
-            (figureOneDependentPhaseCount q) history))
+            (numPhases q) history))
       ((figureOneIdealExperimentLaw q I).map
         (fun samples => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (figureOneChronologicalIdealCoordinate q)
-            (figureOneDependentPhaseCount q) samples))
+            (numPhases q) samples))
       (ENNReal.ofReal (1 / 64 : ℝ))) :
     FigureOnePostInitialDirectFailureBoundFor q I
       (fun point =>
@@ -823,28 +823,28 @@ theorem balancedFigureOneBase_failure_le_of_directPostInitial
   have hbaseLaw :
       (baseVolumeCooling (balancedCoolingPrimitives parameters)
           explicitVolumeCoolingSchedule q).runEstimate oracle.query =
-        ((initialGaussianSamplingMeasure q).map
+        ((initialGaussianLaw q).map
           (initialTruncatedFallback q I)).bind K := by
     rw [balancedFigureOneBaseVolumeCooling_runEstimate_eq_history_map]
     unfold balancedFigureOneBaseHistoryLaw
     calc
       Measure.map (balancedFigureOneHistoryEstimate q)
-          ((initialGaussianSamplingMeasure q).bind (fun proposal =>
+          ((initialGaussianLaw q).bind (fun proposal =>
             balancedFigureOneFullHistoryLaw parameters q I
               (initialTruncatedFallback q I proposal))) =
-          (initialGaussianSamplingMeasure q).bind (fun proposal =>
+          (initialGaussianLaw q).bind (fun proposal =>
             (balancedFigureOneFullHistoryLaw parameters q I
               (initialTruncatedFallback q I proposal)).map
                 (balancedFigureOneHistoryEstimate q)) :=
         map_bind_eq_bind_map_of_measurable _
           (hfull.1.comp (measurable_initialTruncatedFallback q I)) hestimate
-      _ = (initialGaussianSamplingMeasure q).bind
+      _ = (initialGaussianLaw q).bind
           (K ∘ initialTruncatedFallback q I) := by
         congr 1
         funext proposal
         exact (balancedFigureOnePointContinuation_runEstimate_eq_history_map
           parameters q I oracle (initialTruncatedFallback q I proposal)).symm
-      _ = ((initialGaussianSamplingMeasure q).map
+      _ = ((initialGaussianLaw q).map
           (initialTruncatedFallback q I)).bind K :=
         (map_bind_eq_bind_comp _ (initialTruncatedFallback q I)
           (measurable_initialTruncatedFallback q I) K hK).symm
@@ -853,7 +853,7 @@ theorem balancedFigureOneBase_failure_le_of_directPostInitial
   unfold FigureOnePostInitialDirectFailureBoundFor at hpost
   rw [hbaseLaw]
   calc
-    ((initialGaussianSamplingMeasure q).map
+    ((initialGaussianLaw q).map
         (initialTruncatedFallback q I)).bind K (accurateOutcome q I)ᶜ ≤
       ((truncatedGaussianProbability q I (initialVariance q)
           (initialVariance_pos q) : Measure (AmbientSpace q.n)).bind K)
@@ -880,12 +880,12 @@ theorem balancedFigureOneBase_failure_le_of_mappedLaw
         (fun history => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (balancedCoolingChronologicalPhaseVariable q)
-            (figureOneDependentPhaseCount q) history))
+            (numPhases q) history))
       ((figureOneIdealExperimentLaw q I).map
         (fun samples => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (figureOneChronologicalIdealCoordinate q)
-            (figureOneDependentPhaseCount q) samples))
+            (numPhases q) samples))
       (ENNReal.ofReal (1 / 64 : ℝ))) :
     (baseVolumeCooling (balancedCoolingPrimitives parameters)
         explicitVolumeCoolingSchedule q).runEstimate oracle.query

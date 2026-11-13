@@ -645,9 +645,9 @@ theorem accuracyPhase_ellGaussianMass_adjacent_le
       rw [← hfour]
       ac_rfl
 
-theorem speedyAdjacentWarmConstant_pos (q : VolumeParams) :
-    0 < speedyAdjacentWarmConstant q := by
-  unfold speedyAdjacentWarmConstant
+theorem warmConstant_pos (q : VolumeParams) :
+    0 < warmConstant q := by
+  unfold warmConstant
   positivity
 
 /-- **The missing CV18 warm-start bridge.**  The speedy stationary law of one
@@ -656,7 +656,7 @@ phase.  This is the hypothesis actually required by the speedy mixing theorem,
 and it does not follow merely from warmness of the ordinary Gaussians. -/
 theorem accuracyPhase_speedyStationary_adjacent_isWarm
     (q : VolumeParams) (I : VolumeInput q.n) (k : ℕ) :
-    IsWarm (ENNReal.ofReal (speedyAdjacentWarmConstant q))
+    IsWarm (ENNReal.ofReal (warmConstant q))
       (ellGaussianProb
         (accuracyPhaseTruncatedBody q I (scheduleValue q k))
         (figureOneProposalRadius q (scheduleValue q k))
@@ -707,10 +707,10 @@ theorem accuracyPhase_speedyStationary_adjacent_isWarm
     simpa [mus, muNext, Ks, Kt, ds, dt, s, t] using
       accuracyPhase_ellGaussianMass_adjacent_le q I k
   have hw := isWarm_normalize_of_le_smul hmus0 hmusto hmut0 hmutto hdom hmass
-  change IsWarm (ENNReal.ofReal (speedyAdjacentWarmConstant q))
+  change IsWarm (ENNReal.ofReal (warmConstant q))
     ((mus Set.univ)⁻¹ • mus) ((muNext Set.univ)⁻¹ • muNext)
   convert hw using 1
-  unfold speedyAdjacentWarmConstant
+  unfold warmConstant
   rw [ENNReal.ofReal_mul (Real.exp_pos _).le,
     ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 4)]
 

@@ -19,78 +19,78 @@ bound, whereas `FigureOnePostInitialMixingBound` compares with the exact
 (unknown) failure probability of a separate ideal experiment.
 -/
 
-theorem figureOneDependentPhaseCount_pos (q : VolumeParams) :
-    0 < figureOneDependentPhaseCount q := by
-  simp [figureOneDependentPhaseCount]
+theorem numPhases_pos (q : VolumeParams) :
+    0 < numPhases q := by
+  simp [numPhases]
 
-theorem figureOneDependentMaxSampleCount_pos (q : VolumeParams) :
-    0 < figureOneDependentMaxSampleCount q := by
-  exact lt_of_lt_of_le (figureOneSampleCount_pos q) (le_max_right _ _)
+theorem largestSampleCount_pos (q : VolumeParams) :
+    0 < largestSampleCount q := by
+  exact lt_of_lt_of_le (sampleCount_pos q) (le_max_right _ _)
 
-theorem figureOneDependentAlpha_pos (q : VolumeParams) :
-    0 < figureOneDependentAlpha q := by
-  unfold figureOneDependentAlpha
+theorem truncationLevel_pos (q : VolumeParams) :
+    0 < truncationLevel q := by
+  unfold truncationLevel
   exact div_pos
     (mul_pos (by norm_num) (by
-      exact_mod_cast figureOneDependentPhaseCount_pos q))
+      exact_mod_cast numPhases_pos q))
     (sq_pos_of_pos q.heps.1)
 
-theorem figureOneDependentAlpha_one_le (q : VolumeParams) :
-    1 ≤ figureOneDependentAlpha q := by
-  have hm : (1 : ℝ) ≤ figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
+theorem truncationLevel_one_le (q : VolumeParams) :
+    1 ≤ truncationLevel q := by
+  have hm : (1 : ℝ) ≤ numPhases q := by
+    exact_mod_cast numPhases_pos q
   have he2 : q.eps ^ 2 ≤ 1 := by nlinarith [q.heps.1, q.heps.2]
-  rw [figureOneDependentAlpha, le_div_iff₀ (sq_pos_of_pos q.heps.1)]
+  rw [truncationLevel, le_div_iff₀ (sq_pos_of_pos q.heps.1)]
   nlinarith
 
-theorem figureOneDependentPhaseCount_div_alpha (q : VolumeParams) :
-    (figureOneDependentPhaseCount q : ℝ) / figureOneDependentAlpha q =
+theorem numPhases_div_alpha (q : VolumeParams) :
+    (numPhases q : ℝ) / truncationLevel q =
       q.eps ^ 2 / 1024 := by
-  have hm : (figureOneDependentPhaseCount q : ℝ) ≠ 0 := by
-    exact_mod_cast (Nat.ne_of_gt (figureOneDependentPhaseCount_pos q))
+  have hm : (numPhases q : ℝ) ≠ 0 := by
+    exact_mod_cast (Nat.ne_of_gt (numPhases_pos q))
   have he : q.eps ≠ 0 := q.heps.1.ne'
-  unfold figureOneDependentAlpha
+  unfold truncationLevel
   field_simp [hm, he]
 
 theorem figureOneDependent_tail_probability_real (q : VolumeParams) :
     ((q.eps ^ 2 / 16 +
-          2 * ((figureOneDependentPhaseCount q : ℝ) /
-            figureOneDependentAlpha q)) /
+          2 * ((numPhases q : ℝ) /
+            truncationLevel q)) /
         (5 * q.eps / 8) ^ 2) = 33 / 200 := by
-  rw [figureOneDependentPhaseCount_div_alpha]
+  rw [numPhases_div_alpha]
   field_simp [q.heps.1.ne']
   ring
 
-theorem figureOneDependentEpsilon_nonneg (q : VolumeParams) :
-    0 ≤ figureOneDependentEpsilon q := by
-  unfold figureOneDependentEpsilon
-  have ha := figureOneDependentAlpha_pos q
+theorem dependenceError_nonneg (q : VolumeParams) :
+    0 ≤ dependenceError q := by
+  unfold dependenceError
+  have ha := truncationLevel_pos q
   positivity
 
 theorem figureOneDependent_smallness (q : VolumeParams) :
-    4 * figureOneDependentEpsilon q * figureOneDependentAlpha q ^ 3 ≤ 1 := by
-  have ha := figureOneDependentAlpha_pos q
-  have hm : (0 : ℝ) < figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
+    4 * dependenceError q * truncationLevel q ^ 3 ≤ 1 := by
+  have ha := truncationLevel_pos q
+  have hm : (0 : ℝ) < numPhases q := by
+    exact_mod_cast numPhases_pos q
   have he2 : q.eps ^ 2 ≤ 1 := by nlinarith [q.heps.1, q.heps.2]
-  have hm1 : (1 : ℝ) ≤ figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
+  have hm1 : (1 : ℝ) ≤ numPhases q := by
+    exact_mod_cast numPhases_pos q
   have ham : (1 : ℝ) ≤
-      figureOneDependentAlpha q * figureOneDependentPhaseCount q := by
+      truncationLevel q * numPhases q := by
     simpa only [one_mul] using
-      mul_le_mul (figureOneDependentAlpha_one_le q) hm1 zero_le_one ha.le
-  rw [figureOneDependentEpsilon]
+      mul_le_mul (truncationLevel_one_le q) hm1 zero_le_one ha.le
+  rw [dependenceError]
   field_simp [ha.ne', hm.ne']
   nlinarith
 
-theorem figureOnePerSampleMixingError_pos (q : VolumeParams) :
-    0 < figureOnePerSampleMixingError q := by
-  unfold figureOnePerSampleMixingError figureOneDependentEpsilon
-  have ha := figureOneDependentAlpha_pos q
-  have hk : (0 : ℝ) < figureOneDependentMaxSampleCount q := by
-    exact_mod_cast figureOneDependentMaxSampleCount_pos q
-  have hm : (0 : ℝ) < figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
+theorem sampleMixingError_pos (q : VolumeParams) :
+    0 < sampleMixingError q := by
+  unfold sampleMixingError dependenceError
+  have ha := truncationLevel_pos q
+  have hk : (0 : ℝ) < largestSampleCount q := by
+    exact_mod_cast largestSampleCount_pos q
+  have hm : (0 : ℝ) < numPhases q := by
+    exact_mod_cast numPhases_pos q
   exact div_pos
     (div_pos (sq_pos_of_pos q.heps.1)
       (mul_pos (mul_pos (by norm_num) (pow_pos ha 4)) hm))
@@ -99,82 +99,82 @@ theorem figureOnePerSampleMixingError_pos (q : VolumeParams) :
 /-- The exact parameter identity needed to feed the output of Lemma 7.17(c)
 into the `ApproxIndepFun` premise of Lemma 7.15. -/
 theorem figureOne_lemma717c_budget (q : VolumeParams) :
-    3 * (figureOneDependentMaxSampleCount q : ℝ) *
-        (figureOneDependentPhaseCount q : ℝ) *
-          figureOnePerSampleMixingError q =
-      figureOneDependentEpsilon q := by
-  have hk : (figureOneDependentMaxSampleCount q : ℝ) ≠ 0 := by
-    exact_mod_cast (Nat.ne_of_gt (figureOneDependentMaxSampleCount_pos q))
-  have hm : (figureOneDependentPhaseCount q : ℝ) ≠ 0 := by
-    exact_mod_cast (Nat.ne_of_gt (figureOneDependentPhaseCount_pos q))
-  unfold figureOnePerSampleMixingError
+    3 * (largestSampleCount q : ℝ) *
+        (numPhases q : ℝ) *
+          sampleMixingError q =
+      dependenceError q := by
+  have hk : (largestSampleCount q : ℝ) ≠ 0 := by
+    exact_mod_cast (Nat.ne_of_gt (largestSampleCount_pos q))
+  have hm : (numPhases q : ℝ) ≠ 0 := by
+    exact_mod_cast (Nat.ne_of_gt (numPhases_pos q))
+  unfold sampleMixingError
   field_simp [hk, hm]
 
 /-- The successor coefficient required in the recursive first-moment lower
 bound of Lemma 7.15. -/
 theorem figureOneDependent_coefficient (q : VolumeParams) {i : ℕ}
-    (hi : i < figureOneDependentPhaseCount q) :
-    2 * figureOneDependentEpsilon q * figureOneDependentAlpha q ^ 2 *
+    (hi : i < numPhases q) :
+    2 * dependenceError q * truncationLevel q ^ 2 *
         (i + 1) ≤ 1 := by
-  have ha := figureOneDependentAlpha_pos q
-  have hmR : (i + 1 : ℕ) ≤ figureOneDependentPhaseCount q := by omega
-  have hmR' : (i + 1 : ℝ) ≤ figureOneDependentPhaseCount q := by
+  have ha := truncationLevel_pos q
+  have hmR : (i + 1 : ℕ) ≤ numPhases q := by omega
+  have hmR' : (i + 1 : ℝ) ≤ numPhases q := by
     exact_mod_cast hmR
   have he2 : q.eps ^ 2 ≤ 1 := by nlinarith [q.heps.1, q.heps.2]
-  have hm0 : (0 : ℝ) < figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
+  have hm0 : (0 : ℝ) < numPhases q := by
+    exact_mod_cast numPhases_pos q
   have hleft : q.eps ^ 2 * (i + 1 : ℝ) ≤
-      figureOneDependentPhaseCount q := by
+      numPhases q := by
     calc
       q.eps ^ 2 * (i + 1 : ℝ) ≤ 1 * (i + 1 : ℝ) :=
         mul_le_mul_of_nonneg_right he2 (by positivity)
       _ = (i + 1 : ℝ) := one_mul _
-      _ ≤ figureOneDependentPhaseCount q := hmR'
-  have ha2 : (1 : ℝ) ≤ figureOneDependentAlpha q ^ 2 :=
-    one_le_pow₀ (figureOneDependentAlpha_one_le q)
-  have hright : (figureOneDependentPhaseCount q : ℝ) ≤
-      figureOneDependentAlpha q ^ 2 * figureOneDependentPhaseCount q := by
+      _ ≤ numPhases q := hmR'
+  have ha2 : (1 : ℝ) ≤ truncationLevel q ^ 2 :=
+    one_le_pow₀ (truncationLevel_one_le q)
+  have hright : (numPhases q : ℝ) ≤
+      truncationLevel q ^ 2 * numPhases q := by
     simpa only [one_mul] using
       mul_le_mul_of_nonneg_right ha2 hm0.le
-  rw [figureOneDependentEpsilon]
+  rw [dependenceError]
   field_simp [ha.ne', hm0.ne']
   nlinarith
 
 /-- The two Markov truncations in Lemma 7.15 cost at most
 `3 eps^2 / 1024` over all phases. -/
 theorem figureOneDependent_truncation_probability (q : VolumeParams) :
-    (∑ _ : Fin (figureOneDependentPhaseCount q),
-        (ENNReal.ofReal (1 / figureOneDependentAlpha q) +
-          ENNReal.ofReal (2 / figureOneDependentAlpha q))) =
+    (∑ _ : Fin (numPhases q),
+        (ENNReal.ofReal (1 / truncationLevel q) +
+          ENNReal.ofReal (2 / truncationLevel q))) =
       ENNReal.ofReal (3 * q.eps ^ 2 / 1024) := by
-  have ha := figureOneDependentAlpha_pos q
-  have hone : 0 ≤ 1 / figureOneDependentAlpha q := by positivity
-  have htwo : 0 ≤ 2 / figureOneDependentAlpha q := by positivity
+  have ha := truncationLevel_pos q
+  have hone : 0 ≤ 1 / truncationLevel q := by positivity
+  have htwo : 0 ≤ 2 / truncationLevel q := by positivity
   calc
-    (∑ _ : Fin (figureOneDependentPhaseCount q),
-        (ENNReal.ofReal (1 / figureOneDependentAlpha q) +
-          ENNReal.ofReal (2 / figureOneDependentAlpha q))) =
-        figureOneDependentPhaseCount q •
-          (ENNReal.ofReal (1 / figureOneDependentAlpha q) +
-            ENNReal.ofReal (2 / figureOneDependentAlpha q)) := by simp
-    _ = figureOneDependentPhaseCount q •
-          ENNReal.ofReal (3 / figureOneDependentAlpha q) := by
+    (∑ _ : Fin (numPhases q),
+        (ENNReal.ofReal (1 / truncationLevel q) +
+          ENNReal.ofReal (2 / truncationLevel q))) =
+        numPhases q •
+          (ENNReal.ofReal (1 / truncationLevel q) +
+            ENNReal.ofReal (2 / truncationLevel q)) := by simp
+    _ = numPhases q •
+          ENNReal.ofReal (3 / truncationLevel q) := by
       congr 1
       rw [← ENNReal.ofReal_add hone htwo]
       congr 1
       ring
     _ = ENNReal.ofReal
-          ((figureOneDependentPhaseCount q : ℝ) *
-            (3 / figureOneDependentAlpha q)) := by
+          ((numPhases q : ℝ) *
+            (3 / truncationLevel q)) := by
       rw [nsmul_eq_mul, ← ENNReal.ofReal_natCast,
         ← ENNReal.ofReal_mul (by positivity)]
     _ = ENNReal.ofReal (3 * q.eps ^ 2 / 1024) := by
       congr 1
-      rw [show (figureOneDependentPhaseCount q : ℝ) *
-          (3 / figureOneDependentAlpha q) =
-            3 * ((figureOneDependentPhaseCount q : ℝ) /
-              figureOneDependentAlpha q) by ring,
-        figureOneDependentPhaseCount_div_alpha]
+      rw [show (numPhases q : ℝ) *
+          (3 / truncationLevel q) =
+            3 * ((numPhases q : ℝ) /
+              truncationLevel q) by ring,
+        numPhases_div_alpha]
       ring
 
 /-- With dependent-product excess `eps^2/16`, the full Chebyshev plus
@@ -182,12 +182,12 @@ two-truncation right-hand side of Lemma 7.15 is below `11/64`. -/
 theorem figureOneDependent_lemma715_probability_budget (q : VolumeParams) :
     ENNReal.ofReal
         ((q.eps ^ 2 / 16 +
-            2 * ((figureOneDependentPhaseCount q : ℝ) /
-              figureOneDependentAlpha q)) /
+            2 * ((numPhases q : ℝ) /
+              truncationLevel q)) /
           (5 * q.eps / 8) ^ 2) +
-        ∑ _ : Fin (figureOneDependentPhaseCount q),
-          (ENNReal.ofReal (1 / figureOneDependentAlpha q) +
-            ENNReal.ofReal (2 / figureOneDependentAlpha q)) ≤
+        ∑ _ : Fin (numPhases q),
+          (ENNReal.ofReal (1 / truncationLevel q) +
+            ENNReal.ofReal (2 / truncationLevel q)) ≤
       ENNReal.ofReal (11 / 64 : ℝ) := by
   rw [figureOneDependent_tail_probability_real,
     figureOneDependent_truncation_probability]
@@ -214,55 +214,55 @@ theorem measure_dependentPhaseSampleProduct_figureOne_le
     (hVmeas : ∀ j, Measurable (V j))
     (hV0 : ∀ j omega, 0 ≤ V j omega)
     (hVcap : ∀ j omega,
-      V j omega ≤ figureOneDependentAlpha q * rawMean j)
+      V j omega ≤ truncationLevel q * rawMean j)
     (hVmean : ∀ j, (∫ omega, V j omega ∂mu) = mean j)
     (hVsecond : ∀ j, (∫ omega, V j omega ^ 2 ∂mu) = second j)
-    (hVeq : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q → ∀ omega,
+    (hVeq : ∀ j, 1 ≤ j → j ≤ numPhases q → ∀ omega,
       V j omega =
-        dependentTruncatedPhase (figureOneDependentAlpha q) rawMean W j omega)
-    (hWmeas : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+        dependentTruncatedPhase (truncationLevel q) rawMean W j omega)
+    (hWmeas : ∀ j, 1 ≤ j → j ≤ numPhases q →
       Measurable (W j))
-    (hW0 : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hW0 : ∀ j, 1 ≤ j → j ≤ numPhases q →
       ∀ omega, 0 ≤ W j omega)
-    (hWint : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hWint : ∀ j, 1 ≤ j → j ≤ numPhases q →
       Integrable (W j) mu)
-    (hWmean : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hWmean : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ omega, W j omega ∂mu) = rawMean j)
-    (hind : ∀ i, i < figureOneDependentPhaseCount q →
-      ApproxIndepFun (figureOneDependentEpsilon q)
-      (dependentTruncatedProduct (figureOneDependentAlpha q) mean V i)
+    (hind : ∀ i, i < numPhases q →
+      ApproxIndepFun (dependenceError q)
+      (dependentTruncatedProduct (truncationLevel q) mean V i)
       (V (i + 1)) mu)
-    (hrelative : ∀ i, i ≤ figureOneDependentPhaseCount q →
-      (1 + 2 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 4 * i) *
+    (hrelative : ∀ i, i ≤ numPhases q →
+      (1 + 2 * dependenceError q *
+          truncationLevel q ^ 4 * i) *
           dependentPhaseMeanProduct second i ≤
         2 * dependentPhaseMeanProduct mean i ^ 2)
     (htailSecond :
-      (1 + 2 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 4 *
-            figureOneDependentPhaseCount q) *
+      (1 + 2 * dependenceError q *
+          truncationLevel q ^ 4 *
+            numPhases q) *
           dependentPhaseMeanProduct second
-            (figureOneDependentPhaseCount q) ≤
+            (numPhases q) ≤
         (1 + q.eps ^ 2 / 16) *
           dependentPhaseMeanProduct mean
-            (figureOneDependentPhaseCount q) ^ 2) :
+            (numPhases q) ^ 2) :
     mu {omega | (5 * q.eps / 8) *
           dependentPhaseMeanProduct mean
-            (figureOneDependentPhaseCount q) ≤
+            (numPhases q) ≤
         |dependentPhaseSampleProduct W
-            (figureOneDependentPhaseCount q) omega -
+            (numPhases q) omega -
           dependentPhaseMeanProduct mean
-            (figureOneDependentPhaseCount q)|} ≤
+            (numPhases q)|} ≤
       ENNReal.ofReal (11 / 64 : ℝ) := by
   refine (measure_dependentPhaseSampleProduct_relativeDeviation_le
-    mu (figureOneDependentAlpha q) (figureOneDependentEpsilon q)
+    mu (truncationLevel q) (dependenceError q)
       mean rawMean second V W
-      (figureOneDependentAlpha_one_le q)
-      (figureOneDependentEpsilon_nonneg q)
+      (truncationLevel_one_le q)
+      (dependenceError_nonneg q)
       (figureOneDependent_smallness q)
       hmean hmeanPos hrawMean hrawMeanPos hrawMean_le hsecond
       hmeanSecond hrawSecond hVmeas hV0 hVcap hVmean hVsecond
-      (figureOneDependentPhaseCount q) hVeq hWmeas hW0 hWint hWmean hind
+      (numPhases q) hVeq hWmeas hW0 hWint hWmean hind
       hrelative
       (fun i hi => figureOneDependent_coefficient q hi)
       (tailDelta := q.eps ^ 2 / 16) (relativeEps := 5 * q.eps / 8)
@@ -473,62 +473,62 @@ theorem figureOnePostInitialDirectFailureBound_of_lemma715
     (hVmeas : ∀ j, Measurable (V j))
     (hV0 : ∀ j omega, 0 ≤ V j omega)
     (hVcap : ∀ j omega,
-      V j omega ≤ figureOneDependentAlpha q * rawMean j)
+      V j omega ≤ truncationLevel q * rawMean j)
     (hVmean : ∀ j, (∫ omega, V j omega ∂mu) = mean j)
     (hVsecond : ∀ j, (∫ omega, V j omega ^ 2 ∂mu) = second j)
-    (hVeq : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q → ∀ omega,
+    (hVeq : ∀ j, 1 ≤ j → j ≤ numPhases q → ∀ omega,
       V j omega =
-        dependentTruncatedPhase (figureOneDependentAlpha q) rawMean W j omega)
-    (hWmeas : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+        dependentTruncatedPhase (truncationLevel q) rawMean W j omega)
+    (hWmeas : ∀ j, 1 ≤ j → j ≤ numPhases q →
       Measurable (W j))
-    (hW0 : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hW0 : ∀ j, 1 ≤ j → j ≤ numPhases q →
       ∀ omega, 0 ≤ W j omega)
-    (hWint : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hWint : ∀ j, 1 ≤ j → j ≤ numPhases q →
       Integrable (W j) mu)
-    (hWmean : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hWmean : ∀ j, 1 ≤ j → j ≤ numPhases q →
       (∫ omega, W j omega ∂mu) = rawMean j)
-    (hind : ∀ i, i < figureOneDependentPhaseCount q →
-      ApproxIndepFun (figureOneDependentEpsilon q)
-      (dependentTruncatedProduct (figureOneDependentAlpha q) mean V i)
+    (hind : ∀ i, i < numPhases q →
+      ApproxIndepFun (dependenceError q)
+      (dependentTruncatedProduct (truncationLevel q) mean V i)
       (V (i + 1)) mu)
-    (hrelative : ∀ i, i ≤ figureOneDependentPhaseCount q →
-      (1 + 2 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 4 * i) *
+    (hrelative : ∀ i, i ≤ numPhases q →
+      (1 + 2 * dependenceError q *
+          truncationLevel q ^ 4 * i) *
           dependentPhaseMeanProduct second i ≤
         2 * dependentPhaseMeanProduct mean i ^ 2)
     (htailSecond :
-      (1 + 2 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 4 *
-            figureOneDependentPhaseCount q) *
+      (1 + 2 * dependenceError q *
+          truncationLevel q ^ 4 *
+            numPhases q) *
           dependentPhaseMeanProduct second
-            (figureOneDependentPhaseCount q) ≤
+            (numPhases q) ≤
         (1 + q.eps ^ 2 / 16) *
           dependentPhaseMeanProduct mean
-            (figureOneDependentPhaseCount q) ^ 2)
+            (numPhases q) ^ 2)
     (hmeanApprox : RelativeApprox (q.eps / 32)
       (∏ i, figureOneIdealPhaseMean q I i)
-      (dependentPhaseMeanProduct mean (figureOneDependentPhaseCount q)))
+      (dependentPhaseMeanProduct mean (numPhases q)))
     (hlaw :
       (truncatedGaussianProbability q I (initialVariance q)
           (initialVariance_pos q) : Measure (AmbientSpace q.n)).bind
           (figureOneContinuationLaw explicitVolumeCoolingSchedule q I oracle) =
         mu.map fun omega => initialGaussianIntegral q *
-          dependentPhaseSampleProduct W (figureOneDependentPhaseCount q) omega) :
+          dependentPhaseSampleProduct W (numPhases q) omega) :
     FigureOnePostInitialDirectFailureBound q I oracle := by
   have htail := measure_dependentPhaseSampleProduct_figureOne_le
     q mu mean rawMean second V W hmean hmeanPos hrawMean hrawMeanPos
       hrawMean_le hsecond hmeanSecond hrawSecond hVmeas hV0 hVcap hVmean
       hVsecond hVeq hWmeas hW0 hWint hWmean hind hrelative htailSecond
   have hX : Measurable
-      (dependentPhaseSampleProduct W (figureOneDependentPhaseCount q)) := by
+      (dependentPhaseSampleProduct W (numPhases q)) := by
     unfold dependentPhaseSampleProduct
-    exact (Finset.range (figureOneDependentPhaseCount q)).measurable_fun_prod
+    exact (Finset.range (numPhases q)).measurable_fun_prod
       fun j hj =>
       hWmeas (j + 1) (by omega)
         (Nat.succ_le_iff.mpr (Finset.mem_range.mp hj))
   exact figureOnePostInitialDirectFailureBound_of_dependentProduct
     q I oracle htrunc mu
-      (dependentPhaseSampleProduct W (figureOneDependentPhaseCount q)) hX
+      (dependentPhaseSampleProduct W (numPhases q)) hX
       hmeanApprox hlaw htail
 
 /-- A direct `3/16` post-initial failure bound is already stronger than what

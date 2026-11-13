@@ -42,7 +42,7 @@ theorem scheduledBalancedForwardTraceLaw_gaussian_bind_terminal
         (terminalPhaseSteps q)) =
       scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q) := by
+        (numPhases q) := by
   rw [scheduledBalancedForwardTraceLaw_bind_next]
   rfl
 
@@ -64,7 +64,7 @@ theorem iteratedKernelLaw_scheduledGaussian_bind_terminal_eq_forwardTraceLaw
         (terminalPhaseSteps q)) =
       scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q) := by
+        (numPhases q) := by
   simpa only [scheduledBalancedForwardTraceLaw] using
     scheduledBalancedForwardTraceLaw_gaussian_bind_terminal q I
 

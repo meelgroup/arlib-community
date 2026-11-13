@@ -53,7 +53,7 @@ and its matching acceptance denominator contribution. -/
 noncomputable def accuracyImportancePairObservation (q : VolumeParams)
     (sigma2 : ℝ) (weight : AmbientSpace q.n → ℝ)
     (current : AmbientSpace q.n) : MembershipOracleProgram q.n (ℝ × ℝ) :=
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   let target := c⁻¹ • current
   .query target fun inside =>
     .pure <| if inside = true ∧
@@ -82,7 +82,7 @@ theorem runEstimate_accuracyImportancePairObservation
       Measure.dirac
         (accuracyImportanceWeight q I sigma2 weight current,
           accuracyAcceptanceWeight q I sigma2 current) := by
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   let target : AmbientSpace q.n := c⁻¹ • current
   have heligible :
       (oracle.query target = true ∧
@@ -93,7 +93,7 @@ theorem runEstimate_accuracyImportancePairObservation
   simp only [accuracyImportancePairObservation,
     MembershipOracleProgram.runEstimate]
   dsimp only [c, target] at heligible ⊢
-  by_cases ht : (accuracyScaleFactor q)⁻¹ • current ∈
+  by_cases ht : (scaleFactor q)⁻¹ • current ∈
       accuracyPhaseTruncatedBody q I sigma2
   · have hcond := heligible.mpr ht
     simp only [hcond, if_true]
@@ -102,10 +102,10 @@ theorem runEstimate_accuracyImportancePairObservation
       accuracyGaussianRejectionAcceptance
     rw [Set.indicator_of_mem ht]
     simp
-  · have hcond : ¬ (oracle.query ((accuracyScaleFactor q)⁻¹ • current) = true ∧
-        ‖(accuracyScaleFactor q)⁻¹ • current‖ ≤
+  · have hcond : ¬ (oracle.query ((scaleFactor q)⁻¹ • current) = true ∧
+        ‖(scaleFactor q)⁻¹ • current‖ ≤
           Real.sqrt (terminalVariance q) ∧
-        ‖(accuracyScaleFactor q)⁻¹ • current‖ ≤
+        ‖(scaleFactor q)⁻¹ • current‖ ≤
           accuracyPhaseRadius q sigma2) := fun h => ht (heligible.mp h)
     simp only [hcond, if_false]
     congr 2
@@ -139,9 +139,9 @@ theorem accuracyImportancePairObservation_bind_linear
   congr 1
   funext inside
   by_cases h : inside = true ∧
-      ‖(accuracyScaleFactor q)⁻¹ • current‖ ≤
+      ‖(scaleFactor q)⁻¹ • current‖ ≤
         Real.sqrt (terminalVariance q) ∧
-      ‖(accuracyScaleFactor q)⁻¹ • current‖ ≤
+      ‖(scaleFactor q)⁻¹ • current‖ ≤
         accuracyPhaseRadius q sigma2
   · simp only [h, if_true]
     simp

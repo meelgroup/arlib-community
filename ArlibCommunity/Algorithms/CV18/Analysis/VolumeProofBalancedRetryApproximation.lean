@@ -375,13 +375,13 @@ theorem bind_balancedAccuracyRetryBlockKernel_trial_leUpTo_stationary
 balanced rejection kernel. -/
 noncomputable def balancedRetryRecover (q : VolumeParams) :
     Bool × AmbientSpace q.n → Bool × AmbientSpace q.n := fun result =>
-  (result.1, accuracyScaleFactor q • result.2)
+  (result.1, scaleFactor q • result.2)
 
 theorem measurable_balancedRetryRecover (q : VolumeParams) :
     Measurable (balancedRetryRecover q) := by
   exact measurable_fst.prodMk <|
     (measurable_const : Measurable fun _ : Bool × AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_snd
+      scaleFactor q).smul measurable_snd
 
 /-- Equivalent balanced decision law that returns the unscaled speedy state
 on both branches. -/
@@ -435,7 +435,7 @@ theorem balancedAccuracyGaussianRejectionKernel_map_recover
     (balancedAccuracyGaussianRejectionKernel q I sigma2 current).map
         (balancedRetryRecover q) =
       balancedAccuracyDecisionKernel q I sigma2 current := by
-  have hc0 : accuracyScaleFactor q ≠ 0 := (accuracyScaleFactor_pos q).ne'
+  have hc0 : scaleFactor q ≠ 0 := (scaleFactor_pos q).ne'
   have hrecover : Measurable (balancedRetryRecover q) :=
     measurable_balancedRetryRecover q
   change (balancedAccuracyGaussianRejectionLaw q I sigma2 current).map
@@ -444,15 +444,15 @@ theorem balancedAccuracyGaussianRejectionKernel_map_recover
   unfold balancedAccuracyGaussianRejectionLaw balancedAccuracyDecisionLaw
   rw [Measure.map_add _ _ hrecover, Measure.map_smul (hf := by fun_prop), Measure.map_smul (hf := by fun_prop),
     Measure.map_dirac' hrecover, Measure.map_dirac' hrecover]
-  have hcancel : accuracyScaleFactor q •
-      ((accuracyScaleFactor q)⁻¹ • current) = current := by
+  have hcancel : scaleFactor q •
+      ((scaleFactor q)⁻¹ • current) = current := by
     rw [← mul_smul, mul_inv_cancel₀ hc0, one_smul]
   change balancedAccuracyGaussianAcceptance q I sigma2 current •
-        Measure.dirac (true, accuracyScaleFactor q •
-          ((accuracyScaleFactor q)⁻¹ • current)) +
+        Measure.dirac (true, scaleFactor q •
+          ((scaleFactor q)⁻¹ • current)) +
       (1 - balancedAccuracyGaussianAcceptance q I sigma2 current) •
-        Measure.dirac (false, accuracyScaleFactor q •
-          ((accuracyScaleFactor q)⁻¹ • current)) = _
+        Measure.dirac (false, scaleFactor q •
+          ((scaleFactor q)⁻¹ • current)) = _
   rw [hcancel]
 
 /-- Both atoms of the balanced rejection law carry the same transformed
@@ -461,7 +461,7 @@ theorem balancedAccuracyGaussianRejectionLaw_ae_snd
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (current : AmbientSpace q.n) :
     ∀ᵐ result ∂balancedAccuracyGaussianRejectionLaw q I sigma2 current,
-      result.2 = (accuracyScaleFactor q)⁻¹ • current := by
+      result.2 = (scaleFactor q)⁻¹ • current := by
   unfold balancedAccuracyGaussianRejectionLaw
   rw [ae_add_measure_iff]
   constructor
@@ -617,7 +617,7 @@ noncomputable def balancedAccuracyTransitionDecisionTail
     Bool × AmbientSpace q.n → Measure (Option (AmbientSpace q.n)) :=
   fun result =>
     if result.1 then
-      Measure.dirac (some ((accuracyScaleFactor q)⁻¹ • result.2))
+      Measure.dirac (some ((scaleFactor q)⁻¹ • result.2))
     else
       balancedAccuracyTransitionLawAux q I sigma2 proposalCap properStride
         attempts result.2
@@ -641,7 +641,7 @@ theorem balancedAccuracyTransitionDecisionTail_measurable_and_probability
     · exact Measure.measurable_dirac.comp <|
         measurable_some.comp <|
           (measurable_const : Measurable fun _ : Bool × AmbientSpace q.n =>
-            (accuracyScaleFactor q)⁻¹).smul measurable_snd
+            (scaleFactor q)⁻¹).smul measurable_snd
     · exact hE.1.comp measurable_snd
   · intro result
     unfold balancedAccuracyTransitionDecisionTail
@@ -749,7 +749,7 @@ theorem balancedAccuracyTransitionLawAux_succ_eq_recovered
                 properStride attempts mixed) =
             (R mixed).bind (fun result => T (balancedRetryRecover q result)) := by
           have hsecond : ∀ᵐ result ∂R mixed,
-              result.2 = (accuracyScaleFactor q)⁻¹ • mixed := by
+              result.2 = (scaleFactor q)⁻¹ • mixed := by
             exact balancedAccuracyGaussianRejectionLaw_ae_snd
               q I sigma2 mixed
           apply Measure.bind_congr_right
@@ -758,15 +758,15 @@ theorem balancedAccuracyTransitionLawAux_succ_eq_recovered
             balancedAccuracyTransitionDecisionTail
           by_cases hresult : result.1 = true
           · simp only [hresult, if_true]
-            have hc0 : accuracyScaleFactor q ≠ 0 :=
-              (accuracyScaleFactor_pos q).ne'
+            have hc0 : scaleFactor q ≠ 0 :=
+              (scaleFactor_pos q).ne'
             congr 2
             rw [← mul_smul, inv_mul_cancel₀ hc0, one_smul]
           · have hfalse : result.1 = false :=
               Bool.eq_false_of_not_eq_true hresult
             simp only [hfalse, Bool.false_eq_true, if_false]
-            have hc0 : accuracyScaleFactor q ≠ 0 :=
-              (accuracyScaleFactor_pos q).ne'
+            have hc0 : scaleFactor q ≠ 0 :=
+              (scaleFactor_pos q).ne'
             congr 1
             rw [hsecondResult, ← mul_smul, mul_inv_cancel₀ hc0, one_smul]
         _ = ((R mixed).map (balancedRetryRecover q)).bind T :=
@@ -876,7 +876,7 @@ theorem bind_stationaryDecision_transitionTail_eq
         (balancedAccuracyTransitionDecisionTail q I sigma2 proposalCap
           properStride attempts) =
       ((balancedAcceptedStateMeasure q I sigma2 pi).map
-          (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some +
+          (fun x => (scaleFactor q)⁻¹ • x)).map some +
         (balancedRejectedStateMeasure q I sigma2 pi).bind
           (balancedAccuracyTransitionLawAux q I sigma2 proposalCap
             properStride attempts) := by
@@ -903,18 +903,18 @@ theorem bind_stationaryDecision_transitionTail_eq
   rw [Measure.map_bind_eq_bind_comp accepted htrue hT,
     Measure.map_bind_eq_bind_comp rejected hfalse hT]
   have haccept : accepted.bind (fun x => T (truePoint x)) =
-      (accepted.map (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some := by
+      (accepted.map (fun x => (scaleFactor q)⁻¹ • x)).map some := by
     change accepted.bind (fun x =>
-        Measure.dirac (some ((accuracyScaleFactor q)⁻¹ • x))) = _
+        Measure.dirac (some ((scaleFactor q)⁻¹ • x))) = _
     rw [Measure.bind_dirac_eq_map]
     · rw [Measure.map_map]
       · rfl
       · exact measurable_some
       · exact (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-          (accuracyScaleFactor q)⁻¹).smul measurable_id
+          (scaleFactor q)⁻¹).smul measurable_id
     · exact measurable_some.comp <|
         (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-          (accuracyScaleFactor q)⁻¹).smul measurable_id
+          (scaleFactor q)⁻¹).smul measurable_id
   have hrejected : rejected.bind (fun x => T (falsePoint x)) =
       rejected.bind E := by
     apply Measure.bind_congr_right
@@ -1061,7 +1061,7 @@ theorem bind_balancedAccuracyTransitionLawAux_succ_leUpTo_stationary
       (rho.bind (balancedAccuracyTransitionLawAux q I sigma2 proposalCap
         properStride (attempts + 1)))
       (((balancedAcceptedStateMeasure q I sigma2 pi).map
-          (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some +
+          (fun x => (scaleFactor q)⁻¹ • x)).map some +
         (balancedRejectedStateMeasure q I sigma2 pi).bind
           (balancedAccuracyTransitionLawAux q I sigma2 proposalCap
             properStride attempts)) delta := by
@@ -1158,18 +1158,18 @@ theorem balancedAcceptedTargetSubmeasure_eq_mass_smul
       balancedAcceptedStateMeasure q I sigma2 pi Set.univ) :
     let accepted := balancedAcceptedStateMeasure q I sigma2 pi
     let acceptedTarget := accepted.map
-      (fun x => (accuracyScaleFactor q)⁻¹ • x)
+      (fun x => (scaleFactor q)⁻¹ • x)
     acceptedTarget = accepted Set.univ •
       balancedAccuracyGaussianAcceptedTargetLaw q I sigma2 pi := by
   dsimp only
   let accepted := balancedAcceptedStateMeasure q I sigma2 pi
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    (accuracyScaleFactor q)⁻¹ • x
+    (scaleFactor q)⁻¹ • x
   let acceptedTarget := accepted.map scale
   have hscale : Measurable scale := by
     dsimp only [scale]
     exact (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id
+      (scaleFactor q)⁻¹).smul measurable_id
   have haccepted0 : accepted Set.univ ≠ 0 := ne_of_gt <|
     (by norm_num : 0 < ENNReal.ofReal (7 / 128 : ℝ)).trans_le
       (by simpa [accepted] using hacceptedLower)
@@ -1256,12 +1256,12 @@ theorem bind_balancedRejectedTransition_leUpTo_acceptedTarget
     simpa [acceptMass, rejectMass, accepted, rejected] using
       balancedAcceptedRejected_mass_add_eq_one q I hsigma2 pi
   have hacceptedTarget :
-      (accepted.map (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some =
+      (accepted.map (fun x => (scaleFactor q)⁻¹ • x)).map some =
         acceptMass • targetSome := by
     have hbase := balancedAcceptedTargetSubmeasure_eq_mass_smul
       q I hsigma2 pi hacceptedLower
     change (accepted.map
-      (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some = _
+      (fun x => (scaleFactor q)⁻¹ • x)).map some = _
     rw [hbase, Measure.map_smul (hf := measurable_some.aemeasurable)]
   have hrejectedNormalize : rejected = rejectMass • rejectedProb := by
     exact measure_eq_mass_smul_condOn_univ rejected hrejected0 hrejectedTop
@@ -1290,7 +1290,7 @@ theorem bind_balancedRejectedTransition_leUpTo_acceptedTarget
       rw [← hrejectedBind] at hscaled
       have hadd := hscaled.add_left
         ((accepted.map
-          (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some)
+          (fun x => (scaleFactor q)⁻¹ • x)).map some)
       have htargetSum :
           acceptMass • targetSome + rejectMass • targetSome = targetSome := by
         rw [← add_smul, hmass, one_smul]
@@ -1418,12 +1418,12 @@ theorem bind_balancedTransition_leUpTo_acceptedTarget
     simpa [acceptMass, rejectMass, accepted, rejected] using
       balancedAcceptedRejected_mass_add_eq_one q I hsigma2 pi
   have hacceptedTarget :
-      (accepted.map (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some =
+      (accepted.map (fun x => (scaleFactor q)⁻¹ • x)).map some =
         acceptMass • targetSome := by
     have hbase := balancedAcceptedTargetSubmeasure_eq_mass_smul
       q I hsigma2 pi hacceptedLower
     change (accepted.map
-      (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some = _
+      (fun x => (scaleFactor q)⁻¹ • x)).map some = _
     rw [hbase, Measure.map_smul (hf := measurable_some.aemeasurable)]
   have hrejectedNormalize : rejected = rejectMass • rejectedProb :=
     measure_eq_mass_smul_condOn_univ rejected hrejected0 hrejectedTop
@@ -1437,7 +1437,7 @@ theorem bind_balancedTransition_leUpTo_acceptedTarget
           q I hsigma2 proposalCap properStride attempts).1.aemeasurable)]
   rw [← hrejectedBind] at hscaled
   have hadd := hscaled.add_left
-    ((accepted.map (fun x => (accuracyScaleFactor q)⁻¹ • x)).map some)
+    ((accepted.map (fun x => (scaleFactor q)⁻¹ • x)).map some)
   have hone :=
     bind_balancedAccuracyTransitionLawAux_succ_leUpTo_stationary
       q I hsigma2 proposalCap properStride attempts rho pi hfirstBlock

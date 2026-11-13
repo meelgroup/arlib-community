@@ -19,10 +19,10 @@ open scoped ENNReal
 theorem figureOneFinalScheduledCappedValueProgram_queryBound
     (q : VolumeParams) :
     (figureOneFinalScheduledCappedValueProgram q).QueryBound
-      (figureOneFinalScheduledQueryBudget q) := by
+      (queryBudget q) := by
   unfold figureOneFinalScheduledCappedValueProgram
   exact ((figureOneFinalScheduledAbortBaseProgram q).withQueryCap_queryBound
-    (figureOneFinalScheduledQueryBudget q)).bind fun _ => .pure _ 0
+    (queryBudget q)).bind fun _ => .pure _ 0
 
 theorem figureOneFinalScheduledCappedValueProgram_stronglyMeasurable
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I) :
@@ -31,7 +31,7 @@ theorem figureOneFinalScheduledCappedValueProgram_stronglyMeasurable
   have hcapped :=
     (figureOneFinalScheduledAbortBaseProgram_countedStronglyMeasurable
       q I oracle).withQueryCap_stronglyMeasurable
-        (figureOneFinalScheduledQueryBudget q)
+        (queryBudget q)
   unfold figureOneFinalScheduledCappedValueProgram
   apply hcapped.bind (fun _ => by trivial)
   simp only [MembershipOracleProgram.runEstimate]
@@ -41,14 +41,14 @@ theorem runEstimate_figureOneFinalScheduledCappedValueProgram
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I) :
     (figureOneFinalScheduledCappedValueProgram q).runEstimate oracle.query =
       (((figureOneFinalScheduledAbortBaseProgram q).withQueryCap
-        (figureOneFinalScheduledQueryBudget q)).runEstimate oracle.query).map
+        (queryBudget q)).runEstimate oracle.query).map
           (fun result => result.getD 0) := by
   let capped := (figureOneFinalScheduledAbortBaseProgram q).withQueryCap
-    (figureOneFinalScheduledQueryBudget q)
+    (queryBudget q)
   have hcapped : capped.StronglyMeasurable oracle.query :=
     (figureOneFinalScheduledAbortBaseProgram_countedStronglyMeasurable
       q I oracle).withQueryCap_stronglyMeasurable
-        (figureOneFinalScheduledQueryBudget q)
+        (queryBudget q)
   unfold figureOneFinalScheduledCappedValueProgram
   change ((capped.bind fun estimate => .pure (estimate.getD 0)).runEstimate
     oracle.query) = (capped.runEstimate oracle.query).map
@@ -68,12 +68,12 @@ theorem figureOneFinalScheduledCappedValueProgram_failure_le
     (hbase : (figureOneFinalScheduledAbortBaseProgram q).runEstimate
       oracle.query (accurateOutcome q I)ᶜ ≤ ENNReal.ofReal (13 / 64 : ℝ))
     (hcap : ((figureOneFinalScheduledAbortBaseProgram q).withQueryCap
-      (figureOneFinalScheduledQueryBudget q)).runEstimate oracle.query {none} ≤
+      (queryBudget q)).runEstimate oracle.query {none} ≤
         ENNReal.ofReal (1 / 64 : ℝ)) :
     (figureOneFinalScheduledCappedValueProgram q).runEstimate oracle.query
       (accurateOutcome q I)ᶜ ≤ ENNReal.ofReal (1 / 4 : ℝ) := by
   let capped := (figureOneFinalScheduledAbortBaseProgram q).withQueryCap
-    (figureOneFinalScheduledQueryBudget q)
+    (queryBudget q)
   let bad := (accurateOutcome q I)ᶜ
   have hbad : MeasurableSet bad := (accurateOutcome_measurable q I).compl
   have hsubset : (fun result : Option ℝ => result.getD 0) ⁻¹' bad ⊆
@@ -96,7 +96,7 @@ theorem figureOneFinalScheduledCappedValueProgram_failure_le
       add_le_add
         (MembershipOracleProgram.runEstimate_withQueryCap_optionSomeEvent_le
           oracle.query (figureOneFinalScheduledAbortBaseProgram q)
-          (figureOneFinalScheduledQueryBudget q)
+          (queryBudget q)
           (figureOneFinalScheduledAbortBaseProgram_countedStronglyMeasurable
             q I oracle).executionMeasurable bad hbad)
         hcap
@@ -120,7 +120,7 @@ theorem figureOneFinalScheduledCappedValueProgram_failure_le_of_countedReference
       reference delta)
     (href : ∫⁻ outcome, (outcome.2 : ENNReal) ∂reference ≤
       ENNReal.ofReal ((9 * 10 ^ 29) *
-        volumeScheduledBaseComplexityRate q))
+        runRate q))
     (hdelta : delta ≤ ENNReal.ofReal (1 / 640 : ℝ)) :
     (figureOneFinalScheduledCappedValueProgram q).runEstimate oracle.query
       (accurateOutcome q I)ᶜ ≤ ENNReal.ofReal (1 / 4 : ℝ) := by
@@ -131,7 +131,7 @@ theorem figureOneFinalScheduledCappedValueProgram_failure_le_of_countedReference
 /-- The explicit query constant of the amplified scheduled program: median
 amplification turns the base constant `64 * 10^30` into `9 * (64 * 10^30 + 1)`. -/
 noncomputable def figureOneFinalScheduledQueryConstant : ℝ :=
-  9 * (64 * figureOneFinalScheduledExpectedCostConstant + 1)
+  9 * (64 * runCostConstant + 1)
 
 /-- Final amplification for the scheduled executable, conditional only on
 the two local conclusions that the analytic and counted-reference lanes are
@@ -144,7 +144,7 @@ theorem volumeTheorem_finalScheduled_of_baseFailure_and_capFailure
     (hcap : ∀ (q : VolumeParams) (I : VolumeInput q.n)
       (oracle : MembershipOracle I),
         ((figureOneFinalScheduledAbortBaseProgram q).withQueryCap
-          (figureOneFinalScheduledQueryBudget q)).runEstimate oracle.query
+          (queryBudget q)).runEstimate oracle.query
             {none} ≤ ENNReal.ofReal (1 / 64 : ℝ)) :
     ∀ (q : VolumeParams) (I : VolumeInput q.n)
         (oracle : MembershipOracle I), WellRounded q I →
@@ -157,13 +157,13 @@ theorem volumeTheorem_finalScheduled_of_baseFailure_and_capFailure
               figureOneFinalScheduledCappedValueProgram q).QueryBound calls ∧
             calls ≤ Nat.ceil
               (figureOneFinalScheduledQueryConstant *
-                (volumeScheduledBaseComplexityRate q *
+                (runRate q *
                 protectedLog (1 / q.p))) := by
   have hamp := oracleProgram_proof_amplification_of_rate
-    volumeScheduledBaseComplexityRate
-    volumeScheduledBaseComplexityRate_one_le
-    (64 * figureOneFinalScheduledExpectedCostConstant)
-    (mul_pos (by norm_num) figureOneFinalScheduledExpectedCostConstant_pos)
+    runRate
+    runRate_one_le
+    (64 * runCostConstant)
+    (mul_pos (by norm_num) runCostConstant_pos)
   intro q I oracle hrounded
   apply hamp figureOneFinalScheduledCappedValueProgram q I oracle
   · let μ := (figureOneFinalScheduledCappedValueProgram q).runEstimate
@@ -177,7 +177,7 @@ theorem volumeTheorem_finalScheduled_of_baseFailure_and_capFailure
       (hbase q I oracle hrounded) (hcap q I oracle)
   · exact figureOneFinalScheduledCappedValueProgram_stronglyMeasurable
       q I oracle
-  · refine ⟨figureOneFinalScheduledQueryBudget q,
+  · refine ⟨queryBudget q,
       figureOneFinalScheduledCappedValueProgram_queryBound q, ?_⟩
     exact le_rfl
 
@@ -200,7 +200,7 @@ theorem volumeTheorem_finalScheduled_of_baseFailure
               figureOneFinalScheduledCappedValueProgram q).QueryBound calls ∧
             calls ≤ Nat.ceil
               (figureOneFinalScheduledQueryConstant *
-                (volumeScheduledBaseComplexityRate q *
+                (runRate q *
                 protectedLog (1 / q.p))) := by
   apply volumeTheorem_finalScheduled_of_baseFailure_and_capFailure hbase
   intro q I oracle

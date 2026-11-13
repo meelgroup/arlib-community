@@ -35,13 +35,13 @@ open scoped ENNReal
 
 /-- Normalizing the implementation's closed proposal ball is identical to
 normalizing the abstract chain's open ball. -/
-theorem centeredClosedBallMeasure_eq_openBall {n : ℕ} [NeZero n]
+theorem centeredBall_eq_openBall {n : ℕ} [NeZero n]
     {radius : ℝ} (hradius : 0 < radius) :
-    centeredClosedBallMeasure n radius =
+    centeredBall n radius =
       (volume (Metric.ball (0 : AmbientSpace n) radius))⁻¹ •
         volume.restrict (Metric.ball 0 radius) := by
   let finite : FiniteMeasure (AmbientSpace n) :=
-    centeredClosedBallFiniteMeasure n radius
+    centeredBallFinite n radius
   have hfinite : finite ≠ 0 := by
     intro hzero
     have huniv : (finite : Measure (AmbientSpace n)) Set.univ = 0 := by
@@ -56,7 +56,7 @@ theorem centeredClosedBallMeasure_eq_openBall {n : ℕ} [NeZero n]
     apply (ae_eq_of_subset_of_measure_ge Metric.ball_subset_closedBall ?_
       measurableSet_ball.nullMeasurableSet measure_closedBall_lt_top.ne).symm
     rw [Measure.addHaar_closedBall_eq_addHaar_ball]
-  unfold centeredClosedBallMeasure
+  unfold centeredBall
   change (finite.normalize : Measure (AmbientSpace n)) = _
   rw [finite.toMeasure_normalize_eq_of_nonzero hfinite]
   have hmass : (finite.mass : ENNReal) =
@@ -74,9 +74,9 @@ theorem centeredClosedBallMeasure_eq_openBall {n : ℕ} [NeZero n]
 
 /-- After translation, the executable proposal measure is the usual uniform
 measure on the open ball about the current state. -/
-theorem uniformClosedBallMeasure_eq_openBall {n : ℕ} [NeZero n]
+theorem uniformBall_eq_openBall {n : ℕ} [NeZero n]
     (current : AmbientSpace n) {radius : ℝ} (hradius : 0 < radius) :
-    uniformClosedBallMeasure n current radius =
+    uniformBall n current radius =
       (volume (Metric.ball current radius))⁻¹ •
         volume.restrict (Metric.ball current radius) := by
   have hvolume : volume (Metric.ball (0 : AmbientSpace n) radius) =
@@ -92,8 +92,8 @@ theorem uniformClosedBallMeasure_eq_openBall {n : ℕ} [NeZero n]
     (s := Metric.ball current radius)
     (by fun_prop) measurableSet_ball
   rw [hpre] at hrestrict
-  unfold uniformClosedBallMeasure
-  rw [centeredClosedBallMeasure_eq_openBall hradius, Measure.map_smul (hf := by fun_prop),
+  unfold uniformBall
+  rw [centeredBall_eq_openBall hradius, Measure.map_smul (hf := by fun_prop),
     hvolume]
   exact congrArg
     (fun mu : Measure (AmbientSpace n) =>
@@ -116,7 +116,7 @@ theorem ofReal_truncatedMetropolisAcceptance_eq_half_metropolisAccept
     unfold truncatedMetropolisAcceptance
     rw [Set.indicator_of_mem hp]
     rw [metropolisAccept_eq_ofReal]
-    unfold lazyGaussianMetropolisAcceptance gaussianMetropolisAcceptance
+    unfold lazyAcceptance metropolisAcceptance
     unfold gaussianWeightReal
     rw [ENNReal.ofReal_div_of_pos (by norm_num : (0 : ℝ) < 2)]
     norm_num
@@ -166,7 +166,7 @@ theorem truncatedMetropolisKernel_eq_lazy_metropolisGaussian
     fun_prop
   have hmap := lintegral_map hF
     (by fun_prop : Measurable fun z : AmbientSpace q.n => current + z)
-    (μ := centeredClosedBallMeasure q.n r)
+    (μ := centeredBall q.n r)
   have hreject : ∀ y : AmbientSpace q.n,
       ENNReal.ofReal
           (1 - truncatedMetropolisAcceptance q I sigma2 current y) =
@@ -181,15 +181,15 @@ theorem truncatedMetropolisKernel_eq_lazy_metropolisGaussian
   change (∫⁻ z, (2 : ENNReal)⁻¹ * a (current + z) *
       B.indicator 1 (current + z) +
       (1 - (2 : ENNReal)⁻¹ * a (current + z)) * b
-      ∂centeredClosedBallMeasure q.n r) = _
+      ∂centeredBall q.n r) = _
   rw [← hmap]
   change (∫⁻ y, (2 : ENNReal)⁻¹ * a y * B.indicator 1 y +
       (1 - (2 : ENNReal)⁻¹ * a y) * b
-      ∂uniformClosedBallMeasure q.n current r) = _
-  let ν : Measure (AmbientSpace q.n) := uniformClosedBallMeasure q.n current r
+      ∂uniformBall q.n current r) = _
+  let ν : Measure (AmbientSpace q.n) := uniformBall q.n current r
   have hν : ν = (volume (Metric.ball current r))⁻¹ •
       volume.restrict (Metric.ball current r) :=
-    uniformClosedBallMeasure_eq_openBall current hr
+    uniformBall_eq_openBall current hr
   have haBall : (∫⁻ y, a y ∂ν) =
       metropolisMove (truncatedBody q I) r sigma2 current := by
     rw [hν, lintegral_smul_measure]
@@ -305,7 +305,7 @@ theorem truncatedMetropolisKernel_eq_lazy_metropolisGaussian
 
 end ArlibCommunity.Algorithms.CV18
 
-#print axioms ArlibCommunity.Algorithms.CV18.centeredClosedBallMeasure_eq_openBall
-#print axioms ArlibCommunity.Algorithms.CV18.uniformClosedBallMeasure_eq_openBall
+#print axioms ArlibCommunity.Algorithms.CV18.centeredBall_eq_openBall
+#print axioms ArlibCommunity.Algorithms.CV18.uniformBall_eq_openBall
 #print axioms ArlibCommunity.Algorithms.CV18.ofReal_truncatedMetropolisAcceptance_eq_half_metropolisAccept
 #print axioms ArlibCommunity.Algorithms.CV18.truncatedMetropolisKernel_eq_lazy_metropolisGaussian

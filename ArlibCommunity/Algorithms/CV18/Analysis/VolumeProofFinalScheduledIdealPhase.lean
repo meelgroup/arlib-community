@@ -35,12 +35,12 @@ theorem figureOneFinalScheduledIdealPhaseStart_isProbabilityMeasure
     exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
 
 private theorem finalIdealWarmConstant_le_ninetySix (q : VolumeParams) :
-    8 * ENNReal.ofReal (speedyAdjacentWarmConstant q) ≤ 96 := by
+    8 * ENNReal.ofReal (warmConstant q) ≤ 96 := by
   calc
-    8 * ENNReal.ofReal (speedyAdjacentWarmConstant q) ≤ 8 * 12 := by
+    8 * ENNReal.ofReal (warmConstant q) ≤ 8 * 12 := by
       gcongr
       rw [← ENNReal.ofReal_ofNat 12]
-      exact ENNReal.ofReal_le_ofReal (speedyAdjacentWarmConstant_le_twelve q)
+      exact ENNReal.ofReal_le_ofReal (warmConstant_le_twelve q)
     _ = 96 := by norm_num
 
 /-- The contracted live part of every exact ideal phase start has the one
@@ -50,8 +50,8 @@ theorem figureOneFinalScheduledIdealPhaseStart_scaled_isWarm
     let target : Measure (AmbientSpace q.n) :=
       if phase = 0 then figureOneScheduledAcceptedTargetAt q I 0
       else figureOneScheduledAcceptedTargetAt q I (phase - 1)
-    IsWarm (8 * ENNReal.ofReal (speedyAdjacentWarmConstant q))
-      (target.map fun point => accuracyScaleFactor q • point)
+    IsWarm (8 * ENNReal.ofReal (warmConstant q))
+      (target.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase) := by
   dsimp only
   by_cases hzero : phase = 0
@@ -59,12 +59,12 @@ theorem figureOneFinalScheduledIdealPhaseStart_scaled_isWarm
     simp only [if_pos]
     have hwarm8 := initialContractedAcceptedTarget_isWarm_eight q I
     apply hwarm8.mono
-    have hC : (1 : ENNReal) ≤ ENNReal.ofReal (speedyAdjacentWarmConstant q) := by
+    have hC : (1 : ENNReal) ≤ ENNReal.ofReal (warmConstant q) := by
       rw [← ENNReal.ofReal_one]
-      exact ENNReal.ofReal_le_ofReal (speedyAdjacentWarmConstant_one_le q)
+      exact ENNReal.ofReal_le_ofReal (warmConstant_one_le q)
     calc
       (8 : ENNReal) = 8 * 1 := by norm_num
-      _ ≤ 8 * ENNReal.ofReal (speedyAdjacentWarmConstant q) := by gcongr
+      _ ≤ 8 * ENNReal.ofReal (warmConstant q) := by gcongr
   · obtain ⟨previous, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hzero
     simpa [figureOneScheduledAcceptedTargetAt,
       figureOneScheduledSpeedyPiAt] using
@@ -79,7 +79,7 @@ theorem figureOneFinalScheduledGaussianIdealPhaseExpectedCost_le
     (∫⁻ state, countedQueryCost
       ((figureOneFinalScheduledRetainedGaussianPhaseProgram q phase state).run
         oracle.query) ∂figureOneFinalScheduledIdealPhaseStart q I phase) ≤
-      ((384 * (figureOnePhaseSampleCount q (scheduleValue q phase) *
+      ((384 * (phaseSampleCount q (scheduleValue q phase) *
         figureOneFinalScheduledBalancedParameters.retryLimit q
           (scheduleValue q phase) *
         figureOneFinalScheduledBalancedParameters.properStride q
@@ -111,9 +111,9 @@ theorem figureOneFinalScheduledGaussianIdealPhaseExpectedCost_le
         (scheduleValue q phase))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (scheduleValue q phase))
-      (figureOnePhaseSampleCount q (scheduleValue q phase))
-      (figureOneScheduledCorrectedProperStride_pos q (scheduleValue q phase)
-        (figureOneSafeRetryCount q - 1))
+      (phaseSampleCount q (scheduleValue q phase))
+      (strideFor_pos q (scheduleValue q phase)
+        (maxRetries q - 1))
   have hcost : (∫⁻ state, countedQueryCost
       ((figureOneFinalScheduledRetainedGaussianPhaseProgram q phase state).run
         oracle.query) ∂figureOneFinalScheduledIdealPhaseStart q I phase) =
@@ -129,8 +129,8 @@ theorem figureOneFinalScheduledGaussianIdealPhaseExpectedCost_le
                 (scheduleValue q phase))
               (figureOneFinalScheduledBalancedParameters.retryLimit q
                 (scheduleValue q phase))
-              (figureOnePhaseSampleCount q (scheduleValue q phase))
-              (accuracyScaleFactor q • point)).run oracle.query)
+              (phaseSampleCount q (scheduleValue q phase))
+              (scaleFactor q • point)).run oracle.query)
         ∂figureOneFinalScheduledIdealPhaseStart q I phase := by
     apply lintegral_congr
     intro state
@@ -149,7 +149,7 @@ theorem figureOneFinalScheduledGaussianIdealPhaseEndpoint_leUpTo
         (figureOneFinalScheduledRetainedGaussianPhaseProgram q phase state).runEstimate
           oracle.query)
       ((figureOneScheduledAcceptedTargetAt q I phase).map some)
-      (figureOnePhaseSampleCount q (scheduleValue q phase) •
+      (phaseSampleCount q (scheduleValue q phase) •
         figureOneCorrectedTransitionBudget q) := by
   let target : Measure (AmbientSpace q.n) :=
     if phase = 0 then figureOneScheduledAcceptedTargetAt q I 0
@@ -165,24 +165,24 @@ theorem figureOneFinalScheduledGaussianIdealPhaseEndpoint_leUpTo
     split_ifs <;> rfl
   have hwarm := figureOneFinalScheduledIdealPhaseStart_scaled_isWarm q I phase
   have hwarm' : IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
-      (target.map fun point => accuracyScaleFactor q • point)
+      (ENNReal.ofReal (8 * warmConstant q))
+      (target.map fun point => scaleFactor q • point)
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I (scheduleValue q phase))
-        (figureOneScheduledProposalRadius q (scheduleValue q phase))
+        (proposalRadius q (scheduleValue q phase))
         (scheduleValue q phase)) := by
     rw [ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 8)]
     simpa [figureOneScheduledSpeedyPiAt] using hwarm
-  have hcount : 0 < figureOnePhaseSampleCount q (scheduleValue q phase) := by
-    unfold figureOnePhaseSampleCount
+  have hcount : 0 < phaseSampleCount q (scheduleValue q phase) := by
+    unfold phaseSampleCount
     split_ifs
-    · exact figureOneFixedSampleCount_pos q
-    · exact figureOneSampleCount_pos q
+    · exact fixedRateSampleCount_pos q
+    · exact sampleCount_pos q
   have hphase := bind_figureOneFinalScheduledCompleteRetainedKernel_leUpTo
     q I (scheduleValue_pos q phase)
     (measurable_gaussianRatioWeight (scheduleValue q phase)
       (scheduleValue q (phase + 1)))
-    (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)
+    (phaseSampleCount q (scheduleValue q phase) - 1)
     (figureOneFinalScheduledIdealPhaseStart q I phase) target
     (priorError := 0)
     (by rw [hideal]; exact MeasureLeUpTo.refl (target.map some)) hwarm'
@@ -193,7 +193,7 @@ theorem figureOneFinalScheduledGaussianIdealPhaseEndpoint_leUpTo
         (scheduleValue q phase)
         (gaussianRatioWeight (scheduleValue q phase)
           (scheduleValue q (phase + 1)))
-        (figureOnePhaseSampleCount q (scheduleValue q phase) - 1) := by
+        (phaseSampleCount q (scheduleValue q phase) - 1) := by
     funext state
     exact figureOneFinalScheduledRetainedGaussianPhaseProgram_runEstimate
       q I oracle phase state
@@ -206,11 +206,11 @@ truncated Gaussian retained law only by the rejected Gaussian tail mass. -/
 theorem figureOneAbortInitialRetained_leUpTo_truncated
     (q : VolumeParams) (I : VolumeInput q.n) :
     MeasureLeUpTo
-      ((initialGaussianSamplingMeasure q).map (initialTruncatedOption q I))
+      ((initialGaussianLaw q).map (initialTruncatedOption q I))
       ((truncatedGaussianProbability q I (initialVariance q)
         (initialVariance_pos q) : Measure (AmbientSpace q.n)).map some)
       (ENNReal.ofReal (q.eps / 64)) := by
-  let actual := (initialGaussianSamplingMeasure q).map
+  let actual := (initialGaussianLaw q).map
     (initialTruncatedOption q I)
   let target := (truncatedGaussianProbability q I (initialVariance q)
     (initialVariance_pos q) : Measure (AmbientSpace q.n)).map some
@@ -228,7 +228,7 @@ theorem figureOneAbortInitialRetained_leUpTo_truncated
     (Measure.measurable_dirac.comp measurable_some)
     (fun _ => inferInstance) event hevent
   have hleft :
-      ((initialGaussianSamplingMeasure q).map
+      ((initialGaussianLaw q).map
         (initialTruncatedOption q I)).bind (fun initialPoint =>
           match initialPoint with
           | none => Measure.dirac none
@@ -248,7 +248,7 @@ theorem figureOneAbortInitialRetained_leUpTo_truncated
   change actual event ≤ target event + ENNReal.ofReal (q.eps / 64)
   calc
     actual event =
-        (((initialGaussianSamplingMeasure q).map
+        (((initialGaussianLaw q).map
           (initialTruncatedOption q I)).bind (fun initialPoint =>
             match initialPoint with
             | none => Measure.dirac none
@@ -410,8 +410,8 @@ theorem figureOneFinalScheduledRetainedGaussianPhaseProgram_run_eq_map_ratio
       (scheduleValue q phase))
     (figureOneFinalScheduledBalancedParameters.retryLimit q
       (scheduleValue q phase))
-    (figureOnePhaseSampleCount q (scheduleValue q phase))
-    (accuracyScaleFactor q • point)
+    (phaseSampleCount q (scheduleValue q phase))
+    (scaleFactor q • point)
   have hraw := (scheduledBalancedAccuracyRetryCollect_countedMeasurable
     q I oracle (scheduleValue_pos q phase)
       (measurable_gaussianRatioWeight (scheduleValue q phase)
@@ -422,8 +422,8 @@ theorem figureOneFinalScheduledRetainedGaussianPhaseProgram_run_eq_map_ratio
         (scheduleValue q phase))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (scheduleValue q phase))
-      (figureOnePhaseSampleCount q (scheduleValue q phase))).2
-        (accuracyScaleFactor q • point)
+      (phaseSampleCount q (scheduleValue q phase))).2
+        (scaleFactor q • point)
   have hretained :
       (figureOneFinalScheduledRetainedGaussianPhaseProgram q phase
           (some point)).run oracle.query =
@@ -439,12 +439,12 @@ theorem figureOneFinalScheduledRetainedGaussianPhaseProgram_run_eq_map_ratio
           oracle.query =
         (raw.run oracle.query).map fun outcome =>
           (balancedCoolingAverage
-            (figureOnePhaseSampleCount q (scheduleValue q phase)) outcome.1,
+            (phaseSampleCount q (scheduleValue q phase)) outcome.1,
             outcome.2) := by
     unfold scheduledBalancedCoolingRatioEstimate raw
     exact MembershipOracleProgram.run_bind_pure_eq_map oracle.query _
       (balancedCoolingAverage
-        (figureOnePhaseSampleCount q (scheduleValue q phase)))
+        (phaseSampleCount q (scheduleValue q phase)))
       (measurable_balancedCoolingAverage _) hraw
   rw [hretained, hratio, Measure.map_map]
   · apply Measure.map_congr
@@ -650,7 +650,7 @@ theorem figureOneFinalScheduledRetainedTerminalProgram_map_snd_eq_uniform
       (terminalVariance q))
     (figureOneFinalScheduledBalancedParameters.retryLimit q
       (terminalVariance q))
-    (figureOneSampleCount q) (accuracyScaleFactor q • point)
+    (sampleCount q) (scaleFactor q • point)
   have hraw := (scheduledBalancedAccuracyRetryCollect_countedMeasurable
     q I oracle (terminalVariance_pos' q)
       (measurable_uniformRatioWeight (terminalVariance q))
@@ -660,7 +660,7 @@ theorem figureOneFinalScheduledRetainedTerminalProgram_map_snd_eq_uniform
         (terminalVariance q))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (terminalVariance q))
-      (figureOneSampleCount q)).2 (accuracyScaleFactor q • point)
+      (sampleCount q)).2 (scaleFactor q • point)
   let withState := scheduledBalancedCoolingUniformEstimateWithState
     figureOneFinalScheduledBalancedParameters q (terminalVariance q) point
   have hwithState :=
@@ -678,7 +678,7 @@ theorem figureOneFinalScheduledRetainedTerminalProgram_map_snd_eq_uniform
       unfold withState scheduledBalancedCoolingUniformEstimateWithState raw
       symm
       exact MembershipOracleProgram.map_snd_run_bind_pure oracle.query _
-        (balancedCoolingAverage (figureOneSampleCount q))
+        (balancedCoolingAverage (sampleCount q))
         (measurable_balancedCoolingAverage _) hraw
     _ = ((scheduledBalancedCoolingUniformRatioEstimate
         figureOneFinalScheduledBalancedParameters q (terminalVariance q)
@@ -779,7 +779,7 @@ theorem figureOneFinalScheduledRetainedFullCostProgram_map_snd_eq_pointContinuat
   have hchain :=
     figureOneFinalScheduledRetainedGaussianChain_run_eq_map_coolingProduct
       q I oracle 0 (terminalPhaseSteps q) point
-  rw [← explicitScheduleVariances_eq_scheduledVarianceSegment q] at hchain
+  rw [← coolingSchedule_eq_scheduledVarianceSegment q] at hchain
   have hcompose :=
     MembershipOracleProgram.map_snd_bind_countedContinuation_eq
       oracle.query (cooling.run oracle.query)
@@ -819,12 +819,12 @@ theorem exists_figureOneFinalScheduledGaussianCountedReference
         ((ENNReal.ofReal (q.eps / 64) +
             scheduledBalancedStationaryTargetError q) +
           ∑ phase ∈ Finset.range steps,
-            figureOnePhaseSampleCount q (scheduleValue q phase) •
+            phaseSampleCount q (scheduleValue q phase) •
               figureOneCorrectedTransitionBudget q) ∧
       reference.fst = figureOneFinalScheduledIdealPhaseStart q I steps ∧
       countedQueryCost reference ≤
         1 + ∑ phase ∈ Finset.range steps,
-          ((384 * (figureOnePhaseSampleCount q (scheduleValue q phase) *
+          ((384 * (phaseSampleCount q (scheduleValue q phase) *
             figureOneFinalScheduledBalancedParameters.retryLimit q
               (scheduleValue q phase) *
             figureOneFinalScheduledBalancedParameters.properStride q
@@ -837,7 +837,7 @@ theorem exists_figureOneFinalScheduledGaussianCountedReference
       hinitialStrong.executionMeasurable
   let ideal := figureOneFinalScheduledIdealPhaseStart q I
   let phaseCost : ℕ → ENNReal := fun phase =>
-    ((384 * (figureOnePhaseSampleCount q (scheduleValue q phase) *
+    ((384 * (phaseSampleCount q (scheduleValue q phase) *
       figureOneFinalScheduledBalancedParameters.retryLimit q
         (scheduleValue q phase) *
       figureOneFinalScheduledBalancedParameters.properStride q
@@ -845,7 +845,7 @@ theorem exists_figureOneFinalScheduledGaussianCountedReference
   have hreference := exists_countedReference_iteratedKernelLaw
     (figureOneFinalScheduledGaussianCountedKernel q oracle.query)
     ((figureOneAbortInitialSample q).run oracle.query) ideal
-    (fun phase => figureOnePhaseSampleCount q (scheduleValue q phase) •
+    (fun phase => phaseSampleCount q (scheduleValue q phase) •
       figureOneCorrectedTransitionBudget q)
     phaseCost
     (fun phase => by
@@ -906,12 +906,12 @@ theorem exists_figureOneFinalScheduledGaussianPrefixProgram_countedReference
         ((ENNReal.ofReal (q.eps / 64) +
             scheduledBalancedStationaryTargetError q) +
           ∑ phase ∈ Finset.range steps,
-            figureOnePhaseSampleCount q (scheduleValue q phase) •
+            phaseSampleCount q (scheduleValue q phase) •
               figureOneCorrectedTransitionBudget q) ∧
       reference.fst = figureOneFinalScheduledIdealPhaseStart q I steps ∧
       countedQueryCost reference ≤
         1 + ∑ phase ∈ Finset.range steps,
-          ((384 * (figureOnePhaseSampleCount q (scheduleValue q phase) *
+          ((384 * (phaseSampleCount q (scheduleValue q phase) *
             figureOneFinalScheduledBalancedParameters.retryLimit q
               (scheduleValue q phase) *
             figureOneFinalScheduledBalancedParameters.properStride q
@@ -927,7 +927,7 @@ theorem figureOneFinalScheduledTerminalIdealExpectedCost_le
       ((figureOneFinalScheduledRetainedTerminalProgram q state).run
         oracle.query)
       ∂figureOneFinalScheduledIdealPhaseStart q I (terminalPhaseSteps q)) ≤
-      ((384 * (figureOneSampleCount q *
+      ((384 * (sampleCount q *
         figureOneFinalScheduledBalancedParameters.retryLimit q
           (terminalVariance q) *
         figureOneFinalScheduledBalancedParameters.properStride q
@@ -945,11 +945,11 @@ theorem figureOneFinalScheduledTerminalIdealExpectedCost_le
       (terminalPhaseSteps q)
   have hsub : terminalPhaseSteps q - 1 = previous := by omega
   have hwarm : IsWarm
-      (8 * ENNReal.ofReal (speedyAdjacentWarmConstant q))
-      (target.map fun point => accuracyScaleFactor q • point)
+      (8 * ENNReal.ofReal (warmConstant q))
+      (target.map fun point => scaleFactor q • point)
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I (terminalVariance q))
-        (figureOneScheduledProposalRadius q (terminalVariance q))
+        (proposalRadius q (terminalVariance q))
         (terminalVariance q)) := by
     simpa [figureOneScheduledSpeedyPiAt, scheduleValue_terminalPhaseSteps,
       target, hsteps.ne', hsub] using hwarmBase
@@ -966,9 +966,9 @@ theorem figureOneFinalScheduledTerminalIdealExpectedCost_le
         (terminalVariance q))
       (figureOneFinalScheduledBalancedParameters.retryLimit q
         (terminalVariance q))
-      (figureOneSampleCount q)
-      (figureOneScheduledCorrectedProperStride_pos q (terminalVariance q)
-        (figureOneSafeRetryCount q - 1))
+      (sampleCount q)
+      (strideFor_pos q (terminalVariance q)
+        (maxRetries q - 1))
   have hcost : (∫⁻ state, countedQueryCost
       ((figureOneFinalScheduledRetainedTerminalProgram q state).run
         oracle.query)
@@ -984,8 +984,8 @@ theorem figureOneFinalScheduledTerminalIdealExpectedCost_le
                 (terminalVariance q))
               (figureOneFinalScheduledBalancedParameters.retryLimit q
                 (terminalVariance q))
-              (figureOneSampleCount q)
-              (accuracyScaleFactor q • point)).run oracle.query)
+              (sampleCount q)
+              (scaleFactor q • point)).run oracle.query)
         ∂figureOneFinalScheduledIdealPhaseStart q I
           (terminalPhaseSteps q) := by
     apply lintegral_congr
@@ -1012,16 +1012,16 @@ theorem exists_figureOneFinalScheduledRetainedComplete_countedReference
         ((ENNReal.ofReal (q.eps / 64) +
             scheduledBalancedStationaryTargetError q) +
           ∑ phase ∈ Finset.range (terminalPhaseSteps q),
-            figureOnePhaseSampleCount q (scheduleValue q phase) •
+            phaseSampleCount q (scheduleValue q phase) •
               figureOneCorrectedTransitionBudget q) ∧
       countedQueryCost reference ≤
         1 + ∑ phase ∈ Finset.range (terminalPhaseSteps q),
-          ((384 * (figureOnePhaseSampleCount q (scheduleValue q phase) *
+          ((384 * (phaseSampleCount q (scheduleValue q phase) *
             figureOneFinalScheduledBalancedParameters.retryLimit q
               (scheduleValue q phase) *
             figureOneFinalScheduledBalancedParameters.properStride q
               (scheduleValue q phase)) : ℕ) : ENNReal) +
-          ((384 * (figureOneSampleCount q *
+          ((384 * (sampleCount q *
             figureOneFinalScheduledBalancedParameters.retryLimit q
               (terminalVariance q) *
             figureOneFinalScheduledBalancedParameters.properStride q
@@ -1067,21 +1067,21 @@ reference is the warm-shadow work already bounded by the scheduled rate. -/
 theorem figureOneFinalScheduledRetainedCompleteCostEnvelope_le
     (q : VolumeParams) :
     1 + ∑ phase ∈ Finset.range (terminalPhaseSteps q),
-          ((384 * (figureOnePhaseSampleCount q (scheduleValue q phase) *
+          ((384 * (phaseSampleCount q (scheduleValue q phase) *
             figureOneFinalScheduledBalancedParameters.retryLimit q
               (scheduleValue q phase) *
             figureOneFinalScheduledBalancedParameters.properStride q
               (scheduleValue q phase)) : ℕ) : ENNReal) +
-        ((384 * (figureOneSampleCount q *
+        ((384 * (sampleCount q *
           figureOneFinalScheduledBalancedParameters.retryLimit q
             (terminalVariance q) *
           figureOneFinalScheduledBalancedParameters.properStride q
             (terminalVariance q)) : ℕ) : ENNReal) ≤
       ENNReal.ofReal ((9 * 10 ^ 29) *
-        volumeScheduledBaseComplexityRate q) := by
+        runRate q) := by
   calc
     _ = (1 : ENNReal) +
-        ((384 * (figureOneSafeRetryCount q *
+        ((384 * (maxRetries q *
           figureOneScheduledProperWork q) : ℕ) : ENNReal) := by
       simp only [figureOneFinalScheduledBalancedParameters_retryLimit,
         figureOneScheduledProperWork, Nat.cast_add, Nat.cast_mul,
@@ -1098,13 +1098,13 @@ theorem figureOneFinalScheduledRetainedCompleteCostEnvelope_le
 query-cap transfer. -/
 theorem figureOne_exactChance_countReference_budget_le
     (q : VolumeParams) :
-    (figureOneDependentMaxSampleCount q *
-      figureOneDependentPhaseCount q) •
-        ENNReal.ofReal (figureOnePerSampleMixingError q) ≤
+    (largestSampleCount q *
+      numPhases q) •
+        ENNReal.ofReal (sampleMixingError q) ≤
       ENNReal.ofReal (1 / 1280 : ℝ) := by
-  let error := (figureOneDependentMaxSampleCount q *
-      figureOneDependentPhaseCount q) •
-        ENNReal.ofReal (figureOnePerSampleMixingError q)
+  let error := (largestSampleCount q *
+      numPhases q) •
+        ENNReal.ofReal (sampleMixingError q)
   have herrTop : error ≠ ⊤ := by
     dsimp [error]
     rw [nsmul_eq_mul]
@@ -1112,28 +1112,28 @@ theorem figureOne_exactChance_countReference_budget_le
       ENNReal.ofReal_ne_top
   rw [← ENNReal.toReal_le_toReal herrTop ENNReal.ofReal_ne_top]
   rw [ENNReal.toReal_ofReal (by norm_num : (0 : ℝ) ≤ 1 / 1280)]
-  have heq : 3 * error.toReal = figureOneDependentEpsilon q := by
+  have heq : 3 * error.toReal = dependenceError q := by
     simpa [error] using figureOne_exactChance_budget q
-  have hdep0 := figureOneDependentEpsilon_nonneg q
-  have ha := figureOneDependentAlpha_ge_1024 q
-  have ha8 : (8 : ℝ) ≤ figureOneDependentAlpha q := by linarith
-  have hpow : (512 : ℝ) ≤ figureOneDependentAlpha q ^ 3 := by
+  have hdep0 := dependenceError_nonneg q
+  have ha := truncationLevel_ge_1024 q
+  have ha8 : (8 : ℝ) ≤ truncationLevel q := by linarith
+  have hpow : (512 : ℝ) ≤ truncationLevel q ^ 3 := by
     calc
       (512 : ℝ) = 8 ^ 3 := by norm_num
-      _ ≤ figureOneDependentAlpha q ^ 3 :=
+      _ ≤ truncationLevel q ^ 3 :=
         pow_le_pow_left₀ (by norm_num) ha8 3
   have hsmall := figureOneDependent_smallness q
   have hscaled :
-      4 * figureOneDependentEpsilon q * (320 / 3 : ℝ) ≤
-        4 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 3 := by
+      4 * dependenceError q * (320 / 3 : ℝ) ≤
+        4 * dependenceError q *
+          truncationLevel q ^ 3 := by
     have h320 : (320 / 3 : ℝ) ≤
-        figureOneDependentAlpha q ^ 3 := by
+        truncationLevel q ^ 3 := by
       norm_num at hpow ⊢
       linarith
     exact mul_le_mul_of_nonneg_left h320
       (mul_nonneg (by norm_num) hdep0)
-  have hdep : figureOneDependentEpsilon q ≤ (3 / 1280 : ℝ) := by
+  have hdep : dependenceError q ≤ (3 / 1280 : ℝ) := by
     nlinarith
   nlinarith
 
@@ -1143,11 +1143,11 @@ theorem figureOneFinalScheduledCountReferenceError_le
     (q : VolumeParams) :
     scheduledBalancedStationaryTargetError q +
         ∑ phase ∈ Finset.range (terminalPhaseSteps q),
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q ≤
       ENNReal.ofReal (1 / 1280 : ℝ) := by
   let delta := figureOneCorrectedTransitionBudget q
-  let maxSamples := figureOneDependentMaxSampleCount q
+  let maxSamples := largestSampleCount q
   have hstationary : scheduledBalancedStationaryTargetError q ≤ delta := by
     calc
       scheduledBalancedStationaryTargetError q ≤
@@ -1166,29 +1166,29 @@ theorem figureOneFinalScheduledCountReferenceError_le
       delta = 1 * delta := by simp
       _ ≤ (maxSamples : ENNReal) * delta := by
         gcongr
-        exact_mod_cast figureOneDependentMaxSampleCount_pos q
+        exact_mod_cast largestSampleCount_pos q
   have hsum :
       (∑ phase ∈ Finset.range (terminalPhaseSteps q),
-        figureOnePhaseSampleCount q (scheduleValue q phase) • delta) ≤
+        phaseSampleCount q (scheduleValue q phase) • delta) ≤
       ∑ phase ∈ Finset.range (terminalPhaseSteps q),
         maxSamples • delta := by
     apply Finset.sum_le_sum
     intro phase hphase
     gcongr
-    exact figureOnePhaseSampleCount_le_dependentMax q (scheduleValue q phase)
+    exact phaseSampleCount_le_dependentMax q (scheduleValue q phase)
   calc
     scheduledBalancedStationaryTargetError q +
         ∑ phase ∈ Finset.range (terminalPhaseSteps q),
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q ≤
       delta + ∑ phase ∈ Finset.range (terminalPhaseSteps q),
         maxSamples • delta := add_le_add hstationary hsum
     _ ≤ maxSamples • delta +
         ∑ phase ∈ Finset.range (terminalPhaseSteps q),
           maxSamples • delta := add_le_add hdeltaMax le_rfl
-    _ = (maxSamples * figureOneDependentPhaseCount q) • delta := by
+    _ = (maxSamples * numPhases q) • delta := by
       simp only [Finset.sum_const, Finset.card_range, nsmul_eq_mul,
-        figureOneDependentPhaseCount]
+        numPhases]
       push_cast
       ring_nf
     _ ≤ ENNReal.ofReal (1 / 1280 : ℝ) := by

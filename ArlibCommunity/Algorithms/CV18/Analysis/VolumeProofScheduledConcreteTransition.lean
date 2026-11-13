@@ -16,55 +16,55 @@ open MeasureTheory ProbabilityTheory Metric Set
 open scoped ENNReal Pointwise
 open _root_.Arlib _root_.Arlib.MarkovChains
 
-theorem figureOneCorrectedBlockMixingError_le_one
+theorem blockMixingError_le_one
     (q : VolumeParams) (attempts : ℕ) :
-    figureOneCorrectedBlockMixingError q attempts ≤ 1 := by
-  unfold figureOneCorrectedBlockMixingError
-  have h := figureOnePerSampleMixingError_le_one q
+    blockMixingError q attempts ≤ 1 := by
+  unfold blockMixingError
+  have h := sampleMixingError_le_one q
   have ha : 0 ≤ (attempts : ℝ) := Nat.cast_nonneg attempts
   have hden : 1 ≤ 4 * (attempts + 1 : ℝ) := by nlinarith
   rw [div_le_one (by nlinarith)]
   exact h.trans hden
 
-theorem figureOneFinalScheduledLocalCapRequirement_le_proposalCap
+theorem proposalCapRequirement_le_proposalCap
     (q : VolumeParams) (sigma2 : ℝ) :
-    figureOneFinalScheduledLocalCapRequirement q sigma2 ≤
+    proposalCapRequirement q sigma2 ≤
       (figureOneFinalScheduledBalancedParameters.proposalCap q sigma2 : ℝ) := by
   calc
-    figureOneFinalScheduledLocalCapRequirement q sigma2 ≤
-        (Nat.ceil (figureOneFinalScheduledLocalCapRequirement q sigma2) : ℝ) :=
+    proposalCapRequirement q sigma2 ≤
+        (Nat.ceil (proposalCapRequirement q sigma2) : ℝ) :=
       Nat.le_ceil _
     _ ≤ (figureOneFinalScheduledBalancedParameters.proposalCap q sigma2 : ℝ) := by
       rw [figureOneFinalScheduledBalancedParameters_proposalCap,
-        figureOneFinalScheduledLocalProposalCap]
+        maxProposals]
       exact_mod_cast Nat.le_add_left _ _
 
 /-- The enlarged final local cap pays the cap-exhaustion half of every first
 block comparison. -/
 theorem figureOneFinalScheduled_firstCapBudget
     (q : VolumeParams) (sigma2 : ℝ) :
-    let attempts := figureOneSafeRetryCount q - 1
+    let attempts := maxRetries q - 1
     let stride := figureOneFinalScheduledBalancedParameters.properStride q sigma2
     let cap := figureOneFinalScheduledBalancedParameters.proposalCap q sigma2
-    (stride : ENNReal) * ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) ≤
+    (stride : ENNReal) * ENNReal.ofReal (16 * warmConstant q) ≤
       (ENNReal.ofReal (1 / 2) * (cap : ENNReal)) *
         figureOneCorrectedBlockBudget q attempts := by
   dsimp only
-  let attempts := figureOneSafeRetryCount q - 1
+  let attempts := maxRetries q - 1
   let stride := figureOneFinalScheduledBalancedParameters.properStride q sigma2
   let cap := figureOneFinalScheduledBalancedParameters.proposalCap q sigma2
-  let e := figureOneCorrectedBlockMixingError q attempts
-  let W := 16 * speedyAdjacentWarmConstant q
-  have he : 0 < e := figureOneCorrectedBlockMixingError_pos q attempts
+  let e := blockMixingError q attempts
+  let W := 16 * warmConstant q
+  have he : 0 < e := blockMixingError_pos q attempts
   have hW : 0 ≤ W := by
     dsimp [W]
-    positivity [speedyAdjacentWarmConstant_pos q]
+    positivity [warmConstant_pos q]
   have hs : 0 ≤ (stride : ℝ) := Nat.cast_nonneg stride
   have hcap :
       2 * (stride : ℝ) * W / e ≤ (cap : ℝ) := by
-    simpa [figureOneFinalScheduledLocalCapRequirement, attempts, stride, cap,
+    simpa [proposalCapRequirement, attempts, stride, cap,
       e, W, figureOneFinalScheduledBalancedParameters_properStride] using
-      figureOneFinalScheduledLocalCapRequirement_le_proposalCap q sigma2
+      proposalCapRequirement_le_proposalCap q sigma2
   have hreal : (stride : ℝ) * W ≤ (1 / 2 : ℝ) * (cap : ℝ) * e := by
     rw [div_le_iff₀ he] at hcap
     nlinarith
@@ -79,7 +79,7 @@ theorem figureOneFinalScheduled_firstCapBudget
 
 theorem figureOneFinalScheduled_retryCapBudget
     (q : VolumeParams) (sigma2 : ℝ) :
-    let attempts := figureOneSafeRetryCount q - 1
+    let attempts := maxRetries q - 1
     let stride := figureOneFinalScheduledBalancedParameters.properStride q sigma2
     let cap := figureOneFinalScheduledBalancedParameters.proposalCap q sigma2
     (stride : ENNReal) * 2 ≤
@@ -87,32 +87,32 @@ theorem figureOneFinalScheduled_retryCapBudget
         figureOneCorrectedBlockBudget q attempts := by
   dsimp only
   have htwo : (2 : ENNReal) ≤
-      ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+      ENNReal.ofReal (16 * warmConstant q) := by
     rw [show (2 : ENNReal) = ENNReal.ofReal (2 : ℝ) by norm_num]
     exact ENNReal.ofReal_le_ofReal <| by
-      have hM := speedyAdjacentWarmConstant_one_le q
+      have hM := warmConstant_one_le q
       nlinarith
   calc
     (figureOneFinalScheduledBalancedParameters.properStride q sigma2 : ENNReal) * 2 ≤
         (figureOneFinalScheduledBalancedParameters.properStride q sigma2 : ENNReal) *
-          ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by gcongr
+          ENNReal.ofReal (16 * warmConstant q) := by gcongr
     _ ≤ _ := figureOneFinalScheduled_firstCapBudget q sigma2
 
 theorem scheduledBalancedRejectedStationary_isWarm
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     let K := figureOneScheduledPhaseBody q I sigma2
-    let delta := figureOneScheduledProposalRadius q sigma2
+    let delta := proposalRadius q sigma2
     let pi := ellGaussianProb K delta sigma2
     Arlib.IsWarm 2
       (Arlib.condOn
         (scheduledBalancedRejectedStateMeasure q I sigma2 pi) Set.univ) pi := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let pi := ellGaussianProb K delta sigma2
   let branch := scheduledBalancedRejectedStateMeasure q I sigma2 pi
-  have hdelta : 0 < delta := figureOneScheduledProposalRadius_pos q hsigma2
+  have hdelta : 0 < delta := proposalRadius_pos q hsigma2
   have hmass0 : ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 :=
     ellGaussianMeasure_univ_ne_zero
       (figureOneScheduledPhaseBody_measurable q I sigma2)
@@ -146,13 +146,13 @@ theorem scheduledBalancedRejectedRetryBlock_leUpTo_stationary
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (proposalCap properStride attempts : ℕ) (hproposalCap : 0 < proposalCap)
-    (hwalk : figureOneScheduledCorrectedRetryWalkRequirement
+    (hwalk : retryWalkRequirement
       q sigma2 attempts ≤ (properStride : ℝ))
     (hcapBudget : (properStride : ENNReal) * 2 ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) *
         figureOneCorrectedBlockBudget q attempts) :
     let K := figureOneScheduledPhaseBody q I sigma2
-    let delta := figureOneScheduledProposalRadius q sigma2
+    let delta := proposalRadius q sigma2
     let pi := ellGaussianProb K delta sigma2
     let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
     let rejectedProb := Arlib.condOn rejected Set.univ
@@ -163,11 +163,11 @@ theorem scheduledBalancedRejectedRetryBlock_leUpTo_stationary
       (pi.map some) (2 * figureOneCorrectedBlockBudget q attempts) := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let pi := ellGaussianProb K delta sigma2
   let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
   let rejectedProb := Arlib.condOn rejected Set.univ
-  have hdelta : 0 < delta := figureOneScheduledProposalRadius_pos q hsigma2
+  have hdelta : 0 < delta := proposalRadius_pos q hsigma2
   have hmass0 : ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 :=
     ellGaussianMeasure_univ_ne_zero
       (figureOneScheduledPhaseBody_measurable q I sigma2)
@@ -197,28 +197,28 @@ theorem scheduledBalancedRejectedRetryBlock_leUpTo_stationary
       scheduledBalancedRejectedStationary_isWarm q I hsigma2
   have hmixWithin := mixesWithin_scheduledPhaseBody_figureOne_cv18
     q I hsigma2 (M := 2)
-      (eps := figureOneCorrectedBlockMixingError q attempts)
+      (eps := blockMixingError q attempts)
       (by norm_num) (by simpa using hwarm)
-      (figureOneCorrectedBlockMixingError_pos q attempts)
-      (figureOneCorrectedBlockMixingError_le_one q attempts) hwalk
+      (blockMixingError_pos q attempts)
+      (blockMixingError_le_one q attempts) hwalk
   have hmix : Arlib.TVLe
       (iterate
         (lazy (speedyMetropolisGaussian K delta sigma2))
         rejectedProb properStride)
-      pi (ENNReal.ofReal (figureOneCorrectedBlockMixingError q attempts)) := by
+      pi (ENNReal.ofReal (blockMixingError q attempts)) := by
     simpa [MixesWithin, K, delta, pi, rejected, rejectedProb] using hmixWithin
   have hblock :=
     bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationary_of_isWarm
       q I hsigma2 proposalCap properStride hproposalCap rejectedProb hwarm
         hcapBudget hmix
   have hmixEq : ENNReal.ofReal
-      (figureOneCorrectedBlockMixingError q attempts) =
+      (blockMixingError q attempts) =
         figureOneCorrectedBlockBudget q attempts := by
     rfl
   simpa [hmixEq, two_mul] using hblock
 
 /-- A two-warm perturbation of a retained law which is itself
-`8 * speedyAdjacentWarmConstant`-warm has the `16 *` warmness used by the
+`8 * warmConstant`-warm has the `16 *` warmness used by the
 scheduled first-block stride. -/
 theorem scheduledBalancedFirstBlock_leUpTo_stationary
     (q : VolumeParams) (I : VolumeInput q.n)
@@ -226,14 +226,14 @@ theorem scheduledBalancedFirstBlock_leUpTo_stationary
     (proposalCap properStride attempts : ℕ) (hproposalCap : 0 < proposalCap)
     (rho : Measure (AmbientSpace q.n)) [IsProbabilityMeasure rho]
     (hbaseWarm : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) rho
+      (ENNReal.ofReal (8 * warmConstant q)) rho
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
-    (hwalk : figureOneScheduledCorrectedFirstWalkRequirement
+        (proposalRadius q sigma2) sigma2))
+    (hwalk : firstWalkRequirement
       q sigma2 attempts ≤ (properStride : ℝ))
     (hcapBudget : (properStride : ENNReal) *
-        ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) ≤
+        ENNReal.ofReal (16 * warmConstant q) ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) *
         figureOneCorrectedBlockBudget q attempts) :
     ∀ mu : Measure (AmbientSpace q.n),
@@ -244,17 +244,17 @@ theorem scheduledBalancedFirstBlock_leUpTo_stationary
             properStride)).map optionSnd)
         ((ellGaussianProb
           (figureOneScheduledPhaseBody q I sigma2)
-          (figureOneScheduledProposalRadius q sigma2) sigma2).map some)
+          (proposalRadius q sigma2) sigma2).map some)
         (2 * figureOneCorrectedBlockBudget q attempts) := by
   intro mu hmu hwarm
   let _ : IsProbabilityMeasure mu := hmu
   let pi := ellGaussianProb
     (figureOneScheduledPhaseBody q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
-  have hMpos : 0 < speedyAdjacentWarmConstant q :=
-    speedyAdjacentWarmConstant_pos q
+    (proposalRadius q sigma2) sigma2
+  have hMpos : 0 < warmConstant q :=
+    warmConstant_pos q
   have hwarmPi : Arlib.IsWarm
-      (ENNReal.ofReal (16 * speedyAdjacentWarmConstant q)) mu pi := by
+      (ENNReal.ofReal (16 * warmConstant q)) mu pi := by
     have htrans := hwarm.trans hbaseWarm
     convert htrans using 1
     rw [show (2 : ENNReal) = ENNReal.ofReal (2 : ℝ) by norm_num,
@@ -262,38 +262,38 @@ theorem scheduledBalancedFirstBlock_leUpTo_stationary
     congr 1
     ring
   have hmixWithin := mixesWithin_scheduledPhaseBody_figureOne_cv18
-    q I hsigma2 (M := 16 * speedyAdjacentWarmConstant q)
-      (eps := figureOneCorrectedBlockMixingError q attempts)
+    q I hsigma2 (M := 16 * warmConstant q)
+      (eps := blockMixingError q attempts)
       (by
-        have hM := speedyAdjacentWarmConstant_one_le q
+        have hM := warmConstant_one_le q
         nlinarith)
-      hwarmPi (figureOneCorrectedBlockMixingError_pos q attempts)
-      (figureOneCorrectedBlockMixingError_le_one q attempts)
+      hwarmPi (blockMixingError_pos q attempts)
+      (blockMixingError_le_one q attempts)
       (by
-        change figureOneScheduledWalkRequirement q sigma2
-          (16 * speedyAdjacentWarmConstant q)
-            (figureOneCorrectedBlockMixingError q attempts) ≤
+        change walkRequirement q sigma2
+          (16 * warmConstant q)
+            (blockMixingError q attempts) ≤
               (properStride : ℝ) at hwalk
-        simpa only [figureOneScheduledWalkRequirement] using hwalk)
+        simpa only [walkRequirement] using hwalk)
   have hmix : Arlib.TVLe
       (iterate
         (lazy (speedyMetropolisGaussian
           (figureOneScheduledPhaseBody q I sigma2)
-          (figureOneScheduledProposalRadius q sigma2) sigma2))
+          (proposalRadius q sigma2) sigma2))
         mu properStride)
-      pi (ENNReal.ofReal (figureOneCorrectedBlockMixingError q attempts)) := by
+      pi (ENNReal.ofReal (blockMixingError q attempts)) := by
     simpa [MixesWithin, pi] using hmixWithin
   have hblock :=
     bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationary_of_isWarm
       q I hsigma2 proposalCap properStride hproposalCap mu hwarmPi
         hcapBudget hmix
   have hmixEq : ENNReal.ofReal
-      (figureOneCorrectedBlockMixingError q attempts) =
+      (blockMixingError q attempts) =
         figureOneCorrectedBlockBudget q attempts := by rfl
   simpa [hmixEq, two_mul] using hblock
 
 /-- The complete concrete scheduled transition estimate.  Once the retained
-law for the phase is `8 * speedyAdjacentWarmConstant`-warm for that phase's
+law for the phase is `8 * warmConstant`-warm for that phase's
 scheduled speedy stationary law, every two-warm input law is within the full
 corrected transition budget of the ideal restricted Gaussian observation.
 All stride, local-cap, retry-tail, and accepted-target premises are discharged
@@ -303,10 +303,10 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (rho : Measure (AmbientSpace q.n)) [IsProbabilityMeasure rho]
     (hbaseWarm : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) rho
+      (ENNReal.ofReal (8 * warmConstant q)) rho
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)) :
+        (proposalRadius q sigma2) sigma2)) :
     ∀ mu : Measure (AmbientSpace q.n),
       IsProbabilityMeasure mu → Arlib.IsWarm 2 mu rho →
       Arlib.TVLe
@@ -320,13 +320,13 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe
         (figureOneCorrectedTransitionBudget q) := by
   intro mu hmu hwarm
   let _ : IsProbabilityMeasure mu := hmu
-  let attempts := figureOneSafeRetryCount q - 1
+  let attempts := maxRetries q - 1
   let proposalCap :=
     figureOneFinalScheduledBalancedParameters.proposalCap q sigma2
   let properStride :=
     figureOneFinalScheduledBalancedParameters.properStride q sigma2
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let pi := ellGaussianProb K delta sigma2
   have hproposalCap : 0 < proposalCap := by
     simpa [proposalCap] using
@@ -342,7 +342,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe
         (by
           simpa [properStride, attempts,
             figureOneFinalScheduledBalancedParameters_properStride] using
-            figureOneScheduledCorrectedFirstWalkRequirement_le_stride
+            firstWalkRequirement_le_stride
               q sigma2 attempts)
         (by
           simpa [properStride, proposalCap, attempts] using
@@ -362,12 +362,12 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe
           (by
             simpa [properStride, attempts,
               figureOneFinalScheduledBalancedParameters_properStride] using
-              figureOneScheduledCorrectedRetryWalkRequirement_le_stride
+              retryWalkRequirement_le_stride
                 q sigma2 attempts)
           (by
             simpa [properStride, proposalCap, attempts] using
               figureOneFinalScheduled_retryCapBudget q sigma2)
-  have hdelta : 0 < delta := figureOneScheduledProposalRadius_pos q hsigma2
+  have hdelta : 0 < delta := proposalRadius_pos q hsigma2
   have hmass0 : ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 := by
     dsimp [K]
     exact ellGaussianMeasure_univ_ne_zero
@@ -399,7 +399,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe
     bind_scheduledBalancedTransition_tvLe_truncatedGaussian_corrected
       q I hsigma2 proposalCap properStride attempts mu hfirst hretry htail
   simpa [proposalCap, properStride, attempts,
-    Nat.sub_add_cancel (figureOneSafeRetryCount_pos q)] using htv
+    Nat.sub_add_cancel (maxRetries_pos q)] using htv
 
 #print axioms figureOneFinalScheduled_firstCapBudget
 #print axioms figureOneFinalScheduled_retryCapBudget

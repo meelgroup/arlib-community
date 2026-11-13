@@ -110,7 +110,7 @@ theorem figureOneFinalScheduledAbortBaseProgram_countedQueryCost_le_initial_add
     cases initialPoint <;> rfl
   have hintegral :
       (∫⁻ initialPoint, countedQueryCost ((tail initialPoint).run oracle.query)
-          ∂((initialGaussianSamplingMeasure q).map
+          ∂((initialGaussianLaw q).map
             (initialTruncatedOption q I))) ≤
         ∫⁻ point, countedQueryCost ((continuation point).run oracle.query)
           ∂(truncatedGaussianProbability q I (initialVariance q)
@@ -118,13 +118,13 @@ theorem figureOneFinalScheduledAbortBaseProgram_countedQueryCost_le_initial_add
     calc
       _ = ∫⁻ point, countedQueryCost
           ((tail (initialTruncatedOption q I point)).run oracle.query)
-            ∂(initialGaussianSamplingMeasure q) := by
+            ∂(initialGaussianLaw q) := by
         simpa only using
-          (lintegral_map (μ := initialGaussianSamplingMeasure q) htailCostMeas
+          (lintegral_map (μ := initialGaussianLaw q) htailCostMeas
             (measurable_initialTruncatedOption q I))
       _ = ∫⁻ point in truncatedBody q I,
           countedQueryCost ((continuation point).run oracle.query)
-            ∂(initialGaussianSamplingMeasure q) := by
+            ∂(initialGaussianLaw q) := by
         rw [← lintegral_indicator (truncatedBody_measurable q I)]
         apply lintegral_congr
         intro point
@@ -133,7 +133,7 @@ theorem figureOneFinalScheduledAbortBaseProgram_countedQueryCost_le_initial_add
         · simp [initialTruncatedOption, hp, tail,
             MembershipOracleProgram.countedQueryCost_pure]
       _ ≤ _ := lintegral_mono'
-        (initialGaussianSamplingMeasure_restrict_truncatedBody_le q I) le_rfl
+        (initialGaussianLaw_restrict_truncatedBody_le q I) le_rfl
   rw [hbase, MembershipOracleProgram.countedQueryCost_bind_eq_add oracle.query
     (figureOneAbortInitialSample q) tail
     (figureOneAbortInitialSample_countedStronglyMeasurable q I oracle)

@@ -242,7 +242,7 @@ theorem slowPhase_reaches_one_or_terminal (q : VolumeParams) :
 theorem scheduleValue_le_one_imp_lt_slowPhaseSteps (q : VolumeParams)
     {k : ℕ} (hk : scheduleValue q k ≤ 1) : k < slowPhaseSteps q := by
   have hT : 1 < terminalVariance q := by
-    unfold terminalVariance volumeTerminalScale
+    unfold terminalVariance terminalScale
     have hn : (3 : ℝ) ≤ q.n := by exact_mod_cast q.dim_ok
     exact lt_of_lt_of_le (by norm_num : (1 : ℝ) < 3)
       (hn.trans (le_trans (le_max_left _ _) (le_max_right _ _)))
@@ -638,20 +638,20 @@ theorem sum_accelerated_scheduleValue_le (q : VolumeParams) :
 
 noncomputable def explicitVolumeCoolingSchedule (q : VolumeParams) :
     VolumeCoolingSchedule q where
-  variances := explicitScheduleVariances q
-  nonempty := by simp [explicitScheduleVariances]
-  start := by simp [explicitScheduleVariances, scheduleValue]
+  variances := coolingSchedule q
+  nonempty := by simp [coolingSchedule]
+  start := by simp [coolingSchedule, scheduleValue]
   step := by
-    rw [explicitScheduleVariances, List.isChain_ofFn]
+    rw [coolingSchedule, List.isChain_ofFn]
     intro i hi
     exact scheduleValue_succ q i
   positive := by
     intro s hs
-    rw [explicitScheduleVariances, List.mem_ofFn'] at hs
+    rw [coolingSchedule, List.mem_ofFn'] at hs
     obtain ⟨i, rfl⟩ := hs
     exact scheduleValue_pos q i
   finish := by
-    rw [explicitScheduleVariances]
+    rw [coolingSchedule]
     have hne : (List.ofFn fun i : Fin (terminalPhaseSteps q + 1) =>
         scheduleValue q i) ≠ [] := by simp
     rw [List.getLast?_eq_some_getLast hne]
@@ -760,7 +760,7 @@ theorem explicitSchedule_length_bound (q : VolumeParams) :
     have := Nat.add_le_add_right (terminalPhaseSteps_le_total q) 1
     simpa [totalPhaseSteps, N₁, N₂, Nat.add_assoc] using this
   have hfinal := le_trans hstop hnat
-  simpa [explicitVolumeCoolingSchedule, explicitScheduleVariances, totalPhaseSteps,
+  simpa [explicitVolumeCoolingSchedule, coolingSchedule, totalPhaseSteps,
     N₁, N₂, D, M, n, Lₙ, Lₑ, mul_assoc] using hfinal
 
 theorem volume_proof_schedule :

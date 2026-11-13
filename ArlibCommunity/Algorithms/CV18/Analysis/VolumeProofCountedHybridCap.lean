@@ -104,39 +104,39 @@ theorem figureOneFinalScheduledQueryCap_failure_le_of_countReference
       reference delta)
     (href : ∫⁻ count, (count : ENNReal) ∂reference ≤
       ENNReal.ofReal ((9 * 10 ^ 29) *
-        volumeScheduledBaseComplexityRate q))
+        runRate q))
     (hdelta : delta ≤ ENNReal.ofReal (1 / 640 : ℝ)) :
-    (program.withQueryCap (figureOneFinalScheduledQueryBudget q)).runEstimate
+    (program.withQueryCap (queryBudget q)).runEstimate
         oracle {none} ≤ ENNReal.ofReal (1 / 64 : ℝ) := by
-  let budget := figureOneFinalScheduledQueryBudget q
+  let budget := queryBudget q
   let tail := reference {count | budget < count}
   let base := ENNReal.ofReal
-    (figureOneFinalScheduledExpectedCostConstant *
-      volumeScheduledBaseComplexityRate q)
+    (runCostConstant *
+      runRate q)
   have hbase0 : base ≠ 0 := by
     exact ENNReal.ofReal_ne_zero_iff.mpr <|
-      mul_pos figureOneFinalScheduledExpectedCostConstant_pos
-        (volumeScheduledBaseComplexityRate_pos q)
+      mul_pos runCostConstant_pos
+        (runRate_pos q)
   have hbaseTop : base ≠ ∞ := ENNReal.ofReal_ne_top
   have hbudget : ENNReal.ofReal (64 : ℝ) * base ≤
       (budget + 1 : ENNReal) := by
-    have hceil : 64 * figureOneFinalScheduledExpectedCostConstant *
-        volumeScheduledBaseComplexityRate q ≤ (budget : ℝ) := by
-      simpa [budget, figureOneFinalScheduledQueryBudget,
-        globalQueryBudgetOfRate] using Nat.le_ceil
-          (64 * figureOneFinalScheduledExpectedCostConstant *
-            volumeScheduledBaseComplexityRate q)
+    have hceil : 64 * runCostConstant *
+        runRate q ≤ (budget : ℝ) := by
+      simpa [budget, queryBudget,
+        budgetOfRate] using Nat.le_ceil
+          (64 * runCostConstant *
+            runRate q)
     have h := ENNReal.ofReal_le_ofReal hceil
     rw [ENNReal.ofReal_natCast] at h
     calc
       ENNReal.ofReal (64 : ℝ) * base =
           ENNReal.ofReal (64 *
-            (figureOneFinalScheduledExpectedCostConstant *
-              volumeScheduledBaseComplexityRate q)) := by
+            (runCostConstant *
+              runRate q)) := by
         rw [ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 64)]
       _ = ENNReal.ofReal (64 *
-          figureOneFinalScheduledExpectedCostConstant *
-            volumeScheduledBaseComplexityRate q) := by ring_nf
+          runCostConstant *
+            runRate q) := by ring_nf
       _ ≤ (budget : ENNReal) := h
       _ ≤ (budget + 1 : ENNReal) := by
         exact_mod_cast Nat.le_add_right budget 1
@@ -150,15 +150,15 @@ theorem figureOneFinalScheduledQueryCap_failure_le_of_countReference
     exact_mod_cast Nat.add_one_le_iff
   rw [← hevent] at hmarkov
   have hwarmEq : ENNReal.ofReal ((9 * 10 ^ 29) *
-      volumeScheduledBaseComplexityRate q) =
+      runRate q) =
       base * ENNReal.ofReal (9 / 10 : ℝ) := by
     rw [← ENNReal.ofReal_mul
-      (by positivity [figureOneFinalScheduledExpectedCostConstant_pos,
-        volumeScheduledBaseComplexityRate_pos q] :
-        0 ≤ figureOneFinalScheduledExpectedCostConstant *
-          volumeScheduledBaseComplexityRate q)]
+      (by positivity [runCostConstant_pos,
+        runRate_pos q] :
+        0 ≤ runCostConstant *
+          runRate q)]
     congr 1
-    simp only [figureOneFinalScheduledExpectedCostConstant]
+    simp only [runCostConstant]
     ring
   have hscaled : base * (tail * ENNReal.ofReal (64 : ℝ)) ≤
       base * ENNReal.ofReal (9 / 10 : ℝ) := by
@@ -168,7 +168,7 @@ theorem figureOneFinalScheduledQueryCap_failure_le_of_countReference
       _ ≤ (budget + 1 : ENNReal) * tail := by gcongr
       _ ≤ ∫⁻ count, (count : ENNReal) ∂reference := hmarkov
       _ ≤ ENNReal.ofReal ((9 * 10 ^ 29) *
-          volumeScheduledBaseComplexityRate q) := href
+          runRate q) := href
       _ = base * ENNReal.ofReal (9 / 10 : ℝ) := hwarmEq
   have htailScaled : tail * ENNReal.ofReal (64 : ℝ) ≤
       ENNReal.ofReal (9 / 10 : ℝ) := by
@@ -216,39 +216,39 @@ theorem figureOneFinalScheduledQueryCap_failure_le_of_countedReference
     (hdom : MeasureLeUpTo (program.run oracle) reference delta)
     (href : ∫⁻ outcome, (outcome.2 : ENNReal) ∂reference ≤
       ENNReal.ofReal ((9 * 10 ^ 29) *
-        volumeScheduledBaseComplexityRate q))
+        runRate q))
     (hdelta : delta ≤ ENNReal.ofReal (1 / 640 : ℝ)) :
-    (program.withQueryCap (figureOneFinalScheduledQueryBudget q)).runEstimate
+    (program.withQueryCap (queryBudget q)).runEstimate
         oracle {none} ≤ ENNReal.ofReal (1 / 64 : ℝ) := by
-  let budget := figureOneFinalScheduledQueryBudget q
+  let budget := queryBudget q
   let tail := reference {outcome | budget < outcome.2}
   let base := ENNReal.ofReal
-    (figureOneFinalScheduledExpectedCostConstant *
-      volumeScheduledBaseComplexityRate q)
+    (runCostConstant *
+      runRate q)
   have hbase0 : base ≠ 0 := by
     exact ENNReal.ofReal_ne_zero_iff.mpr <|
-      mul_pos figureOneFinalScheduledExpectedCostConstant_pos
-        (volumeScheduledBaseComplexityRate_pos q)
+      mul_pos runCostConstant_pos
+        (runRate_pos q)
   have hbaseTop : base ≠ ∞ := ENNReal.ofReal_ne_top
   have hbudget : ENNReal.ofReal (64 : ℝ) * base ≤
       (budget + 1 : ENNReal) := by
-    have hceil : 64 * figureOneFinalScheduledExpectedCostConstant *
-        volumeScheduledBaseComplexityRate q ≤ (budget : ℝ) := by
-      simpa [budget, figureOneFinalScheduledQueryBudget,
-        globalQueryBudgetOfRate] using Nat.le_ceil
-          (64 * figureOneFinalScheduledExpectedCostConstant *
-            volumeScheduledBaseComplexityRate q)
+    have hceil : 64 * runCostConstant *
+        runRate q ≤ (budget : ℝ) := by
+      simpa [budget, queryBudget,
+        budgetOfRate] using Nat.le_ceil
+          (64 * runCostConstant *
+            runRate q)
     have h := ENNReal.ofReal_le_ofReal hceil
     rw [ENNReal.ofReal_natCast] at h
     calc
       ENNReal.ofReal (64 : ℝ) * base =
           ENNReal.ofReal (64 *
-            (figureOneFinalScheduledExpectedCostConstant *
-              volumeScheduledBaseComplexityRate q)) := by
+            (runCostConstant *
+              runRate q)) := by
         rw [ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 64)]
       _ = ENNReal.ofReal (64 *
-          figureOneFinalScheduledExpectedCostConstant *
-            volumeScheduledBaseComplexityRate q) := by ring_nf
+          runCostConstant *
+            runRate q) := by ring_nf
       _ ≤ (budget : ENNReal) := h
       _ ≤ (budget + 1 : ENNReal) := by
         exact_mod_cast Nat.le_add_right budget 1
@@ -264,15 +264,15 @@ theorem figureOneFinalScheduledQueryCap_failure_le_of_countedReference
     exact_mod_cast Nat.add_one_le_iff
   rw [← hevent] at hmarkov
   have hwarmEq : ENNReal.ofReal ((9 * 10 ^ 29) *
-      volumeScheduledBaseComplexityRate q) =
+      runRate q) =
       base * ENNReal.ofReal (9 / 10 : ℝ) := by
     rw [← ENNReal.ofReal_mul
-      (by positivity [figureOneFinalScheduledExpectedCostConstant_pos,
-        volumeScheduledBaseComplexityRate_pos q] :
-        0 ≤ figureOneFinalScheduledExpectedCostConstant *
-          volumeScheduledBaseComplexityRate q)]
+      (by positivity [runCostConstant_pos,
+        runRate_pos q] :
+        0 ≤ runCostConstant *
+          runRate q)]
     congr 1
-    simp only [figureOneFinalScheduledExpectedCostConstant]
+    simp only [runCostConstant]
     ring
   have hscaled : base * (tail * ENNReal.ofReal (64 : ℝ)) ≤
       base * ENNReal.ofReal (9 / 10 : ℝ) := by
@@ -282,7 +282,7 @@ theorem figureOneFinalScheduledQueryCap_failure_le_of_countedReference
       _ ≤ (budget + 1 : ENNReal) * tail := by gcongr
       _ ≤ ∫⁻ outcome, (outcome.2 : ENNReal) ∂reference := hmarkov
       _ ≤ ENNReal.ofReal ((9 * 10 ^ 29) *
-          volumeScheduledBaseComplexityRate q) := href
+          runRate q) := href
       _ = base * ENNReal.ofReal (9 / 10 : ℝ) := hwarmEq
   have htailScaled : tail * ENNReal.ofReal (64 : ℝ) ≤
       ENNReal.ofReal (9 / 10 : ℝ) := by
@@ -327,10 +327,10 @@ theorem figureOneFinalScheduledAbortQueryCap_failure_le_of_countedReference
       reference delta)
     (href : ∫⁻ outcome, (outcome.2 : ENNReal) ∂reference ≤
       ENNReal.ofReal ((9 * 10 ^ 29) *
-        volumeScheduledBaseComplexityRate q))
+        runRate q))
     (hdelta : delta ≤ ENNReal.ofReal (1 / 640 : ℝ)) :
     ((figureOneFinalScheduledAbortBaseProgram q).withQueryCap
-        (figureOneFinalScheduledQueryBudget q)).runEstimate oracle.query
+        (queryBudget q)).runEstimate oracle.query
           {none} ≤ ENNReal.ofReal (1 / 64 : ℝ) := by
   exact figureOneFinalScheduledQueryCap_failure_le_of_countedReference
     q oracle.query (figureOneFinalScheduledAbortBaseProgram q)

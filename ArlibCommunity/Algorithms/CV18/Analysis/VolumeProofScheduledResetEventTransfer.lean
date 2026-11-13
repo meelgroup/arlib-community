@@ -95,7 +95,7 @@ only the resulting deviation event is transferred to the executable history.
 theorem initializedScheduledRetainedHistory_relativeDeviation_le_of_coordinate_moments
     (q : VolumeParams) (I : VolumeInput q.n) (phase count : ℕ)
     (hcount : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q)
+    (hcountMax : count ≤ largestSampleCount q)
     {A factor delta eps : ℝ} (hA : 0 < A) (hdelta : 0 ≤ delta)
     (heps : 0 < eps)
     (hcoordinateSecond :
@@ -119,7 +119,7 @@ theorem initializedScheduledRetainedHistory_relativeDeviation_le_of_coordinate_m
               (scheduleValue q (phase + 1)) x
             ∂(truncatedGaussianProbability q I (scheduleValue q phase)
               (scheduleValue_pos q phase) : Measure (AmbientSpace q.n))) ^ 2 +
-        3 * (figureOneDependentEpsilon q +
+        3 * (dependenceError q +
             3 * (scheduledResetReferenceError q (count - 1)).toReal) ^
               (1 / 3 : ℝ) *
           (1 - 1 / (count : ℝ)) * A ^ 2 ≤
@@ -332,7 +332,7 @@ retained-sum shadow's live-average event. -/
 theorem figureOneScheduledGaussianPhaseTarget_deviation_eq_retainedSum
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
     (target eps : ℝ) :
-    let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+    let count := phaseSampleCount q (scheduleValue q phase)
     let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
       (scheduleValue q (phase + 1))
     let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -349,7 +349,7 @@ theorem figureOneScheduledGaussianPhaseTarget_deviation_eq_retainedSum
         {state | eps * target ≤
           |retainedLiveTotal state / (count : ℝ) - target|} := by
   dsimp only
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
     (scheduleValue q (phase + 1))
   let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -381,14 +381,14 @@ theorem figureOneScheduledGaussianPhaseTarget_deviation_le_of_initializedHistory
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
     (target eps : ℝ) (bound : ENNReal)
     (hhistory :
-      let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+      let count := phaseSampleCount q (scheduleValue q phase)
       let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
         (scheduleValue q (phase + 1))
       (initializedScheduledRetainedHistoryLaw q I phase (count - 1))
           {history | eps * target ≤
             |sequentialPrefixSum (retainedSampleObservation weight) count history /
                 (count : ℝ) - target|} ≤ bound) :
-    let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+    let count := phaseSampleCount q (scheduleValue q phase)
     let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
       (scheduleValue q (phase + 1))
     let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -404,7 +404,7 @@ theorem figureOneScheduledGaussianPhaseTarget_deviation_le_of_initializedHistory
           |scheduledBalancedPhaseRatio result - target|} ≤
       bound + shadow {state | state.2 = none} := by
   dsimp only at hhistory ⊢
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
     (scheduleValue q (phase + 1))
   let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -417,7 +417,7 @@ theorem figureOneScheduledGaussianPhaseTarget_deviation_le_of_initializedHistory
     initial (count - 1)
   rw [figureOneScheduledGaussianPhaseTarget_deviation_eq_retainedSum]
   exact retainedSum_liveDeviation_le_of_initializedHistory
-    q I phase count (figureOnePhaseSampleCount_pos q _)
+    q I phase count (phaseSampleCount_pos q _)
       target eps bound hhistory
 
 /-- On the public Gaussian phase target, the clamped raw-output projection
@@ -429,7 +429,7 @@ theorem map_figureOneScheduledGaussianPhaseTarget_liveRaw_eq_ratio
         figureOneScheduledTraceLiveRawOutput =
       (figureOneScheduledGaussianPhaseTarget q I phase).map
         scheduledBalancedPhaseRatio := by
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
     (scheduleValue q (phase + 1))
   let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -443,7 +443,7 @@ theorem map_figureOneScheduledGaussianPhaseTarget_liveRaw_eq_ratio
     initial (count - 1)
   let output := balancedCoolingAverage count ∘
     (retainedSumOutput (S := AmbientSpace q.n))
-  have hcount : 0 < count := figureOnePhaseSampleCount_pos q _
+  have hcount : 0 < count := phaseSampleCount_pos q _
   have hcountReal : (0 : ℝ) < count := by exact_mod_cast hcount
   have hweight : Measurable weight :=
     measurable_gaussianRatioWeight (scheduleValue q phase)
@@ -496,14 +496,14 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_deviation_le_of_target
         |scheduledBalancedPhaseRatio result - target|} ≤ bound) :
     (scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q))
+        (numPhases q))
       {trace | eps * target ≤
         |scheduledBalancedTracePhaseVariable q (phase + 1) trace - target|} ≤
       bound + (figureOneCorrectedTransitionBudget q +
         figureOneScheduledRetainedError q phase) := by
   let finalLaw := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   let W := scheduledBalancedTracePhaseVariable q (phase + 1)
   let scalarDeviation : Set ℝ :=
     {value | eps * target ≤ |value - target|}

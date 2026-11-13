@@ -360,7 +360,7 @@ theorem accuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_stationary
   let pi := Arlib.MarkovChains.ellGaussianProb K delta sigma2
   let accepted :=
     (pi.withDensity (accuracyGaussianRejectionAcceptance q I sigma2)).map
-      (fun x => (accuracyScaleFactor q)⁻¹ • x)
+      (fun x => (scaleFactor q)⁻¹ • x)
   have hdelta : 0 < delta := figureOneProposalRadius_pos q hsigma2
   have hmass0 : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2
       Set.univ ≠ 0 := by

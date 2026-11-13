@@ -17,46 +17,46 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open scoped BigOperators
 
-theorem volumeScheduledBaseComplexityRate_pos (q : VolumeParams) :
-    0 < volumeScheduledBaseComplexityRate q := by
-  unfold volumeScheduledBaseComplexityRate
-  have hbase : 0 < volumeBaseComplexityRate q :=
-    volumeBaseComplexityRate_pos_balanced q
-  have haccuracy : 0 < figureOneScheduledAccuracyLog q :=
-    lt_of_lt_of_le zero_lt_one (figureOneScheduledAccuracyLog_one_le q)
+theorem runRate_pos (q : VolumeParams) :
+    0 < runRate q := by
+  unfold runRate
+  have hbase : 0 < baseRate q :=
+    baseRate_pos_balanced q
+  have haccuracy : 0 < accuracyLog q :=
+    lt_of_lt_of_le zero_lt_one (accuracyLog_one_le q)
   have hmix : 0 < protectedLog
-      (1 / figureOneCorrectedBlockMixingError q
-        (figureOneSafeRetryCount q - 1)) :=
+      (1 / blockMixingError q
+        (maxRetries q - 1)) :=
     lt_of_lt_of_le zero_lt_one (le_max_left _ _)
   exact mul_pos (mul_pos hbase haccuracy) (sq_pos_of_pos hmix)
 
-theorem volumeBaseComplexityRate_le_scheduled (q : VolumeParams) :
-    volumeBaseComplexityRate q ≤ volumeScheduledBaseComplexityRate q := by
-  unfold volumeScheduledBaseComplexityRate
-  have hbase : 0 ≤ volumeBaseComplexityRate q :=
-    (volumeBaseComplexityRate_pos_balanced q).le
-  have hA : 1 ≤ figureOneScheduledAccuracyLog q :=
-    figureOneScheduledAccuracyLog_one_le q
+theorem baseRate_le_scheduled (q : VolumeParams) :
+    baseRate q ≤ runRate q := by
+  unfold runRate
+  have hbase : 0 ≤ baseRate q :=
+    (baseRate_pos_balanced q).le
+  have hA : 1 ≤ accuracyLog q :=
+    accuracyLog_one_le q
   have hB : 1 ≤ protectedLog
-      (1 / figureOneCorrectedBlockMixingError q
-        (figureOneSafeRetryCount q - 1)) := le_max_left _ _
+      (1 / blockMixingError q
+        (maxRetries q - 1)) := le_max_left _ _
   calc
-    volumeBaseComplexityRate q = volumeBaseComplexityRate q * 1 * 1 := by ring
-    _ ≤ volumeBaseComplexityRate q * figureOneScheduledAccuracyLog q *
-        protectedLog (1 / figureOneCorrectedBlockMixingError q
-          (figureOneSafeRetryCount q - 1)) ^ 2 := by
+    baseRate q = baseRate q * 1 * 1 := by ring
+    _ ≤ baseRate q * accuracyLog q *
+        protectedLog (1 / blockMixingError q
+          (maxRetries q - 1)) ^ 2 := by
       gcongr
       nlinarith [sq_nonneg (protectedLog
-        (1 / figureOneCorrectedBlockMixingError q
-          (figureOneSafeRetryCount q - 1)) - 1)]
+        (1 / blockMixingError q
+          (maxRetries q - 1)) - 1)]
 
-theorem volumeScheduledBaseComplexityRate_one_le (q : VolumeParams) :
-    1 ≤ volumeScheduledBaseComplexityRate q := by
+theorem runRate_one_le (q : VolumeParams) :
+    1 ≤ runRate q := by
   let n : ℝ := q.n
   let M : ℝ := max 1 q.roundness
   let L : ℝ := protectedLog (n / q.eps)
   let Le : ℝ := protectedLog (1 / q.eps)
-  let H : ℝ := protectedLog (volumeTerminalScale q)
+  let H : ℝ := protectedLog (terminalScale q)
   let R : ℝ := M * n ^ 3 / q.eps ^ 2 * Le ^ 2 * L ^ 2 * H ^ 2
   have hn : 3 ≤ n := by
     dsimp [n]
@@ -77,9 +77,9 @@ theorem volumeScheduledBaseComplexityRate_one_le (q : VolumeParams) :
       simpa only [one_mul] using he2le.trans (hmul hM hn3)
     exact hmul (hmul (hmul hfirst (one_le_pow₀ hLe))
       (one_le_pow₀ hL)) (one_le_pow₀ hH)
-  have hbase : volumeBaseComplexityRate q = R := by
-    dsimp [volumeBaseComplexityRate, R, M, n, Le, L, H, terminalVariance]
-  exact (hbase.symm ▸ hR).trans (volumeBaseComplexityRate_le_scheduled q)
+  have hbase : baseRate q = R := by
+    dsimp [baseRate, R, M, n, Le, L, H, terminalVariance]
+  exact (hbase.symm ▸ hR).trans (baseRate_le_scheduled q)
 
 /-- Exact expected-cost target consumed by the generalized capstone. -/
 def FigureOneScheduledBalancedExpectedQueryCost
@@ -87,14 +87,14 @@ def FigureOneScheduledBalancedExpectedQueryCost
     (C : ℝ) : Prop :=
   ∫⁻ outcome, (outcome.2 : ENNReal)
       ∂((figureOneScheduledBalancedBaseProgram q).run oracle.query) ≤
-    ENNReal.ofReal (C * volumeScheduledBaseComplexityRate q)
+    ENNReal.ofReal (C * runRate q)
 
 noncomputable def figureOneScheduledProperWork (q : VolumeParams) : ℕ :=
   (∑ k ∈ Finset.range (terminalPhaseSteps q),
-      figureOnePhaseSampleCount q (scheduleValue q k) *
+      phaseSampleCount q (scheduleValue q k) *
         figureOneScheduledBalancedParameters.properStride q
           (scheduleValue q k)) +
-    figureOneSampleCount q *
+    sampleCount q *
       figureOneScheduledBalancedParameters.properStride q (terminalVariance q)
 
 /-- Pointwise stride overhead lifts without loss through all phase and sample
@@ -109,31 +109,31 @@ theorem figureOneScheduledProperWork_le_mul_old
       overhead *
         (figureOneCoolingQueryBudget q
             (explicitVolumeCoolingSchedule q).variances +
-          figureOneSampleCount q *
+          sampleCount q *
             figureOneWalkSteps q (terminalVariance q)) := by
   rw [figureOneCoolingQueryBudget_explicit]
   unfold figureOneScheduledProperWork
   calc
     (∑ k ∈ Finset.range (terminalPhaseSteps q),
-        figureOnePhaseSampleCount q (scheduleValue q k) *
+        phaseSampleCount q (scheduleValue q k) *
           figureOneScheduledBalancedParameters.properStride q
             (scheduleValue q k)) +
-        figureOneSampleCount q *
+        sampleCount q *
           figureOneScheduledBalancedParameters.properStride q
             (terminalVariance q) ≤
       (∑ k ∈ Finset.range (terminalPhaseSteps q),
-        figureOnePhaseSampleCount q (scheduleValue q k) *
+        phaseSampleCount q (scheduleValue q k) *
           (overhead * figureOneWalkSteps q (scheduleValue q k))) +
-        figureOneSampleCount q *
+        sampleCount q *
           (overhead * figureOneWalkSteps q (terminalVariance q)) := by
       gcongr with k hk
       · exact hstride _
       · exact hstride _
     _ = overhead *
         ((∑ k ∈ Finset.range (terminalPhaseSteps q),
-          figureOnePhaseSampleCount q (scheduleValue q k) *
+          phaseSampleCount q (scheduleValue q k) *
             figureOneWalkSteps q (scheduleValue q k)) +
-          figureOneSampleCount q *
+          sampleCount q *
             figureOneWalkSteps q (terminalVariance q)) := by
       rw [Nat.mul_add, Finset.mul_sum]
       apply congrArg₂ (· + ·)
@@ -153,14 +153,14 @@ theorem figureOneScheduledProperWork_le_mul_ceil_rate
         overhead * figureOneWalkSteps q sigma2) :
     ∃ C : ℝ, 0 < C ∧ ∀ q,
       figureOneScheduledProperWork q ≤
-        overhead * Nat.ceil (C * volumeBaseComplexityRate q) := by
+        overhead * Nat.ceil (C * baseRate q) := by
   obtain ⟨C, hC, hbaseAll⟩ := figureOne_base_query_cost
   refine ⟨C, hC, ?_⟩
   intro q
   have hbase : figureOneCoolingQueryBudget q
           (explicitVolumeCoolingSchedule q).variances +
-        figureOneSampleCount q * figureOneWalkSteps q (terminalVariance q) ≤
-      Nat.ceil (C * volumeBaseComplexityRate q) := by
+        sampleCount q * figureOneWalkSteps q (terminalVariance q) ≤
+      Nat.ceil (C * baseRate q) := by
     have hone := hbaseAll q
     omega
   exact (figureOneScheduledProperWork_le_mul_old q overhead (hstride q)).trans

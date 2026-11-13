@@ -427,7 +427,7 @@ theorem scheduledBalancedTraceChronologicalPhaseVariable_append_eq
     (q : VolumeParams) {m j : ℕ}
     {trace : ScheduledBalancedCoolingTrace q.n}
     (hvalid : ScheduledBalancedCoolingTraceValid m trace)
-    (hmphase : m ≤ figureOneDependentPhaseCount q)
+    (hmphase : m ≤ numPhases q)
     (hj1 : 1 ≤ j) (hjm : j ≤ m)
     (result : Option (ℝ × AmbientSpace q.n)) :
     scheduledBalancedTraceChronologicalPhaseVariable q j
@@ -540,10 +540,10 @@ of its chronological trace coordinates. -/
 theorem dependentPhaseSampleProduct_scheduledBalancedTrace_eq
     (q : VolumeParams) (trace : ScheduledBalancedCoolingTrace q.n)
     (hvalid : ScheduledBalancedCoolingTraceValid
-      (figureOneDependentPhaseCount q) trace) :
+      (numPhases q) trace) :
     dependentPhaseSampleProduct
         (scheduledBalancedTraceChronologicalPhaseVariable q)
-        (figureOneDependentPhaseCount q) trace = trace.1.2.2.1 := by
+        (numPhases q) trace = trace.1.2.2.1 := by
   unfold dependentPhaseSampleProduct
   rw [hvalid.2.1]
   apply Finset.prod_congr rfl

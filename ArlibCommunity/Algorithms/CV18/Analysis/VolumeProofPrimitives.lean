@@ -11,12 +11,12 @@ namespace ArlibCommunity.Algorithms.CV18
 
 /-! # Concrete Figure-1 oracle programs -/
 
-theorem initialGaussianSamplingMeasure_apply (q : VolumeParams)
+theorem initialGaussianLaw_apply (q : VolumeParams)
     {S : Set (AmbientSpace q.n)} (hS : MeasurableSet S) :
-    initialGaussianSamplingMeasure q S = ENNReal.ofReal
+    initialGaussianLaw q S = ENNReal.ofReal
       ((∫ x in S, gaussianDensity (initialVariance q) x) /
         initialGaussianIntegral q) := by
-  unfold initialGaussianSamplingMeasure
+  unfold initialGaussianLaw
   rw [withDensity_apply _ hS]
   have hZ := initialGaussianIntegral_pos q
   rw [← ofReal_integral_eq_lintegral_ofReal
@@ -28,12 +28,12 @@ theorem initialGaussianSamplingMeasure_apply (q : VolumeParams)
 
 /-- The single initial membership test rejects with only the tail probability
 already budgeted by the all-epsilon starting variance. -/
-theorem initialGaussianSamplingMeasure_body_compl_le
+theorem initialGaussianLaw_body_compl_le
     (q : VolumeParams) (I : VolumeInput q.n) :
-    initialGaussianSamplingMeasure q
+    initialGaussianLaw q
         ((I.body : Set (AmbientSpace q.n))ᶜ) ≤
       ENNReal.ofReal (q.eps / 64) := by
-  rw [initialGaussianSamplingMeasure_apply q I.body.isClosed.measurableSet.compl]
+  rw [initialGaussianLaw_apply q I.body.isClosed.measurableSet.compl]
   apply ENNReal.ofReal_le_ofReal
   rw [div_le_iff₀ (initialGaussianIntegral_pos q)]
   calc
@@ -50,11 +50,11 @@ theorem initialGaussianSamplingMeasure_body_compl_le
         exact Set.compl_subset_compl.mpr I.unitBall_subset hx
     _ ≤ q.eps / 64 * initialGaussianIntegral q := initial_tail_mass_le q
 
-theorem initialGaussianSamplingMeasure_truncatedBody_compl_le
+theorem initialGaussianLaw_truncatedBody_compl_le
     (q : VolumeParams) (I : VolumeInput q.n) :
-    initialGaussianSamplingMeasure q (truncatedBody q I)ᶜ ≤
+    initialGaussianLaw q (truncatedBody q I)ᶜ ≤
       ENNReal.ofReal (q.eps / 64) := by
-  rw [initialGaussianSamplingMeasure_apply q (truncatedBody_measurable q I).compl]
+  rw [initialGaussianLaw_apply q (truncatedBody_measurable q I).compl]
   apply ENNReal.ofReal_le_ofReal
   rw [div_le_iff₀ (initialGaussianIntegral_pos q)]
   calc
@@ -85,7 +85,7 @@ the oracle body or the fixed truncation ball fall back to the origin, which is
 in the truncated body by the unit-ball promise. -/
 noncomputable def figureOneInitialSample (q : VolumeParams) :
     MembershipOracleProgram q.n (Option (AmbientSpace q.n)) :=
-  .randomPoint (initialGaussianSamplingMeasure q) inferInstance fun point =>
+  .randomPoint (initialGaussianLaw q) inferInstance fun point =>
     .query point fun inside =>
       .pure (some (if inside = true ∧
         ‖point‖ ≤ Real.sqrt (terminalVariance q) then point else 0))
@@ -120,7 +120,7 @@ theorem figureOneInitialSample_stronglyMeasurable (q : VolumeParams)
 theorem runEstimate_figureOneInitialSample
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I) :
     (figureOneInitialSample q).runEstimate oracle.query =
-      (initialGaussianSamplingMeasure q).map
+      (initialGaussianLaw q).map
         (some ∘ initialTruncatedFallback q I) := by
   unfold figureOneInitialSample
   simp only [MembershipOracleProgram.runEstimate]
@@ -163,19 +163,19 @@ noncomputable def truncatedMetropolisProposalProgram (q : VolumeParams)
     (sigma2 : ℝ) (current proposal : AmbientSpace q.n) :
     MembershipOracleProgram q.n (AmbientSpace q.n) :=
   .query proposal fun inside =>
-    .randomReal uniformUnitIntervalMeasure inferInstance fun coin =>
+    .randomReal uniformUnit inferInstance fun coin =>
       .pure <| if inside = true ∧
           ‖proposal‖ ≤ Real.sqrt (terminalVariance q) ∧
-          coin ≤ lazyGaussianMetropolisAcceptance sigma2 current proposal
+          coin ≤ lazyAcceptance sigma2 current proposal
         then proposal else current
 
 /-- Estimate-only law of a proposal after the membership answer is read. -/
 noncomputable def truncatedMetropolisProposalEstimateLaw
     {n : ℕ} (oracle : AmbientSpace n → Bool) (terminal sigma2 : ℝ)
     (current proposal : AmbientSpace n) : Measure (AmbientSpace n) :=
-  uniformUnitIntervalMeasure.map fun coin =>
+  uniformUnit.map fun coin =>
     if oracle proposal = true ∧ ‖proposal‖ ≤ Real.sqrt terminal ∧
-        coin ≤ lazyGaussianMetropolisAcceptance sigma2 current proposal
+        coin ≤ lazyAcceptance sigma2 current proposal
       then proposal else current
 
 theorem measurable_truncatedMetropolisProposalEstimateLaw
@@ -193,8 +193,8 @@ theorem measurable_truncatedMetropolisProposalEstimateLaw
       (AmbientSpace q.n × AmbientSpace q.n) × ℝ => ‖p.1.2‖ := by fun_prop
   have haccept : Measurable fun p :
       (AmbientSpace q.n × AmbientSpace q.n) × ℝ =>
-        lazyGaussianMetropolisAcceptance sigma2 p.1.1 p.1.2 := by
-    unfold lazyGaussianMetropolisAcceptance gaussianMetropolisAcceptance
+        lazyAcceptance sigma2 p.1.1 p.1.2 := by
+    unfold lazyAcceptance metropolisAcceptance
     fun_prop
   apply Measurable.ite
   · exact (horacle (measurableSet_singleton true)).inter
@@ -216,13 +216,13 @@ theorem runEstimate_truncatedMetropolisProposalProgram
   have hout : Measurable fun coin : ℝ =>
       if oracle.query proposal = true ∧
           ‖proposal‖ ≤ Real.sqrt (terminalVariance q) ∧
-          coin ≤ lazyGaussianMetropolisAcceptance sigma2 current proposal
+          coin ≤ lazyAcceptance sigma2 current proposal
         then proposal else current := by
     apply Measurable.ite
     · measurability
     · exact measurable_const
     · exact measurable_const
-  rw [Measure.bind_dirac_eq_map uniformUnitIntervalMeasure hout]
+  rw [Measure.bind_dirac_eq_map uniformUnit hout]
 
 theorem truncatedMetropolisProposalProgram_stronglyMeasurable
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
@@ -250,7 +250,7 @@ noncomputable def truncatedMetropolisBallStep (q : VolumeParams)
     (sigma2 : ℝ) (current : AmbientSpace q.n) :
     MembershipOracleProgram q.n (AmbientSpace q.n) :=
   .randomPoint
-      (uniformClosedBallMeasure q.n current (figureOneProposalRadius q sigma2))
+      (uniformBall q.n current (figureOneProposalRadius q sigma2))
       inferInstance fun proposal =>
     truncatedMetropolisProposalProgram q sigma2 current proposal
 
@@ -258,7 +258,7 @@ noncomputable def truncatedMetropolisBallStep (q : VolumeParams)
 noncomputable def truncatedMetropolisBallStepEstimateLaw
     (q : VolumeParams) (oracle : AmbientSpace q.n → Bool) (sigma2 : ℝ)
     (current : AmbientSpace q.n) : Measure (AmbientSpace q.n) :=
-  (centeredClosedBallMeasure q.n (figureOneProposalRadius q sigma2)).bind fun offset =>
+  (centeredBall q.n (figureOneProposalRadius q sigma2)).bind fun offset =>
     truncatedMetropolisProposalEstimateLaw oracle (terminalVariance q) sigma2
       current (current + offset)
 
@@ -296,7 +296,7 @@ theorem runEstimate_truncatedMetropolisBallStep
       truncatedMetropolisProposalEstimateLaw oracle.query
         (terminalVariance q) sigma2 current (current + offset) :=
     hproposal.comp (measurable_const.add measurable_id)
-  unfold truncatedMetropolisBallStepEstimateLaw uniformClosedBallMeasure
+  unfold truncatedMetropolisBallStepEstimateLaw uniformBall
   rw [Measure.bind_apply hs hproposal.aemeasurable,
     Measure.bind_apply hs hoffset.aemeasurable]
   exact lintegral_map (Measure.measurable_coe hs |>.comp hproposal)
@@ -550,22 +550,22 @@ noncomputable def figureOneRatioEstimate (q : VolumeParams)
     (sigma2 tau2 : ℝ) (current : AmbientSpace q.n) :
     MembershipOracleProgram q.n (Option (ℝ × AmbientSpace q.n)) :=
   (collectWalkWeights q sigma2 (figureOneWalkSteps q sigma2)
-      (gaussianRatioWeight sigma2 tau2) (figureOnePhaseSampleCount q sigma2) current).bind
+      (gaussianRatioWeight sigma2 tau2) (phaseSampleCount q sigma2) current).bind
     fun total =>
-      .pure (some (total.1 / (figureOnePhaseSampleCount q sigma2 : ℝ), total.2))
+      .pure (some (total.1 / (phaseSampleCount q sigma2 : ℝ), total.2))
 
 noncomputable def figureOneUniformRatioEstimate (q : VolumeParams)
     (sigma2 : ℝ) (current : AmbientSpace q.n) :
     MembershipOracleProgram q.n (Option ℝ) :=
   (collectWalkWeights q sigma2 (figureOneWalkSteps q sigma2)
-      (uniformRatioWeight sigma2) (figureOneSampleCount q) current).bind
+      (uniformRatioWeight sigma2) (sampleCount q) current).bind
     fun total =>
-      .pure (some (total.1 / (figureOneSampleCount q : ℝ)))
+      .pure (some (total.1 / (sampleCount q : ℝ)))
 
 theorem figureOneRatioEstimate_queryBound (q : VolumeParams)
     (sigma2 tau2 : ℝ) (current : AmbientSpace q.n) :
     (figureOneRatioEstimate q sigma2 tau2 current).QueryBound
-      (figureOnePhaseSampleCount q sigma2 * figureOneWalkSteps q sigma2) := by
+      (phaseSampleCount q sigma2 * figureOneWalkSteps q sigma2) := by
   unfold figureOneRatioEstimate
   exact (collectWalkWeights_queryBound q sigma2 _ _ _ current).bind
     fun total => .pure _ 0
@@ -573,7 +573,7 @@ theorem figureOneRatioEstimate_queryBound (q : VolumeParams)
 theorem figureOneUniformRatioEstimate_queryBound (q : VolumeParams)
     (sigma2 : ℝ) (current : AmbientSpace q.n) :
     (figureOneUniformRatioEstimate q sigma2 current).QueryBound
-      (figureOneSampleCount q * figureOneWalkSteps q sigma2) := by
+      (sampleCount q * figureOneWalkSteps q sigma2) := by
   unfold figureOneUniformRatioEstimate
   exact (collectWalkWeights_queryBound q sigma2 _ _ _ current).bind
     fun total => .pure _ 0
@@ -589,9 +589,9 @@ theorem figureOneRatioEstimate_measurable_and_strong
   have hcollect := collectWalkWeights_measurable_and_strong q I oracle sigma2
     (figureOneWalkSteps q sigma2) (gaussianRatioWeight sigma2 tau2)
     (measurable_gaussianRatioWeight sigma2 tau2)
-      (figureOnePhaseSampleCount q sigma2)
+      (phaseSampleCount q sigma2)
   have hout : Measurable fun total : ℝ × AmbientSpace q.n =>
-      (.pure (some (total.1 / (figureOnePhaseSampleCount q sigma2 : ℝ), total.2)) :
+      (.pure (some (total.1 / (phaseSampleCount q sigma2 : ℝ), total.2)) :
         MembershipOracleProgram q.n (Option (ℝ × AmbientSpace q.n))).runEstimate
           oracle.query := by
     simp only [MembershipOracleProgram.runEstimate]
@@ -602,10 +602,10 @@ theorem figureOneRatioEstimate_measurable_and_strong
         (figureOneRatioEstimate q sigma2 tau2 current).runEstimate oracle.query) =
       (fun current =>
         ((collectWalkWeights q sigma2 (figureOneWalkSteps q sigma2)
-          (gaussianRatioWeight sigma2 tau2) (figureOnePhaseSampleCount q sigma2)
+          (gaussianRatioWeight sigma2 tau2) (phaseSampleCount q sigma2)
             current).runEstimate oracle.query).bind fun total =>
               Measure.dirac
-                (some (total.1 / (figureOnePhaseSampleCount q sigma2 : ℝ), total.2))) by
+                (some (total.1 / (phaseSampleCount q sigma2 : ℝ), total.2))) by
       funext current
       unfold figureOneRatioEstimate
       exact MembershipOracleProgram.runEstimate_bind oracle.query _ _
@@ -625,9 +625,9 @@ theorem figureOneUniformRatioEstimate_measurable_and_strong
         oracle.query := by
   have hcollect := collectWalkWeights_measurable_and_strong q I oracle sigma2
     (figureOneWalkSteps q sigma2) (uniformRatioWeight sigma2)
-    (measurable_uniformRatioWeight sigma2) (figureOneSampleCount q)
+    (measurable_uniformRatioWeight sigma2) (sampleCount q)
   have hout : Measurable fun total : ℝ × AmbientSpace q.n =>
-      (.pure (some (total.1 / (figureOneSampleCount q : ℝ))) :
+      (.pure (some (total.1 / (sampleCount q : ℝ))) :
         MembershipOracleProgram q.n (Option ℝ)).runEstimate oracle.query := by
     simp only [MembershipOracleProgram.runEstimate]
     exact Measure.measurable_dirac.comp <| measurable_some.comp <|
@@ -637,9 +637,9 @@ theorem figureOneUniformRatioEstimate_measurable_and_strong
         (figureOneUniformRatioEstimate q sigma2 current).runEstimate oracle.query) =
       (fun current =>
         ((collectWalkWeights q sigma2 (figureOneWalkSteps q sigma2)
-          (uniformRatioWeight sigma2) (figureOneSampleCount q)
+          (uniformRatioWeight sigma2) (sampleCount q)
             current).runEstimate oracle.query).bind fun total =>
-              Measure.dirac (some (total.1 / (figureOneSampleCount q : ℝ)))) by
+              Measure.dirac (some (total.1 / (sampleCount q : ℝ)))) by
       funext current
       unfold figureOneUniformRatioEstimate
       exact MembershipOracleProgram.runEstimate_bind oracle.query _ _
@@ -1139,7 +1139,7 @@ noncomputable def figureOneCoolingQueryBudget (q : VolumeParams) : List ℝ → 
   | [] => 0
   | [_] => 0
   | sigma2 :: tau2 :: rest =>
-      figureOnePhaseSampleCount q sigma2 * figureOneWalkSteps q sigma2 +
+      phaseSampleCount q sigma2 * figureOneWalkSteps q sigma2 +
         figureOneCoolingQueryBudget q (tau2 :: rest)
 termination_by variances => variances.length
 
@@ -1188,9 +1188,9 @@ theorem figureOneBaseVolumeCooling_queryBound
     (S : (q : VolumeParams) → VolumeCoolingSchedule q) (q : VolumeParams) :
     (baseVolumeCooling figureOnePrimitives S q).QueryBound
       (1 + (figureOneCoolingQueryBudget q (S q).variances +
-        figureOneSampleCount q * figureOneWalkSteps q (terminalVariance q))) := by
+        sampleCount q * figureOneWalkSteps q (terminalVariance q))) := by
   let finalBudget :=
-    figureOneSampleCount q * figureOneWalkSteps q (terminalVariance q)
+    sampleCount q * figureOneWalkSteps q (terminalVariance q)
   have hproduct : ∀ initialPoint,
       ((match initialPoint with
         | none => .pure 0

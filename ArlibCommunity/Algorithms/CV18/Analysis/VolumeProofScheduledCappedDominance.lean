@@ -29,20 +29,20 @@ theorem successfulEndpointLaw_bind_scheduledBalancedAccuracyRetryBlockKernel_le
       iterate
         ((lazy (speedyMetropolisGaussian
           (figureOneScheduledPhaseBody q I sigma2)
-          (figureOneScheduledProposalRadius q sigma2) sigma2)) ^ properStride)
+          (proposalRadius q sigma2) sigma2)) ^ properStride)
         mu 1 := by
   change successfulEndpointLaw
       (mu.bind fun current => cappedProperCollectLaw
         (lazyProperProposalGaussianAux
           (figureOneScheduledPhaseBody q I sigma2)
           (figureOneScheduledPhaseBody_measurable q I sigma2)
-          (figureOneScheduledProposalRadius q sigma2) sigma2)
+          (proposalRadius q sigma2) sigma2)
         (fun _ => 0) proposalCap properStride 1 current) ≤ _
   exact
     successfulEndpointLaw_bind_cappedProperCollectLaw_le_iterate
       (figureOneScheduledPhaseBody q I sigma2)
       (figureOneScheduledPhaseBody_measurable q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2
+      (proposalRadius q sigma2) sigma2
       measurable_const proposalCap properStride 1 mu
 
 /-- A warm input law therefore gives an equally warm successful endpoint
@@ -55,7 +55,7 @@ theorem successfulEndpointLaw_bind_scheduledBalancedAccuracyRetryBlockKernel_isW
     (hinv : Kernel.Invariant
       ((lazy (speedyMetropolisGaussian
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)) ^ properStride) pi) :
+        (proposalRadius q sigma2) sigma2)) ^ properStride) pi) :
     Arlib.IsWarm M
       (successfulEndpointLaw
         (mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
@@ -66,13 +66,13 @@ theorem successfulEndpointLaw_bind_scheduledBalancedAccuracyRetryBlockKernel_isW
           (lazyProperProposalGaussianAux
             (figureOneScheduledPhaseBody q I sigma2)
             (figureOneScheduledPhaseBody_measurable q I sigma2)
-            (figureOneScheduledProposalRadius q sigma2) sigma2)
+            (proposalRadius q sigma2) sigma2)
           (fun _ => 0) proposalCap properStride 1 current)) pi
   exact
     successfulEndpointLaw_bind_cappedProperCollectLaw_isWarm
       (figureOneScheduledPhaseBody q I sigma2)
       (figureOneScheduledPhaseBody_measurable q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2
+      (proposalRadius q sigma2) sigma2
       measurable_const proposalCap properStride 1 hwarm hinv
 
 #print axioms

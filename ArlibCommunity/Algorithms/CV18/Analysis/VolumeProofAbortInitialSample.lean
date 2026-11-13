@@ -74,7 +74,7 @@ theorem figureOneAbortInitialSample_countedStronglyMeasurable
 theorem runEstimate_figureOneAbortInitialSample
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I) :
     (figureOneAbortInitialSample q).runEstimate oracle.query =
-      (initialGaussianSamplingMeasure q).map (initialTruncatedOption q I) := by
+      (initialGaussianLaw q).map (initialTruncatedOption q I) := by
   unfold figureOneAbortInitialSample
   simp only [MembershipOracleProgram.runEstimate]
   have hfun : (fun point : AmbientSpace q.n =>
@@ -109,12 +109,12 @@ theorem runEstimate_figureOneAbortInitialSample
 
 /-- The live law of the aborting initializer is a submeasure of the ideal
 normalized initial Gaussian used by the CV18 warm-start proof. -/
-theorem initialGaussianSamplingMeasure_restrict_truncatedBody_le
+theorem initialGaussianLaw_restrict_truncatedBody_le
     (q : VolumeParams) (I : VolumeInput q.n) :
-    (initialGaussianSamplingMeasure q).restrict (truncatedBody q I) ≤
+    (initialGaussianLaw q).restrict (truncatedBody q I) ≤
       (truncatedGaussianProbability q I (initialVariance q)
         (initialVariance_pos q) : Measure (AmbientSpace q.n)) := by
-  rw [initialGaussianSamplingMeasure_restrict_truncatedBody q I]
+  rw [initialGaussianLaw_restrict_truncatedBody q I]
   intro E
   rw [Measure.smul_apply, smul_eq_mul]
   exact mul_le_of_le_one_left bot_le
@@ -183,7 +183,7 @@ theorem scheduledBalancedAbort_pointContinuation_eq
 
 #print axioms runEstimate_figureOneAbortInitialSample
 #print axioms figureOneAbortInitialSample_countedStronglyMeasurable
-#print axioms initialGaussianSamplingMeasure_restrict_truncatedBody_le
+#print axioms initialGaussianLaw_restrict_truncatedBody_le
 #print axioms scheduledBalancedAbort_coolingProduct_eq
 #print axioms scheduledBalancedAbort_pointContinuation_eq
 

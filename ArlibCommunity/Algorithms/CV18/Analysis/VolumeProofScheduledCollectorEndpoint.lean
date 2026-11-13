@@ -50,7 +50,7 @@ noncomputable def scheduledBalancedRetainedOptionKernel
   | none => Measure.dirac none
   | some current =>
       scheduledBalancedAccuracyTransitionLawAux q I sigma2 proposalCap
-        properStride retryLimit (accuracyScaleFactor q • current)
+        properStride retryLimit (scaleFactor q • current)
 
 theorem scheduledBalancedRetainedOptionKernel_measurable
     (q : VolumeParams) (I : VolumeInput q.n)
@@ -62,9 +62,9 @@ theorem scheduledBalancedRetainedOptionKernel_measurable
     q I hsigma2 proposalCap properStride retryLimit).1
   have hsome : Measurable fun current : AmbientSpace q.n =>
       scheduledBalancedAccuracyTransitionLawAux q I sigma2 proposalCap
-        properStride retryLimit (accuracyScaleFactor q • current) :=
+        properStride retryLimit (scaleFactor q • current) :=
     hT.comp <| (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id
+      scaleFactor q).smul measurable_id
   convert Measurable.optionElim
     (Measure.dirac (none : Option (AmbientSpace q.n))) hsome using 1
   funext state
@@ -118,18 +118,18 @@ theorem map_scheduledBalancedTransitionCollectLaw_optionSnd_generic
         | none => Measure.dirac none
         | some target => Measure.dirac (some
             (total + weight target,
-              (accuracyScaleFactor q)⁻¹ • accuracyScaleFactor q • target))
+              (scaleFactor q)⁻¹ • scaleFactor q • target))
       have htail : Measurable tail := by
         have hsome : Measurable fun target : AmbientSpace q.n =>
             Measure.dirac (some
               (total + weight target,
-                (accuracyScaleFactor q)⁻¹ • accuracyScaleFactor q • target)) :=
+                (scaleFactor q)⁻¹ • scaleFactor q • target)) :=
           Measure.measurable_dirac.comp <| measurable_some.comp <|
             (measurable_const.add hweight).prodMk <|
               ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
-                (accuracyScaleFactor q)⁻¹).smul <|
+                (scaleFactor q)⁻¹).smul <|
                   (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-                    accuracyScaleFactor q).smul measurable_id)
+                    scaleFactor q).smul measurable_id)
         convert Measurable.optionElim
           (Measure.dirac (none : Option (ℝ × AmbientSpace q.n))) hsome using 1
         funext result
@@ -149,7 +149,7 @@ theorem map_scheduledBalancedTransitionCollectLaw_optionSnd_generic
               rw [Measure.map_dirac' hout]
               simp only [optionSnd]
               congr 2
-              rw [inv_smul_smul₀ (accuracyScaleFactor_pos q).ne']
+              rw [inv_smul_smul₀ (scaleFactor_pos q).ne']
         _ = T current := by
           exact Measure.bind_dirac
   | succ samples ih =>
@@ -160,13 +160,13 @@ theorem map_scheduledBalancedTransitionCollectLaw_optionSnd_generic
         | some target =>
             scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
               properStride retryLimit (samples + 1) (total + weight target)
-                (accuracyScaleFactor q • target)
+                (scaleFactor q • target)
       have htail : Measurable tail := by
         have hstate : Measurable fun target : AmbientSpace q.n =>
-            (total + weight target, accuracyScaleFactor q • target) :=
+            (total + weight target, scaleFactor q • target) :=
           (measurable_const.add hweight).prodMk <|
             (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-              accuracyScaleFactor q).smul measurable_id
+              scaleFactor q).smul measurable_id
         have hcollect :=
           (scheduledBalancedTransitionCollectLaw_measurable_and_probability
             q I hsigma2 hweight proposalCap properStride retryLimit
@@ -174,12 +174,12 @@ theorem map_scheduledBalancedTransitionCollectLaw_optionSnd_generic
         have hsome : Measurable fun target : AmbientSpace q.n =>
             scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
               properStride retryLimit (samples + 1) (total + weight target)
-                (accuracyScaleFactor q • target) := by
+                (scaleFactor q • target) := by
           change Measurable ((fun state : ℝ × AmbientSpace q.n =>
             scheduledBalancedTransitionCollectLaw q I sigma2 weight proposalCap
               properStride retryLimit (samples + 1) state.1 state.2) ∘
                 fun target =>
-                  (total + weight target, accuracyScaleFactor q • target))
+                  (total + weight target, scaleFactor q • target))
           exact hcollect.comp hstate
         convert Measurable.optionElim
           (Measure.dirac (none : Option (ℝ × AmbientSpace q.n))) hsome using 1
@@ -203,7 +203,7 @@ theorem map_scheduledBalancedTransitionCollectLaw_optionSnd_generic
         | some target =>
             simpa only [tail, K, scheduledBalancedRetainedOptionKernel] using
               ih (total := total + weight target)
-                (current := accuracyScaleFactor q • target)
+                (current := scaleFactor q • target)
       rw [hpoint]
       rw [iteratedKernelLaw_const_succ_eq_bind K hK (T current) samples]
 

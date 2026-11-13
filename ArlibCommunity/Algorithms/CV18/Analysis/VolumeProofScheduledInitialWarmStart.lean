@@ -17,35 +17,35 @@ open MeasureTheory Metric Set
 open scoped ENNReal Pointwise
 open _root_.Arlib _root_.Arlib.MarkovChains
 
-theorem figureOnePerSampleMixingError_le_eps
-    (q : VolumeParams) : figureOnePerSampleMixingError q ≤ q.eps := by
-  have ha : (1 : ℝ) ≤ figureOneDependentAlpha q :=
-    figureOneDependentAlpha_one_le q
-  have hk : (1 : ℝ) ≤ figureOneDependentMaxSampleCount q := by
-    exact_mod_cast figureOneDependentMaxSampleCount_pos q
-  have hm : (1 : ℝ) ≤ figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
+theorem sampleMixingError_le_eps
+    (q : VolumeParams) : sampleMixingError q ≤ q.eps := by
+  have ha : (1 : ℝ) ≤ truncationLevel q :=
+    truncationLevel_one_le q
+  have hk : (1 : ℝ) ≤ largestSampleCount q := by
+    exact_mod_cast largestSampleCount_pos q
+  have hm : (1 : ℝ) ≤ numPhases q := by
+    exact_mod_cast numPhases_pos q
   have hden1 : 1 ≤
-      4096 * figureOneDependentAlpha q ^ 4 *
-        (figureOneDependentPhaseCount q : ℝ) := by
-    have ha4 : 1 ≤ figureOneDependentAlpha q ^ 4 := one_le_pow₀ ha
+      4096 * truncationLevel q ^ 4 *
+        (numPhases q : ℝ) := by
+    have ha4 : 1 ≤ truncationLevel q ^ 4 := one_le_pow₀ ha
     nlinarith
   have hden2 : 1 ≤
-      3 * (figureOneDependentMaxSampleCount q : ℝ) *
-        (figureOneDependentPhaseCount q : ℝ) := by
+      3 * (largestSampleCount q : ℝ) *
+        (numPhases q : ℝ) := by
     nlinarith
   have he2 : q.eps ^ 2 ≤ q.eps := by
     nlinarith [q.heps.1, q.heps.2]
-  unfold figureOnePerSampleMixingError figureOneDependentEpsilon
+  unfold sampleMixingError dependenceError
   calc
     q.eps ^ 2 /
-          (4096 * figureOneDependentAlpha q ^ 4 *
-            (figureOneDependentPhaseCount q : ℝ)) /
-        (3 * (figureOneDependentMaxSampleCount q : ℝ) *
-          (figureOneDependentPhaseCount q : ℝ))
+          (4096 * truncationLevel q ^ 4 *
+            (numPhases q : ℝ)) /
+        (3 * (largestSampleCount q : ℝ) *
+          (numPhases q : ℝ))
         ≤ q.eps ^ 2 /
-          (4096 * figureOneDependentAlpha q ^ 4 *
-            (figureOneDependentPhaseCount q : ℝ)) :=
+          (4096 * truncationLevel q ^ 4 *
+            (numPhases q : ℝ)) :=
       div_le_self (div_nonneg (sq_nonneg q.eps) (by positivity)) hden2
     _ ≤ q.eps ^ 2 := div_le_self (sq_nonneg q.eps) hden1
     _ ≤ q.eps := he2
@@ -53,23 +53,23 @@ theorem figureOnePerSampleMixingError_le_eps
 theorem protectedLog_dimension_eps_le_scheduledAccuracyLog
     (q : VolumeParams) :
     protectedLog ((q.n : ℝ) / q.eps) ≤
-      figureOneScheduledAccuracyLog q := by
+      accuracyLog q := by
   have hn : (0 : ℝ) < q.n := by
     exact_mod_cast (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)
-  have hcore : figureOneScheduledCoreError q ≤ q.eps := by
-    unfold figureOneScheduledCoreError
+  have hcore : coreMixingError q ≤ q.eps := by
+    unfold coreMixingError
     calc
-      figureOnePerSampleMixingError q / 768 ≤
-          figureOnePerSampleMixingError q := by
-        apply div_le_self (figureOnePerSampleMixingError_pos q).le
+      sampleMixingError q / 768 ≤
+          sampleMixingError q := by
+        apply div_le_self (sampleMixingError_pos q).le
         norm_num
-      _ ≤ q.eps := figureOnePerSampleMixingError_le_eps q
+      _ ≤ q.eps := sampleMixingError_le_eps q
   have hratio : (q.n : ℝ) / q.eps ≤
-      (q.n : ℝ) / figureOneScheduledCoreError q := by
+      (q.n : ℝ) / coreMixingError q := by
     exact div_le_div_of_nonneg_left hn.le
-      (figureOneScheduledCoreError_pos q) hcore
+      (coreMixingError_pos q) hcore
   have hlog : protectedLog ((q.n : ℝ) / q.eps) ≤
-      protectedLog ((q.n : ℝ) / figureOneScheduledCoreError q) := by
+      protectedLog ((q.n : ℝ) / coreMixingError q) := by
     unfold protectedLog
     exact max_le_max le_rfl (Real.log_le_log
       (by positivity [q.heps.1]) hratio)
@@ -78,8 +78,8 @@ theorem protectedLog_dimension_eps_le_scheduledAccuracyLog
 theorem accuracyPhaseRadius_le_scheduledPhaseRadius
     (q : VolumeParams) (sigma2 : ℝ) :
     accuracyPhaseRadius q sigma2 ≤
-      figureOneScheduledPhaseRadius q sigma2 := by
-  unfold accuracyPhaseRadius figureOneScheduledPhaseRadius
+      phaseRadius q sigma2 := by
+  unfold accuracyPhaseRadius phaseRadius
   have hn : (0 : ℝ) ≤ q.n := Nat.cast_nonneg q.n
   have hlog := protectedLog_dimension_eps_le_scheduledAccuracyLog q
   gcongr
@@ -91,12 +91,12 @@ theorem accuracyPhaseInradius_le_scheduledPhaseInradius
   unfold accuracyPhaseInradius figureOneScheduledPhaseInradius
   exact min_le_min le_rfl (accuracyPhaseRadius_le_scheduledPhaseRadius q sigma2)
 
-theorem figureOneScheduledProposalRadius_le_scheduledPhaseInradius
+theorem proposalRadius_le_scheduledPhaseInradius
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    figureOneScheduledProposalRadius q sigma2 ≤
+    proposalRadius q sigma2 ≤
       figureOneScheduledPhaseInradius q sigma2 := by
-  by_cases hsmall : figureOneScheduledPhaseRadius q sigma2 ≤ 1
-  · have hstep := figureOneScheduledProposalRadius_le_inradiusStep
+  by_cases hsmall : phaseRadius q sigma2 ≤ 1
+  · have hstep := proposalRadius_le_inradiusStep
       q hsigma2 hsmall
     have hn : (1 : ℝ) ≤ 2 * q.n := by
       have hn' : (1 : ℝ) ≤ q.n := by
@@ -109,15 +109,15 @@ theorem figureOneScheduledProposalRadius_le_scheduledPhaseInradius
       rw [min_eq_left]
       exact le_of_not_ge hsmall
     rw [hrho]
-    unfold figureOneScheduledProposalRadius
+    unfold proposalRadius
     have hb : 1 ≤ 4096 * Real.sqrt
-        ((q.n : ℝ) * figureOneScheduledAccuracyLog q) := by
+        ((q.n : ℝ) * accuracyLog q) := by
       have hn : (1 : ℝ) ≤ q.n := by
         exact_mod_cast (le_trans (by norm_num : 1 ≤ 3) q.dim_ok)
-      have hL : 1 ≤ figureOneScheduledAccuracyLog q :=
-        figureOneScheduledAccuracyLog_one_le q
+      have hL : 1 ≤ accuracyLog q :=
+        accuracyLog_one_le q
       have hsqrt : 1 ≤ Real.sqrt
-          ((q.n : ℝ) * figureOneScheduledAccuracyLog q) := by
+          ((q.n : ℝ) * accuracyLog q) := by
         rw [← Real.sqrt_one]
         apply Real.sqrt_le_sqrt
         nlinarith
@@ -167,7 +167,7 @@ theorem initialTruncatedGaussian_scheduledInball_dom_speedy
     let pi : Measure (AmbientSpace q.n) :=
       ellGaussianProb
         (figureOneScheduledPhaseBody q I (initialVariance q))
-        (figureOneScheduledProposalRadius q (initialVariance q))
+        (proposalRadius q (initialVariance q))
         (initialVariance q)
     ∀ A, MeasurableSet A →
       sigma (A ∩ good) ≤ ENNReal.ofReal ((2 : ℝ) ^ q.n) * pi A := by
@@ -177,7 +177,7 @@ theorem initialTruncatedGaussian_scheduledInball_dom_speedy
   let K := figureOneScheduledPhaseBody q I s
   let good := Metric.closedBall (0 : AmbientSpace q.n)
     (figureOneScheduledPhaseInradius q s)
-  let delta := figureOneScheduledProposalRadius q s
+  let delta := proposalRadius q s
   let F : ENNReal := ENNReal.ofReal (gaussianIntegral (truncatedBody q I) s)
   let z : ENNReal := ellGaussianMeasure K delta s Set.univ
   let N : ENNReal := ∫⁻ x in A ∩ good, gaussianWeight s x
@@ -208,8 +208,8 @@ theorem initialTruncatedGaussian_scheduledInball_dom_speedy
     intro x hx
     exact ofReal_halfPow_le_ell_of_closedBall_subset
       (figureOneScheduledPhaseInradius_pos q hs)
-      (figureOneScheduledProposalRadius_pos q hs)
-      (figureOneScheduledProposalRadius_le_scheduledPhaseInradius q hs)
+      (proposalRadius_pos q hs)
+      (proposalRadius_le_scheduledPhaseInradius q hs)
       (fun y hy => by
         have hnorm : ‖y‖ ≤ figureOneScheduledPhaseInradius q s := by
           simpa [Metric.mem_closedBall, dist_zero_right] using hy
@@ -285,7 +285,7 @@ theorem initialScheduledSpeedy_restrictOff_isWarm
       (restrictOff sigma bad)
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I (initialVariance q))
-        (figureOneScheduledProposalRadius q (initialVariance q))
+        (proposalRadius q (initialVariance q))
         (initialVariance q)) := by
   dsimp only
   let sigma : Measure (AmbientSpace q.n) :=
@@ -297,7 +297,7 @@ theorem initialScheduledSpeedy_restrictOff_isWarm
   let pi : Measure (AmbientSpace q.n) :=
     ellGaussianProb
       (figureOneScheduledPhaseBody q I (initialVariance q))
-      (figureOneScheduledProposalRadius q (initialVariance q))
+      (proposalRadius q (initialVariance q))
       (initialVariance q)
   have hbad : sigma bad ≤ 1 / 2 := by
     simpa [sigma, bad, good] using
@@ -330,7 +330,7 @@ theorem initialScheduledSpeedy_restrictOff_tvLe
 
 /-! ## Constant-warm scaled start used by the executable
 
-The actual first collector contracts its initial draw by `accuracyScaleFactor`.
+The actual first collector contracts its initial draw by `scaleFactor`.
 The KLS accepted target is already close to the truncated Gaussian; after the
 same contraction it supplies an `8`-warm good law.  This is the polynomial
 warm start needed by both mixing and expected-cost bounds.
@@ -341,19 +341,19 @@ private theorem initialContractedAcceptedTarget_isProbabilityMeasure_aux
     let sigma2 := initialVariance q
     let pi := ellGaussianProb
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2
+      (proposalRadius q sigma2) sigma2
     let contract : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-      accuracyScaleFactor q • x
+      scaleFactor q • x
     IsProbabilityMeasure
       ((scheduledBalancedAccuracyGaussianAcceptedTargetLaw
         q I sigma2 pi).map contract) := by
   dsimp only
   let sigma2 := initialVariance q
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let pi := ellGaussianProb K delta sigma2
   have hsigma2 : 0 < sigma2 := initialVariance_pos q
-  have hdelta : 0 < delta := figureOneScheduledProposalRadius_pos q hsigma2
+  have hdelta : 0 < delta := proposalRadius_pos q hsigma2
   have hmass0 : ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 :=
     ellGaussianMeasure_univ_ne_zero
       (figureOneScheduledPhaseBody_measurable q I sigma2)
@@ -387,9 +387,9 @@ theorem initialScaledScheduled_leUpTo_contractedAcceptedTarget
       (initialVariance_pos q) : Measure (AmbientSpace q.n))
     let pi := ellGaussianProb
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2
+      (proposalRadius q sigma2) sigma2
     let contract : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-      accuracyScaleFactor q • x
+      scaleFactor q • x
     let good := (scheduledBalancedAccuracyGaussianAcceptedTargetLaw
       q I sigma2 pi).map contract
     MeasureLeUpTo (sigma.map contract) good
@@ -402,22 +402,22 @@ theorem initialScaledScheduled_leUpTo_contractedAcceptedTarget
         (initialVariance q)
         (ellGaussianProb
           (figureOneScheduledPhaseBody q I (initialVariance q))
-          (figureOneScheduledProposalRadius q (initialVariance q))
+          (proposalRadius q (initialVariance q))
           (initialVariance q))).map
-            (fun x => accuracyScaleFactor q • x)) :=
+            (fun x => scaleFactor q • x)) :=
     initialContractedAcceptedTarget_isProbabilityMeasure_aux q I
   exact MeasureLeUpTo.of_tvLe
     ((htv.map (by fun_prop : Measurable fun x : AmbientSpace q.n =>
-      accuracyScaleFactor q • x)).symm)
+      scaleFactor q • x)).symm)
 
 theorem initialContractedAcceptedTarget_isWarm_eight
     (q : VolumeParams) (I : VolumeInput q.n) :
     let sigma2 := initialVariance q
     let pi := ellGaussianProb
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2
+      (proposalRadius q sigma2) sigma2
     let contract : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-      accuracyScaleFactor q • x
+      scaleFactor q • x
     IsWarm 8
       ((scheduledBalancedAccuracyGaussianAcceptedTargetLaw
         q I sigma2 pi).map contract) pi := by
@@ -430,9 +430,9 @@ theorem initialContractedAcceptedTarget_isProbabilityMeasure
     let sigma2 := initialVariance q
     let pi := ellGaussianProb
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2
+      (proposalRadius q sigma2) sigma2
     let contract : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-      accuracyScaleFactor q • x
+      scaleFactor q • x
     IsProbabilityMeasure
       ((scheduledBalancedAccuracyGaussianAcceptedTargetLaw
         q I sigma2 pi).map contract) := by
@@ -448,9 +448,9 @@ theorem exists_initialScaledScheduled_good_bad
       (initialVariance_pos q) : Measure (AmbientSpace q.n))
     let pi := ellGaussianProb
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2
+      (proposalRadius q sigma2) sigma2
     let contract : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-      accuracyScaleFactor q • x
+      scaleFactor q • x
     let good := (scheduledBalancedAccuracyGaussianAcceptedTargetLaw
       q I sigma2 pi).map contract
     ∃ bad : Measure (AmbientSpace q.n),

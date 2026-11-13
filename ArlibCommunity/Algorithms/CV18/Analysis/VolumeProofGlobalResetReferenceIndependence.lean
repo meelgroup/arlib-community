@@ -29,12 +29,12 @@ theorem figureOneScheduledTrace_lemma717c_of_globalResetReference
     (hdom : MeasureLeUpTo
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q))
+          (numPhases q))
       reference delta) :
-    ∀ i, i < figureOneDependentPhaseCount q →
+    ∀ i, i < numPhases q →
       ApproxIndepFun
-        (figureOneDependentEpsilon q + 3 * delta.toReal)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+        (dependenceError q + 3 * delta.toReal)
+        (dependentTruncatedProduct (truncationLevel q)
           (scheduledFigureOneTraceTruncatedMean q I)
           (scheduledFigureOneTraceTruncatedPhase q I) i)
         (scheduledFigureOneTraceTruncatedPhase q I (i + 1))
@@ -42,8 +42,8 @@ theorem figureOneScheduledTrace_lemma717c_of_globalResetReference
   intro i hi
   let actual := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
-  let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+      (numPhases q)
+  let X := dependentTruncatedProduct (truncationLevel q)
     (scheduledFigureOneTraceTruncatedMean q I)
     (scheduledFigureOneTraceTruncatedPhase q I) i
   let Y := scheduledFigureOneTraceTruncatedPhase q I (i + 1)
@@ -52,7 +52,7 @@ theorem figureOneScheduledTrace_lemma717c_of_globalResetReference
       figureOneFinalScheduledBalancedParameters q I _
   have hX : Measurable X :=
     measurable_dependentTruncatedProduct
-      (figureOneDependentAlpha q)
+      (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I)
       (fun j => (measurable_scheduledBalancedTracePhaseVariable q j).min
@@ -74,14 +74,14 @@ theorem figureOneScheduledGlobalResetReferenceError_ne_top
 /-- Relative (rather than coarse absolute) accounting for the global reset
 error.  Its factor-three independence-transfer cost is at most `3/2` times
 the original coefficient, so the old and new costs total at most `5/2`. -/
-theorem figureOneDependentEpsilon_add_three_globalResetError_toReal_le
+theorem dependenceError_add_three_globalResetError_toReal_le
     (q : VolumeParams) :
-    figureOneDependentEpsilon q +
+    dependenceError q +
         3 * (figureOneScheduledGlobalResetReferenceError q).toReal ≤
-      (5 / 2 : ℝ) * figureOneDependentEpsilon q := by
-  let samples := figureOneDependentMaxSampleCount q *
-    figureOneDependentPhaseCount q
-  let base := samples • ENNReal.ofReal (figureOnePerSampleMixingError q)
+      (5 / 2 : ℝ) * dependenceError q := by
+  let samples := largestSampleCount q *
+    numPhases q
+  let base := samples • ENNReal.ofReal (sampleMixingError q)
   have hbaseTop : base ≠ ⊤ := by
     dsimp [base]
     rw [nsmul_eq_mul]
@@ -91,7 +91,7 @@ theorem figureOneDependentEpsilon_add_three_globalResetError_toReal_le
   have hglobal := figureOneScheduledGlobalResetReferenceError_le_count q
   have hrewrite :
       samples • ENNReal.ofReal
-          ((3 / 2 : ℝ) * figureOnePerSampleMixingError q) =
+          ((3 / 2 : ℝ) * sampleMixingError q) =
         ENNReal.ofReal (3 / 2 : ℝ) * base := by
     simp only [base, samples, nsmul_eq_mul]
     rw [ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 3 / 2)]
@@ -101,9 +101,9 @@ theorem figureOneDependentEpsilon_add_three_globalResetError_toReal_le
     (ENNReal.mul_ne_top ENNReal.ofReal_ne_top hbaseTop) hglobal
   rw [ENNReal.toReal_mul,
     ENNReal.toReal_ofReal (by norm_num : (0 : ℝ) ≤ 3 / 2)] at hreal
-  have hexact : 3 * base.toReal = figureOneDependentEpsilon q := by
+  have hexact : 3 * base.toReal = dependenceError q := by
     simpa [base, samples] using figureOne_exactChance_budget q
-  nlinarith [figureOneDependentEpsilon_nonneg q]
+  nlinarith [dependenceError_nonneg q]
 
 /-- Specialized global transfer: any comparison whose error is bounded by
 the exact chronological fixed-reset sum gives all reference-side Lemma
@@ -117,13 +117,13 @@ theorem figureOneScheduledTrace_lemma717c_of_globalResetReference_le
     (hdom : MeasureLeUpTo
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q))
+          (numPhases q))
       reference delta)
     (hdelta : delta ≤ figureOneScheduledGlobalResetReferenceError q) :
-    ∀ i, i < figureOneDependentPhaseCount q →
+    ∀ i, i < numPhases q →
       ApproxIndepFun
-        ((5 / 2 : ℝ) * figureOneDependentEpsilon q)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+        ((5 / 2 : ℝ) * dependenceError q)
+        (dependentTruncatedProduct (truncationLevel q)
           (scheduledFigureOneTraceTruncatedMean q I)
           (scheduledFigureOneTraceTruncatedPhase q I) i)
         (scheduledFigureOneTraceTruncatedPhase q I (i + 1))
@@ -143,17 +143,17 @@ theorem figureOneScheduledTrace_lemma717c_of_globalResetReference_le
       3 * (figureOneScheduledGlobalResetReferenceError q).toReal :=
     mul_le_mul_of_nonneg_left hdeltaReal (by norm_num)
   calc
-    figureOneDependentEpsilon q + 3 * delta.toReal ≤
-        figureOneDependentEpsilon q +
+    dependenceError q + 3 * delta.toReal ≤
+        dependenceError q +
           3 * (figureOneScheduledGlobalResetReferenceError q).toReal := by
       gcongr
-    _ ≤ (5 / 2 : ℝ) * figureOneDependentEpsilon q :=
-      figureOneDependentEpsilon_add_three_globalResetError_toReal_le q
+    _ ≤ (5 / 2 : ℝ) * dependenceError q :=
+      dependenceError_add_three_globalResetError_toReal_le q
 
 #print axioms figureOneScheduledTrace_lemma717c_of_globalResetReference
 #print axioms figureOneScheduledGlobalResetReferenceError_ne_top
 #print axioms
-  figureOneDependentEpsilon_add_three_globalResetError_toReal_le
+  dependenceError_add_three_globalResetError_toReal_le
 #print axioms figureOneScheduledTrace_lemma717c_of_globalResetReference_le
 
 end

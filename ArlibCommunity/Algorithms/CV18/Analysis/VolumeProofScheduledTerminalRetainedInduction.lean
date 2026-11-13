@@ -23,9 +23,9 @@ theorem map_scheduledBalancedTerminalTracePhaseKernel_retainedOption
           scheduledBalancedTraceRetainedOption =
       figureOneFinalScheduledCompleteRetainedKernel q I
         (terminalVariance q) (uniformRatioWeight (terminalVariance q))
-        (figureOneSampleCount q - 1)
+        (sampleCount q - 1)
         (scheduledBalancedTraceRetainedOption trace) := by
-  have hcount : 0 < figureOneSampleCount q := figureOneSampleCount_pos q
+  have hcount : 0 < sampleCount q := sampleCount_pos q
   rcases trace with ⟨history, live⟩
   cases live with
   | false =>
@@ -45,9 +45,9 @@ theorem map_scheduledBalancedTerminalTracePhaseKernel_retainedOption
       have happend : Measurable append :=
         (measurable_scheduledBalancedCoolingTraceAppend (n := q.n)).comp
           (measurable_const.prodMk measurable_id)
-      let avg := balancedCoolingAverage (n := q.n) (figureOneSampleCount q)
+      let avg := balancedCoolingAverage (n := q.n) (sampleCount q)
       have havg : Measurable avg :=
-        measurable_balancedCoolingAverage (figureOneSampleCount q)
+        measurable_balancedCoolingAverage (sampleCount q)
       let collect := scheduledBalancedTransitionCollectLaw q I
         (terminalVariance q) (uniformRatioWeight (terminalVariance q))
         (figureOneFinalScheduledBalancedParameters.proposalCap q
@@ -56,8 +56,8 @@ theorem map_scheduledBalancedTerminalTracePhaseKernel_retainedOption
           (terminalVariance q))
         (figureOneFinalScheduledBalancedParameters.retryLimit q
           (terminalVariance q))
-        (figureOneSampleCount q) 0
-        (accuracyScaleFactor q • history.2.2.2)
+        (sampleCount q) 0
+        (scaleFactor q • history.2.2.2)
       unfold scheduledBalancedTracePhaseKernel
         scheduledBalancedTracePhaseObservationLaw
       simp only [if_true, lt_self_iff_false, if_false]
@@ -84,12 +84,12 @@ theorem map_bind_scheduledBalancedTerminalTracePhaseKernel_retainedOption
       (law.map scheduledBalancedTraceRetainedOption).bind
         (figureOneFinalScheduledCompleteRetainedKernel q I
           (terminalVariance q) (uniformRatioWeight (terminalVariance q))
-          (figureOneSampleCount q - 1)) := by
+          (sampleCount q - 1)) := by
   let traceK := scheduledBalancedTracePhaseKernel
     figureOneFinalScheduledBalancedParameters q I (terminalPhaseSteps q)
   let retainedK := figureOneFinalScheduledCompleteRetainedKernel q I
     (terminalVariance q) (uniformRatioWeight (terminalVariance q))
-    (figureOneSampleCount q - 1)
+    (sampleCount q - 1)
   have htraceK := scheduledBalancedTracePhaseKernel_measurable_and_probability
     figureOneFinalScheduledBalancedParameters q I (terminalPhaseSteps q)
   have hretainedK :=
@@ -97,7 +97,7 @@ theorem map_bind_scheduledBalancedTerminalTracePhaseKernel_retainedOption
       q I (terminalVariance_pos' q)
       (weight := uniformRatioWeight (terminalVariance q))
       (measurable_uniformRatioWeight (terminalVariance q))
-      (figureOneSampleCount q - 1)
+      (sampleCount q - 1)
   calc
     (law.bind traceK).map scheduledBalancedTraceRetainedOption =
         law.bind fun trace =>
@@ -115,7 +115,7 @@ theorem map_bind_scheduledBalancedTerminalTracePhaseKernel_retainedOption
 noncomputable def figureOneScheduledFullRetainedError
     (q : VolumeParams) : ENNReal :=
   figureOneScheduledRetainedError q (terminalPhaseSteps q) +
-    figureOneSampleCount q • figureOneCorrectedTransitionBudget q
+    sampleCount q • figureOneCorrectedTransitionBudget q
 
 /-- The retained state after all Gaussian phases and the final uniform phase
 is dominated by the terminal accepted target with the complete exact-chance
@@ -125,7 +125,7 @@ theorem scheduledBalancedFullForwardTraceLaw_retained_leUpTo_target
     MeasureLeUpTo
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)).map
+          (numPhases q)).map
             scheduledBalancedTraceRetainedOption)
       ((figureOneScheduledAcceptedTargetAt q I
         (terminalPhaseSteps q)).map some)
@@ -141,8 +141,8 @@ theorem scheduledBalancedFullForwardTraceLaw_retained_leUpTo_target
   let _ : IsProbabilityMeasure target :=
     figureOneScheduledAcceptedTargetAt_isProbabilityMeasure q I prev
   have hwarm : IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
-      (target.map fun x => accuracyScaleFactor q • x)
+      (ENNReal.ofReal (8 * warmConstant q))
+      (target.map fun x => scaleFactor q • x)
       (figureOneScheduledSpeedyPiAt q I phases) := by
     simpa [target, phases, figureOneScheduledAcceptedTargetAt,
       figureOneScheduledSpeedyPiAt, hprevSucc] using
@@ -152,7 +152,7 @@ theorem scheduledBalancedFullForwardTraceLaw_retained_leUpTo_target
       q I (terminalVariance_pos' q)
       (weight := uniformRatioWeight (terminalVariance q))
       (measurable_uniformRatioWeight (terminalVariance q))
-      (figureOneSampleCount q - 1)
+      (sampleCount q - 1)
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I phases).map
           scheduledBalancedTraceRetainedOption)
@@ -162,10 +162,10 @@ theorem scheduledBalancedFullForwardTraceLaw_retained_leUpTo_target
         rw [figureOneScheduledSpeedyPiAt,
           scheduleValue_terminalPhaseSteps] at hwarm
         exact hwarm)
-  have hcount : 0 < figureOneSampleCount q := figureOneSampleCount_pos q
+  have hcount : 0 < sampleCount q := sampleCount_pos q
   rw [Nat.sub_add_cancel hcount] at hstep
-  rw [show figureOneDependentPhaseCount q = phases + 1 by
-    simp [figureOneDependentPhaseCount, phases]]
+  rw [show numPhases q = phases + 1 by
+    simp [numPhases, phases]]
   rw [show scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I (phases + 1) =
       (scheduledBalancedForwardTraceLaw
@@ -173,7 +173,7 @@ theorem scheduledBalancedFullForwardTraceLaw_retained_leUpTo_target
           (scheduledBalancedTracePhaseKernel
             figureOneFinalScheduledBalancedParameters q I phases) by rfl]
   rw [map_bind_scheduledBalancedTerminalTracePhaseKernel_retainedOption]
-  simpa [figureOneDependentPhaseCount, phases, target,
+  simpa [numPhases, phases, target,
     figureOneScheduledAcceptedTargetAt, figureOneScheduledSpeedyPiAt,
     figureOneScheduledFullRetainedError, scheduleValue_terminalPhaseSteps]
     using hstep
@@ -182,7 +182,7 @@ theorem exists_figureOneScheduledFullTraceLiveRetained_good_bad
     (q : VolumeParams) (I : VolumeInput q.n) :
     let law := scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)
+        (numPhases q)
     let good := figureOneScheduledAcceptedTargetAt q I
       (terminalPhaseSteps q)
     ∃ bad : Measure (AmbientSpace q.n),

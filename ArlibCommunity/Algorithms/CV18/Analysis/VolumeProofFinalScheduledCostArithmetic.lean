@@ -12,30 +12,30 @@ open scoped ENNReal BigOperators
 
 /-- The safe finite retry horizon is controlled by the same protected
 logarithm that appears in the corrected scheduled mixing stride. -/
-theorem figureOneSafeRetryCount_cast_le_correctedMixingLog
+theorem maxRetries_cast_le_correctedMixingLog
     (q : VolumeParams) :
-    (figureOneSafeRetryCount q : ℝ) ≤
+    (maxRetries q : ℝ) ≤
       129 * protectedLog
-        (1 / figureOneCorrectedBlockMixingError q
-          (figureOneSafeRetryCount q - 1)) := by
-  let nu := figureOnePerSampleMixingError q
-  let N := figureOneSafeRetryCount q
+        (1 / blockMixingError q
+          (maxRetries q - 1)) := by
+  let nu := sampleMixingError q
+  let N := maxRetries q
   let B := protectedLog
-    (1 / figureOneCorrectedBlockMixingError q (N - 1))
+    (1 / blockMixingError q (N - 1))
   have hnu : 0 < nu := by
-    simpa [nu] using figureOnePerSampleMixingError_pos q
+    simpa [nu] using sampleMixingError_pos q
   have hNpos : 0 < N := by
-    simpa [N] using figureOneSafeRetryCount_pos q
+    simpa [N] using maxRetries_pos q
   have hNreal : (1 : ℝ) ≤ N := by exact_mod_cast hNpos
   have hrawNonneg : 0 ≤ 128 * protectedLog (4 / nu) := by
     have : 1 ≤ protectedLog (4 / nu) := le_max_left _ _
     positivity
   have hceil : (N : ℝ) < 128 * protectedLog (4 / nu) + 1 := by
-    simpa [N, figureOneSafeRetryCount, nu] using
+    simpa [N, maxRetries, nu] using
       Nat.ceil_lt_add_one hrawNonneg
   have harg : 4 / nu ≤
-      1 / figureOneCorrectedBlockMixingError q (N - 1) := by
-    unfold figureOneCorrectedBlockMixingError
+      1 / blockMixingError q (N - 1) := by
+    unfold blockMixingError
     change 4 / nu ≤ 1 / (nu / (4 * (((N - 1 : ℕ) : ℝ) + 1)))
     have hNcast : (((N - 1 : ℕ) : ℝ) + 1) = N := by
       exact_mod_cast Nat.sub_add_cancel hNpos
@@ -56,9 +56,9 @@ theorem figureOneSafeRetryCount_cast_le_correctedMixingLog
   nlinarith
 
 /-- The adjacent-speedy warmness factor is an absolute numerical constant. -/
-theorem speedyAdjacentWarmConstant_le_twelve (q : VolumeParams) :
-    speedyAdjacentWarmConstant q ≤ 12 := by
-  unfold speedyAdjacentWarmConstant
+theorem warmConstant_le_twelve (q : VolumeParams) :
+    warmConstant q ≤ 12 := by
+  unfold warmConstant
   calc
     Real.exp (1 / 2) * (4 * Real.exp (1 / 2)) =
         4 * Real.exp 1 := by
@@ -72,14 +72,14 @@ theorem speedyAdjacentWarmConstant_le_twelve (q : VolumeParams) :
 scheduled proposal radius is substituted. -/
 theorem figureOneScheduledMixingDenominator_inv_sq_le
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    let d := figureOneScheduledProposalRadius q sigma2 * Real.log 2 /
+    let d := proposalRadius q sigma2 * Real.log 2 /
       (640 * Real.sqrt sigma2 * Real.sqrt q.n)
     1 / d ^ 2 ≤
       10 ^ 14 * max 1 sigma2 * (q.n : ℝ) ^ 2 *
-        figureOneScheduledAccuracyLog q := by
+        accuracyLog q := by
   dsimp only
   let n : ℝ := q.n
-  let A := figureOneScheduledAccuracyLog q
+  let A := accuracyLog q
   let s := Real.sqrt sigma2
   let rn := Real.sqrt n
   let rA := Real.sqrt (n * A)
@@ -88,7 +88,7 @@ theorem figureOneScheduledMixingDenominator_inv_sq_le
     dsimp only [n]
     exact_mod_cast (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)
   have hA : 1 ≤ A := by
-    simpa [A] using figureOneScheduledAccuracyLog_one_le q
+    simpa [A] using accuracyLog_one_le q
   have hs : 0 < s := by simpa [s] using Real.sqrt_pos.2 hsigma2
   have hrn : 0 < rn := by simpa [rn] using Real.sqrt_pos.2 hn
   have hrA : 0 < rA := by
@@ -155,32 +155,32 @@ theorem figureOneScheduledMixingDenominator_inv_sq_le
 
 /-- The corrected scheduled proper stride has exactly one accuracy-log and
 one corrected-mixing-log overhead over the legacy walk scale. -/
-theorem figureOneScheduledCorrectedProperStride_cast_le
+theorem strideFor_cast_le
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     let B := protectedLog
-      (1 / figureOneCorrectedBlockMixingError q
-        (figureOneSafeRetryCount q - 1))
-    (figureOneScheduledCorrectedProperStride q sigma2
-        (figureOneSafeRetryCount q - 1) : ℝ) ≤
+      (1 / blockMixingError q
+        (maxRetries q - 1))
+    (strideFor q sigma2
+        (maxRetries q - 1) : ℝ) ≤
       (9 * 10 ^ 16) * max 1 sigma2 * (q.n : ℝ) ^ 2 *
         protectedLog ((q.n : ℝ) / q.eps) ^ 2 *
-        figureOneScheduledAccuracyLog q * B := by
+        accuracyLog q * B := by
   dsimp only
-  let attempts := figureOneSafeRetryCount q - 1
-  let e := figureOneCorrectedBlockMixingError q attempts
+  let attempts := maxRetries q - 1
+  let e := blockMixingError q attempts
   let B := protectedLog (1 / e)
-  let A := figureOneScheduledAccuracyLog q
+  let A := accuracyLog q
   let L := protectedLog ((q.n : ℝ) / q.eps)
   let X := max 1 sigma2 * (q.n : ℝ) ^ 2 * L ^ 2 * A
-  let d := figureOneScheduledProposalRadius q sigma2 * Real.log 2 /
+  let d := proposalRadius q sigma2 * Real.log 2 /
     (640 * Real.sqrt sigma2 * Real.sqrt q.n)
   have he : 0 < e := by
-    simpa [e, attempts] using figureOneCorrectedBlockMixingError_pos q attempts
+    simpa [e, attempts] using blockMixingError_pos q attempts
   have hB : 1 ≤ B := by
     dsimp only [B, protectedLog]
     exact le_max_left _ _
   have hA : 1 ≤ A := by
-    simpa [A] using figureOneScheduledAccuracyLog_one_le q
+    simpa [A] using accuracyLog_one_le q
   have hL : 1 ≤ L := by
     dsimp only [L, protectedLog]
     exact le_max_left _ _
@@ -196,7 +196,7 @@ theorem figureOneScheduledCorrectedProperStride_cast_le
     exact hmul (hmul (hmul hm hn2) hL2) hA
   have hd : 0 < d := by
     dsimp only [d]
-    positivity [figureOneScheduledProposalRadius_pos q hsigma2]
+    positivity [proposalRadius_pos q hsigma2]
   have hinv : 1 / d ^ 2 ≤ 10 ^ 14 * X := by
     have h := figureOneScheduledMixingDenominator_inv_sq_le q hsigma2
     dsimp only at h
@@ -204,7 +204,7 @@ theorem figureOneScheduledCorrectedProperStride_cast_le
     let Y := 10 ^ 14 * max 1 sigma2 * (q.n : ℝ) ^ 2 * A
     have hY0 : 0 ≤ Y := by dsimp only [Y]; positivity
     calc
-      1 / (figureOneScheduledProposalRadius q sigma2 * Real.log 2 /
+      1 / (proposalRadius q sigma2 * Real.log 2 /
           (640 * Real.sqrt sigma2 * Real.sqrt ↑q.n)) ^ 2 ≤ Y := by
         simpa [Y, A] using h
       _ ≤ Y * L ^ 2 := by
@@ -213,20 +213,20 @@ theorem figureOneScheduledCorrectedProperStride_cast_le
       _ = 10 ^ 14 * (max 1 sigma2 * ↑q.n ^ 2 * L ^ 2 * A) := by
         dsimp only [Y]
         ring
-  have hM : speedyAdjacentWarmConstant q ≤ 12 :=
-    speedyAdjacentWarmConstant_le_twelve q
-  have hMpos : 0 < speedyAdjacentWarmConstant q :=
-    speedyAdjacentWarmConstant_pos q
-  have hfirstLog : Real.log (16 * speedyAdjacentWarmConstant q) ≤ 191 := by
+  have hM : warmConstant q ≤ 12 :=
+    warmConstant_le_twelve q
+  have hMpos : 0 < warmConstant q :=
+    warmConstant_pos q
+  have hfirstLog : Real.log (16 * warmConstant q) ≤ 191 := by
     calc
-      Real.log (16 * speedyAdjacentWarmConstant q) ≤
-          16 * speedyAdjacentWarmConstant q - 1 :=
+      Real.log (16 * warmConstant q) ≤
+          16 * warmConstant q - 1 :=
         Real.log_le_sub_one_of_pos (by positivity)
       _ ≤ 191 := by nlinarith
   have hreLog : Real.log (1 / e) ≤ B := by
     dsimp only [B, protectedLog]
     exact le_max_right _ _
-  have hfirstNum : Real.log (16 * speedyAdjacentWarmConstant q) +
+  have hfirstNum : Real.log (16 * warmConstant q) +
       2 * Real.log (1 / e) ≤ 193 * B := by
     nlinarith
   have hretryNum : Real.log 2 + 2 * Real.log (1 / e) ≤ 3 * B := by
@@ -234,7 +234,7 @@ theorem figureOneScheduledCorrectedProperStride_cast_le
       nlinarith [Real.log_le_sub_one_of_pos (by norm_num : (0 : ℝ) < 2)]
     nlinarith
   have hfirstQuot :
-      (Real.log (16 * speedyAdjacentWarmConstant q) +
+      (Real.log (16 * warmConstant q) +
           2 * Real.log (1 / e)) / d ^ 2 ≤
         193 * B * (10 ^ 14 * X) := by
     calc
@@ -249,28 +249,28 @@ theorem figureOneScheduledCorrectedProperStride_cast_le
       _ = (3 * B) * (1 / d ^ 2) := by ring
       _ ≤ 3 * B * (10 ^ 14 * X) := by gcongr
   have hfirst :
-      figureOneScheduledCorrectedFirstWalkRequirement q sigma2 attempts ≤
+      firstWalkRequirement q sigma2 attempts ≤
         (8 * 10 ^ 16) * X * B := by
-    rw [figureOneScheduledCorrectedFirstWalkRequirement_explicit]
-    change 4 * ((Real.log (16 * speedyAdjacentWarmConstant q) +
+    rw [firstWalkRequirement_explicit]
+    change 4 * ((Real.log (16 * warmConstant q) +
       2 * Real.log (1 / e)) / d ^ 2) + 1 ≤ _
     nlinarith [mul_nonneg (sub_nonneg.mpr hX) (sub_nonneg.mpr hB)]
   have hretry :
-      figureOneScheduledCorrectedRetryWalkRequirement q sigma2 attempts ≤
+      retryWalkRequirement q sigma2 attempts ≤
         (8 * 10 ^ 16) * X * B := by
-    rw [figureOneScheduledCorrectedRetryWalkRequirement_explicit]
+    rw [retryWalkRequirement_explicit]
     change 4 * ((Real.log 2 + 2 * Real.log (1 / e)) / d ^ 2) + 1 ≤ _
     nlinarith [mul_nonneg (sub_nonneg.mpr hX) (sub_nonneg.mpr hB)]
   have hrawNonneg : 0 ≤ max 1 (max
-      (figureOneScheduledCorrectedFirstWalkRequirement q sigma2 attempts)
-      (figureOneScheduledCorrectedRetryWalkRequirement q sigma2 attempts)) :=
+      (firstWalkRequirement q sigma2 attempts)
+      (retryWalkRequirement q sigma2 attempts)) :=
     le_trans zero_le_one (le_max_left _ _)
   have hceil := Nat.ceil_lt_add_one hrawNonneg
-  change (figureOneScheduledCorrectedProperStride q sigma2 attempts : ℝ) ≤ _
-  unfold figureOneScheduledCorrectedProperStride
+  change (strideFor q sigma2 attempts : ℝ) ≤ _
+  unfold strideFor
   have hmax : max 1 (max
-      (figureOneScheduledCorrectedFirstWalkRequirement q sigma2 attempts)
-      (figureOneScheduledCorrectedRetryWalkRequirement q sigma2 attempts)) ≤
+      (firstWalkRequirement q sigma2 attempts)
+      (retryWalkRequirement q sigma2 attempts)) ≤
       (8 * 10 ^ 16) * X * B := by
     apply max_le
     · nlinarith [mul_nonneg (sub_nonneg.mpr hX) (sub_nonneg.mpr hB)]
@@ -283,32 +283,32 @@ theorem figureOneScheduledCorrectedProperStride_cast_le
 most nine times the two explicit logarithmic overheads. -/
 theorem figureOneFinalScheduledStride_cast_le_walk
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    let A := figureOneScheduledAccuracyLog q
+    let A := accuracyLog q
     let B := protectedLog
-      (1 / figureOneCorrectedBlockMixingError q
-        (figureOneSafeRetryCount q - 1))
+      (1 / blockMixingError q
+        (maxRetries q - 1))
     (figureOneFinalScheduledBalancedParameters.properStride q sigma2 : ℝ) ≤
       9 * A * B * (figureOneWalkSteps q sigma2 : ℝ) := by
   dsimp only [figureOneFinalScheduledBalancedParameters_properStride]
-  let A := figureOneScheduledAccuracyLog q
+  let A := accuracyLog q
   let B := protectedLog
-    (1 / figureOneCorrectedBlockMixingError q
-      (figureOneSafeRetryCount q - 1))
+    (1 / blockMixingError q
+      (maxRetries q - 1))
   let raw := 10 ^ 16 * max 1 sigma2 * (q.n : ℝ) ^ 2 *
     protectedLog ((q.n : ℝ) / q.eps) ^ 2
-  have hstride := figureOneScheduledCorrectedProperStride_cast_le q hsigma2
+  have hstride := strideFor_cast_le q hsigma2
   have hraw : raw ≤ (figureOneWalkSteps q sigma2 : ℝ) := by
     unfold figureOneWalkSteps
     exact Nat.le_ceil raw
   have hAB0 : 0 ≤ 9 * A * B := by
-    have hA0 : 0 ≤ A := (figureOneScheduledAccuracyLog_one_le q).trans' zero_le_one
+    have hA0 : 0 ≤ A := (accuracyLog_one_le q).trans' zero_le_one
     have hB0 : 0 ≤ B := by
       dsimp only [B, protectedLog]
       exact zero_le_one.trans (le_max_left _ _)
     positivity
   calc
-    (figureOneScheduledCorrectedProperStride q sigma2
-        (figureOneSafeRetryCount q - 1) : ℝ) ≤
+    (strideFor q sigma2
+        (maxRetries q - 1) : ℝ) ≤
         (9 * A * B) * raw := by
       dsimp only [A, B, raw] at hstride ⊢
       nlinarith
@@ -320,32 +320,32 @@ theorem figureOneFinalScheduledStride_cast_le_walk
 work sum times only the two explicit logarithmic overheads. -/
 theorem figureOneScheduledProperWork_cast_le_old
     (q : VolumeParams) :
-    let A := figureOneScheduledAccuracyLog q
+    let A := accuracyLog q
     let B := protectedLog
-      (1 / figureOneCorrectedBlockMixingError q
-        (figureOneSafeRetryCount q - 1))
+      (1 / blockMixingError q
+        (maxRetries q - 1))
     (figureOneScheduledProperWork q : ℝ) ≤
       9 * A * B *
         (figureOneCoolingQueryBudget q
             (explicitVolumeCoolingSchedule q).variances +
-          figureOneSampleCount q *
+          sampleCount q *
             figureOneWalkSteps q (terminalVariance q) : ℕ) := by
   dsimp only
-  let A := figureOneScheduledAccuracyLog q
+  let A := accuracyLog q
   let B := protectedLog
-    (1 / figureOneCorrectedBlockMixingError q
-      (figureOneSafeRetryCount q - 1))
+    (1 / blockMixingError q
+      (maxRetries q - 1))
   rw [figureOneCoolingQueryBudget_explicit]
   unfold figureOneScheduledProperWork
   push_cast
   have hphase :
       (∑ k ∈ Finset.range (terminalPhaseSteps q),
-        (figureOnePhaseSampleCount q (scheduleValue q k) : ℝ) *
+        (phaseSampleCount q (scheduleValue q k) : ℝ) *
           (figureOneScheduledBalancedParameters.properStride q
             (scheduleValue q k) : ℝ)) ≤
       9 * A * B *
         ∑ k ∈ Finset.range (terminalPhaseSteps q),
-          (figureOnePhaseSampleCount q (scheduleValue q k) : ℝ) *
+          (phaseSampleCount q (scheduleValue q k) : ℝ) *
             (figureOneWalkSteps q (scheduleValue q k) : ℝ) := by
     rw [Finset.mul_sum]
     apply Finset.sum_le_sum
@@ -356,38 +356,38 @@ theorem figureOneScheduledProperWork_cast_le_old
     simp only [figureOneScheduledBalancedParameters_properStride,
       figureOneFinalScheduledBalancedParameters_properStride] at hs ⊢
     convert mul_le_mul_of_nonneg_left hs
-      (Nat.cast_nonneg (figureOnePhaseSampleCount q (scheduleValue q k))) using 1 <;>
+      (Nat.cast_nonneg (phaseSampleCount q (scheduleValue q k))) using 1 <;>
         ring
   have hterminal := figureOneFinalScheduledStride_cast_le_walk q
     (terminalVariance_pos' q)
   have hterminal' :
-      (figureOneSampleCount q : ℝ) *
+      (sampleCount q : ℝ) *
           (figureOneScheduledBalancedParameters.properStride q
             (terminalVariance q) : ℝ) ≤
         9 * A * B *
-          ((figureOneSampleCount q : ℝ) *
+          ((sampleCount q : ℝ) *
             (figureOneWalkSteps q (terminalVariance q) : ℝ)) := by
     dsimp only [A, B] at hterminal ⊢
     simp only [figureOneScheduledBalancedParameters_properStride,
       figureOneFinalScheduledBalancedParameters_properStride] at hterminal ⊢
     calc
-      (figureOneSampleCount q : ℝ) *
-          (figureOneScheduledCorrectedProperStride q (terminalVariance q)
-            (figureOneSafeRetryCount q - 1) : ℝ) ≤
-        (figureOneSampleCount q : ℝ) *
-          (9 * figureOneScheduledAccuracyLog q *
-            protectedLog (1 / figureOneCorrectedBlockMixingError q
-              (figureOneSafeRetryCount q - 1)) *
+      (sampleCount q : ℝ) *
+          (strideFor q (terminalVariance q)
+            (maxRetries q - 1) : ℝ) ≤
+        (sampleCount q : ℝ) *
+          (9 * accuracyLog q *
+            protectedLog (1 / blockMixingError q
+              (maxRetries q - 1)) *
                 (figureOneWalkSteps q (terminalVariance q) : ℝ)) :=
         mul_le_mul_of_nonneg_left hterminal (Nat.cast_nonneg _)
       _ = _ := by ring
   calc
     _ ≤ 9 * A * B *
           (∑ k ∈ Finset.range (terminalPhaseSteps q),
-            (figureOnePhaseSampleCount q (scheduleValue q k) : ℝ) *
+            (phaseSampleCount q (scheduleValue q k) : ℝ) *
               (figureOneWalkSteps q (scheduleValue q k) : ℝ)) +
         9 * A * B *
-          ((figureOneSampleCount q : ℝ) *
+          ((sampleCount q : ℝ) *
             (figureOneWalkSteps q (terminalVariance q) : ℝ)) :=
       add_le_add hphase hterminal'
     _ = _ := by ring
@@ -395,22 +395,22 @@ theorem figureOneScheduledProperWork_cast_le_old
 /-- Even charging the complete fixed retry horizon, the scheduled proper-step
 work is bounded by a small absolute multiple of the scheduled soft-O rate.
 This deliberately does not use a local proposal cap. -/
-theorem figureOneSafeRetryCount_mul_scheduledProperWork_cast_le_sharp
+theorem maxRetries_mul_scheduledProperWork_cast_le_sharp
     (q : VolumeParams) :
-    ((figureOneSafeRetryCount q * figureOneScheduledProperWork q : ℕ) : ℝ) ≤
-      (2322 * 10 ^ 24) * volumeScheduledBaseComplexityRate q := by
-  let N := figureOneSafeRetryCount q
+    ((maxRetries q * figureOneScheduledProperWork q : ℕ) : ℝ) ≤
+      (2322 * 10 ^ 24) * runRate q := by
+  let N := maxRetries q
   let work := figureOneScheduledProperWork q
   let oldWork := figureOneCoolingQueryBudget q
       (explicitVolumeCoolingSchedule q).variances +
-    figureOneSampleCount q * figureOneWalkSteps q (terminalVariance q)
-  let A := figureOneScheduledAccuracyLog q
+    sampleCount q * figureOneWalkSteps q (terminalVariance q)
+  let A := accuracyLog q
   let B := protectedLog
-    (1 / figureOneCorrectedBlockMixingError q (N - 1))
-  let base := volumeBaseComplexityRate q
+    (1 / blockMixingError q (N - 1))
+  let base := baseRate q
   have hN : (N : ℝ) ≤ 129 * B := by
     simpa only [N, B] using
-      figureOneSafeRetryCount_cast_le_correctedMixingLog q
+      maxRetries_cast_le_correctedMixingLog q
   have hwork : (work : ℝ) ≤ 9 * A * B * (oldWork : ℝ) := by
     simpa only [work, oldWork, A, B, N] using
       figureOneScheduledProperWork_cast_le_old q
@@ -421,7 +421,7 @@ theorem figureOneSafeRetryCount_mul_scheduledProperWork_cast_le_sharp
       exact_mod_cast hnat
     have hx : 0 ≤ (2 * 10 ^ 24) * base := by
       dsimp only [base]
-      unfold volumeBaseComplexityRate
+      unfold baseRate
       positivity
     have hceil := Nat.ceil_lt_add_one hx
     push_cast at hcast
@@ -429,13 +429,13 @@ theorem figureOneSafeRetryCount_mul_scheduledProperWork_cast_le_sharp
   have hN0 : 0 ≤ (N : ℝ) := Nat.cast_nonneg _
   have hwork0 : 0 ≤ (work : ℝ) := Nat.cast_nonneg _
   have hA0 : 0 ≤ A :=
-    zero_le_one.trans (figureOneScheduledAccuracyLog_one_le q)
+    zero_le_one.trans (accuracyLog_one_le q)
   have hB0 : 0 ≤ B := by
     dsimp only [B, protectedLog]
     exact zero_le_one.trans (le_max_left _ _)
   have hbase0 : 0 ≤ base := by
     dsimp only [base]
-    unfold volumeBaseComplexityRate
+    unfold baseRate
     positivity
   calc
     ((N * work : ℕ) : ℝ) = (N : ℝ) * (work : ℝ) := by push_cast; rfl
@@ -443,21 +443,21 @@ theorem figureOneSafeRetryCount_mul_scheduledProperWork_cast_le_sharp
       exact mul_le_mul hN hwork hwork0 (by positivity)
     _ ≤ (129 * B) * (9 * A * B * ((2 * 10 ^ 24) * base)) := by
       gcongr
-    _ = (2322 * 10 ^ 24) * volumeScheduledBaseComplexityRate q := by
-      dsimp only [volumeScheduledBaseComplexityRate, base, A, B, N]
+    _ = (2322 * 10 ^ 24) * runRate q := by
+      dsimp only [runRate, base, A, B, N]
       ring
 
 /-- Rounded decimal version of the sharp complete-retry work envelope. -/
-theorem figureOneSafeRetryCount_mul_scheduledProperWork_cast_le
+theorem maxRetries_mul_scheduledProperWork_cast_le
     (q : VolumeParams) :
-    ((figureOneSafeRetryCount q * figureOneScheduledProperWork q : ℕ) : ℝ) ≤
-      (3 * 10 ^ 27) * volumeScheduledBaseComplexityRate q := by
+    ((maxRetries q * figureOneScheduledProperWork q : ℕ) : ℝ) ≤
+      (3 * 10 ^ 27) * runRate q := by
   calc
-    _ ≤ (2322 * 10 ^ 24) * volumeScheduledBaseComplexityRate q :=
-      figureOneSafeRetryCount_mul_scheduledProperWork_cast_le_sharp q
-    _ ≤ (3 * 10 ^ 27) * volumeScheduledBaseComplexityRate q := by
+    _ ≤ (2322 * 10 ^ 24) * runRate q :=
+      maxRetries_mul_scheduledProperWork_cast_le_sharp q
+    _ ≤ (3 * 10 ^ 27) * runRate q := by
       apply mul_le_mul_of_nonneg_right _
-        (volumeScheduledBaseComplexityRate_pos q).le
+        (runRate_pos q).le
       norm_num
 
 /-- After multiplying by the worst scheduled warmness (`96`) and by the
@@ -465,19 +465,19 @@ factor two that absorbs each trial's endpoint queries, the full fixed-shadow
 cost still fits below `9·10^29` times the scheduled rate. -/
 theorem figureOneWarmShadowScheduledWork_cast_le
     (q : VolumeParams) :
-    ((384 * (figureOneSafeRetryCount q * figureOneScheduledProperWork q) : ℕ) : ℝ) ≤
-      (9 * 10 ^ 29) * volumeScheduledBaseComplexityRate q := by
+    ((384 * (maxRetries q * figureOneScheduledProperWork q) : ℕ) : ℝ) ≤
+      (9 * 10 ^ 29) * runRate q := by
   calc
     _ = 384 *
-        ((figureOneSafeRetryCount q * figureOneScheduledProperWork q : ℕ) : ℝ) := by
+        ((maxRetries q * figureOneScheduledProperWork q : ℕ) : ℝ) := by
       push_cast
       ring
     _ ≤ 384 * ((2322 * 10 ^ 24) *
-        volumeScheduledBaseComplexityRate q) := by
+        runRate q) := by
       gcongr
-      exact figureOneSafeRetryCount_mul_scheduledProperWork_cast_le_sharp q
-    _ ≤ (9 * 10 ^ 29) * volumeScheduledBaseComplexityRate q := by
-      have hrate := (volumeScheduledBaseComplexityRate_pos q).le
+      exact maxRetries_mul_scheduledProperWork_cast_le_sharp q
+    _ ≤ (9 * 10 ^ 29) * runRate q := by
+      have hrate := (runRate_pos q).le
       nlinarith
 
 /-- The one-query initializer plus the complete warm chronological shadow
@@ -485,27 +485,27 @@ still fits strictly inside the `9·10^29` reference-cost allowance. -/
 theorem one_add_figureOneWarmShadowScheduledWork_le
     (q : VolumeParams) :
     (1 : ENNReal) +
-        ((384 * (figureOneSafeRetryCount q *
+        ((384 * (maxRetries q *
           figureOneScheduledProperWork q) : ℕ) : ENNReal) ≤
       ENNReal.ofReal ((9 * 10 ^ 29) *
-        volumeScheduledBaseComplexityRate q) := by
+        runRate q) := by
   have hmain :=
-    figureOneSafeRetryCount_mul_scheduledProperWork_cast_le_sharp q
-  have hrate := volumeScheduledBaseComplexityRate_one_le q
+    maxRetries_mul_scheduledProperWork_cast_le_sharp q
+  have hrate := runRate_one_le q
   have hmain' :
-      ((384 * (figureOneSafeRetryCount q *
+      ((384 * (maxRetries q *
         figureOneScheduledProperWork q) : ℕ) : ℝ) ≤
         384 * ((2322 * 10 ^ 24) *
-          volumeScheduledBaseComplexityRate q) := by
+          runRate q) := by
     calc
-      _ = 384 * ((figureOneSafeRetryCount q *
+      _ = 384 * ((maxRetries q *
           figureOneScheduledProperWork q : ℕ) : ℝ) := by push_cast; ring
       _ ≤ _ := by gcongr
   have hreal :
       (1 : ℝ) +
-          ((384 * (figureOneSafeRetryCount q *
+          ((384 * (maxRetries q *
             figureOneScheduledProperWork q) : ℕ) : ℝ) ≤
-        (9 * 10 ^ 29) * volumeScheduledBaseComplexityRate q := by
+        (9 * 10 ^ 29) * runRate q := by
     nlinarith
   have hofReal := ENNReal.ofReal_le_ofReal hreal
   rw [ENNReal.ofReal_add (by norm_num : (0 : ℝ) ≤ 1)
@@ -518,36 +518,36 @@ after multiplication by one corrected block-error budget, its ceiling costs
 only an absolute constant times the scheduled stride. -/
 theorem figureOneFinalScheduledLocalCapCeil_mul_blockError_le
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    let attempts := figureOneSafeRetryCount q - 1
-    let e := figureOneCorrectedBlockMixingError q attempts
+    let attempts := maxRetries q - 1
+    let e := blockMixingError q attempts
     let stride := figureOneFinalScheduledBalancedParameters.properStride q sigma2
-    (Nat.ceil (figureOneFinalScheduledLocalCapRequirement q sigma2) : ℝ) * e ≤
+    (Nat.ceil (proposalCapRequirement q sigma2) : ℝ) * e ≤
       385 * stride := by
   dsimp only
-  let attempts := figureOneSafeRetryCount q - 1
-  let e := figureOneCorrectedBlockMixingError q attempts
+  let attempts := maxRetries q - 1
+  let e := blockMixingError q attempts
   let stride := figureOneFinalScheduledBalancedParameters.properStride q sigma2
-  let requirement := figureOneFinalScheduledLocalCapRequirement q sigma2
+  let requirement := proposalCapRequirement q sigma2
   have he : 0 < e := by
-    simpa [e, attempts] using figureOneCorrectedBlockMixingError_pos q attempts
+    simpa [e, attempts] using blockMixingError_pos q attempts
   have heone : e ≤ 1 := by
-    simpa [e, attempts] using figureOneCorrectedBlockMixingError_le_one q attempts
+    simpa [e, attempts] using blockMixingError_le_one q attempts
   have hstrideNat : 0 < stride := by
-    simpa [stride] using figureOneScheduledCorrectedProperStride_pos q sigma2
-      (figureOneSafeRetryCount q - 1)
+    simpa [stride] using strideFor_pos q sigma2
+      (maxRetries q - 1)
   have hstride : (1 : ℝ) ≤ stride := by exact_mod_cast hstrideNat
-  have hM := speedyAdjacentWarmConstant_le_twelve q
+  have hM := warmConstant_le_twelve q
   have hreq0 : 0 ≤ requirement := by
-    dsimp only [requirement, figureOneFinalScheduledLocalCapRequirement]
-    positivity [speedyAdjacentWarmConstant_pos q]
+    dsimp only [requirement, proposalCapRequirement]
+    positivity [warmConstant_pos q]
   have hceil := Nat.ceil_lt_add_one hreq0
   have hmul : (Nat.ceil requirement : ℝ) * e < (requirement + 1) * e :=
     mul_lt_mul_of_pos_right hceil he
   have hcancel : requirement * e =
-      32 * speedyAdjacentWarmConstant q * (stride : ℝ) := by
-    dsimp only [requirement, figureOneFinalScheduledLocalCapRequirement,
+      32 * warmConstant q * (stride : ℝ) := by
+    dsimp only [requirement, proposalCapRequirement,
       stride, e, attempts]
-    rw [div_mul_cancel₀ _ (figureOneCorrectedBlockMixingError_pos q _).ne']
+    rw [div_mul_cancel₀ _ (blockMixingError_pos q _).ne']
     simp only [figureOneFinalScheduledBalancedParameters_properStride]
     ring
   dsimp only [requirement, e, attempts, stride] at hmul hcancel ⊢
@@ -559,26 +559,26 @@ block-error charge splits into the global budget times that small error plus
 `387` scheduled strides. -/
 theorem figureOneFinalScheduledProposalCap_add_two_mul_blockError_le
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    let attempts := figureOneSafeRetryCount q - 1
-    let e := figureOneCorrectedBlockMixingError q attempts
+    let attempts := maxRetries q - 1
+    let e := blockMixingError q attempts
     let stride := figureOneFinalScheduledBalancedParameters.properStride q sigma2
     ((figureOneFinalScheduledBalancedParameters.proposalCap q sigma2 + 2 : ℕ) : ℝ) * e ≤
-      (figureOneFinalScheduledQueryBudget q : ℝ) * e + 387 * stride := by
+      (queryBudget q : ℝ) * e + 387 * stride := by
   dsimp only
-  let attempts := figureOneSafeRetryCount q - 1
-  let e := figureOneCorrectedBlockMixingError q attempts
+  let attempts := maxRetries q - 1
+  let e := blockMixingError q attempts
   let stride := figureOneFinalScheduledBalancedParameters.properStride q sigma2
   have hceil := figureOneFinalScheduledLocalCapCeil_mul_blockError_le q hsigma2
   have he : 0 < e := by
-    simpa [e, attempts] using figureOneCorrectedBlockMixingError_pos q attempts
+    simpa [e, attempts] using blockMixingError_pos q attempts
   have heone : e ≤ 1 := by
-    simpa [e, attempts] using figureOneCorrectedBlockMixingError_le_one q attempts
+    simpa [e, attempts] using blockMixingError_le_one q attempts
   have hstrideNat : 0 < stride := by
-    simpa [stride] using figureOneScheduledCorrectedProperStride_pos q sigma2
-      (figureOneSafeRetryCount q - 1)
+    simpa [stride] using strideFor_pos q sigma2
+      (maxRetries q - 1)
   have hstride : (1 : ℝ) ≤ stride := by exact_mod_cast hstrideNat
   simp only [figureOneFinalScheduledBalancedParameters_proposalCap,
-    figureOneFinalScheduledLocalProposalCap]
+    maxProposals]
   push_cast
   dsimp only [e, attempts, stride] at hceil ⊢
   nlinarith
@@ -591,15 +591,15 @@ retry factor is introduced. -/
 theorem figureOneCorrectedTargetBudget_eq_safeRetryCount_nsmul_blockBudget
     (q : VolumeParams) :
     figureOneCorrectedTargetBudget q =
-      figureOneSafeRetryCount q •
-        figureOneCorrectedBlockBudget q (figureOneSafeRetryCount q - 1) := by
-  let N := figureOneSafeRetryCount q
+      maxRetries q •
+        figureOneCorrectedBlockBudget q (maxRetries q - 1) := by
+  let N := maxRetries q
   have hN : 0 < N := by
-    simpa [N] using figureOneSafeRetryCount_pos q
-  have hnu : 0 < figureOnePerSampleMixingError q :=
-    figureOnePerSampleMixingError_pos q
+    simpa [N] using maxRetries_pos q
+  have hnu : 0 < sampleMixingError q :=
+    sampleMixingError_pos q
   unfold figureOneCorrectedTargetBudget figureOneCorrectedTransitionBudget
-    figureOneCorrectedBlockBudget figureOneCorrectedBlockMixingError
+    figureOneCorrectedBlockBudget blockMixingError
   apply (ENNReal.toReal_eq_toReal_iff'
     (ENNReal.div_ne_top (by simp) (by norm_num))
     (by
@@ -609,13 +609,13 @@ theorem figureOneCorrectedTargetBudget_eq_safeRetryCount_nsmul_blockBudget
     ENNReal.toReal_ofNat, ENNReal.toReal_nsmul]
   simp only [nsmul_eq_mul]
   rw [ENNReal.toReal_ofReal (by positivity :
-    0 ≤ figureOnePerSampleMixingError q /
-      (4 * (((figureOneSafeRetryCount q - 1 : ℕ) : ℝ) + 1)))]
+    0 ≤ sampleMixingError q /
+      (4 * (((maxRetries q - 1 : ℕ) : ℝ) + 1)))]
   have hNcast : (((N - 1 : ℕ) : ℝ) + 1) = N := by
     exact_mod_cast Nat.sub_add_cancel hN
   dsimp only [N] at hNcast ⊢
   rw [hNcast]
-  have hN0 : (figureOneSafeRetryCount q : ℝ) ≠ 0 := by
+  have hN0 : (maxRetries q : ℝ) ≠ 0 := by
     exact_mod_cast hN.ne'
   field_simp [hN0]
 
@@ -623,17 +623,17 @@ theorem figureOneCorrectedTargetBudget_eq_safeRetryCount_nsmul_blockBudget
 expected-cost integral. -/
 theorem figureOneFinalScheduledProposalCap_add_two_mul_blockBudget_le
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    let attempts := figureOneSafeRetryCount q - 1
+    let attempts := maxRetries q - 1
     let block := figureOneCorrectedBlockBudget q attempts
     let stride := figureOneFinalScheduledBalancedParameters.properStride q sigma2
     ((figureOneFinalScheduledBalancedParameters.proposalCap q sigma2 + 2 : ℕ) :
         ENNReal) * block ≤
-      (figureOneFinalScheduledQueryBudget q : ENNReal) * block +
+      (queryBudget q : ENNReal) * block +
         387 * (stride : ENNReal) := by
   dsimp only
-  let attempts := figureOneSafeRetryCount q - 1
-  let e := figureOneCorrectedBlockMixingError q attempts
-  have he : 0 < e := figureOneCorrectedBlockMixingError_pos q attempts
+  let attempts := maxRetries q - 1
+  let e := blockMixingError q attempts
+  have he : 0 < e := blockMixingError_pos q attempts
   have hreal :=
     figureOneFinalScheduledProposalCap_add_two_mul_blockError_le q hsigma2
   have hblockTop : figureOneCorrectedBlockBudget q attempts ≠ ∞ := by
@@ -643,7 +643,7 @@ theorem figureOneFinalScheduledProposalCap_add_two_mul_blockBudget_le
         ℕ) : ENNReal) * figureOneCorrectedBlockBudget q attempts ≠ ∞ :=
     ENNReal.mul_ne_top (by simp) hblockTop
   have hbudgetTop :
-      (figureOneFinalScheduledQueryBudget q : ENNReal) *
+      (queryBudget q : ENNReal) *
         figureOneCorrectedBlockBudget q attempts ≠ ∞ :=
     ENNReal.mul_ne_top (by simp) hblockTop
   have hstrideTop :
@@ -653,8 +653,8 @@ theorem figureOneFinalScheduledProposalCap_add_two_mul_blockBudget_le
     (ENNReal.add_ne_top.2 ⟨hbudgetTop, hstrideTop⟩)).mp
   simp only [figureOneCorrectedBlockBudget]
   have hbudgetTop' :
-      (figureOneFinalScheduledQueryBudget q : ENNReal) *
-        ENNReal.ofReal (figureOneCorrectedBlockMixingError q attempts) ≠ ∞ :=
+      (queryBudget q : ENNReal) *
+        ENNReal.ofReal (blockMixingError q attempts) ≠ ∞ :=
     ENNReal.mul_ne_top (by simp) (by simp)
   rw [ENNReal.toReal_mul, ENNReal.toReal_natCast,
     ENNReal.toReal_ofReal he.le,
@@ -670,13 +670,13 @@ phase start costs only the retry factor times the cap-cancelled block bound.
 In particular, this term has no inverse transition-error factor. -/
 theorem figureOneFinalScheduledProposalCap_mul_stationaryTargetError_le
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    let attempts := figureOneSafeRetryCount q - 1
+    let attempts := maxRetries q - 1
     let block := figureOneCorrectedBlockBudget q attempts
     let stride := figureOneFinalScheduledBalancedParameters.properStride q sigma2
     ((figureOneFinalScheduledBalancedParameters.proposalCap q sigma2 + 2 : ℕ) :
         ENNReal) * scheduledBalancedStationaryTargetError q ≤
-      figureOneSafeRetryCount q •
-        ((figureOneFinalScheduledQueryBudget q : ENNReal) * block +
+      maxRetries q •
+        ((queryBudget q : ENNReal) * block +
           387 * (stride : ENNReal)) := by
   dsimp only
   calc
@@ -684,28 +684,28 @@ theorem figureOneFinalScheduledProposalCap_mul_stationaryTargetError_le
           ℕ) : ENNReal) * figureOneCorrectedTargetBudget q := by
       gcongr
       exact scheduledBalancedStationaryTargetError_le_targetBudget q
-    _ = figureOneSafeRetryCount q •
+    _ = maxRetries q •
         (((figureOneFinalScheduledBalancedParameters.proposalCap q sigma2 + 2 :
             ℕ) : ENNReal) *
-          figureOneCorrectedBlockBudget q (figureOneSafeRetryCount q - 1)) := by
+          figureOneCorrectedBlockBudget q (maxRetries q - 1)) := by
       rw [figureOneCorrectedTargetBudget_eq_safeRetryCount_nsmul_blockBudget]
       simp only [nsmul_eq_mul]
       ring
-    _ ≤ figureOneSafeRetryCount q •
-        ((figureOneFinalScheduledQueryBudget q : ENNReal) *
-            figureOneCorrectedBlockBudget q (figureOneSafeRetryCount q - 1) +
+    _ ≤ maxRetries q •
+        ((queryBudget q : ENNReal) *
+            figureOneCorrectedBlockBudget q (maxRetries q - 1) +
           387 * (figureOneFinalScheduledBalancedParameters.properStride q sigma2 :
             ENNReal)) := by
       gcongr
       exact figureOneFinalScheduledProposalCap_add_two_mul_blockBudget_le
         q hsigma2
 
-#print axioms figureOneSafeRetryCount_cast_le_correctedMixingLog
+#print axioms maxRetries_cast_le_correctedMixingLog
 #print axioms figureOneScheduledMixingDenominator_inv_sq_le
-#print axioms figureOneScheduledCorrectedProperStride_cast_le
+#print axioms strideFor_cast_le
 #print axioms figureOneScheduledProperWork_cast_le_old
-#print axioms figureOneSafeRetryCount_mul_scheduledProperWork_cast_le_sharp
-#print axioms figureOneSafeRetryCount_mul_scheduledProperWork_cast_le
+#print axioms maxRetries_mul_scheduledProperWork_cast_le_sharp
+#print axioms maxRetries_mul_scheduledProperWork_cast_le
 #print axioms figureOneWarmShadowScheduledWork_cast_le
 #print axioms one_add_figureOneWarmShadowScheduledWork_le
 #print axioms figureOneFinalScheduledLocalCapCeil_mul_blockError_le

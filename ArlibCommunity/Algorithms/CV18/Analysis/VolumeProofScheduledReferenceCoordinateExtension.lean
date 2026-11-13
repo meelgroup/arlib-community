@@ -19,24 +19,24 @@ namespace ArlibCommunity.Algorithms.CV18
 noncomputable section
 
 /-- Extend the finite family of recorded trace coordinates by the positive
-ideal raw mean outside `1, ..., figureOneDependentPhaseCount q`. -/
+ideal raw mean outside `1, ..., numPhases q`. -/
 noncomputable def figureOneScheduledReferenceCoordinateExtension
     (q : VolumeParams) (I : VolumeInput q.n) (j : ℕ) :
     ScheduledBalancedCoolingTrace q.n → ℝ :=
-  if 1 ≤ j ∧ j ≤ figureOneDependentPhaseCount q then
+  if 1 ≤ j ∧ j ≤ numPhases q then
     scheduledBalancedTracePhaseVariable q j
   else fun _ => figureOneChronologicalRawMean q I j
 
 theorem figureOneScheduledReferenceCoordinateExtension_eq_of_used
     (q : VolumeParams) (I : VolumeInput q.n) {j : ℕ}
-    (hj1 : 1 ≤ j) (hj : j ≤ figureOneDependentPhaseCount q) :
+    (hj1 : 1 ≤ j) (hj : j ≤ numPhases q) :
     figureOneScheduledReferenceCoordinateExtension q I j =
       scheduledBalancedTracePhaseVariable q j := by
   simp [figureOneScheduledReferenceCoordinateExtension, hj1, hj]
 
 theorem figureOneScheduledReferenceCoordinateExtension_eq_rawMean_of_not_used
     (q : VolumeParams) (I : VolumeInput q.n) {j : ℕ}
-    (hj : ¬(1 ≤ j ∧ j ≤ figureOneDependentPhaseCount q)) :
+    (hj : ¬(1 ≤ j ∧ j ≤ numPhases q)) :
     figureOneScheduledReferenceCoordinateExtension q I j =
       fun _ => figureOneChronologicalRawMean q I j := by
   simp [figureOneScheduledReferenceCoordinateExtension, hj]
@@ -60,7 +60,7 @@ theorem figureOneScheduledReferenceCoordinateExtension_nonnegative
 
 theorem figureOneScheduledReferenceCoordinateExtension_apply_of_used
     (q : VolumeParams) (I : VolumeInput q.n) {j : ℕ}
-    (hj1 : 1 ≤ j) (hj : j ≤ figureOneDependentPhaseCount q)
+    (hj1 : 1 ≤ j) (hj : j ≤ numPhases q)
     (trace : ScheduledBalancedCoolingTrace q.n) :
     figureOneScheduledReferenceCoordinateExtension q I j trace =
       scheduledBalancedTracePhaseVariable q j trace := by
@@ -72,10 +72,10 @@ theorem dependentPhaseSampleProduct_referenceCoordinateExtension_eq
     (trace : ScheduledBalancedCoolingTrace q.n) :
     dependentPhaseSampleProduct
         (figureOneScheduledReferenceCoordinateExtension q I)
-        (figureOneDependentPhaseCount q) trace =
+        (numPhases q) trace =
       dependentPhaseSampleProduct
         (scheduledBalancedTracePhaseVariable q)
-        (figureOneDependentPhaseCount q) trace := by
+        (numPhases q) trace := by
   unfold dependentPhaseSampleProduct
   apply Finset.prod_congr rfl
   intro j hj
@@ -89,7 +89,7 @@ theorem figureOneScheduledReferenceCoordinateExtension_memLp_of_not_used
     (q : VolumeParams) (I : VolumeInput q.n)
     (mu : Measure (ScheduledBalancedCoolingTrace q.n))
     [IsProbabilityMeasure mu] {j : ℕ}
-    (hj : ¬(1 ≤ j ∧ j ≤ figureOneDependentPhaseCount q)) :
+    (hj : ¬(1 ≤ j ∧ j ≤ numPhases q)) :
     MemLp (figureOneScheduledReferenceCoordinateExtension q I j) 2 mu := by
   rw [figureOneScheduledReferenceCoordinateExtension_eq_rawMean_of_not_used
     q I hj]
@@ -99,7 +99,7 @@ theorem integral_figureOneScheduledReferenceCoordinateExtension_of_not_used
     (q : VolumeParams) (I : VolumeInput q.n)
     (mu : Measure (ScheduledBalancedCoolingTrace q.n))
     [IsProbabilityMeasure mu] {j : ℕ}
-    (hj : ¬(1 ≤ j ∧ j ≤ figureOneDependentPhaseCount q)) :
+    (hj : ¬(1 ≤ j ∧ j ≤ numPhases q)) :
     (∫ trace, figureOneScheduledReferenceCoordinateExtension q I j trace ∂mu) =
       figureOneChronologicalRawMean q I j := by
   rw [figureOneScheduledReferenceCoordinateExtension_eq_rawMean_of_not_used
@@ -110,7 +110,7 @@ theorem integral_sq_figureOneScheduledReferenceCoordinateExtension_of_not_used
     (q : VolumeParams) (I : VolumeInput q.n)
     (mu : Measure (ScheduledBalancedCoolingTrace q.n))
     [IsProbabilityMeasure mu] {j : ℕ}
-    (hj : ¬(1 ≤ j ∧ j ≤ figureOneDependentPhaseCount q)) :
+    (hj : ¬(1 ≤ j ∧ j ≤ numPhases q)) :
     (∫ trace,
         figureOneScheduledReferenceCoordinateExtension q I j trace ^ 2 ∂mu) =
       figureOneChronologicalRawMean q I j ^ 2 := by
@@ -122,7 +122,7 @@ theorem integral_sq_figureOneScheduledReferenceCoordinateExtension_le_of_not_use
     (q : VolumeParams) (I : VolumeInput q.n)
     (mu : Measure (ScheduledBalancedCoolingTrace q.n))
     [IsProbabilityMeasure mu] {j : ℕ}
-    (hj : ¬(1 ≤ j ∧ j ≤ figureOneDependentPhaseCount q)) :
+    (hj : ¬(1 ≤ j ∧ j ≤ numPhases q)) :
     (∫ trace,
         figureOneScheduledReferenceCoordinateExtension q I j trace ^ 2 ∂mu) ≤
       (figureOneChronologicalMomentFactor q j +

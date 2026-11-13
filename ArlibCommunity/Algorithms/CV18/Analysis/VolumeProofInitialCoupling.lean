@@ -17,9 +17,9 @@ draw is exactly a scalar multiple of the restricted Gaussian probability used
 by the stationary walk analysis.
 -/
 
-theorem initialGaussianSamplingMeasure_restrict_truncatedBody
+theorem initialGaussianLaw_restrict_truncatedBody
     (q : VolumeParams) (I : VolumeInput q.n) :
-    (initialGaussianSamplingMeasure q).restrict (truncatedBody q I) =
+    (initialGaussianLaw q).restrict (truncatedBody q I) =
       ENNReal.ofReal
           (gaussianIntegral (truncatedBody q I) (initialVariance q) /
             initialGaussianIntegral q) •
@@ -27,7 +27,7 @@ theorem initialGaussianSamplingMeasure_restrict_truncatedBody
           (initialVariance_pos q) : Measure (AmbientSpace q.n)) := by
   ext S hS
   rw [Measure.restrict_apply hS,
-    initialGaussianSamplingMeasure_apply q
+    initialGaussianLaw_apply q
       (hS.inter (truncatedBody_measurable q I)),
     Measure.smul_apply, smul_eq_mul,
     truncatedGaussianProbability_apply q I (initialVariance_pos q) hS]
@@ -125,9 +125,9 @@ theorem initialGaussianRestrictedMassCoefficient_le_one
   let ν : Measure (AmbientSpace q.n) :=
     truncatedGaussianProbability q I (initialVariance q)
       (initialVariance_pos q)
-  have hrestrict := initialGaussianSamplingMeasure_restrict_truncatedBody q I
+  have hrestrict := initialGaussianLaw_restrict_truncatedBody q I
   change c ≤ 1
-  change (initialGaussianSamplingMeasure q).restrict (truncatedBody q I) =
+  change (initialGaussianLaw q).restrict (truncatedBody q I) =
       c • ν at hrestrict
   have hmass := congrArg (fun m : Measure (AmbientSpace q.n) => m Set.univ)
     hrestrict
@@ -138,7 +138,7 @@ theorem initialGaussianRestrictedMassCoefficient_le_one
   rw [← hmass]
   simpa only [measure_univ] using
     (measure_mono (Set.subset_univ (truncatedBody q I))
-      (μ := initialGaussianSamplingMeasure q))
+      (μ := initialGaussianLaw q))
 
 /-- The successful part of the executable initial draw is dominated by the
 ideal normalized restricted-Gaussian law. -/
@@ -147,10 +147,10 @@ theorem initialGaussianRestriction_bind_le
     (q : VolumeParams) (I : VolumeInput q.n)
     (K : AmbientSpace q.n → Measure β) (_hK : Measurable K)
     (E : Set β) (_hE : MeasurableSet E) :
-    ((initialGaussianSamplingMeasure q).restrict (truncatedBody q I)).bind K E ≤
+    ((initialGaussianLaw q).restrict (truncatedBody q I)).bind K E ≤
       ((truncatedGaussianProbability q I (initialVariance q)
         (initialVariance_pos q) : Measure (AmbientSpace q.n)).bind K) E := by
-  rw [initialGaussianSamplingMeasure_restrict_truncatedBody q I,
+  rw [initialGaussianLaw_restrict_truncatedBody q I,
     Measure.bind_smul (hf := by fun_prop), Measure.smul_apply]
   rw [smul_eq_mul]
   apply mul_le_of_le_one_left
@@ -167,7 +167,7 @@ theorem initialTruncatedFallback_bind_apply_le
     (K : AmbientSpace q.n → Measure β) (hK : Measurable K)
     (hKprob : ∀ x, IsProbabilityMeasure (K x))
     (E : Set β) (hE : MeasurableSet E) :
-    (((initialGaussianSamplingMeasure q).map
+    (((initialGaussianLaw q).map
         (initialTruncatedFallback q I)).bind K) E ≤
       ((truncatedGaussianProbability q I (initialVariance q)
         (initialVariance_pos q) : Measure (AmbientSpace q.n)).bind K) E +
@@ -175,13 +175,13 @@ theorem initialTruncatedFallback_bind_apply_le
   rw [map_bind_eq_bind_comp _ _
     (measurable_initialTruncatedFallback q I) K hK]
   calc
-    (initialGaussianSamplingMeasure q).bind
+    (initialGaussianLaw q).bind
         (K ∘ initialTruncatedFallback q I) E ≤
-      ((initialGaussianSamplingMeasure q).restrict
+      ((initialGaussianLaw q).restrict
           (truncatedBody q I)).bind K E +
-        initialGaussianSamplingMeasure q (truncatedBody q I)ᶜ :=
+        initialGaussianLaw q (truncatedBody q I)ᶜ :=
       bind_fallback_apply_le
-        (initialGaussianSamplingMeasure q) (truncatedBody q I)
+        (initialGaussianLaw q) (truncatedBody q I)
         (truncatedBody_measurable q I) (initialTruncatedFallback q I)
         (measurable_initialTruncatedFallback q I)
         (fun x hx => by
@@ -192,7 +192,7 @@ theorem initialTruncatedFallback_bind_apply_le
         ENNReal.ofReal (q.eps / 64) := by
       exact add_le_add
         (initialGaussianRestriction_bind_le q I K hK E hE)
-        (initialGaussianSamplingMeasure_truncatedBody_compl_le q I)
+        (initialGaussianLaw_truncatedBody_compl_le q I)
 
 /-- Estimate law of the complete Figure-1 computation after initialization. -/
 noncomputable def figureOneContinuationLaw
@@ -223,7 +223,7 @@ theorem runEstimate_figureOneBaseVolumeCooling_eq_initialFallback_bind
     (S : (q : VolumeParams) → VolumeCoolingSchedule q)
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I) :
     (baseVolumeCooling figureOnePrimitives S q).runEstimate oracle.query =
-      ((initialGaussianSamplingMeasure q).map
+      ((initialGaussianLaw q).map
         (initialTruncatedFallback q I)).bind
           (figureOneContinuationLaw S q I oracle) := by
   let initialProgram : Option (AmbientSpace q.n) →
@@ -253,22 +253,22 @@ theorem runEstimate_figureOneBaseVolumeCooling_eq_initialFallback_bind
     hinitialStrong hinitialRun,
     runEstimate_figureOneInitialSample q I oracle]
   calc
-    ((initialGaussianSamplingMeasure q).map
+    ((initialGaussianLaw q).map
         (some ∘ initialTruncatedFallback q I)).bind
           (fun initialPoint =>
             (initialProgram initialPoint).runEstimate oracle.query) =
-      (initialGaussianSamplingMeasure q).bind
+      (initialGaussianLaw q).bind
         ((fun initialPoint =>
           (initialProgram initialPoint).runEstimate oracle.query) ∘
             (some ∘ initialTruncatedFallback q I)) :=
       map_bind_eq_bind_comp _ _
         (measurable_some.comp (measurable_initialTruncatedFallback q I))
         _ hinitialRun
-    _ = (initialGaussianSamplingMeasure q).bind
+    _ = (initialGaussianLaw q).bind
         (figureOneContinuationLaw S q I oracle ∘
           initialTruncatedFallback q I) := by
       congr 1
-    _ = ((initialGaussianSamplingMeasure q).map
+    _ = ((initialGaussianLaw q).map
           (initialTruncatedFallback q I)).bind
             (figureOneContinuationLaw S q I oracle) :=
       (map_bind_eq_bind_comp _ _

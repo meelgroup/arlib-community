@@ -64,10 +64,10 @@ theorem map_bind_figureOneFinalScheduledTransitionCollectLaw_optionSnd_leUpTo
     (samples : ℕ) (total : ℝ)
     (rho : Measure (AmbientSpace q.n)) [IsProbabilityMeasure rho]
     (hbaseWarm : IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) rho
+      (ENNReal.ofReal (8 * warmConstant q)) rho
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)) :
+        (proposalRadius q sigma2) sigma2)) :
     let parameters := figureOneFinalScheduledBalancedParameters
     let cap := parameters.proposalCap q sigma2
     let stride := parameters.properStride q sigma2
@@ -75,7 +75,7 @@ theorem map_bind_figureOneFinalScheduledTransitionCollectLaw_optionSnd_leUpTo
     let target := scheduledBalancedAccuracyGaussianAcceptedTargetLaw q I sigma2
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)
+        (proposalRadius q sigma2) sigma2)
     MeasureLeUpTo
       ((rho.bind fun current =>
         scheduledBalancedTransitionCollectLaw q I sigma2 weight cap stride
@@ -91,7 +91,7 @@ theorem map_bind_figureOneFinalScheduledTransitionCollectLaw_optionSnd_leUpTo
   let target := scheduledBalancedAccuracyGaussianAcceptedTargetLaw q I sigma2
     (ellGaussianProb
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2)
+      (proposalRadius q sigma2) sigma2)
   have hT := scheduledBalancedAccuracyTransitionLawAux_measurable_and_probability
     q I hsigma2 cap stride retries
   have hK := figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
@@ -153,7 +153,7 @@ noncomputable def figureOneFinalScheduledCompleteRetainedKernel
         (figureOneFinalScheduledBalancedParameters.proposalCap q sigma2)
         (figureOneFinalScheduledBalancedParameters.properStride q sigma2)
         (figureOneFinalScheduledBalancedParameters.retryLimit q sigma2)
-        (samples + 1) 0 (accuracyScaleFactor q • current)).map optionSnd
+        (samples + 1) 0 (scaleFactor q • current)).map optionSnd
 
 theorem figureOneFinalScheduledCompleteRetainedKernel_measurable_and_probability
     (q : VolumeParams) (I : VolumeInput q.n)
@@ -172,17 +172,17 @@ theorem figureOneFinalScheduledCompleteRetainedKernel_measurable_and_probability
     q I hsigma2 hweight cap stride retries (samples + 1)
   have hsome : Measurable fun current : AmbientSpace q.n =>
       (scheduledBalancedTransitionCollectLaw q I sigma2 weight cap stride
-        retries (samples + 1) 0 (accuracyScaleFactor q • current)).map
+        retries (samples + 1) 0 (scaleFactor q • current)).map
           optionSnd := by
     apply (Measure.measurable_map _ measurable_optionSnd).comp
     change Measurable
       ((fun state : ℝ × AmbientSpace q.n =>
         scheduledBalancedTransitionCollectLaw q I sigma2 weight cap stride
           retries (samples + 1) state.1 state.2) ∘
-        fun current => (0, accuracyScaleFactor q • current))
+        fun current => (0, scaleFactor q • current))
     exact hcollect.1.comp <| measurable_const.prodMk <|
       ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
-        accuracyScaleFactor q).smul measurable_id)
+        scaleFactor q).smul measurable_id)
   constructor
   · convert Measurable.optionElim
       (Measure.dirac (none : Option (AmbientSpace q.n))) hsome using 1
@@ -197,7 +197,7 @@ theorem figureOneFinalScheduledCompleteRetainedKernel_measurable_and_probability
     | some current =>
         let _ : IsProbabilityMeasure
             (scheduledBalancedTransitionCollectLaw q I sigma2 weight cap stride
-              retries (samples + 1) 0 (accuracyScaleFactor q • current)) :=
+              retries (samples + 1) 0 (scaleFactor q • current)) :=
           hcollect.2 _ _
         exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_optionSnd.aemeasurable
 
@@ -216,15 +216,15 @@ theorem bind_figureOneFinalScheduledCompleteRetainedKernel_leUpTo
     {priorError : ENNReal}
     (hstart : MeasureLeUpTo actualStart (goodRetained.map some) priorError)
     (hgoodWarm : IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
-      (goodRetained.map fun x => accuracyScaleFactor q • x)
+      (ENNReal.ofReal (8 * warmConstant q))
+      (goodRetained.map fun x => scaleFactor q • x)
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)) :
+        (proposalRadius q sigma2) sigma2)) :
     let target := scheduledBalancedAccuracyGaussianAcceptedTargetLaw q I sigma2
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)
+        (proposalRadius q sigma2) sigma2)
     MeasureLeUpTo
       (actualStart.bind
         (figureOneFinalScheduledCompleteRetainedKernel
@@ -238,15 +238,15 @@ theorem bind_figureOneFinalScheduledCompleteRetainedKernel_leUpTo
     q I hsigma2 hweight samples
   have htransport := hstart.bind_same hG.1 hG.2
   let _ : IsProbabilityMeasure
-      (goodRetained.map fun x => accuracyScaleFactor q • x) :=
+      (goodRetained.map fun x => scaleFactor q • x) :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
   have hgoodPhase :=
     map_bind_figureOneFinalScheduledTransitionCollectLaw_optionSnd_leUpTo
       q I hsigma2 hweight samples 0
-        (goodRetained.map fun x => accuracyScaleFactor q • x) hgoodWarm
+        (goodRetained.map fun x => scaleFactor q • x) hgoodWarm
   have hgoodEq :
       (goodRetained.map some).bind G =
-        ((goodRetained.map fun x => accuracyScaleFactor q • x).bind
+        ((goodRetained.map fun x => scaleFactor q • x).bind
           fun current =>
             scheduledBalancedTransitionCollectLaw q I sigma2 weight
               (figureOneFinalScheduledBalancedParameters.proposalCap q sigma2)
@@ -280,18 +280,18 @@ theorem bind_figureOneFinalScheduledCompleteRetainedKernel_leUpTo
     have hF : Measurable F := by
       exact (Measure.measurable_map _ measurable_optionSnd).comp hcollect
     have hGF : G ∘ some =
-        F ∘ fun x : AmbientSpace q.n => accuracyScaleFactor q • x := by
+        F ∘ fun x : AmbientSpace q.n => scaleFactor q • x := by
       rfl
     calc
       (goodRetained.map some).bind G =
           goodRetained.bind (G ∘ some) :=
         map_bind_eq_bind_comp_state goodRetained measurable_some hG.1
       _ = goodRetained.bind
-          (F ∘ fun x => accuracyScaleFactor q • x) := by
+          (F ∘ fun x => scaleFactor q • x) := by
         rw [hGF]
-      _ = (goodRetained.map fun x => accuracyScaleFactor q • x).bind F :=
+      _ = (goodRetained.map fun x => scaleFactor q • x).bind F :=
         (map_bind_eq_bind_comp_state goodRetained (by fun_prop) hF).symm
-      _ = ((goodRetained.map fun x => accuracyScaleFactor q • x).bind
+      _ = ((goodRetained.map fun x => scaleFactor q • x).bind
           collect).map optionSnd :=
         (map_bind_eq_bind_map_of_measurable _ hcollect measurable_optionSnd).symm
   rw [hgoodEq] at htransport

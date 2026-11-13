@@ -29,13 +29,13 @@ theorem figureOneScheduledAcceptedTargetAt_ae_mem_phaseBody
   let pi := figureOneScheduledSpeedyPiAt q I phase
   let accepted := scheduledBalancedAcceptedStateMeasure q I sigma2 pi
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    (accuracyScaleFactor q)⁻¹ • x
+    (scaleFactor q)⁻¹ • x
   let _ : IsProbabilityMeasure pi :=
     figureOneScheduledSpeedyPiAt_isProbabilityMeasure q I phase
   have hscale : Measurable scale := by
     dsimp only [scale]
     exact (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id
+      (scaleFactor q)⁻¹).smul measurable_id
   have hK : MeasurableSet K :=
     figureOneScheduledPhaseBody_measurable q I sigma2
   have hacceptMeas : Measurable

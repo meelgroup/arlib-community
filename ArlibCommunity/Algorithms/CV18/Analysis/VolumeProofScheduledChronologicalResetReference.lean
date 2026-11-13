@@ -187,7 +187,7 @@ theorem ae_trace_live_of_map_retainedOption_eq_map_some
 is exactly the newly appended public trace coordinate. -/
 theorem scheduledBalancedTracePhaseVariable_resetAppend_eq_fst
     (q : VolumeParams) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     (trace : ScheduledBalancedCoolingTrace q.n)
     (hvalid : ScheduledBalancedCoolingTraceValid phase trace)
     (hlive : trace.2 = true)
@@ -272,7 +272,7 @@ theorem scheduledResetPairToResult_nonnegative
 
 theorem scheduledBalancedTracePhaseVariable_resetAppend_eq_fst_of_good
     (q : VolumeParams) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     (trace : ScheduledBalancedCoolingTrace q.n)
     (hvalid : ScheduledBalancedCoolingTraceValid phase trace)
     (hlive : trace.2 = true)
@@ -288,7 +288,7 @@ theorem scheduledBalancedTracePhaseVariable_resetAppend_eq_fst_of_good
 
 theorem scheduledResetPrefixCoordinates_resetAppend_eq
     (q : VolumeParams) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     (trace : ScheduledBalancedCoolingTrace q.n)
     (hvalid : ScheduledBalancedCoolingTraceValid phase trace)
     (result : ℝ × Option (AmbientSpace q.n)) :
@@ -306,7 +306,7 @@ completed coordinate, and records the new score as coordinate `phase + 1`.
 This is the structural induction step behind the global CV18 reference law. -/
 theorem exists_scheduledTraceRecordedReset
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     (source : Measure (ScheduledBalancedCoolingTrace q.n))
     [IsProbabilityMeasure source]
     (hvalid : ∀ᵐ trace ∂source,
@@ -634,7 +634,7 @@ theorem exists_scheduledGaussianAcceptedPairTarget
           scheduledResetPairOutput)
         target
         (scheduledResetReferenceError q
-            (figureOnePhaseSampleCount q (scheduleValue q phase) - 1) +
+            (phaseSampleCount q (scheduleValue q phase) - 1) +
           scheduledBalancedStationaryTargetError q) ∧
       target.map Prod.snd =
         (figureOneScheduledAcceptedTargetAt q I phase).map some ∧
@@ -646,7 +646,7 @@ theorem exists_scheduledGaussianAcceptedPairTarget
         (figureOneChronologicalMomentFactor q (phase + 1) +
             figureOneExecutableMomentSlack q / 8) *
           figureOneChronologicalRawMean q I (phase + 1) ^ 2 := by
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let mean :=
     ∫ x, gaussianRatioWeight (n := q.n) (scheduleValue q phase)
         (scheduleValue q (phase + 1)) x
@@ -658,10 +658,10 @@ theorem exists_scheduledGaussianAcceptedPairTarget
     1 + scheduleValue q phase / terminalVariance q
   have hcount : 0 < count := by
     simpa [count] using
-      figureOnePhaseSampleCount_pos q (scheduleValue q phase)
-  have hcountMax : count ≤ figureOneDependentMaxSampleCount q := by
+      phaseSampleCount_pos q (scheduleValue q phase)
+  have hcountMax : count ≤ largestSampleCount q := by
     simpa [count] using
-      figureOnePhaseSampleCount_le_dependentMax q (scheduleValue q phase)
+      phaseSampleCount_le_dependentMax q (scheduleValue q phase)
   have hmeanPos : 0 < mean := by
     rw [show mean =
         gaussianIntegral (truncatedBody q I) (scheduleValue q (phase + 1)) /
@@ -716,8 +716,8 @@ theorem exists_scheduledGaussianAcceptedPairTarget
         hstate hmem hmean hsecond'
   have hmeanChronological : mean =
       figureOneChronologicalRawMean q I (phase + 1) := by
-    have hphaseDependent : phase < figureOneDependentPhaseCount q := by
-      rw [figureOneDependentPhaseCount]
+    have hphaseDependent : phase < numPhases q := by
+      rw [numPhases]
       omega
     have horder :
         figureOneChronologicalPhaseOrder q ⟨phase, hphaseDependent⟩ =
@@ -755,7 +755,7 @@ theorem exists_scheduledGaussianExactPairTarget
           scheduledResetPairOutput)
         target
         (scheduledResetReferenceError q
-          (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)) ∧
+          (phaseSampleCount q (scheduleValue q phase) - 1)) ∧
       target.map Prod.snd = scheduledRetainedExactSome q I phase ∧
       (∀ᵐ result ∂target, 0 ≤ result.1) ∧
       MemLp Prod.fst 2 target ∧
@@ -765,7 +765,7 @@ theorem exists_scheduledGaussianExactPairTarget
         (figureOneChronologicalMomentFactor q (phase + 1) +
             figureOneExecutableMomentSlack q / 8) *
           figureOneChronologicalRawMean q I (phase + 1) ^ 2 := by
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let mean :=
     ∫ x, gaussianRatioWeight (n := q.n) (scheduleValue q phase)
         (scheduleValue q (phase + 1)) x
@@ -777,10 +777,10 @@ theorem exists_scheduledGaussianExactPairTarget
     1 + scheduleValue q phase / terminalVariance q
   have hcount : 0 < count := by
     simpa [count] using
-      figureOnePhaseSampleCount_pos q (scheduleValue q phase)
-  have hcountMax : count ≤ figureOneDependentMaxSampleCount q := by
+      phaseSampleCount_pos q (scheduleValue q phase)
+  have hcountMax : count ≤ largestSampleCount q := by
     simpa [count] using
-      figureOnePhaseSampleCount_le_dependentMax q (scheduleValue q phase)
+      phaseSampleCount_le_dependentMax q (scheduleValue q phase)
   have hmeanPos : 0 < mean := by
     rw [show mean =
         gaussianIntegral (truncatedBody q I) (scheduleValue q (phase + 1)) /
@@ -855,8 +855,8 @@ theorem exists_scheduledGaussianExactPairTarget
       integral_map houtput.aemeasurable
         (measurable_fst.pow_const 2).aestronglyMeasurable]
     exact hsecond'
-  have hphaseDependent : phase < figureOneDependentPhaseCount q := by
-    rw [figureOneDependentPhaseCount]
+  have hphaseDependent : phase < numPhases q := by
+    rw [numPhases]
     omega
   have horder :
       figureOneChronologicalPhaseOrder q ⟨phase, hphaseDependent⟩ =
@@ -892,7 +892,7 @@ theorem exists_scheduledTerminalPairTarget
         ((figureOneScheduledTerminalPhaseTarget q I).map
           scheduledResetPairOutput)
         target
-        (scheduledResetReferenceError q (figureOneSampleCount q - 1)) ∧
+        (scheduledResetReferenceError q (sampleCount q - 1)) ∧
       target.map Prod.snd =
         scheduledRetainedExactSome q I (terminalPhaseSteps q) ∧
       (∀ᵐ result ∂target, 0 ≤ result.1) ∧
@@ -932,7 +932,7 @@ theorem exists_scheduledTerminalPairTarget
       integral_map houtput.aemeasurable measurable_fst.aestronglyMeasurable]
     exact hmean
   have hsecondTarget : (∫ result, result.1 ^ 2 ∂target) ≤
-      (1 + (Real.exp (1 / 2) - 1) / (figureOneSampleCount q : ℝ) +
+      (1 + (Real.exp (1 / 2) - 1) / (sampleCount q : ℝ) +
           figureOneExecutableMomentSlack q / 8) *
         (figureOneIdealPhaseMean q I .terminal) ^ 2 := by
     rw [show target = joint.map scheduledResetPairOutput by rfl,
@@ -940,8 +940,8 @@ theorem exists_scheduledTerminalPairTarget
         (measurable_fst.pow_const 2).aestronglyMeasurable]
     exact hsecond
   have hphaseDependent : terminalPhaseSteps q <
-      figureOneDependentPhaseCount q := by
-    rw [figureOneDependentPhaseCount]
+      numPhases q := by
+    rw [numPhases]
     omega
   have hterminal : figureOneChronologicalPhaseAt q
       (terminalPhaseSteps q + 1) = .terminal := by
@@ -954,7 +954,7 @@ theorem exists_scheduledTerminalPairTarget
     rw [figureOneChronologicalRawMean, hterminal]
   have hfactorChronological : figureOneChronologicalMomentFactor q
       (terminalPhaseSteps q + 1) =
-        1 + (Real.exp (1 / 2) - 1) / (figureOneSampleCount q : ℝ) := by
+        1 + (Real.exp (1 / 2) - 1) / (sampleCount q : ℝ) := by
     rw [figureOneChronologicalMomentFactor, hterminal]
     rfl
   refine ⟨target, htargetProb, ?_, hstateTarget, hnonnegTarget,

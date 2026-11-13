@@ -10,7 +10,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledRetrySemantic
 
 The finite transition law returns a target-space observation.  Its retained
 speedy state is nevertheless not lost: multiplication by
-`accuracyScaleFactor` recovers it.  This file iterates that recovered-state
+`scaleFactor` recovers it.  This file iterates that recovered-state
 transition and relates the resulting phase estimator to the executable
 balanced-retry collector.
 -/
@@ -30,7 +30,7 @@ noncomputable def scheduledBalancedAccuracyTransitionCollectLaw
     ℕ → ℝ → AmbientSpace q.n →
       Measure (Option (ℝ × AmbientSpace q.n))
   | 0, total, current =>
-      Measure.dirac (some (total, (accuracyScaleFactor q)⁻¹ • current))
+      Measure.dirac (some (total, (scaleFactor q)⁻¹ • current))
   | samples + 1, total, current =>
       (scheduledBalancedAccuracyTransitionLawAux q I sigma2 proposalCap properStride
         retryLimit current).bind fun result =>
@@ -39,7 +39,7 @@ noncomputable def scheduledBalancedAccuracyTransitionCollectLaw
           | some target =>
               scheduledBalancedAccuracyTransitionCollectLaw q I sigma2 weight
                 proposalCap properStride retryLimit samples
-                (total + weight target) (accuracyScaleFactor q • target)
+                (total + weight target) (scaleFactor q • target)
 
 theorem scheduledBalancedAccuracyTransitionCollectLaw_measurable_and_probability
     (q : VolumeParams) (I : VolumeInput q.n)
@@ -63,11 +63,11 @@ theorem scheduledBalancedAccuracyTransitionCollectLaw_measurable_and_probability
       · exact Measure.measurable_dirac.comp <|
           measurable_some.comp <| measurable_fst.prodMk <|
             (measurable_const : Measurable fun _ : ℝ × AmbientSpace q.n =>
-              (accuracyScaleFactor q)⁻¹).smul measurable_snd
+              (scaleFactor q)⁻¹).smul measurable_snd
       · intro total current
         change IsProbabilityMeasure
           (Measure.dirac
-            (some (total, (accuracyScaleFactor q)⁻¹ • current)))
+            (some (total, (scaleFactor q)⁻¹ • current)))
         infer_instance
   | succ samples ih =>
       let tail : (ℝ × AmbientSpace q.n) ×
@@ -79,19 +79,19 @@ theorem scheduledBalancedAccuracyTransitionCollectLaw_measurable_and_probability
             scheduledBalancedAccuracyTransitionCollectLaw q I sigma2 weight
               proposalCap properStride retryLimit samples
               (value.1.1 + weight target)
-              (accuracyScaleFactor q • target)
+              (scaleFactor q • target)
       have hsome : Measurable fun value :
           (ℝ × AmbientSpace q.n) × AmbientSpace q.n =>
             scheduledBalancedAccuracyTransitionCollectLaw q I sigma2 weight proposalCap
               properStride retryLimit samples
               (value.1.1 + weight value.2)
-              (accuracyScaleFactor q • value.2) := by
+              (scaleFactor q • value.2) := by
         exact ih.1.comp <|
           ((measurable_fst.comp measurable_fst).add
             (hweight.comp measurable_snd)).prodMk <|
               (measurable_const : Measurable fun _ :
                 (ℝ × AmbientSpace q.n) × AmbientSpace q.n =>
-                  accuracyScaleFactor q).smul measurable_snd
+                  scaleFactor q).smul measurable_snd
       have htail : Measurable tail := by
         dsimp only [tail]
         convert Measurable.optionElimParam
@@ -101,7 +101,7 @@ theorem scheduledBalancedAccuracyTransitionCollectLaw_measurable_and_probability
             scheduledBalancedAccuracyTransitionCollectLaw q I sigma2 weight proposalCap
               properStride retryLimit samples
               (value.1.1 + weight value.2)
-              (accuracyScaleFactor q • value.2))
+              (scaleFactor q • value.2))
           (Measure.measurable_dirac.comp measurable_const) hsome using 1
         ext value
         cases value.2 <;> rfl
@@ -147,7 +147,7 @@ noncomputable def scheduledBalancedAccuracyTransitionCollectLawFirst
     ℕ → ℝ → AmbientSpace q.n →
       Measure (Option (ℝ × AmbientSpace q.n))
   | 0, total, current =>
-      Measure.dirac (some (total, (accuracyScaleFactor q)⁻¹ • current))
+      Measure.dirac (some (total, (scaleFactor q)⁻¹ • current))
   | samples + 1, total, current =>
       (scheduledBalancedAccuracyTransitionLawAux q I sigma2 proposalCap properStride
         attempts current).bind fun result =>
@@ -156,7 +156,7 @@ noncomputable def scheduledBalancedAccuracyTransitionCollectLawFirst
           | some target =>
               scheduledBalancedAccuracyTransitionCollectLaw q I sigma2 weight
                 proposalCap properStride retryLimit samples
-                (total + weight target) (accuracyScaleFactor q • target)
+                (total + weight target) (scaleFactor q • target)
 
 theorem scheduledBalancedAccuracyTransitionCollectLawFirst_full
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
@@ -222,7 +222,7 @@ theorem map_scheduledBalancedRetryCollectLawAux_eq_transitionCollectLawFirst
                     scheduledBalancedAccuracyTransitionCollectLaw q I sigma2 weight
                       proposalCap properStride retryLimit future
                       (total + weight target)
-                      (accuracyScaleFactor q • target)
+                      (scaleFactor q • target)
               have htail : Measurable tail := by
                 dsimp only [tail]
                 have hcollect :=
@@ -233,11 +233,11 @@ theorem map_scheduledBalancedRetryCollectLawAux_eq_transitionCollectLawFirst
                     scheduledBalancedAccuracyTransitionCollectLaw q I sigma2 weight
                       proposalCap properStride retryLimit future
                       (total + weight target)
-                      (accuracyScaleFactor q • target) :=
+                      (scaleFactor q • target) :=
                   hcollect.comp <|
                     (measurable_const.add hweight).prodMk <|
                       (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-                        accuracyScaleFactor q).smul measurable_id
+                        scaleFactor q).smul measurable_id
                 convert Measurable.optionElim
                   (Measure.dirac (none : Option (ℝ × AmbientSpace q.n)))
                     hsome using 1
@@ -254,7 +254,7 @@ theorem map_scheduledBalancedRetryCollectLawAux_eq_transitionCollectLawFirst
                     scheduledBalancedAccuracyTransitionCollectLaw q I sigma2 weight
                       proposalCap properStride retryLimit future
                       (total + weight target)
-                      (accuracyScaleFactor q • target)
+                      (scaleFactor q • target)
               have hnextTarget : Measurable nextTarget := by
                 dsimp only [nextTarget]
                 have hcollect :=
@@ -265,11 +265,11 @@ theorem map_scheduledBalancedRetryCollectLawAux_eq_transitionCollectLawFirst
                     scheduledBalancedAccuracyTransitionCollectLaw q I sigma2 weight
                       proposalCap properStride retryLimit future
                       (total + weight target)
-                      (accuracyScaleFactor q • target) :=
+                      (scaleFactor q • target) :=
                   hcollect.comp <|
                     (measurable_const.add hweight).prodMk <|
                       (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-                        accuracyScaleFactor q).smul measurable_id
+                        scaleFactor q).smul measurable_id
                 convert Measurable.optionElim
                   (Measure.dirac (none : Option (ℝ × AmbientSpace q.n)))
                     hsome using 1
@@ -477,16 +477,16 @@ theorem map_scheduledBalancedRetryCollectLawAux_eq_transitionCollectLawFirst
                     hnextTarget.aemeasurable]
                   apply Measure.bind_congr_right
                   have hsecond : ∀ᵐ result ∂R mixed,
-                      result.2 = (accuracyScaleFactor q)⁻¹ • mixed :=
+                      result.2 = (scaleFactor q)⁻¹ • mixed :=
                     scheduledBalancedAccuracyGaussianRejectionLaw_ae_snd
                       q I sigma2 mixed
                   filter_upwards [hsecond] with result hsecondResult
                   by_cases hresult : result.1 = true
-                  · have hc0 : accuracyScaleFactor q ≠ 0 :=
-                      (accuracyScaleFactor_pos q).ne'
+                  · have hc0 : scaleFactor q ≠ 0 :=
+                      (scaleFactor_pos q).ne'
                     simp only [rawNext, endpointResult, hresult, if_true]
                     rw [Measure.dirac_bind hnextTarget]
-                    have hrecover : accuracyScaleFactor q • result.2 = mixed := by
+                    have hrecover : scaleFactor q • result.2 = mixed := by
                       rw [hsecondResult, ← mul_smul, mul_inv_cancel₀ hc0,
                         one_smul]
                     dsimp only [nextTarget]

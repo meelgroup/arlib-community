@@ -89,7 +89,7 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_zero_leUpTo_target
     MeasureLeUpTo
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (scheduledBalancedTracePhaseVariable q 1))
       ((figureOneScheduledGaussianPhaseTarget q I 0).map
         figureOneScheduledTraceLiveRawOutput)
@@ -101,10 +101,10 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_zero_leUpTo_target
     truncatedGaussianProbability q I (initialVariance q)
       (initialVariance_pos q)
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let pi := ellGaussianProb
     (figureOneScheduledPhaseBody q I (initialVariance q))
-    (figureOneScheduledProposalRadius q (initialVariance q))
+    (proposalRadius q (initialVariance q))
     (initialVariance q)
   let good := (scheduledBalancedAccuracyGaussianAcceptedTargetLaw
     q I (initialVariance q) pi).map scale
@@ -145,12 +145,12 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_zero_leUpTo_target
     simpa [good, pi, scale, figureOneScheduledSpeedyPiAt, scheduleValue] using
       hgoodWarm
   have hM16 : (8 : ENNReal) ≤
-      ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+      ENNReal.ofReal (16 * warmConstant q) := by
     rw [show (8 : ENNReal) = ENNReal.ofReal (8 : ℝ) by norm_num]
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
+      nlinarith [warmConstant_one_le q]
   apply scheduledBalancedFinalTraceRawPhase_leUpTo_of_immediate
-    q I 0 (figureOneDependentPhaseCount_pos q)
+    q I 0 (numPhases_pos q)
       (figureOneScheduledGaussianPhaseTarget q I 0)
   apply bind_scheduledBalancedTracePhaseOutputLaw_leUpTo_of_live_good_bad
     q I 0 (terminalPhaseSteps_pos q) rho good bad (by norm_num) (by norm_num)
@@ -165,7 +165,7 @@ theorem scheduledBalancedFinalTraceRawTerminalPhase_leUpTo_target
     MeasureLeUpTo
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (scheduledBalancedTracePhaseVariable q
             (terminalPhaseSteps q + 1)))
       ((figureOneScheduledTerminalPhaseTarget q I).map
@@ -184,7 +184,7 @@ theorem scheduledBalancedFinalTraceRawTerminalPhase_leUpTo_target
   let rho := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I phase
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let good := (figureOneScheduledAcceptedTargetAt q I previous).map scale
   let eta := figureOneScheduledRetainedError q phase
   obtain ⟨bad, hlive, herror⟩ :=
@@ -212,22 +212,22 @@ theorem scheduledBalancedFinalTraceRawTerminalPhase_leUpTo_target
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I phase
   have hgood : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) good
+      (ENNReal.ofReal (8 * warmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I phase) := by
     simpa [good, scale, phase, figureOneScheduledAcceptedTargetAt,
       figureOneScheduledSpeedyPiAt, hpreviousSucc] using
       map_scheduledBalancedAcceptedTarget_scale_adjacent_isWarm q I previous
   have hM8 : (1 : ENNReal) ≤
-      ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) := by
+      ENNReal.ofReal (8 * warmConstant q) := by
     rw [← ENNReal.ofReal_one]
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
-  have hM8M16 : ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) ≤
-      ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+      nlinarith [warmConstant_one_le q]
+  have hM8M16 : ENNReal.ofReal (8 * warmConstant q) ≤
+      ENNReal.ofReal (16 * warmConstant q) := by
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
+      nlinarith [warmConstant_one_le q]
   apply scheduledBalancedFinalTraceRawPhase_leUpTo_of_immediate
-    q I phase (by rw [figureOneDependentPhaseCount]; omega)
+    q I phase (by rw [numPhases]; omega)
       (figureOneScheduledTerminalPhaseTarget q I)
   apply
     bind_scheduledBalancedTerminalTracePhaseOutputLaw_leUpTo_of_live_good_bad
@@ -244,7 +244,7 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_zero_tv_target
     Arlib.TVLe
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (scheduledBalancedTracePhaseVariable q 1))
       ((figureOneScheduledGaussianPhaseTarget q I 0).map
         figureOneScheduledTraceLiveRawOutput)
@@ -253,13 +253,13 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_zero_tv_target
   let _ : IsProbabilityMeasure
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)) :=
+        (numPhases q)) :=
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I _
   let _ : IsProbabilityMeasure
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (scheduledBalancedTracePhaseVariable q 1)) :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       (measurable_scheduledBalancedTracePhaseVariable q 1).aemeasurable
@@ -280,7 +280,7 @@ theorem scheduledBalancedFinalTraceRawTerminalPhase_tv_target
     Arlib.TVLe
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (scheduledBalancedTracePhaseVariable q
             (terminalPhaseSteps q + 1)))
       ((figureOneScheduledTerminalPhaseTarget q I).map
@@ -290,13 +290,13 @@ theorem scheduledBalancedFinalTraceRawTerminalPhase_tv_target
   let _ : IsProbabilityMeasure
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)) :=
+        (numPhases q)) :=
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I _
   let _ : IsProbabilityMeasure
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (scheduledBalancedTracePhaseVariable q
             (terminalPhaseSteps q + 1))) :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable

@@ -24,9 +24,9 @@ theorem lintegral_optional_scheduledCollector_cost_le_finalEnvelope_of_leUpTo
     [IsProbabilityMeasure target]
     (happrox : MeasureLeUpTo mu (target.map some) error)
     (hwarm : _root_.Arlib.IsWarm M
-      (target.map fun point => accuracyScaleFactor q • point)
+      (target.map fun point => scaleFactor q • point)
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (hM : M ≤ 96)
     (proposalCap properStride retryLimit samples : ℕ)
     (hstride : 0 < properStride) :
@@ -35,12 +35,12 @@ theorem lintegral_optional_scheduledCollector_cost_le_finalEnvelope_of_leUpTo
         | some point => countedQueryCost
             ((scheduledBalancedAccuracyRetryCollect q sigma2 weight proposalCap
               properStride retryLimit samples
-              (accuracyScaleFactor q • point)).run oracle.query)
+              (scaleFactor q • point)).run oracle.query)
       ∂mu ≤
       ((384 * (samples * retryLimit * properStride) : ℕ) : ENNReal) +
         ((samples * retryLimit * (proposalCap + 2) : ℕ) : ENNReal) * error := by
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun point =>
-    accuracyScaleFactor q • point
+    scaleFactor q • point
   let cost : AmbientSpace q.n → ENNReal := fun current => countedQueryCost
     ((scheduledBalancedAccuracyRetryCollect q sigma2 weight proposalCap
       properStride retryLimit samples current).run oracle.query)
@@ -109,8 +109,8 @@ theorem lintegral_optional_scheduledCollector_cost_le_finalEnvelope_of_leUpTo
         simpa only [countedQueryCost] using
           (scheduledBalancedAccuracyRetryCollect_queryBound q sigma2 weight
             proposalCap properStride retryLimit samples
-              (accuracyScaleFactor q • point)).lintegral_queryCount_le
-            (hcollector.2 (accuracyScaleFactor q • point))
+              (scaleFactor q • point)).lintegral_queryCount_le
+            (hcollector.2 (scaleFactor q • point))
   have herror : ∫⁻ state, optionCost state ∂bad ≤
       ((samples * retryLimit * (proposalCap + 2) : ℕ) : ENNReal) * error := by
     calc

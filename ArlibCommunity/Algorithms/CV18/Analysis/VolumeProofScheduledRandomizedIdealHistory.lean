@@ -100,7 +100,7 @@ noncomputable def figureOneRandomizedIdealHistoryLaw
 /-- Append one freshly drawn ideal phase block to a visible history. -/
 noncomputable def figureOneRandomizedIdealHistoryAppend
     (q : VolumeParams) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q) :
+    (hphase : phase < numPhases q) :
     Option (BalancedCoolingHistory q.n) →
       FigureOneIdealPhaseSampleSpace q
         (figureOneChronologicalPhaseOrder q ⟨phase, hphase⟩) →
@@ -115,7 +115,7 @@ noncomputable def figureOneRandomizedIdealHistoryAppend
 
 theorem measurable_uncurry_figureOneRandomizedIdealHistoryAppend
     (q : VolumeParams) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q) :
+    (hphase : phase < numPhases q) :
     Measurable (Function.uncurry
       (figureOneRandomizedIdealHistoryAppend q phase hphase)) := by
   let p := figureOneChronologicalPhaseOrder q ⟨phase, hphase⟩
@@ -151,7 +151,7 @@ theorem measurable_uncurry_figureOneRandomizedIdealHistoryAppend
 /-- The freshly randomized ideal phase kernel on visible history alone. -/
 noncomputable def figureOneRandomizedIdealHistoryKernel
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q) :
+    (hphase : phase < numPhases q) :
     Option (BalancedCoolingHistory q.n) →
       Measure (Option (BalancedCoolingHistory q.n)) :=
   let p := figureOneChronologicalPhaseOrder q ⟨phase, hphase⟩
@@ -160,7 +160,7 @@ noncomputable def figureOneRandomizedIdealHistoryKernel
 
 theorem figureOneRandomizedIdealHistoryKernel_measurable_and_probability
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q) :
+    (hphase : phase < numPhases q) :
     Measurable (figureOneRandomizedIdealHistoryKernel q I phase hphase) ∧
     ∀ history, IsProbabilityMeasure
       (figureOneRandomizedIdealHistoryKernel q I phase hphase history) := by
@@ -184,7 +184,7 @@ block, then projecting the old deterministic construction is exactly one
 step of the genuinely randomized history kernel. -/
 theorem figureOneRandomizedIdealHistoryLaw_succ_of_indepFun
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     (hind : IndepFun
       (fun state => (figureOneIdealChronologicalState q phase state).2)
       (fun state => state.1
@@ -311,13 +311,13 @@ ideal scalar product law. -/
 theorem figureOneRandomizedIdealHistoryLaw_map_output
     (q : VolumeParams) (I : VolumeInput q.n) :
     (figureOneRandomizedIdealHistoryLaw q I
-      (figureOneDependentPhaseCount q)).map
+      (numPhases q)).map
         (balancedFigureOneHistoryEstimate q) =
       (figureOneIdealExperimentLaw q I).map
         (fun samples => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (figureOneChronologicalIdealCoordinate q)
-            (figureOneDependentPhaseCount q) samples) := by
+            (numPhases q) samples) := by
   rw [figureOneRandomizedIdealHistoryLaw, Measure.map_map
     (measurable_balancedFigureOneHistoryEstimate q) measurable_snd]
   exact figureOneIdealChronologicalIteration_map_output q I
@@ -328,7 +328,7 @@ so it cannot inspect or correlate with unused future ideal samples. -/
 theorem MeasureLeUpTo.map_scheduledHistory_le_randomizedIdeal
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
     (I : VolumeInput q.n)
-    (hphase : ∀ phase, phase < figureOneDependentPhaseCount q →
+    (hphase : ∀ phase, phase < numPhases q →
       MeasureLeUpTo
         ((figureOneRandomizedIdealHistoryLaw q I phase).bind
           (scheduledBalancedForwardPhaseKernel parameters q I phase))
@@ -336,13 +336,13 @@ theorem MeasureLeUpTo.map_scheduledHistory_le_randomizedIdeal
         (figureOnePhaseReplacementBudget q)) :
     MeasureLeUpTo
       ((scheduledBalancedForwardHistoryLaw parameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (balancedFigureOneHistoryEstimate q))
       ((figureOneIdealExperimentLaw q I).map
         (fun samples => initialGaussianIntegral q *
           dependentPhaseSampleProduct
             (figureOneChronologicalIdealCoordinate q)
-            (figureOneDependentPhaseCount q) samples))
+            (numPhases q) samples))
       (ENNReal.ofReal (1 / 64 : ℝ)) := by
   let actualK := scheduledBalancedForwardPhaseKernel parameters q I
   let actualInitial :=
@@ -363,15 +363,15 @@ theorem MeasureLeUpTo.map_scheduledHistory_le_randomizedIdeal
       (fun phase history =>
         (scheduledBalancedForwardPhaseKernel_measurable_and_probability
           parameters q I phase).2 history)
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
       (fun phase hp => by simpa [idealLaw, actualK] using hphase phase hp)
   have hmapped := hhistory.map
     (measurable_balancedFigureOneHistoryEstimate q)
   have hbudget := figureOnePhaseReplacementBudget_sum_le q
   rw [show iteratedKernelLaw actualK actualInitial
-        (figureOneDependentPhaseCount q) =
+        (numPhases q) =
       scheduledBalancedForwardHistoryLaw parameters q I
-        (figureOneDependentPhaseCount q) by rfl,
+        (numPhases q) by rfl,
     figureOneRandomizedIdealHistoryLaw_map_output q I] at hmapped
   exact hmapped.mono_error hbudget
 
@@ -386,9 +386,9 @@ theorem scheduledPostInitialDirectFailureBound_of_randomizedIdealHistory
           (initialVariance_pos q) : Measure (AmbientSpace q.n)).bind
           continuation =
         (scheduledBalancedForwardHistoryLaw parameters q I
-          (figureOneDependentPhaseCount q)).map
+          (numPhases q)).map
             (balancedFigureOneHistoryEstimate q))
-    (hphase : ∀ phase, phase < figureOneDependentPhaseCount q →
+    (hphase : ∀ phase, phase < numPhases q →
       MeasureLeUpTo
         ((figureOneRandomizedIdealHistoryLaw q I phase).bind
           (scheduledBalancedForwardPhaseKernel parameters q I phase))
@@ -401,7 +401,7 @@ theorem scheduledPostInitialDirectFailureBound_of_randomizedIdealHistory
   let mu := figureOneIdealExperimentLaw q I
   let mean := dependentPhaseMeanProduct
     (figureOneChronologicalTruncatedMean q I mu W)
-    (figureOneDependentPhaseCount q)
+    (numPhases q)
   let _ : IsProbabilityMeasure mu :=
     figureOneIdealExperimentLaw_isProbabilityMeasure q I
   have hmeas : ∀ j, Measurable (W j) :=
@@ -419,15 +419,15 @@ theorem scheduledPostInitialDirectFailureBound_of_randomizedIdealHistory
         figureOneChronologicalRawMean q I j ^ 2 :=
     fun j => figureOneChronologicalIdealCoordinate_secondMoment_le
       q I hsharp j
-  have hind : ∀ i, i < figureOneDependentPhaseCount q →
-      ApproxIndepFun (figureOneDependentEpsilon q)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+  have hind : ∀ i, i < numPhases q →
+      ApproxIndepFun (dependenceError q)
+        (dependentTruncatedProduct (truncationLevel q)
           (figureOneChronologicalTruncatedMean q I mu W)
           (figureOneChronologicalTruncatedPhase q I W) i)
         (figureOneChronologicalTruncatedPhase q I W (i + 1)) mu := by
     intro i hi
     exact (figureOneChronologicalIdeal_exactIndependence q I i hi).mono
-      (figureOneDependentEpsilon_nonneg q)
+      (dependenceError_nonneg q)
   have htail := measure_chronologicalIdealPhaseSampleProduct_figureOne_le
     q I mu W hmeas hnonneg hmem hmean hsecond hind
   have hmeanApprox :=
@@ -442,13 +442,13 @@ theorem scheduledPostInitialDirectFailureBound_of_randomizedIdealHistory
   apply figureOnePostInitialDirectFailureBoundFor_of_mappedProductLe
     q I continuation (figureOneRadialTruncationBound q I hrounded)
     (scheduledBalancedForwardHistoryLaw parameters q I
-      (figureOneDependentPhaseCount q)) mu
+      (numPhases q)) mu
     (balancedCoolingHistoryProduct q)
-    (dependentPhaseSampleProduct W (figureOneDependentPhaseCount q))
+    (dependentPhaseSampleProduct W (numPhases q))
     (measurable_balancedCoolingHistoryProduct q)
     (by
       unfold dependentPhaseSampleProduct
-      exact (Finset.range (figureOneDependentPhaseCount q)).measurable_fun_prod
+      exact (Finset.range (numPhases q)).measurable_fun_prod
         fun j _ => hmeas (j + 1))
     mean hmeanApprox htail
   · simpa [W, mu] using htransfer
@@ -469,9 +469,9 @@ theorem figureOneFinalScheduledBalancedBase_failure_le_of_postHistory_randomized
                 oracle.query) =
         (scheduledBalancedForwardHistoryLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)).map
+          (numPhases q)).map
             (balancedFigureOneHistoryEstimate q))
-    (hphase : ∀ phase, phase < figureOneDependentPhaseCount q →
+    (hphase : ∀ phase, phase < numPhases q →
       MeasureLeUpTo
         ((figureOneRandomizedIdealHistoryLaw q I phase).bind
           (scheduledBalancedForwardPhaseKernel

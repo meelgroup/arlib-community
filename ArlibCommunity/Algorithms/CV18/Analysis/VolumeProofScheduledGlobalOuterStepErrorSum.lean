@@ -25,7 +25,7 @@ noncomputable def figureOneScheduledGaussianOuterStepError
     (q : VolumeParams) (phase : ℕ) : ENNReal :=
   (figureOneCorrectedTransitionBudget q +
       scheduledResetReferenceError q
-        (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)) +
+        (phaseSampleCount q (scheduleValue q phase) - 1)) +
     scheduledBalancedStationaryTargetError q
 
 /-- Law-comparison error charged by the terminal chronological phase.  There
@@ -33,7 +33,7 @@ is no accepted-endpoint correction after the terminal coordinate. -/
 noncomputable def figureOneScheduledTerminalOuterStepError
     (q : VolumeParams) : ENNReal :=
   figureOneCorrectedTransitionBudget q +
-    scheduledResetReferenceError q (figureOneSampleCount q - 1)
+    scheduledResetReferenceError q (sampleCount q - 1)
 
 /-- The initial accepted-target correction, all Gaussian phase errors, and
 the terminal phase error are exactly the global chronological comparison

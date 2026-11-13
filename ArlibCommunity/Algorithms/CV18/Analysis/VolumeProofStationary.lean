@@ -18,10 +18,10 @@ proof to actual probability measures. It is the measure-theoretic entry point
 for warm starts and mixing of `truncatedMetropolisBallStep`.
 -/
 
-theorem uniformUnitIntervalMeasure_eq_restrict :
-    uniformUnitIntervalMeasure = volume.restrict (Set.Icc (0 : ℝ) 1) := by
-  unfold uniformUnitIntervalMeasure
-  let finite : FiniteMeasure ℝ := uniformUnitIntervalFiniteMeasure
+theorem uniformUnit_eq_restrict :
+    uniformUnit = volume.restrict (Set.Icc (0 : ℝ) 1) := by
+  unfold uniformUnit
+  let finite : FiniteMeasure ℝ := uniformUnitFinite
   have hmass : finite.mass = 1 := by
     apply ENNReal.coe_injective
     rw [FiniteMeasure.ennreal_mass]
@@ -32,12 +32,12 @@ theorem uniformUnitIntervalMeasure_eq_restrict :
   change (finite.normalize : Measure ℝ) = _
   rw [finite.toMeasure_normalize_eq_of_nonzero hfinite, hmass]
   simp
-  change (uniformUnitIntervalFiniteMeasure : Measure ℝ) = _
+  change (uniformUnitFinite : Measure ℝ) = _
   rfl
 
-theorem uniformUnitIntervalMeasure_Iic {a : ℝ} (_ha0 : 0 ≤ a) (ha1 : a ≤ 1) :
-    uniformUnitIntervalMeasure (Set.Iic a) = ENNReal.ofReal a := by
-  rw [uniformUnitIntervalMeasure_eq_restrict,
+theorem uniformUnit_Iic {a : ℝ} (_ha0 : 0 ≤ a) (ha1 : a ≤ 1) :
+    uniformUnit (Set.Iic a) = ENNReal.ofReal a := by
+  rw [uniformUnit_eq_restrict,
     Measure.restrict_apply measurableSet_Iic]
   have hset : Set.Iic a ∩ Set.Icc (0 : ℝ) 1 = Set.Icc 0 a := by
     ext x
@@ -50,9 +50,9 @@ theorem uniformUnitIntervalMeasure_Iic {a : ℝ} (_ha0 : 0 ≤ a) (ha1 : a ≤ 1
   rw [hset, Real.volume_Icc]
   simp
 
-theorem uniformUnitIntervalMeasure_Ioi {a : ℝ} (ha0 : 0 ≤ a) (_ha1 : a ≤ 1) :
-    uniformUnitIntervalMeasure (Set.Ioi a) = ENNReal.ofReal (1 - a) := by
-  rw [uniformUnitIntervalMeasure_eq_restrict,
+theorem uniformUnit_Ioi {a : ℝ} (ha0 : 0 ≤ a) (_ha1 : a ≤ 1) :
+    uniformUnit (Set.Ioi a) = ENNReal.ofReal (1 - a) := by
+  rw [uniformUnit_eq_restrict,
     Measure.restrict_apply measurableSet_Ioi]
   have hset : Set.Ioi a ∩ Set.Icc (0 : ℝ) 1 = Set.Ioc a 1 := by
     ext x
@@ -66,7 +66,7 @@ theorem uniformUnitIntervalMeasure_Ioi {a : ℝ} (ha0 : 0 ≤ a) (_ha1 : a ≤ 1
 
 theorem uniformUnitInterval_map_threshold {a : ℝ} (ha0 : 0 ≤ a) (ha1 : a ≤ 1)
     {E : Type*} [MeasurableSpace E] (accepted rejected : E) :
-    uniformUnitIntervalMeasure.map
+    uniformUnit.map
         (fun coin => if coin ≤ a then accepted else rejected) =
       ENNReal.ofReal a • Measure.dirac accepted +
         ENNReal.ofReal (1 - a) • Measure.dirac rejected := by
@@ -91,7 +91,7 @@ theorem uniformUnitInterval_map_threshold {a : ℝ} (ha0 : 0 ≤ a) (ha1 : a ≤
         if coin ≤ a then accepted else rejected) ⁻¹' S = Set.Iic a := by
       ext coin
       by_cases hcoin : coin ≤ a <;> simp [hcoin, haS, hrS]
-    rw [hpre, uniformUnitIntervalMeasure_Iic ha0 ha1]
+    rw [hpre, uniformUnit_Iic ha0 ha1]
     simp [Measure.dirac_apply' _ hS, haS, hrS]
   · have hpre : (fun coin : ℝ =>
         if coin ≤ a then accepted else rejected) ⁻¹' S = Set.Ioi a := by
@@ -99,7 +99,7 @@ theorem uniformUnitInterval_map_threshold {a : ℝ} (ha0 : 0 ≤ a) (ha1 : a ≤
       by_cases hcoin : coin ≤ a
       · simp [hcoin, haS]
       · simp [hcoin, hrS, lt_of_not_ge hcoin]
-    rw [hpre, uniformUnitIntervalMeasure_Ioi ha0 ha1]
+    rw [hpre, uniformUnit_Ioi ha0 ha1]
     simp [Measure.dirac_apply' _ hS, haS, hrS]
   · have hpre : (fun coin : ℝ =>
         if coin ≤ a then accepted else rejected) ⁻¹' S = ∅ := by
@@ -131,12 +131,12 @@ theorem volume_restrict_centeredClosedBall_map_neg (n : ℕ) (radius : ℝ) :
     _ = volume.restrict (Metric.closedBall 0 radius) := by
       rw [Measure.map_neg_eq_self]
 
-theorem centeredClosedBallMeasure_map_neg (n : ℕ) {radius : ℝ}
+theorem centeredBall_map_neg (n : ℕ) {radius : ℝ}
     (hradius : 0 < radius) :
-    (centeredClosedBallMeasure n radius).map (fun x => -x) =
-      centeredClosedBallMeasure n radius := by
+    (centeredBall n radius).map (fun x => -x) =
+      centeredBall n radius := by
   let finite : FiniteMeasure (AmbientSpace n) :=
-    centeredClosedBallFiniteMeasure n radius
+    centeredBallFinite n radius
   have hfinite : finite ≠ 0 := by
     intro hzero
     have huniv : (finite : Measure (AmbientSpace n)) Set.univ = 0 := by
@@ -146,7 +146,7 @@ theorem centeredClosedBallMeasure_map_neg (n : ℕ) {radius : ℝ}
       Set.univ = 0 at huniv
     rw [Measure.restrict_apply_univ] at huniv
     exact (Metric.measure_closedBall_pos volume (0 : AmbientSpace n) hradius).ne' huniv
-  unfold centeredClosedBallMeasure
+  unfold centeredBall
   change Measure.map (fun x : AmbientSpace n => -x)
       (finite.normalize : Measure (AmbientSpace n)) =
     (finite.normalize : Measure (AmbientSpace n))
@@ -159,9 +159,9 @@ give the same joint flow after exchanging the two endpoints. -/
 theorem centeredClosedBall_flow_swap (n : ℕ) {radius : ℝ}
     (hradius : 0 < radius) (F : AmbientSpace n → AmbientSpace n → ENNReal)
     (hF : Measurable (Function.uncurry F)) :
-    (∫⁻ x, ∫⁻ z, F x (x + z) ∂(centeredClosedBallMeasure n radius) ∂volume) =
-      ∫⁻ y, ∫⁻ z, F (y + z) y ∂(centeredClosedBallMeasure n radius) ∂volume := by
-  let ν : Measure (AmbientSpace n) := centeredClosedBallMeasure n radius
+    (∫⁻ x, ∫⁻ z, F x (x + z) ∂(centeredBall n radius) ∂volume) =
+      ∫⁻ y, ∫⁻ z, F (y + z) y ∂(centeredBall n radius) ∂volume := by
+  let ν : Measure (AmbientSpace n) := centeredBall n radius
   have hleft : Measurable fun p : AmbientSpace n × AmbientSpace n =>
       F p.1 (p.1 + p.2) :=
     hF.comp (measurable_fst.prodMk (measurable_fst.add measurable_snd))
@@ -190,7 +190,7 @@ theorem centeredClosedBall_flow_swap (n : ℕ) {radius : ℝ}
       change (∫⁻ z, H (-z) ∂ν) = ∫⁻ z, H z ∂ν
       rw [← lintegral_map hH measurable_neg]
       exact congrArg (fun μ : Measure (AmbientSpace n) => ∫⁻ z, H z ∂μ)
-        (centeredClosedBallMeasure_map_neg n hradius)
+        (centeredBall_map_neg n hradius)
     _ = ∫⁻ y, ∫⁻ z, F (y + z) y ∂ν ∂volume :=
       (lintegral_lintegral_swap hright.aemeasurable).symm
 
@@ -287,10 +287,10 @@ remaining stationarity proof only has to combine this identity with symmetry
 of the translated-ball proposal and the reject-to-self mass. -/
 theorem gaussianDensity_mul_lazyAcceptance_comm {n : ℕ} (sigma2 : ℝ)
     (x y : AmbientSpace n) :
-    gaussianDensity sigma2 x * lazyGaussianMetropolisAcceptance sigma2 x y =
-      gaussianDensity sigma2 y * lazyGaussianMetropolisAcceptance sigma2 y x := by
+    gaussianDensity sigma2 x * lazyAcceptance sigma2 x y =
+      gaussianDensity sigma2 y * lazyAcceptance sigma2 y x := by
   rw [gaussianDensity_eq, gaussianDensity_eq]
-  unfold lazyGaussianMetropolisAcceptance gaussianMetropolisAcceptance
+  unfold lazyAcceptance metropolisAcceptance
   exact mul_lazyMinRatio_comm (Real.exp_pos _) (Real.exp_pos _)
 
 theorem oracle_and_radius_iff_mem_truncatedBody (q : VolumeParams)
@@ -302,19 +302,19 @@ theorem oracle_and_radius_iff_mem_truncatedBody (q : VolumeParams)
   simp only [truncatedBody, Set.mem_inter_iff, Metric.mem_closedBall,
     dist_zero_right]
 
-theorem lazyGaussianMetropolisAcceptance_nonneg {n : ℕ} (sigma2 : ℝ)
+theorem lazyAcceptance_nonneg {n : ℕ} (sigma2 : ℝ)
     (x y : AmbientSpace n) :
-    0 ≤ lazyGaussianMetropolisAcceptance sigma2 x y := by
-  unfold lazyGaussianMetropolisAcceptance gaussianMetropolisAcceptance
+    0 ≤ lazyAcceptance sigma2 x y := by
+  unfold lazyAcceptance metropolisAcceptance
   have hratio : 0 ≤
       Real.exp (-‖y‖ ^ 2 / (2 * sigma2)) /
         Real.exp (-‖x‖ ^ 2 / (2 * sigma2)) := by positivity
   positivity
 
-theorem lazyGaussianMetropolisAcceptance_le_one {n : ℕ} (sigma2 : ℝ)
+theorem lazyAcceptance_le_one {n : ℕ} (sigma2 : ℝ)
     (x y : AmbientSpace n) :
-    lazyGaussianMetropolisAcceptance sigma2 x y ≤ 1 := by
-  unfold lazyGaussianMetropolisAcceptance gaussianMetropolisAcceptance
+    lazyAcceptance sigma2 x y ≤ 1 := by
+  unfold lazyAcceptance metropolisAcceptance
   have hmin : min 1
       (Real.exp (-‖y‖ ^ 2 / (2 * sigma2)) /
         Real.exp (-‖x‖ ^ 2 / (2 * sigma2))) ≤ 1 := min_le_left _ _
@@ -327,16 +327,16 @@ theorem truncatedMetropolisProposalEstimateLaw_of_eligible
       ‖proposal‖ ≤ Real.sqrt (terminalVariance q)) :
     truncatedMetropolisProposalEstimateLaw oracle.query
         (terminalVariance q) sigma2 current proposal =
-      ENNReal.ofReal (lazyGaussianMetropolisAcceptance sigma2 current proposal) •
+      ENNReal.ofReal (lazyAcceptance sigma2 current proposal) •
           Measure.dirac proposal +
         ENNReal.ofReal
-            (1 - lazyGaussianMetropolisAcceptance sigma2 current proposal) •
+            (1 - lazyAcceptance sigma2 current proposal) •
           Measure.dirac current := by
   unfold truncatedMetropolisProposalEstimateLaw
   simp only [heligible.1, heligible.2, true_and]
   exact uniformUnitInterval_map_threshold
-    (lazyGaussianMetropolisAcceptance_nonneg sigma2 current proposal)
-    (lazyGaussianMetropolisAcceptance_le_one sigma2 current proposal)
+    (lazyAcceptance_nonneg sigma2 current proposal)
+    (lazyAcceptance_le_one sigma2 current proposal)
     proposal current
 
 theorem truncatedMetropolisProposalEstimateLaw_of_ineligible
@@ -350,12 +350,12 @@ theorem truncatedMetropolisProposalEstimateLaw_of_ineligible
   have hfun : (fun coin : ℝ =>
       if oracle.query proposal = true ∧
           ‖proposal‖ ≤ Real.sqrt (terminalVariance q) ∧
-          coin ≤ lazyGaussianMetropolisAcceptance sigma2 current proposal
+          coin ≤ lazyAcceptance sigma2 current proposal
         then proposal else current) = fun _ => current := by
     funext coin
     have hfull : ¬ (oracle.query proposal = true ∧
         ‖proposal‖ ≤ Real.sqrt (terminalVariance q) ∧
-        coin ≤ lazyGaussianMetropolisAcceptance sigma2 current proposal) := by
+        coin ≤ lazyAcceptance sigma2 current proposal) := by
       intro h
       exact hineligible ⟨h.1, h.2.1⟩
     simp [hfull]
@@ -369,7 +369,7 @@ noncomputable def truncatedMetropolisAcceptance (q : VolumeParams)
     (I : VolumeInput q.n) (sigma2 : ℝ)
     (current proposal : AmbientSpace q.n) : ℝ :=
   (truncatedBody q I).indicator
-    (fun y => lazyGaussianMetropolisAcceptance sigma2 current y) proposal
+    (fun y => lazyAcceptance sigma2 current y) proposal
 
 theorem truncatedMetropolisAcceptance_nonneg (q : VolumeParams)
     (I : VolumeInput q.n) (sigma2 : ℝ)
@@ -378,7 +378,7 @@ theorem truncatedMetropolisAcceptance_nonneg (q : VolumeParams)
   unfold truncatedMetropolisAcceptance
   by_cases h : proposal ∈ truncatedBody q I
   · rw [Set.indicator_of_mem h]
-    exact lazyGaussianMetropolisAcceptance_nonneg sigma2 current proposal
+    exact lazyAcceptance_nonneg sigma2 current proposal
   · rw [Set.indicator_of_notMem h]
 
 theorem truncatedMetropolisAcceptance_le_one (q : VolumeParams)
@@ -388,7 +388,7 @@ theorem truncatedMetropolisAcceptance_le_one (q : VolumeParams)
   unfold truncatedMetropolisAcceptance
   by_cases h : proposal ∈ truncatedBody q I
   · rw [Set.indicator_of_mem h]
-    exact lazyGaussianMetropolisAcceptance_le_one sigma2 current proposal
+    exact lazyAcceptance_le_one sigma2 current proposal
   · rw [Set.indicator_of_notMem h]
     norm_num
 
@@ -398,7 +398,7 @@ theorem measurable_truncatedMetropolisAcceptance (q : VolumeParams)
       truncatedMetropolisAcceptance q I sigma2 p.1 p.2 := by
   unfold truncatedMetropolisAcceptance
   apply Measurable.indicator
-  · unfold lazyGaussianMetropolisAcceptance gaussianMetropolisAcceptance
+  · unfold lazyAcceptance metropolisAcceptance
     fun_prop
   · exact (truncatedBody_measurable q I).preimage measurable_snd
 
@@ -479,7 +479,7 @@ theorem truncatedMetropolisKernel_apply
           ENNReal.ofReal
             (1 - truncatedMetropolisAcceptance q I sigma2 current (current + z)) *
               B.indicator 1 current
-        ∂(centeredClosedBallMeasure q.n (figureOneProposalRadius q sigma2)) := by
+        ∂(centeredBall q.n (figureOneProposalRadius q sigma2)) := by
   change (truncatedMetropolisBallStepEstimateLaw
     q oracle.query sigma2 current) B = _
   unfold truncatedMetropolisBallStepEstimateLaw
@@ -508,14 +508,14 @@ theorem truncatedMetropolisAcceptedFlow_comm
           ENNReal.ofReal
             (truncatedMetropolisAcceptance q I sigma2 x (x + z)) *
           B.indicator 1 (x + z)
-        ∂(centeredClosedBallMeasure q.n (figureOneProposalRadius q sigma2))
+        ∂(centeredBall q.n (figureOneProposalRadius q sigma2))
       ∂volume) =
     ∫⁻ y, ∫⁻ z,
         B.indicator 1 y * truncatedGaussianENNRealDensity q I sigma2 y *
           ENNReal.ofReal
             (truncatedMetropolisAcceptance q I sigma2 y (y + z)) *
           A.indicator 1 (y + z)
-        ∂(centeredClosedBallMeasure q.n (figureOneProposalRadius q sigma2))
+        ∂(centeredBall q.n (figureOneProposalRadius q sigma2))
       ∂volume := by
   let F : AmbientSpace q.n → AmbientSpace q.n → ENNReal := fun x y =>
     A.indicator 1 x * truncatedGaussianENNRealDensity q I sigma2 x *
@@ -539,10 +539,10 @@ theorem truncatedMetropolisAcceptedFlow_comm
           ENNReal.ofReal
             (truncatedMetropolisAcceptance q I sigma2 x (x + z)) *
           B.indicator 1 (x + z)
-        ∂(centeredClosedBallMeasure q.n (figureOneProposalRadius q sigma2))
+        ∂(centeredBall q.n (figureOneProposalRadius q sigma2))
       ∂volume) =
       ∫⁻ y, ∫⁻ z, F (y + z) y
-        ∂(centeredClosedBallMeasure q.n (figureOneProposalRadius q sigma2))
+        ∂(centeredBall q.n (figureOneProposalRadius q sigma2))
         ∂volume :=
       centeredClosedBall_flow_swap q.n
         (figureOneProposalRadius_pos q hsigma2) F hF
@@ -551,7 +551,7 @@ theorem truncatedMetropolisAcceptedFlow_comm
           ENNReal.ofReal
             (truncatedMetropolisAcceptance q I sigma2 y (y + z)) *
           A.indicator 1 (y + z)
-        ∂(centeredClosedBallMeasure q.n (figureOneProposalRadius q sigma2))
+        ∂(centeredBall q.n (figureOneProposalRadius q sigma2))
       ∂volume := by
       apply lintegral_congr
       intro y
@@ -589,7 +589,7 @@ noncomputable def truncatedMetropolisAcceptedFlow
       ENNReal.ofReal
         (truncatedMetropolisAcceptance q I sigma2 x (x + z)) *
       B.indicator 1 (x + z)
-    ∂(centeredClosedBallMeasure q.n (figureOneProposalRadius q sigma2)) ∂volume
+    ∂(centeredBall q.n (figureOneProposalRadius q sigma2)) ∂volume
 
 noncomputable def truncatedMetropolisRejectedFlow
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
@@ -599,7 +599,7 @@ noncomputable def truncatedMetropolisRejectedFlow
       ENNReal.ofReal
         (1 - truncatedMetropolisAcceptance q I sigma2 x (x + z)) *
       B.indicator 1 x
-    ∂(centeredClosedBallMeasure q.n (figureOneProposalRadius q sigma2)) ∂volume
+    ∂(centeredBall q.n (figureOneProposalRadius q sigma2)) ∂volume
 
 theorem truncatedMetropolisAcceptedFlow_comm'
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
@@ -632,7 +632,7 @@ theorem truncatedMetropolis_raw_flow_eq_add
       truncatedMetropolisAcceptedFlow q I sigma2 A B +
         truncatedMetropolisRejectedFlow q I sigma2 A B := by
   let d := truncatedGaussianENNRealDensity q I sigma2
-  let ν := centeredClosedBallMeasure q.n (figureOneProposalRadius q sigma2)
+  let ν := centeredBall q.n (figureOneProposalRadius q sigma2)
   have hd : Measurable d :=
     measurable_truncatedGaussianENNRealDensity q I sigma2
   have hAind : Measurable (A.indicator (1 : AmbientSpace q.n → ENNReal)) :=

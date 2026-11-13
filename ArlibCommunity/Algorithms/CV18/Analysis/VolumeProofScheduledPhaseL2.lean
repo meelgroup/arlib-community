@@ -33,7 +33,7 @@ theorem exists_scheduledPhaseBody_weight_upper_bound
     refine ⟨unitBall_subset_truncatedBody q I
       (Metric.mem_closedBall_self zero_le_one), ?_⟩
     exact Metric.mem_closedBall_self
-      (figureOneScheduledPhaseRadius_pos q hsigma2).le
+      (phaseRadius_pos q hsigma2).le
   have hB0 : 0 ≤ B :=
     (hweight0 0).trans (hB (Set.mem_image_of_mem weight hzero))
   exact ⟨B, hB0, fun x hx => hB (Set.mem_image_of_mem weight hx)⟩
@@ -79,11 +79,11 @@ theorem memLp_scheduledBalancedCoolingRatioTransitionLaw_ratio
       Real.exp (-‖x‖ ^ 2 / (2 * tau2))).div₀ (by fun_prop) ?_
     intro x
     exact Real.exp_ne_zero _
-  have hsamples : 0 < figureOnePhaseSampleCount q sigma2 := by
-    unfold figureOnePhaseSampleCount
+  have hsamples : 0 < phaseSampleCount q sigma2 := by
+    unfold phaseSampleCount
     split_ifs
-    · exact figureOneFixedSampleCount_pos q
-    · exact figureOneSampleCount_pos q
+    · exact fixedRateSampleCount_pos q
+    · exact sampleCount_pos q
   simpa [scheduledBalancedCoolingRatioTransitionLaw] using
     memLp_scheduledBalancedTransitionCollect_average_of_continuous
       q I hsigma2 hcontinuous
@@ -91,9 +91,9 @@ theorem memLp_scheduledBalancedCoolingRatioTransitionLaw_ratio
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOnePhaseSampleCount q sigma2)
+      (phaseSampleCount q sigma2)
       hsamples
-      (accuracyScaleFactor q • current)
+      (scaleFactor q • current)
 
 /-- Every executable scheduled terminal Gaussian-to-uniform phase has an
 `L²` average. -/
@@ -114,8 +114,8 @@ theorem memLp_scheduledBalancedCoolingUniformTransitionLaw_ratio
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOneSampleCount q) (figureOneSampleCount_pos q)
-      (accuracyScaleFactor q • current)
+      (sampleCount q) (sampleCount_pos q)
+      (scaleFactor q • current)
 
 /-! ## Uniform bounds and the full trace -/
 
@@ -186,12 +186,12 @@ theorem exists_scheduledBalancedTracePhaseObservation_ratio_bound
           (by fun_prop) ?_
       intro x
       exact Real.exp_ne_zero _
-    have hsamples : 0 < figureOnePhaseSampleCount q
+    have hsamples : 0 < phaseSampleCount q
         (scheduleValue q phase) := by
-      unfold figureOnePhaseSampleCount
+      unfold phaseSampleCount
       split_ifs
-      · exact figureOneFixedSampleCount_pos q
-      · exact figureOneSampleCount_pos q
+      · exact fixedRateSampleCount_pos q
+      · exact sampleCount_pos q
     obtain ⟨B, hB1, hbound⟩ :=
       exists_scheduledBalancedTransitionCollect_average_uniform_bound
         q I (scheduleValue_pos q phase) hcontinuous
@@ -200,7 +200,7 @@ theorem exists_scheduledBalancedTracePhaseObservation_ratio_bound
         (parameters.proposalCap q (scheduleValue q phase))
         (parameters.properStride q (scheduleValue q phase))
         (parameters.retryLimit q (scheduleValue q phase))
-        (figureOnePhaseSampleCount q (scheduleValue q phase)) hsamples
+        (phaseSampleCount q (scheduleValue q phase)) hsamples
     refine ⟨B, hB1, ?_⟩
     intro trace
     rcases trace with ⟨history, live⟩
@@ -214,7 +214,7 @@ theorem exists_scheduledBalancedTracePhaseObservation_ratio_bound
         unfold scheduledBalancedTracePhaseObservationLaw
         simp only [if_true, hphase]
         simpa [scheduledBalancedCoolingRatioTransitionLaw] using
-          hbound (accuracyScaleFactor q • history.2.2.2)
+          hbound (scaleFactor q • history.2.2.2)
   · have hcontinuous : Continuous
         (uniformRatioWeight (n := q.n) (terminalVariance q)) := by
       unfold uniformRatioWeight
@@ -226,7 +226,7 @@ theorem exists_scheduledBalancedTracePhaseObservation_ratio_bound
         (parameters.proposalCap q (terminalVariance q))
         (parameters.properStride q (terminalVariance q))
         (parameters.retryLimit q (terminalVariance q))
-        (figureOneSampleCount q) (figureOneSampleCount_pos q)
+        (sampleCount q) (sampleCount_pos q)
     refine ⟨B, hB1, ?_⟩
     intro trace
     rcases trace with ⟨history, live⟩
@@ -240,14 +240,14 @@ theorem exists_scheduledBalancedTracePhaseObservation_ratio_bound
         unfold scheduledBalancedTracePhaseObservationLaw
         simp only [if_true, hphase, if_false]
         simpa [scheduledBalancedCoolingUniformTransitionLaw] using
-          hbound (accuracyScaleFactor q • history.2.2.2)
+          hbound (scaleFactor q • history.2.2.2)
 
 /-- The freshly appended chronological coordinate is bounded by the scalar
 observation bound; a previously dead trace appends `1`, which explains the
 premise `1 ≤ B`. -/
 theorem scheduledBalancedTrace_append_new_coordinate_le
     (q : VolumeParams) {phase : ℕ}
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     {trace : ScheduledBalancedCoolingTrace q.n}
     (hvalid : ScheduledBalancedCoolingTraceValid phase trace)
     {B : ℝ} (hB1 : 1 ≤ B)
@@ -272,7 +272,7 @@ almost-everywhere bounded by some finite constant. -/
 theorem exists_scheduledBalancedForwardTrace_coordinate_bound
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
     (I : VolumeInput q.n) : ∀ phases j,
-    1 ≤ j → j ≤ phases → phases ≤ figureOneDependentPhaseCount q →
+    1 ≤ j → j ≤ phases → phases ≤ numPhases q →
       ∃ B : ℝ, 0 ≤ B ∧
         ∀ᵐ trace ∂scheduledBalancedForwardTraceLaw parameters q I phases,
           scheduledBalancedTraceChronologicalPhaseVariable q j trace ≤ B := by
@@ -288,7 +288,7 @@ theorem exists_scheduledBalancedForwardTrace_coordinate_bound
       have hkernel : Measurable kernel :=
         (scheduledBalancedTracePhaseKernel_measurable_and_probability
           parameters q I phase).1
-      have hphaseTotal : phase < figureOneDependentPhaseCount q := by omega
+      have hphaseTotal : phase < numPhases q := by omega
       by_cases hjnew : j = phase + 1
       · subst j
         obtain ⟨B, hB1, hobs⟩ :=
@@ -352,33 +352,33 @@ theorem exists_scheduledBalancedForwardTrace_coordinate_bound
 finite scheduled execution law. -/
 theorem memLp_scheduledBalancedForwardTrace_phaseVariable
     (q : VolumeParams) (I : VolumeInput q.n) (j : ℕ)
-    (hj1 : 1 ≤ j) (hjm : j ≤ figureOneDependentPhaseCount q) :
+    (hj1 : 1 ≤ j) (hjm : j ≤ numPhases q) :
     MemLp (scheduledBalancedTracePhaseVariable q j) 2
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)) := by
+        (numPhases q)) := by
   let _ : IsProbabilityMeasure
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) :=
+          (numPhases q)) :=
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I _
   obtain ⟨B, hB0, hbound⟩ :=
     exists_scheduledBalancedForwardTrace_coordinate_bound
       figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q) j hj1 hjm le_rfl
+      (numPhases q) j hj1 hjm le_rfl
   have hnonneg := scheduledBalancedForwardTraceLaw_ae_coordinatesNonnegative
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   have hW0 : ∀ᵐ trace ∂scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q),
+        (numPhases q),
       0 ≤ scheduledBalancedTracePhaseVariable q j trace :=
     Filter.Eventually.of_forall
       (scheduledBalancedTracePhaseVariable_nonnegative q j)
   have hWB : ∀ᵐ trace ∂scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q),
+        (numPhases q),
       scheduledBalancedTracePhaseVariable q j trace ≤ B := by
     filter_upwards [hbound, hnonneg] with trace hraw hcoordinates
     have hjrepr : j = (j - 1) + 1 := by omega
@@ -453,24 +453,24 @@ paper's centered phase-average estimate.  Square-integrability is supplied by
 the executable scheduled-trace support theorem above. -/
 theorem scheduledFigureOneTrace_rawSecond_four_of_centered_three
     (q : VolumeParams) (I : VolumeInput q.n) (j : ℕ)
-    (hj1 : 1 ≤ j) (hjm : j ≤ figureOneDependentPhaseCount q)
+    (hj1 : 1 ≤ j) (hjm : j ≤ numPhases q)
     (hcenter :
       (∫ trace,
           (scheduledBalancedTracePhaseVariable q j trace -
             scheduledFigureOneTraceRawMean q I j) ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         3 * scheduledFigureOneTraceRawMean q I j ^ 2) :
     (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
       ∂scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)) ≤
+        (numPhases q)) ≤
       4 * scheduledFigureOneTraceRawMean q I j ^ 2 := by
   let _ : IsProbabilityMeasure
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)) :=
+        (numPhases q)) :=
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I _
   apply integral_sq_le_four_mul_integral_sq_of_centered_three
@@ -480,26 +480,26 @@ theorem scheduledFigureOneTrace_rawSecond_four_of_centered_three
 /-- Schedule specialization of the exact paired-variance interface. -/
 theorem scheduledFigureOneTrace_rawSecond_le_of_centered
     (q : VolumeParams) (I : VolumeInput q.n) (j : ℕ)
-    (hj1 : 1 ≤ j) (hjm : j ≤ figureOneDependentPhaseCount q)
+    (hj1 : 1 ≤ j) (hjm : j ≤ numPhases q)
     (hcenter :
       (∫ trace,
           (scheduledBalancedTracePhaseVariable q j trace -
             scheduledFigureOneTraceRawMean q I j) ^ 2
         ∂scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) ≤
+          (numPhases q)) ≤
         (figureOneChronologicalMomentFactor q j - 1) *
           scheduledFigureOneTraceRawMean q I j ^ 2) :
     (∫ trace, scheduledBalancedTracePhaseVariable q j trace ^ 2
       ∂scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)) ≤
+        (numPhases q)) ≤
       figureOneChronologicalMomentFactor q j *
         scheduledFigureOneTraceRawMean q I j ^ 2 := by
   let _ : IsProbabilityMeasure
       (scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)) :=
+        (numPhases q)) :=
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I _
   apply integral_sq_le_factor_mul_integral_sq_of_centered

@@ -58,7 +58,7 @@ noncomputable def scheduledGaussianObservationFromRetainedOption
       Measure (Option (ℝ × AmbientSpace q.n))
   | none => Measure.dirac none
   | some point => figureOneScheduledScaledGaussianPhaseLaw q I phase
-      (accuracyScaleFactor q • point)
+      (scaleFactor q • point)
 
 theorem scheduledGaussianObservationFromRetainedOption_measurable_and_probability
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ) :
@@ -71,10 +71,10 @@ theorem scheduledGaussianObservationFromRetainedOption_measurable_and_probabilit
   constructor
   · have hsome : Measurable fun point : AmbientSpace q.n =>
         figureOneScheduledScaledGaussianPhaseLaw q I phase
-          (accuracyScaleFactor q • point) :=
+          (scaleFactor q • point) :=
       hphase.1.comp <|
         ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
-          accuracyScaleFactor q).smul measurable_id)
+          scaleFactor q).smul measurable_id)
     convert Measurable.optionElim
       (Measure.dirac (none : Option (ℝ × AmbientSpace q.n))) hsome using 1
     funext state
@@ -117,8 +117,8 @@ theorem sequentialPairLaw_gaussian_output_leUpTo_of_retainedSome_warm
     (mu : Measure (AmbientSpace q.n)) [IsProbabilityMeasure mu]
     (hretained : source.map scheduledBalancedTraceRetainedOption = mu.map some)
     (hwarm : Arlib.IsWarm
-      (ENNReal.ofReal (16 * speedyAdjacentWarmConstant q))
-      (mu.map fun point => accuracyScaleFactor q • point)
+      (ENNReal.ofReal (16 * warmConstant q))
+      (mu.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase)) :
     MeasureLeUpTo
       ((sequentialPairLaw source
@@ -148,24 +148,24 @@ theorem sequentialPairLaw_gaussian_output_leUpTo_of_retainedSome_warm
   rw [hfactor, hretained]
   rw [map_bind_eq_bind_comp_state mu measurable_some hK.1]
   let _ : IsProbabilityMeasure
-      (mu.map fun point => accuracyScaleFactor q • point) :=
+      (mu.map fun point => scaleFactor q • point) :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
-        accuracyScaleFactor q).smul measurable_id).aemeasurable
+        scaleFactor q).smul measurable_id).aemeasurable
   have hbase :=
     bind_figureOneScheduledScaledGaussianPhaseLaw_leUpTo_target_of_warmSixteen
-      q I phase (mu.map fun point => accuracyScaleFactor q • point) hwarm
+      q I phase (mu.map fun point => scaleFactor q • point) hwarm
   have hscale : Measurable fun point : AmbientSpace q.n =>
-      accuracyScaleFactor q • point :=
+      scaleFactor q • point :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id
+      scaleFactor q).smul measurable_id
   have hphaseK :=
     figureOneScheduledScaledGaussianPhaseLaw_measurable_and_probability
       q I phase
   rw [map_bind_eq_bind_comp_state mu hscale hphaseK.1] at hbase
   change MeasureLeUpTo
     (mu.bind fun point => figureOneScheduledScaledGaussianPhaseLaw q I phase
-      (accuracyScaleFactor q • point))
+      (scaleFactor q • point))
     (figureOneScheduledGaussianPhaseTarget q I phase)
     (figureOneCorrectedTransitionBudget q)
   exact hbase
@@ -195,7 +195,7 @@ theorem sequentialPairLaw_gaussian_output_leUpTo_of_accepted_same
   apply hwarm8.mono
   rw [show (8 : ENNReal) = ENNReal.ofReal (8 : ℝ) by norm_num]
   exact ENNReal.ofReal_le_ofReal <| by
-    nlinarith [speedyAdjacentWarmConstant_one_le q]
+    nlinarith [warmConstant_one_le q]
 
 /-- First/same-phase operational comparison composed with a public-phase
 joint reset target. -/
@@ -256,7 +256,7 @@ theorem sequentialPairLaw_gaussian_output_leUpTo_of_accepted_adjacent
     q I previous
   apply h.mono
   exact ENNReal.ofReal_le_ofReal <| by
-    nlinarith [speedyAdjacentWarmConstant_one_le q]
+    nlinarith [warmConstant_one_le q]
 
 /-- Compose the adjacent operational phase comparison with any public-phase
 joint reset target.  This is the exact `TVLe` premise consumed by the outer
@@ -306,7 +306,7 @@ noncomputable def scheduledTerminalObservationFromRetainedOption
       Measure (Option (ℝ × AmbientSpace q.n))
   | none => Measure.dirac none
   | some point => figureOneScheduledScaledTerminalPhaseLaw q I
-      (accuracyScaleFactor q • point)
+      (scaleFactor q • point)
 
 theorem scheduledTerminalObservationFromRetainedOption_measurable_and_probability
     (q : VolumeParams) (I : VolumeInput q.n) :
@@ -318,10 +318,10 @@ theorem scheduledTerminalObservationFromRetainedOption_measurable_and_probabilit
   constructor
   · have hsome : Measurable fun point : AmbientSpace q.n =>
         figureOneScheduledScaledTerminalPhaseLaw q I
-          (accuracyScaleFactor q • point) :=
+          (scaleFactor q • point) :=
       hphase.1.comp <|
         ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
-          accuracyScaleFactor q).smul measurable_id)
+          scaleFactor q).smul measurable_id)
     convert Measurable.optionElim
       (Measure.dirac (none : Option (ℝ × AmbientSpace q.n))) hsome using 1
     funext state
@@ -361,8 +361,8 @@ theorem sequentialPairLaw_terminal_output_leUpTo_of_retainedSome_warm
     (mu : Measure (AmbientSpace q.n)) [IsProbabilityMeasure mu]
     (hretained : source.map scheduledBalancedTraceRetainedOption = mu.map some)
     (hwarm : Arlib.IsWarm
-      (ENNReal.ofReal (16 * speedyAdjacentWarmConstant q))
-      (mu.map fun point => accuracyScaleFactor q • point)
+      (ENNReal.ofReal (16 * warmConstant q))
+      (mu.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q))) :
     MeasureLeUpTo
       ((sequentialPairLaw source
@@ -394,23 +394,23 @@ theorem sequentialPairLaw_terminal_output_leUpTo_of_retainedSome_warm
   rw [hfactor, hretained]
   rw [map_bind_eq_bind_comp_state mu measurable_some hK.1]
   let _ : IsProbabilityMeasure
-      (mu.map fun point => accuracyScaleFactor q • point) :=
+      (mu.map fun point => scaleFactor q • point) :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
-        accuracyScaleFactor q).smul measurable_id).aemeasurable
+        scaleFactor q).smul measurable_id).aemeasurable
   have hbase :=
     bind_figureOneScheduledScaledTerminalPhaseLaw_leUpTo_target_of_warmSixteen
-      q I (mu.map fun point => accuracyScaleFactor q • point) hwarm
+      q I (mu.map fun point => scaleFactor q • point) hwarm
   have hscale : Measurable fun point : AmbientSpace q.n =>
-      accuracyScaleFactor q • point :=
+      scaleFactor q • point :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id
+      scaleFactor q).smul measurable_id
   have hphaseK :=
     figureOneScheduledScaledTerminalPhaseLaw_measurable_and_probability q I
   rw [map_bind_eq_bind_comp_state mu hscale hphaseK.1] at hbase
   change MeasureLeUpTo
     (mu.bind fun point => figureOneScheduledScaledTerminalPhaseLaw q I
-      (accuracyScaleFactor q • point))
+      (scaleFactor q • point))
     (figureOneScheduledTerminalPhaseTarget q I)
     (figureOneCorrectedTransitionBudget q)
   exact hbase
@@ -445,7 +445,7 @@ theorem sequentialPairLaw_terminal_output_leUpTo_of_accepted
   rw [hsucc] at h
   apply h.mono
   exact ENNReal.ofReal_le_ofReal <| by
-    nlinarith [speedyAdjacentWarmConstant_one_le q]
+    nlinarith [warmConstant_one_le q]
 
 /-- Terminal operational comparison composed with its joint equation-(6)
 reset target. -/

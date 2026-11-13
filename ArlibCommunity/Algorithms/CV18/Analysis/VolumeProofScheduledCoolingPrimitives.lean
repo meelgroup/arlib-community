@@ -64,9 +64,9 @@ noncomputable def scheduledBalancedCoolingRatioLaw
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOnePhaseSampleCount q sigma2)
-      (accuracyScaleFactor q • current)).map
-    (balancedCoolingAverage (figureOnePhaseSampleCount q sigma2))
+      (phaseSampleCount q sigma2)
+      (scaleFactor q • current)).map
+    (balancedCoolingAverage (phaseSampleCount q sigma2))
 
 theorem scheduledBalancedCoolingRatioEstimate_measurable_strong_and_law
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
@@ -85,10 +85,10 @@ theorem scheduledBalancedCoolingRatioEstimate_measurable_strong_and_law
   let cap := parameters.proposalCap q sigma2
   let stride := parameters.properStride q sigma2
   let retries := parameters.retryLimit q sigma2
-  let samples := figureOnePhaseSampleCount q sigma2
+  let samples := phaseSampleCount q sigma2
   let weight : AmbientSpace q.n → ℝ := gaussianRatioWeight sigma2 tau2
   let scalePoint : AmbientSpace q.n → AmbientSpace q.n :=
-    fun current => accuracyScaleFactor q • current
+    fun current => scaleFactor q • current
   have hweight : Measurable weight :=
     measurable_gaussianRatioWeight sigma2 tau2
   have htransition :=
@@ -96,7 +96,7 @@ theorem scheduledBalancedCoolingRatioEstimate_measurable_strong_and_law
       q I hsigma2 hweight cap stride retries samples
   have hscale : Measurable scalePoint :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id
+      scaleFactor q).smul measurable_id
   have hsource : Measurable fun current =>
       scheduledBalancedAccuracyRetryCollectLaw q I sigma2 weight cap stride
         retries samples (scalePoint current) := htransition.1.comp hscale

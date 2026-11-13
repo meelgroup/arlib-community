@@ -19,35 +19,35 @@ theorem scheduledFigureOneTrace_independence_of_reference
     (hrefProb : ∀ i, IsProbabilityMeasure (reference i))
     (delta : ℕ → ENNReal) (hdelta : ∀ i, delta i ≠ ⊤)
     (epsilon : ℕ → ℝ)
-    (hdom : ∀ i, i < figureOneDependentPhaseCount q →
+    (hdom : ∀ i, i < numPhases q →
       MeasureLeUpTo
         (scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q))
+          (numPhases q))
         (reference i) (delta i))
-    (hindReference : ∀ i, i < figureOneDependentPhaseCount q →
+    (hindReference : ∀ i, i < numPhases q →
       ApproxIndepFun (epsilon i)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+        (dependentTruncatedProduct (truncationLevel q)
           (scheduledFigureOneTraceTruncatedMean q I)
           (scheduledFigureOneTraceTruncatedPhase q I) i)
         (scheduledFigureOneTraceTruncatedPhase q I (i + 1))
         (reference i))
-    (hbudget : ∀ i, i < figureOneDependentPhaseCount q →
-      epsilon i + 3 * (delta i).toReal ≤ figureOneDependentEpsilon q) :
-    ∀ i, i < figureOneDependentPhaseCount q →
-      ApproxIndepFun (figureOneDependentEpsilon q)
-        (dependentTruncatedProduct (figureOneDependentAlpha q)
+    (hbudget : ∀ i, i < numPhases q →
+      epsilon i + 3 * (delta i).toReal ≤ dependenceError q) :
+    ∀ i, i < numPhases q →
+      ApproxIndepFun (dependenceError q)
+        (dependentTruncatedProduct (truncationLevel q)
           (scheduledFigureOneTraceTruncatedMean q I)
           (scheduledFigureOneTraceTruncatedPhase q I) i)
         (scheduledFigureOneTraceTruncatedPhase q I (i + 1))
         (scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I
-          (figureOneDependentPhaseCount q)) := by
+          (numPhases q)) := by
   intro i hi
   let mu := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
-  let X := dependentTruncatedProduct (figureOneDependentAlpha q)
+      (numPhases q)
+  let X := dependentTruncatedProduct (truncationLevel q)
     (scheduledFigureOneTraceTruncatedMean q I)
     (scheduledFigureOneTraceTruncatedPhase q I) i
   let Y := scheduledFigureOneTraceTruncatedPhase q I (i + 1)
@@ -57,7 +57,7 @@ theorem scheduledFigureOneTrace_independence_of_reference
   let _ : IsProbabilityMeasure (reference i) := hrefProb i
   have hX : Measurable X :=
     measurable_dependentTruncatedProduct
-      (figureOneDependentAlpha q)
+      (truncationLevel q)
       (scheduledFigureOneTraceTruncatedMean q I)
       (scheduledFigureOneTraceTruncatedPhase q I)
       (fun j => (measurable_scheduledBalancedTracePhaseVariable q j).min

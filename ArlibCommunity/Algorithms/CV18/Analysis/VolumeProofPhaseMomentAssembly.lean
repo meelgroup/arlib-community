@@ -26,12 +26,12 @@ Lemma 7.15.  They are intentionally finite-horizon: the earlier unbounded
 -/
 
 theorem figureOneIdealPhase_card_eq_phaseCount (q : VolumeParams) :
-    Fintype.card (FigureOneIdealPhase q) = figureOneDependentPhaseCount q := by
+    Fintype.card (FigureOneIdealPhase q) = numPhases q := by
   have hcomp := Fintype.card_subtype_compl
     (fun k : Fin (terminalPhaseSteps q) => scheduleValue q k ≤ 1)
   have hle := Fintype.card_subtype_le
     (fun k : Fin (terminalPhaseSteps q) => scheduleValue q k ≤ 1)
-  rw [figureOneDependentPhaseCount]
+  rw [numPhases]
   rw [Fintype.card_congr (figureOneIdealPhaseEquiv q)]
   simp only [Fintype.card_sum, Fintype.card_unique]
   simp only [Fintype.card_fin] at hcomp hle
@@ -39,12 +39,12 @@ theorem figureOneIdealPhase_card_eq_phaseCount (q : VolumeParams) :
   omega
 
 noncomputable def figureOneDependentPhaseOrder (q : VolumeParams) :
-    Fin (figureOneDependentPhaseCount q) ≃ FigureOneIdealPhase q :=
+    Fin (numPhases q) ≃ FigureOneIdealPhase q :=
   Fintype.equivOfCardEq (by simpa using (figureOneIdealPhase_card_eq_phaseCount q).symm)
 
 noncomputable def figureOneDependentPhaseAt (q : VolumeParams) (j : ℕ) : FigureOneIdealPhase q :=
-  figureOneDependentPhaseOrder q ⟨j % figureOneDependentPhaseCount q,
-    Nat.mod_lt _ (figureOneDependentPhaseCount_pos q)⟩
+  figureOneDependentPhaseOrder q ⟨j % numPhases q,
+    Nat.mod_lt _ (numPhases_pos q)⟩
 
 noncomputable def figureOneDependentRawMean (q : VolumeParams) (I : VolumeInput q.n) (j : ℕ) : ℝ :=
   figureOneIdealPhaseMean q I (figureOneDependentPhaseAt q (j - 1))
@@ -53,17 +53,17 @@ noncomputable def figureOneDependentMomentFactor (q : VolumeParams) (j : ℕ) : 
   figureOneIdealPhaseFactor q (figureOneDependentPhaseAt q (j - 1))
 
 theorem figureOneDependentRawMean_product (q : VolumeParams) (I : VolumeInput q.n) :
-    dependentPhaseMeanProduct (figureOneDependentRawMean q I) (figureOneDependentPhaseCount q) =
+    dependentPhaseMeanProduct (figureOneDependentRawMean q I) (numPhases q) =
       ∏ i, figureOneIdealPhaseMean q I i := by
   rw [dependentPhaseMeanProduct]
   calc
-    (∏ j ∈ Finset.range (figureOneDependentPhaseCount q), figureOneDependentRawMean q I (j + 1)) =
-        ∏ j ∈ Finset.range (figureOneDependentPhaseCount q),
+    (∏ j ∈ Finset.range (numPhases q), figureOneDependentRawMean q I (j + 1)) =
+        ∏ j ∈ Finset.range (numPhases q),
           figureOneIdealPhaseMean q I (figureOneDependentPhaseAt q j) := by
       apply Finset.prod_congr rfl
       intro j hj
       simp only [figureOneDependentRawMean, Nat.add_sub_cancel]
-    _ = ∏ i : Fin (figureOneDependentPhaseCount q),
+    _ = ∏ i : Fin (numPhases q),
           figureOneIdealPhaseMean q I (figureOneDependentPhaseOrder q i) := by
       rw [← Fin.prod_univ_eq_prod_range
         (fun j => figureOneIdealPhaseMean q I (figureOneDependentPhaseAt q j))]
@@ -74,17 +74,17 @@ theorem figureOneDependentRawMean_product (q : VolumeParams) (I : VolumeInput q.
       (figureOneDependentPhaseOrder q).prod_comp (figureOneIdealPhaseMean q I)
 
 theorem figureOneDependentMomentFactor_product (q : VolumeParams) :
-    dependentPhaseMeanProduct (figureOneDependentMomentFactor q) (figureOneDependentPhaseCount q) =
+    dependentPhaseMeanProduct (figureOneDependentMomentFactor q) (numPhases q) =
       ∏ i, figureOneIdealPhaseFactor q i := by
   rw [dependentPhaseMeanProduct]
   calc
-    (∏ j ∈ Finset.range (figureOneDependentPhaseCount q), figureOneDependentMomentFactor q (j + 1)) =
-        ∏ j ∈ Finset.range (figureOneDependentPhaseCount q),
+    (∏ j ∈ Finset.range (numPhases q), figureOneDependentMomentFactor q (j + 1)) =
+        ∏ j ∈ Finset.range (numPhases q),
           figureOneIdealPhaseFactor q (figureOneDependentPhaseAt q j) := by
       apply Finset.prod_congr rfl
       intro j hj
       simp only [figureOneDependentMomentFactor, Nat.add_sub_cancel]
-    _ = ∏ i : Fin (figureOneDependentPhaseCount q),
+    _ = ∏ i : Fin (numPhases q),
           figureOneIdealPhaseFactor q (figureOneDependentPhaseOrder q i) := by
       rw [← Fin.prod_univ_eq_prod_range
         (fun j => figureOneIdealPhaseFactor q (figureOneDependentPhaseAt q j))]
@@ -103,7 +103,7 @@ theorem figureOneDependentMomentFactor_one_le (q : VolumeParams) (j : ℕ) :
   figureOneIdealPhaseFactor_one_le q _
 
 theorem figureOneDependentMomentFactor_product_le (q : VolumeParams) :
-    dependentPhaseMeanProduct (figureOneDependentMomentFactor q) (figureOneDependentPhaseCount q) ≤
+    dependentPhaseMeanProduct (figureOneDependentMomentFactor q) (numPhases q) ≤
       Real.exp (13 * q.eps ^ 2 / 512) := by
   rw [figureOneDependentMomentFactor_product]
   exact figureOneIdealPhaseFactor_product_le q
@@ -114,14 +114,14 @@ theorem figureOneIdealPhaseFactor_le_two (q : VolumeParams) (i : FigureOneIdealP
   | fixed k =>
       simp only [figureOneIdealPhaseFactor]
       have hn : (3 : ℝ) ≤ q.n := by exact_mod_cast q.dim_ok
-      have hc : (1 : ℝ) ≤ figureOneFixedSampleCount q := by
-        exact_mod_cast figureOneFixedSampleCount_pos q
+      have hc : (1 : ℝ) ≤ fixedRateSampleCount q := by
+        exact_mod_cast fixedRateSampleCount_pos q
       have hn0 : (0 : ℝ) < q.n := by linarith
-      have hc0 : (0 : ℝ) < figureOneFixedSampleCount q := by linarith
+      have hc0 : (0 : ℝ) < fixedRateSampleCount q := by linarith
       rw [div_div]
-      have hden : (3 : ℝ) ≤ (q.n : ℝ) * figureOneFixedSampleCount q := by
+      have hden : (3 : ℝ) ≤ (q.n : ℝ) * fixedRateSampleCount q := by
         nlinarith [mul_le_mul hn hc (by norm_num) hn0.le]
-      have hfrac : (2 : ℝ) / ((q.n : ℝ) * figureOneFixedSampleCount q) ≤ 2 / 3 :=
+      have hfrac : (2 : ℝ) / ((q.n : ℝ) * fixedRateSampleCount q) ≤ 2 / 3 :=
         div_le_div_of_nonneg_left (by norm_num) (by norm_num) hden
       linarith
   | accelerated k =>
@@ -129,42 +129,42 @@ theorem figureOneIdealPhaseFactor_le_two (q : VolumeParams) (i : FigureOneIdealP
       have hsT : scheduleValue q k ≤ terminalVariance q :=
         scheduleValue_le_terminal q k
       have hT : 0 < terminalVariance q := terminalVariance_pos' q
-      have hc : (1 : ℝ) ≤ figureOneSampleCount q := by
-        exact_mod_cast figureOneSampleCount_pos q
-      have hc0 : (0 : ℝ) < figureOneSampleCount q := by linarith
+      have hc : (1 : ℝ) ≤ sampleCount q := by
+        exact_mod_cast sampleCount_pos q
+      have hc0 : (0 : ℝ) < sampleCount q := by linarith
       have hratio : scheduleValue q k / terminalVariance q ≤ 1 := by
         exact (div_le_one hT).2 hsT
       have hfrac : scheduleValue q k / terminalVariance q /
-          figureOneSampleCount q ≤ 1 := by
+          sampleCount q ≤ 1 := by
         apply (div_le_one hc0).2
         exact hratio.trans hc
       linarith
   | terminal =>
       simp only [figureOneIdealPhaseFactor]
-      have hc : (1 : ℝ) ≤ figureOneSampleCount q := by
-        exact_mod_cast figureOneSampleCount_pos q
-      have hc0 : (0 : ℝ) < figureOneSampleCount q := by linarith
+      have hc : (1 : ℝ) ≤ sampleCount q := by
+        exact_mod_cast sampleCount_pos q
+      have hc0 : (0 : ℝ) < sampleCount q := by linarith
       have hexp : Real.exp (1 / 2) ≤ (5 / 3 : ℝ) := by
         convert Real.exp_le_two_add_div_two_sub (x := (1 / 2 : ℝ))
           (by norm_num) (by norm_num) using 1 <;> norm_num
       have hfrac : (Real.exp (1 / 2) - 1) /
-          figureOneSampleCount q ≤ 2 / 3 := by
+          sampleCount q ≤ 2 / 3 := by
         apply (div_le_iff₀ hc0).2
         nlinarith
       linarith
 
-theorem figureOneDependentAlpha_ge_1024 (q : VolumeParams) :
-    (1024 : ℝ) ≤ figureOneDependentAlpha q := by
-  have hm : (1 : ℝ) ≤ figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
+theorem truncationLevel_ge_1024 (q : VolumeParams) :
+    (1024 : ℝ) ≤ truncationLevel q := by
+  have hm : (1 : ℝ) ≤ numPhases q := by
+    exact_mod_cast numPhases_pos q
   have he2 : q.eps ^ 2 ≤ 1 := by nlinarith [q.heps.1, q.heps.2]
-  rw [figureOneDependentAlpha, le_div_iff₀ (sq_pos_of_pos q.heps.1)]
+  rw [truncationLevel, le_div_iff₀ (sq_pos_of_pos q.heps.1)]
   nlinarith
 
 noncomputable def figureOneHistoryTruncatedPhase {Omega : Type*} [MeasurableSpace Omega]
     (q : VolumeParams) (I : VolumeInput q.n) (W : ℕ → Omega → ℝ) :
     ℕ → Omega → ℝ :=
-  dependentTruncatedPhase (figureOneDependentAlpha q) (figureOneDependentRawMean q I) W
+  dependentTruncatedPhase (truncationLevel q) (figureOneDependentRawMean q I) W
 
 noncomputable def figureOneHistoryTruncatedMean {Omega : Type*} [MeasurableSpace Omega]
     (q : VolumeParams) (I : VolumeInput q.n) (mu : Measure Omega)
@@ -181,7 +181,7 @@ theorem figureOneHistoryTruncatedPhase_eq
     (q : VolumeParams) (I : VolumeInput q.n) (W : ℕ → Omega → ℝ)
     (j : ℕ) (omega : Omega) :
     figureOneHistoryTruncatedPhase q I W j omega =
-      dependentTruncatedPhase (figureOneDependentAlpha q)
+      dependentTruncatedPhase (truncationLevel q)
         (figureOneDependentRawMean q I) W j omega := rfl
 
 theorem figureOneHistoryTruncatedMean_eq
@@ -211,12 +211,12 @@ theorem figureOneHistoryTruncatedPhase_nonneg {Omega : Type*} [MeasurableSpace O
     0 ≤ figureOneHistoryTruncatedPhase q I W j omega := by
   unfold figureOneHistoryTruncatedPhase dependentTruncatedPhase
   exact le_min (hW0 j omega)
-    (mul_nonneg (figureOneDependentAlpha_pos q).le (figureOneDependentRawMean_pos q I j).le)
+    (mul_nonneg (truncationLevel_pos q).le (figureOneDependentRawMean_pos q I j).le)
 
 theorem figureOneHistoryTruncatedPhase_le_cap {Omega : Type*} [MeasurableSpace Omega]
     (q : VolumeParams) (I : VolumeInput q.n) (W : ℕ → Omega → ℝ)
     (j : ℕ) (omega : Omega) :
-    figureOneHistoryTruncatedPhase q I W j omega ≤ figureOneDependentAlpha q * figureOneDependentRawMean q I j := by
+    figureOneHistoryTruncatedPhase q I W j omega ≤ truncationLevel q * figureOneDependentRawMean q I j := by
   unfold figureOneHistoryTruncatedPhase dependentTruncatedPhase
   exact min_le_right _ _
 
@@ -233,7 +233,7 @@ theorem figureOneHistoryTruncatedPhase_memLp_two {Omega : Type*} [MeasurableSpac
     (hW0 : ∀ j omega, 0 ≤ W j omega) (j : ℕ) :
     MemLp (figureOneHistoryTruncatedPhase q I W j) 2 mu := by
   apply MemLp.of_bound (figureOneHistoryTruncatedPhase_measurable q I W hWmeas j).aestronglyMeasurable
-    (figureOneDependentAlpha q * figureOneDependentRawMean q I j)
+    (truncationLevel q * figureOneDependentRawMean q I j)
   filter_upwards with omega
   rw [Real.norm_eq_abs, abs_of_nonneg (figureOneHistoryTruncatedPhase_nonneg q I W hW0 j omega)]
   exact figureOneHistoryTruncatedPhase_le_cap q I W j omega
@@ -289,9 +289,9 @@ theorem figureOneHistoryTruncatedMean_ge_three_quarters_rawMean
       figureOneDependentMomentFactor q j * figureOneDependentRawMean q I j ^ 2) (j : ℕ) :
     (3 / 4 : ℝ) * figureOneDependentRawMean q I j ≤ figureOneHistoryTruncatedMean q I mu W j := by
   let raw := figureOneDependentRawMean q I j
-  let alpha := figureOneDependentAlpha q
+  let alpha := truncationLevel q
   have hraw : 0 < raw := figureOneDependentRawMean_pos q I j
-  have halpha : (1024 : ℝ) ≤ alpha := figureOneDependentAlpha_ge_1024 q
+  have halpha : (1024 : ℝ) ≤ alpha := truncationLevel_ge_1024 q
   have hcap : 0 < alpha * raw := mul_pos (by linarith) hraw
   have htrunc := integral_min_ge_integral_sub_secondMoment_div_four mu
     ((hWmem j).integrable (by norm_num)) (hWmem j).integrable_sq (hW0 j) hcap
@@ -318,12 +318,12 @@ theorem figureOneRawMean_le_one_add_inv_alpha_mul_truncatedMean
     (hWmean : ∀ j, (∫ omega, W j omega ∂mu) = figureOneDependentRawMean q I j)
     (hWsecond : ∀ j, (∫ omega, W j omega ^ 2 ∂mu) ≤
       figureOneDependentMomentFactor q j * figureOneDependentRawMean q I j ^ 2) (j : ℕ) :
-    figureOneDependentRawMean q I j ≤ (1 + 1 / figureOneDependentAlpha q) *
+    figureOneDependentRawMean q I j ≤ (1 + 1 / truncationLevel q) *
       figureOneHistoryTruncatedMean q I mu W j := by
   let raw := figureOneDependentRawMean q I j
-  let alpha := figureOneDependentAlpha q
+  let alpha := truncationLevel q
   have hraw : 0 < raw := figureOneDependentRawMean_pos q I j
-  have halpha : (1024 : ℝ) ≤ alpha := figureOneDependentAlpha_ge_1024 q
+  have halpha : (1024 : ℝ) ≤ alpha := truncationLevel_ge_1024 q
   have hcap : 0 < alpha * raw := mul_pos (by linarith) hraw
   have htrunc := integral_min_ge_integral_sub_secondMoment_div_four mu
     ((hWmem j).integrable (by norm_num)) (hWmem j).integrable_sq (hW0 j) hcap
@@ -446,13 +446,13 @@ theorem figureOneRawMeanProduct_le_pow_mul_truncatedMeanProduct
     (hWsecond : ∀ j, (∫ omega, W j omega ^ 2 ∂mu) ≤
       figureOneDependentMomentFactor q j * figureOneDependentRawMean q I j ^ 2) (i : ℕ) :
     dependentPhaseMeanProduct (figureOneDependentRawMean q I) i ≤
-      (1 + 1 / figureOneDependentAlpha q) ^ i *
+      (1 + 1 / truncationLevel q) ^ i *
         dependentPhaseMeanProduct (figureOneHistoryTruncatedMean q I mu W) i := by
   unfold dependentPhaseMeanProduct
   calc
     (∏ j ∈ Finset.range i, figureOneDependentRawMean q I (j + 1)) ≤
         ∏ j ∈ Finset.range i,
-          ((1 + 1 / figureOneDependentAlpha q) *
+          ((1 + 1 / truncationLevel q) *
             figureOneHistoryTruncatedMean q I mu W (j + 1)) := by
       apply Finset.prod_le_prod₀
       · intro j hj
@@ -460,7 +460,7 @@ theorem figureOneRawMeanProduct_le_pow_mul_truncatedMeanProduct
       · intro j hj
         exact figureOneRawMean_le_one_add_inv_alpha_mul_truncatedMean q I mu W hWmeas hW0
           hWmem hWmean hWsecond (j + 1)
-    _ = (1 + 1 / figureOneDependentAlpha q) ^ i *
+    _ = (1 + 1 / truncationLevel q) ^ i *
         ∏ j ∈ Finset.range i, figureOneHistoryTruncatedMean q I mu W (j + 1) := by
       rw [Finset.prod_mul_distrib]
       simp
@@ -486,25 +486,25 @@ theorem figureOneTruncatedMeanProduct_le_rawMeanProduct
       hWmean (j + 1)
 
 theorem figureOne_one_add_inv_alpha_pow_le_exp
-    (q : VolumeParams) {i : ℕ} (hi : i ≤ figureOneDependentPhaseCount q) :
-    (1 + 1 / figureOneDependentAlpha q) ^ i ≤
+    (q : VolumeParams) {i : ℕ} (hi : i ≤ numPhases q) :
+    (1 + 1 / truncationLevel q) ^ i ≤
       Real.exp (q.eps ^ 2 / 1024) := by
-  let alpha := figureOneDependentAlpha q
-  have ha : 0 < alpha := figureOneDependentAlpha_pos q
+  let alpha := truncationLevel q
+  have ha : 0 < alpha := truncationLevel_pos q
   have hinv0 : 0 ≤ 1 / alpha := by positivity
   have hbase : 1 + 1 / alpha ≤ Real.exp (1 / alpha) := by
     simpa [add_comm] using Real.add_one_le_exp (1 / alpha)
   have hpow : (1 + 1 / alpha) ^ i ≤ Real.exp (1 / alpha) ^ i :=
     pow_le_pow_left₀ (by positivity) hbase i
   rw [← Real.exp_nat_mul] at hpow
-  have hiR : (i : ℝ) ≤ figureOneDependentPhaseCount q := by exact_mod_cast hi
+  have hiR : (i : ℝ) ≤ numPhases q := by exact_mod_cast hi
   have hquot : (i : ℝ) / alpha ≤
-      (figureOneDependentPhaseCount q : ℝ) / alpha :=
+      (numPhases q : ℝ) / alpha :=
     div_le_div_of_nonneg_right hiR ha.le
   have hexp : Real.exp ((i : ℝ) / alpha) ≤
       Real.exp (q.eps ^ 2 / 1024) := by
     apply Real.exp_le_exp.mpr
-    simpa [alpha, figureOneDependentPhaseCount_div_alpha q] using hquot
+    simpa [alpha, numPhases_div_alpha q] using hquot
   change (1 + 1 / alpha) ^ i ≤ _
   calc
     _ ≤ Real.exp ((i : ℝ) * (1 / alpha)) := hpow
@@ -533,7 +533,7 @@ theorem figureOneTruncatedSecondProduct_le_factor_mul_rawMeanProduct_sq
       hWsecond (j + 1)
 
 theorem figureOneMomentFactor_partialProduct_le_exp
-    (q : VolumeParams) {i : ℕ} (hi : i ≤ figureOneDependentPhaseCount q) :
+    (q : VolumeParams) {i : ℕ} (hi : i ≤ numPhases q) :
     dependentPhaseMeanProduct (figureOneDependentMomentFactor q) i ≤
       Real.exp (13 * q.eps ^ 2 / 512) := by
   have hmono := Finset.prod_mono_set_of_one_le₀
@@ -598,12 +598,12 @@ theorem figureOneHistoryTruncatedMeanProduct_relativeApprox_ideal
     RelativeApprox (q.eps / 32)
       (∏ i, figureOneIdealPhaseMean q I i)
       (dependentPhaseMeanProduct (figureOneHistoryTruncatedMean q I mu W)
-        (figureOneDependentPhaseCount q)) := by
+        (numPhases q)) := by
   rw [← figureOneDependentRawMean_product q I]
   let raw := dependentPhaseMeanProduct (figureOneDependentRawMean q I)
-    (figureOneDependentPhaseCount q)
+    (numPhases q)
   let truncated := dependentPhaseMeanProduct
-    (figureOneHistoryTruncatedMean q I mu W) (figureOneDependentPhaseCount q)
+    (figureOneHistoryTruncatedMean q I mu W) (numPhases q)
   have hrawPos : 0 < raw := by
     dsimp [raw, dependentPhaseMeanProduct]
     apply Finset.prod_pos
@@ -618,7 +618,7 @@ theorem figureOneHistoryTruncatedMeanProduct_relativeApprox_ideal
       hWmem hWmean _
   have hrawPow := figureOneRawMeanProduct_le_pow_mul_truncatedMeanProduct
     q I mu W hWmeas hW0 hWmem hWmean hWsecond
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   have hpow := figureOne_one_add_inv_alpha_pow_le_exp q (le_refl _)
   have hrawExp : raw ≤ Real.exp (q.eps ^ 2 / 1024) * truncated := by
     exact hrawPow.trans (mul_le_mul_of_nonneg_right hpow htruncated0)
@@ -659,7 +659,7 @@ theorem figureOneTruncatedSecondProduct_le_one_add_eps_sq_div_32
     (hWmean : ∀ j, (∫ omega, W j omega ∂mu) = figureOneDependentRawMean q I j)
     (hWsecond : ∀ j, (∫ omega, W j omega ^ 2 ∂mu) ≤
       figureOneDependentMomentFactor q j * figureOneDependentRawMean q I j ^ 2)
-    {i : ℕ} (hi : i ≤ figureOneDependentPhaseCount q) :
+    {i : ℕ} (hi : i ≤ numPhases q) :
     dependentPhaseMeanProduct (figureOneHistoryTruncatedSecond q I mu W) i ≤
       (1 + q.eps ^ 2 / 32) *
         dependentPhaseMeanProduct (figureOneHistoryTruncatedMean q I mu W) i ^ 2 := by
@@ -716,14 +716,14 @@ theorem figureOneTruncatedSecondProduct_le_one_add_eps_sq_div_32
         (sq_nonneg meanProduct)
 
 theorem figureOneDependentMomentMultiplier_le
-    (q : VolumeParams) {i : ℕ} (hi : i ≤ figureOneDependentPhaseCount q) :
-    1 + 2 * figureOneDependentEpsilon q * figureOneDependentAlpha q ^ 4 * i ≤
+    (q : VolumeParams) {i : ℕ} (hi : i ≤ numPhases q) :
+    1 + 2 * dependenceError q * truncationLevel q ^ 4 * i ≤
       1 + q.eps ^ 2 / 2048 := by
-  have ha := figureOneDependentAlpha_pos q
-  have hm : (0 : ℝ) < figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
-  have hiR : (i : ℝ) ≤ figureOneDependentPhaseCount q := by exact_mod_cast hi
-  rw [figureOneDependentEpsilon]
+  have ha := truncationLevel_pos q
+  have hm : (0 : ℝ) < numPhases q := by
+    exact_mod_cast numPhases_pos q
+  have hiR : (i : ℝ) ≤ numPhases q := by exact_mod_cast hi
+  rw [dependenceError]
   field_simp [ha.ne', hm.ne']
   nlinarith
 
@@ -744,30 +744,30 @@ theorem figureOneHistory_tailSecond
     (hWmean : ∀ j, (∫ omega, W j omega ∂mu) = figureOneDependentRawMean q I j)
     (hWsecond : ∀ j, (∫ omega, W j omega ^ 2 ∂mu) ≤
       figureOneDependentMomentFactor q j * figureOneDependentRawMean q I j ^ 2) :
-    (1 + 2 * figureOneDependentEpsilon q * figureOneDependentAlpha q ^ 4 *
-        figureOneDependentPhaseCount q) *
+    (1 + 2 * dependenceError q * truncationLevel q ^ 4 *
+        numPhases q) *
         dependentPhaseMeanProduct (figureOneHistoryTruncatedSecond q I mu W)
-          (figureOneDependentPhaseCount q) ≤
+          (numPhases q) ≤
       (1 + q.eps ^ 2 / 16) *
         dependentPhaseMeanProduct (figureOneHistoryTruncatedMean q I mu W)
-          (figureOneDependentPhaseCount q) ^ 2 := by
+          (numPhases q) ^ 2 := by
   let meanProduct := dependentPhaseMeanProduct (figureOneHistoryTruncatedMean q I mu W)
-    (figureOneDependentPhaseCount q)
+    (numPhases q)
   have hmeanSq0 : 0 ≤ meanProduct ^ 2 := sq_nonneg _
   have hsecond := figureOneTruncatedSecondProduct_le_one_add_eps_sq_div_32 q I mu W hWmeas
     hW0 hWmem hWmean hWsecond (le_refl _)
   have hmult := figureOneDependentMomentMultiplier_le q (le_refl _)
-  have hmult0 : 0 ≤ 1 + 2 * figureOneDependentEpsilon q *
-      figureOneDependentAlpha q ^ 4 * (figureOneDependentPhaseCount q : ℝ) := by
-    have hterm : 0 ≤ 2 * figureOneDependentEpsilon q *
-        figureOneDependentAlpha q ^ 4 * (figureOneDependentPhaseCount q : ℝ) :=
+  have hmult0 : 0 ≤ 1 + 2 * dependenceError q *
+      truncationLevel q ^ 4 * (numPhases q : ℝ) := by
+    have hterm : 0 ≤ 2 * dependenceError q *
+        truncationLevel q ^ 4 * (numPhases q : ℝ) :=
       mul_nonneg
-        (mul_nonneg (mul_nonneg (by norm_num) (figureOneDependentEpsilon_nonneg q))
+        (mul_nonneg (mul_nonneg (by norm_num) (dependenceError_nonneg q))
           (by positivity)) (by positivity)
     linarith
   calc
-    _ ≤ (1 + 2 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 4 * figureOneDependentPhaseCount q) *
+    _ ≤ (1 + 2 * dependenceError q *
+          truncationLevel q ^ 4 * numPhases q) *
         ((1 + q.eps ^ 2 / 32) * meanProduct ^ 2) :=
       mul_le_mul_of_nonneg_left hsecond hmult0
     _ ≤ ((1 + q.eps ^ 2 / 2048) * (1 + q.eps ^ 2 / 32)) *
@@ -788,9 +788,9 @@ theorem figureOneHistory_relativeProduct_finite
     (hWmean : ∀ j, (∫ omega, W j omega ∂mu) = figureOneDependentRawMean q I j)
     (hWsecond : ∀ j, (∫ omega, W j omega ^ 2 ∂mu) ≤
       figureOneDependentMomentFactor q j * figureOneDependentRawMean q I j ^ 2) :
-    ∀ i, i ≤ figureOneDependentPhaseCount q →
-      (1 + 2 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 4 * i) *
+    ∀ i, i ≤ numPhases q →
+      (1 + 2 * dependenceError q *
+          truncationLevel q ^ 4 * i) *
           dependentPhaseMeanProduct (figureOneHistoryTruncatedSecond q I mu W) i ≤
         2 * dependentPhaseMeanProduct (figureOneHistoryTruncatedMean q I mu W) i ^ 2 := by
   intro i hi
@@ -799,17 +799,17 @@ theorem figureOneHistory_relativeProduct_finite
   have hsecond := figureOneTruncatedSecondProduct_le_one_add_eps_sq_div_32 q I mu W hWmeas
     hW0 hWmem hWmean hWsecond hi
   have hmult := figureOneDependentMomentMultiplier_le q hi
-  have hmult0 : 0 ≤ 1 + 2 * figureOneDependentEpsilon q *
-      figureOneDependentAlpha q ^ 4 * (i : ℝ) := by
-    have hterm : 0 ≤ 2 * figureOneDependentEpsilon q *
-        figureOneDependentAlpha q ^ 4 * (i : ℝ) :=
+  have hmult0 : 0 ≤ 1 + 2 * dependenceError q *
+      truncationLevel q ^ 4 * (i : ℝ) := by
+    have hterm : 0 ≤ 2 * dependenceError q *
+        truncationLevel q ^ 4 * (i : ℝ) :=
       mul_nonneg
-        (mul_nonneg (mul_nonneg (by norm_num) (figureOneDependentEpsilon_nonneg q))
+        (mul_nonneg (mul_nonneg (by norm_num) (dependenceError_nonneg q))
           (by positivity)) (by positivity)
     linarith
   calc
-    _ ≤ (1 + 2 * figureOneDependentEpsilon q *
-          figureOneDependentAlpha q ^ 4 * i) *
+    _ ≤ (1 + 2 * dependenceError q *
+          truncationLevel q ^ 4 * i) *
         ((1 + q.eps ^ 2 / 32) * meanProduct ^ 2) :=
       mul_le_mul_of_nonneg_left hsecond hmult0
     _ ≤ ((1 + q.eps ^ 2 / 2048) * (1 + q.eps ^ 2 / 32)) *

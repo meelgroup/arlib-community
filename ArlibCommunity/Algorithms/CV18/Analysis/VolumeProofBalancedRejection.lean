@@ -75,10 +75,10 @@ one membership query and does not change the target returned on success. -/
 noncomputable def balancedAccuracyGaussianRejectionAttempt (q : VolumeParams)
     (sigma2 : ℝ) (current : AmbientSpace q.n) :
     MembershipOracleProgram q.n (Bool × AmbientSpace q.n) :=
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   let target := c⁻¹ • current
   .query target fun inside =>
-    .randomReal uniformUnitIntervalMeasure inferInstance fun coin =>
+    .randomReal uniformUnit inferInstance fun coin =>
       if inside = true ∧
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
@@ -105,14 +105,14 @@ theorem balancedAccuracyGaussianRejectionAttempt_stronglyMeasurable
       oracle.query := by
   simp only [balancedAccuracyGaussianRejectionAttempt,
     MembershipOracleProgram.StronglyMeasurable]
-  let target : AmbientSpace q.n := (accuracyScaleFactor q)⁻¹ • current
+  let target : AmbientSpace q.n := (scaleFactor q)⁻¹ • current
   let output : ℝ → Bool × AmbientSpace q.n := fun coin =>
     if oracle.query target = true ∧
         ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
         ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
         ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
           Arlib.MarkovChains.gaussianScaleAcceptance sigma2
-            (accuracyScaleFactor q) target then
+            (scaleFactor q) target then
       (true, target)
     else (false, target)
   have hout : Measurable output := by
@@ -129,7 +129,7 @@ theorem balancedAccuracyGaussianRejectionAttempt_stronglyMeasurable
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
             Arlib.MarkovChains.gaussianScaleAcceptance sigma2
-              (accuracyScaleFactor q) target) := by
+              (scaleFactor q) target) := by
         intro coin h
         exact heligible ⟨h.1, h.2.1, h.2.2.1⟩
       simp only [output, hfalse, if_false]
@@ -141,7 +141,7 @@ theorem balancedAccuracyGaussianRejectionAttempt_stronglyMeasurable
             ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
             ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
               Arlib.MarkovChains.gaussianScaleAcceptance sigma2
-                (accuracyScaleFactor q) target then
+                (scaleFactor q) target then
           .pure (true, target) else .pure (false, target))) =
         fun coin => Measure.dirac (output coin) by
       funext coin
@@ -150,7 +150,7 @@ theorem balancedAccuracyGaussianRejectionAttempt_stronglyMeasurable
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
             Arlib.MarkovChains.gaussianScaleAcceptance sigma2
-              (accuracyScaleFactor q) target
+              (scaleFactor q) target
       · simp [h, output, MembershipOracleProgram.runEstimate]
       · simp [h, output, MembershipOracleProgram.runEstimate]]
     exact Measure.measurable_dirac.comp hout
@@ -161,7 +161,7 @@ theorem balancedAccuracyGaussianRejectionAttempt_stronglyMeasurable
 noncomputable def balancedAccuracyGaussianRejectionLaw
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (current : AmbientSpace q.n) : Measure (Bool × AmbientSpace q.n) :=
-  let target := (accuracyScaleFactor q)⁻¹ • current
+  let target := (scaleFactor q)⁻¹ • current
   let accept := balancedAccuracyGaussianAcceptance q I sigma2 current
   accept • Measure.dirac (true, target) +
     (1 - accept) • Measure.dirac (false, target)
@@ -174,16 +174,16 @@ theorem measurable_balancedAccuracyGaussianRejectionLaw
   simp only [balancedAccuracyGaussianRejectionLaw, Measure.add_apply,
     Measure.smul_apply, smul_eq_mul, Measure.dirac_apply' _ hS]
   have htarget : Measurable fun current : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹ • current :=
+      (scaleFactor q)⁻¹ • current :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id
+      (scaleFactor q)⁻¹).smul measurable_id
   have htrue : Measurable fun current : AmbientSpace q.n =>
       S.indicator (1 : Bool × AmbientSpace q.n → ENNReal)
-        (true, (accuracyScaleFactor q)⁻¹ • current) :=
+        (true, (scaleFactor q)⁻¹ • current) :=
     (measurable_one.indicator hS).comp (measurable_const.prodMk htarget)
   have hfalse : Measurable fun current : AmbientSpace q.n =>
       S.indicator (1 : Bool × AmbientSpace q.n → ENNReal)
-        (false, (accuracyScaleFactor q)⁻¹ • current) :=
+        (false, (scaleFactor q)⁻¹ • current) :=
     (measurable_one.indicator hS).comp (measurable_const.prodMk htarget)
   have hacc := measurable_balancedAccuracyGaussianAcceptance q I sigma2
   exact (hacc.mul htrue).add ((measurable_const.sub hacc).mul hfalse)
@@ -194,7 +194,7 @@ theorem runEstimate_balancedAccuracyGaussianRejectionAttempt
     (balancedAccuracyGaussianRejectionAttempt q sigma2 current).runEstimate
         oracle.query =
       balancedAccuracyGaussianRejectionLaw q I sigma2 current := by
-  let c := accuracyScaleFactor q
+  let c := scaleFactor q
   let target : AmbientSpace q.n := c⁻¹ • current
   let accept := balancedAccuracyGaussianAcceptance q I sigma2 current
   have haccept : accept ≤ 1 :=
@@ -235,18 +235,18 @@ theorem runEstimate_balancedAccuracyGaussianRejectionAttempt
         if coin ≤ accept.toReal then (true, target) else (false, target) :=
       Measurable.ite measurableSet_Iic measurable_const measurable_const
     have hbind :
-        (uniformUnitIntervalMeasure.bind fun value =>
+        (uniformUnit.bind fun value =>
           MembershipOracleProgram.runEstimate oracle.query
             (if value ≤ accept.toReal then
               MembershipOracleProgram.pure (true, target)
             else MembershipOracleProgram.pure (false, target))) =
-          uniformUnitIntervalMeasure.bind fun value =>
+          uniformUnit.bind fun value =>
             Measure.dirac (if value ≤ accept.toReal then
               (true, target) else (false, target)) := by
       apply Measure.bind_congr_right
       filter_upwards with value
       split <;> simp [MembershipOracleProgram.runEstimate]
-    rw [hbind, Measure.bind_dirac_eq_map uniformUnitIntervalMeasure hout]
+    rw [hbind, Measure.bind_dirac_eq_map uniformUnit hout]
     rw [uniformUnitInterval_map_threshold hacceptReal0 hacceptReal1
       (true, target) (false, target)]
     unfold balancedAccuracyGaussianRejectionLaw
@@ -321,11 +321,11 @@ theorem balancedAccuracyGaussianRejectionKernel_true_prod
     (mu.bind (balancedAccuracyGaussianRejectionKernel q I sigma2))
         ({true} ×ˢ B) =
       ((mu.withDensity (balancedAccuracyGaussianAcceptance q I sigma2)).map
-        (fun x => (accuracyScaleFactor q)⁻¹ • x)) B := by
+        (fun x => (scaleFactor q)⁻¹ • x)) B := by
   have hscale : Measurable (fun x : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹ • x) :=
+      (scaleFactor q)⁻¹ • x) :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id
+      (scaleFactor q)⁻¹).smul measurable_id
   have hprod : MeasurableSet ({true} ×ˢ B) :=
     (measurableSet_singleton true).prod hB
   rw [Measure.bind_apply hprod
@@ -339,7 +339,7 @@ theorem balancedAccuracyGaussianRejectionKernel_true_prod
       ({true} ×ˢ B) = _
   simp only [balancedAccuracyGaussianRejectionLaw, Measure.add_apply,
     Measure.smul_apply, smul_eq_mul, Measure.dirac_apply' _ hprod]
-  by_cases ht : (accuracyScaleFactor q)⁻¹ • current ∈ B
+  by_cases ht : (scaleFactor q)⁻¹ • current ∈ B
   · simp [ht, Set.indicator_of_mem, hprod]
   · simp [ht, Set.indicator_of_notMem, hprod]
 
@@ -349,7 +349,7 @@ noncomputable def balancedAccuracyGaussianAcceptedTargetLaw
     (mu : Measure (AmbientSpace q.n)) : Measure (AmbientSpace q.n) :=
   Arlib.condOn
     ((mu.withDensity (balancedAccuracyGaussianAcceptance q I sigma2)).map
-      (fun x => (accuracyScaleFactor q)⁻¹ • x)) Set.univ
+      (fun x => (scaleFactor q)⁻¹ • x)) Set.univ
 
 /-- Multiplying every acceptance probability by `1/2` does not change the
 law conditioned on success. -/
@@ -359,11 +359,11 @@ theorem balancedAccuracyGaussianAcceptedTargetLaw_eq
     balancedAccuracyGaussianAcceptedTargetLaw q I sigma2 mu =
       accuracyGaussianAcceptedTargetLaw q I sigma2 mu := by
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    (accuracyScaleFactor q)⁻¹ • x
+    (scaleFactor q)⁻¹ • x
   have hscale : Measurable scale := by
     dsimp [scale]
     exact (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id
+      (scaleFactor q)⁻¹).smul measurable_id
   unfold balancedAccuracyGaussianAcceptedTargetLaw
     accuracyGaussianAcceptedTargetLaw
   unfold balancedAccuracyGaussianAcceptance

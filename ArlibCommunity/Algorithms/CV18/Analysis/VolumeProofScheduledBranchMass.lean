@@ -19,15 +19,15 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     let K := figureOneScheduledPhaseBody q I sigma2
-    let delta := figureOneScheduledProposalRadius q sigma2
+    let delta := proposalRadius q sigma2
     let pi := ellGaussianProb K delta sigma2
     ENNReal.ofReal (7 / 64 : ℝ) ≤
       (pi.withDensity
         (scheduledAccuracyGaussianRejectionAcceptance q I sigma2)) Set.univ := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
-  let c := accuracyScaleFactor q
+  let delta := proposalRadius q sigma2
+  let c := scaleFactor q
   let pi := ellGaussianProb K delta sigma2
   let core := c • K
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
@@ -37,8 +37,8 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge
     ((volume : Measure (AmbientSpace q.n)).withDensity
       (gaussianWeight (sigma2 / c ^ 2))) K
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
-  have hdelta : 0 < delta := figureOneScheduledProposalRadius_pos q hsigma2
-  have hc0 : 0 < c := by simpa [c] using accuracyScaleFactor_pos q
+  have hdelta : 0 < delta := proposalRadius_pos q hsigma2
+  have hc0 : 0 < c := by simpa [c] using scaleFactor_pos q
   have hKmeas : MeasurableSet K := figureOneScheduledPhaseBody_measurable q I sigma2
   have hKconv : Convex ℝ K := figureOneScheduledPhaseBody_convex q I sigma2
   have hKcompact : IsCompact K := figureOneScheduledPhaseBody_isCompact q I sigma2
@@ -73,15 +73,15 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge
   let _ : IsProbabilityMeasure proposal :=
     Arlib.isProbabilityMeasure_condOn _ hprop0 hproptop
   have hsourceTv : Arlib.TVLe source proposal
-      (4 * ENNReal.ofReal (figureOneScheduledCoreError q)) := by
+      (4 * ENNReal.ofReal (coreMixingError q)) := by
     simpa [source, proposal, pi, core, scale, K, delta, c] using
       figureOneScheduled_stationaryCoreMap_tv_proposal q I hsigma2
-  have herr : 4 * ENNReal.ofReal (figureOneScheduledCoreError q) ≤
+  have herr : 4 * ENNReal.ofReal (coreMixingError q) ≤
       ENNReal.ofReal (1 / 4 : ℝ) := by
     rw [show (4 : ENNReal) = ENNReal.ofReal (4 : ℝ) by norm_num,
       ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 4)]
     exact ENNReal.ofReal_le_ofReal (by
-      nlinarith [figureOneScheduledCoreError_le_one_div_sixteen q])
+      nlinarith [coreMixingError_le_one_div_sixteen q])
   have hzero : (0 : AmbientSpace q.n) ∈ K := by
     apply ball_scheduledPhaseInradius_subset q I sigma2
     exact Metric.mem_ball_self (figureOneScheduledPhaseInradius_pos q hsigma2)
@@ -90,8 +90,8 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge
     dsimp [proposal, g, c]
     exact half_le_condOn_gaussian_scaleAcceptance_mass_standardCore_cv18
       hn hKmeas hKconv hzero
-      (by simpa [c, accuracyScaleFactor] using hprop0)
-      (by simpa [c, accuracyScaleFactor] using hproptop)
+      (by simpa [c, scaleFactor] using hprop0)
+      (by simpa [c, scaleFactor] using hproptop)
   have hg : Measurable g := by
     dsimp [g]
     exact measurable_gaussianScaleAcceptance sigma2 c
@@ -99,7 +99,7 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge
     intro x
     dsimp [g]
     exact gaussianScaleAcceptance_le_one hsigma2 hc0
-      (accuracyScaleFactor_le_one q) x
+      (scaleFactor_le_one q) x
   have hsourceAccept : ENNReal.ofReal (1 / 4 : ℝ) ≤
       (source.withDensity g) Set.univ :=
     TVLe.withDensity_mass_ge_quarter_cv18 hsourceTv herr hg hg1 hhalf
@@ -147,13 +147,13 @@ theorem scheduledBalancedAcceptedStateMeasure_mass_ge
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     let K := figureOneScheduledPhaseBody q I sigma2
-    let delta := figureOneScheduledProposalRadius q sigma2
+    let delta := proposalRadius q sigma2
     let pi := ellGaussianProb K delta sigma2
     ENNReal.ofReal (7 / 128 : ℝ) ≤
       scheduledBalancedAcceptedStateMeasure q I sigma2 pi Set.univ := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let pi := ellGaussianProb K delta sigma2
   rw [scheduledBalancedAcceptedStateMeasure_eq_half_smul,
     Measure.smul_apply, smul_eq_mul]
@@ -291,18 +291,18 @@ theorem scheduledBalancedAcceptedTargetSubmeasure_eq_mass_smul
       scheduledBalancedAcceptedStateMeasure q I sigma2 pi Set.univ) :
     let accepted := scheduledBalancedAcceptedStateMeasure q I sigma2 pi
     let acceptedTarget := accepted.map
-      (fun x => (accuracyScaleFactor q)⁻¹ • x)
+      (fun x => (scaleFactor q)⁻¹ • x)
     acceptedTarget = accepted Set.univ •
       scheduledBalancedAccuracyGaussianAcceptedTargetLaw q I sigma2 pi := by
   dsimp only
   let accepted := scheduledBalancedAcceptedStateMeasure q I sigma2 pi
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    (accuracyScaleFactor q)⁻¹ • x
+    (scaleFactor q)⁻¹ • x
   let acceptedTarget := accepted.map scale
   have hscale : Measurable scale := by
     dsimp only [scale]
     exact (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      (accuracyScaleFactor q)⁻¹).smul measurable_id
+      (scaleFactor q)⁻¹).smul measurable_id
   have haccepted0 : accepted Set.univ ≠ 0 := ne_of_gt <|
     (by norm_num : 0 < ENNReal.ofReal (7 / 128 : ℝ)).trans_le
       (by simpa [accepted] using hacceptedLower)

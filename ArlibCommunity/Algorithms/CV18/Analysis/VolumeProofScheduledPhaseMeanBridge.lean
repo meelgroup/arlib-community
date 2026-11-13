@@ -58,7 +58,7 @@ set_option maxHeartbeats 1000000 in
 followed by the public output and averaging maps. -/
 theorem figureOneScheduledTerminalPhaseTarget_eq_map_retainedSumKernel
     (q : VolumeParams) (I : VolumeInput q.n) :
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     let weight := uniformRatioWeight (terminalVariance q)
     let K := figureOneFinalScheduledRetainedOptionKernel q I
       (terminalVariance q)
@@ -71,7 +71,7 @@ theorem figureOneScheduledTerminalPhaseTarget_eq_map_retainedSumKernel
         initial (count - 1)).map
           (balancedCoolingAverage count ∘ retainedSumOutput) := by
   dsimp only
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let s := terminalVariance q
   let weight := uniformRatioWeight (n := q.n) s
   let exact : Measure (AmbientSpace q.n) :=
@@ -92,7 +92,7 @@ theorem figureOneScheduledTerminalPhaseTarget_eq_map_retainedSumKernel
           (figureOneFinalScheduledBalancedParameters.proposalCap q s)
           (figureOneFinalScheduledBalancedParameters.properStride q s)
           (figureOneFinalScheduledBalancedParameters.retryLimit q s)
-          (count - 1) (weight point) (accuracyScaleFactor q • point)
+          (count - 1) (weight point) (scaleFactor q • point)
   have hs : 0 < s := terminalVariance_pos' q
   have hweight : Measurable weight := measurable_uniformRatioWeight s
   have hK := figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
@@ -119,10 +119,10 @@ theorem figureOneScheduledTerminalPhaseTarget_eq_map_retainedSumKernel
           (figureOneFinalScheduledBalancedParameters.proposalCap q s)
           (figureOneFinalScheduledBalancedParameters.properStride q s)
           (figureOneFinalScheduledBalancedParameters.retryLimit q s)
-          (count - 1) (weight point) (accuracyScaleFactor q • point) := by
+          (count - 1) (weight point) (scaleFactor q • point) := by
       exact htailCollect.1.comp <| hweight.prodMk <|
         (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-          accuracyScaleFactor q).smul measurable_id
+          scaleFactor q).smul measurable_id
     convert Measurable.optionElim
       (Measure.dirac (none : Option (ℝ × AmbientSpace q.n))) hsome using 1
     funext result
@@ -215,7 +215,7 @@ theorem integral_map_balancedCooling_retainedSumOutput_liveRaw_eq
 shadow average. -/
 theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_eq_shadow
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ) :
-    let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+    let count := phaseSampleCount q (scheduleValue q phase)
     let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
       (scheduleValue q (phase + 1))
     let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -230,7 +230,7 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_eq_shadow
         ∂iteratedKernelLaw (fun _ => retainedSumKernel K weight)
           initial (count - 1) := by
   dsimp only
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
     (scheduleValue q (phase + 1))
   let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -243,10 +243,10 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_eq_shadow
     initial (count - 1)
   have hcount : 0 < count := by
     dsimp only [count]
-    unfold figureOnePhaseSampleCount
+    unfold phaseSampleCount
     split_ifs
-    · exact figureOneFixedSampleCount_pos q
-    · exact figureOneSampleCount_pos q
+    · exact fixedRateSampleCount_pos q
+    · exact sampleCount_pos q
   have hweight : Measurable weight := measurable_gaussianRatioWeight _ _
   have hK := figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
     q I (scheduleValue_pos q phase)
@@ -268,7 +268,7 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_eq_shadow
 shadow average. -/
 theorem integral_figureOneScheduledTerminalPhaseTarget_liveRaw_eq_shadow
     (q : VolumeParams) (I : VolumeInput q.n) :
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
     let K := figureOneFinalScheduledRetainedOptionKernel q I
       (terminalVariance q)
@@ -282,7 +282,7 @@ theorem integral_figureOneScheduledTerminalPhaseTarget_liveRaw_eq_shadow
         ∂iteratedKernelLaw (fun _ => retainedSumKernel K weight)
           initial (count - 1) := by
   dsimp only
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
   let K := figureOneFinalScheduledRetainedOptionKernel q I
     (terminalVariance q)
@@ -292,7 +292,7 @@ theorem integral_figureOneScheduledTerminalPhaseTarget_liveRaw_eq_shadow
         (fun x => (weight x, some x))
   let shadow := iteratedKernelLaw (fun _ => retainedSumKernel K weight)
     initial (count - 1)
-  have hcount : 0 < count := figureOneSampleCount_pos q
+  have hcount : 0 < count := sampleCount_pos q
   have hweight : Measurable weight := measurable_uniformRatioWeight _
   have hK := figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
     q I (terminalVariance_pos' q)
@@ -353,7 +353,7 @@ Cauchy--Schwarz against the normalized shadow second moment. -/
 theorem integral_initializedScheduledRetainedHistory_average_sub_target_le_death
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
     (haverageMem :
-      let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+      let count := phaseSampleCount q (scheduleValue q phase)
       let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
         (scheduleValue q (phase + 1))
       let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -366,7 +366,7 @@ theorem integral_initializedScheduledRetainedHistory_average_sub_target_le_death
         state.1 / (count : ℝ)) 2
         (iteratedKernelLaw (fun _ => retainedSumKernel K weight)
           initial (count - 1))) :
-    let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+    let count := phaseSampleCount q (scheduleValue q phase)
     let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
       (scheduleValue q (phase + 1))
     let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -386,7 +386,7 @@ theorem integral_initializedScheduledRetainedHistory_average_sub_target_le_death
       Real.sqrt (∫ state, (state.1 / (count : ℝ)) ^ 2 ∂shadow) *
         Real.sqrt (shadow.real {state | state.2 = none}) := by
   dsimp only
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
     (scheduleValue q (phase + 1))
   let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -399,10 +399,10 @@ theorem integral_initializedScheduledRetainedHistory_average_sub_target_le_death
     initial (count - 1)
   have hcount : 0 < count := by
     dsimp only [count]
-    unfold figureOnePhaseSampleCount
+    unfold phaseSampleCount
     split_ifs
-    · exact figureOneFixedSampleCount_pos q
-    · exact figureOneSampleCount_pos q
+    · exact fixedRateSampleCount_pos q
+    · exact sampleCount_pos q
   have hweight : Measurable weight := measurable_gaussianRatioWeight _ _
   have hK := figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
     q I (scheduleValue_pos q phase)
@@ -445,7 +445,7 @@ theorem integral_initializedScheduledRetainedHistory_average_sub_target_le_death
 is exactly the terminal retained-sum shadow average. -/
 theorem integral_initializedScheduledRetainedHistory_terminal_average_eq_shadow
     (q : VolumeParams) (I : VolumeInput q.n) :
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
     let K := figureOneFinalScheduledRetainedOptionKernel q I
       (terminalVariance q)
@@ -462,8 +462,8 @@ theorem integral_initializedScheduledRetainedHistory_terminal_average_eq_shadow
         ∂iteratedKernelLaw (fun _ => retainedSumKernel K weight)
           initial (count - 1) := by
   dsimp only
-  have hcount : 0 < figureOneSampleCount q := figureOneSampleCount_pos q
-  have htail : figureOneSampleCount q - 1 + 1 = figureOneSampleCount q :=
+  have hcount : 0 < sampleCount q := sampleCount_pos q
+  have htail : sampleCount q - 1 + 1 = sampleCount q :=
     Nat.sub_add_cancel hcount
   simpa [initializedScheduledRetainedHistoryLaw, htail,
     scheduleValue_terminalPhaseSteps] using
@@ -477,14 +477,14 @@ theorem integral_initializedScheduledRetainedHistory_terminal_average_eq_shadow
       (measurable_uniformRatioWeight (terminalVariance q))
       (truncatedGaussianProbability q I (terminalVariance q)
         (terminalVariance_pos' q) : Measure (AmbientSpace q.n))
-      (figureOneSampleCount q - 1)
+      (sampleCount q - 1)
 
 /-- Terminal analogue of the Gaussian pre-kill bridge: the initialized
 uniform-history average loses only the accumulated total on final death. -/
 theorem integral_initializedScheduledRetainedHistory_terminal_average_sub_target_le_death
     (q : VolumeParams) (I : VolumeInput q.n)
     (haverageMem :
-      let count := figureOneSampleCount q
+      let count := sampleCount q
       let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
       let K := figureOneFinalScheduledRetainedOptionKernel q I
         (terminalVariance q)
@@ -496,7 +496,7 @@ theorem integral_initializedScheduledRetainedHistory_terminal_average_sub_target
         state.1 / (count : ℝ)) 2
         (iteratedKernelLaw (fun _ => retainedSumKernel K weight)
           initial (count - 1))) :
-    let count := figureOneSampleCount q
+    let count := sampleCount q
     let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
     let K := figureOneFinalScheduledRetainedOptionKernel q I
       (terminalVariance q)
@@ -516,7 +516,7 @@ theorem integral_initializedScheduledRetainedHistory_terminal_average_sub_target
       Real.sqrt (∫ state, (state.1 / (count : ℝ)) ^ 2 ∂shadow) *
         Real.sqrt (shadow.real {state | state.2 = none}) := by
   dsimp only
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
   let K := figureOneFinalScheduledRetainedOptionKernel q I
     (terminalVariance q)
@@ -526,7 +526,7 @@ theorem integral_initializedScheduledRetainedHistory_terminal_average_sub_target
         (fun x => (weight x, some x))
   let shadow := iteratedKernelLaw (fun _ => retainedSumKernel K weight)
     initial (count - 1)
-  have hcount : 0 < count := figureOneSampleCount_pos q
+  have hcount : 0 < count := sampleCount_pos q
   have hweight : Measurable weight := measurable_uniformRatioWeight _
   have hK := figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
     q I (terminalVariance_pos' q)
@@ -572,8 +572,8 @@ theorem figureOneScheduledTerminalShadow_dead_real_le
     (q : VolumeParams) (I : VolumeInput q.n)
     (hepsilonTop :
       2 * scheduledBalancedStationaryTargetError q +
-          figureOneSampleCount q • figureOneCorrectedTransitionBudget q ≠ ⊤) :
-    let count := figureOneSampleCount q
+          sampleCount q • figureOneCorrectedTransitionBudget q ≠ ⊤) :
+    let count := sampleCount q
     let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
     let K := figureOneFinalScheduledRetainedOptionKernel q I
       (terminalVariance q)
@@ -586,7 +586,7 @@ theorem figureOneScheduledTerminalShadow_dead_real_le
       (scheduledBalancedStationaryTargetError q +
         (count - 1) • figureOneCorrectedTransitionBudget q).toReal := by
   dsimp only
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let steps := count - 1
   let s := terminalVariance q
   let weight := uniformRatioWeight (n := q.n) s
@@ -662,9 +662,9 @@ theorem integral_figureOneScheduledTerminalPhaseTarget_liveRaw_lower
     (q : VolumeParams) (I : VolumeInput q.n) {A : ℝ} (hA : 0 ≤ A)
     (hepsilonTop :
       2 * scheduledBalancedStationaryTargetError q +
-          figureOneSampleCount q • figureOneCorrectedTransitionBudget q ≠ ⊤)
+          sampleCount q • figureOneCorrectedTransitionBudget q ≠ ⊤)
     (hshadowMem :
-      let count := figureOneSampleCount q
+      let count := sampleCount q
       let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
       let K := figureOneFinalScheduledRetainedOptionKernel q I
         (terminalVariance q)
@@ -676,7 +676,7 @@ theorem integral_figureOneScheduledTerminalPhaseTarget_liveRaw_lower
         (iteratedKernelLaw (fun _ => retainedSumKernel K weight)
           initial (count - 1)))
     (hshadowSecond :
-      let count := figureOneSampleCount q
+      let count := sampleCount q
       let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
       let K := figureOneFinalScheduledRetainedOptionKernel q I
         (terminalVariance q)
@@ -690,7 +690,7 @@ theorem integral_figureOneScheduledTerminalPhaseTarget_liveRaw_lower
     figureOneIdealPhaseMean q I .terminal -
         Real.exp (1 / 2) *
           (2 * scheduledBalancedStationaryTargetError q +
-            figureOneSampleCount q •
+            sampleCount q •
               figureOneCorrectedTransitionBudget q).toReal -
         A * Real.sqrt
           ((iteratedKernelLaw
@@ -702,11 +702,11 @@ theorem integral_figureOneScheduledTerminalPhaseTarget_liveRaw_lower
               (terminalVariance_pos' q) : Measure (AmbientSpace q.n)).map
                 (fun x =>
                   (uniformRatioWeight (terminalVariance q) x, some x)))
-            (figureOneSampleCount q - 1)).real
+            (sampleCount q - 1)).real
               {state | state.2 = none}) ≤
       ∫ result, figureOneScheduledTraceLiveRawOutput result
         ∂figureOneScheduledTerminalPhaseTarget q I := by
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let steps := count - 1
   let s := terminalVariance q
   let weight := uniformRatioWeight (n := q.n) s
@@ -720,7 +720,7 @@ theorem integral_figureOneScheduledTerminalPhaseTarget_liveRaw_lower
     (fun _ => retainedSumKernel K weight) initial steps
   let epsilon := 2 * scheduledBalancedStationaryTargetError q +
     count • figureOneCorrectedTransitionBudget q
-  have hcount : 0 < count := figureOneSampleCount_pos q
+  have hcount : 0 < count := sampleCount_pos q
   have hcountR : (0 : ℝ) < count := by exact_mod_cast hcount
   have hs : 0 < s := terminalVariance_pos' q
   have hweight : Measurable weight := measurable_uniformRatioWeight s
@@ -909,9 +909,9 @@ theorem integral_figureOneScheduledTerminalPhaseTarget_liveRaw_lower_explicit
     (q : VolumeParams) (I : VolumeInput q.n) {A : ℝ} (hA : 0 ≤ A)
     (hepsilonTop :
       2 * scheduledBalancedStationaryTargetError q +
-          figureOneSampleCount q • figureOneCorrectedTransitionBudget q ≠ ⊤)
+          sampleCount q • figureOneCorrectedTransitionBudget q ≠ ⊤)
     (hshadowMem :
-      let count := figureOneSampleCount q
+      let count := sampleCount q
       let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
       let K := figureOneFinalScheduledRetainedOptionKernel q I
         (terminalVariance q)
@@ -923,7 +923,7 @@ theorem integral_figureOneScheduledTerminalPhaseTarget_liveRaw_lower_explicit
         (iteratedKernelLaw (fun _ => retainedSumKernel K weight)
           initial (count - 1)))
     (hshadowSecond :
-      let count := figureOneSampleCount q
+      let count := sampleCount q
       let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
       let K := figureOneFinalScheduledRetainedOptionKernel q I
         (terminalVariance q)
@@ -937,15 +937,15 @@ theorem integral_figureOneScheduledTerminalPhaseTarget_liveRaw_lower_explicit
     figureOneIdealPhaseMean q I .terminal -
         Real.exp (1 / 2) *
           (2 * scheduledBalancedStationaryTargetError q +
-            figureOneSampleCount q •
+            sampleCount q •
               figureOneCorrectedTransitionBudget q).toReal -
         A * Real.sqrt
           ((scheduledBalancedStationaryTargetError q +
-            (figureOneSampleCount q - 1) •
+            (sampleCount q - 1) •
               figureOneCorrectedTransitionBudget q).toReal) ≤
       ∫ result, figureOneScheduledTraceLiveRawOutput result
         ∂figureOneScheduledTerminalPhaseTarget q I := by
-  let count := figureOneSampleCount q
+  let count := sampleCount q
   let weight := uniformRatioWeight (n := q.n) (terminalVariance q)
   let K := figureOneFinalScheduledRetainedOptionKernel q I
     (terminalVariance q)

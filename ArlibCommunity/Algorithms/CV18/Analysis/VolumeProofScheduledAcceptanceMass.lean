@@ -30,28 +30,28 @@ theorem figureOneScheduled_stationaryCoreMap_tv_proposal
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     let K := figureOneScheduledPhaseBody q I sigma2
-    let delta := figureOneScheduledProposalRadius q sigma2
-    let c := accuracyScaleFactor q
+    let delta := proposalRadius q sigma2
+    let c := scaleFactor q
     let pi := ellGaussianProb K delta sigma2
     let proposal := Arlib.condOn
       ((volume : Measure (AmbientSpace q.n)).withDensity
         (gaussianWeight (sigma2 / c ^ 2))) K
     Arlib.TVLe
       ((Arlib.condOn pi (c • K)).map (fun x => c⁻¹ • x))
-      proposal (4 * ENNReal.ofReal (figureOneScheduledCoreError q)) := by
+      proposal (4 * ENNReal.ofReal (coreMixingError q)) := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
-  let c := accuracyScaleFactor q
+  let delta := proposalRadius q sigma2
+  let c := scaleFactor q
   let pi := ellGaussianProb K delta sigma2
   let proposal := Arlib.condOn
     ((volume : Measure (AmbientSpace q.n)).withDensity
       (gaussianWeight (sigma2 / c ^ 2))) K
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
-  have hdelta : 0 < delta := figureOneScheduledProposalRadius_pos q hsigma2
-  have hc0 : 0 < c := by simpa [c] using accuracyScaleFactor_pos q
+  have hdelta : 0 < delta := proposalRadius_pos q hsigma2
+  have hc0 : 0 < c := by simpa [c] using scaleFactor_pos q
   have hc1 : c < 1 := by
-    dsimp [c, accuracyScaleFactor]
+    dsimp [c, scaleFactor]
     have : 0 < 1 / (2 * (q.n : ℝ)) := by positivity
     linarith
   have hKmeas : MeasurableSet K :=
@@ -67,7 +67,7 @@ theorem figureOneScheduled_stationaryCoreMap_tv_proposal
       hdelta sigma2
   have hmasstop : ellGaussianMeasure K delta sigma2 Set.univ ≠ ⊤ :=
     ellGaussianMeasure_ne_top_cv18 hKtop delta hsigma2
-  by_cases hsmall : figureOneScheduledPhaseRadius q sigma2 ≤ 1
+  by_cases hsmall : phaseRadius q sigma2 ≤ 1
   · have hcoreEq := condOn_ellGaussianProb_smul_eq_gaussian_radius_cv18
       hKmeas hKconv (figureOneScheduledPhaseInradius_pos q hsigma2)
       (ball_scheduledPhaseInradius_subset q I sigma2) hc0 hc1 hdelta
@@ -75,9 +75,9 @@ theorem figureOneScheduled_stationaryCoreMap_tv_proposal
         calc
           delta ≤ figureOneScheduledPhaseInradius q sigma2 /
               (2 * (q.n : ℝ)) :=
-            figureOneScheduledProposalRadius_le_inradiusStep q hsigma2 hsmall
+            proposalRadius_le_inradiusStep q hsigma2 hsmall
           _ = (1 - c) * figureOneScheduledPhaseInradius q sigma2 := by
-            dsimp [c, accuracyScaleFactor]
+            dsimp [c, scaleFactor]
             ring)
       hmass0 hmasstop
     have hmap := congrArg
@@ -87,7 +87,7 @@ theorem figureOneScheduled_stationaryCoreMap_tv_proposal
         proposal := by simpa [pi, proposal] using hmap
     rw [heq]
     exact (Arlib.TVLe.refl proposal).mono bot_le
-  · have hlarge : 1 ≤ figureOneScheduledPhaseRadius q sigma2 :=
+  · have hlarge : 1 ≤ phaseRadius q sigma2 :=
       le_of_not_ge hsmall
     have hunit : Metric.closedBall (0 : AmbientSpace q.n) 1 ⊆ K := by
       intro x hx
@@ -117,14 +117,14 @@ theorem figureOneScheduled_stationaryCoreMap_tv_proposal
       exact withDensity_gaussianWeight_ne_top hsigma2 hcoreM hcoreVoltop
     have hpaper := standardCore_defect_and_speedyMass_cv18
       hn hKconv hKcompact.isClosed hKtop hunit hdelta
-      (Real.sqrt_pos.2 hsigma2) (figureOneScheduledCoreError_pos q)
-      (figureOneScheduledCoreError_le_one_div_sixteen q)
-      (figureOneScheduledProposalRadius_le_coreStep q hsigma2)
+      (Real.sqrt_pos.2 hsigma2) (coreMixingError_pos q)
+      (coreMixingError_le_one_div_sixteen q)
+      (proposalRadius_le_coreStep q hsigma2)
       (by convert hgaussCore0 using 1 <;>
-        simp [c, accuracyScaleFactor, div_eq_mul_inv, mul_comm,
+        simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
           Real.sq_sqrt hsigma2.le])
       (by convert hgaussCoretop using 1 <;>
-        simp [c, accuracyScaleFactor, div_eq_mul_inv, mul_comm,
+        simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
           Real.sq_sqrt hsigma2.le])
       (by simpa [Real.sq_sqrt hsigma2.le] using hmass0)
       (by simpa [Real.sq_sqrt hsigma2.le] using hmasstop)
@@ -132,8 +132,8 @@ theorem figureOneScheduled_stationaryCoreMap_tv_proposal
       hKmeas hcoreM delta sigma2 hmass0 hmasstop hgaussCore0 hgaussCoretop
       ENNReal.ofReal_ne_top
       (ENNReal.ofReal_le_ofReal
-        ((figureOneScheduledCoreError_le_one_div_sixteen q).trans (by norm_num)))
-      (by simpa [c, accuracyScaleFactor, Real.sq_sqrt hsigma2.le] using hpaper.1)
+        ((coreMixingError_le_one_div_sixteen q).trans (by norm_num)))
+      (by simpa [c, scaleFactor, Real.sq_sqrt hsigma2.le] using hpaper.1)
     have hgaussRestrict :
         Arlib.condOn
             (((volume : Measure (AmbientSpace q.n)).withDensity

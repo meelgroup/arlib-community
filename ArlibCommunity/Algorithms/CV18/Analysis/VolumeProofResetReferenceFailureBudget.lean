@@ -27,19 +27,19 @@ noncomputable def figureOneScheduledGlobalResetReferenceError
     (q : VolumeParams) : ENNReal :=
   (∑ phase ∈ Finset.range (terminalPhaseSteps q),
       scheduledResetReferenceError q
-        (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)) +
-    scheduledResetReferenceError q (figureOneSampleCount q - 1)
+        (phaseSampleCount q (scheduleValue q phase) - 1)) +
+    scheduledResetReferenceError q (sampleCount q - 1)
 
 /-- ENNReal form of the one-step fixed-reset envelope. -/
 theorem scheduledRetainedEndpointError_one_le_ofReal
     (q : VolumeParams) :
     scheduledRetainedEndpointError q 1 ≤
       ENNReal.ofReal
-        ((3 / 2 : ℝ) * figureOnePerSampleMixingError q) := by
+        ((3 / 2 : ℝ) * sampleMixingError q) := by
   rw [← ENNReal.toReal_le_toReal
     (scheduledRetainedEndpointError_ne_top q 1) ENNReal.ofReal_ne_top]
   rw [ENNReal.toReal_ofReal (mul_nonneg (by norm_num)
-    (figureOnePerSampleMixingError_pos q).le)]
+    (sampleMixingError_pos q).le)]
   simpa only [mul_assoc] using
     scheduledRetainedEndpointError_one_toReal_le q
 
@@ -48,24 +48,24 @@ sample-by-phase exact-chance count. -/
 theorem figureOneScheduledGlobalResetReferenceError_le_count
     (q : VolumeParams) :
     figureOneScheduledGlobalResetReferenceError q ≤
-      (figureOneDependentMaxSampleCount q *
-        figureOneDependentPhaseCount q) •
+      (largestSampleCount q *
+        numPhases q) •
           ENNReal.ofReal
-            ((3 / 2 : ℝ) * figureOnePerSampleMixingError q) := by
+            ((3 / 2 : ℝ) * sampleMixingError q) := by
   let endpoint := scheduledRetainedEndpointError q 1
-  let maxSamples := figureOneDependentMaxSampleCount q
+  let maxSamples := largestSampleCount q
   have hphase : ∀ phase,
       scheduledResetReferenceError q
-          (figureOnePhaseSampleCount q (scheduleValue q phase) - 1) ≤
+          (phaseSampleCount q (scheduleValue q phase) - 1) ≤
         maxSamples • endpoint := by
     intro phase
     rw [scheduledResetReferenceError_eq_nsmul]
     exact nsmul_le_nsmul_left (bot_le : 0 ≤ endpoint) <|
       (Nat.sub_le _ _).trans
-        (figureOnePhaseSampleCount_le_dependentMax
+        (phaseSampleCount_le_dependentMax
           q (scheduleValue q phase))
   have hterminal :
-      scheduledResetReferenceError q (figureOneSampleCount q - 1) ≤
+      scheduledResetReferenceError q (sampleCount q - 1) ≤
         maxSamples • endpoint := by
     rw [scheduledResetReferenceError_eq_nsmul]
     exact nsmul_le_nsmul_left (bot_le : 0 ≤ endpoint) <|
@@ -73,7 +73,7 @@ theorem figureOneScheduledGlobalResetReferenceError_le_count
   have hsum :
       (∑ phase ∈ Finset.range (terminalPhaseSteps q),
         scheduledResetReferenceError q
-          (figureOnePhaseSampleCount q (scheduleValue q phase) - 1)) ≤
+          (phaseSampleCount q (scheduleValue q phase) - 1)) ≤
       ∑ _phase ∈ Finset.range (terminalPhaseSteps q),
         maxSamples • endpoint := by
     exact Finset.sum_le_sum fun phase hmem => hphase phase
@@ -82,16 +82,16 @@ theorem figureOneScheduledGlobalResetReferenceError_le_count
         (∑ _phase ∈ Finset.range (terminalPhaseSteps q),
           maxSamples • endpoint) + maxSamples • endpoint :=
       add_le_add hsum hterminal
-    _ = (figureOneDependentMaxSampleCount q *
-          figureOneDependentPhaseCount q) • endpoint := by
+    _ = (largestSampleCount q *
+          numPhases q) • endpoint := by
       simp only [Finset.sum_const, Finset.card_range, nsmul_eq_mul,
-        figureOneDependentPhaseCount, maxSamples, endpoint]
+        numPhases, maxSamples, endpoint]
       push_cast
       ring
-    _ ≤ (figureOneDependentMaxSampleCount q *
-          figureOneDependentPhaseCount q) •
+    _ ≤ (largestSampleCount q *
+          numPhases q) •
             ENNReal.ofReal
-              ((3 / 2 : ℝ) * figureOnePerSampleMixingError q) :=
+              ((3 / 2 : ℝ) * sampleMixingError q) :=
       nsmul_le_nsmul_right
         (scheduledRetainedEndpointError_one_le_ofReal q) _
 
@@ -101,15 +101,15 @@ theorem figureOneScheduledGlobalResetReferenceError_le
     (q : VolumeParams) :
     figureOneScheduledGlobalResetReferenceError q ≤
       ENNReal.ofReal (3 / 2560 : ℝ) := by
-  let samples := figureOneDependentMaxSampleCount q *
-    figureOneDependentPhaseCount q
-  let base := samples • ENNReal.ofReal (figureOnePerSampleMixingError q)
+  let samples := largestSampleCount q *
+    numPhases q
+  let base := samples • ENNReal.ofReal (sampleMixingError q)
   have hbase : base ≤ ENNReal.ofReal (1 / 1280 : ℝ) := by
     simpa [base, samples] using figureOne_exactChance_countReference_budget_le q
   have hglobal := figureOneScheduledGlobalResetReferenceError_le_count q
   have hrewrite :
       samples • ENNReal.ofReal
-          ((3 / 2 : ℝ) * figureOnePerSampleMixingError q) =
+          ((3 / 2 : ℝ) * sampleMixingError q) =
         ENNReal.ofReal (3 / 2 : ℝ) * base := by
     simp only [base, samples, nsmul_eq_mul]
     rw [ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 3 / 2)]
@@ -131,7 +131,7 @@ theorem figureOneFinalScheduledCountReferenceError_le_boundaryReserve
     (q : VolumeParams) :
     scheduledBalancedStationaryTargetError q +
         ∑ phase ∈ Finset.range (terminalPhaseSteps q),
-          figureOnePhaseSampleCount q (scheduleValue q phase) •
+          phaseSampleCount q (scheduleValue q phase) •
             figureOneCorrectedTransitionBudget q ≤
       ENNReal.ofReal (1 / 128 : ℝ) := by
   exact (figureOneFinalScheduledCountReferenceError_le q).trans

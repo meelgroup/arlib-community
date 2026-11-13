@@ -23,7 +23,7 @@ noncomputable section
 complete joint law of all already completed coordinates. -/
 theorem map_scheduledResetPrefixCoordinates_resetAppend_eq
     (q : VolumeParams) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     (reset : Measure (ScheduledBalancedCoolingTrace q.n ×
       (ℝ × Option (AmbientSpace q.n))))
     (source : Measure (ScheduledBalancedCoolingTrace q.n))
@@ -140,7 +140,7 @@ score prefix. -/
 noncomputable def scheduledResetPrefixTruncatedPhase
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ) :
     ℕ → (Fin phase → ℝ) → ℝ :=
-  dependentTruncatedPhase (figureOneDependentAlpha q)
+  dependentTruncatedPhase (truncationLevel q)
     (scheduledFigureOneTraceRawMean q I)
     (scheduledResetPrefixPhaseVariable phase)
 
@@ -154,7 +154,7 @@ finite score prefix. -/
 noncomputable def scheduledResetPrefixTruncatedProduct
     (q : VolumeParams) (I : VolumeInput q.n) (phase i : ℕ) :
     (Fin phase → ℝ) → ℝ :=
-  dependentTruncatedProduct (figureOneDependentAlpha q)
+  dependentTruncatedProduct (truncationLevel q)
     (scheduledFigureOneTraceTruncatedMean q I)
     (scheduledResetPrefixTruncatedPhase q I phase) i
 
@@ -162,7 +162,7 @@ theorem measurable_scheduledResetPrefixTruncatedProduct
     (q : VolumeParams) (I : VolumeInput q.n) (phase i : ℕ) :
     Measurable (scheduledResetPrefixTruncatedProduct q I phase i) :=
   measurable_dependentTruncatedProduct
-    (figureOneDependentAlpha q)
+    (truncationLevel q)
     (scheduledFigureOneTraceTruncatedMean q I)
     (scheduledResetPrefixTruncatedPhase q I phase)
     (measurable_scheduledResetPrefixTruncatedPhase q I phase) i
@@ -186,7 +186,7 @@ factors through any reset prefix containing those `i` coordinates. -/
 theorem dependentTruncatedProduct_scheduledTrace_factor_prefix
     (q : VolumeParams) (I : VolumeInput q.n) (phase i : ℕ)
     (hi : i ≤ phase) :
-    dependentTruncatedProduct (figureOneDependentAlpha q)
+    dependentTruncatedProduct (truncationLevel q)
         (scheduledFigureOneTraceTruncatedMean q I)
         (scheduledFigureOneTraceTruncatedPhase q I) i =
       scheduledResetPrefixTruncatedProduct q I phase i ∘
@@ -195,10 +195,10 @@ theorem dependentTruncatedProduct_scheduledTrace_factor_prefix
   | zero => rfl
   | succ i ih =>
       funext trace
-      change dependentTruncatedProduct (figureOneDependentAlpha q)
+      change dependentTruncatedProduct (truncationLevel q)
           (scheduledFigureOneTraceTruncatedMean q I)
           (scheduledFigureOneTraceTruncatedPhase q I) (i + 1) trace =
-        dependentTruncatedProduct (figureOneDependentAlpha q)
+        dependentTruncatedProduct (truncationLevel q)
           (scheduledFigureOneTraceTruncatedMean q I)
           (scheduledResetPrefixTruncatedPhase q I phase) (i + 1)
             (scheduledResetPrefixCoordinates q phase trace)
@@ -224,12 +224,12 @@ theorem ApproxIndepFun.scheduledTrace_of_resetPrefix_map_eq
       source.map (scheduledResetPrefixCoordinates q phase))
     {epsilon : ℝ}
     (hind : ApproxIndepFun epsilon
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+      (dependentTruncatedProduct (truncationLevel q)
         (scheduledFigureOneTraceTruncatedMean q I)
         (scheduledFigureOneTraceTruncatedPhase q I) i)
       (scheduledFigureOneTraceTruncatedPhase q I (i + 1)) source) :
     ApproxIndepFun epsilon
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+      (dependentTruncatedProduct (truncationLevel q)
         (scheduledFigureOneTraceTruncatedMean q I)
         (scheduledFigureOneTraceTruncatedPhase q I) i)
       (scheduledFigureOneTraceTruncatedPhase q I (i + 1)) reference := by
@@ -255,7 +255,7 @@ trace mean. -/
 noncomputable def scheduledResetPrefixChronologicalTruncatedPhase
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ) :
     ℕ → (Fin phase → ℝ) → ℝ :=
-  dependentTruncatedPhase (figureOneDependentAlpha q)
+  dependentTruncatedPhase (truncationLevel q)
     (figureOneChronologicalRawMean q I)
     (scheduledResetPrefixPhaseVariable phase)
 
@@ -271,7 +271,7 @@ means under the evolving reference law. -/
 noncomputable def scheduledResetPrefixChronologicalTruncatedProduct
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
     (mean : ℕ → ℝ) (i : ℕ) : (Fin phase → ℝ) → ℝ :=
-  dependentTruncatedProduct (figureOneDependentAlpha q) mean
+  dependentTruncatedProduct (truncationLevel q) mean
     (scheduledResetPrefixChronologicalTruncatedPhase q I phase) i
 
 theorem measurable_scheduledResetPrefixChronologicalTruncatedProduct
@@ -279,7 +279,7 @@ theorem measurable_scheduledResetPrefixChronologicalTruncatedProduct
     (mean : ℕ → ℝ) (i : ℕ) :
     Measurable
       (scheduledResetPrefixChronologicalTruncatedProduct q I phase mean i) :=
-  measurable_dependentTruncatedProduct (figureOneDependentAlpha q) mean
+  measurable_dependentTruncatedProduct (truncationLevel q) mean
     (scheduledResetPrefixChronologicalTruncatedPhase q I phase)
     (measurable_scheduledResetPrefixChronologicalTruncatedPhase q I phase) i
 
@@ -287,7 +287,7 @@ theorem measurable_scheduledResetPrefixChronologicalTruncatedProduct
 coordinate factors through the finite score prefix. -/
 theorem figureOneChronologicalTruncatedPhase_extension_factor_prefix
     (q : VolumeParams) (I : VolumeInput q.n) (phase j : ℕ)
-    (hphase : phase ≤ figureOneDependentPhaseCount q)
+    (hphase : phase ≤ numPhases q)
     (hj1 : 1 ≤ j) (hjphase : j ≤ phase) :
     figureOneChronologicalTruncatedPhase q I
         (figureOneScheduledReferenceCoordinateExtension q I) j =
@@ -305,7 +305,7 @@ theorem figureOneChronologicalTruncatedPhase_extension_factor_prefix
 an exact reset-prefix law identity. -/
 theorem figureOneChronologicalTruncatedMean_extension_eq_of_prefix_map_eq
     (q : VolumeParams) (I : VolumeInput q.n) (phase j : ℕ)
-    (hphase : phase ≤ figureOneDependentPhaseCount q)
+    (hphase : phase ≤ numPhases q)
     (hj1 : 1 ≤ j) (hjphase : j ≤ phase)
     (source reference : Measure (ScheduledBalancedCoolingTrace q.n))
     (hlaw : reference.map (scheduledResetPrefixCoordinates q phase) =
@@ -366,9 +366,9 @@ theorem dependentTruncatedProduct_congr_mean_prefix
 finite prefix for any supplied deterministic truncated-mean function. -/
 theorem dependentTruncatedProduct_chronological_extension_factor_prefix
     (q : VolumeParams) (I : VolumeInput q.n) (phase i : ℕ)
-    (hphase : phase ≤ figureOneDependentPhaseCount q)
+    (hphase : phase ≤ numPhases q)
     (hi : i ≤ phase) (mean : ℕ → ℝ) :
-    dependentTruncatedProduct (figureOneDependentAlpha q) mean
+    dependentTruncatedProduct (truncationLevel q) mean
         (figureOneChronologicalTruncatedPhase q I
           (figureOneScheduledReferenceCoordinateExtension q I)) i =
       scheduledResetPrefixChronologicalTruncatedProduct q I phase mean i ∘
@@ -377,11 +377,11 @@ theorem dependentTruncatedProduct_chronological_extension_factor_prefix
   | zero => rfl
   | succ i ih =>
       funext trace
-      change dependentTruncatedProduct (figureOneDependentAlpha q) mean
+      change dependentTruncatedProduct (truncationLevel q) mean
           (figureOneChronologicalTruncatedPhase q I
             (figureOneScheduledReferenceCoordinateExtension q I))
             (i + 1) trace =
-        dependentTruncatedProduct (figureOneDependentAlpha q) mean
+        dependentTruncatedProduct (truncationLevel q) mean
           (scheduledResetPrefixChronologicalTruncatedPhase q I phase)
             (i + 1) (scheduledResetPrefixCoordinates q phase trace)
       rw [dependentTruncatedProduct_succ, dependentTruncatedProduct_succ]
@@ -397,13 +397,13 @@ final-capstone Lemma 7.17(c) fact, including the change from source-law to
 reference-law truncated means. -/
 theorem ApproxIndepFun.chronological_extension_of_resetPrefix_map_eq
     (q : VolumeParams) (I : VolumeInput q.n) (phase i : ℕ)
-    (hphase : phase ≤ figureOneDependentPhaseCount q) (hi : i < phase)
+    (hphase : phase ≤ numPhases q) (hi : i < phase)
     (source reference : Measure (ScheduledBalancedCoolingTrace q.n))
     (hlaw : reference.map (scheduledResetPrefixCoordinates q phase) =
       source.map (scheduledResetPrefixCoordinates q phase))
     {epsilon : ℝ}
     (hind : ApproxIndepFun epsilon
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+      (dependentTruncatedProduct (truncationLevel q)
         (figureOneChronologicalTruncatedMean q I source
           (figureOneScheduledReferenceCoordinateExtension q I))
         (figureOneChronologicalTruncatedPhase q I
@@ -412,7 +412,7 @@ theorem ApproxIndepFun.chronological_extension_of_resetPrefix_map_eq
         (figureOneScheduledReferenceCoordinateExtension q I) (i + 1))
       source) :
     ApproxIndepFun epsilon
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+      (dependentTruncatedProduct (truncationLevel q)
         (figureOneChronologicalTruncatedMean q I reference
           (figureOneScheduledReferenceCoordinateExtension q I))
         (figureOneChronologicalTruncatedPhase q I
@@ -429,10 +429,10 @@ theorem ApproxIndepFun.chronological_extension_of_resetPrefix_map_eq
     exact (figureOneChronologicalTruncatedMean_extension_eq_of_prefix_map_eq
       q I phase j hphase hj1 (hji.trans hi.le) source reference hlaw).symm
   have hproductMean :
-      dependentTruncatedProduct (figureOneDependentAlpha q) meanSource
+      dependentTruncatedProduct (truncationLevel q) meanSource
           (figureOneChronologicalTruncatedPhase q I
             (figureOneScheduledReferenceCoordinateExtension q I)) i =
-        dependentTruncatedProduct (figureOneDependentAlpha q) meanReference
+        dependentTruncatedProduct (truncationLevel q) meanReference
           (figureOneChronologicalTruncatedPhase q I
             (figureOneScheduledReferenceCoordinateExtension q I)) i :=
     dependentTruncatedProduct_congr_mean_prefix _ _ _ _ i hmean
@@ -469,20 +469,20 @@ new reference law, while measurable postprocessing truncates the raw score
 exactly as required by the final capstone. -/
 theorem ApproxIndepFun.chronological_extension_created_of_resetPrefix_map_eq
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     (source reference : Measure (ScheduledBalancedCoolingTrace q.n))
     (hlaw : reference.map (scheduledResetPrefixCoordinates q phase) =
       source.map (scheduledResetPrefixCoordinates q phase))
     {epsilon : ℝ}
     (hind : ApproxIndepFun epsilon
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+      (dependentTruncatedProduct (truncationLevel q)
         (figureOneChronologicalTruncatedMean q I source
           (figureOneScheduledReferenceCoordinateExtension q I))
         (figureOneChronologicalTruncatedPhase q I
           (figureOneScheduledReferenceCoordinateExtension q I)) phase)
       (scheduledBalancedTracePhaseVariable q (phase + 1)) reference) :
     ApproxIndepFun epsilon
-      (dependentTruncatedProduct (figureOneDependentAlpha q)
+      (dependentTruncatedProduct (truncationLevel q)
         (figureOneChronologicalTruncatedMean q I reference
           (figureOneScheduledReferenceCoordinateExtension q I))
         (figureOneChronologicalTruncatedPhase q I
@@ -500,14 +500,14 @@ theorem ApproxIndepFun.chronological_extension_created_of_resetPrefix_map_eq
     exact (figureOneChronologicalTruncatedMean_extension_eq_of_prefix_map_eq
       q I phase j hphase.le hj1 hjphase source reference hlaw).symm
   have hproductMean :
-      dependentTruncatedProduct (figureOneDependentAlpha q) meanSource V
+      dependentTruncatedProduct (truncationLevel q) meanSource V
           phase =
-        dependentTruncatedProduct (figureOneDependentAlpha q) meanReference V
+        dependentTruncatedProduct (truncationLevel q) meanReference V
           phase :=
     dependentTruncatedProduct_congr_mean_prefix _ _ _ _ phase hmean
   let truncateNew : ℝ → ℝ := fun value =>
     min value
-      (figureOneDependentAlpha q *
+      (truncationLevel q *
         figureOneChronologicalRawMean q I (phase + 1))
   have htruncateNew : Measurable truncateNew :=
     measurable_id.min measurable_const

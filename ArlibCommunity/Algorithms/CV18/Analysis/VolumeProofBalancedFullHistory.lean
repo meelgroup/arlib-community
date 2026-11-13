@@ -59,9 +59,9 @@ noncomputable def balancedCoolingUniformLawWithState
       (parameters.proposalCap q sigma2)
       (parameters.properStride q sigma2)
       (parameters.retryLimit q sigma2)
-      (figureOneSampleCount q) 0
-      (accuracyScaleFactor q • current)).map
-    (balancedCoolingAverage (figureOneSampleCount q))
+      (sampleCount q) 0
+      (scaleFactor q • current)).map
+    (balancedCoolingAverage (sampleCount q))
 
 theorem balancedCoolingUniformEstimateWithState_measurable_strong_and_law
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
@@ -80,17 +80,17 @@ theorem balancedCoolingUniformEstimateWithState_measurable_strong_and_law
   let cap := parameters.proposalCap q sigma2
   let stride := parameters.properStride q sigma2
   let retries := parameters.retryLimit q sigma2
-  let samples := figureOneSampleCount q
+  let samples := sampleCount q
   let weight : AmbientSpace q.n → ℝ := uniformRatioWeight sigma2
   let scalePoint : AmbientSpace q.n → AmbientSpace q.n :=
-    fun current => accuracyScaleFactor q • current
+    fun current => scaleFactor q • current
   have hweight : Measurable weight := measurable_uniformRatioWeight sigma2
   have htransition :=
     balancedAccuracyTransitionCollectLaw_measurable_and_probability
       q I hsigma2 hweight cap stride retries samples
   have hscale : Measurable scalePoint :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id
+      scaleFactor q).smul measurable_id
   have hsource : Measurable fun current =>
       balancedAccuracyTransitionCollectLaw q I sigma2 weight cap stride retries
         samples 0 (scalePoint current) :=
@@ -157,19 +157,19 @@ theorem balancedCoolingUniformLawWithState_measurable_and_probability
   let cap := parameters.proposalCap q sigma2
   let stride := parameters.properStride q sigma2
   let retries := parameters.retryLimit q sigma2
-  let samples := figureOneSampleCount q
+  let samples := sampleCount q
   let weight : AmbientSpace q.n → ℝ := uniformRatioWeight sigma2
   have htransition :=
     balancedAccuracyTransitionCollectLaw_measurable_and_probability
       q I hsigma2 (measurable_uniformRatioWeight sigma2)
         cap stride retries samples
   have hscale : Measurable fun current : AmbientSpace q.n =>
-      accuracyScaleFactor q • current :=
+      scaleFactor q • current :=
     (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-      accuracyScaleFactor q).smul measurable_id
+      scaleFactor q).smul measurable_id
   have hsource : Measurable fun current =>
       balancedAccuracyTransitionCollectLaw q I sigma2 weight cap stride retries
-        samples 0 (accuracyScaleFactor q • current) :=
+        samples 0 (scaleFactor q • current) :=
     htransition.1.comp (measurable_const.prodMk hscale)
   have havg := measurable_balancedCoolingAverage (n := q.n) samples
   constructor
@@ -179,8 +179,8 @@ theorem balancedCoolingUniformLawWithState_measurable_and_probability
     unfold balancedCoolingUniformLawWithState
     let _ : IsProbabilityMeasure
         (balancedAccuracyTransitionCollectLaw q I sigma2 weight cap stride retries
-          samples 0 (accuracyScaleFactor q • current)) :=
-      htransition.2 0 (accuracyScaleFactor q • current)
+          samples 0 (scaleFactor q • current)) :=
+      htransition.2 0 (scaleFactor q • current)
     exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable havg.aemeasurable
 
 /-- Append the terminal phase to a successful Gaussian history. -/
@@ -642,7 +642,7 @@ the terminal ratio phase. -/
 noncomputable def balancedFigureOneBaseHistoryLaw
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
     (I : VolumeInput q.n) : Measure (Option (BalancedCoolingHistory q.n)) :=
-  (initialGaussianSamplingMeasure q).bind fun proposal =>
+  (initialGaussianLaw q).bind fun proposal =>
     balancedFigureOneFullHistoryLaw parameters q I
       (initialTruncatedFallback q I proposal)
 
@@ -734,12 +734,12 @@ theorem balancedFigureOneBaseVolumeCooling_runEstimate_eq_history_map
 noncomputable def balancedCoolingPhaseQueryBudget
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
     (sigma2 : ℝ) : ℕ :=
-  figureOnePhaseSampleCount q sigma2 * parameters.retryLimit q sigma2 *
+  phaseSampleCount q sigma2 * parameters.retryLimit q sigma2 *
     (parameters.proposalCap q sigma2 + 2)
 
 noncomputable def balancedCoolingTerminalQueryBudget
     (parameters : BalancedCoolingParameters) (q : VolumeParams) : ℕ :=
-  figureOneSampleCount q * parameters.retryLimit q (terminalVariance q) *
+  sampleCount q * parameters.retryLimit q (terminalVariance q) *
     (parameters.proposalCap q (terminalVariance q) + 2)
 
 noncomputable def balancedCoolingQueryBudget
@@ -763,14 +763,14 @@ theorem balancedCoolingRatioEstimate_queryBound
     (parameters.proposalCap q sigma2)
     (parameters.properStride q sigma2)
     (parameters.retryLimit q sigma2)
-    (figureOnePhaseSampleCount q sigma2)
-    (accuracyScaleFactor q • current)).bind fun _ => .pure _ 0
+    (phaseSampleCount q sigma2)
+    (scaleFactor q • current)).bind fun _ => .pure _ 0
 
 theorem balancedCoolingUniformEstimateWithState_queryBound
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
     (sigma2 : ℝ) (current : AmbientSpace q.n) :
     (balancedCoolingUniformEstimateWithState parameters q sigma2 current).QueryBound
-      (figureOneSampleCount q * parameters.retryLimit q sigma2 *
+      (sampleCount q * parameters.retryLimit q sigma2 *
         (parameters.proposalCap q sigma2 + 2)) := by
   unfold balancedCoolingUniformEstimateWithState
   exact (balancedAccuracyRetryCollect_queryBound q sigma2
@@ -778,14 +778,14 @@ theorem balancedCoolingUniformEstimateWithState_queryBound
     (parameters.proposalCap q sigma2)
     (parameters.properStride q sigma2)
     (parameters.retryLimit q sigma2)
-    (figureOneSampleCount q)
-    (accuracyScaleFactor q • current)).bind fun _ => .pure _ 0
+    (sampleCount q)
+    (scaleFactor q • current)).bind fun _ => .pure _ 0
 
 theorem balancedCoolingUniformRatioEstimate_queryBound
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
     (sigma2 : ℝ) (current : AmbientSpace q.n) :
     (balancedCoolingUniformRatioEstimate parameters q sigma2 current).QueryBound
-      (figureOneSampleCount q * parameters.retryLimit q sigma2 *
+      (sampleCount q * parameters.retryLimit q sigma2 *
         (parameters.proposalCap q sigma2 + 2)) := by
   unfold balancedCoolingUniformRatioEstimate
   exact (balancedCoolingUniformEstimateWithState_queryBound
@@ -881,15 +881,15 @@ theorem balancedFigureOneBaseVolumeCooling_queryBound
   exact (figureOneInitialSample_queryBound q).bind hproduct
 
 /-- Exact residual arithmetic condition for an explicit
-`volumeBaseComplexityRate` cap.  It cannot be removed for an arbitrary
+`baseRate` cap.  It cannot be removed for an arbitrary
 `BalancedCoolingParameters`, since its caps and retry limits are unrestricted. -/
 theorem balancedFigureOneBaseVolumeCooling_queryBound_rate
     (parameters : BalancedCoolingParameters) (q : VolumeParams) (C : ℝ)
     (hcost : (balancedFigureOneBaseQueryBudget parameters q : ℝ) ≤
-      C * volumeBaseComplexityRate q) :
+      C * baseRate q) :
     (baseVolumeCooling (balancedCoolingPrimitives parameters)
       explicitVolumeCoolingSchedule q).QueryBound
-        (Nat.ceil (C * volumeBaseComplexityRate q)) := by
+        (Nat.ceil (C * baseRate q)) := by
   apply (balancedFigureOneBaseVolumeCooling_queryBound parameters q).mono
   exact_mod_cast hcost.trans (Nat.le_ceil _)
 

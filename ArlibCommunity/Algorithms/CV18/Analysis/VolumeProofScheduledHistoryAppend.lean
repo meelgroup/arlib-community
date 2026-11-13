@@ -442,11 +442,11 @@ theorem scheduledExecutableFrontHistoryLaw_eq_iterated
                       (some ((fun k => if k = head.2.1 then ratio else head.1 k),
                         head.2.1 + 1, head.2.2.1 * ratio, nextPoint)) (by omega)
 
-theorem explicitScheduleVariances_eq_scheduledVarianceSegment
+theorem coolingSchedule_eq_scheduledVarianceSegment
     (q : VolumeParams) :
     (explicitVolumeCoolingSchedule q).variances =
       scheduledVarianceSegment q 0 (terminalPhaseSteps q) := by
-  unfold explicitVolumeCoolingSchedule explicitScheduleVariances
+  unfold explicitVolumeCoolingSchedule coolingSchedule
     scheduledVarianceSegment
   congr 1
   apply List.ofFn_inj.mpr
@@ -495,7 +495,7 @@ theorem map_scheduledExecutableFigureOneCoolingHistory_output_eq_forward
     omega
   rw [← hfrom]
   unfold scheduledExecutableCoolingHistoryFrom
-  rw [← explicitScheduleVariances_eq_scheduledVarianceSegment q]
+  rw [← coolingSchedule_eq_scheduledVarianceSegment q]
   unfold scheduledExecutableFigureOneCoolingHistoryLaw
   rw [Measure.map_map measurable_balancedCoolingHistoryOutput
     (measurable_balancedCoolingHistoryConcatOption head)]
@@ -663,9 +663,9 @@ theorem scheduledBalancedFigureOnePointContinuation_runEstimate_eq_forwardHistor
     (scheduledBalancedFigureOnePointContinuation parameters q point).runEstimate
         oracle.query =
       (scheduledBalancedForwardHistoryLawFromPoint parameters q I
-        (figureOneDependentPhaseCount q) point).map
+        (numPhases q) point).map
           (balancedFigureOneHistoryEstimate q) := by
-  rw [figureOneDependentPhaseCount]
+  rw [numPhases]
   calc
     _ = (scheduledExecutableFigureOneFullHistoryLaw parameters q I point).map
           (balancedFigureOneHistoryEstimate q) :=

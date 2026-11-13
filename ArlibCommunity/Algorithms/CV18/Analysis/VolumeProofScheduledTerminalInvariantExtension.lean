@@ -37,7 +37,7 @@ theorem exists_scheduledTerminalInvariantExtension
             (terminalPhaseSteps q)))
         reference (figureOneScheduledTerminalOuterStepError q) ∧
       ScheduledGlobalResetPrefixInvariant q I
-        (figureOneDependentPhaseCount q) reference := by
+        (numPhases q) reference := by
   obtain ⟨reference, hreference, hcomparison, hinvariant⟩ :=
     exists_scheduledTerminalReference_of_gaussianPrefixInvariant
       q I source hsource

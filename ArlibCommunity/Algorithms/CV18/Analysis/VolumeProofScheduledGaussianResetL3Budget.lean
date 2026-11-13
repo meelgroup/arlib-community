@@ -67,10 +67,10 @@ theorem scheduleValue_gaussian_branchAverageFactor_eq_chronological
         1 + 2 / (q.n : ℝ)
       else
         1 + scheduleValue q phase / terminalVariance q) - 1) /
-          (figureOnePhaseSampleCount q (scheduleValue q phase) : ℝ) =
+          (phaseSampleCount q (scheduleValue q phase) : ℝ) =
       figureOneChronologicalMomentFactor q (phase + 1) := by
-  have hphaseDependent : phase < figureOneDependentPhaseCount q := by
-    rw [figureOneDependentPhaseCount]
+  have hphaseDependent : phase < numPhases q := by
+    rw [numPhases]
     omega
   rw [figureOneChronologicalMomentFactor,
     figureOneChronologicalPhaseAt_succ q phase hphaseDependent]
@@ -84,38 +84,38 @@ theorem scheduleValue_gaussian_branchAverageFactor_eq_chronological
       (⟨phase, hphase⟩ : Fin (terminalPhaseSteps q))
   rw [horder]
   by_cases hsone : scheduleValue q phase ≤ 1
-  · simp [hsone, figureOneIdealPhaseFactor, figureOnePhaseSampleCount]
-  · simp [hsone, figureOneIdealPhaseFactor, figureOnePhaseSampleCount]
+  · simp [hsone, figureOneIdealPhaseFactor, phaseSampleCount]
+  · simp [hsone, figureOneIdealPhaseFactor, phaseSampleCount]
 
 /-- Scalar equation-(6) arithmetic: the reset-transported approximate
 independence term, including the finite-count factor and the uniform `L³`
 constant, consumes at most `slack / 8`. -/
 theorem scheduledGaussianResetReference_equationSix_budget
     (q : VolumeParams) {count : ℕ} (hcount : 0 < count)
-    (hcountMax : count ≤ figureOneDependentMaxSampleCount q)
+    (hcountMax : count ≤ largestSampleCount q)
     (factor mean : ℝ) :
     (1 + (factor - 1) / (count : ℝ)) * mean ^ 2 +
-        3 * (figureOneDependentEpsilon q +
+        3 * (dependenceError q +
             3 * (scheduledResetReferenceError q (count - 1)).toReal) ^
               (1 / 3 : ℝ) *
           (1 - 1 / (count : ℝ)) *
             ((129 / 64 : ℝ) * mean) ^ 2 ≤
       (1 + ((factor - 1) / (count : ℝ) +
           figureOneExecutableMomentSlack q / 8)) * mean ^ 2 := by
-  let epsilon := figureOneDependentEpsilon q +
+  let epsilon := dependenceError q +
     3 * (scheduledResetReferenceError q (count - 1)).toReal
-  have hdependent : 0 < figureOneDependentEpsilon q := by
-    unfold figureOneDependentEpsilon
-    have hm : (0 : ℝ) < figureOneDependentPhaseCount q := by
-      exact_mod_cast figureOneDependentPhaseCount_pos q
+  have hdependent : 0 < dependenceError q := by
+    unfold dependenceError
+    have hm : (0 : ℝ) < numPhases q := by
+      exact_mod_cast numPhases_pos q
     exact div_pos (sq_pos_of_pos q.heps.1)
       (mul_pos
-        (mul_pos (by norm_num) (pow_pos (figureOneDependentAlpha_pos q) 4)) hm)
+        (mul_pos (by norm_num) (pow_pos (truncationLevel_pos q) 4)) hm)
   have hepsilon : 0 ≤ epsilon := by
     dsimp [epsilon]
     positivity
   have hepsilonLe : epsilon ≤
-      (5 / 2 : ℝ) * figureOneDependentEpsilon q := by
+      (5 / 2 : ℝ) * dependenceError q := by
     simpa [epsilon] using
       scheduledResetReference_transportEpsilon_le q hcountMax
   have hcoefficient :=
@@ -152,7 +152,7 @@ assembly. -/
 theorem scheduledGaussianResetReference_equationSix_budget_chronological
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
     (hphase : phase < terminalPhaseSteps q) :
-    let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+    let count := phaseSampleCount q (scheduleValue q phase)
     let mean :=
       ∫ x, gaussianRatioWeight (n := q.n) (scheduleValue q phase)
           (scheduleValue q (phase + 1)) x
@@ -163,7 +163,7 @@ theorem scheduledGaussianResetReference_equationSix_budget_chronological
     else
       1 + scheduleValue q phase / terminalVariance q
     (1 + (factor - 1) / (count : ℝ)) * mean ^ 2 +
-        3 * (figureOneDependentEpsilon q +
+        3 * (dependenceError q +
             3 * (scheduledResetReferenceError q (count - 1)).toReal) ^
               (1 / 3 : ℝ) *
           (1 - 1 / (count : ℝ)) *
@@ -171,9 +171,9 @@ theorem scheduledGaussianResetReference_equationSix_budget_chronological
       (figureOneChronologicalMomentFactor q (phase + 1) +
           figureOneExecutableMomentSlack q / 8) * mean ^ 2 := by
   dsimp only
-  have hcount := figureOnePhaseSampleCount_pos q (scheduleValue q phase)
+  have hcount := phaseSampleCount_pos q (scheduleValue q phase)
   have hcountMax :=
-    figureOnePhaseSampleCount_le_dependentMax q (scheduleValue q phase)
+    phaseSampleCount_le_dependentMax q (scheduleValue q phase)
   have hbudget := scheduledGaussianResetReference_equationSix_budget
     q hcount hcountMax
       (if scheduleValue q phase ≤ 1 then
@@ -192,7 +192,7 @@ theorem scheduledGaussianResetReference_equationSix_budget_chronological
             1 + 2 / (q.n : ℝ)
           else
             1 + scheduleValue q phase / terminalVariance q) - 1) /
-              (figureOnePhaseSampleCount q (scheduleValue q phase) : ℝ) +
+              (phaseSampleCount q (scheduleValue q phase) : ℝ) +
             figureOneExecutableMomentSlack q / 8)) *
           (∫ x, gaussianRatioWeight (n := q.n) (scheduleValue q phase)
               (scheduleValue q (phase + 1)) x
@@ -214,7 +214,7 @@ generic initialized-history deviation theorem. -/
 theorem initializedScheduledRetainedHistory_gaussian_relativeDeviation_le
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
     (hphase : phase < terminalPhaseSteps q) {eps : ℝ} (heps : 0 < eps) :
-    let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+    let count := phaseSampleCount q (scheduleValue q phase)
     let mean :=
       ∫ x, gaussianRatioWeight (n := q.n) (scheduleValue q phase)
           (scheduleValue q (phase + 1)) x
@@ -235,7 +235,7 @@ theorem initializedScheduledRetainedHistory_gaussian_relativeDeviation_le
         figureOneExecutableMomentSlack q / 8)) / eps ^ 2) +
         scheduledResetReferenceError q (count - 1) := by
   dsimp only
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let mean :=
     ∫ x, gaussianRatioWeight (n := q.n) (scheduleValue q phase)
         (scheduleValue q (phase + 1)) x
@@ -247,10 +247,10 @@ theorem initializedScheduledRetainedHistory_gaussian_relativeDeviation_le
     1 + scheduleValue q phase / terminalVariance q
   have hcount : 0 < count := by
     simpa [count] using
-      figureOnePhaseSampleCount_pos q (scheduleValue q phase)
-  have hcountMax : count ≤ figureOneDependentMaxSampleCount q := by
+      phaseSampleCount_pos q (scheduleValue q phase)
+  have hcountMax : count ≤ largestSampleCount q := by
     simpa [count] using
-      figureOnePhaseSampleCount_le_dependentMax q (scheduleValue q phase)
+      phaseSampleCount_le_dependentMax q (scheduleValue q phase)
   have hmean : 0 < mean := by
     rw [show mean =
         gaussianIntegral (truncatedBody q I) (scheduleValue q (phase + 1)) /

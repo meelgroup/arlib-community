@@ -5,7 +5,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-! # Warmness of the retained scheduled accepted state
 
-The retained point is expanded by `accuracyScaleFactor⁻¹`; the next phase
+The retained point is expanded by `scaleFactor⁻¹`; the next phase
 contracts it again.  Thus its ideal live law is the normalized accepted
 submeasure of the preceding speedy stationary law.  This file records the
 constant needed by the chronological warm-start induction.
@@ -54,15 +54,15 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge_one_eighth
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     let K := figureOneScheduledPhaseBody q I sigma2
-    let delta := figureOneScheduledProposalRadius q sigma2
+    let delta := proposalRadius q sigma2
     let pi := ellGaussianProb K delta sigma2
     ENNReal.ofReal (1 / 8 : ℝ) ≤
       (pi.withDensity
         (scheduledAccuracyGaussianRejectionAcceptance q I sigma2)) Set.univ := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
-  let c := accuracyScaleFactor q
+  let delta := proposalRadius q sigma2
+  let c := scaleFactor q
   let pi := ellGaussianProb K delta sigma2
   let core := c • K
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
@@ -72,8 +72,8 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge_one_eighth
     ((volume : Measure (AmbientSpace q.n)).withDensity
       (gaussianWeight (sigma2 / c ^ 2))) K
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
-  have hdelta : 0 < delta := figureOneScheduledProposalRadius_pos q hsigma2
-  have hc0 : 0 < c := by simpa [c] using accuracyScaleFactor_pos q
+  have hdelta : 0 < delta := proposalRadius_pos q hsigma2
+  have hc0 : 0 < c := by simpa [c] using scaleFactor_pos q
   have hKmeas : MeasurableSet K := figureOneScheduledPhaseBody_measurable q I sigma2
   have hKconv : Convex ℝ K := figureOneScheduledPhaseBody_convex q I sigma2
   have hKcompact : IsCompact K := figureOneScheduledPhaseBody_isCompact q I sigma2
@@ -108,16 +108,16 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge_one_eighth
   let _ : IsProbabilityMeasure proposal :=
     Arlib.isProbabilityMeasure_condOn _ hprop0 hproptop
   have hsourceTv : Arlib.TVLe source proposal
-      (4 * ENNReal.ofReal (figureOneScheduledCoreError q)) := by
+      (4 * ENNReal.ofReal (coreMixingError q)) := by
     simpa [source, proposal, pi, core, scale, K, delta, c] using
       figureOneScheduled_stationaryCoreMap_tv_proposal q I hsigma2
-  have herr : 4 * ENNReal.ofReal (figureOneScheduledCoreError q) ≤
+  have herr : 4 * ENNReal.ofReal (coreMixingError q) ≤
       ENNReal.ofReal (3 / 14 : ℝ) := by
     rw [show (4 : ENNReal) = ENNReal.ofReal (4 : ℝ) by norm_num,
       ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 4)]
     apply ENNReal.ofReal_le_ofReal
-    unfold figureOneScheduledCoreError
-    nlinarith [figureOnePerSampleMixingError_le_one q]
+    unfold coreMixingError
+    nlinarith [sampleMixingError_le_one q]
   have hzero : (0 : AmbientSpace q.n) ∈ K := by
     apply ball_scheduledPhaseInradius_subset q I sigma2
     exact Metric.mem_ball_self (figureOneScheduledPhaseInradius_pos q hsigma2)
@@ -126,8 +126,8 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge_one_eighth
     dsimp [proposal, g, c]
     exact half_le_condOn_gaussian_scaleAcceptance_mass_standardCore_cv18
       hn hKmeas hKconv hzero
-      (by simpa [c, accuracyScaleFactor] using hprop0)
-      (by simpa [c, accuracyScaleFactor] using hproptop)
+      (by simpa [c, scaleFactor] using hprop0)
+      (by simpa [c, scaleFactor] using hproptop)
   have hg : Measurable g := by
     dsimp [g]
     exact measurable_gaussianScaleAcceptance sigma2 c
@@ -135,7 +135,7 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge_one_eighth
     intro x
     dsimp [g]
     exact gaussianScaleAcceptance_le_one hsigma2 hc0
-      (accuracyScaleFactor_le_one q) x
+      (scaleFactor_le_one q) x
   have hsourceAccept : ENNReal.ofReal (2 / 7 : ℝ) ≤
       (source.withDensity g) Set.univ :=
     TVLe.withDensity_mass_ge_two_sevenths_cv18 hsourceTv herr hg hg1 hhalf
@@ -169,13 +169,13 @@ theorem scheduledBalancedAcceptedStateMeasure_mass_ge_one_sixteenth
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     let K := figureOneScheduledPhaseBody q I sigma2
-    let delta := figureOneScheduledProposalRadius q sigma2
+    let delta := proposalRadius q sigma2
     let pi := ellGaussianProb K delta sigma2
     ENNReal.ofReal (1 / 16 : ℝ) ≤
       scheduledBalancedAcceptedStateMeasure q I sigma2 pi Set.univ := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let pi := ellGaussianProb K delta sigma2
   rw [scheduledBalancedAcceptedStateMeasure_eq_half_smul,
     Measure.smul_apply, smul_eq_mul]
@@ -206,17 +206,17 @@ theorem map_scheduledBalancedAcceptedTarget_scale_eq
     (sigma2 : ℝ) (pi : Measure (AmbientSpace q.n)) :
     let accepted := scheduledBalancedAcceptedStateMeasure q I sigma2 pi
     (scheduledBalancedAccuracyGaussianAcceptedTargetLaw q I sigma2 pi).map
-        (fun x => accuracyScaleFactor q • x) =
+        (fun x => scaleFactor q • x) =
       (accepted Set.univ)⁻¹ • accepted := by
   dsimp only
   let accepted := scheduledBalancedAcceptedStateMeasure q I sigma2 pi
   let expand : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    (accuracyScaleFactor q)⁻¹ • x
+    (scaleFactor q)⁻¹ • x
   let contract : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   have hexpand : Measurable expand := by fun_prop
   have hcontract : Measurable contract := by fun_prop
-  have hc0 : accuracyScaleFactor q ≠ 0 := (accuracyScaleFactor_pos q).ne'
+  have hc0 : scaleFactor q ≠ 0 := (scaleFactor_pos q).ne'
   unfold scheduledBalancedAccuracyGaussianAcceptedTargetLaw
   change (Arlib.condOn (accepted.map expand) Set.univ).map contract = _
   rw [Arlib.condOn_def, Measure.map_smul (hf := by fun_prop),
@@ -237,14 +237,14 @@ theorem map_scheduledBalancedAcceptedTarget_scale_isWarm_eight
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     let K := figureOneScheduledPhaseBody q I sigma2
-    let delta := figureOneScheduledProposalRadius q sigma2
+    let delta := proposalRadius q sigma2
     let pi := ellGaussianProb K delta sigma2
     Arlib.IsWarm 8
       ((scheduledBalancedAccuracyGaussianAcceptedTargetLaw
-        q I sigma2 pi).map (fun x => accuracyScaleFactor q • x)) pi := by
+        q I sigma2 pi).map (fun x => scaleFactor q • x)) pi := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let pi := ellGaussianProb K delta sigma2
   let accepted := scheduledBalancedAcceptedStateMeasure q I sigma2 pi
   have hmass : ENNReal.ofReal (1 / 16 : ℝ) ≤ accepted Set.univ := by
@@ -284,14 +284,14 @@ theorem map_scheduledBalancedAcceptedTarget_scale_adjacent_isWarm
     let sigma2 := scheduleValue q phase
     let pi := ellGaussianProb
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2
+      (proposalRadius q sigma2) sigma2
     let nextPi := ellGaussianProb
       (figureOneScheduledPhaseBody q I (scheduleValue q (phase + 1)))
-      (figureOneScheduledProposalRadius q (scheduleValue q (phase + 1)))
+      (proposalRadius q (scheduleValue q (phase + 1)))
       (scheduleValue q (phase + 1))
-    Arlib.IsWarm (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
+    Arlib.IsWarm (ENNReal.ofReal (8 * warmConstant q))
       ((scheduledBalancedAccuracyGaussianAcceptedTargetLaw
-        q I sigma2 pi).map (fun x => accuracyScaleFactor q • x)) nextPi := by
+        q I sigma2 pi).map (fun x => scaleFactor q • x)) nextPi := by
   dsimp only
   have hsame := map_scheduledBalancedAcceptedTarget_scale_isWarm_eight
     q I (scheduleValue_pos q phase)
@@ -309,10 +309,10 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_acceptedTarget
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (rho : Measure (AmbientSpace q.n)) [IsProbabilityMeasure rho]
     (hbaseWarm : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) rho
+      (ENNReal.ofReal (8 * warmConstant q)) rho
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)) :
+        (proposalRadius q sigma2) sigma2)) :
     ∀ mu : Measure (AmbientSpace q.n),
       IsProbabilityMeasure mu → Arlib.IsWarm 2 mu rho →
       MeasureLeUpTo
@@ -324,17 +324,17 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_acceptedTarget
         ((scheduledBalancedAccuracyGaussianAcceptedTargetLaw q I sigma2
           (ellGaussianProb
             (figureOneScheduledPhaseBody q I sigma2)
-            (figureOneScheduledProposalRadius q sigma2) sigma2)).map some)
+            (proposalRadius q sigma2) sigma2)).map some)
         (figureOneCorrectedTransitionBudget q) := by
   intro mu hmu hwarm
   let _ : IsProbabilityMeasure mu := hmu
-  let attempts := figureOneSafeRetryCount q - 1
+  let attempts := maxRetries q - 1
   let proposalCap :=
     figureOneFinalScheduledBalancedParameters.proposalCap q sigma2
   let properStride :=
     figureOneFinalScheduledBalancedParameters.properStride q sigma2
   let K := figureOneScheduledPhaseBody q I sigma2
-  let delta := figureOneScheduledProposalRadius q sigma2
+  let delta := proposalRadius q sigma2
   let pi := ellGaussianProb K delta sigma2
   have hproposalCap : 0 < proposalCap := by
     simpa [proposalCap] using
@@ -350,7 +350,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_acceptedTarget
         (by
           simpa [properStride, attempts,
             figureOneFinalScheduledBalancedParameters_properStride] using
-            figureOneScheduledCorrectedFirstWalkRequirement_le_stride
+            firstWalkRequirement_le_stride
               q sigma2 attempts)
         (by
           simpa [properStride, proposalCap, attempts] using
@@ -370,12 +370,12 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_acceptedTarget
           (by
             simpa [properStride, attempts,
               figureOneFinalScheduledBalancedParameters_properStride] using
-              figureOneScheduledCorrectedRetryWalkRequirement_le_stride
+              retryWalkRequirement_le_stride
                 q sigma2 attempts)
           (by
             simpa [properStride, proposalCap, attempts] using
               figureOneFinalScheduled_retryCapBudget q sigma2)
-  have hdelta : 0 < delta := figureOneScheduledProposalRadius_pos q hsigma2
+  have hdelta : 0 < delta := proposalRadius_pos q hsigma2
   have hmass0 : ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 := by
     dsimp [K]
     exact ellGaussianMeasure_univ_ne_zero
@@ -422,7 +422,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_acceptedTarget
       (scheduledBalancedStationaryTargetError q)).trans hbudget
   have hresult := hdom.mono_error hpre
   simpa [proposalCap, properStride, attempts,
-    Nat.sub_add_cancel (figureOneSafeRetryCount_pos q), K, delta, pi] using hresult
+    Nat.sub_add_cancel (maxRetries_pos q), K, delta, pi] using hresult
 
 /-- Optional retained-state kernel between consecutive samples of one
 scheduled phase.  Failure is absorbing; a live retained point is contracted
@@ -436,7 +436,7 @@ noncomputable def figureOneFinalScheduledRetainedOptionKernel
         (figureOneFinalScheduledBalancedParameters.proposalCap q sigma2)
         (figureOneFinalScheduledBalancedParameters.properStride q sigma2)
         (figureOneFinalScheduledBalancedParameters.retryLimit q sigma2)
-        (accuracyScaleFactor q • current)
+        (scaleFactor q • current)
 
 theorem figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
     (q : VolumeParams) (I : VolumeInput q.n)
@@ -455,10 +455,10 @@ theorem figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
         (figureOneFinalScheduledBalancedParameters.proposalCap q sigma2)
         (figureOneFinalScheduledBalancedParameters.properStride q sigma2)
         (figureOneFinalScheduledBalancedParameters.retryLimit q sigma2)
-        (accuracyScaleFactor q • current) := by
+        (scaleFactor q • current) := by
     exact htransition.1.comp <|
       (measurable_const : Measurable fun _ : AmbientSpace q.n =>
-        accuracyScaleFactor q).smul measurable_id
+        scaleFactor q).smul measurable_id
   constructor
   · convert Measurable.optionElim
       (Measure.dirac (none : Option (AmbientSpace q.n))) hsome using 1
@@ -470,7 +470,7 @@ theorem figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
         change IsProbabilityMeasure
           (Measure.dirac (none : Option (AmbientSpace q.n)))
         infer_instance
-    | some current => exact htransition.2 (accuracyScaleFactor q • current)
+    | some current => exact htransition.2 (scaleFactor q • current)
 
 /-- The normalized accepted target is approximately invariant under one more
 retained transition.  This is the integrated (not pointwise-Dirac) step used
@@ -480,7 +480,7 @@ theorem bind_figureOneFinalScheduledAcceptedTarget_retainedOptionKernel_leUpTo
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     let pi := ellGaussianProb
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2
+      (proposalRadius q sigma2) sigma2
     let target := scheduledBalancedAccuracyGaussianAcceptedTargetLaw
       q I sigma2 pi
     MeasureLeUpTo
@@ -490,20 +490,20 @@ theorem bind_figureOneFinalScheduledAcceptedTarget_retainedOptionKernel_leUpTo
   dsimp only
   let pi := ellGaussianProb
     (figureOneScheduledPhaseBody q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
+    (proposalRadius q sigma2) sigma2
   let target := scheduledBalancedAccuracyGaussianAcceptedTargetLaw
     q I sigma2 pi
   let contract : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let transition := scheduledBalancedAccuracyTransitionLawAux q I sigma2
     (figureOneFinalScheduledBalancedParameters.proposalCap q sigma2)
     (figureOneFinalScheduledBalancedParameters.properStride q sigma2)
     (figureOneFinalScheduledBalancedParameters.retryLimit q sigma2)
-  have hdelta : 0 < figureOneScheduledProposalRadius q sigma2 :=
-    figureOneScheduledProposalRadius_pos q hsigma2
+  have hdelta : 0 < proposalRadius q sigma2 :=
+    proposalRadius_pos q hsigma2
   have hmass0 : ellGaussianMeasure
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2 Set.univ ≠ 0 :=
+      (proposalRadius q sigma2) sigma2 Set.univ ≠ 0 :=
     ellGaussianMeasure_univ_ne_zero
       (figureOneScheduledPhaseBody_measurable q I sigma2)
       (figureOneScheduledPhaseBody_convex q I sigma2)
@@ -511,10 +511,10 @@ theorem bind_figureOneFinalScheduledAcceptedTarget_retainedOptionKernel_leUpTo
       (figureOneScheduledPhaseBody_volume_ne_zero q I hsigma2) hdelta sigma2
   have hmasstop : ellGaussianMeasure
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2 Set.univ ≠ ⊤ :=
+      (proposalRadius q sigma2) sigma2 Set.univ ≠ ⊤ :=
     ellGaussianMeasure_ne_top_cv18
       (figureOneScheduledPhaseBody_volume_ne_top q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) hsigma2
+      (proposalRadius q sigma2) hsigma2
   let _ : IsProbabilityMeasure pi :=
     isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   have haccepted : ENNReal.ofReal (7 / 128 : ℝ) ≤
@@ -525,7 +525,7 @@ theorem bind_figureOneFinalScheduledAcceptedTarget_retainedOptionKernel_leUpTo
     scheduledBalancedAccuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_of_lower
       q I hsigma2 pi haccepted
   have hcontractWarm : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q))
+      (ENNReal.ofReal (8 * warmConstant q))
       (target.map contract) pi := by
     have h8 : Arlib.IsWarm 8 (target.map contract) pi := by
       simpa [target, pi, contract] using
@@ -533,7 +533,7 @@ theorem bind_figureOneFinalScheduledAcceptedTarget_retainedOptionKernel_leUpTo
     apply h8.mono
     rw [← ENNReal.ofReal_ofNat 8]
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
+      nlinarith [warmConstant_one_le q]
   let _ : IsProbabilityMeasure (target.map contract) :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop : Measurable contract).aemeasurable
   have hstep :=
@@ -576,14 +576,14 @@ theorem iterated_figureOneFinalScheduledRetainedOptionKernel_leUpTo
     (hinitial :
       let pi := ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2
+        (proposalRadius q sigma2) sigma2
       let target := scheduledBalancedAccuracyGaussianAcceptedTargetLaw
         q I sigma2 pi
       MeasureLeUpTo actualInitial (target.map some) initialError) :
     ∀ samples,
       let pi := ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2
+        (proposalRadius q sigma2) sigma2
       let target := scheduledBalancedAccuracyGaussianAcceptedTargetLaw
         q I sigma2 pi
       MeasureLeUpTo
@@ -597,7 +597,7 @@ theorem iterated_figureOneFinalScheduledRetainedOptionKernel_leUpTo
   let target := scheduledBalancedAccuracyGaussianAcceptedTargetLaw q I sigma2
     (ellGaussianProb
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2)
+      (proposalRadius q sigma2) sigma2)
   let K := figureOneFinalScheduledRetainedOptionKernel q I sigma2
   have hK := figureOneFinalScheduledRetainedOptionKernel_measurable_and_probability
     q I hsigma2

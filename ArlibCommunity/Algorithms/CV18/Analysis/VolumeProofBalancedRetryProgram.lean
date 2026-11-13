@@ -75,7 +75,7 @@ theorem measurable_balancedAccuracyRetryOutput (q : VolumeParams) :
     (measurable_some.comp <|
       measurable_fst.prodMk <|
         (measurable_const : Measurable fun _ : ℝ × AmbientSpace q.n =>
-          (accuracyScaleFactor q)⁻¹).smul measurable_snd) using 1
+          (scaleFactor q)⁻¹).smul measurable_snd) using 1
   ext value
   cases value <;> rfl
 

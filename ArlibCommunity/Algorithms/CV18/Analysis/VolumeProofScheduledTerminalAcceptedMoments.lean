@@ -26,36 +26,36 @@ theorem scheduledBalancedStationaryTargetError_le_one_div_sixtyFour
   apply (scheduledBalancedStationaryTargetError_le_targetBudget q).trans
   unfold figureOneCorrectedTargetBudget figureOneCorrectedTransitionBudget
   have he2 : q.eps ^ 2 ≤ 1 := by nlinarith [q.heps.1, q.heps.2]
-  have ha : 1 ≤ figureOneDependentAlpha q :=
-    figureOneDependentAlpha_one_le q
-  have hk : (1 : ℝ) ≤ figureOneDependentMaxSampleCount q := by
-    exact_mod_cast figureOneDependentMaxSampleCount_pos q
-  have hm : (1 : ℝ) ≤ figureOneDependentPhaseCount q := by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
-  have hden1 : 4096 ≤ 4096 * figureOneDependentAlpha q ^ 4 *
-      (figureOneDependentPhaseCount q : ℝ) := by
-    have ha4 : 1 ≤ figureOneDependentAlpha q ^ 4 := one_le_pow₀ ha
+  have ha : 1 ≤ truncationLevel q :=
+    truncationLevel_one_le q
+  have hk : (1 : ℝ) ≤ largestSampleCount q := by
+    exact_mod_cast largestSampleCount_pos q
+  have hm : (1 : ℝ) ≤ numPhases q := by
+    exact_mod_cast numPhases_pos q
+  have hden1 : 4096 ≤ 4096 * truncationLevel q ^ 4 *
+      (numPhases q : ℝ) := by
+    have ha4 : 1 ≤ truncationLevel q ^ 4 := one_le_pow₀ ha
     nlinarith
-  have hden2 : 1 ≤ 3 * (figureOneDependentMaxSampleCount q : ℝ) *
-      (figureOneDependentPhaseCount q : ℝ) := by nlinarith
-  have hden1pos : 0 < 4096 * figureOneDependentAlpha q ^ 4 *
-      (figureOneDependentPhaseCount q : ℝ) := by nlinarith
-  have hden2pos : 0 < 3 * (figureOneDependentMaxSampleCount q : ℝ) *
-      (figureOneDependentPhaseCount q : ℝ) := by nlinarith
+  have hden2 : 1 ≤ 3 * (largestSampleCount q : ℝ) *
+      (numPhases q : ℝ) := by nlinarith
+  have hden1pos : 0 < 4096 * truncationLevel q ^ 4 *
+      (numPhases q : ℝ) := by nlinarith
+  have hden2pos : 0 < 3 * (largestSampleCount q : ℝ) *
+      (numPhases q : ℝ) := by nlinarith
   have hfirst : q.eps ^ 2 /
-      (4096 * figureOneDependentAlpha q ^ 4 *
-        (figureOneDependentPhaseCount q : ℝ)) ≤ 1 / 4096 := by
+      (4096 * truncationLevel q ^ 4 *
+        (numPhases q : ℝ)) ≤ 1 / 4096 := by
     apply (div_le_iff₀ hden1pos).2
     nlinarith
-  have hper : figureOnePerSampleMixingError q ≤ 1 / 4096 := by
-    unfold figureOnePerSampleMixingError figureOneDependentEpsilon
+  have hper : sampleMixingError q ≤ 1 / 4096 := by
+    unfold sampleMixingError dependenceError
     apply (div_le_iff₀ hden2pos).2
     nlinarith
   apply (ENNReal.toReal_le_toReal
     (ENNReal.div_ne_top ENNReal.ofReal_ne_top (by norm_num))
     ENNReal.ofReal_ne_top).mp
   rw [ENNReal.toReal_div]
-  simp only [ENNReal.toReal_ofReal (figureOnePerSampleMixingError_pos q).le,
+  simp only [ENNReal.toReal_ofReal (sampleMixingError_pos q).le,
     ENNReal.toReal_ofNat, ENNReal.toReal_ofReal (by norm_num :
       (0 : ℝ) ≤ 1 / 64)]
   nlinarith

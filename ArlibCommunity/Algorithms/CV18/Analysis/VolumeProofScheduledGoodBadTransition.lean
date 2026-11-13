@@ -81,10 +81,10 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_of_good_bad
     (hgood : Arlib.IsWarm M good
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (hbad : bad Set.univ ≤ eta)
     (hM : 2 * M + 1 ≤
-      ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) :
+      ENNReal.ofReal (8 * warmConstant q)) :
     MeasureLeUpTo
       (mu.bind
         (scheduledBalancedAccuracyTransitionLawAux q I sigma2
@@ -96,12 +96,12 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_of_good_bad
       (figureOneCorrectedTransitionBudget q + 2 * eta) := by
   let pi := ellGaussianProb
     (figureOneScheduledPhaseBody q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
-  have hdelta : 0 < figureOneScheduledProposalRadius q sigma2 :=
-    figureOneScheduledProposalRadius_pos q hsigma2
+    (proposalRadius q sigma2) sigma2
+  have hdelta : 0 < proposalRadius q sigma2 :=
+    proposalRadius_pos q hsigma2
   have hmass0 : ellGaussianMeasure
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2 Set.univ ≠ 0 :=
+      (proposalRadius q sigma2) sigma2 Set.univ ≠ 0 :=
     ellGaussianMeasure_univ_ne_zero
       (figureOneScheduledPhaseBody_measurable q I sigma2)
       (figureOneScheduledPhaseBody_convex q I sigma2)
@@ -110,10 +110,10 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_of_good_bad
       hdelta sigma2
   have hmasstop : ellGaussianMeasure
       (figureOneScheduledPhaseBody q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2 Set.univ ≠ ⊤ :=
+      (proposalRadius q sigma2) sigma2 Set.univ ≠ ⊤ :=
     ellGaussianMeasure_ne_top_cv18
       (figureOneScheduledPhaseBody_volume_ne_top q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) hsigma2
+      (proposalRadius q sigma2) hsigma2
   let _ : IsProbabilityMeasure pi :=
     isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   let good2 : Measure (AmbientSpace q.n) := (2 : ENNReal) • good
@@ -187,10 +187,10 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe_of_good_bad
     (hgood : Arlib.IsWarm M good
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2))
+        (proposalRadius q sigma2) sigma2))
     (hbad : bad Set.univ ≤ eta)
     (hM : 2 * M + 1 ≤
-      ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) :
+      ENNReal.ofReal (8 * warmConstant q)) :
     Arlib.TVLe
       (mu.bind
         (scheduledBalancedAccuracyTransitionLawAux q I sigma2

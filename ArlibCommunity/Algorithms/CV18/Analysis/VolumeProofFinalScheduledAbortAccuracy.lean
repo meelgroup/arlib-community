@@ -24,7 +24,7 @@ theorem initialTruncatedOption_bind_apply_le
     (K : AmbientSpace q.n → Measure β) (hK : Measurable K)
     (hKprob : ∀ point, IsProbabilityMeasure (K point))
     (E : Set β) (hE : MeasurableSet E) :
-    (((initialGaussianSamplingMeasure q).map
+    (((initialGaussianLaw q).map
         (initialTruncatedOption q I)).bind (fun initialPoint =>
           match initialPoint with
           | none => abortLaw
@@ -46,23 +46,23 @@ theorem initialTruncatedOption_bind_apply_le
     Measure.bind_apply hE hK.aemeasurable]
   calc
     (∫⁻ point, (L ∘ initialTruncatedOption q I) point E
-        ∂initialGaussianSamplingMeasure q) =
+        ∂initialGaussianLaw q) =
         ∫⁻ point, (L ∘ initialTruncatedOption q I) point E
-          ∂((initialGaussianSamplingMeasure q).restrict (truncatedBody q I) +
-            (initialGaussianSamplingMeasure q).restrict
+          ∂((initialGaussianLaw q).restrict (truncatedBody q I) +
+            (initialGaussianLaw q).restrict
               (truncatedBody q I)ᶜ) := by
       rw [Measure.restrict_add_restrict_compl
         (truncatedBody_measurable q I)]
     _ = (∫⁻ point, (L ∘ initialTruncatedOption q I) point E
-          ∂(initialGaussianSamplingMeasure q).restrict (truncatedBody q I)) +
+          ∂(initialGaussianLaw q).restrict (truncatedBody q I)) +
         ∫⁻ point, (L ∘ initialTruncatedOption q I) point E
-          ∂(initialGaussianSamplingMeasure q).restrict
+          ∂(initialGaussianLaw q).restrict
             (truncatedBody q I)ᶜ := by
       rw [lintegral_add_measure]
     _ = (∫⁻ point, K point E
-          ∂(initialGaussianSamplingMeasure q).restrict (truncatedBody q I)) +
+          ∂(initialGaussianLaw q).restrict (truncatedBody q I)) +
         ∫⁻ point, (L ∘ initialTruncatedOption q I) point E
-          ∂(initialGaussianSamplingMeasure q).restrict
+          ∂(initialGaussianLaw q).restrict
             (truncatedBody q I)ᶜ := by
       congr 1
       apply lintegral_congr_ae
@@ -70,15 +70,15 @@ theorem initialTruncatedOption_bind_apply_le
         [ae_restrict_mem (truncatedBody_measurable q I)] with point hpoint
       simp [L, initialTruncatedOption, hpoint]
     _ ≤ (∫⁻ point, K point E
-          ∂(initialGaussianSamplingMeasure q).restrict (truncatedBody q I)) +
-        initialGaussianSamplingMeasure q (truncatedBody q I)ᶜ := by
+          ∂(initialGaussianLaw q).restrict (truncatedBody q I)) +
+        initialGaussianLaw q (truncatedBody q I)ᶜ := by
       gcongr
       calc
         (∫⁻ point, (L ∘ initialTruncatedOption q I) point E
-            ∂(initialGaussianSamplingMeasure q).restrict
+            ∂(initialGaussianLaw q).restrict
               (truncatedBody q I)ᶜ) ≤
             ∫⁻ _point, (1 : ENNReal)
-              ∂(initialGaussianSamplingMeasure q).restrict
+              ∂(initialGaussianLaw q).restrict
                 (truncatedBody q I)ᶜ := by
           apply lintegral_mono
           intro point
@@ -93,16 +93,16 @@ theorem initialTruncatedOption_bind_apply_le
             (μ := L (initialTruncatedOption q I point))
           change L (initialTruncatedOption q I point) E ≤ 1
           simpa only [measure_univ] using hle
-        _ = initialGaussianSamplingMeasure q (truncatedBody q I)ᶜ := by
+        _ = initialGaussianLaw q (truncatedBody q I)ᶜ := by
           rw [lintegral_one, Measure.restrict_apply_univ]
     _ ≤ (∫⁻ point, K point E
           ∂(truncatedGaussianProbability q I (initialVariance q)
             (initialVariance_pos q))) + ENNReal.ofReal (q.eps / 64) := by
       exact add_le_add
         (lintegral_mono'
-          (initialGaussianSamplingMeasure_restrict_truncatedBody_le q I)
+          (initialGaussianLaw_restrict_truncatedBody_le q I)
           le_rfl)
-        (initialGaussianSamplingMeasure_truncatedBody_compl_le q I)
+        (initialGaussianLaw_truncatedBody_compl_le q I)
 
 /-- For an event which is impossible after the abort output, the rejected
 initial Gaussian mass costs nothing.  Only the live restriction remains, and
@@ -114,7 +114,7 @@ theorem initialTruncatedOption_bind_apply_le_of_none_zero
     (q : VolumeParams) (I : VolumeInput q.n)
     (K : Option (AmbientSpace q.n) → Measure β) (hK : Measurable K)
     (E : Set β) (hE : MeasurableSet E) (hnone : K none E = 0) :
-    (((initialGaussianSamplingMeasure q).map
+    (((initialGaussianLaw q).map
         (initialTruncatedOption q I)).bind K) E ≤
       (((truncatedGaussianProbability q I (initialVariance q)
         (initialVariance_pos q) : Measure (AmbientSpace q.n)).map some).bind K) E := by
@@ -123,21 +123,21 @@ theorem initialTruncatedOption_bind_apply_le_of_none_zero
     (hK.comp (measurable_initialTruncatedOption q I)).aemeasurable]
   calc
     (∫⁻ point, (K ∘ initialTruncatedOption q I) point E
-        ∂initialGaussianSamplingMeasure q) =
+        ∂initialGaussianLaw q) =
         ∫⁻ point, (K ∘ initialTruncatedOption q I) point E
-          ∂((initialGaussianSamplingMeasure q).restrict (truncatedBody q I) +
-            (initialGaussianSamplingMeasure q).restrict
+          ∂((initialGaussianLaw q).restrict (truncatedBody q I) +
+            (initialGaussianLaw q).restrict
               (truncatedBody q I)ᶜ) := by
       rw [Measure.restrict_add_restrict_compl
         (truncatedBody_measurable q I)]
     _ = (∫⁻ point, (K ∘ initialTruncatedOption q I) point E
-          ∂(initialGaussianSamplingMeasure q).restrict (truncatedBody q I)) +
+          ∂(initialGaussianLaw q).restrict (truncatedBody q I)) +
         ∫⁻ point, (K ∘ initialTruncatedOption q I) point E
-          ∂(initialGaussianSamplingMeasure q).restrict
+          ∂(initialGaussianLaw q).restrict
             (truncatedBody q I)ᶜ := by
       rw [lintegral_add_measure]
     _ = (∫⁻ point, K (some point) E
-          ∂(initialGaussianSamplingMeasure q).restrict (truncatedBody q I)) + 0 := by
+          ∂(initialGaussianLaw q).restrict (truncatedBody q I)) + 0 := by
       congr 1
       · apply lintegral_congr_ae
         filter_upwards
@@ -154,7 +154,7 @@ theorem initialTruncatedOption_bind_apply_le_of_none_zero
             (initialVariance_pos q)) := by
       rw [add_zero]
       exact lintegral_mono'
-        (initialGaussianSamplingMeasure_restrict_truncatedBody_le q I) le_rfl
+        (initialGaussianLaw_restrict_truncatedBody_le q I) le_rfl
     _ = (((truncatedGaussianProbability q I (initialVariance q)
           (initialVariance_pos q) : Measure (AmbientSpace q.n)).map some).bind K) E := by
       rw [map_bind_eq_bind_comp _ _ measurable_some K hK]
@@ -166,7 +166,7 @@ theorem figureOneFinalScheduledAbortBaseProgram_runEstimate_eq_initial_bind
     (q : VolumeParams) (I : VolumeInput q.n)
     (oracle : MembershipOracle I) :
     (figureOneFinalScheduledAbortBaseProgram q).runEstimate oracle.query =
-      ((initialGaussianSamplingMeasure q).map
+      ((initialGaussianLaw q).map
         (initialTruncatedOption q I)).bind (fun initialPoint =>
           match initialPoint with
           | none => Measure.dirac (0 : ℝ)
@@ -271,7 +271,7 @@ theorem figureOneFinalScheduledAbortBase_failure_le_of_directPostInitial
   rw [figureOneFinalScheduledAbortBaseProgram_runEstimate_eq_initial_bind]
   unfold FigureOnePostInitialDirectFailureBoundFor at hpost
   calc
-    ((initialGaussianSamplingMeasure q).map
+    ((initialGaussianLaw q).map
         (initialTruncatedOption q I)).bind (fun initialPoint =>
           match initialPoint with
           | none => Measure.dirac (0 : ℝ)

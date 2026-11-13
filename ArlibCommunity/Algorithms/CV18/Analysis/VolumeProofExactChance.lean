@@ -387,13 +387,13 @@ theorem ApproxIndepFun.of_iteratedKernelLaw_exactChance
 exact-chance loss over `maxSampleCount * phaseCount` samples exactly the
 dependent-product independence budget. -/
 theorem figureOne_exactChance_budget (q : VolumeParams) :
-    3 * (((figureOneDependentMaxSampleCount q *
-      figureOneDependentPhaseCount q) •
-        ENNReal.ofReal (figureOnePerSampleMixingError q)).toReal) =
-      figureOneDependentEpsilon q := by
+    3 * (((largestSampleCount q *
+      numPhases q) •
+        ENNReal.ofReal (sampleMixingError q)).toReal) =
+      dependenceError q := by
   rw [nsmul_eq_mul, ENNReal.toReal_mul]
   simp only [ENNReal.toReal_natCast,
-    ENNReal.toReal_ofReal (figureOnePerSampleMixingError_pos q).le]
+    ENNReal.toReal_ofReal (sampleMixingError_pos q).le]
   rw [Nat.cast_mul]
   simpa only [mul_assoc] using figureOne_lemma717c_budget q
 
@@ -414,22 +414,22 @@ theorem ApproxIndepFun.of_figureOne_exactChance
       MeasureLeUpTo
         ((iteratedKernelLaw idealK initial i).bind (actualK i))
         (iteratedKernelLaw idealK initial (i + 1))
-        (ENNReal.ofReal (figureOnePerSampleMixingError q)))
+        (ENNReal.ofReal (sampleMixingError q)))
     (X : State → S) (Y : State → T)
     (hX : Measurable X) (hY : Measurable Y)
     (hexact : ApproxIndepFun 0 X Y
       (iteratedKernelLaw idealK initial
-        (figureOneDependentMaxSampleCount q *
-          figureOneDependentPhaseCount q))) :
-    ApproxIndepFun (figureOneDependentEpsilon q) X Y
+        (largestSampleCount q *
+          numPhases q))) :
+    ApproxIndepFun (dependenceError q) X Y
       (iteratedKernelLaw actualK initial
-        (figureOneDependentMaxSampleCount q *
-          figureOneDependentPhaseCount q)) := by
+        (largestSampleCount q *
+          numPhases q)) := by
   have h := ApproxIndepFun.of_iteratedKernelLaw_exactChance
     actualK idealK initial ENNReal.ofReal_ne_top hactualMeas hactualProb
       hidealMeas hidealProb hstep
-      (figureOneDependentMaxSampleCount q *
-        figureOneDependentPhaseCount q) X Y hX hY hexact
+      (largestSampleCount q *
+        numPhases q) X Y hX hY hexact
   rw [figureOne_exactChance_budget q] at h
   exact h
 

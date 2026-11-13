@@ -44,7 +44,7 @@ theorem measurable_figureOneScheduledTraceLiveRawOutput :
 a live trace appends the nonnegative phase observation (or zero on failure). -/
 theorem scheduledBalancedTracePhaseVariable_append_eq_rawOutput
     (q : VolumeParams) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     (trace : ScheduledBalancedCoolingTrace q.n)
     (hvalid : ScheduledBalancedCoolingTraceValid phase trace)
     (result : Option (ℝ × AmbientSpace q.n)) :
@@ -65,7 +65,7 @@ theorem scheduledBalancedTracePhaseVariable_append_eq_rawOutput
 exactly the corresponding trace-dependent scalar output law. -/
 theorem bind_scheduledBalancedTraceRawPhaseOutput_eq_forwardTrace_succ
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q) :
+    (hphase : phase < numPhases q) :
     let rho := scheduledBalancedForwardTraceLaw
       figureOneFinalScheduledBalancedParameters q I phase
     let outK := scheduledBalancedTracePhaseOutputLaw
@@ -140,7 +140,7 @@ theorem bind_scheduledBalancedTraceRawPhaseOutput_eq_forwardTrace_succ
 theorem map_scheduledBalancedForwardTraceLaw_rawPhase_eq_prefix
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
     (I : VolumeInput q.n) (phase future : ℕ)
-    (horizon : phase + 1 + future ≤ figureOneDependentPhaseCount q) :
+    (horizon : phase + 1 + future ≤ numPhases q) :
     (scheduledBalancedForwardTraceLaw parameters q I
       (phase + 1 + future)).map
         (scheduledBalancedTracePhaseVariable q (phase + 1)) =
@@ -155,7 +155,7 @@ theorem map_scheduledBalancedForwardTraceLaw_rawPhase_eq_prefix
       let m := phase + 1 + future
       let law := scheduledBalancedForwardTraceLaw parameters q I m
       let K := scheduledBalancedTracePhaseKernel parameters q I m
-      have hmphase : m ≤ figureOneDependentPhaseCount q := by
+      have hmphase : m ≤ numPhases q := by
         dsimp only [m]
         omega
       have hK := scheduledBalancedTracePhaseKernel_measurable_and_probability
@@ -203,7 +203,7 @@ theorem map_scheduledBalancedForwardTraceLaw_rawPhase_eq_prefix
 coordinate of the final trace. -/
 theorem scheduledBalancedFinalTraceRawPhase_leUpTo_of_immediate
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
-    (hphase : phase < figureOneDependentPhaseCount q)
+    (hphase : phase < numPhases q)
     (target : Measure (Option (ℝ × AmbientSpace q.n)))
     {error : ENNReal}
     (himmediate :
@@ -217,7 +217,7 @@ theorem scheduledBalancedFinalTraceRawPhase_leUpTo_of_immediate
     MeasureLeUpTo
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (scheduledBalancedTracePhaseVariable q (phase + 1)))
       (target.map figureOneScheduledTraceLiveRawOutput) error := by
   have himmediateLaw :=
@@ -225,10 +225,10 @@ theorem scheduledBalancedFinalTraceRawPhase_leUpTo_of_immediate
       q I phase hphase
   have hfuture := map_scheduledBalancedForwardTraceLaw_rawPhase_eq_prefix
     figureOneFinalScheduledBalancedParameters q I phase
-      (figureOneDependentPhaseCount q - (phase + 1)) (by omega)
+      (numPhases q - (phase + 1)) (by omega)
   have hhorizon : phase + 1 +
-      (figureOneDependentPhaseCount q - (phase + 1)) =
-        figureOneDependentPhaseCount q := by omega
+      (numPhases q - (phase + 1)) =
+        numPhases q := by omega
   rw [hhorizon] at hfuture
   rw [hfuture, ← himmediateLaw]
   exact himmediate
@@ -242,7 +242,7 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_leUpTo_target
     MeasureLeUpTo
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (scheduledBalancedTracePhaseVariable q (phase + 1)))
       ((figureOneScheduledGaussianPhaseTarget q I phase).map
         figureOneScheduledTraceLiveRawOutput)
@@ -258,7 +258,7 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_leUpTo_target
   let rho := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I phase
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x =>
-    accuracyScaleFactor q • x
+    scaleFactor q • x
   let good := (figureOneScheduledAcceptedTargetAt q I previous).map scale
   let eta := figureOneScheduledRetainedError q phase
   obtain ⟨bad, hlive, herror⟩ :=
@@ -286,7 +286,7 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_leUpTo_target
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I phase
   have hgood : Arlib.IsWarm
-      (ENNReal.ofReal (8 * speedyAdjacentWarmConstant q)) good
+      (ENNReal.ofReal (8 * warmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I phase) := by
     simpa [good, scale, previous, hpreviousSucc,
       figureOneScheduledAcceptedTargetAt,
@@ -294,16 +294,16 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_leUpTo_target
       map_scheduledBalancedAcceptedTarget_scale_adjacent_isWarm
         q I previous
   have hM8 : (1 : ENNReal) ≤
-      ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) := by
+      ENNReal.ofReal (8 * warmConstant q) := by
     rw [← ENNReal.ofReal_one]
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
-  have hM8M16 : ENNReal.ofReal (8 * speedyAdjacentWarmConstant q) ≤
-      ENNReal.ofReal (16 * speedyAdjacentWarmConstant q) := by
+      nlinarith [warmConstant_one_le q]
+  have hM8M16 : ENNReal.ofReal (8 * warmConstant q) ≤
+      ENNReal.ofReal (16 * warmConstant q) := by
     exact ENNReal.ofReal_le_ofReal <| by
-      nlinarith [speedyAdjacentWarmConstant_one_le q]
+      nlinarith [warmConstant_one_le q]
   apply scheduledBalancedFinalTraceRawPhase_leUpTo_of_immediate
-    q I phase (by rw [figureOneDependentPhaseCount]; omega)
+    q I phase (by rw [numPhases]; omega)
       (figureOneScheduledGaussianPhaseTarget q I phase)
   apply bind_scheduledBalancedTracePhaseOutputLaw_leUpTo_of_live_good_bad
     q I phase hphase rho good bad hM8 ENNReal.ofReal_ne_top hM8M16
@@ -350,14 +350,14 @@ theorem scheduledFigureOneTraceRawMean_abs_sub_ideal_le_of_mapped_tv
     (hscalar : Arlib.TVLe
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q)).map
+        (numPhases q)).map
           (scheduledBalancedTracePhaseVariable q j))
       ((figureOneIdealPhaseLaw q I (figureOneChronologicalPhaseAt q j)).map
         (figureOneIdealPhaseEstimator q
           (figureOneChronologicalPhaseAt q j))) epsilon)
     (hWB : ∀ᵐ trace ∂scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
-        (figureOneDependentPhaseCount q),
+        (numPhases q),
       scheduledBalancedTracePhaseVariable q j trace <= B)
     (hidealB : ∀ᵐ samples
         ∂figureOneIdealPhaseLaw q I (figureOneChronologicalPhaseAt q j),
@@ -368,7 +368,7 @@ theorem scheduledFigureOneTraceRawMean_abs_sub_ideal_le_of_mapped_tv
       B * epsilon.toReal := by
   let mu := scheduledBalancedForwardTraceLaw
     figureOneFinalScheduledBalancedParameters q I
-      (figureOneDependentPhaseCount q)
+      (numPhases q)
   let phase := figureOneChronologicalPhaseAt q j
   let idealLaw := figureOneIdealPhaseLaw q I phase
   let W := scheduledBalancedTracePhaseVariable q j
@@ -430,16 +430,16 @@ aggregate budget leaves exactly the `eps/64` product slack used downstream. -/
 theorem scheduledFigureOneTraceRawMeanProduct_relativeApprox_ideal_of_phasewise
     (q : VolumeParams) (I : VolumeInput q.n) {delta : ℝ}
     (hdelta0 : 0 <= delta) (hdelta1 : delta <= 1)
-    (hbudget : (figureOneDependentPhaseCount q : ℝ) * delta ≤ q.eps / 128)
-    (hphase : ∀ j, 1 ≤ j → j ≤ figureOneDependentPhaseCount q →
+    (hbudget : (numPhases q : ℝ) * delta ≤ q.eps / 128)
+    (hphase : ∀ j, 1 ≤ j → j ≤ numPhases q →
       |scheduledFigureOneTraceRawMean q I j -
           figureOneChronologicalRawMean q I j| <=
         delta * figureOneChronologicalRawMean q I j) :
     RelativeApprox (q.eps / 64)
       (∏ phase, figureOneIdealPhaseMean q I phase)
       (dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I)
-        (figureOneDependentPhaseCount q)) := by
-  let m := figureOneDependentPhaseCount q
+        (numPhases q)) := by
+  let m := numPhases q
   let ideal := dependentPhaseMeanProduct (figureOneChronologicalRawMean q I) m
   let actual := dependentPhaseMeanProduct (scheduledFigureOneTraceRawMean q I) m
   have honeSub : 0 <= 1 - delta := by linarith

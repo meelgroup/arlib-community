@@ -22,13 +22,13 @@ noncomputable def scheduledBalancedAccuracyRetryBlockKernel
       (Arlib.MarkovChains.lazyProperProposalGaussianAux
         (figureOneScheduledPhaseBody q I sigma2)
         (figureOneScheduledPhaseBody_measurable q I sigma2)
-        (figureOneScheduledProposalRadius q sigma2) sigma2)
+        (proposalRadius q sigma2) sigma2)
       (fun _ => 0) proposalCap properStride 1 current
   measurable' := by
     let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux
       (figureOneScheduledPhaseBody q I sigma2)
       (figureOneScheduledPhaseBody_measurable q I sigma2)
-      (figureOneScheduledProposalRadius q sigma2) sigma2
+      (proposalRadius q sigma2) sigma2
     change Measurable fun current =>
       cappedProperCollectLaw Q (fun _ => 0) proposalCap properStride 1 current
     unfold cappedProperCollectLaw
@@ -47,7 +47,7 @@ instance scheduledBalancedAccuracyRetryBlockKernel_isMarkovKernel
   let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux
     (figureOneScheduledPhaseBody q I sigma2)
     (figureOneScheduledPhaseBody_measurable q I sigma2)
-    (figureOneScheduledProposalRadius q sigma2) sigma2
+    (proposalRadius q sigma2) sigma2
   change IsProbabilityMeasure
     (cappedProperCollectLaw Q (fun _ => 0) proposalCap properStride 1 current)
   unfold cappedProperCollectLaw

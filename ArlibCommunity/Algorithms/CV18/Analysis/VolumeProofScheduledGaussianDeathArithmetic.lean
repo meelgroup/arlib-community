@@ -21,25 +21,25 @@ theorem figureOneExecutableMomentSlack_pos (q : VolumeParams) :
     0 < figureOneExecutableMomentSlack q := by
   unfold figureOneExecutableMomentSlack
   exact div_pos (sq_pos_of_pos q.heps.1) <| mul_pos (by norm_num) <| by
-    exact_mod_cast figureOneDependentPhaseCount_pos q
+    exact_mod_cast numPhases_pos q
 
 theorem figureOneExecutableMomentSlack_eq_inv_four_alpha
     (q : VolumeParams) :
     figureOneExecutableMomentSlack q =
-      1 / (4 * figureOneDependentAlpha q) := by
-  have hm : (figureOneDependentPhaseCount q : ℝ) ≠ 0 := by
-    exact_mod_cast (Nat.ne_of_gt (figureOneDependentPhaseCount_pos q))
+      1 / (4 * truncationLevel q) := by
+  have hm : (numPhases q : ℝ) ≠ 0 := by
+    exact_mod_cast (Nat.ne_of_gt (numPhases_pos q))
   have he : q.eps ≠ 0 := q.heps.1.ne'
-  unfold figureOneExecutableMomentSlack figureOneDependentAlpha
+  unfold figureOneExecutableMomentSlack truncationLevel
   field_simp [hm, he]
   norm_num
 
-theorem figureOneDependentEpsilon_eq_slack_div_alpha_four
+theorem dependenceError_eq_slack_div_alpha_four
     (q : VolumeParams) :
-    figureOneDependentEpsilon q =
+    dependenceError q =
       figureOneExecutableMomentSlack q /
-        figureOneDependentAlpha q ^ 4 := by
-  unfold figureOneDependentEpsilon figureOneExecutableMomentSlack
+        truncationLevel q ^ 4 := by
+  unfold dependenceError figureOneExecutableMomentSlack
   ring
 
 /-- The endpoint-error budget used by the killed Gaussian collector is
@@ -47,31 +47,31 @@ quadratically smaller than the per-phase executable moment slack. -/
 theorem figureOneScheduledGaussianPhase_error_toReal_le_slack_sq
     (q : VolumeParams) (phase : ℕ) :
     (2 * scheduledBalancedStationaryTargetError q +
-        figureOnePhaseSampleCount q (scheduleValue q phase) •
+        phaseSampleCount q (scheduleValue q phase) •
           figureOneCorrectedTransitionBudget q).toReal ≤
       (figureOneExecutableMomentSlack q / 16384) ^ 2 := by
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
-  let maxCount := figureOneDependentMaxSampleCount q
-  let phases := figureOneDependentPhaseCount q
-  let nu := figureOnePerSampleMixingError q
-  let dependent := figureOneDependentEpsilon q
-  let alpha := figureOneDependentAlpha q
+  let count := phaseSampleCount q (scheduleValue q phase)
+  let maxCount := largestSampleCount q
+  let phases := numPhases q
+  let nu := sampleMixingError q
+  let dependent := dependenceError q
+  let alpha := truncationLevel q
   let slack := figureOneExecutableMomentSlack q
   let stationary := scheduledBalancedStationaryTargetError q
   let delta := figureOneCorrectedTransitionBudget q
   have hnu : 0 < nu := by
-    simpa [nu] using figureOnePerSampleMixingError_pos q
+    simpa [nu] using sampleMixingError_pos q
   have hmax : 0 < maxCount := by
-    simpa [maxCount] using figureOneDependentMaxSampleCount_pos q
+    simpa [maxCount] using largestSampleCount_pos q
   have hphases : 0 < phases := by
-    simpa [phases] using figureOneDependentPhaseCount_pos q
+    simpa [phases] using numPhases_pos q
   have halpha : (1024 : ℝ) ≤ alpha := by
-    simpa [alpha] using figureOneDependentAlpha_ge_1024 q
+    simpa [alpha] using truncationLevel_ge_1024 q
   have hslack : 0 < slack := by
     simpa [slack] using figureOneExecutableMomentSlack_pos q
   have hcount : count ≤ maxCount := by
     simpa [count, maxCount] using
-      figureOnePhaseSampleCount_le_dependentMax q (scheduleValue q phase)
+      phaseSampleCount_le_dependentMax q (scheduleValue q phase)
   have hdeltaTop : delta ≠ ⊤ := by
     simp [delta, figureOneCorrectedTransitionBudget]
   have htargetTop : figureOneCorrectedTargetBudget q ≠ ⊤ :=
@@ -130,7 +130,7 @@ theorem figureOneScheduledGaussianPhase_error_toReal_le_slack_sq
         nlinarith [pow_nonneg (show 0 ≤ alpha by positivity) 3]
   have hdependent : dependent = slack / alpha ^ 4 := by
     simpa [dependent, slack, alpha] using
-      figureOneDependentEpsilon_eq_slack_div_alpha_four q
+      dependenceError_eq_slack_div_alpha_four q
   have hslackAlpha : slack = 1 / (4 * alpha) := by
     simpa [slack, alpha] using
       figureOneExecutableMomentSlack_eq_inv_four_alpha q
@@ -142,7 +142,7 @@ theorem figureOneScheduledGaussianPhase_error_toReal_le_slack_sq
     field_simp [halphaPos.ne', hphasesReal.ne']
     nlinarith
   rw [show 2 * scheduledBalancedStationaryTargetError q +
-      figureOnePhaseSampleCount q (scheduleValue q phase) •
+      phaseSampleCount q (scheduleValue q phase) •
         figureOneCorrectedTransitionBudget q =
       2 * stationary + count • delta by rfl,
     herrorReal]
@@ -151,7 +151,7 @@ theorem figureOneScheduledGaussianPhase_error_toReal_le_slack_sq
 theorem figureOneScheduledGaussianPhase_error_ne_top
     (q : VolumeParams) (phase : ℕ) :
     2 * scheduledBalancedStationaryTargetError q +
-        figureOnePhaseSampleCount q (scheduleValue q phase) •
+        phaseSampleCount q (scheduleValue q phase) •
           figureOneCorrectedTransitionBudget q ≠ ⊤ := by
   apply ENNReal.add_ne_top.mpr
   constructor
@@ -167,7 +167,7 @@ theorem figureOneScheduledGaussianPhase_error_ne_top
 inherits the same quadratic executable-slack bound. -/
 theorem figureOneScheduledGaussianShadow_dead_real_le_slack_sq
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ) :
-    let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+    let count := phaseSampleCount q (scheduleValue q phase)
     let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
       (scheduleValue q (phase + 1))
     let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -180,7 +180,7 @@ theorem figureOneScheduledGaussianShadow_dead_real_le_slack_sq
       initial (count - 1)).real {state | state.2 = none} ≤
       (figureOneExecutableMomentSlack q / 16384) ^ 2 := by
   dsimp only
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let stationary := scheduledBalancedStationaryTargetError q
   let delta := figureOneCorrectedTransitionBudget q
   have htop := figureOneScheduledGaussianPhase_error_ne_top q phase
@@ -206,7 +206,7 @@ theorem figureOneScheduledGaussianShadow_dead_real_le_slack_sq
 /-- Square-root form consumed by the all-or-nothing killing estimate. -/
 theorem sqrt_figureOneScheduledGaussianShadow_dead_real_le_slack
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ) :
-    let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+    let count := phaseSampleCount q (scheduleValue q phase)
     let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
       (scheduleValue q (phase + 1))
     let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -235,7 +235,7 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower_final_param
           (scheduleValue q (phase + 1)) x
         ∂(truncatedGaussianProbability q I (scheduleValue q phase)
           (scheduleValue_pos q phase) : Measure (AmbientSpace q.n))
-    let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+    let count := phaseSampleCount q (scheduleValue q phase)
     let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
       (scheduleValue q (phase + 1))
     let K := figureOneFinalScheduledRetainedOptionKernel q I
@@ -264,7 +264,7 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower_final_param
         (scheduleValue q (phase + 1)) x
       ∂(truncatedGaussianProbability q I (scheduleValue q phase)
         (scheduleValue_pos q phase) : Measure (AmbientSpace q.n))
-  let count := figureOnePhaseSampleCount q (scheduleValue q phase)
+  let count := phaseSampleCount q (scheduleValue q phase)
   let weight := gaussianRatioWeight (n := q.n) (scheduleValue q phase)
     (scheduleValue q (phase + 1))
   let K := figureOneFinalScheduledRetainedOptionKernel q I
