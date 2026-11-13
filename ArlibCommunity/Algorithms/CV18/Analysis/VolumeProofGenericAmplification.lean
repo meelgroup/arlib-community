@@ -4,24 +4,6 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory
 
-/-- Repeat an arbitrary real-valued oracle program independently. -/
-noncomputable def repeatOracleProgram {n : ℕ}
-    (base : MembershipOracleProgram n ℝ) :
-    (m : ℕ) → MembershipOracleProgram n (Fin m → ℝ)
-  | 0 => .pure Fin.elim0
-  | m + 1 =>
-      base.bind fun estimate =>
-        (repeatOracleProgram base m).bind fun tail =>
-          .pure (Fin.cons estimate tail)
-
-/-- Median amplification of an arbitrary parameterized base program. -/
-noncomputable def amplifyOracleProgram
-    (base : (q : VolumeParams) → MembershipOracleProgram q.n ℝ) :
-    VolumeAlgorithm :=
-  fun q =>
-    (repeatOracleProgram (base q) (confidenceRepetitions q)).bind fun estimates =>
-      .pure (Arlib.Probability.medianOf estimates)
-
 theorem repeatOracleProgram_queryBound {n : ℕ}
     (base : MembershipOracleProgram n ℝ) {budget : ℕ}
     (hbase : base.QueryBound budget) : ∀ repetitions,

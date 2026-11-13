@@ -209,7 +209,7 @@ theorem figureOneFinalScheduledAbortBaseProgram_runEstimate_eq_initial_bind
     cases initialPoint <;> rfl
   have hbase : figureOneFinalScheduledAbortBaseProgram q =
       (figureOneAbortInitialSample q).bind tail := by
-    unfold figureOneFinalScheduledAbortBaseProgram baseVolumeCooling tail
+    unfold figureOneFinalScheduledAbortBaseProgram baseVolumeCoolingOn tail
     congr 1
     funext initialPoint
     cases initialPoint with

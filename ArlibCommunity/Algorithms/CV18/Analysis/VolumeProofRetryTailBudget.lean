@@ -2,9 +2,6 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledAcceptedTarge
 
 namespace ArlibCommunity.Algorithms.CV18
 
-noncomputable def figureOneSafeRetryCount (q : VolumeParams) : ℕ :=
-  Nat.ceil (128 * protectedLog (4 / figureOnePerSampleMixingError q))
-
 theorem figureOneSafeRetryCount_pos (q : VolumeParams) :
     0 < figureOneSafeRetryCount q := by
   apply Nat.ceil_pos.mpr

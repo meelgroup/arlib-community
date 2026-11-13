@@ -14,18 +14,9 @@ from `volumeBaseComplexityRate`.
 
 namespace ArlibCommunity.Algorithms.CV18
 
-/-- A deliberately slack absolute constant for the complete scheduled base
-run.  Its slack absorbs endpoint and rejection queries and the finite retry
-multiplier without altering the CV18 soft-O rate. -/
-noncomputable def figureOneFinalScheduledExpectedCostConstant : ℝ := 10 ^ 30
-
 theorem figureOneFinalScheduledExpectedCostConstant_pos :
     0 < figureOneFinalScheduledExpectedCostConstant := by
   norm_num [figureOneFinalScheduledExpectedCostConstant]
-
-noncomputable def figureOneFinalScheduledQueryBudget (q : VolumeParams) : ℕ :=
-  globalQueryBudgetOfRate figureOneFinalScheduledExpectedCostConstant
-    volumeScheduledBaseComplexityRate q
 
 theorem figureOneFinalScheduledQueryBudget_pos (q : VolumeParams) :
     0 < figureOneFinalScheduledQueryBudget q := by
@@ -33,34 +24,6 @@ theorem figureOneFinalScheduledQueryBudget_pos (q : VolumeParams) :
   apply Nat.ceil_pos.mpr
   positivity [figureOneFinalScheduledExpectedCostConstant_pos,
     volumeScheduledBaseComplexityRate_pos q]
-
-/-- The real-valued local block cap required by the cap-loss estimate.  The
-factor `16 * speedyAdjacentWarmConstant` is the larger of the first-block and
-retry-block warmness constants. -/
-noncomputable def figureOneFinalScheduledLocalCapRequirement
-    (q : VolumeParams) (sigma2 : ℝ) : ℝ :=
-  2 * (figureOneScheduledCorrectedProperStride q sigma2
-      (figureOneSafeRetryCount q - 1) : ℝ) *
-      (16 * speedyAdjacentWarmConstant q) /
-    figureOneCorrectedBlockMixingError q (figureOneSafeRetryCount q - 1)
-
-/-- The local collector cap contains the outer cutoff budget as a prefix and
-then adds enough slack to make cap exhaustion cost one corrected block budget.
-The outer query cutoff remains a separate global guard. -/
-noncomputable def figureOneFinalScheduledLocalProposalCap
-    (q : VolumeParams) (sigma2 : ℝ) : ℕ :=
-  figureOneFinalScheduledQueryBudget q +
-    Nat.ceil (figureOneFinalScheduledLocalCapRequirement q sigma2)
-
-/-- The parameters shared by the final cost, mapped-law, and prefix arguments.
-Only the global proposal cap differs from the earlier scheduled prototype. -/
-noncomputable def figureOneFinalScheduledBalancedParameters :
-    BalancedCoolingParameters where
-  proposalCap := figureOneFinalScheduledLocalProposalCap
-  properStride := fun q sigma2 =>
-    figureOneScheduledCorrectedProperStride q sigma2
-      (figureOneSafeRetryCount q - 1)
-  retryLimit := fun q _ => figureOneSafeRetryCount q
 
 @[simp] theorem figureOneFinalScheduledBalancedParameters_proposalCap
     (q : VolumeParams) (sigma2 : ℝ) :

@@ -107,8 +107,7 @@ existence proposition.  Query capping and amplification are unconditional in
 the imported assembly theorem. -/
 theorem volumeTheorem_finalScheduled_of_globalResetReferenceExists
     (hglobal : GlobalResetReferenceExists) :
-    ∃ C : ℝ, 0 < C ∧
-      ∀ (q : VolumeParams) (I : VolumeInput q.n)
+    ∀ (q : VolumeParams) (I : VolumeInput q.n)
         (oracle : MembershipOracle I), WellRounded q I →
           1 - q.p ≤ outcomeProbability
             (volumeAlgorithmLaw
@@ -118,7 +117,8 @@ theorem volumeTheorem_finalScheduled_of_globalResetReferenceExists
             (amplifyOracleProgram
               figureOneFinalScheduledCappedValueProgram q).QueryBound calls ∧
             calls ≤ Nat.ceil
-              (C * (volumeScheduledBaseComplexityRate q *
+              (figureOneFinalScheduledQueryConstant *
+                (volumeScheduledBaseComplexityRate q *
                 protectedLog (1 / q.p))) := by
   apply volumeTheorem_finalScheduled_of_baseFailure
   intro q I oracle hrounded

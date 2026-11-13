@@ -24,14 +24,6 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 
-/-- Finite execution parameters for the balanced/proper-step phase collector.
-The statistical sample counts are not configurable: they are the actual
-Figure-One counts used by `VolumeProofDependentSchedule`. -/
-structure BalancedCoolingParameters where
-  proposalCap : (q : VolumeParams) → ℝ → ℕ
-  properStride : (q : VolumeParams) → ℝ → ℕ
-  retryLimit : (q : VolumeParams) → ℝ → ℕ
-
 /-- The phase count is bounded by the common sample-count parameter appearing
 in the dependent-product error budget. -/
 theorem figureOnePhaseSampleCount_le_dependentMax
@@ -46,13 +38,6 @@ theorem figureOnePhaseSampleCount_le_dependentMax
 theorem figureOneTerminalSampleCount_le_dependentMax (q : VolumeParams) :
     figureOneSampleCount q ≤ figureOneDependentMaxSampleCount q :=
   le_max_right _ _
-
-/-- Average an accumulated phase observable without changing its retained
-target-space state. -/
-noncomputable def balancedCoolingAverage (samples : ℕ) :
-    Option (ℝ × AmbientSpace n) → Option (ℝ × AmbientSpace n)
-  | none => none
-  | some (total, current) => some (total / (samples : ℝ), current)
 
 theorem measurable_balancedCoolingAverage (samples : ℕ) :
     Measurable (balancedCoolingAverage (n := n) samples) := by
@@ -91,13 +76,6 @@ noncomputable def balancedCoolingUniformEstimateWithState
       (figureOneSampleCount q)
       (accuracyScaleFactor q • current)).bind fun result =>
     .pure (balancedCoolingAverage (figureOneSampleCount q) result)
-
-/-- Forget only the terminal retained state, as required by
-`VolumeCoolingPrimitives.uniformRatioEstimate`. -/
-noncomputable def balancedCoolingForgetState :
-    Option (ℝ × AmbientSpace n) → Option ℝ
-  | none => none
-  | some (estimate, _) => some estimate
 
 theorem measurable_balancedCoolingForgetState :
     Measurable (balancedCoolingForgetState (n := n)) := by

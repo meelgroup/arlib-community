@@ -46,41 +46,6 @@ theorem scheduledBalancedAccuracyRetryCollectLaw_measurable_and_probability
           0 current) := hraw.2 0 current
     exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hout.aemeasurable
 
-/-- One averaged Gaussian cooling phase driven by the scheduled-body sampler. -/
-noncomputable def scheduledBalancedCoolingRatioEstimate
-    (parameters : BalancedCoolingParameters) (q : VolumeParams)
-    (sigma2 tau2 : ℝ) (current : AmbientSpace q.n) :
-    MembershipOracleProgram q.n (Option (ℝ × AmbientSpace q.n)) :=
-  (scheduledBalancedAccuracyRetryCollect q sigma2
-      (gaussianRatioWeight sigma2 tau2)
-      (parameters.proposalCap q sigma2)
-      (parameters.properStride q sigma2)
-      (parameters.retryLimit q sigma2)
-      (figureOnePhaseSampleCount q sigma2)
-      (accuracyScaleFactor q • current)).bind fun result =>
-    .pure (balancedCoolingAverage (figureOnePhaseSampleCount q sigma2) result)
-
-/-- The scheduled terminal Gaussian-to-uniform phase, retaining its endpoint. -/
-noncomputable def scheduledBalancedCoolingUniformEstimateWithState
-    (parameters : BalancedCoolingParameters) (q : VolumeParams)
-    (sigma2 : ℝ) (current : AmbientSpace q.n) :
-    MembershipOracleProgram q.n (Option (ℝ × AmbientSpace q.n)) :=
-  (scheduledBalancedAccuracyRetryCollect q sigma2 (uniformRatioWeight sigma2)
-      (parameters.proposalCap q sigma2)
-      (parameters.properStride q sigma2)
-      (parameters.retryLimit q sigma2)
-      (figureOneSampleCount q)
-      (accuracyScaleFactor q • current)).bind fun result =>
-    .pure (balancedCoolingAverage (figureOneSampleCount q) result)
-
-/-- Forget the retained endpoint after the scheduled terminal phase. -/
-noncomputable def scheduledBalancedCoolingUniformRatioEstimate
-    (parameters : BalancedCoolingParameters) (q : VolumeParams)
-    (sigma2 : ℝ) (current : AmbientSpace q.n) :
-    MembershipOracleProgram q.n (Option ℝ) :=
-  (scheduledBalancedCoolingUniformEstimateWithState parameters q sigma2 current).bind
-    fun result => .pure (balancedCoolingForgetState result)
-
 /-- Actual scheduled-body implementation of the Figure-One cooling interface. -/
 noncomputable def scheduledBalancedCoolingPrimitives
     (parameters : BalancedCoolingParameters) : VolumeCoolingPrimitives where

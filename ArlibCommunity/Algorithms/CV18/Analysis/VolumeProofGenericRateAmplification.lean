@@ -5,12 +5,11 @@ namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory
 
 /-- Median amplification with an arbitrary explicit positive base-rate
-envelope.  This is the soft-O form needed when a concrete walk construction
+envelope.  The amplified constant is the explicit `9 * (C₀ + 1)`.  This is the soft-O form needed when a concrete walk construction
 exposes additional logarithmic factors. -/
 theorem oracleProgram_proof_amplification_of_rate
     (rate : VolumeParams → ℝ) (hrate : ∀ q, 1 ≤ rate q) :
     ∀ C₀ : ℝ, 0 < C₀ →
-      ∃ C : ℝ, 0 < C ∧
         ∀ (base : (q : VolumeParams) → MembershipOracleProgram q.n ℝ)
           (q : VolumeParams) (I : VolumeInput q.n)
           (oracle : MembershipOracle I),
@@ -25,10 +24,9 @@ theorem oracleProgram_proof_amplification_of_rate
                 ∃ calls,
                   (amplifyOracleProgram base q).QueryBound calls ∧
                   calls ≤ Nat.ceil
-                    (C * (rate q * protectedLog (1 / q.p))) := by
+                    (9 * (C₀ + 1) * (rate q * protectedLog (1 / q.p))) := by
   intro C₀ hC₀
   let C : ℝ := 9 * (C₀ + 1)
-  refine ⟨C, by dsimp [C]; linarith, ?_⟩
   intro base q I oracle hprob hmeas hcost
   let μ : Measure ℝ := (base q).runEstimate oracle.query
   let R : ℝ := rate q

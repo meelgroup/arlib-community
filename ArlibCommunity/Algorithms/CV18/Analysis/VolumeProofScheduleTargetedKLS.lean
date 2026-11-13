@@ -18,16 +18,6 @@ namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory Metric Set
 open scoped ENNReal Pointwise
 
-/-- Core error consuming one eighth of the per-sample budget after the KLS
-factor `96`. -/
-noncomputable def figureOneScheduledCoreError (q : VolumeParams) : ℝ :=
-  figureOnePerSampleMixingError q / 768
-
-/-- Radial truncation error consuming a second eighth of the per-sample
-budget. -/
-noncomputable def figureOneScheduledRadialError (q : VolumeParams) : ℝ :=
-  figureOnePerSampleMixingError q / 8
-
 theorem figureOneScheduledCoreError_pos (q : VolumeParams) :
     0 < figureOneScheduledCoreError q := by
   unfold figureOneScheduledCoreError
@@ -89,23 +79,11 @@ theorem figureOneScheduledTargetError_le (q : VolumeParams) :
   ring_nf
   exact le_rfl
 
-/-- A common logarithmic scale large enough for both the core and radial
-accuracy requirements. -/
-noncomputable def figureOneScheduledAccuracyLog (q : VolumeParams) : ℝ :=
-  max
-    (protectedLog ((q.n : ℝ) / figureOneScheduledCoreError q))
-    (protectedLog ((q.n : ℝ) / figureOneScheduledRadialError q))
-
 theorem figureOneScheduledAccuracyLog_one_le (q : VolumeParams) :
     1 ≤ figureOneScheduledAccuracyLog q := by
   unfold figureOneScheduledAccuracyLog
   exact le_trans (le_max_left _ _)
     (le_max_left _ _)
-
-noncomputable def figureOneScheduledPhaseRadius
-    (q : VolumeParams) (sigma2 : ℝ) : ℝ :=
-  32 * Real.sqrt sigma2 *
-    Real.sqrt ((q.n : ℝ) * figureOneScheduledAccuracyLog q)
 
 noncomputable def figureOneScheduledPhaseBody
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ) :
@@ -116,20 +94,6 @@ noncomputable def figureOneScheduledPhaseBody
 noncomputable def figureOneScheduledPhaseInradius
     (q : VolumeParams) (sigma2 : ℝ) : ℝ :=
   min 1 (figureOneScheduledPhaseRadius q sigma2)
-
-noncomputable def figureOneScheduledProposalRadius
-    (q : VolumeParams) (sigma2 : ℝ) : ℝ :=
-  min (Real.sqrt sigma2) 1 /
-    (4096 * Real.sqrt
-      ((q.n : ℝ) * figureOneScheduledAccuracyLog q))
-
-/-- Exact generic speedy-mixing cost after the schedule-targeted proposal
-radius is substituted. -/
-noncomputable def figureOneScheduledWalkRequirement
-    (q : VolumeParams) (sigma2 M mixError : ℝ) : ℝ :=
-  4 * ((Real.log M + 2 * Real.log (1 / mixError)) /
-    (figureOneScheduledProposalRadius q sigma2 * Real.log 2 /
-      (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1
 
 theorem figureOneScheduledPhaseRadius_pos
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :

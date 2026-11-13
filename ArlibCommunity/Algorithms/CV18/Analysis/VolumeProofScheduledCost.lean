@@ -13,29 +13,6 @@ proposal through the first-block and retry-block mixing deadlines.
 
 namespace ArlibCommunity.Algorithms.CV18
 
-/-- First proper block: accepted-state warmness followed by adjacent-phase
-warmness, at the component error assigned to one block. -/
-noncomputable def figureOneScheduledCorrectedFirstWalkRequirement
-    (q : VolumeParams) (sigma2 : ℝ) (attempts : ℕ) : ℝ :=
-  figureOneScheduledWalkRequirement q sigma2
-    (16 * speedyAdjacentWarmConstant q)
-    (figureOneCorrectedBlockMixingError q attempts)
-
-/-- Retry blocks start from the normalized rejected branch, which is
-two-warm for the scheduled speedy stationary law. -/
-noncomputable def figureOneScheduledCorrectedRetryWalkRequirement
-    (q : VolumeParams) (sigma2 : ℝ) (attempts : ℕ) : ℝ :=
-  figureOneScheduledWalkRequirement q sigma2 2
-    (figureOneCorrectedBlockMixingError q attempts)
-
-/-- A single proper-step stride covering both block types at scheduled
-geometry. -/
-noncomputable def figureOneScheduledCorrectedProperStride
-    (q : VolumeParams) (sigma2 : ℝ) (attempts : ℕ) : ℕ :=
-  Nat.ceil (max 1 (max
-    (figureOneScheduledCorrectedFirstWalkRequirement q sigma2 attempts)
-    (figureOneScheduledCorrectedRetryWalkRequirement q sigma2 attempts)))
-
 theorem figureOneScheduledCorrectedFirstWalkRequirement_le_stride
     (q : VolumeParams) (sigma2 : ℝ) (attempts : ℕ) :
     figureOneScheduledCorrectedFirstWalkRequirement q sigma2 attempts ≤

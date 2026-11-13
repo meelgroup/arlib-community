@@ -16,14 +16,6 @@ namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory
 open scoped ENNReal
 
-/-- The final scheduled aborting base program, guarded by the shared global
-query cutoff and with cutoff failure represented by the harmless value zero. -/
-noncomputable def figureOneFinalScheduledCappedValueProgram
-    (q : VolumeParams) : MembershipOracleProgram q.n ℝ :=
-  ((figureOneFinalScheduledAbortBaseProgram q).withQueryCap
-      (figureOneFinalScheduledQueryBudget q)).bind
-    fun estimate => .pure (estimate.getD 0)
-
 theorem figureOneFinalScheduledCappedValueProgram_queryBound
     (q : VolumeParams) :
     (figureOneFinalScheduledCappedValueProgram q).QueryBound
@@ -136,6 +128,11 @@ theorem figureOneFinalScheduledCappedValueProgram_failure_le_of_countedReference
   exact figureOneFinalScheduledAbortQueryCap_failure_le_of_countedReference
     q I oracle reference hdom href hdelta
 
+/-- The explicit query constant of the amplified scheduled program: median
+amplification turns the base constant `64 * 10^30` into `9 * (64 * 10^30 + 1)`. -/
+noncomputable def figureOneFinalScheduledQueryConstant : ℝ :=
+  9 * (64 * figureOneFinalScheduledExpectedCostConstant + 1)
+
 /-- Final amplification for the scheduled executable, conditional only on
 the two local conclusions that the analytic and counted-reference lanes are
 designed to supply. -/
@@ -149,8 +146,7 @@ theorem volumeTheorem_finalScheduled_of_baseFailure_and_capFailure
         ((figureOneFinalScheduledAbortBaseProgram q).withQueryCap
           (figureOneFinalScheduledQueryBudget q)).runEstimate oracle.query
             {none} ≤ ENNReal.ofReal (1 / 64 : ℝ)) :
-    ∃ C : ℝ, 0 < C ∧
-      ∀ (q : VolumeParams) (I : VolumeInput q.n)
+    ∀ (q : VolumeParams) (I : VolumeInput q.n)
         (oracle : MembershipOracle I), WellRounded q I →
           1 - q.p ≤ outcomeProbability
             (volumeAlgorithmLaw
@@ -160,14 +156,14 @@ theorem volumeTheorem_finalScheduled_of_baseFailure_and_capFailure
             (amplifyOracleProgram
               figureOneFinalScheduledCappedValueProgram q).QueryBound calls ∧
             calls ≤ Nat.ceil
-              (C * (volumeScheduledBaseComplexityRate q *
+              (figureOneFinalScheduledQueryConstant *
+                (volumeScheduledBaseComplexityRate q *
                 protectedLog (1 / q.p))) := by
-  obtain ⟨C, hC, hamp⟩ := oracleProgram_proof_amplification_of_rate
+  have hamp := oracleProgram_proof_amplification_of_rate
     volumeScheduledBaseComplexityRate
     volumeScheduledBaseComplexityRate_one_le
     (64 * figureOneFinalScheduledExpectedCostConstant)
     (mul_pos (by norm_num) figureOneFinalScheduledExpectedCostConstant_pos)
-  refine ⟨C, hC, ?_⟩
   intro q I oracle hrounded
   apply hamp figureOneFinalScheduledCappedValueProgram q I oracle
   · let μ := (figureOneFinalScheduledCappedValueProgram q).runEstimate
@@ -193,8 +189,7 @@ theorem volumeTheorem_finalScheduled_of_baseFailure
       (oracle : MembershipOracle I), WellRounded q I →
         (figureOneFinalScheduledAbortBaseProgram q).runEstimate oracle.query
           (accurateOutcome q I)ᶜ ≤ ENNReal.ofReal (13 / 64 : ℝ)) :
-    ∃ C : ℝ, 0 < C ∧
-      ∀ (q : VolumeParams) (I : VolumeInput q.n)
+    ∀ (q : VolumeParams) (I : VolumeInput q.n)
         (oracle : MembershipOracle I), WellRounded q I →
           1 - q.p ≤ outcomeProbability
             (volumeAlgorithmLaw
@@ -204,7 +199,8 @@ theorem volumeTheorem_finalScheduled_of_baseFailure
             (amplifyOracleProgram
               figureOneFinalScheduledCappedValueProgram q).QueryBound calls ∧
             calls ≤ Nat.ceil
-              (C * (volumeScheduledBaseComplexityRate q *
+              (figureOneFinalScheduledQueryConstant *
+                (volumeScheduledBaseComplexityRate q *
                 protectedLog (1 / q.p))) := by
   apply volumeTheorem_finalScheduled_of_baseFailure_and_capFailure hbase
   intro q I oracle

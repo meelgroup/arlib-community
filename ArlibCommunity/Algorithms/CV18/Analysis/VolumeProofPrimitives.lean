@@ -11,37 +11,6 @@ namespace ArlibCommunity.Algorithms.CV18
 
 /-! # Concrete Figure-1 oracle programs -/
 
-/-- The centered Gaussian with covariance `initialVariance q * I`, defined
-directly by its normalized Lebesgue density.  This keeps the executable law
-identical to the density used by the initial-tail proof and avoids any bridge
-through Mathlib's standard-Gaussian volume API. -/
-noncomputable def initialGaussianSamplingMeasure (q : VolumeParams) :
-    Measure (AmbientSpace q.n) :=
-  volume.withDensity fun x => ENNReal.ofReal
-    (gaussianDensity (initialVariance q) x / initialGaussianIntegral q)
-
-theorem initialGaussianIntegral_pos (q : VolumeParams) :
-    0 < initialGaussianIntegral q := by
-  unfold initialGaussianIntegral
-  exact Real.rpow_pos_of_pos
-    (mul_pos (mul_pos (by norm_num) Real.pi_pos) (initialVariance_pos q)) _
-
-instance initialGaussianSamplingMeasure_isProbabilityMeasure (q : VolumeParams) :
-    IsProbabilityMeasure (initialGaussianSamplingMeasure q) := by
-  constructor
-  unfold initialGaussianSamplingMeasure
-  rw [withDensity_apply _ MeasurableSet.univ]
-  simp only [Measure.restrict_univ]
-  have hZ := initialGaussianIntegral_pos q
-  rw [← ofReal_integral_eq_lintegral_ofReal
-    ((integrable_gaussianDensity (initialVariance_pos q)).div_const _)]
-  · rw [integral_div, integral_gaussianDensity (initialVariance_pos q)]
-    change ENNReal.ofReal (initialGaussianIntegral q / initialGaussianIntegral q) = 1
-    rw [div_self hZ.ne']
-    simp
-  · exact Filter.Eventually.of_forall fun x =>
-      div_nonneg (Real.exp_pos _).le hZ.le
-
 theorem initialGaussianSamplingMeasure_apply (q : VolumeParams)
     {S : Set (AmbientSpace q.n)} (hS : MeasurableSet S) :
     initialGaussianSamplingMeasure q S = ENNReal.ofReal
@@ -187,11 +156,6 @@ theorem runEstimate_figureOneInitialSample
     funext point
     rw [congrFun hfun point]]
   rw [Measure.bind_dirac_eq_map _ hmap]
-
-/-- Half the Metropolis acceptance probability makes the chain lazy. -/
-noncomputable def lazyGaussianMetropolisAcceptance {n : ℕ} (sigma2 : ℝ)
-    (x y : AmbientSpace n) : ℝ :=
-  gaussianMetropolisAcceptance sigma2 x y / 2
 
 /-- Accept only points in both the oracle body and the fixed truncation ball.
 The oracle is queried even outside the ball, giving one query per step. -/
@@ -447,16 +411,6 @@ theorem truncatedMetropolisBallWalk_measurable_and_strong
         exact (truncatedMetropolisBallStep_stronglyMeasurable
           q I oracle sigma2 current).bind ih.2 ih.1
 
-/-- The body indicator cancels from a ratio at points known to be inside. -/
-noncomputable def gaussianRatioWeight {n : ℕ} (sigma2 tau2 : ℝ)
-    (x : AmbientSpace n) : ℝ :=
-  Real.exp (-‖x‖ ^ 2 / (2 * tau2)) /
-    Real.exp (-‖x‖ ^ 2 / (2 * sigma2))
-
-noncomputable def uniformRatioWeight {n : ℕ} (sigma2 : ℝ)
-    (x : AmbientSpace n) : ℝ :=
-  Real.exp (‖x‖ ^ 2 / (2 * sigma2))
-
 theorem measurable_gaussianRatioWeight {n : ℕ} (sigma2 tau2 : ℝ) :
     Measurable (gaussianRatioWeight (n := n) sigma2 tau2) := by
   unfold gaussianRatioWeight
@@ -584,25 +538,6 @@ theorem collectWalkWeights_measurable_and_strong
       · intro current
         simp only [collectWalkWeights]
         exact (hwalk.2 current).bind htailStrong htailRun
-
-/-- The paper's sample count for accelerated phases and the terminal
-Gaussian-to-uniform phase. -/
-noncomputable def figureOneSampleCount (q : VolumeParams) : ℕ :=
-  Nat.ceil
-    (512 * protectedLog (terminalVariance q) / q.eps ^ 2)
-
-/-- The all-epsilon starting variance lengthens the fixed-rate chain from
-`O(n log n)` to `O(n log(n/eps))`; its empirical means therefore use the
-matching logarithm. -/
-noncomputable def figureOneFixedSampleCount (q : VolumeParams) : ℕ :=
-  Nat.ceil
-    (4096 * protectedLog ((q.n : ℝ) / q.eps) / q.eps ^ 2)
-
-/-- Phase-sensitive sample count.  Accelerated phases keep the paper's
-`log terminalVariance` count, avoiding an unnecessary runtime penalty. -/
-noncomputable def figureOnePhaseSampleCount (q : VolumeParams)
-    (sigma2 : ℝ) : ℕ :=
-  if sigma2 ≤ 1 then figureOneFixedSampleCount q else figureOneSampleCount q
 
 /-- The explicit fixed walk cap whose adequacy is the ball-walk mixing
 obligation in the base-run proof. -/

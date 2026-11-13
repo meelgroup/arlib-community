@@ -31,15 +31,6 @@ theorem measurable_initialTruncatedOption (q : VolumeParams)
   exact Measurable.ite (truncatedBody_measurable q I)
     (measurable_some.comp measurable_id) measurable_const
 
-/-- One Gaussian proposal and one membership query, aborting rather than
-continuing from the origin when the proposal misses the truncated body. -/
-noncomputable def figureOneAbortInitialSample (q : VolumeParams) :
-    MembershipOracleProgram q.n (Option (AmbientSpace q.n)) :=
-  .randomPoint (initialGaussianSamplingMeasure q) inferInstance fun point =>
-    .query point fun inside =>
-      .pure (if inside = true ∧
-        ‖point‖ ≤ Real.sqrt (terminalVariance q) then some point else none)
-
 theorem figureOneAbortInitialSample_queryBound (q : VolumeParams) :
     (figureOneAbortInitialSample q).QueryBound 1 := by
   apply MembershipOracleProgram.QueryBound.randomPoint
@@ -129,13 +120,6 @@ theorem initialGaussianSamplingMeasure_restrict_truncatedBody_le
   exact mul_le_of_le_one_left bot_le
     (initialGaussianRestrictedMassCoefficient_le_one q I)
 
-/-- Scheduled primitives with paper-faithful aborting initialization. -/
-noncomputable def scheduledBalancedAbortCoolingPrimitives
-    (parameters : BalancedCoolingParameters) : VolumeCoolingPrimitives where
-  initialSample := figureOneAbortInitialSample
-  ratioEstimate := scheduledBalancedCoolingRatioEstimate parameters
-  uniformRatioEstimate := scheduledBalancedCoolingUniformRatioEstimate parameters
-
 /-- `coolingProduct` does not inspect the initialization field, so changing
 only that field leaves every post-initial continuation definitionally
 equivalent. -/
@@ -196,15 +180,6 @@ theorem scheduledBalancedAbort_pointContinuation_eq
       scheduledBalancedFigureOnePointContinuation parameters q point := by
   rw [scheduledBalancedAbort_coolingProduct_eq]
   rfl
-
-/-- Candidate final scheduled base program whose failed initialization costs
-exactly one query and performs no cooling transitions. -/
-noncomputable def figureOneFinalScheduledAbortBaseProgram
-    (q : VolumeParams) : MembershipOracleProgram q.n ℝ :=
-  baseVolumeCooling
-    (scheduledBalancedAbortCoolingPrimitives
-      figureOneFinalScheduledBalancedParameters)
-    explicitVolumeCoolingSchedule q
 
 #print axioms runEstimate_figureOneAbortInitialSample
 #print axioms figureOneAbortInitialSample_countedStronglyMeasurable

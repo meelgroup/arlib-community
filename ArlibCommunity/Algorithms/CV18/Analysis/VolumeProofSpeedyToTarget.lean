@@ -840,11 +840,6 @@ theorem map_condOn_gaussian_smul_cv18
     (ENNReal.ofReal_ne_zero_iff.mpr (pow_pos hc0 n))
     ENNReal.ofReal_ne_top
 
-/-- Acceptance probability used after scaling the core back to `K`. -/
-noncomputable def gaussianScaleAcceptance (variance c : ℝ)
-    (x : EuclideanSpace ℝ (Fin n)) : ENNReal :=
-  gaussianWeight variance x / gaussianWeight (variance / c ^ 2) x
-
 theorem measurable_gaussianScaleAcceptance (variance c : ℝ) :
     Measurable (gaussianScaleAcceptance (n := n) variance c) := by
   exact (measurable_gaussianWeight variance).div

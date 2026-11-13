@@ -9,6 +9,7 @@ import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Probability
 import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 import Mathlib.Analysis.InnerProductSpace.PiL2
+import ArlibCommunity.Algorithms.CV18.Model.Pseudocode
 
 /-!
 # The Metropolis-filtered ball walk for the Gaussian-restricted density
@@ -147,10 +148,6 @@ variable {n : ℕ}
 
 /-! ## The Gaussian weight -/
 
-/-- The **unnormalised Gaussian weight** `e^{-‖x‖²/(2s)}`, as a real number. -/
-noncomputable def gaussianWeightReal (s : ℝ) (x : EuclideanSpace ℝ (Fin n)) : ℝ :=
-  Real.exp (-‖x‖ ^ 2 / (2 * s))
-
 theorem gaussianWeightReal_pos (s : ℝ) (x : EuclideanSpace ℝ (Fin n)) :
     0 < gaussianWeightReal s x := Real.exp_pos _
 
@@ -189,12 +186,6 @@ theorem exp_le_gaussianWeightReal {s : ℝ} (hs : 0 < s) {r : ℝ}
   have hinv : (0 : ℝ) < (2 * s)⁻¹ := inv_pos.2 h2
   rw [gaussianWeightReal, Real.exp_le_exp, div_eq_mul_inv, div_eq_mul_inv]
   nlinarith
-
-/-- The **Gaussian weight** `e^{-‖x‖²/(2s)}` as an element of `ℝ≥0∞`.  It is the density,
-with respect to Lebesgue measure, of the unnormalised measure whose restriction to a body
-`K` is the Cousins-Vempala target `∝ 1_K(x)·e^{-‖x‖²/(2s)}`. -/
-noncomputable def gaussianWeight (s : ℝ) (x : EuclideanSpace ℝ (Fin n)) : ℝ≥0∞ :=
-  ENNReal.ofReal (gaussianWeightReal s x)
 
 theorem gaussianWeight_pos (s : ℝ) (x : EuclideanSpace ℝ (Fin n)) : 0 < gaussianWeight s x :=
   ENNReal.ofReal_pos.2 (gaussianWeightReal_pos s x)

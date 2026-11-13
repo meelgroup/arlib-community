@@ -123,8 +123,7 @@ theorem globalResetReferenceExists : GlobalResetReferenceExists := by
 The returned constant is universal; the probability and oracle-query bounds
 are those of the executable amplified membership-oracle program. -/
 theorem volumeTheorem_finalScheduled :
-    ∃ C : ℝ, 0 < C ∧
-      ∀ (q : VolumeParams) (I : VolumeInput q.n)
+    ∀ (q : VolumeParams) (I : VolumeInput q.n)
         (oracle : MembershipOracle I), WellRounded q I →
           1 - q.p ≤ outcomeProbability
             (volumeAlgorithmLaw
@@ -134,7 +133,8 @@ theorem volumeTheorem_finalScheduled :
             (amplifyOracleProgram
               figureOneFinalScheduledCappedValueProgram q).QueryBound calls ∧
             calls ≤ Nat.ceil
-              (C * (volumeScheduledBaseComplexityRate q *
+              (figureOneFinalScheduledQueryConstant *
+                (volumeScheduledBaseComplexityRate q *
                 protectedLog (1 / q.p))) :=
   volumeTheorem_finalScheduled_of_globalResetReferenceExists
     globalResetReferenceExists

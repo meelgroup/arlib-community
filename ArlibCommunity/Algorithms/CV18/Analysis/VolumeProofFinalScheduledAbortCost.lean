@@ -34,7 +34,7 @@ theorem figureOneFinalScheduledAbortBaseProgram_countedStronglyMeasurable
     | some point => exact hpoint.2 point
   have hbase : figureOneFinalScheduledAbortBaseProgram q =
       (figureOneAbortInitialSample q).bind tail := by
-    unfold figureOneFinalScheduledAbortBaseProgram baseVolumeCooling tail
+    unfold figureOneFinalScheduledAbortBaseProgram baseVolumeCoolingOn tail
     congr 1
     funext initialPoint
     cases initialPoint with
@@ -82,7 +82,7 @@ theorem figureOneFinalScheduledAbortBaseProgram_countedQueryCost_le_initial_add
     | some point => exact hcontinuation.2 point
   have hbase : figureOneFinalScheduledAbortBaseProgram q =
       (figureOneAbortInitialSample q).bind tail := by
-    unfold figureOneFinalScheduledAbortBaseProgram baseVolumeCooling tail
+    unfold figureOneFinalScheduledAbortBaseProgram baseVolumeCoolingOn tail
       continuation
     congr 1
     funext initialPoint

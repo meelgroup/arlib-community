@@ -2,7 +2,7 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import ArlibCommunity.Algorithms.CV18.Model.Pseudocode
+import ArlibCommunity.Algorithms.CV18.Analysis.ModelSupport
 import Mathlib.MeasureTheory.Measure.GiryMonad
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
@@ -67,51 +67,6 @@ theorem MembershipOracleProgram.run_isProbabilityMeasure
       apply MeasureTheory.isProbabilityMeasure_bind hmeas.1
       filter_upwards [hmeas.2] with value hvalue
       exact ih value hvalue
-
-/-- Lebesgue measure on the centered proposal ball, with its finiteness proof. -/
-noncomputable def centeredClosedBallFiniteMeasure (n : ℕ) (radius : ℝ) :
-    FiniteMeasure (AmbientSpace n) :=
-  ⟨volume.restrict (Metric.closedBall 0 radius), ⟨by
-    rw [Measure.restrict_apply_univ]
-    exact measure_closedBall_lt_top⟩⟩
-
-/-- Normalized Lebesgue measure on the proposal ball centered at zero. -/
-noncomputable def centeredClosedBallMeasure (n : ℕ) (radius : ℝ) :
-    Measure (AmbientSpace n) :=
-  (centeredClosedBallFiniteMeasure n radius).normalize
-
-instance centeredClosedBallMeasure_isProbabilityMeasure (n : ℕ) (radius : ℝ) :
-    IsProbabilityMeasure (centeredClosedBallMeasure n radius) := by
-  unfold centeredClosedBallMeasure
-  infer_instance
-
-/-- Uniform proposal measure on a ball, written as a translated centered law.
-This presentation makes dependence on the current point measurably explicit. -/
-noncomputable def uniformClosedBallMeasure (n : ℕ) (center : AmbientSpace n)
-    (radius : ℝ) : Measure (AmbientSpace n) :=
-  (centeredClosedBallMeasure n radius).map fun offset => center + offset
-
-instance uniformClosedBallMeasure_isProbabilityMeasure
-    (n : ℕ) (center : AmbientSpace n) (radius : ℝ) :
-    IsProbabilityMeasure (uniformClosedBallMeasure n center radius) := by
-  unfold uniformClosedBallMeasure
-  exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
-
-/-- Lebesgue measure on `[0,1]`, packaged with its finiteness proof. -/
-noncomputable def uniformUnitIntervalFiniteMeasure : FiniteMeasure ℝ :=
-  ⟨volume.restrict (Set.Icc 0 1), ⟨by
-    rw [Measure.restrict_apply_univ]
-    exact measure_Icc_lt_top⟩⟩
-
-/-- Normalized Lebesgue measure on `[0,1]`, used for Metropolis and laziness
-coins without discretizing their acceptance thresholds. -/
-noncomputable def uniformUnitIntervalMeasure : Measure ℝ :=
-  uniformUnitIntervalFiniteMeasure.normalize
-
-instance uniformUnitIntervalMeasure_isProbabilityMeasure :
-    IsProbabilityMeasure uniformUnitIntervalMeasure := by
-  unfold uniformUnitIntervalMeasure
-  infer_instance
 
 /-- All executions of a program traverse exactly `count` query nodes. This is
 syntax-level accounting and is independent of any probability semantics. -/
@@ -206,12 +161,6 @@ theorem MembershipOracleProgram.FixedQueryCount.run_count_eq_one
       rw [lintegral_congr_ae heq]
       let _ : IsProbabilityMeasure law := hprob
       simp
-
-/-- Metropolis acceptance probability for two points at variance `sigma2`. -/
-noncomputable def gaussianMetropolisAcceptance {n : ℕ} (sigma2 : ℝ)
-    (x y : AmbientSpace n) : ℝ :=
-  min 1 (Real.exp (-‖y‖ ^ 2 / (2 * sigma2)) /
-    Real.exp (-‖x‖ ^ 2 / (2 * sigma2)))
 
 /-- One implementable Metropolis ball-walk step. It proposes from the full
 ball, asks the oracle whether the proposal is in the body, and uses a genuine

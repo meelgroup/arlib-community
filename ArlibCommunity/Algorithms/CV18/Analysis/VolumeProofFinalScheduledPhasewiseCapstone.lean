@@ -70,6 +70,9 @@ theorem volumeTheorem_finalScheduled_of_phasewise_ideal_bounds
             calls ≤ Nat.ceil
               (C * (volumeScheduledBaseComplexityRate q *
                 protectedLog (1 / q.p))) := by
+  refine ⟨figureOneFinalScheduledQueryConstant, by
+    unfold figureOneFinalScheduledQueryConstant
+    linarith [figureOneFinalScheduledExpectedCostConstant_pos], ?_⟩
   apply volumeTheorem_finalScheduled_of_baseFailure
   intro q I oracle hrounded
   apply figureOneFinalScheduledAbortBase_failure_le_of_executable_moments

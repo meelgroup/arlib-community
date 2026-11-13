@@ -2,7 +2,7 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import ArlibCommunity.Algorithms.CV18.Model.Pseudocode
+import ArlibCommunity.Algorithms.CV18.Analysis.ModelSupport
 import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
 import Mathlib.Analysis.Complex.ExponentialBounds
 import Mathlib.MeasureTheory.Integral.Bochner.Set
@@ -11,28 +11,11 @@ open MeasureTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-noncomputable def gaussianDensity {n : ℕ} (s : ℝ) (x : AmbientSpace n) : ℝ :=
-  Real.exp (- (1 / (2 * s)) * ‖x‖ ^ 2)
-
 theorem gaussianDensity_eq (s : ℝ) (x : AmbientSpace n) :
     gaussianDensity s x = Real.exp (-‖x‖ ^ 2 / (2 * s)) := by
   unfold gaussianDensity
   congr 1
   field_simp
-
-theorem integral_gaussianDensity {n : ℕ} {s : ℝ} (hs : 0 < s) :
-    ∫ x : AmbientSpace n, gaussianDensity s x =
-      Real.rpow (2 * Real.pi * s) ((n : ℝ) / 2) := by
-  have h := GaussianFourier.integral_rexp_neg_mul_sq_norm
-    (V := AmbientSpace n) (b := (1 / (2 * s) : ℝ)) (by positivity)
-  rw [show (Real.pi / (1 / (2 * s))) = 2 * Real.pi * s by field_simp] at h
-  simpa [gaussianDensity, finrank_euclideanSpace_fin] using h
-
-theorem integrable_gaussianDensity {n : ℕ} {s : ℝ} (hs : 0 < s) :
-    Integrable (gaussianDensity (n := n) s) := by
-  apply Integrable.of_integral_ne_zero
-  rw [integral_gaussianDensity hs]
-  exact (Real.rpow_pos_of_pos (by positivity) _).ne'
 
 theorem gaussianIntegral_univ {n : ℕ} {s : ℝ} (hs : 0 < s) :
     gaussianIntegral (Set.univ : Set (AmbientSpace n)) s =
@@ -126,11 +109,6 @@ lemma initial_tail_coefficient_le (q : VolumeParams) :
         ((Real.exp_le_exp.mpr hrest).trans exp_neg_six_le_one_div_64)
         (Real.exp_pos _).le he0.le
     _ = q.eps / 64 := by ring
-
-lemma initialVariance_pos (q : VolumeParams) : 0 < initialVariance q := by
-  unfold initialVariance
-  have hn : (0 : ℝ) < q.n := by exact_mod_cast (lt_of_lt_of_le (by norm_num) q.dim_ok)
-  exact div_pos q.heps.1 (by positivity)
 
 lemma initial_tail_mass_le (q : VolumeParams) :
     (∫ x in (unitBall q.n)ᶜ, gaussianDensity (initialVariance q) x) ≤

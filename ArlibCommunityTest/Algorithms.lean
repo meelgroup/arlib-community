@@ -81,4 +81,9 @@ example (q : VolumeParams) (I : VolumeInput q.n)
         (accurateOutcome q I) :=
   figureOne_base_accuracy_of_truncation_and_mixing q I oracle htrunc hmixing
 
+/-- The headline: the concrete program `cv18Program`, defined under `Model/`,
+meets the Theorem 1.1 accuracy and membership-query guarantee. -/
+example : VolumeGuarantee cv18Program volumeTheoremOneOneRate :=
+  cv18TheoremOneOne
+
 end ArlibCommunityTest.CV18

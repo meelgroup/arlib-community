@@ -675,10 +675,6 @@ theorem runEstimate_accuracyMetropolisMarkedBallStep_eq_lazyProperAux
       rw [hfalse t ht] at hadd
       exact WithTop.add_left_cancel (measure_ne_top nu ({false} ×ˢ t)) hadd
 
-/-- Homothety used by the KLS speedy-to-target rejection routine. -/
-noncomputable def accuracyScaleFactor (q : VolumeParams) : ℝ :=
-  1 - 1 / (2 * (q.n : ℝ))
-
 theorem accuracyScaleFactor_pos (q : VolumeParams) :
     0 < accuracyScaleFactor q := by
   have hn : (1 : ℝ) ≤ q.n := by

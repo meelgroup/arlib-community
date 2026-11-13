@@ -47,13 +47,6 @@ noncomputable def figureOneCorrectedTargetBudget
     (q : VolumeParams) : ENNReal :=
   figureOneCorrectedTransitionBudget q / 4
 
-/-- The remaining half-budget is spread across the first block and every
-possible retry block.  A factor `4`, rather than `2`, leaves one additional
-quarter of slack in the component sum. -/
-noncomputable def figureOneCorrectedBlockMixingError
-    (q : VolumeParams) (attempts : ℕ) : ℝ :=
-  figureOnePerSampleMixingError q / (4 * (attempts + 1 : ℝ))
-
 /-- The block-mixing component as a measure-error budget. -/
 noncomputable def figureOneCorrectedBlockBudget
     (q : VolumeParams) (attempts : ℕ) : ENNReal :=

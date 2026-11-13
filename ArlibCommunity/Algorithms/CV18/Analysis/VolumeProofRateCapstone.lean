@@ -6,11 +6,6 @@ namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory
 open scoped ENNReal
 
-noncomputable def globalQueryBudgetOfRate
-    (costConstant : ℝ) (rate : VolumeParams → ℝ)
-    (q : VolumeParams) : ℕ :=
-  Nat.ceil (64 * costConstant * rate q)
-
 noncomputable def globallyCappedValueProgramOfRate
     (costConstant : ℝ) (rate : VolumeParams → ℝ)
     (base : (q : VolumeParams) → MembershipOracleProgram q.n ℝ)
@@ -173,9 +168,9 @@ theorem volumeTheorem_of_baseProgram_and_rate
               (globallyCappedValueProgramOfRate costConstant rate base) q).QueryBound calls ∧
             calls ≤ Nat.ceil
               (C * (rate q * protectedLog (1 / q.p))) := by
-  obtain ⟨C, hC, hamp⟩ := oracleProgram_proof_amplification_of_rate
+  have hamp := oracleProgram_proof_amplification_of_rate
     rate hrate (64 * costConstant) (mul_pos (by norm_num) hcostConstant)
-  refine ⟨C, hC, ?_⟩
+  refine ⟨9 * (64 * costConstant + 1), by linarith, ?_⟩
   intro q I oracle hrounded
   apply hamp (globallyCappedValueProgramOfRate costConstant rate base) q I oracle
   · let μ := (globallyCappedValueProgramOfRate costConstant rate base q).runEstimate

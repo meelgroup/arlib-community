@@ -645,11 +645,6 @@ theorem accuracyPhase_ellGaussianMass_adjacent_le
       rw [← hfour]
       ac_rfl
 
-/-- A real-valued warmness constant for carrying speedy endpoints between
-successive cooling phases. -/
-noncomputable def speedyAdjacentWarmConstant (q : VolumeParams) : ℝ :=
-  Real.exp (1 / 2) * (4 * Real.exp (1 / 2))
-
 theorem speedyAdjacentWarmConstant_pos (q : VolumeParams) :
     0 < speedyAdjacentWarmConstant q := by
   unfold speedyAdjacentWarmConstant

@@ -1271,7 +1271,7 @@ theorem figureOneFinalScheduledRetainedCompleteProgram_map_snd_eq_abortBase
     rfl
   have hactualForm : figureOneFinalScheduledAbortBaseProgram q =
       (figureOneAbortInitialSample q).bind actualNext := by
-    unfold figureOneFinalScheduledAbortBaseProgram baseVolumeCooling actualNext
+    unfold figureOneFinalScheduledAbortBaseProgram baseVolumeCoolingOn actualNext
     congr 1
     funext state
     cases state with

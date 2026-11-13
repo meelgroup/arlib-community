@@ -69,14 +69,6 @@ noncomputable def balancedAccuracyRetryCollectAux (q : VolumeParams)
                     properStride retryLimit attempts (samples + 1) total mixed
 termination_by attempts samples total current => (samples, attempts)
 
-/-- Convert the retained speedy state of the last accepted trial into its
-Gaussian target, while preserving failure and the accumulated observable. -/
-noncomputable def balancedAccuracyRetryOutput (q : VolumeParams) :
-    Option (ℝ × AmbientSpace q.n) → Option (ℝ × AmbientSpace q.n)
-  | none => none
-  | some (total, speedy) =>
-      some (total, (accuracyScaleFactor q)⁻¹ • speedy)
-
 theorem measurable_balancedAccuracyRetryOutput (q : VolumeParams) :
     Measurable (balancedAccuracyRetryOutput q) := by
   convert Measurable.optionElim none

@@ -18,22 +18,6 @@ open Lean Elab Command
 
 namespace ArlibCommunity.Algorithms.CV18.Meta
 
-/-- All `ArlibCommunity.Algorithms.CV18` constants reachable from a seed, through both types and values. -/
-private partial def closureAux (env : Environment) :
-    NameSet → List Name → NameSet → NameSet
-  | _, [], acc => acc
-  | seen, c :: rest, acc =>
-    if seen.contains c then closureAux env seen rest acc
-    else
-      let seen := seen.insert c
-      let acc := if (`ArlibCommunity.Algorithms.CV18).isPrefixOf c then acc.insert c else acc
-      match env.find? c with
-      | none => closureAux env seen rest acc
-      | some ci =>
-        let next := ci.type.getUsedConstants.toList
-          ++ (match ci.value? with | some v => v.getUsedConstants.toList | none => [])
-        closureAux env seen (next ++ rest) acc
-
 /-- Which module defines a constant.
 
     `getModuleIdxFor?` is the only route in current Lean: `getModuleFor?` was
@@ -45,7 +29,28 @@ private def moduleOf (env : Environment) (c : Name) : Name :=
   | some idx => (env.allImportedModuleNames[idx.toNat]?).getD `«unknown»
   | none => env.mainModule
 
-/-- Constants not defined under `ArlibCommunity.Algorithms.CV18/Model/`, paired with the module defining them. -/
+/-- All constants defined in this package's modules that are reachable from a
+seed, through both types and values.
+
+Membership is decided by the *defining module*, not by the name: vendored
+background files declare constants in foreign namespaces such as
+`Arlib.MarkovChains`, and a name-prefix test would silently miss them. -/
+private partial def closureAux (env : Environment) :
+    NameSet → List Name → NameSet → NameSet
+  | _, [], acc => acc
+  | seen, c :: rest, acc =>
+    if seen.contains c then closureAux env seen rest acc
+    else
+      let seen := seen.insert c
+      let acc := if (`ArlibCommunity).isPrefixOf (moduleOf env c) then acc.insert c else acc
+      match env.find? c with
+      | none => closureAux env seen rest acc
+      | some ci =>
+        let next := ci.type.getUsedConstants.toList
+          ++ (match ci.value? with | some v => v.getUsedConstants.toList | none => [])
+        closureAux env seen (next ++ rest) acc
+
+/-- Package constants not defined under `ArlibCommunity.Algorithms.CV18/Model/`, paired with the module defining them. -/
 private def outsideModel (env : Environment) (cls : NameSet) : List (Name × Name) :=
   cls.toList.filterMap fun c =>
     let mod := moduleOf env c

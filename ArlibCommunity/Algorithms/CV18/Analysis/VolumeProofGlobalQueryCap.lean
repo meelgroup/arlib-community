@@ -229,24 +229,6 @@ theorem MembershipOracleProgram.CountedStronglyMeasurable.bind
         exact (Measure.measurable_bind' hcont).comp hprogram.1
       · exact fun value => ih value (hprogram.2 value)
 
-/-- Run an oracle program with one shared membership-query budget.  Random
-draws do not consume budget.  A pure result at budget zero still succeeds;
-only an attempted query past the budget produces `none`. -/
-noncomputable def MembershipOracleProgram.withQueryCap
-    {n : ℕ} {Result : Type} :
-    ℕ → MembershipOracleProgram n Result →
-      MembershipOracleProgram n (Option Result)
-  | _, .pure result => .pure (some result)
-  | 0, .query _ _ => .pure none
-  | budget + 1, .query point next =>
-      .query point fun answer => withQueryCap budget (next answer)
-  | budget, .randomNat law next =>
-      .randomNat law fun seed => withQueryCap budget (next seed)
-  | budget, .randomPoint law hprob next =>
-      .randomPoint law hprob fun point => withQueryCap budget (next point)
-  | budget, .randomReal law hprob next =>
-      .randomReal law hprob fun value => withQueryCap budget (next value)
-
 /-- The global cap is a genuine worst-case syntax-level query bound. -/
 theorem MembershipOracleProgram.withQueryCap_queryBound
     {n : ℕ} {Result : Type} (budget : ℕ)

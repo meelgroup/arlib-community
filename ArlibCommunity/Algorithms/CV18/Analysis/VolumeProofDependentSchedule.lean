@@ -19,36 +19,6 @@ bound, whereas `FigureOnePostInitialMixingBound` compares with the exact
 (unknown) failure probability of a separate ideal experiment.
 -/
 
-/-- There is one empirical estimator for every Gaussian transition and one
-more for the terminal Gaussian-to-uniform transition. -/
-noncomputable def figureOneDependentPhaseCount (q : VolumeParams) : ℕ :=
-  terminalPhaseSteps q + 1
-
-/-- A uniform upper bound for the two phase-sensitive sample counts. -/
-noncomputable def figureOneDependentMaxSampleCount (q : VolumeParams) : ℕ :=
-  max (figureOneFixedSampleCount q) (figureOneSampleCount q)
-
-/-- The truncation level used when Lemma 7.15 is instantiated at final
-relative error `5 * q.eps / 8`.  The large absolute constant leaves a clean
-probability budget below `3/16`. -/
-noncomputable def figureOneDependentAlpha (q : VolumeParams) : ℝ :=
-  1024 * (figureOneDependentPhaseCount q : ℝ) / q.eps ^ 2
-
-/-- Dependence coefficient consumed by the recursive moment estimates in
-Lemma 7.15. -/
-noncomputable def figureOneDependentEpsilon (q : VolumeParams) : ℝ :=
-  q.eps ^ 2 /
-    (4096 * figureOneDependentAlpha q ^ 4 *
-      (figureOneDependentPhaseCount q : ℝ))
-
-/-- Per-sample mixing accuracy sufficient for Lemma 7.17(c).  With at most
-`k` samples in each of `m` phases, `3 k m nu` is exactly the dependence
-coefficient selected above. -/
-noncomputable def figureOnePerSampleMixingError (q : VolumeParams) : ℝ :=
-  figureOneDependentEpsilon q /
-    (3 * (figureOneDependentMaxSampleCount q : ℝ) *
-      (figureOneDependentPhaseCount q : ℝ))
-
 theorem figureOneDependentPhaseCount_pos (q : VolumeParams) :
     0 < figureOneDependentPhaseCount q := by
   simp [figureOneDependentPhaseCount]

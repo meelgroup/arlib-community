@@ -2,7 +2,7 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import ArlibCommunity.Algorithms.CV18.Model.Pseudocode
+import ArlibCommunity.Algorithms.CV18.Analysis.ModelSupport
 import Mathlib.Analysis.Complex.ExponentialBounds
 import Mathlib.Data.List.ChainOfFn
 
@@ -80,9 +80,6 @@ theorem nextVariance_ge_self' (q : VolumeParams) {s : ℝ}
   refine le_min hst ?_
   have hr := (coolingRate_one_lt' q hs).le
   nlinarith
-
-noncomputable def scheduleValue (q : VolumeParams) (k : ℕ) : ℝ :=
-  (nextVariance q)^[k] (initialVariance q)
 
 theorem scheduleValue_succ (q : VolumeParams) (k : ℕ) :
     scheduleValue q (k + 1) = nextVariance q (scheduleValue q k) := by
@@ -345,39 +342,25 @@ theorem schedule_reaches_terminal (q : VolumeParams) :
 noncomputable def totalPhaseSteps (q : VolumeParams) : ℕ :=
   slowPhaseSteps q + fastPhaseSteps q
 
-/-! The first index at which the deterministic schedule reaches its terminal
-variance.  Using the least such index matters for the runtime proof: after this
-point `nextVariance` is stationary, so retaining the coarse upper-bound tail
-would add useless terminal-to-terminal sampling phases. -/
-noncomputable def terminalPhaseSteps (q : VolumeParams) : ℕ :=
-  Nat.find (show ∃ k : ℕ, scheduleValue q k = terminalVariance q from
-    ⟨totalPhaseSteps q, by
-      simpa [totalPhaseSteps] using schedule_reaches_terminal q⟩)
+/-- The defining set of `terminalPhaseSteps` is nonempty: the schedule
+reaches the terminal variance within `totalPhaseSteps q` transitions. -/
+theorem terminalPhaseSteps_set_nonempty (q : VolumeParams) :
+    {k : ℕ | scheduleValue q k = terminalVariance q}.Nonempty :=
+  ⟨totalPhaseSteps q, by
+    simpa [totalPhaseSteps] using schedule_reaches_terminal q⟩
 
 theorem scheduleValue_terminalPhaseSteps (q : VolumeParams) :
-    scheduleValue q (terminalPhaseSteps q) = terminalVariance q := by
-  unfold terminalPhaseSteps
-  exact Nat.find_spec (show ∃ k : ℕ, scheduleValue q k = terminalVariance q from
-    ⟨totalPhaseSteps q, by
-      simpa [totalPhaseSteps] using schedule_reaches_terminal q⟩)
+    scheduleValue q (terminalPhaseSteps q) = terminalVariance q :=
+  Nat.sInf_mem (terminalPhaseSteps_set_nonempty q)
 
 theorem terminalPhaseSteps_le_total (q : VolumeParams) :
-    terminalPhaseSteps q ≤ totalPhaseSteps q := by
-  unfold terminalPhaseSteps
-  exact Nat.find_min'
-    (show ∃ k : ℕ, scheduleValue q k = terminalVariance q from
-      ⟨totalPhaseSteps q, by
-        simpa [totalPhaseSteps] using schedule_reaches_terminal q⟩)
-    (by simpa [totalPhaseSteps] using schedule_reaches_terminal q)
+    terminalPhaseSteps q ≤ totalPhaseSteps q :=
+  Nat.sInf_le (by simpa [totalPhaseSteps] using schedule_reaches_terminal q)
 
 theorem scheduleValue_ne_terminal_of_lt_terminalPhaseSteps
     (q : VolumeParams) {k : ℕ} (hk : k < terminalPhaseSteps q) :
-    scheduleValue q k ≠ terminalVariance q := by
-  unfold terminalPhaseSteps at hk
-  exact Nat.find_min
-    (show ∃ j : ℕ, scheduleValue q j = terminalVariance q from
-      ⟨totalPhaseSteps q, by
-        simpa [totalPhaseSteps] using schedule_reaches_terminal q⟩) hk
+    scheduleValue q k ≠ terminalVariance q :=
+  Nat.notMem_of_lt_sInf hk
 
 /-- A logarithmic potential which is zero throughout the variance-at-most-one
 part and begins telescoping exactly when accelerated cooling starts. -/
@@ -652,9 +635,6 @@ theorem sum_accelerated_scheduleValue_le (q : VolumeParams) :
         terminalVariance q := add_le_add hprefix hlast_term
     _ ≤ 4 * terminalVariance q * protectedLog (terminalVariance q) +
         terminalVariance q := by gcongr
-
-noncomputable def explicitScheduleVariances (q : VolumeParams) : List ℝ :=
-  List.ofFn fun i : Fin (terminalPhaseSteps q + 1) => scheduleValue q i
 
 noncomputable def explicitVolumeCoolingSchedule (q : VolumeParams) :
     VolumeCoolingSchedule q where

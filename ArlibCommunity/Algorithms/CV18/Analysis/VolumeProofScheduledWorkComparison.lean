@@ -17,14 +17,6 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open scoped BigOperators
 
-/-- Exact soft-O rate of the schedule-targeted executable.  The two extra
-factors are logarithmic: one selects the accuracy body/radius and the other
-is the squared warm-start mixing deadline. -/
-noncomputable def volumeScheduledBaseComplexityRate (q : VolumeParams) : ℝ :=
-  volumeBaseComplexityRate q * figureOneScheduledAccuracyLog q *
-    protectedLog (1 / figureOneCorrectedBlockMixingError q
-      (figureOneSafeRetryCount q - 1)) ^ 2
-
 theorem volumeScheduledBaseComplexityRate_pos (q : VolumeParams) :
     0 < volumeScheduledBaseComplexityRate q := by
   unfold volumeScheduledBaseComplexityRate
