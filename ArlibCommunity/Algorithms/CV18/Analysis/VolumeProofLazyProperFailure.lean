@@ -14,7 +14,7 @@ stopped-path cylinder with the independently restarted trajectory model.
 -/
 
 open Arlib
-open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 

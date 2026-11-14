@@ -2,7 +2,8 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license.
 -/
-import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.CoolingVariance
+import ArlibCommunity.Foundations.Convex.Basic.GaussianWeight
+import ArlibCommunity.Algorithms.CV18.Analysis.CoolingVariance
 import ArlibCommunity.Foundations.Convex.Localization.Analysis.Localization
 import Mathlib.MeasureTheory.Integral.Pi
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
@@ -25,12 +26,12 @@ Prékopa–Leindler nor Brunn–Minkowski.  `ArlibCommunity.Foundations.Convexit
 discharges it for the case the algorithm actually uses — `f` a (multiple of the) indicator
 of a convex measurable set:
 
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.zLogconcaveHypothesis_indicator` — for `f = 1_K`, `K` convex and
+* `ArlibCommunity.Algorithms.CV18.zLogconcaveHypothesis_indicator` — for `f = 1_K`, `K` convex and
   measurable, with no boundedness, roundness or `0 ∈ K` hypothesis;
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.zLogconcaveHypothesis_indicator_const` — for `f = c · 1_K`, any
+* `ArlibCommunity.Algorithms.CV18.zLogconcaveHypothesis_indicator_const` — for `f = c · 1_K`, any
   `c : ℝ`;
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.fixed_var_bound_indicator` and
-  `ArlibCommunity.Foundations.Convex.GaussianCooling.fixed_var_bound_ratio_indicator` — paper Lemma 5.10 for a convex
+* `ArlibCommunity.Algorithms.CV18.fixed_var_bound_indicator` and
+  `ArlibCommunity.Algorithms.CV18.fixed_var_bound_ratio_indicator` — paper Lemma 5.10 for a convex
   body, now *unconditional*.
 
 ## The proof
@@ -95,7 +96,9 @@ open ArlibCommunity.Foundations.Convex
 
 open ArlibCommunity.Foundations.Convex
 
-namespace ArlibCommunity.Foundations.Convex.GaussianCooling
+open ArlibCommunity.Foundations.Convex
+
+namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory Set Real
 
@@ -283,19 +286,6 @@ theorem measurable_zIntegrand_slice {K : Set (EuclSpace n)} (hK : MeasurableSet 
     exact (measurable_const.mul (by fun_prop)).indicator (measurableSet_zSlice hK A)
   · rw [zIntegrand_slice_nonpos hA]
     exact measurable_const
-
-/-- The `n`-dimensional Gaussian is integrable: it is a product of one-dimensional ones. -/
-theorem integrable_gaussian_pi {c : ℝ} (hc : 0 < c) :
-    Integrable (fun t : Fin n → ℝ => Real.exp (-(∑ i, t i ^ 2) / c)) := by
-  have h1 : (fun t : Fin n → ℝ => Real.exp (-(∑ i, t i ^ 2) / c))
-      = fun t : Fin n → ℝ => ∏ i, Real.exp (-(1 / c) * (t i) ^ 2) := by
-    funext t
-    rw [← Real.exp_sum]
-    congr 1
-    rw [← Finset.mul_sum]
-    field_simp
-  rw [h1, MeasureTheory.volume_pi]
-  exact Integrable.fintype_prod (fun _ => integrable_exp_neg_mul_sq (by positivity))
 
 theorem integrable_zIntegrand_slice {K : Set (EuclSpace n)} (hK : MeasurableSet K) (A : ℝ) :
     Integrable fun t : Fin n → ℝ => zIntegrand K (A, t) := by
@@ -492,7 +482,6 @@ Every result above must depend on exactly `[propext, Classical.choice, Quot.soun
 #print axioms convex_zCone
 #print axioms isLogConcave_zIntegrand
 #print axioms measurable_zIntegrand_slice
-#print axioms integrable_gaussian_pi
 #print axioms integrable_zIntegrand_slice
 #print axioms zFun_eq_integral
 #print axioms isLogConcave_zMarginal
@@ -504,4 +493,4 @@ Every result above must depend on exactly `[propext, Classical.choice, Quot.soun
 #print axioms fixed_var_bound_indicator
 #print axioms fixed_var_bound_ratio_indicator
 
-end ArlibCommunity.Foundations.Convex.GaussianCooling
+end ArlibCommunity.Algorithms.CV18

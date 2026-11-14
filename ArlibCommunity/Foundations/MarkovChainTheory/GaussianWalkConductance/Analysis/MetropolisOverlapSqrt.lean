@@ -127,7 +127,7 @@ only a **constant factor** on the operative scale, not a power of `n`.  Evaluate
 `Φ ≥ ln 2/(5120·n^{3/2})` at the same step.
 -/
 
-open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 

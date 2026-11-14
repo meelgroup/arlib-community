@@ -77,8 +77,6 @@ import ArlibCommunity.Foundations.Convex.CrossRatioIsoperimetry.Analysis.LovaszV
 import ArlibCommunity.Foundations.Convex.CrossRatioIsoperimetry.Analysis.WeightedIsoBook
 import ArlibCommunity.Foundations.Convex.CrossRatioIsoperimetry.Model.Theorem
 import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.ConcaveProfileIso
-import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.CoolingVariance
-import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IndicatorVariance
 import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IsoEnlargeContinuous
 import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IsoEnlargeMeasurable
 import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IsoEnlargeSlack
@@ -91,8 +89,7 @@ import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.KLS97Lemm
 import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.OneDimSharp
 import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsoperimetry
 import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsoperimetryConcave
-import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.Unblock
-import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.ZLogconcave
+import ArlibCommunity.Foundations.Convex.ConvexIsoperimetry.Analysis.BoundedDensityIsoperimetry
 import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Model.Theorem
 import ArlibCommunity.Foundations.Convex.Localization.Analysis.ConcaveSelection
 import ArlibCommunity.Foundations.Convex.Localization.Analysis.HamSandwich

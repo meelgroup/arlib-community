@@ -5,8 +5,8 @@ Authors: ArLib contributors
 -/
 import ArlibCommunity.Foundations.Convex.Localization.Analysis.ProductLocalization
 import ArlibCommunity.Foundations.Convex.CrossRatioIsoperimetry.Analysis.BrascampLieb1D
-import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.CoolingVariance
-import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IndicatorVariance
+import ArlibCommunity.Algorithms.CV18.Analysis.CoolingVariance
+import ArlibCommunity.Algorithms.CV18.Analysis.IndicatorVariance
 
 /-!
 # Gaussian variance for an arbitrary one-dimensional log-concave profile
@@ -21,7 +21,7 @@ open MeasureTheory Set intervalIntegral
 
 open ArlibCommunity.Foundations.Convex
 
-open ArlibCommunity.Foundations.Convex.GaussianCooling
+
 
 namespace ArlibCommunity.Algorithms.CV18
 

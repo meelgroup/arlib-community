@@ -103,7 +103,7 @@ of `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` is insens
 assumption on the mathematics but a *theorem* about the data `h1d2` already quantifies over,
 and it is exactly the step Cousins–Vempala cite at `vol3_journal.tex:506`.  It was a binder
 only because the repository's `ArlibCommunity.Foundations.brascampLieb`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/CoolingVariance.lean:693`) is the needle-specific special case
+(`ArlibCommunity/Algorithms/CV18/Analysis/CoolingVariance.lean:693`) is the needle-specific special case
 `J₂J₀ − J₁² ≤ (σ²/x)J₀²` for the exponential family `s(x,·)`, with no log-concave factor.
 
 `ArlibCommunity.Foundations.Convex.brascampLieb_oneDim` (`ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/BrascampLieb1D.lean`) now proves the general
@@ -406,7 +406,7 @@ quantified over: `F·γ` has density `exp(−V)` with `V'' ≥ 1/σ²` (because 
 so Brascamp–Lieb bounds its variance by `σ²`, which is precisely the step
 Cousins–Vempala take at `vol3_journal.tex:506`.  It appears as a binder only because that
 form of Brascamp–Lieb — for `log-concave × Gaussian` — is not in this repository;
-`ArlibCommunity.Foundations.brascampLieb` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/CoolingVariance.lean:693`) is the
+`ArlibCommunity.Foundations.brascampLieb` (`ArlibCommunity/Algorithms/CV18/Analysis/CoolingVariance.lean:693`) is the
 needle-specific case with no log-concave factor and does not apply here.  Discharging `hvar`
 turns this theorem into `h1d2` verbatim at the constant `1/(2√3)`. -/
 theorem oneDim_isoperimetry_gaussianFactor {σ : ℝ} (hσ : 0 < σ) (F : ℝ → ℝ)

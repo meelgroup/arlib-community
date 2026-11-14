@@ -5,7 +5,7 @@ Authors: Uddalok Sarkar
 -/
 import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.MetropolisGaussian
 import ArlibCommunity.Foundations.MarkovChainTheory.BallWalkMixing.Analysis.ConvexBodyMixing
-import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.Unblock
+import ArlibCommunity.Foundations.Convex.ConvexIsoperimetry.Analysis.BoundedDensityIsoperimetry
 
 /-!
 # Conductance and mixing of the Metropolis-filtered ball walk for the Gaussian density
@@ -47,16 +47,16 @@ lemmas.  What had to be redone is exactly the two steps that see the density.
 
 ## The isoperimetric input
 
-`ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_gaussian_iso_kappa` and
-`ArlibCommunity.Foundations.Convex.GaussianCooling.exists_uniformOn_gaussian_iso_of_convex`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/Unblock.lean`) prove the three-set isoperimetric
+`ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_kappa` and
+`ArlibCommunity.Foundations.Convex.exists_uniformOn_gaussian_iso_of_convex`
+(`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean`) prove the three-set isoperimetric
 inequality for `ArlibCommunity.Foundations.Convex.uniformOn (volume.withDensity g) K` — the *same* measure that is
 stationary for `metropolisGaussian K δ s` — in exactly the shape
 `conductance_metropolisGaussian_ge` consumes.  The density sandwich `m ≤ g ≤ M` those
 theorems use is available at precisely the parameters needed here: `M = 1` from
 `gaussianWeight_le_one` and `m = e^{-R²/(2s)}` from `exp_le_gaussianWeightReal`, with the
 radius `R` manufactured from convexity by
-`ArlibCommunity.Foundations.Convex.GaussianCooling.exists_closedBall_superset_of_convex`.  The acceptance floor `α` of step 1
+`ArlibCommunity.Foundations.Convex.exists_closedBall_superset_of_convex`.  The acceptance floor `α` of step 1
 is the *same* `m/M`.  So the convex-body theorems below assume **nothing**.
 
 ## Main results
@@ -86,7 +86,7 @@ Every one of `α`, `θ`, `κ` is exponentially small in `n` for the Cousins-Vemp
 `2·vol K/vol B(0,1/2)`, which is exponential in `n`.  **So the conductance here is
 exponentially small in `n` and the mixing time exponentially large; nothing below is a
 polynomial-time statement and none of it may be quoted as one.**  The obstruction is
-inherited, not introduced: `ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/Unblock.lean:591-596` records
+inherited, not introduced: `ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean:591-596` records
 that its isoperimetric constant is not polynomial, and
 `ArlibCommunity/Foundations/MarkovChainTheory/BallWalkMixing/Analysis/BallWalkConductance.lean` records the further `√n` loss in
 the ball-intersection geometry.  The sharp isoperimetric constant needs localization, which
@@ -101,7 +101,7 @@ local-conductance floor `hell`) appear in full in its type, and both are *discha
 `conductance_metropolisGaussian_convex`, which therefore assumes only geometry.
 -/
 
-open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
@@ -139,7 +139,7 @@ theorem le_metropolisAccept {s : ℝ} (hs : 0 < s) {α : ℝ≥0∞} (hα1 : α 
 
 /-- **The concrete acceptance floor on a bounded body**: `e^{-R²/(2s)} ≤ g(y)` for
 `‖y‖ ≤ R`.  This is the lower half of the density sandwich of
-`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/Unblock.lean`, in the `gaussianWeight` spelling. -/
+`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean`, in the `gaussianWeight` spelling. -/
 theorem ofReal_exp_le_gaussianWeight {s R : ℝ} (hs : 0 < s)
     {y : EuclideanSpace ℝ (Fin n)} (hy : ‖y‖ ≤ R) :
     ENNReal.ofReal (Real.exp (-R ^ 2 / (2 * s))) ≤ gaussianWeight s y :=
@@ -340,7 +340,7 @@ Three hypotheses carry content, all written out inline; none is a `def` or a nam
 
 * `hαK` — an **acceptance floor** `α ≤ g(y)` on `K`, with `0 < α ≤ 1`.  On a body inside
   `R·Bₙ` this holds at `α = e^{-R²/(2s)}` (`ofReal_exp_le_gaussianWeight`).  It is the lower
-  half of the density sandwich of `ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/Unblock.lean`, and it
+  half of the density sandwich of `ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean`, and it
   enters the conductance to the **first** power (the isoperimetric constant `κ` already
   carries it squared).
 * `hell` — a **uniform lower bound `ℓ(x) ≥ θ` on the unweighted local conductance**, exactly
@@ -349,7 +349,7 @@ Three hypotheses carry content, all written out inline; none is a `def` or a nam
   ball.  Some such hypothesis is forced for the same reason as there: near a boundary point
   of a bounded body the walk really is slow.
 * `hiso` — the **isoperimetric inequality for the weighted measure `π`**, spelled out.  It is
-  *proved*, not assumed, by `ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_gaussian_iso_kappa` for a convex `K`
+  *proved*, not assumed, by `ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_kappa` for a convex `K`
   inside `R·Bₙ`, at `κ = e^{-R²/s}·2⁻ⁿ/(2R)`.
 
 The remaining hypotheses are non-degeneracy: `1 ≤ n`, `K` measurable, `0 < δ`, `0 < s`, and
@@ -846,12 +846,12 @@ theorem mixesWithin_lazy_metropolisGaussian (hn : 1 ≤ n)
 
 Here the three hypotheses with content are all discharged, and what remains is geometry:
 `K` convex, measurable, bounded (by `R`), with an inscribed ball `B(c,γ)`.  The isoperimetric
-inequality comes from `ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_gaussian_iso_kappa`, the local-conductance
+inequality comes from `ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_kappa`, the local-conductance
 floor from `ArlibCommunity.Foundations.MarkovChainTheory.le_ell_of_convex_of_ball_subset`, and the acceptance floor
 from `ofReal_exp_le_gaussianWeight`. -/
 
 /-- The `gaussianWeight` of `MetropolisGaussian.lean` is the inline weight of
-`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/Unblock.lean`, definitionally.  This is a bridge, not a
+`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean`, definitionally.  This is a bridge, not a
 claim: it is proved by `rfl`, so no name can stand in for an unproved identification. -/
 theorem gaussianWeight_eq_ofReal_exp (s : ℝ) :
     (gaussianWeight s : EuclideanSpace ℝ (Fin n) → ℝ≥0∞)
@@ -866,7 +866,7 @@ with an inscribed ball — with nothing assumed.**
 Assumed: only geometry — `1 ≤ n`; `K` measurable, convex, of finite volume, contained in
 `R·Bₙ` and containing `B(c,γ)`; a step `0 < δ ≤ γ`; a temperature `0 < s`.  There is **no**
 isoperimetric hypothesis and **no** local-conductance hypothesis: the first is
-`ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_gaussian_iso_kappa`, the second
+`ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_kappa`, the second
 `ArlibCommunity.Foundations.MarkovChainTheory.le_ell_of_convex_of_ball_subset`, and the acceptance floor is
 `ofReal_exp_le_gaussianWeight`.
 
@@ -898,7 +898,7 @@ theorem conductance_metropolisGaussian_convex (hn : 1 ≤ n)
     calc dist x y = ‖x - y‖ := dist_eq_norm x y
       _ ≤ ‖x‖ + ‖y‖ := norm_sub_le x y
       _ ≤ 2 * R := by linarith [hnorm x hx, hnorm y hy]
-  have hiso := ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_gaussian_iso_kappa hs hconv hKm hK0 hKtop hR
+  have hiso := ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_kappa hs hconv hKm hK0 hKtop hR
   rw [← gaussianWeight_eq_ofReal_exp s] at hiso
   refine conductance_metropolisGaussian_ge hn hKm hδ hs
     (withDensity_gaussianWeight_ne_zero s hK0)
@@ -951,7 +951,7 @@ theorem mixesWithin_lazy_metropolisGaussian_convex (hn : 1 ≤ n)
     calc dist x y = ‖x - y‖ := dist_eq_norm x y
       _ ≤ ‖x‖ + ‖y‖ := norm_sub_le x y
       _ ≤ 2 * R := by linarith [hnorm x hx, hnorm y hy]
-  have hiso := ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_gaussian_iso_kappa hs hconv hKm hK0 hKtop hR
+  have hiso := ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_kappa hs hconv hKm hK0 hKtop hR
   rw [← gaussianWeight_eq_ofReal_exp s] at hiso
   refine mixesWithin_lazy_metropolisGaussian hn hKm hK0 hKtop hδ hs
     (α := Real.exp (-R ^ 2 / (2 * s))) (Real.exp_pos _) ?_ ?_
@@ -966,7 +966,7 @@ theorem mixesWithin_lazy_metropolisGaussian_convex (hn : 1 ≤ n)
 
 /-! ## 8. Removing the radius, and the non-vacuity witness
 
-`ArlibCommunity.Foundations.Convex.GaussianCooling.exists_closedBall_superset_of_convex` manufactures the radius `R` out of
+`ArlibCommunity.Foundations.Convex.exists_closedBall_superset_of_convex` manufactures the radius `R` out of
 convexity, an inscribed unit ball and finiteness of the volume — the exact hypothesis bundle
 a volume-oracle interface supplies.  With it the geometric hypotheses collapse to three, and
 the conductance is *positive* with no assumption at all.  The radius it produces is
@@ -983,7 +983,7 @@ class a volume oracle quantifies over — every step `0 < δ ≤ 1` and every te
 stationary measure.
 
 **Assumed: nothing.**  The isoperimetric input is
-`ArlibCommunity.Foundations.Convex.GaussianCooling.exists_uniformOn_gaussian_iso_of_convex`, the local-conductance floor is
+`ArlibCommunity.Foundations.Convex.exists_uniformOn_gaussian_iso_of_convex`, the local-conductance floor is
 `ArlibCommunity.Foundations.MarkovChainTheory.le_ell_of_convex_of_ball_subset`, and the acceptance floor is
 `ofReal_exp_le_gaussianWeight`.
 
@@ -1000,7 +1000,7 @@ theorem exists_conductance_metropolisGaussian_pos (hn : 1 ≤ n)
       ENNReal.ofReal phi ≤ conductance (metropolisGaussian K δ s)
         (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight s)) K) := by
-  obtain ⟨R, hR0, hR⟩ := ArlibCommunity.Foundations.Convex.GaussianCooling.exists_closedBall_superset_of_convex hconv hball hKtop
+  obtain ⟨R, hR0, hR⟩ := ArlibCommunity.Foundations.Convex.exists_closedBall_superset_of_convex hconv hball hKtop
   set α : ℝ := Real.exp (-R ^ 2 / (2 * s)) with hα
   set θ : ℝ := (1 / (1 + 2 * R)) ^ n with hθ
   set kap : ℝ := Real.exp (-(R ^ 2) / s) * (1 / 2 : ℝ) ^ n / (2 * R) with hkap
@@ -1049,7 +1049,7 @@ theorem exists_mixesWithin_lazy_metropolisGaussian_convex (hn : 1 ≤ n)
       MixesWithin (lazy (metropolisGaussian K δ s))
         (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight s)) K) mu0 t (ENNReal.ofReal eps) := by
-  obtain ⟨R, hR0, hR⟩ := ArlibCommunity.Foundations.Convex.GaussianCooling.exists_closedBall_superset_of_convex hconv hball hKtop
+  obtain ⟨R, hR0, hR⟩ := ArlibCommunity.Foundations.Convex.exists_closedBall_superset_of_convex hconv hball hKtop
   have hK0 : volume K ≠ 0 := volume_ne_zero_of_ball_subset one_pos hball
   haveI hprob : IsProbabilityMeasure
       (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity

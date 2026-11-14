@@ -29,7 +29,7 @@ binder verbatim, at the constant `1/(2√3)`.
 
 ## Why this is not `ArlibCommunity.Foundations.brascampLieb`
 
-`ArlibCommunity.Foundations.brascampLieb` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/CoolingVariance.lean:693`) is the
+`ArlibCommunity.Foundations.brascampLieb` (`ArlibCommunity/Algorithms/CV18/Analysis/CoolingVariance.lean:693`) is the
 *needle-specific* inequality `J₂J₀ − J₁² ≤ (σ²/x)J₀²` for the one-parameter exponential
 family `s(x,·)`, with **no log-concave factor**.  It does not apply to a general `F`, which
 is why this file exists.  Its proof technique (integration by parts) is also not the one

@@ -51,7 +51,7 @@ isoperimetry side became `R`-free.
 Every declaration is a `theorem`; there is no `def`, `structure`, `class` or `axiom` here.
 -/
 
-open ArlibCommunity.Foundations.Convex.GaussianCooling ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
+open ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 

@@ -34,7 +34,7 @@ and not before.
 
 Every conductance constant that is actually *proved* in this repository is exponentially small
 in `n` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisConductance.lean`;
-`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/Unblock.lean:591–596`, "this is not a polynomial-time
+`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean:591–596`, "this is not a polynomial-time
 result").  The theorem below would change that picture, but only once `hiso` — and `hoverlap`
 — are discharged.  Until then it is a conditional reduction, not a rate improvement.  **No
 statement in this file asserts, or may be quoted as asserting, a polynomial mixing time.**

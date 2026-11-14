@@ -2,7 +2,8 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license.
 -/
-import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.ZLogconcave
+import ArlibCommunity.Foundations.Convex.Basic.GaussianWeight
+import ArlibCommunity.Algorithms.CV18.Analysis.ZLogconcave
 
 /-!
 # The Cousins–Vempala per-phase variance bound, unconditional for a convex body
@@ -15,24 +16,24 @@ log-concave `f` but **true** for `f = 1_K` with `K` convex.
 This file pushes the specialisation `f := 1_K` all the way to the shape the volume algorithm
 consumes, so that no result below carries a `ZLogconcaveHypothesis` binder:
 
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.G_indicator_pos` — `0 < G 1_K s` for `s > 0` whenever `K` is
+* `ArlibCommunity.Algorithms.CV18.G_indicator_pos` — `0 < G 1_K s` for `s > 0` whenever `K` is
   measurable with positive volume; this discharges the `G … ≠ 0` side conditions of
   `variance_ratio`, `lc_variance_bound` and `fixed_var_bound_ratio`.  No `volume K ≠ ⊤`
   guard is needed: `G 1_K s` is a *real* integral of a gaussian-dominated integrand and is
   finite for every `K` (`integrable_gW_indicator`).
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.G_mul_G_le_exp_indicator` — for every convex measurable `K`, every
+* `ArlibCommunity.Algorithms.CV18.G_mul_G_le_exp_indicator` — for every convex measurable `K`, every
   `σ > 0` and every cooling rate `0 ≤ α < 1`,
 
     `G 1_K (σ²/(1-α)) · G 1_K (σ²/(1+α)) ≤ exp((n+1)α²/(1-α²)) · G 1_K (σ²)²`,
 
   the transport step `G_mul_G_le_of_zLogconcave` with its hypothesis discharged and the
   algebraic factor `(1-α²)^{-(n+1)}` replaced by an exponential *variance budget*.
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.second_moment_le_exp_indicator` — the same bound in estimator form,
+* `ArlibCommunity.Algorithms.CV18.second_moment_le_exp_indicator` — the same bound in estimator form,
   `E(Y²) ≤ exp(phaseVarBudget) · E(Y)²`, which is literally the per-factor hypothesis `hc` of
   `ArlibCommunity.Foundations.GaussianCooling.prod_sq_div_le` / `prod_sq_div_le_exp`.
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.variance_le_exp_indicator` — the target shape,
+* `ArlibCommunity.Algorithms.CV18.variance_le_exp_indicator` — the target shape,
   `Var(Y) ≤ (exp(phaseVarBudget) - 1) · E(Y)²`.
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.phaseVarBudget_fixed_rate` and the `…_fixed_rate` corollaries — at
+* `ArlibCommunity.Algorithms.CV18.phaseVarBudget_fixed_rate` and the `…_fixed_rate` corollaries — at
   the fixed cooling rate `α = 1/n` the budget is exactly `1/(n-1)`.
 
 ## The variance budget
@@ -51,7 +52,7 @@ slightly *sharper* than the `1 + 2/n` of `fixed_var_bound_indicator` (at `n = 3`
 
 Nothing here assumes `ZLogconcaveHypothesis`.  The standing hypotheses are only
 `Convex ℝ K`, `MeasurableSet K`, `0 < volume K`, `0 < σ` and `0 ≤ α < 1`; the volume
-hypothesis is exhibited as satisfiable by `ArlibCommunity.Foundations.Convex.GaussianCooling.variance_le_exp_closedBall`.
+hypothesis is exhibited as satisfiable by `ArlibCommunity.Algorithms.CV18.variance_le_exp_closedBall`.
 
 `LocalizationHypothesis` (`Variance.lean:1095`) is a *different* assumption, feeding the
 *accelerated* bounds `variance_bound` / `lc_variance_bound`; it is untouched here and is not
@@ -62,7 +63,11 @@ open ArlibCommunity.Foundations.Convex
 
 open ArlibCommunity.Foundations.Convex
 
-namespace ArlibCommunity.Foundations.Convex.GaussianCooling
+
+
+open ArlibCommunity.Foundations.Convex
+
+namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory Set Real
 
@@ -72,22 +77,6 @@ variable {n : ℕ}
 
 Everything in `Variance.lean` that turns a `G`-inequality into a statement about the
 estimator needs `G f a ≠ 0`.  For `f = 1_K` this is exactly `0 < volume K`. -/
-
-/-- The `n`-dimensional gaussian weight is integrable on `EuclideanSpace ℝ (Fin n)`.
-Transported from `integrable_gaussian_pi` along the volume-preserving identification with
-`Fin n → ℝ`. -/
-theorem integrable_gaussian_eucl {s : ℝ} (hs : 0 < s) :
-    Integrable (fun x : EuclSpace n => Real.exp (-(‖x‖ ^ 2) / (2 * s))) := by
-  rw [← (PiLp.volume_preserving_toLp (Fin n)).integrable_comp_emb
-    (MeasurableEquiv.toLp 2 (Fin n → ℝ)).measurableEmbedding]
-  have hcomp : ((fun x : EuclSpace n => Real.exp (-(‖x‖ ^ 2) / (2 * s)))
-        ∘ (WithLp.toLp 2 : (Fin n → ℝ) → EuclSpace n))
-      = fun t : Fin n → ℝ => Real.exp (-(∑ i, t i ^ 2) / (2 * s)) := by
-    funext t
-    simp only [Function.comp_apply]
-    rw [EuclideanSpace.real_norm_sq_eq]
-  rw [hcomp]
-  exact integrable_gaussian_pi (by positivity)
 
 /-- `g(·, s)` for `f = 1_K` is the indicator of `K` of the gaussian weight. -/
 theorem gW_indicator_eq (K : Set (EuclSpace n)) (s : ℝ) :
@@ -441,7 +430,6 @@ theorem variance_le_exp_closedBall (c : EuclSpace n) {r : ℝ} (hr : 0 < r) {σ 
 
 Every result above must depend on exactly `[propext, Classical.choice, Quot.sound]`. -/
 
-#print axioms integrable_gaussian_eucl
 #print axioms gW_indicator_eq
 #print axioms integrable_gW_indicator
 #print axioms support_gW_indicator
@@ -461,4 +449,4 @@ Every result above must depend on exactly `[propext, Classical.choice, Quot.soun
 #print axioms fixed_var_bound_ratio_of_volume_pos
 #print axioms variance_le_exp_closedBall
 
-end ArlibCommunity.Foundations.Convex.GaussianCooling
+end ArlibCommunity.Algorithms.CV18

@@ -5,7 +5,7 @@ Authors: ArLib contributors
 -/
 import ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationMeasurable
 import ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLSC
-import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IndicatorVariance
+import ArlibCommunity.Foundations.Convex.Basic.GaussianWeight
 
 /-!
 # `thm:iso` with **no** localization binder, for `S₁, S₂` open and `S₃` closed
@@ -93,7 +93,7 @@ open MeasureTheory Set Filter Metric
 
 open scoped ENNReal _root_.Topology
 
-open ArlibCommunity.Foundations.Convex.GaussianCooling
+
 
 open ArlibCommunity.Foundations.Convex
 
@@ -949,7 +949,7 @@ theorem gaussianRestricted_isoperimetry_openClosed_witness (hn : 2 ≤ n) :
     have heq : h = fun x : EuclideanSpace ℝ (Fin n) => Real.exp (-(‖x‖ ^ 2) / (2 * 1)) := by
       funext x; rw [hhdef]; norm_num
     rw [heq]
-    exact ArlibCommunity.Foundations.Convex.GaussianCooling.integrable_gaussian_eucl one_pos
+    exact ArlibCommunity.Foundations.Convex.integrable_gaussian_eucl one_pos
   -- balls of radius `1/8` about `r·e`, for `|r| ≤ 1/2`, sit in the unit ball
   have hballs : ∀ r : ℝ, |r| ≤ 1 / 2 → ∀ x ∈ Metric.ball (r • e) (1/8),
       ‖x‖ ≤ 1 ∧ |(inner ℝ e x : ℝ) - r| < 1/8 := by
@@ -1258,7 +1258,7 @@ theorem exists_separated_no_disjoint_open_enlargement (hn : 2 ≤ n) :
         = fun x : EuclideanSpace ℝ (Fin n) => Real.exp (-(‖x‖ ^ 2) / (2 * 1)) := by
       funext x; norm_num
     rw [heq]
-    exact ArlibCommunity.Foundations.Convex.GaussianCooling.integrable_gaussian_eucl one_pos
+    exact ArlibCommunity.Foundations.Convex.integrable_gaussian_eucl one_pos
   have hhi : Integrable h := by rw [hheq]; exact hgi.indicator measurableSet_ball
   -- balls of radius `1/8` about `r·e`, `|r| ≤ 1/2`, sit well inside the unit ball
   have hballs : ∀ r : ℝ, |r| ≤ 1 / 2 → ∀ x ∈ Metric.ball (r • e) (1/8),

@@ -73,7 +73,7 @@ instantiation is a separate step and is not performed here.
 Every declaration is a `theorem`; there is no `def`, `structure`, `class` or `axiom` here.
 -/
 
-open ArlibCommunity.Foundations.Convex.GaussianCooling
+
 
 open ArlibCommunity.Foundations.Convex
 
@@ -172,7 +172,7 @@ theorem gaussianRestricted_isoperimetry_measurable_logTwo_witness (hn : 2 ≤ n)
     have heq : h = fun x : EuclideanSpace ℝ (Fin n) => Real.exp (-(‖x‖ ^ 2) / (2 * 1)) := by
       funext x; rw [hhdef]; norm_num
     rw [heq]
-    exact ArlibCommunity.Foundations.Convex.GaussianCooling.integrable_gaussian_eucl one_pos
+    exact ArlibCommunity.Foundations.Convex.integrable_gaussian_eucl one_pos
   -- positive total mass, from a floor on the unit ball
   have hlow : ∀ x ∈ Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1, Real.exp (-(1 : ℝ) / 2) ≤ h x := by
     intro x hx

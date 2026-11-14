@@ -58,7 +58,7 @@ open MeasureTheory Set Filter Metric
 
 open scoped ENNReal _root_.Topology
 
-open ArlibCommunity.Foundations.Convex.GaussianCooling
+
 
 open ArlibCommunity.Foundations.Convex
 
@@ -340,7 +340,7 @@ theorem exists_enlargements_witness (hn : 2 ≤ n) :
     have heq : h = fun x : EuclideanSpace ℝ (Fin n) => Real.exp (-(‖x‖ ^ 2) / (2 * 1)) := by
       funext x; rw [hhdef]; norm_num
     rw [heq]
-    exact ArlibCommunity.Foundations.Convex.GaussianCooling.integrable_gaussian_eucl one_pos
+    exact ArlibCommunity.Foundations.Convex.integrable_gaussian_eucl one_pos
   -- balls of radius `1/8` about `r·e`, for `|r| ≤ 1/2`, sit in the unit ball
   have hballs : ∀ r : ℝ, |r| ≤ 1 / 2 → ∀ x ∈ Metric.ball (r • e) (1 / 8),
       ‖x‖ ≤ 1 ∧ |(inner ℝ e x : ℝ) - r| < 1 / 8 := by

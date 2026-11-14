@@ -99,7 +99,7 @@ be quoted as one.**  There is no `def`, `structure` or named `Prop` in this file
 declaration is a `theorem`.
 -/
 
-open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 

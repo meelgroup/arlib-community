@@ -63,7 +63,7 @@ reproving isoperimetry by localization.
 quoted as one.  Nothing is `sorry`ed; see the axiom audit at the bottom.
 -/
 
-open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 

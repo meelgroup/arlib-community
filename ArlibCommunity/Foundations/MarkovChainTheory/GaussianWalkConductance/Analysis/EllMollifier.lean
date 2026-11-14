@@ -110,7 +110,7 @@ measurability or convexity of `K`, and no measurability of `A`.
 open MeasureTheory Metric Filter
 open scoped ENNReal _root_.Topology
 
-open ArlibCommunity.Foundations.Convex.GaussianCooling ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
+open ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 

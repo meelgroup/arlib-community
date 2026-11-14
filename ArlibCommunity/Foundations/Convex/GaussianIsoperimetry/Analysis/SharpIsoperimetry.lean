@@ -139,7 +139,7 @@ holds there vacuously.
 Nothing here says, or implies, that any algorithm runs in polynomial time.  The conductance
 constants in this repository are still exponentially small
 (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisConductance.lean`;
-`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/Unblock.lean:591–596`, "this is not a polynomial-time
+`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean:591–596`, "this is not a polynomial-time
 result").  `thm:iso` is the input that would eventually change that picture — but only once
 **all four** hypotheses above are discharged, and today none of them is.  Until then this file
 is a conditional reduction, not a rate improvement.

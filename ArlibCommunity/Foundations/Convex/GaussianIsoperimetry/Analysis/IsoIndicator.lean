@@ -108,7 +108,7 @@ open ArlibCommunity.Foundations.Convex
 
 open scoped ENNReal _root_.Topology
 
-open ArlibCommunity.Foundations.Convex.GaussianCooling
+
 
 open ArlibCommunity.Foundations.Convex
 
@@ -322,7 +322,7 @@ theorem integrable_gaussianWeightReal {σ : ℝ} (hσ : 0 < σ) :
     funext x
     rw [gaussianWeightReal]
   rw [heq]
-  exact ArlibCommunity.Foundations.Convex.GaussianCooling.integrable_gaussian_eucl (pow_pos hσ 2)
+  exact ArlibCommunity.Foundations.Convex.integrable_gaussian_eucl (pow_pos hσ 2)
 
 /-- **(A), landed.**  The continuous outer approximations converge in every set integral.
 

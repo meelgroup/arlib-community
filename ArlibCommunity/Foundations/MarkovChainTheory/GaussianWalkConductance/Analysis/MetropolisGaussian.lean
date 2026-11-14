@@ -30,7 +30,7 @@ This module builds that chain as a genuine `ProbabilityTheory.Kernel` on
 needs before it can start: the kernel is Markov, and the Gaussian-restricted measure on
 `K` is reversible — hence invariant — for it.
 
-`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/Unblock.lean:80` recorded this kernel as the single
+`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean:80` recorded this kernel as the single
 missing object between the isoperimetric input proved there and the §4 conductance
 statement at the generality Cousins-Vempala need; `ArlibCommunity.Foundations.MarkovChainTheory.ballWalk`
 (`BallWalk.lean:24`) deliberately omits the filter and is stationary for the *uniform*
@@ -496,7 +496,7 @@ theorem isReversible_metropolisGaussian {K : Set (EuclideanSpace ℝ (Fin n))}
 Detailed balance (`isReversible_metropolisGaussian`) plus the landed
 `IsReversible.invariant`.  This is the stationarity claim that every mixing statement
 about the Gaussian-cooling chain presupposes, and it is the object
-`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/Unblock.lean` records as missing. -/
+`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean` records as missing. -/
 theorem invariant_metropolisGaussian {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) (δ s : ℝ) :
     Kernel.Invariant (metropolisGaussian K δ s)

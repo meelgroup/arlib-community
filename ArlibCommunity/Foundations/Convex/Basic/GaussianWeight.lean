@@ -3,6 +3,8 @@ Copyright (c) 2026 Uddalok Sarkar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Uddalok Sarkar
 -/
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Mathlib.MeasureTheory.Integral.Pi
 import ArlibCommunity.Foundations.Convex.Prelude
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Analysis.SpecialFunctions.Exp
@@ -32,6 +34,7 @@ The basic facts — positivity, the bound by `1`, continuity and measurability �
 
 namespace ArlibCommunity.Foundations.Convex
 
+open MeasureTheory
 open scoped ENNReal
 
 variable {n : ℕ}
@@ -103,5 +106,34 @@ theorem gaussianWeight_lt_one {s : ℝ} (hs : 0 < s) {x : EuclideanSpace ℝ (Fi
     gaussianWeight s x < 1 := by
   rw [gaussianWeight, ← ENNReal.ofReal_one]
   exact (ENNReal.ofReal_lt_ofReal_iff one_pos).2 (gaussianWeightReal_lt_one hs hx)
+
+/-- The `n`-dimensional Gaussian is integrable: it is a product of one-dimensional ones. -/
+theorem integrable_gaussian_pi {n : ℕ} {c : ℝ} (hc : 0 < c) :
+    Integrable (fun t : Fin n → ℝ => Real.exp (-(∑ i, t i ^ 2) / c)) := by
+  have h1 : (fun t : Fin n → ℝ => Real.exp (-(∑ i, t i ^ 2) / c))
+      = fun t : Fin n → ℝ => ∏ i, Real.exp (-(1 / c) * (t i) ^ 2) := by
+    funext t
+    rw [← Real.exp_sum]
+    congr 1
+    rw [← Finset.mul_sum]
+    field_simp
+  rw [h1, MeasureTheory.volume_pi]
+  exact Integrable.fintype_prod (fun _ => integrable_exp_neg_mul_sq (by positivity))
+
+/-- The `n`-dimensional gaussian weight is integrable on `EuclideanSpace ℝ (Fin n)`.
+Transported from `integrable_gaussian_pi` along the volume-preserving identification with
+`Fin n → ℝ`. -/
+theorem integrable_gaussian_eucl {n : ℕ} {s : ℝ} (hs : 0 < s) :
+    Integrable (fun x : EuclideanSpace ℝ (Fin n) => Real.exp (-(‖x‖ ^ 2) / (2 * s))) := by
+  rw [← (PiLp.volume_preserving_toLp (Fin n)).integrable_comp_emb
+    (MeasurableEquiv.toLp 2 (Fin n → ℝ)).measurableEmbedding]
+  have hcomp : ((fun x : EuclideanSpace ℝ (Fin n) => Real.exp (-(‖x‖ ^ 2) / (2 * s)))
+        ∘ (WithLp.toLp 2 : (Fin n → ℝ) → EuclideanSpace ℝ (Fin n)))
+      = fun t : Fin n → ℝ => Real.exp (-(∑ i, t i ^ 2) / (2 * s)) := by
+    funext t
+    simp only [Function.comp_apply]
+    rw [EuclideanSpace.real_norm_sq_eq]
+  rw [hcomp]
+  exact integrable_gaussian_pi (by positivity)
 
 end ArlibCommunity.Foundations.Convex

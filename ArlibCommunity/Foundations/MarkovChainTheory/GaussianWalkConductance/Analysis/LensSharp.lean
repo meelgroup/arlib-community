@@ -135,7 +135,7 @@ Kannan, Lovász and Simonovits (1995), Lemma 3.5.
 Cousins and Vempala, §4.1 (`1409.6011/vol3_journal.tex:509–700`).
 -/
 
-open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 

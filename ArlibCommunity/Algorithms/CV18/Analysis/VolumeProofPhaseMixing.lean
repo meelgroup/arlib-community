@@ -3,7 +3,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofTruncation
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofKLSCore
 
 open Arlib
-open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory Metric Set

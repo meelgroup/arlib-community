@@ -100,7 +100,7 @@ There is no `def`, `structure`, `class` or `axiom` in this file; every declarati
 open MeasureTheory Metric
 open scoped ENNReal Pointwise
 
-open ArlibCommunity.Foundations.Convex.GaussianCooling ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
+open ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 

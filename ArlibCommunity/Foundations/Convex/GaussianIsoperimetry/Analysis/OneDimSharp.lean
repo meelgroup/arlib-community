@@ -121,7 +121,7 @@ Cousins and Vempala, *Gaussian Cooling and O\*(n³) Algorithms for Volume and Ga
 §3 (`1409.6011/vol3_journal.tex:404–508`).
 -/
 
-open ArlibCommunity.Foundations.Convex.GaussianCooling
+
 
 open ArlibCommunity.Foundations.Convex
 

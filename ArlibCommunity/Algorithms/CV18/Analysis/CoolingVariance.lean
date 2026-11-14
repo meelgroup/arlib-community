@@ -66,7 +66,11 @@ Everything else in the file is unconditional.
 
 
 
-namespace ArlibCommunity.Foundations.Convex.GaussianCooling
+
+
+
+
+namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory Set Real
 
@@ -1295,7 +1299,7 @@ clearly-named hypothesis of `G_mul_G_le_of_zLogconcave`, `fixed_var_bound` and
 `fixed_var_bound_ratio`.
 
 **⚠ It is FALSE for general logconcave `f`, so do not try to prove it in that
-generality.** See `ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/ZLogconcave.lean`.
+generality.** See `ArlibCommunity/Algorithms/CV18/Analysis/ZLogconcave.lean`.
 Counterexample: `n = 1`, `f x = e^{−x}` (logconcave, positive, with `G f s` finite
 for every `s > 0`). Then `z(A) = √(2π)·A^{3/2}·e^{1/(2A)}`, whose log is strictly
 *convex* for `A < 2/3`; at `a = 1/10, b = 1/5` the inequality fails by a factor
@@ -1306,7 +1310,7 @@ The obstruction is structural, not a missing lemma: the proof route needs
 constant on its domain. So up to a constant factor, **indicators of convex sets are
 exactly the `f` for which this holds**.
 
-What *is* available: `ArlibCommunity.Foundations.Convex.GaussianCooling.zLogconcaveHypothesis_indicator` proves
+What *is* available: `ArlibCommunity.Algorithms.CV18.zLogconcaveHypothesis_indicator` proves
 it for `f = 1_K` with `K` convex and measurable (and `…_indicator_const` for
 `c · 1_K`), which is the instance a volume oracle for a convex body needs — giving
 the unconditional `fixed_var_bound_indicator` / `fixed_var_bound_ratio_indicator`.
@@ -1411,4 +1415,4 @@ theorem fixed_var_bound_ratio (hz : ZLogconcaveHypothesis f) {σ : ℝ} (hσ : 0
 
 end FixedRate
 
-end ArlibCommunity.Foundations.Convex.GaussianCooling
+end ArlibCommunity.Algorithms.CV18

@@ -42,24 +42,24 @@ measure on a convex body, where previously this development had none at any cons
 
 ## Main results
 
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.measure_withDensity_le_mul`,
-  `ArlibCommunity.Foundations.Convex.GaussianCooling.mul_le_measure_withDensity` — the density sandwich, one side each.
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.withDensity_mul_le_of_separated` — the isoperimetric inequality in volume
+* `ArlibCommunity.Foundations.Convex.measure_withDensity_le_mul`,
+  `ArlibCommunity.Foundations.Convex.mul_le_measure_withDensity` — the density sandwich, one side each.
+* `ArlibCommunity.Foundations.Convex.withDensity_mul_le_of_separated` — the isoperimetric inequality in volume
   form for `volume.withDensity g`, for any `g` sandwiched between `m` and `M` on a bounded
   convex `K`.  No positivity hypotheses at all: every step is `ℝ≥0∞`-monotone, and at `m = 0`
   the statement is trivially true.
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_withDensity_iso_of_convex` — the same, normalized, in the
+* `ArlibCommunity.Foundations.Convex.uniformOn_withDensity_iso_of_convex` — the same, normalized, in the
   `hiso` shape that `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge` consumes.
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_gaussian_iso_of_convex`,
-  `ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_gaussian_iso_kappa` — the instance the volume algorithm needs:
+* `ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_of_convex`,
+  `ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_kappa` — the instance the volume algorithm needs:
   the Gaussian-restricted measure on a convex `K ⊆ R·Bₙ`, at `κ = e^{-R²/s}·2⁻ⁿ/(2R)`.
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.ball_smul_subset`, `ArlibCommunity.Foundations.Convex.GaussianCooling.norm_le_of_mem_of_convex`,
-  `ArlibCommunity.Foundations.Convex.GaussianCooling.exists_closedBall_superset_of_convex` — a convex body containing the unit
+* `ArlibCommunity.Foundations.Convex.ball_smul_subset`, `ArlibCommunity.Foundations.Convex.norm_le_of_mem_of_convex`,
+  `ArlibCommunity.Foundations.Convex.exists_closedBall_superset_of_convex` — a convex body containing the unit
   ball and of finite volume is bounded, with the explicit radius `2·vol K/vol B(0,1/2)`,
   proved by a ball-packing count rather than by compactness.  This exists because the
   radius `R` above is *not* available from the hypotheses the volume-oracle interface
   supplies; this manufactures it.
-* `ArlibCommunity.Foundations.Convex.GaussianCooling.exists_uniformOn_gaussian_iso_of_convex` — the capstone: for **every**
+* `ArlibCommunity.Foundations.Convex.exists_uniformOn_gaussian_iso_of_convex` — the capstone: for **every**
   convex measurable `K` containing the unit ball with `volume K ≠ ⊤`, and every `s > 0`, a
   strictly positive `κ` for which the Gaussian-restricted measure on `K` satisfies the
   three-set isoperimetric inequality.  No radius, no roundness, no localization.
@@ -87,7 +87,9 @@ open ArlibCommunity.Foundations.Convex
 
 open ArlibCommunity.Foundations.Convex
 
-namespace ArlibCommunity.Foundations.Convex.GaussianCooling
+
+
+namespace ArlibCommunity.Foundations.Convex
 
 open MeasureTheory Set
 open scoped ENNReal
@@ -177,10 +179,10 @@ the `hiso` argument of `ArlibCommunity.Foundations.MarkovChainTheory.conductance
 
     m²·(d/D)·π A·π B  ≤  M²·2ⁿ·π (K \ A \ B).
 
-**Assumed: nothing.**  This is `ArlibCommunity.Foundations.Convex.GaussianCooling.withDensity_mul_le_of_separated` divided
+**Assumed: nothing.**  This is `ArlibCommunity.Foundations.Convex.withDensity_mul_le_of_separated` divided
 through by `(ν K)³`.  The two extra hypotheses `hν0`, `hνtop` are the non-degeneracy that
 makes `π` a probability measure; they are discharged for the Gaussian weight in
-`ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_gaussian_iso_of_convex` below.
+`ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_of_convex` below.
 
 **Cost.**  `κ = (m/M)²·2⁻ⁿ/D`, exponentially small in `n`; see the module docstring. -/
 theorem uniformOn_withDensity_iso_of_convex
@@ -222,7 +224,7 @@ theorem uniformOn_withDensity_iso_of_convex
 
 The Cousins–Vempala cooling schedule carries the weight `e^{-‖x‖²/(2s)}`, in the `ℝ≥0∞`
 form `ENNReal.ofReal (Real.exp (-(‖x‖ ^ 2) / (2 * s)))` (the same exponent convention as
-`ArlibCommunity.Foundations.Convex.GaussianCooling.gW`).  It is written out inline everywhere rather than named, so that
+`ArlibCommunity.Algorithms.CV18.gW`).  It is written out inline everywhere rather than named, so that
 no definition can drift from what these theorems prove about it. -/
 
 /-- The Gaussian weight is at most `1` for `s > 0`: its exponent is nonpositive. -/
@@ -246,7 +248,7 @@ theorem gaussianWeight_ge {s R : ℝ} (hs : 0 < s) {x : EuclideanSpace ℝ (Fin 
 
 /-- **The Gaussian-weighted measure of a body of finite volume is finite**, because the
 weight is bounded by `1`.  This is one of the two non-degeneracy inputs of
-`ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_withDensity_iso_of_convex`. -/
+`ArlibCommunity.Foundations.Convex.uniformOn_withDensity_iso_of_convex`. -/
 theorem gaussianMeasure_ne_top {K : Set (EuclideanSpace ℝ (Fin n))} (hKm : MeasurableSet K)
     {s : ℝ} (hs : 0 < s) (hfin : volume K ≠ ⊤) :
     (volume.withDensity
@@ -259,7 +261,7 @@ theorem gaussianMeasure_ne_top {K : Set (EuclideanSpace ℝ (Fin n))} (hKm : Mea
 
 /-- **The Gaussian-weighted measure of a body of positive volume inside `R·Bₙ` is
 positive**, because the weight is bounded below by `e^{-R²/(2s)} > 0` there.  This is the
-other non-degeneracy input of `ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_withDensity_iso_of_convex`. -/
+other non-degeneracy input of `ArlibCommunity.Foundations.Convex.uniformOn_withDensity_iso_of_convex`. -/
 theorem gaussianMeasure_ne_zero {K : Set (EuclideanSpace ℝ (Fin n))} (hKm : MeasurableSet K)
     {s R : ℝ} (hs : 0 < s) (hK0 : volume K ≠ 0)
     (hR : K ⊆ Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) R) :
@@ -289,7 +291,7 @@ phase samples from.  Then for every `d > 0` and every pair of `d`-separated meas
 
     e^{-R²/s}·(d/(2R))·π A·π B  ≤  2ⁿ·π (K \ A \ B).
 
-**Assumed: nothing.**  This is `ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_withDensity_iso_of_convex` at
+**Assumed: nothing.**  This is `ArlibCommunity.Foundations.Convex.uniformOn_withDensity_iso_of_convex` at
 `m = e^{-R²/(2s)}`, `M = 1`, `D = 2R`, with the two non-degeneracy hypotheses discharged by
 `gaussianMeasure_ne_zero` and `gaussianMeasure_ne_top`.
 
@@ -351,7 +353,7 @@ theorem uniformOn_gaussian_iso_of_convex
 
 with `π = uniformOn (volume.withDensity e^{-‖·‖²/(2s)}) K`.
 
-**Assumed: nothing.**  A restatement of `ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_gaussian_iso_of_convex`
+**Assumed: nothing.**  A restatement of `ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_of_convex`
 with the `2ⁿ` moved to the left as `(1/2)ⁿ`, so the shape matches the `hiso` argument of
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge` verbatim — modulo that theorem's `π` being the
 *uniform* measure, which is exactly the gap recorded under "what this does not unblock" in
@@ -440,7 +442,7 @@ theorem uniformOn_gaussian_iso_kappa
 
 /-! ### Removing the radius hypothesis
 
-`ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_gaussian_iso_of_convex` needs `K ⊆ R·Bₙ`, and the interface that
+`ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_of_convex` needs `K ⊆ R·Bₙ`, and the interface that
 would consume it — `Ttc.VolumeAlgorithm.correct` — supplies no such `R`: it quantifies over
 every convex `K` with `Metric.ball 0 1 ⊆ K` and `volume K ≠ ⊤`.  Those three facts do force
 boundedness, with an explicit radius, and this section proves it.
@@ -568,7 +570,7 @@ theorem norm_le_of_mem_of_convex {K : Set (EuclideanSpace ℝ (Fin n))} (hK : Co
 
 /-- **Every convex body containing the unit ball and of finite volume sits in a closed ball
 of an explicit positive radius.**  The `∃ R` form of `norm_le_of_mem_of_convex`, which is
-what `ArlibCommunity.Foundations.Convex.GaussianCooling.exists_uniformOn_gaussian_iso_of_convex` consumes. -/
+what `ArlibCommunity.Foundations.Convex.exists_uniformOn_gaussian_iso_of_convex` consumes. -/
 theorem exists_closedBall_superset_of_convex {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : Convex ℝ K) (hball : Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1 ⊆ K)
     (hfin : volume K ≠ ⊤) :
@@ -589,8 +591,8 @@ is exactly the class `Ttc.VolumeAlgorithm.correct` quantifies over — and every
 
 for all `d > 0` and all `d`-separated measurable `A, B ⊆ K`.
 
-**Assumed: nothing.**  This composes `ArlibCommunity.Foundations.Convex.GaussianCooling.uniformOn_gaussian_iso_kappa` with
-`ArlibCommunity.Foundations.Convex.GaussianCooling.exists_closedBall_superset_of_convex`, which manufactures the radius the
+**Assumed: nothing.**  This composes `ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_kappa` with
+`ArlibCommunity.Foundations.Convex.exists_closedBall_superset_of_convex`, which manufactures the radius the
 first one needs out of convexity, the inscribed unit ball and finiteness of the volume.
 
 **Cost.**  The `κ` produced is `e^{-R²/s}·2⁻ⁿ/(2R)` with `R = max 1 (2·vol K/vol B(0,1/2))`,
@@ -640,4 +642,4 @@ axioms.  Re-check with `lake build ArlibCommunity.Foundations.Convexity.Gaussian
 #print axioms exists_closedBall_superset_of_convex
 #print axioms exists_uniformOn_gaussian_iso_of_convex
 
-end ArlibCommunity.Foundations.Convex.GaussianCooling
+end ArlibCommunity.Foundations.Convex

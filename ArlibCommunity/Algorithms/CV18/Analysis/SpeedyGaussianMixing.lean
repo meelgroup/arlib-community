@@ -88,7 +88,7 @@ oracle calls or samples appears in it, and the step count must not be quoted as 
 of a single speedy step (a rejection loop) is not bounded anywhere below.
 -/
 
-open ArlibCommunity.Foundations.Convex.GaussianCooling ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
+open ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 

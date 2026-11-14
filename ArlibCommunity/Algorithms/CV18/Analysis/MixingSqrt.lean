@@ -91,7 +91,7 @@ running time.**  It is the `Φ⁻²` arithmetic, made a theorem, over any chain 
 stated hypotheses.
 -/
 
-open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 open ArlibCommunity.Foundations.MarkovChainTheory
 
