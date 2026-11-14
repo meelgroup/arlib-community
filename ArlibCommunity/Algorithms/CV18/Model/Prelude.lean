@@ -550,14 +550,15 @@ noncomputable def runRate (q : VolumeParams) : ℝ :=
     protectedLog (1 / blockMixingError q
       (maxRetries q - 1)) ^ 2
 
-/-- **Exact query rate for Theorem 1.1**: the per-run rate of the scheduled
-program, multiplied by the median-amplification factor.  Dropping the
-protected logarithmic factors gives the paper's `O*(roundness * n^3 / eps^2)`. -/
-noncomputable def queryRate (q : VolumeParams) : ℝ :=
-  runRate q * protectedLog (1 / q.p)
-
 /-- The explicit constant in front of the query rate of Theorem 1.1. -/
 noncomputable def queryConstant : ℝ := 9 * (64 * 10 ^ 30 + 1)
+
+/-- **Exact query rate for Theorem 1.1**: the explicit constant `queryConstant`,
+times the per-run rate of the scheduled program, times the median-amplification
+factor.  Dropping the constant and the protected logarithmic factors gives the
+paper's `O*(roundness * n^3 / eps^2)`. -/
+noncomputable def queryRate (q : VolumeParams) : ℝ :=
+  queryConstant * runRate q * protectedLog (1 / q.p)
 
 /-- A global query budget `ceil(64 * costConstant * rate q)`. -/
 noncomputable def budgetOfRate

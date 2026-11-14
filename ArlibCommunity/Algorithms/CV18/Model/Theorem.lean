@@ -12,8 +12,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledGlobalResetRe
 The statement mentions only objects defined under `Model/`: the input promise
 and parameters (`Prelude.lean`), the program `cv18Program` and its cost model
 `queryCost` (`Pseudocode.lean`), and the explicit query rate
-`queryRate` with its constant `queryConstant`
-(`Prelude.lean`).  The proof is developed under `Analysis/`.
+`queryRate`, constant included (`Prelude.lean`).  The proof is developed under `Analysis/`.
 
 The rate keeps every logarithmic factor.  Dropping them gives the paper's
 `O*(roundness · n³ / ε²)`; for a well-rounded body with constant `roundness`
@@ -28,15 +27,14 @@ correct membership oracle,
 
 * **accuracy**: the estimate is within `1 ± ε` of the volume with probability
   at least `1 - p`, and
-* **cost**: every execution makes at most `⌈queryConstant · rate q⌉`
-  membership calls. -/
+* **cost**: every execution makes at most `⌈rate q⌉` membership calls. -/
 def VolumeGuarantee (algorithm : VolumeAlgorithm)
     (rate : VolumeParams → ℝ) : Prop :=
   ∀ (q : VolumeParams) (I : VolumeInput q.n)
     (oracle : MembershipOracle I), WellRounded q I →
       1 - q.p ≤ outcomeProbability
         (volumeAlgorithmLaw algorithm q I oracle) (accurateOutcome q I) ∧
-      (algorithm q).queryCost ≤ Nat.ceil (queryConstant * rate q)
+      (algorithm q).queryCost ≤ Nat.ceil (rate q)
 
 /-- **Cousins–Vempala 2018, Theorem 1.1**, for the program `cv18Program`. -/
 theorem cv18TheoremOneOne :
@@ -48,7 +46,7 @@ theorem cv18TheoremOneOne :
   have hconst : figureOneFinalScheduledQueryConstant = queryConstant := by
     norm_num [figureOneFinalScheduledQueryConstant,
       runCostConstant, queryConstant]
-  rw [hconst] at hle
+  rw [hconst, ← mul_assoc] at hle
   exact ⟨haccuracy, hcalls.queryCost_le.trans (by exact_mod_cast hle)⟩
 
 #modelClosureOfType cv18TheoremOneOne
