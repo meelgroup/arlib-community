@@ -25,11 +25,21 @@ naming a problem is a sign the split has not been found yet.*
 
 ## What's inside
 
-One area so far.
+Two areas: four algorithm entries, and the general theory they rest on.
 
 | Area | Contents | Start here |
 | --- | --- | --- |
-| `Algorithms` | Analyses of specific algorithms. Currently `TPA/` — Huber's Tootsie Pop Algorithm: the closed form of its contraction-counter tail, the Poisson law that follows, almost-sure termination, and the two-phase run-count schedule. | [ArlibCommunity/Algorithms.lean](ArlibCommunity/Algorithms.lean) |
+| `Algorithms/TPA` | Huber–Schott's Tootsie Pop Algorithm [Hub10]: its contraction-counter tail, Poisson law, almost-sure termination, and two-phase run-count schedule. | [README](ArlibCommunity/Algorithms/TPA/README.md) |
+| `Algorithms/HitAndRun` | Lovász's hit-and-run walk on a convex body [Lov99]: a fully proved mixing theorem with a corrected constant, and the facet-scan walk for polytopes. | [README](ArlibCommunity/Algorithms/HitAndRun/README.md) |
+| `Algorithms/KV97` | Kannan–Vempala lattice-point sampling [KV97]: every lattice point of a polytope is returned with probability within a stated factor of uniform. | [README](ArlibCommunity/Algorithms/KV97/README.md) |
+| `Algorithms/CV18` | Cousins–Vempala Gaussian cooling [CV18]: Theorem 1.1, accuracy and an explicit membership-query bound, for the program `cv18Program`, with no assumptions beyond the input promise. | [README](ArlibCommunity/Algorithms/CV18/README.md) |
+| `Foundations` | Convex geometry (Prékopa–Leindler, Brunn–Minkowski, localization, isoperimetry) and Markov chains on a general space (conductance, mixing), used by the algorithm entries. | [ArlibCommunity/Foundations.lean](ArlibCommunity/Foundations.lean) |
+
+Each algorithm's README states the problem, cites the paper, says what is proved
+and where it differs from the paper, and gives a reading order. HitAndRun, KV97
+and CV18 put the statement to audit under `Model/` and its proof under
+`Analysis/`; a build check fails if a `Model/` statement depends on anything
+outside `Model/`.
 
 `import ArlibCommunity` gives you everything; `import ArlibCommunity.Algorithms`
 gives you one area; importing a single module gives you one piece. Every
@@ -37,16 +47,12 @@ declaration lives in the namespace matching its module path, and each algorithm
 gets a namespace of its own (`ArlibCommunity.Algorithms.TPA`) — the entries are
 independent, and short names like `tpaTail` would otherwise collide.
 
-The area roots carry the real documentation: read
-[ArlibCommunity/Algorithms/TPA.lean](ArlibCommunity/Algorithms/TPA.lean) before
-reading any module under it.
-
 ## Getting started
 
 Use the same toolchain as arlib, which is Mathlib's own — today:
 
 ```
-leanprover/lean4:v4.33.0
+leanprover/lean4:v4.35.0
 ```
 
 Copy that line into your `lean-toolchain`, then add arlib-community to your

@@ -23,10 +23,22 @@ and their names (`tpaTail`, and whatever follows) would otherwise collide.
 
 ## Sub-areas
 
-* `ArlibCommunity.Algorithms.TPA` — the Tootsie Pop Algorithm (Huber; the
-  sub-area root records that which of his papers it follows is unresolved): the
-  Poisson law of its contraction counter, almost-sure termination, and the
-  two-phase run-count schedule.
+* `ArlibCommunity.Algorithms.TPA` — the Tootsie Pop Algorithm (Huber–Schott
+  [Hub10]): the Poisson law of its contraction counter, almost-sure
+  termination, and the two-phase run-count schedule.
+* `ArlibCommunity.Algorithms.HitAndRun` — the hit-and-run sampler: its
+  direction/chord kernel, a finite-facet realization, stationarity, and a fully
+  discharged corrected mixing theorem.
+* `ArlibCommunity.Algorithms.CV18` — Cousins–Vempala Gaussian cooling:
+  Theorem 1.1, accuracy and an explicit membership-query bound, for the program
+  `cv18Program`, with no assumptions beyond the input promise.
+* `ArlibCommunity.Algorithms.KV97` — Kannan–Vempala lattice-point sampling:
+  inflate the polytope, sample it continuously, round each coordinate at random;
+  every lattice point of the polytope is returned with probability within a
+  factor of uniform.
 -/
 
 import ArlibCommunity.Algorithms.TPA
+import ArlibCommunity.Algorithms.HitAndRun
+import ArlibCommunity.Algorithms.CV18
+import ArlibCommunity.Algorithms.KV97
