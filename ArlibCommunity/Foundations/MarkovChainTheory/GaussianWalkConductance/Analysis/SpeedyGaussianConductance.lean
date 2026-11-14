@@ -231,7 +231,7 @@ open/closed sets to measurable ones. The `ℓ`-weighted inequality itself is alr
 with no Lipschitz hypothesis, for `S₁, S₂` open and `S₃` closed:
 `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_openClosed_logTwo` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`).
 **UPDATE (same day): that upgrade is done, and this theorem is superseded.**
-`ArlibCommunity.Foundations.MarkovChainTheory.hiso_speedyMetropolisGaussian_uncond` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianUncond.lean`)
+`ArlibCommunity.Foundations.MarkovChainTheory.hiso_speedyMetropolisGaussian_uncond` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/OverlapPerPair.lean`)
 is this binder with `hellLip`, `hLσ`, `hKR` and the parameters `R`, `Lf` all removed, and
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond` is the conductance bound built on it,
 with an unconditional witness.  Prefer those.  The theorems in *this* file remain correct but

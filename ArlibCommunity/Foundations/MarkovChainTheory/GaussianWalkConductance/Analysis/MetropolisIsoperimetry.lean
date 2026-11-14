@@ -4,11 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.EllGaussianFacts
 import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.EllLogConcave
-import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.EllMollifier
-import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IsoEnlargeMeasurable
-import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IsoEnlargeSlack
+import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IsoMeasurable
 import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IsoIndicator
-import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IsoMeasurableUncond
 import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IsoWeighted
 import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.OneDimSharp
 import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.MetropolisOverlapSqrt

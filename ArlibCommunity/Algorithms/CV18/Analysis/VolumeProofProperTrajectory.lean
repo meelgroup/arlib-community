@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Uddalok Sarkar
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofProperStep
-import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.MarkedTimeChange
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.TimeChange
 
 /-!
 # Proper proposals for the Gaussian Metropolis ball walk

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Uddalok Sarkar
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofProperTrajectory
-import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.MarkedTimeChange
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.TimeChange
 
 /-!
 # The proper-proposal clock on an actual Gaussian Metropolis trajectory

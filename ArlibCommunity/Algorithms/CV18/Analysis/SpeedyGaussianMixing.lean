@@ -3,7 +3,7 @@ Copyright (c) 2026 Uddalok Sarkar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Uddalok Sarkar
 -/
-import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.SpeedyGaussianUncond
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.OverlapPerPair
 import ArlibCommunity.Algorithms.CV18.Analysis.MixingSqrt
 import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.SpeedyWalk
 
@@ -11,7 +11,7 @@ import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Anal
 # Cousins–Vempala `thm:mixing` for the lazy speedy Metropolis–Gaussian walk
 
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianUncond.lean`) is Cousins–Vempala's `thm:speedyconductance`
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/OverlapPerPair.lean`) is Cousins–Vempala's `thm:speedyconductance`
 ([CV18]) with **no** isoperimetric and **no** comparability
 hypothesis:
 
@@ -196,7 +196,7 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_uncond_explicit (hn : 21 ≤ n
 /-! ## 2. Non-vacuity
 
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond_witness`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianUncond.lean`) discharges the conductance theorem's whole
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/OverlapPerPair.lean`) discharges the conductance theorem's whole
 binder bundle at
 
     n = 21,  K = B̄(0,1),  σ = 100,  δ = 1,  R = 1.

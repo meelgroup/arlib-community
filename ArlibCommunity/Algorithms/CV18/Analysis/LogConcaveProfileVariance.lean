@@ -3,7 +3,7 @@ Copyright (c) 2026 ArLib contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ArLib contributors
 -/
-import ArlibCommunity.Foundations.Convex.Localization.Analysis.ProductLocalization
+import ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationNeedleInBody
 import ArlibCommunity.Foundations.Convex.CrossRatioIsoperimetry.Analysis.BrascampLieb1D
 import ArlibCommunity.Algorithms.CV18.Analysis.CoolingVariance
 import ArlibCommunity.Algorithms.CV18.Analysis.IndicatorVariance

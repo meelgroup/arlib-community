@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ArLib contributors
 -/
 import Mathlib.Analysis.Convex.Measure
-import ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationTransverse
+import ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAffine
 
 /-!
 # Closing up the localisation chain, and positioning its limit segment

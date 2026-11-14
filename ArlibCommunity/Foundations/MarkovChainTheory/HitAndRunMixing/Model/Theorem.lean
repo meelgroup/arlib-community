@@ -3,8 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Foundations.MarkovChainTheory.HitAndRunMixing.Model.Prelude
-import ArlibCommunity.Foundations.MarkovChainTheory.HitAndRunMixing.Analysis.HitAndRunConductanceUncond
-import ArlibCommunity.Foundations.MarkovChainTheory.HitAndRunMixing.Analysis.HitAndRunMixingUncond
+import ArlibCommunity.Foundations.MarkovChainTheory.HitAndRunMixing.Analysis.HitAndRunUncond
 import ArlibCommunity.Foundations.Meta.ModelClosure
 
 /-!

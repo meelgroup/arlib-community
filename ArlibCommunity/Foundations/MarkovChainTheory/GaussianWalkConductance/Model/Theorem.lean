@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Model.Prelude
 import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.MetropolisIsoperimetry
-import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.SpeedyGaussianUncond
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.OverlapPerPair
 import ArlibCommunity.Foundations.Meta.ModelClosure
 
 /-!

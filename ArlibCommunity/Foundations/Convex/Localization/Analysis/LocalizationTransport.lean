@@ -3,7 +3,7 @@ Copyright (c) 2026 ArLib contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ArLib contributors
 -/
-import ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleSlabChain
+import ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleSlab
 import ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleLimit
 import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic

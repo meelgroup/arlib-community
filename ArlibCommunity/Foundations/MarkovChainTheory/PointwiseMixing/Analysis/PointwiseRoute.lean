@@ -8,7 +8,6 @@ import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 import ArlibCommunity.Foundations.MarkovChainTheory.PointwiseMixing.Analysis.PointwiseMixing
 import ArlibCommunity.Foundations.MarkovChainTheory.Basic.MixingFromConductance
 import ArlibCommunity.Foundations.Convex.Basic.UniformOn
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 
 /-!
 # Closing the TV → pointwise gap: which route actually works
