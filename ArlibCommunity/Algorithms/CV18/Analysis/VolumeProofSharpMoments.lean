@@ -12,8 +12,8 @@ namespace ArlibCommunity.Algorithms.CV18
 /-!
 # Unconditional accelerated-phase moment bound
 
-This module adapts the compact-convex localization theorem vendored under
-`ArlibCommunity.Algorithms.CV18.Analysis.Background` to the variance convention and clipped cooling
+This module adapts the compact-convex localization theorem of
+`ArlibCommunity/Foundations/Convex/Localization/` to the variance convention and clipped cooling
 schedule used by the CV18 executable model.
 -/
 

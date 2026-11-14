@@ -126,6 +126,6 @@ its type is machine-checked to unfold only to declarations under `Model/`.
 The older `volumeTheorem_of_postInitialMixing` remains available as a compact
 legacy interface.
 
-See `Model/README.md` for the statement audit and `Analysis/README.md` for the
-module-level proof audit.
+See `CV18/README.md` for the paper, the deviations, and a reading
+guide.
 -/

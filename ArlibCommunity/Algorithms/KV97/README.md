@@ -41,4 +41,11 @@ Both are explained in `Analysis/HitProbability.lean`.
 - `Model/` is the audit surface: `Prelude.lean` and `ProblemSetting.lean` (the
   input and the sampler assumption), `Pseudocode.lean` (the program and its
   output law) and `Theorem.lean`.
-- `Analysis/README.md` is a guide to the proof files.
+- `Analysis/PseudocodeProof.lean` computes the output law: a lattice point `x`
+  is returned with probability `∫ prodTent x p dsampler(p)`.
+  `Analysis/TheoremProof.lean` turns this into Theorem 2 via
+  `Analysis/HitProbability.lean`.
+- The rounding laws are in `Tent.lean`, `RoundLaw.lean`, `ProdKernel.lean`,
+  `KernelIntegral.lean` and `ContTent.lean`; the inflation and the escape bound
+  in `Defs.lean`, `Inflate.lean`, `SubgaussianTail.lean` and `Escape.lean`.
+- `Analysis/AuditCheck.lean` checks the model closure and prints the axioms.

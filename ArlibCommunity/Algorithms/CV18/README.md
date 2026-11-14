@@ -24,8 +24,8 @@ Gaussian integrals, and multiplies the ratios. Theorem 1.1 takes the median of
 
 - **accuracy:** the estimate is within `1 ± ε` of the volume with probability at
   least `1 − p`;
-- **cost:** every execution makes at most `⌈queryConstant · queryRate q⌉` membership
-  calls.
+- **cost:** every execution makes at most `⌈queryRate q⌉` membership calls, where
+  `queryRate q = queryConstant · runRate q · max(1, log(1/p))`, constant included.
 
 The query rate keeps every logarithmic factor. Dropping them gives the paper's
 `O*(roundness · n³ / ε²)`.
@@ -45,6 +45,19 @@ The starting variance is `ε/(64n)` rather than `1/(4n)`, and a failed run repor
 
 ## How to read it
 
-- `Model/README.md` is the guide to the audit surface (`Prelude.lean`,
-  `Pseudocode.lean`, `Theorem.lean`).
-- `Analysis/README.md` is the guide to the proof and records its dependency audit.
+- `Model/` is the audit surface, read in this order:
+  - `Prelude.lean`: the parameters, the body and its unit-ball promise, the
+    membership oracle, what counts as accurate, the language programs are written
+    in (`MembershipOracleProgram`, with `do` notation) and its output law, the
+    cooling schedule, and every numeric parameter, including `queryRate`;
+  - `Pseudocode.lean`: the cost model `queryCost` (each membership call costs
+    `1`) and `cv18Program`;
+  - `Theorem.lean`: `cv18TheoremOneOne`.
+
+  `#modelClosureOfType cv18TheoremOneOne` and `#modelClosure cv18Program` fail
+  the build if either statement unfolds to anything outside `Model/`.
+- `Analysis/` holds the proof. Its end point is `volumeTheorem_finalScheduled`
+  (`VolumeProofFinalScheduledTheoremAssembly.lean`), stated for the program as
+  written with constructors in `ScheduledProgram.lean`; `PseudocodeBridge.lean`
+  proves that program equal to `cv18Program`. Definitions used only by the proof
+  are in `ModelSupport.lean`.

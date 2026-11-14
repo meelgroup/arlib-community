@@ -39,7 +39,10 @@ corrected inequalities are in `Foundations/MarkovChainTheory/HitAndRunMixing/`
 
 - `Model/` is the audit surface: `ProblemSetting.lean` (the input), `Pseudocode.lean`
   (the walk) and `Theorem.lean` (the results above).
-- `Analysis/README.md` is a guide to the proof files.
+- `Analysis/PseudocodeProof.lean` proves the direction/chord formula, that the
+  kernel is Markov with the uniform law stationary, and `finiteFacetStep_eq_step`.
+- `Analysis/TheoremProof.lean` assembles `hitAndRun_mixes`.
+- `Analysis/AuditCheck.lean` checks the model closure and prints the axioms.
 - The general theory — the hit-and-run kernel, its conductance, isoperimetry and
   conductance-to-mixing — is in `ArlibCommunity/Foundations/`, mainly
   `MarkovChainTheory/HitAndRunMixing/`.
