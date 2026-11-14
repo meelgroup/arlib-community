@@ -78,7 +78,7 @@ disc — carries over to this file unchanged (`exists_conductance_metropolisGaus
 Three constants for the same geometry at separation `δ/√n` sit in this library, and the choice
 is not cosmetic — it decides whether the theorem has any instances at all.
 
-* `ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim` (`LensMin.lean`), constant `1/40`, is
+* `ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim` (`LensMin.lean`), constant `1/40`, is
   the obvious input and makes the theorem **vacuous**: the floor would read
   `1 ≤ 20·a·(1/40)·θ = a·θ/2`, while `a ≤ 1` (the exponent is nonpositive) and
   `θ ≤ ell K δ x ≤ 1` (`ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one`) at any point of a nonempty `K`, so

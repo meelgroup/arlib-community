@@ -10,7 +10,7 @@ import ArlibCommunity.Foundations.MarkovChainTheory.BallWalkMixing.Analysis.Unit
 /-!
 # Unconditional mixing of the ball walk on a general bounded convex body
 
-`ArlibCommunity.Foundations.MarkovChains.Continuous.UnitBallMixing` composes the Markov-chain stack end to end
+`ArlibCommunity.Foundations.MarkovChainTheory.BallWalkMixing.Analysis.UnitBallMixing` composes the Markov-chain stack end to end
 for one fixed body, the Euclidean unit ball.  This file does the same for an *arbitrary*
 bounded convex body `K` that contains a ball `B(c, γ)` — the object a sampling oracle
 actually receives (a Kannan–Vempala inflated polytope, say), rather than a normalised
@@ -49,7 +49,7 @@ be quoted as one.**  What it is: a statement about a general convex body in whic
 isoperimetry, the local conductance, the Cheeger inequality, the `L²` decay and the
 total-variation bound are all *discharged simultaneously* rather than assumed.  The route
 to a polynomial constant is unchanged and still open — the localization argument, whose
-remaining obstruction is recorded as (P1) in `Arlib/Convexity/PositionalCut.lean`.
+remaining obstruction is recorded as (P1) in `PositionalCut.lean` (not in this repository; see `REFERENCES.md`).
 
 ## Main results
 

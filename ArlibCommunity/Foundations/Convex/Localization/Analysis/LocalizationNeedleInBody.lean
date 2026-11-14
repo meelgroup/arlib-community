@@ -66,7 +66,7 @@ carried along.  The replay is three lemmas deep, over the *shrinking-slab* branc
 (`ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_collinear_shrinkingSlab`), which is the branch a
 genuinely shrinking chain can satisfy — the fixed-slab
 `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_collinear` cannot be used, see the module
-docstring of `ArlibCommunity.Foundations.Convexity.LocalizationClosed`.
+docstring of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationClosed`.
 
 * `ArlibCommunity.Foundations.Convex.exists_axis_of_collinear_mem` — `ArlibCommunity.Foundations.Convex.exists_axis_of_collinear` with the base point and
   the tip of the produced axis exhibited as points of the limit body.
@@ -294,7 +294,7 @@ theorem exists_needle_mem_of_compact_chain (hm : m ≠ 0)
 /-- **The needle of a chain in `EuclideanSpace`, with its two endpoints in the limit body.**
 
 `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact_chain_euclidean_ne_zero` replayed over the
-previous lemma.  The transport is the one of `ArlibCommunity.Foundations.Convexity.LocalizationTransport`; the two
+previous lemma.  The transport is the one of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationTransport`; the two
 membership clauses cross it because the transported chain is literally the preimage of the
 original one, so `⋂ k, F k = WithLp.toLp 2 ⁻¹' ⋂ k, C k`. -/
 theorem exists_needle_mem_of_compact_chain_euclidean (hm : m ≠ 0)

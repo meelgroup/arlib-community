@@ -202,9 +202,9 @@ The route taken so far — `ArlibCommunity.Foundations.Convex.exists_disjoint_op
 *metric* branch of the disjunction, which needs a global log-Lipschitz bound
 `d_h(u,v) ≤ L·‖u − v‖`.  For the indicator density `1_K·γ` that is free (`1_K` is constant on
 `K`, `γ` has `L = R/σ²`).  For the `ℓ`-weighted density it is the binder `hellLip`, which
-`AUDIT.md` §0i argues has no witness with non-constant `ℓ` at the operative step, because
+has, by an informal argument, no witness with non-constant `ℓ` at the operative step, because
 `hLσ` caps `L` far below the true rate `≈ √n·log 2/δ` forced by a corner
-(`ArlibCommunity.Foundations.MarkovChains.two_pow_mul_ell_cube_corner_le_one`).
+(`two_pow_mul_ell_cube_corner_le_one` (not in this repository; see `REFERENCES.md`)).
 
 **This file takes the other route: never convert the density branch.**  Each pair stays in
 whichever branch it was already in, and both branches are allowed to degrade slightly.  The
@@ -1370,7 +1370,7 @@ measurable case has been the open blocker since.
 (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`) — discharges the *density* branch of the
 disjunction by converting it into the *metric* branch, which needs a global log-Lipschitz
 bound on `h`.  That is free for the indicator density `1_K·γ` and is the binder `hellLip` for
-the `ℓ`-weighted one, where `AUDIT.md` §0i argues it has no witness with non-constant `ℓ`.
+the `ℓ`-weighted one, where, by the same informal argument, it has no witness with non-constant `ℓ`.
 Here each pair stays in its own branch and only the *thresholds* move, so the estimate needed
 is a perturbation bound for `densDist`, which uniform continuity on a compact set supplies —
 **with the radius chosen after the sets**, hence with no inequality to satisfy against `σ`,

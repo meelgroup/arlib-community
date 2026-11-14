@@ -102,7 +102,7 @@ i.e. `max |u − a| > 3|x − u|` over the two endpoints `a` of that chord.  Its
   These used to be the inline hypotheses `hA3`, `hA3m`; **both are now discharged**, and no
   such binder survives.
 
-**Assumed, as the one remaining inline hypothesis of the capstone `tvLe_hitAndRun_lemma41`**
+**Assumed, as the one remaining inline hypothesis of the capstone `tvLe_hitAndRun_of_close`**
 (no named `Prop` is introduced for it):
 
 * `hcap` — the spherical-cap estimate `P_u(A₂) ≤ q₂`.  This is the paper's "it takes a
@@ -151,7 +151,7 @@ yields `1 − c(1 − q)` with the sharp `c = (2(1 + 4/n)ⁿ)⁻¹`, and `1/(c(1
 
 For `2 ≤ n ≤ 4` one has `q ≥ 1`: the lemma yields nothing at all.  (At `n = 1` the cap set is
 empty, so `q₂ = 0` and the lemma gives `1 − 3/80`; that is
-`tvLe_hitAndRun_lemma41_unconditional`.)  For `n ≥ 5` it yields a real
+`tvLe_hitAndRun_of_close_unconditional`.)  For `n ≥ 5` it yields a real
 bound, but the constant is `1892.8…` in the limit, not `500` — worse by a factor of `3.8`,
 and worse still (`34386`) at `n = 5`.  **No rounding recovers `1 − 1/500`.**  Before the
 `A₃` correction the same computation gave `432` at `n = 2` and `486.7…` as `n → ∞`, i.e.
@@ -167,7 +167,7 @@ drops to mass `≈ 0.236`, giving `q ≈ 0.861` even at the crude `q₂ = 1/2` a
 needs `Λ`-parametric versions of `chordDiff_le_two_mul` and `volume_inter_scale_union_le`,
 both of which hard-code `2` and `3` in `ChordCompare.lean`, so it is not done here.
 
-This file hard-codes none of these numbers.  `tvLe_hitAndRun_lemma41` is parametric in `q₂`
+This file hard-codes none of these numbers.  `tvLe_hitAndRun_of_close` is parametric in `q₂`
 and returns the sharp `1 − (1 − q)/(2(1 + 4/n)ⁿ)` with `q = 1/8 + q₂ + 1/2`, so a caller who
 can prove a cap bound gets whatever constant that bound supports.
 
@@ -178,8 +178,8 @@ longer derivable, and keeping the corollary would have meant keeping a statement
 hypotheses cannot deliver it.  **The figure `1 − 1/2880` is lost**, and with it every
 dimension-free constant this file can currently offer: there is no dimension-free `q₂ < 3/8`,
 since `q₂(2) = 1/2` and `q₂(3) = 0.4226…`.  What replaces it is
-`tvLe_hitAndRun_lemma41_of_le_three_eighths`, still parametric in `q₂` but rounded to
-`1 − (3/8 − q₂)/120`, and `tvLe_hitAndRun_lemma41_unconditional`, the only statement here
+`tvLe_hitAndRun_of_close_of_le_three_eighths`, still parametric in `q₂` but rounded to
+`1 − (3/8 − q₂)/120`, and `tvLe_hitAndRun_of_close_unconditional`, the only statement here
 with **no** unproved hypothesis at all — which, as the table shows, is non-trivial only at
 `n = 1`.
 -/
@@ -584,7 +584,7 @@ The constant returned is the *sharp* one, `1 − (1 − q)/(2(1 + 4/n)ⁿ)` with
 `q = 1/8 + q₂ + 1/2`.  It is a real bound only for `q₂ < 3/8`; the paper's `1 − 1/500` is
 **not** among its values, and neither is any dimension-free constant.  See the module
 docstring. -/
-theorem tvLe_hitAndRun_lemma41 (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem tvLe_hitAndRun_of_close (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K) {u v : EuclideanSpace ℝ (Fin n)}
     (hu : u ∈ K) (hv : v ∈ K) (huv : u ≠ v)
@@ -717,7 +717,7 @@ No dimension-free replacement exists at present: `q₂ < 3/8` is needed, but the
 probability is `1/2` at `n = 2` and `0.4226…` at `n = 3`.  Any caller of this corollary is
 therefore implicitly restricted to `n ≥ 5`, and gets `1 − 1/1892.8…` at best — not the
 paper's `1 − 1/500`.  See the module docstring. -/
-theorem tvLe_hitAndRun_lemma41_of_le_three_eighths (hn : n ≠ 0)
+theorem tvLe_hitAndRun_of_close_of_le_three_eighths (hn : n ≠ 0)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K) {u v : EuclideanSpace ℝ (Fin n)}
@@ -734,7 +734,7 @@ theorem tvLe_hitAndRun_lemma41_of_le_three_eighths (hn : n ≠ 0)
       ≤ ENNReal.ofReal q₂) :
     TVLe (hitAndRun K u) (hitAndRun K v)
       (ENNReal.ofReal (1 - (3 / 8 - q₂) / 120)) := by
-  refine (tvLe_hitAndRun_lemma41 hn hKc hKcl hKm hKb hu hv huv hmoveu hmovev ha hb hdK hFu
+  refine (tvLe_hitAndRun_of_close hn hKc hKcl hKm hKb hu hv huv hmoveu hmovev ha hb hdK hFu
     hq₂0 hcap).mono (ENNReal.ofReal_le_ofReal ?_)
   have h := one_div_le_inv_two_mul_pow n
   nlinarith [mul_nonneg (sub_nonneg.2 h) (by linarith : (0:ℝ) ≤ 3 / 8 - q₂)]
@@ -752,7 +752,7 @@ the best that the constraint `∑ᵢ ⟪θ,eᵢ⟫² = 1` alone yields, and the 
 needs the density of `⟪θ,ŵ⟫`, which Mathlib v4.32 does not have.  No non-vacuity witness is
 formalised here; the side conditions are the ordinary ones (an interval, two nearby interior
 points, at cross-ratio distance `< 1/8`). -/
-theorem tvLe_hitAndRun_lemma41_unconditional (hn : n ≠ 0)
+theorem tvLe_hitAndRun_of_close_unconditional (hn : n ≠ 0)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K) {u v : EuclideanSpace ℝ (Fin n)}
@@ -769,7 +769,7 @@ theorem tvLe_hitAndRun_lemma41_unconditional (hn : n ≠ 0)
   have hnR : (0 : ℝ) < (n : ℝ) := by
     have : n ≠ 0 := hn
     positivity
-  refine tvLe_hitAndRun_lemma41 hn hKc hKcl hKm hKb hu hv huv hmoveu hmovev ha hb hdK hFu
+  refine tvLe_hitAndRun_of_close hn hKc hKcl hKm hKb hu hv huv hmoveu hmovev ha hb hdK hFu
     ?_ (hitAndRun_almostOrthogonal_le_one_sub_inv hn hKm u v)
   have : (1 : ℝ) / (n : ℝ) ≤ 1 := by
     rw [div_le_one hnR]
@@ -790,9 +790,9 @@ section AxiomCheck
 #print axioms hitAndRun_ball_medianStep_le
 #print axioms tvLe_of_overlap
 #print axioms tvLe_hitAndRun_of_overlap
-#print axioms tvLe_hitAndRun_lemma41
-#print axioms tvLe_hitAndRun_lemma41_of_le_three_eighths
-#print axioms tvLe_hitAndRun_lemma41_unconditional
+#print axioms tvLe_hitAndRun_of_close
+#print axioms tvLe_hitAndRun_of_close_of_le_three_eighths
+#print axioms tvLe_hitAndRun_of_close_unconditional
 
 end AxiomCheck
 

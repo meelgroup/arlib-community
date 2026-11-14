@@ -50,7 +50,7 @@ lemma here interprets it as a facet count. KV97's `r` is the *maximum number of
 facets meeting any unit cube around a lattice point* — a local quantity — while
 the consuming paper's `cor:linf` uses the *total* facet count. The total
 upper-bounds the local one, so substituting it only weakens the bound, but the
-two are not the same number; see the discussion in `Algorithms/KV97/Analysis/Theorem2.lean` §4d. Nothing in this file
+two are not the same number; see the discussion in `Algorithms/KV97/Analysis/HitProbability.lean` §4d. Nothing in this file
 asserts they are equal.
 -/
 

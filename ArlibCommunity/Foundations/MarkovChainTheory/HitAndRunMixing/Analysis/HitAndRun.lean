@@ -107,14 +107,14 @@ There is **no conductance bound and no mixing bound here, in any form** — not 
 theorem, not as an assumed predicate, not as a definition whose name asserts one.  The
 paper's conductance bound (Theorem 4.2) rests on its Theorem 2.1, which is proved by
 applying the Localization Lemma to *signed* integrands; that step is an open gap in this
-repository (see `Arlib/Convexity/TransverseCut.lean`, and note that Borsuk–Ulam is absent
+repository (see `TransverseCut.lean` (not in this repository; see `REFERENCES.md`), and note that Borsuk–Ulam is absent
 from Mathlib v4.32).  What this file supplies is the object such a bound would be
 *about*, together with the reversibility that any conductance argument presupposes.  The
 conductance machinery it feeds — `ArlibCommunity.Foundations.MarkovChainTheory.conductance`, `Cheeger.lean`,
 `L2Mixing.lean`'s `mixesWithin_of_conductance` — is already in place and needs only the
 missing isoperimetric input.
 
-`ArlibCommunity.Foundations.MarkovChains.Continuous.BallWalk` is imported for `IsReversible.smul` and for the
+`ArlibCommunity.Foundations.MarkovChainTheory.BallWalkMixing.Analysis.BallWalk` is imported for `IsReversible.smul` and for the
 unit-ball guards `volume_unitBall_ne_zero` / `volume_unitBall_ne_top` /
 `isProbabilityMeasure_uniformOn_unitBall`, which are walk-independent.
 -/

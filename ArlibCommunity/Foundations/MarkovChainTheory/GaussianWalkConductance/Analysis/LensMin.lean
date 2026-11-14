@@ -13,14 +13,14 @@ For a convex `K ∋ u, v` in `ℝⁿ` (`n ≥ 2`) and `‖u − v‖ ≤ δ/√n
 
     vol(K ∩ B(u,δ) ∩ B(v,δ))  ≥  (1/40) · min{ℓ(u), ℓ(v)} · vol(δBₙ)
 
-(`kls_lemma35_at_sep_sqrt_dim`), where `ℓ(x) = vol(K ∩ B(x,δ))/vol(B(x,δ))` is the local
+(`lens_volume_ge_at_sep_sqrt_dim`), where `ℓ(x) = vol(K ∩ B(x,δ))/vol(B(x,δ))` is the local
 conductance of `ArlibCommunity/Foundations/MarkovChainTheory/BallWalkMixing/Analysis/BallWalk.lean`.  This is Lemma 3.5 of [KLS95] as
 cited by Cousins–Vempala at [CV18], with the constant `1/40` in place
 of the paper's `1/(e+1)`; no attempt is made to sharpen it.  Nothing is `sorry`ed and no
 hypothesis beyond the paper's is carried — see the axiom audit at the bottom.
 
 This closes the `δ/n` → `δ/√n` gap left open by
-`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/StarPolar.lean` (`kls_lemma35_at_sep_div_dim`), and it does so
+`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/StarPolar.lean` (`lens_volume_ge_at_sep_div_dim`), and it does so
 **without** the inequality that file proposed, which
 `ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/LensHalfspace.lean` refutes.
 
@@ -62,7 +62,7 @@ giving `c·vol B ≤ Λ`, in agreement with `ArlibCommunity.Foundations.MarkovCh
 
 ## What is assumed, and what is not
 
-Nothing is assumed: `volume_lens_ge_min_ball_inter` and `kls_lemma35_at_sep_sqrt_dim` carry
+Nothing is assumed: `volume_lens_ge_min_ball_inter` and `lens_volume_ge_at_sep_sqrt_dim` carry
 exactly the hypotheses `2 ≤ n`, `Convex ℝ K`, `u ∈ K`, `v ∈ K`, `0 < δ`, `‖u−v‖ ≤ δ/√n`.  In
 particular **no measurability hypothesis on `K`** (convex sets are null-measurable,
 `Convex.nullMeasurableSet`), no bound on `ℓ`, and no comparability hypothesis such as
@@ -424,7 +424,7 @@ theorem volume_lens_ge_min_ball_inter (hn : 2 ≤ n) {K : Set (EuclideanSpace �
 /-- **Lemma 3.5 of [KLS95] at separation `δ/√n`**, in the paper's own shape: the lens carries a
 constant fraction of `min{ℓ(u), ℓ(v)}·vol(δBₙ)`.  The constant here is `1/40`, not the paper's
 `1/(e+1)`. -/
-theorem kls_lemma35_at_sep_sqrt_dim (hn : 2 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem lens_volume_ge_at_sep_sqrt_dim (hn : 2 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) {u v : EuclideanSpace ℝ (Fin n)} (hu : u ∈ K) (hv : v ∈ K) {δ : ℝ}
     (hδ : 0 < δ) (hsep : ‖u - v‖ ≤ δ / Real.sqrt n) :
     ENNReal.ofReal (1 / 40) * min (ell K δ u) (ell K δ v)
@@ -458,4 +458,4 @@ end ArlibCommunity.Foundations.MarkovChainTheory
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.min_volume_le_volume_midpoint_sum
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.convex_inner_sub_le_zero
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_ge_min_ball_inter
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim

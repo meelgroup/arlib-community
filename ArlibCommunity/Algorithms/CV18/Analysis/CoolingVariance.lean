@@ -1316,7 +1316,7 @@ it for `f = 1_K` with `K` convex and measurable (and `…_indicator_const` for
 the unconditional `fixed_var_bound_indicator` / `fixed_var_bound_ratio_indicator`.
 The earlier remark here that this is "a Prékopa–Leindler consequence" pending
 Mathlib support was doubly wrong: this repo now proves Prékopa–Leindler and
-Brunn–Minkowski (`Arlib/Convexity/{PrekopaLeindler,PrekopaLeindlerN,BrunnSharp}.lean`),
+Brunn–Minkowski (`ArlibCommunity/Foundations/Convex/{PrekopaLeindler,BrunnMinkowski}/`),
 and the general statement is false regardless. -/
 def ZLogconcaveHypothesis (f : EuclSpace n → ℝ) : Prop :=
   ∀ a b : ℝ, 0 < a → 0 < b → zFun f a * zFun f b ≤ (zFun f ((a + b) / 2)) ^ 2

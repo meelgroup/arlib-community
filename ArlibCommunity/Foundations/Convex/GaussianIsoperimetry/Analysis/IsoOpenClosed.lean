@@ -49,7 +49,7 @@ This file takes the remaining route: **restrict the topology and discharge the b
 
 ## How the `η`-slack is avoided
 
-`ArlibCommunity.Foundations.Convexity.LocalizationLSC` reaches lower semicontinuous integrands but pays, in the
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLSC` reaches lower semicontinuous integrands but pays, in the
 *equality* slot, an additive re-centring constant `κ ∈ [0, η]` chosen **before** the needle
 (`ArlibCommunity.Foundations.Convex.exists_needle_of_lowerSemicontinuous_pair`), and that slack cannot be sent to `0` at a
 fixed needle.  Here it is not paid at all.  The minorant `φ` of `1_{S₁}h` is nonnegative, so it can
@@ -422,7 +422,7 @@ indicator integrands by `ArlibCommunity.Foundations.Convex.needleIntegral_mono` 
 The price of dropping the localization binder is exactly three hypotheses: `S₁, S₂` **open**,
 `S₃` **closed**, and `h` **continuous and bounded**.  The first three are what make the two
 integrands lower semicontinuous, hence approximable from below by continuous ones
-(`ArlibCommunity.Foundations.Convexity.LocalizationLSC`); the last is what makes those approximants exist at all and
+(`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLSC`); the last is what makes those approximants exist at all and
 keeps the needle mass of `h` integrable.  `ArlibCommunity.Foundations.Convex.exists_null_measurableSet_needleIntegral_eq_one`
 shows the topological hypotheses cannot be removed by any almost-everywhere argument.
 

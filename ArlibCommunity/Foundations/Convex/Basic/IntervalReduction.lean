@@ -18,7 +18,7 @@ This file is about the *content* of that sentence: the passage from the **interv
 the one-dimensional isoperimetric inequality — which is what the Localization Lemma and
 `(1d-1)`/`(1d-2)` deliver — to an arbitrary **measurable** three-way partition, which is what
 the proof actually consumes.  It is the hypothesis called `hcombinatorial` in
-`ArlibCommunity.Foundations.Convexity.SharpIsoperimetry`.
+`ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsoperimetry`.
 
 ## Main results
 
@@ -31,7 +31,7 @@ the proof actually consumes.  It is the hypothesis called `hcombinatorial` in
   hypothesis of `ArlibCommunity.Foundations.Convex.oneDim_partition_of_side` at once, with a strictly positive left-hand
   side.
 * `ArlibCommunity.Foundations.Convex.cousinsVempala_counterexample_c_le` — the acid test: for the configuration recorded
-  in `ArlibCommunity.Foundations.Convexity.SharpIsoperimetry` (the one that refutes the literal reading of the
+  in `ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsoperimetry` (the one that refutes the literal reading of the
   paper's sentence), the separation hypothesis `hcross` forces `c ≤ 5/18`, so it is **not**
   satisfiable at the `c = 4` of that counterexample.
 * `ArlibCommunity.Foundations.Convex.hside_not_implied` — the honest boundary of this file: `hcross` does **not** force
@@ -385,7 +385,7 @@ theorem setIntegral_one (S : Set ℝ) : (∫ _t in S, (1:ℝ)) = (volume S).toRe
 
 /-- **The acid test: the separation hypothesis excludes the recorded counterexample.**
 
-`ArlibCommunity.Foundations.Convexity.SharpIsoperimetry` records the configuration that refutes the literal
+`ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsoperimetry` records the configuration that refutes the literal
 reading of [CV18]: `D ≡ 1` on `[0,1]`, `Z₁ = [0,0.4] ∪ [0.6,1]`,
 `Z₂ = (0.45,0.5)` and `c = 4`.  It satisfies both post-localisation relations, yet no interval
 reduction exists in either orientation.

@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.KV97.Model.ProblemSetting
 import ArlibCommunity.Algorithms.KV97.Analysis.PseudocodeProof
-import ArlibCommunity.Algorithms.KV97.Analysis.Theorem2
+import ArlibCommunity.Algorithms.KV97.Analysis.HitProbability
 
 /-!
 # Proof of Kannan–Vempala Theorem 2 for the program
 
 `PseudocodeProof.output_singleton` writes the output probability as an integral against the
 sampler.  With the sampler's density `f` this is `∫_{P'} f · prodTent x`, which is exactly the
-quantity `theorem2_of_body` bounds.
+quantity `hitProbability_bounds_of_body` bounds.
 -/
 
 namespace ArlibCommunity.Algorithms.KV97.TheoremProof
@@ -67,6 +67,6 @@ theorem latticePoint_probability (p : Problem n ι)
     rw [Real.norm_eq_abs, abs_of_nonneg (hf0 q hq)]
     exact hfS.upper hq
   rw [output_singleton_toReal hS hf hV hε1 hfS]
-  exact theorem2_of_body hV (by linarith) hε1 hfS hint hx p.c_nonneg p.one_le_r p.card_le_r
+  exact hitProbability_bounds_of_body hV (by linarith) hε1 hfS hint hx p.c_nonneg p.one_le_r p.card_le_r
 
 end ArlibCommunity.Algorithms.KV97.TheoremProof

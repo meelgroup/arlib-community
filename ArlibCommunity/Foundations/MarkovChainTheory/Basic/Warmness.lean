@@ -32,9 +32,9 @@ here.
    ⚠ **`√e` is CV's constant at CV's schedule `σ²ᵢ₊₁ = σ²ᵢ(1 + 1/n)`, and this repository's
    schedule binder is twice that rate** (`hcc : cc ≤ 1 + 2/n`, binder #33 of
    `Ttc.ttc_runtime_mn4`), which supports `M ≤ e`, not `√e`.  Both are proved:
-   `ArlibCommunity.Foundations.GaussianCooling.isWarm_coolLaw_succ_sqrt_exp` gives `√e` at `1 + 1/n`, and
+   `isWarm_coolLaw_succ_sqrt_exp` (not in this repository; see `REFERENCES.md`) gives `√e` at `1 + 1/n`, and
    `isWarm_coolLaw_succ_exp` gives `e` at `1 + 2/n`
-   (`Arlib/Convexity/GaussianCooling/WarmChain.lean`).  Nothing downstream depends on the
+   (`WarmChain.lean` (not in this repository; see `REFERENCES.md`)).  Nothing downstream depends on the
    value — `hMc : 1 ≤ Mcool` is a free binder — but do not quote `√e` for this repo's
    schedule.
 
@@ -49,7 +49,7 @@ here.
 3. **Total variation never increases** (`tvLe_step`, `tvLe_iterate`, and the corollary
    `tvLe_iterate_of_invariant_mono`).  Running the chain cannot move the law *away* from
    stationarity: the map `μ ↦ step P μ` is a contraction for total variation.  This is the
-   data-processing inequality for a Markov kernel, which `ArlibCommunity.Foundations.Probability.TV` explicitly
+   data-processing inequality for a Markov kernel, which `ArlibCommunity.Foundations.Convex.Basic.TV` explicitly
    leaves out (it has only the deterministic case `ArlibCommunity.Foundations.Convex.TVLe.map`); the missing
    ingredient it names — a layer-cake argument moving a setwise bound past a lower
    integral — is `lintegral_le_of_tvLe` below.
@@ -166,8 +166,8 @@ ball walk of that phase.
 
 ⚠ `√e` is CV's constant at CV's rate `1 + 1/n`; this repository's schedule binder is
 `cc ≤ 1 + 2/n`, which supports `e`.  Both are now proved —
-`ArlibCommunity.Foundations.GaussianCooling.isWarm_coolLaw_succ_sqrt_exp` and `isWarm_coolLaw_succ_exp`
-(`Arlib/Convexity/GaussianCooling/WarmChain.lean`) — and the module docstring above records
+`isWarm_coolLaw_succ_sqrt_exp` and `isWarm_coolLaw_succ_exp`
+(`WarmChain.lean`) — and the module docstring above records
 an arithmetic slip in CV's own proof of the `√e` lemma. -/
 
 /-- Warmness is exactly domination by the scaled measure, `μ ≤ M • pi`.  This is the form
@@ -212,7 +212,7 @@ theorem isWarm_iterate_of_invariant {M : ℝ≥0∞} {μ pi : Measure Ω} {P : K
 
 /-! ## Data processing: a kernel cannot increase total variation
 
-`ArlibCommunity.Foundations.Probability.TV` proves the *deterministic* data-processing inequality
+`ArlibCommunity.Foundations.Convex.Basic.TV` proves the *deterministic* data-processing inequality
 (`ArlibCommunity.Foundations.Convex.TVLe.map`) and explicitly leaves out the kernel version, naming the missing
 ingredient: a layer-cake argument moving a setwise bound past a lower integral.  That
 ingredient is `lintegral_le_of_tvLe`, and `tvLe_step` is the inequality it buys. -/

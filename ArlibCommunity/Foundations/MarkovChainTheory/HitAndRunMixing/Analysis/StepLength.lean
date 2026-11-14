@@ -63,7 +63,7 @@ The paper's **Lemma 3.3** (= Corollary 4.6 of Kannan–Lovász–Simonovits 1997
 is *quoted* by Lovász–Vempala.  It is **proved in this repository**, at the correct order `√n`
 and with an explicit absolute constant, as `ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt`
 in `ArlibCommunity/Foundations/Convex/BoundaryLayer/Analysis/KLS97Sharp.lean`; the specialisation to inradius `r = 1` used here is
-`ArlibCommunity.Foundations.Convex.lem33_sqrt`.  It used to enter `ArlibCommunity.Foundations.MarkovChainTheory.volume_goodSet_ge` and
+`ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt_unitBall`.  It used to enter `ArlibCommunity.Foundations.MarkovChainTheory.volume_goodSet_ge` and
 `ArlibCommunity.Foundations.MarkovChainTheory.lintegral_stepRadius_ge` as a visible inline `∀`-hypothesis `hLem33`; that hypothesis is
 gone.  `ArlibCommunity.Foundations.MarkovChainTheory.lintegral_stepRadius_ge` now discharges it from `hball : closedBall z 1 ⊆ K`,
 which is exactly the paper's "Suppose `K` contains a unit ball", and `volume_goodSet_ge` still
@@ -564,7 +564,7 @@ lemma measurableSet_goodSet {K : Set (EuclideanSpace ℝ (Fin n))} (hK : Measura
 
 Given the paper's Lemma 3.3 — *quoted*, not proved, by Lovász–Vempala from Corollary 4.6 of
 Kannan–Lovász–Simonovits 1997, and **proved in this repository** as
-`ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt` / `ArlibCommunity.Foundations.Convex.lem33_sqrt`
+`ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt` / `ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt_unitBall`
 (`ArlibCommunity/Foundations/Convex/BoundaryLayer/Analysis/KLS97Sharp.lean`) — this is exactly the paper's step
 
 > `∫_K σ(x,t) dx ≤ α·vol(K) + (1−α)·vol({x ∈ K : σ(x,t) ≥ α})` , hence
@@ -574,7 +574,7 @@ The Lemma 3.3 inequality is still taken here as an inline hypothesis, because th
 *purely distributional*: it uses neither convexity nor closedness of `K`, only measurability
 and finite volume, and so it would be wrong to bolt those hypotheses on merely to discharge the
 input.  The discharge happens one level up, in `ArlibCommunity.Foundations.MarkovChainTheory.lintegral_stepRadius_ge`, which carries
-`hKc`, `hKcl` and `hball : closedBall z 1 ⊆ K` and calls `ArlibCommunity.Foundations.Convex.lem33_sqrt`.  **No caller needs
+`hKc`, `hKcl` and `hball : closedBall z 1 ⊆ K` and calls `ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt_unitBall`.  **No caller needs
 to supply Lemma 3.3 as an assumption any more**, and no `hLem33` binder survives past this
 theorem.
 
@@ -756,14 +756,14 @@ private lemma ofReal_sq_div_le_lintegral {b c : ℝ} (hb : 0 < b) (hc : 0 < c) :
 Kannan–Lovász–Simonovits 1997, which Lovász–Vempala quote rather than prove — used to appear
 here as an inline `∀`-hypothesis `hLem33`.  It is now *proved*, in
 `ArlibCommunity/Foundations/Convex/BoundaryLayer/Analysis/KLS97Sharp.lean`, and discharged inside this proof by
-`ArlibCommunity.Foundations.Convex.lem33_sqrt hn hKc hKcl hKfin hball`.  What replaces the hypothesis is
+`ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt_unitBall hn hKc hKcl hKfin hball`.  What replaces the hypothesis is
 `hball : Metric.closedBall z 1 ⊆ K` — exactly the paper's own "Suppose `K` contains a unit
 ball" for Lemma 3.4, and the `r = 1` instance of Lemma 3.3's inradius hypothesis.  `hKcl` was
 already present and is what `KLS97Sharp.lean` needs (its cap step uses the metric projection
 onto `K`).
 
 **The constant.**  The conclusion is `((1−α)/(10√n))·vol K`, where the paper writes
-`((1−α)/√n)·vol K`.  The factor `10` is inherited from `ArlibCommunity.Foundations.Convex.lem33_sqrt`, which proves Lemma
+`((1−α)/√n)·vol K`.  The factor `10` is inherited from `ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt_unitBall`, which proves Lemma
 3.3 in the form `(10·t√n/2r)·vol(K)·vol(tB)`.  That is a constant-factor loss in the majorant
 used by the proof route there — an exponential envelope `e^{2−λh}` in place of the Gaussian,
 and `(1+x)ⁿ − 1 ≤ nx·e^{nx}` — **not** an error in KLS97, whose `C = 1` is consistent with
@@ -786,7 +786,7 @@ theorem lintegral_stepRadius_ge (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin
   have hLem33 : ∀ t : ℝ, 0 < t → ∫⁻ x in K, volume (Metric.closedBall x t \ K)
       ≤ ENNReal.ofReal (t * (10 * Real.sqrt n) / 2) * volume K
           * volume (Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) t) :=
-    ArlibCommunity.Foundations.Convex.lem33_sqrt hn hKc hKcl hKfin hball
+    ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt_unitBall hn hKc hKcl hKfin hball
   have hnpos : (0 : ℝ) < (n : ℝ) := by exact_mod_cast Nat.pos_of_ne_zero hn
   have hsqrt : 0 < Real.sqrt n := Real.sqrt_pos.mpr hnpos
   have hb : (0 : ℝ) < 1 - α := by linarith

@@ -14,14 +14,14 @@ This directory contains the arguments behind it:
 - The inflation and the escape bound: `Defs.lean` (`κ`, the loss, the choice of `c`),
   `Inflate.lean` (the inflated polytope and its volume), `SubgaussianTail.lean` and
   `Escape.lean` (the probability that rounding leaves the inflated polytope).
-- `Theorem2.lean` proves Theorem 2 in density form, with the escape mass discharged.
+- `HitProbability.lean` proves Theorem 2 in density form, with the escape mass discharged.
 - `SamplerRoutes.lean` connects the sampler contract to samplers the Markov-chain theory
   provides: total-variation mixing at tolerance `θ / V`, exact rejection, and the lazy
   ball walk.
 
 ## Deviations from the paper
 
-Both are recorded where they arise, in `Theorem2.lean`:
+Both are recorded where they arise, in `HitProbability.lean`:
 
 - The sampler's density is assumed within `1 ± ε` of uniform **pointwise** on the inflated
   polytope, not merely in total variation.  The paper states a relative error, which a

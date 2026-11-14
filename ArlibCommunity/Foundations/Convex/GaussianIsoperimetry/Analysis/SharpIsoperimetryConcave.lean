@@ -63,7 +63,7 @@ printed one: `S₁` and `S₂` must be `2.401×` further apart before the metric
 density branch `4(d/σ)√n ≤ d_h(u,v)` is untouched.  Downstream, an application that wants a
 given metric separation must shrink `d` by that factor, costing a constant factor in every
 conductance bound derived from `thm:iso` — and nothing more.  Recovering `ln 2` needs a sharper
-`(1d-2)`; `ArlibCommunity.Foundations.Convexity.ConcaveProfileIso` does not have it.
+`(1d-2)`; `ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.ConcaveProfileIso` does not have it.
 
 ## The profile is concave, and that is the point
 
@@ -99,9 +99,9 @@ Corollary 2.4), applied to `g₁ = 1_{S₁}h − A·h` and `g₂ = (d/σ)A·1_{S
 above.  It is a plain `∀`-binder of
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_concave` — there is no `def … : Prop` packaging it, and
 no `axiom`.  Its status in this repository is the subject of
-`ArlibCommunity.Foundations.Convexity.LocalizationAssembly` (residuals **(A)** transverse thinness and **(B)/(G2c)**
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly` (residuals **(A)** transverse thinness and **(B)/(G2c)**
 the affine change of coordinates, listed in that file's docstring) and
-`ArlibCommunity.Foundations.Convexity.LocalizationClosed`.
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationClosed`.
 
 The `σ`-corrected density branch of the separation hypothesis is inherited unchanged from
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry`; see that file's docstring, "Two discrepancies with the

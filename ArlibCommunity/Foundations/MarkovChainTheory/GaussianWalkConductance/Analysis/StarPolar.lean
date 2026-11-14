@@ -31,7 +31,7 @@ and removes the floor.
 * `volume_lens_inter_ge_max` — the same, run from both endpoints of a convex `K ∋ u,v`, at
   separation `‖u−v‖ ≤ δ/n`: the lens carries a `(1 − 1/n)ⁿ` fraction of the **larger** of the
   two ball-slices.  (The paper's `min` becomes a `max`.)
-* `kls_lemma35_at_sep_div_dim` — **Lemma 3.5 of [KLS95] in the paper's own shape**, constant
+* `lens_volume_ge_at_sep_div_dim` — **Lemma 3.5 of [KLS95] in the paper's own shape**, constant
   `1/(e+1)` and all, for `n ≥ 3` and `‖u−v‖ ≤ δ/n`.
 * `overlap_speedyWalk_convex` — **the payoff.**  `cor:overlap`'s conclusion
   `1 ≤ 20·(P_u(Tᶜ) + P_v(T))` on a convex `K`, at separation `δ/n`, **with the local
@@ -490,7 +490,7 @@ pointing away from `v` makes `vol(K ∩ B(u,δ) ∩ B(v,δ))/vol(K ∩ B(u,δ))`
 and is saved only because `ℓ(v)` is then exponentially small too), whereas the estimate below
 holds with `max` and needs no such case analysis.  Closing the gap needs a genuinely
 different argument; see the module docstring. -/
-theorem kls_lemma35_at_sep_div_dim {n : ℕ} (hn : 3 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem lens_volume_ge_at_sep_div_dim {n : ℕ} (hn : 3 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) {u v : EuclideanSpace ℝ (Fin n)} (hu : u ∈ K) (hv : v ∈ K) {δ : ℝ}
     (hδ : 0 < δ) (hsep : ‖u - v‖ ≤ δ / n) :
     ENNReal.ofReal (1 / (Real.exp 1 + 1)) * min (ell K δ u) (ell K δ v)
@@ -541,7 +541,7 @@ a bounded convex body where `20·ℓ = 5 < 11`, i.e. where `overlap_speedyWalk` 
 this theorem does.
 
 The price is the separation: `δ/n` rather than the paper's `δ/√n`; see
-`kls_lemma35_at_sep_div_dim`.
+`lens_volume_ge_at_sep_div_dim`.
 
 `u ∈ T`, `v ∉ T` and `d_h(u,v) < 1/4` are not used — they are carried only so the statement
 matches the consumer's binder.  The paper's `d_ℓ(u,v) < 1/3` of `lem:overlap` is not needed
@@ -623,7 +623,7 @@ supplies.  The conclusion becomes
 gives `Ω(δ/(σ√n))` but assumes the local-conductance floor `11 ≤ 20·ℓ(x)` on all of `K`, which
 no bounded convex body satisfies.  This one applies to every bounded convex body of positive
 volume (`hpos` via `volume_ball_inter_ne_zero_of_convex`) and pays a factor `√n`: `Ω(δ/(σn))`.
-The `√n` is exactly the separation gap of `kls_lemma35_at_sep_div_dim`.
+The `√n` is exactly the separation gap of `lens_volume_ge_at_sep_div_dim`.
 
 **This is not a polynomial-time statement and may not be quoted as one**: `hiso` (`thm:iso`)
 is a hypothesis and is unproved in this repository. -/
@@ -877,7 +877,7 @@ end ArlibCommunity.Foundations.MarkovChainTheory
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.homothety_image_subset_ball_inter
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_ne_zero_of_convex
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.ell_mul_volume_ball
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_div_dim
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_div_dim
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_convex
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.exists_overlap_speedyWalk_convex_witness

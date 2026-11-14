@@ -10,13 +10,13 @@ section
 /-!
 # (G2c): the affine change of coordinates for the localisation needle
 
-`ArlibCommunity.Foundations.Convex.needleIntegral_eq_zero_and_ge` (in `ArlibCommunity.Foundations.Convexity.LocalizationAssembly`) delivers the
+`ArlibCommunity.Foundations.Convex.needleIntegral_eq_zero_and_ge` (in `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly`) delivers the
 two conclusions of the equality-refined Localization Lemma, but **in a fixed frame**: the needle
 is the first coordinate axis of `ℝ^(m+1)`, the bodies sit in the slab `{x | x 0 ∈ [0,1]}`, and
 the height of a point is literally its first coordinate.  The localisation chain of that same
 file, on the other hand, produces bodies shrinking to an *arbitrary* segment.
 
-This file removes that mismatch.  It is gap **(G2c)** of `ArlibCommunity.Foundations.Convexity.NeedleProfile`.
+This file removes that mismatch.  It is gap **(G2c)** of `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleProfile`.
 
 ## Main results
 
@@ -28,13 +28,13 @@ This file removes that mismatch.  It is gap **(G2c)** of `ArlibCommunity.Foundat
 * `ArlibCommunity.Foundations.Convex.concaveOn_limit_normalised_slice_profile` — the limit of the *normalised* slice profiles
   has a concave `1/m`-th power, so the `W` produced below is an honest needle profile.
 * `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos` — `ArlibCommunity.Foundations.Convex.needleIntegral_eq_zero_and_ge` with the
-  profile hypotheses (G2a), (G2b) discharged from `ArlibCommunity.Foundations.Convexity.ConcaveSelection` and `W`
+  profile hypotheses (G2a), (G2b) discharged from `ArlibCommunity.Foundations.Convex.Localization.Analysis.ConcaveSelection` and `W`
   quantified existentially.
 * `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_affine` — **(G2c)**: the same two conclusions for
   an arbitrary needle `t ↦ a + t • v` and arbitrary height functional `φ`.
 
 The Jacobian never has to be split into a first-coordinate scaling times a transverse
-determinant, contrary to what the (G2c) paragraph of `ArlibCommunity.Foundations.Convexity.NeedleProfile`
+determinant, contrary to what the (G2c) paragraph of `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleProfile`
 anticipated: the profile hypotheses are discharged *in the frame*, before the transport, so the
 only thing the transport moves is a set integral and a volume, and the single constant cancels.
 -/
@@ -471,7 +471,7 @@ a sequence `δ k → 0` with
 
 i.e. the integrand varies by `o(1)` between a point of the `k`-th body of the localisation chain
 and the point of the needle axis at the same height.  The localisation chain of
-`ArlibCommunity.Foundations.Convexity.LocalizationAssembly` delivers instead the *geometric* statement that the
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly` delivers instead the *geometric* statement that the
 intersection `⋂ k, C k` is collinear (`ArlibCommunity.Foundations.Convex.exists_flat_cut_chain_collinear`).
 
 This file bridges the two, and does so with **no metric decay hypothesis at all**: the only extra

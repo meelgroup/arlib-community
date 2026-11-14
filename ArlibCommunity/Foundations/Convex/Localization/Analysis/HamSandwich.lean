@@ -9,11 +9,11 @@ import ArlibCommunity.Foundations.Convex.Localization.Analysis.OddMap
 /-!
 # The two-measure ham sandwich, for signed integrands
 
-This file settles the open statement **(P1)** of `ArlibCommunity.Foundations.Convexity.PositionalCut` — equivalently
-gap **(G1)** of `ArlibCommunity.Foundations.Convexity.LocalizationLemma` — for **signed** integrands, which is the
-generality the localisation argument consumes.  `ArlibCommunity.Foundations.Convexity.TransverseCut` proves only the
+This file settles the open statement **(P1)** of `PositionalCut.lean` (not in this repository; see `REFERENCES.md`) — equivalently
+gap **(G1)** of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLemma` — for **signed** integrands, which is the
+generality the localisation argument consumes.  `TransverseCut.lean` (not in this repository; see `REFERENCES.md`) proves only the
 nonnegative case, by mass centres, and records that the signed case "is where Borsuk–Ulam
-re-enters".  It does; Borsuk–Ulam is now available, proved in `ArlibCommunity.Foundations.Topology.OddMap`.
+re-enters".  It does; Borsuk–Ulam is now available, proved in `ArlibCommunity.Foundations.Convex.Localization.Analysis.OddMap`.
 
 ## Main results
 
@@ -51,7 +51,7 @@ Positivity on both sides is then immediate: each side carries exactly half of ea
 
 ## Why the weakening from bisection to positivity does not help
 
-`ArlibCommunity.Foundations.Convexity.PositionalCut` notes that (P1) needs only positivity of the four masses, not
+`PositionalCut.lean` notes that (P1) needs only positivity of the four masses, not
 exact bisection, and suggests that this should be a softer target.  It is not, and it is worth
 recording why, so that the soft route is not retried.
 
@@ -69,7 +69,7 @@ connected sphere of directions.  Its one hidden input is a *continuous odd selec
 of the bisecting level.  That selection exists precisely because `s ↦ ∫_{C ∩ {L_u ≤ s}} g` is
 **strictly monotone**, which holds only for **nonnegative** `g`; then the bisecting level is
 unique and depends continuously on `u`.  This is exactly the hypothesis
-`ArlibCommunity.Foundations.Convexity.TransverseCut` uses, and it is exactly what fails here.
+`TransverseCut.lean` uses, and it is exactly what fails here.
 
 For signed `g` the profile is not monotone and the level set
 `Z = {(u,s) : ∫_{C ∩ {L_u ≤ s}} g = (∫_C g)/2}` — the zero set of an odd continuous function on the
@@ -101,7 +101,7 @@ construction also reads "if `A_m ∩ int K_m ≠ ∅`, set `K_{m+1} := K_m`", wh
 relative to its own contradiction argument a few paragraphs later; it is presumably a typo for
 cutting *when* the flat meets the interior, but that is an inference.  **Nothing in this file rests
 on any of that**: the results below are proved from Borsuk–Ulam, which is proved in
-`ArlibCommunity.Foundations.Topology.OddMap` from Mathlib.
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.OddMap` from Mathlib.
 
 ## A note on the two dimension hypotheses
 
@@ -119,7 +119,7 @@ ambient dimension may be exactly `2` and Borsuk–Ulam is still applied in its `
 
 There is **no** `def`, `structure`, `class` or `Prop` here asserting the ham sandwich, (P1), (G1),
 the Localization Lemma or the isoperimetric inequality, and no theorem below takes any of them as
-a hypothesis.  The single `def`, `ArlibCommunity.Foundations.cutFun`, is a plain explicit linear combination of two
+a hypothesis.  The single `def`, `cutFun`, is a plain explicit linear combination of two
 inner products, and every property attributed to it is proved.  The axiom audit at the end
 confirms that every result depends on exactly `[propext, Classical.choice, Quot.sound]`.
 -/
@@ -325,7 +325,7 @@ in `span {e₁, e₂}`, that bisects `∫_C g` **and** `∫_C h` simultaneously.
 The proof is Borsuk–Ulam (`ArlibCommunity.Foundations.Convex.exists_eq_zero_of_odd_pair_sphere`) applied to the two cut
 masses as functions on the unit sphere of `ℝ³`, which parametrizes the oriented halfspaces
 orthogonal to `span {e₁, e₂}`: they are continuous (`ArlibCommunity.Foundations.Convex.continuousAt_setIntegral_param`) and,
-after subtracting half of the total mass, odd (`ArlibCommunity.Foundations.cutMass_add_neg`). -/
+after subtracting half of the total mass, odd (`cutMass_add_neg`). -/
 theorem exists_halfSpace_bisecting_pair {e₁ e₂ : E} (h11 : inner ℝ e₁ e₁ = (1 : ℝ))
     (h22 : inner ℝ e₂ e₂ = (1 : ℝ)) (h12 : inner ℝ e₁ e₂ = (0 : ℝ))
     {C : Set E} {g h : E → ℝ} (hC : MeasurableSet C)
@@ -518,9 +518,9 @@ measurable `C` carrying positive `g`-mass and positive `h`-mass — with `g` and
 integrable, **no sign hypothesis** — there are a nonzero direction `L` and a level `s` such that
 both sides of the cut `{L ≤ s}`, `{s < L}` carry positive `g`-mass *and* positive `h`-mass.
 
-This is the statement labelled **(P1)** in `ArlibCommunity.Foundations.Convexity.PositionalCut` and **(G1)** in
-`ArlibCommunity.Foundations.Convexity.LocalizationLemma`, in the generality the localisation argument consumes;
-`ArlibCommunity.Foundations.Convexity.TransverseCut` proves only the nonnegative case, by mass centres. -/
+This is the statement labelled **(P1)** in `PositionalCut.lean` and **(G1)** in
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLemma`, in the generality the localisation argument consumes;
+`TransverseCut.lean` proves only the nonnegative case, by mass centres. -/
 theorem exists_two_sided_halfSpace_signed (h2 : 2 ≤ finrank ℝ E)
     {C : Set E} {g h : E → ℝ} (hC : MeasurableSet C)
     (hgi : IntegrableOn g C μ) (hhi : IntegrableOn h C μ)

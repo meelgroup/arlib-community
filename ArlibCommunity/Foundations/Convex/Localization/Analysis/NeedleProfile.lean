@@ -9,7 +9,7 @@ import ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLimit
 /-!
 # (G2) reduced: a concave profile already suffices, and the weak-convergence step, proved
 
-`ArlibCommunity.Foundations.Convexity.LocalizationLimit` recorded gap **(G2)** — the limit passage of the
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLimit` recorded gap **(G2)** — the limit passage of the
 Lovász–Simonovits localisation argument — as having two residual pieces:
 
 > *(i)* the **weak-convergence statement**
@@ -25,7 +25,7 @@ Lovász–Simonovits localisation argument — as having two residual pieces:
 Every one-dimensional consumer of a needle in this repository takes as input *log-concavity of
 the needle density* — that is the explicit contract of `ArlibCommunity.Foundations.Convex.logConcaveOn_needleDensity`
 ("precisely the hypothesis that every one-dimensional lemma downstream consumes"), and of
-`ArlibCommunity.Foundations.Convex.IsLogConcave.comp_needleMap` in `ArlibCommunity.Foundations.Convexity.Isoperimetry`.  Affineness of `ℓ` is
+`ArlibCommunity.Foundations.Convex.IsLogConcave.comp_needleMap` in `ArlibCommunity.Foundations.Convex.Basic.Isoperimetry`.  Affineness of `ℓ` is
 used only to *establish* that log-concavity, via `ArlibCommunity.Foundations.Convex.logConcaveOn_needleWeight`.
 
 But a nonnegative concave function is log-concave (`ArlibCommunity.Foundations.Convex.logConcaveOn_of_concaveOn`), so a
@@ -58,7 +58,7 @@ variables; that reduction is *not* formalised here — see §3).
 * `ArlibCommunity.Foundations.Convex.abs_setIntegral_sub_slice_profile_le` — **the thin-tube comparison.**  If `f` varies by
   at most `δ` between a point of `K` and the point of the axis at the same height, then
   `|∫_K f − ∫ vol(slice K t)·f(axis t) dt| ≤ δ · vol K`.  This is the *only* place transverse
-  thinness — the corrected target of (G1), see `ArlibCommunity.Foundations.Convexity.NeedleLimit` — is consumed.  No
+  thinness — the corrected target of (G1), see `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleLimit` — is consumed.  No
   convexity is used.
 * `ArlibCommunity.Foundations.Convex.tendsto_average_setIntegral_of_profile` — **the limit passage.**  For measurable bodies
   `C k` of finite positive volume in the unit slab, a bounded measurable `f`, transverse
@@ -69,13 +69,13 @@ variables; that reduction is *not* formalised here — see §3).
   hypothesis of the previous theorem holds simultaneously, with nonzero volumes and a nonzero
   limit.
 
-`ArlibCommunity.Foundations.Convex.concaveOn_limit_slice_profile` (in `ArlibCommunity.Foundations.Convexity.LocalizationLimit`) is the companion
+`ArlibCommunity.Foundations.Convex.concaveOn_limit_slice_profile` (in `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLimit`) is the companion
 fact that `W ^ (1/m)` is concave when the `C k` are convex; combined with §1, the limit measure
 that comes out is *exactly* of the form a downstream one-dimensional lemma accepts.
 
 ## 3. What (G2) still needs, stated exactly
 
-**(G2a) and (G2b) are now proved**, in `ArlibCommunity.Foundations.Convexity.ConcaveSelection`.  Only (G2c) is
+**(G2a) and (G2b) are now proved**, in `ArlibCommunity.Foundations.Convex.Localization.Analysis.ConcaveSelection`.  Only (G2c) is
 left of (G2).  The two paragraphs below are kept because their *content* is still accurate —
 what changed is that each is now a theorem rather than a hypothesis.
 
@@ -265,7 +265,7 @@ at the same height, then the integral of `f` over `K` differs from the *needle i
 Dividing by `vol K`, this says: for bodies that are transversally thin to within `δ`-variation
 of `f`, the normalised integral over the body agrees with the integral against the slice-volume
 profile along the axis.  **This is the step at which transverse thinness — the output of (G1),
-`ArlibCommunity.Foundations.Convexity.NeedleLimit`'s corrected target — is consumed, and it is the only place it is
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleLimit`'s corrected target — is consumed, and it is the only place it is
 consumed.**  No convexity is used. -/
 theorem abs_setIntegral_sub_slice_profile_le {K : Set (Fin (m + 1) → ℝ)} (hK : MeasurableSet K)
     (hKfin : volume K ≠ ⊤) {f : (Fin (m + 1) → ℝ) → ℝ} (hfm : Measurable f) {M δ : ℝ}

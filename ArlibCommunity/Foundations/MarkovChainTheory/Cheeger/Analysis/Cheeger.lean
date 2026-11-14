@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Integral.MeanInequalities
 /-!
 # The `L²` layer: real Dirichlet form, variance, and the spectral gap
 
-`ArlibCommunity.Foundations.MarkovChains.Continuous.MixingFromConductance` stops at
+`ArlibCommunity.Foundations.MarkovChainTheory.Basic.MixingFromConductance` stops at
 `conductanceOn_eq_dirichletForm_div`, which reads `Φ(S) = E(1_S, 1_S) / π(S)` with `E` the
 `ℝ≥0∞`-valued Dirichlet form.  The next object the Cheeger dictionary needs is a
 *variance*, and `ℝ≥0∞` is the wrong home for it: `Var f = E f² − (E f)²` truncates at `0`
@@ -102,8 +102,8 @@ exhibit a chain satisfying it, on which the inequality reads `1/8 ≤ 1`.
 
 There is no `def`, `structure` field or predicate anywhere in this file that names the
 Cheeger inequality (or isoperimetry) and stands in for its proof.  That failure mode — a
-predicate whose name asserts the theorem — is what the non-vacuity rule and `CV-ROADMAP.md` §2a
-warn about, and what `../gaussian-cooling-vempala`'s `Isoperimetry` / `MixingFromConductance` /
+predicate whose name asserts the theorem — is what the *non-vacuity rule* in `ArlibCommunity/Foundations.lean`
+warns about, and what `../gaussian-cooling-vempala`'s `Isoperimetry` / `MixingFromConductance` /
 `SpeedyConductance` / `BallWalkMixing` exhibit.
 
 ## What is still NOT here

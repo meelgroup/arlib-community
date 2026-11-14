@@ -40,8 +40,8 @@ bound in that paper rests on:
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` has exactly four hypotheses that are not geometry or
 analysis of the data.  Each is a plain binder — there is **no** `def … : Prop` packaging the
 conclusion, and in particular nothing shaped like the `IsoInput`/`OneDimIso` predicate that
-`ArlibCommunity.Foundations.Convexity.Isoperimetry` (docstring, line 75) and
-`ArlibCommunity.Foundations.Convexity.Localization` (line 56) deliberately refuse to introduce.
+`ArlibCommunity.Foundations.Convex.Basic.Isoperimetry` (docstring, line 75) and
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.Localization` (line 56) deliberately refuse to introduce.
 
 1. **`hloc` — the Localization Lemma** of Lovász–Simonovits (KLS 1995, Corollary 2.4), applied
    to `g₁ = 1_{S₁}h − A·h` and `g₂ = (d/σ)A·1_{S₂}h − 1_{S₃}h`; [CV18].
@@ -50,7 +50,7 @@ conclusion, and in particular nothing shaped like the `IsoInput`/`OneDimIso` pre
    both displayed relations — being homogeneous of degree one in the needle measure — are
    invariant).
    *Status in this repository*: partially assembled in
-   `ArlibCommunity.Foundations.Convexity.LocalizationAssembly`.  `ArlibCommunity.Foundations.Convex.needleIntegral_eq_zero_and_ge` delivers the
+   `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly`.  `ArlibCommunity.Foundations.Convex.needleIntegral_eq_zero_and_ge` delivers the
    two conclusions from the chain invariants, but its residual hypotheses **(A)** transverse
    thinness (`hδ₁`, `hδ₂`, `δ k → 0`) and **(B)/(G2c)** the affine change of coordinates are
 open there (that file's docstring, "Classification of every hypothesis"). A third mismatch
@@ -85,7 +85,7 @@ open there (that file's docstring, "Classification of every hypothesis"). A thir
    Lovász–Simonovits for a general measurable partition, deduced from its interval case.
 3. **`h1d1` — inequality (1d-1)**, [CV18], cited there as Lemma 3.8 of
    Kannan–Lovász–Simonovits 1997.  **This repository does not contain it.**
-   `ArlibCommunity.Foundations.Convex.lem33_sqrt` / `ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt`
+   `ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt_unitBall` / `ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt`
    (`ArlibCommunity/Foundations/Convex/BoundaryLayer/Analysis/KLS97Sharp.lean`) is *Corollary 4.6* of that paper — an `n`-dimensional
    statement `∫_K vol(B(x,t) \ K) dx ≤ …` about ball-walk step lengths — and is a different
    result from the four-integral one-dimensional inequality wanted here.  Nobody is currently
@@ -93,7 +93,7 @@ open there (that file's docstring, "Classification of every hypothesis"). A thir
 4. **`h1d2` — inequality (1d-2)**, [CV18], with the paper's coefficient
    `\iso = ln 2`, divided by `σ` because the needle's Gaussian factor has variance `σ²` rather
    than `1` (Brascamp–Lieb, [CV18]).  Being proved concurrently in
-   `ArlibCommunity.Foundations.Convexity.OneDimIsoperimetry`.  That file's target `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry`
+   `ArlibCommunity.Foundations.Convex.Basic.OneDimIsoperimetry`.  That file's target `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry`
    currently reaches coefficient `sup w / ∫ w ≥ 1/(2√3)` rather than `ln 2 ≈ 0.693`; if it
    lands at the weaker constant, `h1d2` here should be reinstantiated with `1/(2√3)` in place
    of `ln 2` and the separation hypothesis's first branch with `2√3·d` in place of `d/ln 2` —
@@ -333,7 +333,7 @@ theorem gaussianRestricted_isoperimetry (hn : 0 < n) {σ d : ℝ} (hσ : 0 < σ)
     -- to `g₁ = 1_{S₁}h − A·h` and `g₂ = (d/σ)A·1_{S₂}h − 1_{S₃}h`; [CV18].
     -- The needle is arclength-parameterised (`‖e‖ = 1`); the paper's `(1−t)a + tb`, `t ∈ [0,1]`
     -- differs from it by an affine change of parameter, under which both displayed relations
-    -- are invariant.  Partially assembled in `ArlibCommunity.Foundations.Convexity.LocalizationAssembly`; see the
+    -- are invariant.  Partially assembled in `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly`; see the
     -- module docstring for the residuals.
     (hloc : ∀ A : ℝ, 0 < A →
       (∫ x in S₁, h x) = A * ∫ x, h x →

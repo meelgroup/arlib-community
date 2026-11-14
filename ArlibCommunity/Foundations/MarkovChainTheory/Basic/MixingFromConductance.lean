@@ -18,9 +18,9 @@ conductance `phi` started from an `M`-warm distribution,
 
 Mathlib v4.32 has Markov kernels and invariance but no chain iterate as a measure, no
 mixing predicate, no quantitative convergence rate and no conductance on a general
-measurable space (`CV-ROADMAP.md` §3).  The chain layer — `step`, `iterate`, `MixesWithin`,
+measurable space.  The chain layer — `step`, `iterate`, `MixesWithin`,
 the data-processing inequality and the monotonicity of the distance to stationarity — is
-supplied by `ArlibCommunity.Foundations.MarkovChains.Continuous.Warmness`, which this module imports and builds
+supplied by `ArlibCommunity.Foundations.MarkovChainTheory.Basic.Warmness`, which this module imports and builds
 on.  What is added here is the *quantitative* half: the arithmetic that converts a decay
 rate into an explicit number of steps, and the first step of the Cheeger dictionary that
 relates the conductance of a set to a Rayleigh quotient of the Dirichlet form.
@@ -81,7 +81,7 @@ lemmas `step_const_eq` and `mixesWithin_const`.
 `d_TV(Q_t, Q) ≤ √M (1 − phi²/2)^t`, are not proved in this file.**  They are also *not*
 assumed: there is no `def` or `structure` field in this module that names either statement
 and stands in for its proof, which is the failure mode the non-vacuity rule and
-the discussion in `Algorithms/KV97/Analysis/Theorem2.lean` §0 warn about, and which
+the discussion in `Algorithms/KV97/Analysis/HitProbability.lean` §0 warn about, and which
 `../gaussian-cooling-vempala/lean/GaussianCooling/Conductance.lean`
 (`MixingFromConductance`) exhibits.  The decay bound enters the one theorem that needs it,
 `mixesWithin_of_conductance_decay`, as an explicit hypothesis on the caller, so that
@@ -193,7 +193,7 @@ theorem conductanceMixingTime_le {M phi eps : ℝ} (hM : 1 ≤ M) (hphi0 : 0 < p
 
 The chain iterate `ArlibCommunity.Foundations.MarkovChainTheory.iterate` and the mixing predicate
 `ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin` are those of
-`ArlibCommunity.Foundations.MarkovChains.Continuous.Warmness`; nothing about them is redefined here. -/
+`ArlibCommunity.Foundations.MarkovChainTheory.Basic.Warmness`; nothing about them is redefined here. -/
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 

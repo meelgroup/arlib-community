@@ -10,7 +10,7 @@ import ArlibCommunity.Foundations.Convex.Basic.Isoperimetry
 # Marginals of log-concave functions, and log-concave measures
 
 This file collects what the Prékopa–Leindler inequality of
-`ArlibCommunity.Foundations.Convexity.PrekopaLeindlerN` unlocks: the **marginal theorem** — integrating a
+`ArlibCommunity.Foundations.Convex.PrekopaLeindler.Analysis.PrekopaLeindlerN` unlocks: the **marginal theorem** — integrating a
 log-concave function over some of its variables leaves a log-concave function — and its
 standard consequences.  Mathlib `v4.32` has none of them.
 
@@ -52,10 +52,10 @@ stated there.
 
 The **Localization Lemma** of Lovász–Simonovits and the **isoperimetric inequality for
 log-concave densities** (Cousins–Vempala §3, `thm:iso`) are *not* proved here, and — as in
-`ArlibCommunity.Foundations.Convexity.Isoperimetry` — **no predicate in this file asserts either of them**.
+`ArlibCommunity.Foundations.Convex.Basic.Isoperimetry` — **no predicate in this file asserts either of them**.
 There is deliberately no `LocalizationInput`, `IsoInput` or `OneDimIso`: a predicate whose
 name asserts a theorem is inhabited only by degenerate witnesses and establishes nothing
-where the conclusion has content (`CV-ROADMAP.md` §2a).
+where the conclusion has content; see the *non-vacuity rule* in `ArlibCommunity/Foundations.lean`.
 
 What is proved above is the *input* side of the localisation argument — Prékopa–Leindler's
 marginal theorem and the log-concavity of the measures and section functions the argument

@@ -348,7 +348,7 @@ theorem chordLength_eq_ofReal (hKc : Convex ℝ K) (hKcl : IsClosed K)
 /-! ### The comparison in the form `HitAndRunOverlap` consumes -/
 
 /-- **The chord comparison** `ℓ(v,x)·|x − u| ≤ 2·|x − v|·ℓ(u,x)`, the hypothesis `hchord` of
-`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_lemma41`.
+`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close`.
 
 The Euclidean factors cancel: this is `ArlibCommunity.Foundations.MarkovChainTheory.chordDiff_le_two_mul` re-read through
 `chordLength_eq_ofReal`.  Note the second chord hypothesis `chordHigh K u x ≤ 3`, which the
@@ -416,7 +416,7 @@ theorem chordHigh_self (K : Set (EuclideanSpace ℝ (Fin n))) (u : EuclideanSpac
     rw [chordHigh, hempty, Real.sSup_empty]
 
 /-- **`{x : chordLow K u x < −3}` is measurable** — the hypothesis `hA3m` of
-`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_lemma41`.
+`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close`.
 
 On a convex bounded `K` containing `u`, `chordLow K u x < −3` says that some parameter below
 `−3` is admissible, and by convexity some *rational* one is; so the set is the countable
@@ -604,7 +604,7 @@ theorem hitAndRunProposal_chordHigh_gt_le (hKm : MeasurableSet K) (hKc : Convex 
     _ = ENNReal.ofReal (1 / 3) := mul_one _
 
 /-- **`P_u(A₃) ≤ 1/3`** — the hypothesis `hA3` of
-`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_lemma41`, for the walk itself.  The lazy atom of
+`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close`, for the walk itself.  The lazy atom of
 `hitAndRun` sits at `u`, which is never in `A₃` (`chordLow_self`). -/
 theorem hitAndRun_chordLow_lt_le (hKm : MeasurableSet K) (hKc : Convex ℝ K)
     (hKb : Bornology.IsBounded K) (hu : u ∈ K) :

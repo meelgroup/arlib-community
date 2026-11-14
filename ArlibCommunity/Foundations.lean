@@ -27,26 +27,38 @@ outside `Model/` and the area preludes.  `Convex` does not depend on `MarkovChai
 | --- | --- |
 | `PrekopaLeindler` | the Prékopa–Leindler inequality on `ℝⁿ` |
 | `BrunnMinkowski` | the sharp Brunn–Minkowski inequality, and Brunn's slice theorem |
-| `Localization` | the Localization Lemma of Kannan–Lovász–Simonovits |
+| `Localization` | the Localization Lemma of Kannan–Lovász–Simonovits [KLS95] |
 | `ConvexIsoperimetry` | three-set isoperimetry for a convex body |
-| `CrossRatioIsoperimetry` | Lovász–Vempala's weighted cross-ratio isoperimetry |
-| `GaussianIsoperimetry` | Cousins–Vempala's isoperimetry for Gaussian-restricted log-concave densities |
-| `BoundaryLayer` | KLS97 Corollary 4.6 at the sharp order `√n` |
+| `CrossRatioIsoperimetry` | Lovász–Vempala's weighted cross-ratio isoperimetry ([LV06], Theorem 2.1, corrected) |
+| `GaussianIsoperimetry` | Cousins–Vempala's isoperimetry for Gaussian-restricted log-concave densities [CV18] |
+| `BoundaryLayer` | [KLS97] Corollary 4.6 at the sharp order `√n` |
 
 ## Markov chain theory (`ArlibCommunity.Foundations.MarkovChainTheory`)
 
 | Theorem | Surface statement |
 | --- | --- |
 | `Cheeger` | Cheeger's inequality `Φ²/2 ≤ gap ≤ 2Φ` |
-| `ConductanceMixing` | the Lovász–Simonovits decay `√M (1 − φ²/2)^t` |
+| `ConductanceMixing` | the Lovász–Simonovits decay `√M (1 − φ²/2)^t` [LS93] |
 | `PointwiseMixing` | pointwise mixing from uniform minorisation; TV does not imply it |
-| `HitAndRunMixing` | hit-and-run's conductance and mixing (Lovász–Vempala Theorems 4.2 and 1.1) |
+| `HitAndRunMixing` | hit-and-run's conductance and mixing ([LV06], Theorems 4.2 and 1.1) |
 | `BallWalkMixing` | mixing of the lazy ball walk on a polytope |
 | `GaussianWalkConductance` | conductance of the Metropolis–Gaussian and speedy walks |
 
 The walk theorems are stated for any Markov kernel whose step at every point is the walk's
 explicit one-step law (defined in `Model/Prelude.lean`); each folder also proves that such a
 kernel exists.
+
+Bracketed keys such as `[KLS95]` are entries of `REFERENCES.md`.
+
+## The non-vacuity rule
+
+No `def`, `structure` field or named `Prop` here asserts a theorem's conclusion.  A predicate
+such as `IsoInput K` or `MixesFast P`, taken as a hypothesis, is typically inhabited only by
+degenerate witnesses (a zero measure, an empty body, a trivial threshold), so a result proved
+from it says nothing in the case with content, and its name hides that from a reader.  Missing
+inputs are instead spelled out as `∀`-hypotheses in the theorem's type, where an auditor sees
+exactly what is assumed.  Where a hypothesis is kept, its docstring says whether it has a
+witness in which it is satisfied non-trivially, and if not, why.
 -/
 
 import ArlibCommunity.Foundations.Convex.Basic.CrossRatio

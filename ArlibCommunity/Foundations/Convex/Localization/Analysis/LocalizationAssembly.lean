@@ -24,7 +24,7 @@ any profile-convergence property**; the two definitions below (`ArlibCommunity.F
 `ArlibCommunity.Foundations.Convex.pencilLevel`) are explicit formulas, and every property attributed to them is proved.
 The residual analytic ingredients appear only as inline `∀`-hypotheses of
 `ArlibCommunity.Foundations.Convex.needleIntegral_eq_zero_and_ge`, in exactly the shape
-`ArlibCommunity.Foundations.Convexity.NeedleProfile` states them.
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleProfile` states them.
 
 ## What is proved here, unconditionally
 
@@ -39,7 +39,7 @@ The residual analytic ingredients appear only as inline `∀`-hypotheses of
 
   This is the missing *positional* control.  `ArlibCommunity.Foundations.Convex.exists_halfSpace_bisecting` prescribes the
   direction but not the position; `ArlibCommunity.Foundations.Convex.exists_halfSpace_bisecting_pair_of_finrank` prescribes
-  neither.  It is the "rotating pencil" route that `ArlibCommunity.Foundations.Topology.HamSandwich` records as a
+  neither.  It is the "rotating pencil" route that `ArlibCommunity.Foundations.Convex.Localization.Analysis.HamSandwich` records as a
   cheap alternative available to a later reader — and no Borsuk–Ulam is used: with the equality
   form, only *one* integrand ever needs bisecting.
 
@@ -107,17 +107,17 @@ and `ℓ` is delivered concave, not affine.
 `ArlibCommunity.Foundations.Convex.lt_setIntegral_of_perturbed`.  Measurability, finiteness and positivity of the volumes:
 `ArlibCommunity.Foundations.Convex.exists_flat_cut_chain` plus `ArlibCommunity.Foundations.Convex.interior_nonempty_of_setIntegral_pos`.
 
-*(proved — (G2a), (G2b) of `ArlibCommunity.Foundations.Convexity.NeedleProfile`, in
-`ArlibCommunity.Foundations.Convexity.ConcaveSelection`)* — `hB`, the uniform bound on the normalised slice profiles
+*(proved — (G2a), (G2b) of `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleProfile`, in
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.ConcaveSelection`)* — `hB`, the uniform bound on the normalised slice profiles
 (`ArlibCommunity.Foundations.Convex.normalised_volume_slice_le`, at constant `2^(m+1)`), and `hlim`, their pointwise
 convergence to `W` along a subsequence (`ArlibCommunity.Foundations.Convex.exists_subseq_tendsto_normalised_slice_profile'`,
 Arzelà–Ascoli on the *profiles*, not Blaschke on the *bodies*).  Both are packaged into
 `ArlibCommunity.Foundations.Convex.needleIntegral_eq_zero_and_ge` by `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos`
-(`ArlibCommunity.Foundations.Convexity.LocalizationAffine`), which quantifies `W` existentially and asks instead only
+(`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAffine`), which quantifies `W` existentially and asks instead only
 that the bodies be convex, slice-finite and spanning.
 
-*(proved — the two items formerly listed here as open, in `ArlibCommunity.Foundations.Convexity.LocalizationAffine`
-and `ArlibCommunity.Foundations.Convexity.LocalizationTransverse`)*:
+*(proved — the two items formerly listed here as open, in `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAffine`
+and `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAffine`)*:
 
 * **(A) The transverse-thinness bridge**, formerly "the precise point at which the assembly
   stops", is now `ArlibCommunity.Foundations.Convex.exists_tendsto_transverse_modulus` /
@@ -127,7 +127,7 @@ and `ArlibCommunity.Foundations.Convexity.LocalizationTransverse`)*:
   and the neighbourhood `{y | |g y − g (axis y)| < ε}` is open because `g` and the axis map are
   continuous.  The explicit moduli `δ k = sSup {|g y − g (axis y)| : y ∈ C k}` then tend to `0`.
   What it needs of the chain — that its bodies be *closed* — is supplied by
-  `ArlibCommunity.Foundations.Convex.exists_flat_cut_chain_collinear_compact` (`ArlibCommunity.Foundations.Convexity.LocalizationClosed`), which
+  `ArlibCommunity.Foundations.Convex.exists_flat_cut_chain_collinear_compact` (`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationClosed`), which
   closes each body of `ArlibCommunity.Foundations.Convex.exists_flat_cut_chain` up: the frontier of a convex set is
   Haar-null, so no mass moves, and a half-turn of the pencil turns the closure of the open side
   of a cut into the closed side of another cut through the same flat.  Nothing about (A) is
@@ -141,7 +141,7 @@ open.
   `ArlibCommunity.Foundations.Convex.map_affine_addHaar`, `ArlibCommunity.Foundations.Convex.addHaar_preimage_affine`, `ArlibCommunity.Foundations.Convex.setIntegral_comp_affine`.
   The Jacobian is a single positive constant and cancels from both conclusions, so the
   factorisation of the determinant into "first-coordinate scaling times transverse determinant"
-  that `ArlibCommunity.Foundations.Convexity.NeedleProfile` anticipated is **not** needed: the profile hypotheses are
+  that `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleProfile` anticipated is **not** needed: the profile hypotheses are
   discharged in the frame, before the transport.
   `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact` combines (A) and (B), and
   `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact_box` is its non-vacuity witness.
@@ -162,16 +162,16 @@ open.
   `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact` asks every body to lie in *and* span
   one fixed slab, which forces `φ '' (D k − a) = [0,1]` at every stage and
   (`ArlibCommunity.Foundations.Convex.exists_mem_iInter_height`) in the limit; a localisation chain shrinks in *every*
-  direction, so no nonzero `φ` has constant range along it.  `ArlibCommunity.Foundations.Convexity.NeedleSlab`
+  direction, so no nonzero `φ` has constant range along it.  `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleSlab`
   removes the rigidity: the `k`-th body lies in and spans its **own** slab `[l k, u k]`, with
   `l k ≤ 0 ≤ 1 ≤ u k`, `l k → 0`, `u k → 1`.  The mechanism is a rescaling of the *profile*
   rather than the body — `ArlibCommunity.Foundations.Convex.rescaledProfile` puts every stage's profile on `[0,1]`, so the
-  Arzelà–Ascoli selection of `ArlibCommunity.Foundations.Convexity.ConcaveSelection` applies verbatim, with the
+  Arzelà–Ascoli selection of `ArlibCommunity.Foundations.Convex.Localization.Analysis.ConcaveSelection` applies verbatim, with the
   slab-independent uniform bound supplied by `ArlibCommunity.Foundations.Convex.le_two_pow_of_concaveOn_rpow` (a
   one-dimensional restatement of `ArlibCommunity.Foundations.Convex.normalised_volume_slice_le` with the geometry stripped
   out).  The needle point then moves with `k`, and continuity of the integrands absorbs it in
   the same dominated-convergence step (`ArlibCommunity.Foundations.Convex.tendsto_average_setIntegral_of_rescaledProfile`).
-  `ArlibCommunity.Foundations.Convexity.NeedleSlabAffine` carries this to general position, and
+  `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleSlab` carries this to general position, and
   `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_shrinking_box` is the acid test: the boxes
   `[−1/(k+1), 1+1/(k+1)] × [−1/(k+1), 1/(k+1)]^m` shrink in *every* direction including along
   the needle, which the fixed-slab form provably cannot accept.  In
@@ -376,7 +376,7 @@ equal halves.
 This is the **positional** bisection that `ArlibCommunity.Foundations.Convex.exists_halfSpace_bisecting` (which fixes the
 direction, not the position) and `ArlibCommunity.Foundations.Convex.exists_halfSpace_bisecting_pair_of_finrank` (which
 prescribes neither) do not give.  It is the "rotating pencil" route recorded as an alternative in
-`ArlibCommunity.Foundations.Topology.HamSandwich`: only the *one-parameter* intermediate value theorem is used, no
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.HamSandwich`: only the *one-parameter* intermediate value theorem is used, no
 Borsuk–Ulam.  A single integrand is bisected — which is all the equality form of the Localization
 Lemma needs. -/
 theorem exists_pencil_bisecting {e₁ e₂ : E} (h11 : inner ℝ e₁ e₁ = (1 : ℝ))

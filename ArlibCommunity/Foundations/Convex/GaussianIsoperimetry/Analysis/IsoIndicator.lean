@@ -92,7 +92,7 @@ Two hypotheses beyond what the consumer already carries are used, and both are l
 The consumer's `hiso` states its **metric** branch at threshold `δ·log 2/√n / log 2`, i.e. `d/log 2`
 with `d = δ·log 2/√n`.  Everything proved here — and everything provable in this repository —
 states it at `2√3·d`.  This is **not** a defect of this file: it is the known `(1d-2)` constant
-gap recorded at `AUDIT.md:192` and `CV-ROADMAP.md:240`.  `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor_unconditional`
+gap between this repository's one-dimensional inequality and [CV18]'s.  `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor_unconditional`
 (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/ConcaveProfileIso.lean`) discharges `(1d-2)` at `1/(2√3) ≈ 0.289`, not
 Cousins–Vempala's `ln 2 ≈ 0.693`, so the separation threshold is larger by `2√3·ln 2 ≈ 2.401`.
 `ArlibCommunity.Foundations.Convex.metric_threshold_lt_openClosed_threshold` records the direction machine-checked:
@@ -799,7 +799,7 @@ its `hiso` binder at threshold `d / log 2`; everything provable in this reposito
 `2√3·d`, and `d/log 2 < 2√3·d` for `d > 0`.  So the consumer's separation hypothesis is
 **strictly weaker** than the one discharged here and cannot be `exact`-ed into it.
 
-This is the `(1d-2)` constant gap already recorded at `AUDIT.md:192` and `CV-ROADMAP.md:240`:
+This is the `(1d-2)` constant gap described in the module docstring:
 `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor_unconditional` proves `(1d-2)` at `1/(2√3) ≈ 0.289`,
 not Cousins–Vempala's `ln 2 ≈ 0.693`.  It has nothing to do with the indicator density; nothing
 here shows the consumer's binder is false. -/

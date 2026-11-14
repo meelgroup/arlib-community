@@ -22,8 +22,8 @@ alone.  The headline is
 * `ArlibCommunity.Foundations.MarkovChainTheory.unifSphere_cap_le` — for `n ≥ 1100`,
   `σ{θ ∈ Sⁿ⁻¹ : √n·|⟨θ,w⟩| > |w|} ≤ 9/25 = 0.36`;
 * `ArlibCommunity.Foundations.MarkovChainTheory.hitAndRun_almostOrthogonal_le_nine_twentyfifths` — the same bound in the
-  exact shape of the `hcap` binder of `tvLe_hitAndRun_lemma41`;
-* `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_lemma41_uncond` — **Lemma 4.1 with every hypothesis of
+  exact shape of the `hcap` binder of `tvLe_hitAndRun_of_close`;
+* `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_uncond` — **Lemma 4.1 with every hypothesis of
   the paper's proof discharged**, concluding `TVLe (P_u) (P_v) (1 − 1/8000)`.
 
 ## What had to be proved, and why it is not cheap
@@ -69,7 +69,7 @@ that sees the actual distribution is unavoidable.  The route taken here is:
 * **Non-vacuity.**  The bounded quantity is not zero: `SphereCoord.lean`'s
   `inv_le_unifSphere_almostOrthogonalDirClosed` gives `σ ≥ 1/n > 0` for the closed cap, so
   `unifSphere_cap_le` is a genuine two-sided sandwich, and the `hcap` binder it discharges is
-  the one `tvLe_hitAndRun_lemma41` actually consumes (it is passed by `exact`).
+  the one `tvLe_hitAndRun_of_close` actually consumes (it is passed by `exact`).
 -/
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
@@ -1430,7 +1430,7 @@ theorem unifSphere_cap_le {n : ℕ} (hn : 21 ≤ n) (w : EuclideanSpace ℝ (Fin
           rw [mul_comm (ENNReal.ofReal (9 / 25)), ← mul_assoc,
             ENNReal.inv_mul_cancel sphereArea_ne_zero (sphereArea_ne_top n), one_mul]
 
-/-- **The cap hypothesis `hcap` of `tvLe_hitAndRun_lemma41`, discharged at `q₂ = 9/25`.**
+/-- **The cap hypothesis `hcap` of `tvLe_hitAndRun_of_close`, discharged at `q₂ = 9/25`.**
 This is the shape the capstone consumes. -/
 theorem hitAndRun_almostOrthogonal_le_nine_twentyfifths {n : ℕ} (hn : 21 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
@@ -1442,12 +1442,12 @@ theorem hitAndRun_almostOrthogonal_le_nine_twentyfifths {n : ℕ} (hn : 21 ≤ n
 
 /-- **Lemma 4.1 with every hypothesis of the paper's proof discharged**, for `n ≥ 1100`.
 
-`tvLe_hitAndRun_lemma41_of_le_three_eighths` at `q₂ = 9/25 < 3/8` gives the numeral
+`tvLe_hitAndRun_of_close_of_le_three_eighths` at `q₂ = 9/25 < 3/8` gives the numeral
 `1 − 1/8000`: the one-step laws of two points at cross-ratio distance `< 1/8` overlap in
 mass at least `1/8000`.  (The paper claims `1/500`; see the module docstring of
 `HitAndRunOverlap.lean` for why no rounding recovers it, and this file's docstring for why
 `1/8000` rather than the `1/1892` that a sharp cap bound would give.) -/
-theorem tvLe_hitAndRun_lemma41_uncond {n : ℕ} (hn : 21 ≤ n)
+theorem tvLe_hitAndRun_of_close_uncond {n : ℕ} (hn : 21 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K) {u v : EuclideanSpace ℝ (Fin n)}
@@ -1458,7 +1458,7 @@ theorem tvLe_hitAndRun_lemma41_uncond {n : ℕ} (hn : 21 ≤ n)
     (hdK : crossRatioDist K u v < 1 / 8)
     (hFu : ‖u - v‖ < 2 / Real.sqrt n * medianStep K u) :
     TVLe (hitAndRun K u) (hitAndRun K v) (ENNReal.ofReal (1 - 1 / 8000)) := by
-  have h := tvLe_hitAndRun_lemma41_of_le_three_eighths (n := n) (by omega) hKc hKcl hKm hKb
+  have h := tvLe_hitAndRun_of_close_of_le_three_eighths (n := n) (by omega) hKc hKcl hKm hKb
     hu hv huv hmoveu hmovev ha hb hdK hFu (q₂ := 9 / 25) (by norm_num) (by norm_num)
     (hitAndRun_almostOrthogonal_le_nine_twentyfifths hn hKm u v)
   have hnum : (1 : ℝ) - (3 / 8 - 9 / 25) / 120 = 1 - 1 / 8000 := by norm_num
@@ -1505,7 +1505,7 @@ section AxiomCheck
 #print axioms volume_cone_le
 #print axioms unifSphere_cap_le
 #print axioms hitAndRun_almostOrthogonal_le_nine_twentyfifths
-#print axioms tvLe_hitAndRun_lemma41_uncond
+#print axioms tvLe_hitAndRun_of_close_uncond
 
 end AxiomCheck
 

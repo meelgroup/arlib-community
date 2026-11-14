@@ -13,8 +13,8 @@ import ArlibCommunity.Foundations.Convex.CrossRatioIsoperimetry.Analysis.Brascam
 Cousins–Vempala state the one-dimensional inequality `(1d-2)`
 ([CV18]) for a needle profile `ℓ ^ (n−1)` with `ℓ` **affine** —
 "a nonnegative linear function `l : [0,1] → ℝ₊`" ([CV18]).  This
-repository's localization machinery (`ArlibCommunity.Foundations.Convexity.LocalizationAssembly`,
-`ArlibCommunity.Foundations.Convexity.LocalizationAffine`, `ArlibCommunity.Foundations.Convexity.LocalizationTransverse`) delivers a
+repository's localization machinery (`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly`,
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAffine`, `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAffine`) delivers a
 profile `W` that is only known to satisfy "`W ^ (1/m)` concave", and
 `ArlibCommunity.Foundations.Convex.exists_convex_slice_profile_not_affine` **refutes** the concave-to-affine upgrade.
 This file restates and proves `(1d-2)` with `ℓ` merely **concave**, so that the two halves
@@ -29,7 +29,7 @@ The concave-vs-affine question has a one-line answer for `(1d-2)`, recorded here
 > `ℓ ^ k` (`ArlibCommunity.Foundations.Convex.logConcaveOn_pow_of_concaveOn`), hence so is `ℓ ^ k · g` for log-concave
 > `g` (`ArlibCommunity.Foundations.Convex.LogConcaveOn.mul`).
 
-`ArlibCommunity.Foundations.Convex.oneDim_isoperimetry` — the target of `ArlibCommunity.Foundations.Convexity.OneDimIsoperimetry` — is
+`ArlibCommunity.Foundations.Convex.oneDim_isoperimetry` — the target of `ArlibCommunity.Foundations.Convex.Basic.OneDimIsoperimetry` — is
 stated for a *single* log-concave weight `w` with no profile factor at all, so
 `(1d-2)` for a concave profile is that theorem applied to `w = ℓ ^ k · g`.  **Affineness of
 `ℓ` is never used**, and neither is `k = n − 1`; the profile enters only through the
@@ -66,7 +66,7 @@ inequality, which is insensitive to zeros (`0 ^ c = 0` for `c > 0` and `0 ^ 0 = 
   that is **genuinely concave and not affine** (`ℓ t = 1 − t²` on `[-1,1]`, which is also a
   case where `ℓ` vanishes, at the two endpoints).
 
-## Relation to `ArlibCommunity.Foundations.Convexity.SharpIsoperimetry`
+## Relation to `ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsoperimetry`
 
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` carries a binder
 
@@ -92,7 +92,7 @@ missing input.**
 
 *The constant.*  What is proved here is `1/(2√3) ≈ 0.2887`, not `ln 2 ≈ 0.6931`; the two
 lossy steps are identified in the docstring of `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_isotropic` and are
-slack in this argument, not an error in the paper.  `ArlibCommunity.Foundations.Convexity.SharpIsoperimetry`'s own
+slack in this argument, not an error in the paper.  `ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsoperimetry`'s own
 docstring already anticipates the substitution: `h1d2` reinstantiated with `1/(2√3)` for
 `ln 2`, and the separation hypothesis's metric branch with `2√3·d` for `d/ln 2`.  The proof
 of `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` is insensitive to the value.
@@ -102,7 +102,7 @@ of `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` is insens
 `∫_α^β (t − c)² F·γ ≤ σ² ∫_α^β F·γ` for some `c ∈ [α,β]`.  That is not an additional
 assumption on the mathematics but a *theorem* about the data `h1d2` already quantifies over,
 and it is exactly the step Cousins–Vempala cite at [CV18].  It was a binder
-only because the repository's `ArlibCommunity.Foundations.brascampLieb`
+only because the repository's `ArlibCommunity.Algorithms.CV18.brascampLieb`
 (`ArlibCommunity/Algorithms/CV18/Analysis/CoolingVariance.lean`) is the needle-specific special case
 `J₂J₀ − J₁² ≤ (σ²/x)J₀²` for the exponential family `s(x,·)`, with no log-concave factor.
 
@@ -205,7 +205,7 @@ theorem oneDim_isoperimetry_concaveProfile
 /-- **`(1d-2)` in the shape the Localization Lemma hands it over.**
 
 `ArlibCommunity.Foundations.Convex.needleIntegral_eq_zero_and_ge` and its relatives
-(`ArlibCommunity.Foundations.Convexity.LocalizationAssembly`) deliver the needle profile as a single function
+(`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly`) deliver the needle profile as a single function
 `W ≥ 0` together with `ConcaveOn ℝ · (fun t => W t ^ (1/m))`
 (`ArlibCommunity.Foundations.Convex.concaveOn_limit_normalised_slice_profile`, with `m = n − 1`), *not* as a factored
 `ℓ ^ m`.  This is the same inequality as `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_concaveProfile` presented
@@ -396,7 +396,7 @@ For a nonnegative log-concave `F` on `[α,β]` and the Gaussian factor
 *The constant.*  Cousins–Vempala's `\iso` is `ln 2 ≈ 0.6931` ([CV18]); what is
 proved here is `1/(2√3) ≈ 0.2887`.  The gap is slack in two steps of
 `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_isotropic`, identified in that theorem's docstring, not an error in
-the paper.  `ArlibCommunity.Foundations.Convexity.SharpIsoperimetry`'s own docstring already anticipates the
+the paper.  `ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsoperimetry`'s own docstring already anticipates the
 substitution: `h1d2` reinstantiated with `1/(2√3)` for `ln 2`, and the separation
 hypothesis's metric branch with `2√3·d` for `d/ln 2`.
 
@@ -406,7 +406,7 @@ quantified over: `F·γ` has density `exp(−V)` with `V'' ≥ 1/σ²` (because 
 so Brascamp–Lieb bounds its variance by `σ²`, which is precisely the step
 Cousins–Vempala take at [CV18].  It appears as a binder only because that
 form of Brascamp–Lieb — for `log-concave × Gaussian` — is not in this repository;
-`ArlibCommunity.Foundations.brascampLieb` (`ArlibCommunity/Algorithms/CV18/Analysis/CoolingVariance.lean`) is the
+`ArlibCommunity.Algorithms.CV18.brascampLieb` (`ArlibCommunity/Algorithms/CV18/Analysis/CoolingVariance.lean`) is the
 needle-specific case with no log-concave factor and does not apply here.  Discharging `hvar`
 turns this theorem into `h1d2` verbatim at the constant `1/(2√3)`. -/
 theorem oneDim_isoperimetry_gaussianFactor {σ : ℝ} (hσ : 0 < σ) (F : ℝ → ℝ)
@@ -445,7 +445,7 @@ Localization Lemma actually produces, with `ℓ ≥ 0` **concave** (not affine) 
 log-concave restriction the Gaussian is cut by.  This is the call
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` makes at `SharpIsoperimetry.lean`, with the
 affine `ℓ` of that file replaced by a concave one — the only change needed on the `(1d-2)`
-side to accept the concave profile of `ArlibCommunity.Foundations.Convexity.LocalizationAssembly`. -/
+side to accept the concave profile of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly`. -/
 theorem oneDim_isoperimetry_gaussian_concaveProfile {σ : ℝ} (hσ : 0 < σ) {ℓ f : ℝ → ℝ}
     {k : ℕ} {t₀ α β u v : ℝ} (hau : α ≤ u) (huv : u ≤ v) (hvβ : v ≤ β)
     (hℓ : ConcaveOn ℝ (Set.Icc α β) ℓ) (hℓ₀ : ∀ t ∈ Set.Icc α β, 0 ≤ ℓ t)

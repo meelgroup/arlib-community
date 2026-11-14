@@ -14,7 +14,7 @@ builds the speedy walk, whose conductance is bounded with *no* local-conductance
 but whose stationary measure is `ellProb K δ`, the law with density proportional to
 `ell K δ`.  This file relates the two chains directly, rather than comparing their
 stationary measures numerically the way
-`Arlib/MarkovChains/Continuous/SpeedyToUniform.lean` does.
+`SpeedyToUniform.lean` (not in this repository; see `REFERENCES.md`) does.
 
 The relation is a **time change**.  One step of the ball walk from `x` is: with probability
 `ell K δ x` take exactly the step the speedy walk would take, and with the remaining

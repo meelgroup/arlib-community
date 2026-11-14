@@ -62,7 +62,7 @@ a bound on `hitAndRun K u {x : ‖x−u‖·‖u−v‖ < √n·|⟪x−u, u−v
 * `ArlibCommunity.Foundations.MarkovChainTheory.hitAndRun_almostOrthogonal_le` — that reduction, specialised.
 * `ArlibCommunity.Foundations.MarkovChainTheory.hitAndRun_almostOrthogonal_le_one_sub_inv` — **`hcap` discharged with
   `q₂ = 1 − 1/n`**, unconditionally.  At `n = 2` this is exactly the `1/2` that
-  `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_lemma41` needs.  (The `_of_half` corollary that once
+  `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close` needs.  (The `_of_half` corollary that once
   recorded this figure was **deleted** in `868a1c9`'s follow-up: correcting the paper's false
   `hchord` raised the budget to `1/8 + q₂ + 1/2`, which is vacuous at `q₂ = 1/2`.)
 
@@ -599,7 +599,7 @@ theorem measurableSet_almostOrthogonalDir (u v : EuclideanSpace ℝ (Fin n)) :
     continuous_const.mul ((continuous_subtype_val.inner continuous_const)).abs
   exact measurableSet_lt measurable_const h2.measurable
 
-/-- **The cap hypothesis `hcap` of `tvLe_hitAndRun_lemma41`, reduced to the unit sphere.**
+/-- **The cap hypothesis `hcap` of `tvLe_hitAndRun_of_close`, reduced to the unit sphere.**
 
 `P_u{x : |⟨x − u, u − v⟩| > n^{-1/2}|x − u||u − v|} ≤ σ{θ : |⟨θ, u − v⟩| > n^{-1/2}|u − v|}`,
 where `σ = unifSphere n` is the normalised surface measure.  The event is a double cone about
@@ -656,7 +656,7 @@ theorem almostOrthogonalDir_eq {w : EuclideanSpace ℝ (Fin n)} (hw : w ≠ 0) :
 At most `n - 1` of the `n` coordinates of a unit vector can exceed the root-mean-square value
 `n^{-1/2}` strictly, so the set of directions `θ` with `√n·|⟨θ, w⟩| > |w|` has normalised
 surface measure at most `(n-1)/n`.  At `n = 2` this is exactly the value `1/2` that
-`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_lemma41` needs.  (The `_of_half` corollary that once
+`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close` needs.  (The `_of_half` corollary that once
   recorded this figure was **deleted** in `868a1c9`'s follow-up: correcting the paper's false
   `hchord` raised the budget to `1/8 + q₂ + 1/2`, which is vacuous at `q₂ = 1/2`.) -/
 theorem unifSphere_almostOrthogonalDir_le (hn : n ≠ 0) (w : EuclideanSpace ℝ (Fin n)) :
@@ -787,7 +787,7 @@ theorem inv_le_unifSphere_almostOrthogonalDirClosed (hn : n ≠ 0)
     _ = unifSphere n S := by
         rw [← mul_assoc, ENNReal.inv_mul_cancel hn0' hntop, one_mul]
 
-/-- **The cap hypothesis `hcap` of `tvLe_hitAndRun_lemma41`, discharged with
+/-- **The cap hypothesis `hcap` of `tvLe_hitAndRun_of_close`, discharged with
 `q₂ = 1 - 1/n`.** -/
 theorem hitAndRun_almostOrthogonal_le_one_sub_inv (hn : n ≠ 0)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)

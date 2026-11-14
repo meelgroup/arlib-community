@@ -93,7 +93,7 @@ The speedy walk's stationary distribution is `ellProb K delta`, the law with den
 proportional to `ell` on `K`.  It is **not** `ArlibCommunity.Foundations.Convex.uniformOn volume K`, and it is not the
 uniform measure on any subset of `K` either.  Consequently:
 
-* `ArlibCommunity.Foundations.MarkovChains.Continuous.PointwiseRoute.theorem2_of_mixesWithin` — and therefore Kannan-Vempala Theorem 2 as
+* `ArlibCommunity.Algorithms.KV97.hitProbability_bounds_of_mixesWithin` — and therefore Kannan-Vempala Theorem 2 as
   formalised in this library — is stated for the *uniform* measure on `K`, and **nothing in
   this file composes with it.**  There is deliberately no `theorem2_of_lazy_speedyWalk`
   here: writing one would require a bridge from `ellProb K delta` to
@@ -964,8 +964,8 @@ Hypotheses that carry content, all inline:
   genuinely needed: without it the overlap loss is measured against `vol(B(u,δ))` rather than
   `vol(B(u,δ) ∩ K)` and the `θ` comes back.
 * `hiso` — the **isoperimetric inequality for `ellProb K δ`**, spelled out.  Nothing here
-  proves it; Mathlib has no isoperimetric inequality for log-concave densities
-  (`CV-ROADMAP.md` §3).  Note it is stated for `ellProb K δ`, *not* for the uniform measure
+  proves it; Mathlib has no isoperimetric inequality for log-concave densities.
+  Note it is stated for `ellProb K δ`, *not* for the uniform measure
   on `K`; those are different hypotheses.
 
 The remaining hypotheses are non-degeneracy guards: `1 ≤ n`, `K` measurable with

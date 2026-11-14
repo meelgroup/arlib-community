@@ -60,7 +60,7 @@ That is the whole difference; every other line is the original.
 (`ArlibCommunity.Foundations.MarkovChainTheory.chordLow_eq_zero_of_notMem_interior`), so the side condition
 `chordLow K u v < 0` of the paper's Lemma 4.1 fails at every boundary pair and the `∀ u ∈ K`
 form cannot be discharged.  On the interior it is proved outright, at `1 − 1/8000` for
-`n ≥ 1100`, by `ArlibCommunity.Foundations.MarkovChainTheory.hLem41_interior_uncond`.  The unchanged
+`n ≥ 1100`, by `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_interior`.  The unchanged
 `conductance_hitAndRun_ge_of_tv_lsc` below is derived from this theorem by `interior_subset`,
 which is the machine-checked proof that the weakening loses no consumer. -/
 theorem conductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
@@ -250,7 +250,7 @@ theorem conductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
       (hS1int u hu) (hS2int v hv) huv (hmove u (hS1int u hu)) (hmove v (hS2int v hv))
       (hdich u hu v hv) hxK hxt
   -- the global bound `h ≤ 1/3` of Theorem 2.1, which the paper calls clear and which is
-  -- *not* a consequence of the chord bound (`ArlibCommunity.Foundations.not_hIso_two`)
+  -- *not* a consequence of the chord bound (`not_hIso_two` (not in this repository; see `REFERENCES.md`))
   have hg13 : ∀ x ∈ K, g x ≤ 1 / 3 := by
     intro x hx
     rw [hgapp x]
@@ -455,7 +455,7 @@ theorem conductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
 the interior.**
 
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_interior` replayed on
-`ArlibCommunity.Foundations.Geometry.conductance_hitAndRun_ge_of_tv_lsc_interior`; the arithmetic is the original's. -/
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_lsc_interior`; the arithmetic is the original's. -/
 theorem conductance_hitAndRun_ge_lsc_interior (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
@@ -487,16 +487,16 @@ theorem conductance_hitAndRun_ge_lsc_interior (hn : 1 ≤ n)
 
 /-- **The composition: Theorem 4.2 with `hIso` discharged, `hLem41` on the interior.**
 
-`ArlibCommunity.Foundations.Convex.hIso_lowerSemicontinuous` fed to `ArlibCommunity.Foundations.Geometry.conductance_hitAndRun_ge_lsc_interior`.  The
+`ArlibCommunity.Foundations.Convex.hIso_lowerSemicontinuous` fed to `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_lsc_interior`.  The
 residual binders are exactly three, all named and all inline at the declaration: `hLem41`
 (Lemma 4.1, on `interior K` — the only satisfiable form, and the one
-`ArlibCommunity.Foundations.MarkovChainTheory.hLem41_interior_uncond` proves outright), `htrans` (the chord transfer,
+`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_interior` proves outright), `htrans` (the chord transfer,
 proved by `ArlibCommunity.Foundations.Convex.htrans_of_compact`) and `hloc` (the Localization Lemma for continuous
 integrands with the needle inside the body, proved by `ArlibCommunity.Foundations.Convex.hloc_needle_in_body`).  `hIso` —
 the paper's Theorem 2.1, the binder three attempts have failed to discharge — is *gone*.
 
 That the two `hIso` shapes agree is not asserted here, it is checked: this composition would not
-typecheck if the binder replayed into `ArlibCommunity.Foundations.Geometry.conductance_hitAndRun_ge_of_tv_lsc_interior`
+typecheck if the binder replayed into `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_lsc_interior`
 differed by a single clause from the conclusion of `ArlibCommunity.Foundations.Convex.hIso_lowerSemicontinuous`. -/
 theorem conductance_hitAndRun_ge_of_transfer_of_localization_interior (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
@@ -542,7 +542,7 @@ theorem conductance_hitAndRun_ge_of_transfer_of_localization_interior (hn : 1 �
     (hIso_lowerSemicontinuous hKc hKcl hKm hKb hK0 hKtop htrans hloc)
 
 /-- **The composition with `hLem41` demanded on all of `K`** — the shape this theorem had before
-`ArlibCommunity.Foundations.Geometry.conductance_hitAndRun_ge_of_transfer_of_localization_interior` was split off, kept verbatim
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer_of_localization_interior` was split off, kept verbatim
 so that every existing consumer continues to typecheck, and derived from the interior form by
 `interior_subset`. -/
 theorem conductance_hitAndRun_ge_of_transfer_of_localization (hn : 1 ≤ n)
@@ -583,7 +583,7 @@ theorem conductance_hitAndRun_ge_of_transfer_of_localization (hn : 1 ≤ n)
 
 /-- **Lovász–Vempala Theorem 4.2 with the Localization Lemma discharged.**
 
-`ArlibCommunity.Foundations.Geometry.conductance_hitAndRun_ge_of_transfer_of_localization` with its third binder `hloc` proved
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer_of_localization` with its third binder `hloc` proved
 rather than assumed, leaving `hLem41` (Lemma 4.1, owned elsewhere) and `htrans` (the chord
 transfer).  The statement is that theorem's, clause for clause, with the single change that
 `1 ≤ n` becomes `2 ≤ n` — the dimension restriction of
@@ -623,7 +623,7 @@ theorem conductance_hitAndRun_ge_of_transfer (hn : 2 ≤ n)
 
 /-- **The consumer, with `htrans` discharged.**
 
-`ArlibCommunity.Foundations.Geometry.conductance_hitAndRun_ge_of_transfer_of_localization` fed `ArlibCommunity.Foundations.Convex.htrans_of_compact`.
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer_of_localization` fed `ArlibCommunity.Foundations.Convex.htrans_of_compact`.
 The residual binders are exactly two: `hLem41` (Lemma 4.1) and `hloc` (the Localization
 Lemma for continuous integrands with the needle inside the body).  `htrans` is gone.
 
@@ -654,11 +654,11 @@ theorem conductance_hitAndRun_ge_of_localization (hn : 1 ≤ n)
 /-- **Theorem 4.2 of Lovász–Vempala, with `hIso` replaced by Theorem 2.1's conclusion.**
 
 Residual binders: `hLem41` and `hthm21`.  The second is the ℝ-valued, Lebesgue-normalised form
-that `ArlibCommunity.Foundations.Convex.thm21_of_localization` proves from the Localization Lemma, so the moment that
+that `ArlibCommunity.Foundations.Convex.crossRatioIso_uniform_of_localization` proves from the Localization Lemma, so the moment that
 localization work lands this theorem is one `exact` away from carrying only `hLem41`.
 
-The trade is exactly `ArlibCommunity.Foundations.Convex.hIso_of_thm21` and nothing else. -/
-theorem conductance_hitAndRun_ge_of_thm21 (hn : 1 ≤ n)
+The trade is exactly `ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` and nothing else. -/
+theorem conductance_hitAndRun_ge_of_crossRatioIso (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -686,14 +686,14 @@ theorem conductance_hitAndRun_ge_of_thm21 (hn : 1 ≤ n)
   have hKtop : volume K ≠ ⊤ :=
     ne_top_of_le_ne_top measure_closedBall_lt_top.ne (measure_mono hR)
   exact conductance_hitAndRun_ge hn hKc hKcl hKm hKb hball hD hLem41
-    (hIso_of_thm21 hKb hKm hK0 hKtop hthm21)
+    (hIso_of_crossRatioIso hKb hKm hK0 hKtop hthm21)
 
 /-- **Theorem 4.2 of Lovász–Vempala, with `hIso` replaced by the *corrected* Theorem 2.1
 binder.**
 
-`ArlibCommunity.Foundations.Geometry.conductance_hitAndRun_ge_of_thm21` rerun on `hthm21sub`.  Residual binders: `hLem41`
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso` rerun on `hthm21sub`.  Residual binders: `hLem41`
 (owned elsewhere) and `hthm21sub`.  Unlike the original, `hthm21sub` is not refuted by
-`ArlibCommunity.Foundations.Convex.not_thm21_book`, so this composition is the one a future proof of Theorem 2.1 should be
+`ArlibCommunity.Foundations.Convex.not_crossRatioIso_printed`, so this composition is the one a future proof of Theorem 2.1 should be
 pointed at. -/
 theorem conductance_hitAndRun_ge_book (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
@@ -751,13 +751,13 @@ theorem conductance_hitAndRun_ge_of_hIso_copy (hn : 1 ≤ n)
   ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge hn hKc hKcl hKm hKb hball hD hLem41 hIso
 
 /-- **Theorem 4.2 at the lower semicontinuous `hIso`, with `hLem41` demanded on all of `K`** —
-the shape this theorem had before `ArlibCommunity.Foundations.Geometry.conductance_hitAndRun_ge_of_tv_lsc_interior` was split
+the shape this theorem had before `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_lsc_interior` was split
 off, kept verbatim so that every existing consumer continues to typecheck.
 
 The proof *is* the claim that the split is a strengthening: a caller holding Lemma 4.1 on all of
 `K` gets it on `interior K` by `interior_subset`, so nothing provable from this statement is lost
 by the weaker binder.  The converse fails, and that is the point — see
-`ArlibCommunity.Foundations.Geometry.conductance_hitAndRun_ge_of_tv_lsc_interior`'s docstring. -/
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_lsc_interior`'s docstring. -/
 theorem conductance_hitAndRun_ge_of_tv_lsc (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -783,7 +783,7 @@ theorem conductance_hitAndRun_ge_of_tv_lsc (hn : 1 ≤ n) {K : Set (EuclideanSpa
 
 /-- **Theorem 4.2 in the paper's constant at the lower semicontinuous `hIso`, with `hLem41`
 demanded on all of `K`** — the shape this theorem had before
-`ArlibCommunity.Foundations.Geometry.conductance_hitAndRun_ge_lsc_interior` was split off, kept verbatim so that every existing
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_lsc_interior` was split off, kept verbatim so that every existing
 consumer continues to typecheck, and derived from the interior form by `interior_subset`. -/
 theorem conductance_hitAndRun_ge_lsc (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
@@ -810,9 +810,9 @@ theorem conductance_hitAndRun_ge_lsc (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ
 
 /-- **The replayed conductance theorem reproves the original.**
 
-Same statement as `ArlibCommunity.Foundations.Geometry.conductance_hitAndRun_ge_of_hIso_copy` — hence, by that theorem, the
+Same statement as `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_hIso_copy` — hence, by that theorem, the
 statement of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` — but proved through
-`ArlibCommunity.Foundations.Geometry.conductance_hitAndRun_ge_lsc`, feeding it the full binder with the
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_lsc`, feeding it the full binder with the
 `LowerSemicontinuous` clause discarded.  So the 375-line replay neither weakened the conclusion
 nor strengthened any hypothesis other than the one clause it was meant to add. -/
 theorem conductance_hitAndRun_ge_of_hIso_copy_via_lsc (hn : 1 ≤ n)

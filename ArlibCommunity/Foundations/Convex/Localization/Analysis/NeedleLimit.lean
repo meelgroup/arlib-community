@@ -10,8 +10,8 @@ import ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLimit
 # The needle limit of the localisation bisection: a negative answer, and what survives
 
 This file attacks the limit passage of the Lovász–Simonovits localisation argument — the step
-that `ArlibCommunity.Foundations.Convexity.LocalizationLemma` calls **(G2)** and that
-`ArlibCommunity.Foundations.Convexity.LocalizationLimit` narrowed down to a weak-convergence statement plus a
+that `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLemma` calls **(G2)** and that
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLimit` narrowed down to a weak-convergence statement plus a
 "concave-to-affine" reduction.
 
 The concrete question it settles is the one the whole programme had reduced to:
@@ -22,7 +22,7 @@ The concrete question it settles is the one the whole programme had reduced to:
 > and force the bodies of the chain to shrink, so that the recursion is well-founded and the
 > limit is a needle?
 
-The module docstring of `ArlibCommunity.Foundations.Convexity.LocalizationLemma` asserts exactly this, in the
+The module docstring of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLemma` asserts exactly this, in the
 sentence "a standard argument (always cut the current body's longest axis in half) makes the
 diameters decay geometrically".
 
@@ -118,21 +118,21 @@ this file gives no reason to believe the "longest axis" rule produces one: the c
 forced by the mass-bisection, so the retained side can be nearly all of the current body in
 every direction at once.  Whether transverse thinness is forcible is open here.
 
-Only after that would the weak-convergence statement of `ArlibCommunity.Foundations.Convexity.LocalizationLimit`
+Only after that would the weak-convergence statement of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLimit`
 (item (i) there) and the renormalised profile from `ArlibCommunity.Foundations.Convex.concaveOn_limit_slice_profile` come
 into play.
 
 ## Where the limit passage now lives
 
 The "renormalised limit" this file argues is the only admissible one is carried out in
-`ArlibCommunity.Foundations.Convexity.NeedleProfile` (fixed unit slab) and, for a chain whose slab **shrinks** to the
-needle's, in `ArlibCommunity.Foundations.Convexity.NeedleSlab`:
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleProfile` (fixed unit slab) and, for a chain whose slab **shrinks** to the
+needle's, in `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleSlab`:
 `ArlibCommunity.Foundations.Convex.tendsto_average_setIntegral_of_rescaledProfile` is the same limit passage with the `k`-th
 body allowed to occupy its own slab `[l k, u k]`, subject only to `l k → 0` and `u k → 1`.  That
-is what removes the rigidity recorded as item (E) of `ArlibCommunity.Foundations.Convexity.LocalizationAssembly` — a
+is what removes the rigidity recorded as item (E) of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly` — a
 localisation chain shrinks in *every* direction, so it cannot keep a constant height range, and
-the fixed-slab form asks it to.  `ArlibCommunity.Foundations.Convexity.NeedleSlabAffine` carries that to general
-position and `ArlibCommunity.Foundations.Convexity.NeedleSlabChain` shows every decreasing chain of compact convex
+the fixed-slab form asks it to.  `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleSlab` carries that to general
+position and `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleSlab` shows every decreasing chain of compact convex
 bodies with a nondegenerate intersection satisfies the relaxed hypotheses.
 
 Nothing in this file changed; the transverse-thinness target it identifies above is exactly what

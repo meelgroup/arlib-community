@@ -369,7 +369,7 @@ bound, not a spectral-gap bound and not a runtime claim, and may not be quoted a
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond`
 (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/OverlapPerPair.lean`) is this statement with `hLf`, `hellLip` and
 `hLσ` removed — same conclusion, same remaining binders — and it has an unconditional
-witness.  Prefer it.  See `AUDIT.md` §0k. -/
+witness.  Prefer it. -/
 theorem conductance_speedyMetropolisGaussian_ge_perPair (hn : 21 ≤ n) {σ δ R Lf : ℝ}
     (hσ : 0 < σ) (hδ : 0 < δ) (hδσ : δ ≤ σ / (8 * Real.sqrt n)) (hLf : 0 ≤ Lf)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (hKc : Convex ℝ K)
@@ -521,14 +521,14 @@ section
     hellLip : ∀ u ∈ K, ∀ v ∈ K, ℓ(u) ≤ ℓ(v)·exp(Lf·‖u − v‖)
     hLσ     : √3·(σ²·Lf + R) ≤ 2σ√n
 
-which `AUDIT.md` §0i(b) argues admit no witness with non-constant `ℓ` at the operative step
+which, by an informal argument, admit no witness with non-constant `ℓ` at the operative step
 `δ ≤ σ/(8√n)`: `hLσ` caps `Lf` far below the rate `≈ √n·log 2/δ` that a corner forces, and
-`ArlibCommunity.Foundations.MarkovChains.two_pow_mul_ell_cube_corner_le_one` puts a corner in every consumer's
+`two_pow_mul_ell_cube_corner_le_one` (not in this repository; see `REFERENCES.md`) puts a corner in every consumer's
 class.
 
 **This file removes them.**  They entered only through the isoperimetric binder `hiso`, and
 `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianIndicator_isoperimetry_measurable_logTwo`
-(`ArlibCommunity/Foundations/Geometry/IsoIndicatorEll.lean`) now supplies `hiso` at the indicator density
+(`IsoIndicatorEll.lean` (not in this repository; see `REFERENCES.md`)) now supplies `hiso` at the indicator density
 `1_K·ℓ·γ` with no Lipschitz hypothesis of any kind.
 
 ## What is proved here
@@ -656,7 +656,7 @@ The step cap reads `1 ≤ 100/(8√21)`, true since `√21 ≤ 5` gives `100/(8�
 radius cap `1 ≤ 200√21` has enormous room.
 
 This matters more than a routine witness would.  The binders this theorem *drops* —
-`hellLip` and `hLσ` — are the ones `AUDIT.md` §0i(b) argues have **no** witness with
+`hellLip` and `hLσ` — are the ones that, by an informal argument, have **no** witness with
 non-constant `ℓ`, so its predecessor
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_perPair` had no unconditional
 instance at all.  Here the bundle is met at `δ = 1` against a body of radius `1`.

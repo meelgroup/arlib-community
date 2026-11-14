@@ -24,8 +24,8 @@ one-dimensional **needle** — a segment carrying the density `ℓ^{n-1}`.
 Deliberately absent is any `def`/`structure`/`class`/`Prop` whose name asserts it; the only
 things named below are (i) explicit functions and sets (`needleWeight`, `needleIntegral`,
 `halfSpace`) and (ii) theorems proved outright.  Nothing here is a hypothesis-bundle standing in
-for the conclusion.  See `CV-ROADMAP.md` §2a and the module docstring of
-`ArlibCommunity.Foundations.Convexity.Isoperimetry` for why that matters.
+for the conclusion.  See the *non-vacuity rule* in `ArlibCommunity/Foundations.lean` and the module docstring of
+`ArlibCommunity.Foundations.Convex.Basic.Isoperimetry` for why that matters.
 
 ## What *is* proved here, unconditionally
 
@@ -411,7 +411,7 @@ This is what lets a construction that cuts with `ArlibCommunity.Foundations.Conv
 that the two sides partition the space exactly — be closed up after the fact without leaving the
 class of sets the construction talks about: every closure of a cut body is again contained in a
 *closed* half-space of the same family, with `L` replaced by `-L` and `s` by `-s`.  For the pencil
-of `ArlibCommunity.Foundations.Convexity.LocalizationAssembly` the sign flip is a half-turn of the angle
+of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly` the sign flip is a half-turn of the angle
 (`ArlibCommunity.Foundations.Convex.pencilFun_add_pi`), so the family of cuts is literally preserved. -/
 theorem closure_halfSpace_false_subset (L : E →L[ℝ] ℝ) (s : ℝ) :
     closure (halfSpace L s false) ⊆ halfSpace (-L) (-s) true := by

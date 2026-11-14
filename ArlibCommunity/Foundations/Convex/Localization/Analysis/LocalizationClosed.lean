@@ -9,11 +9,11 @@ import ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAffin
 /-!
 # Closing up the localisation chain, and positioning its limit segment
 
-`ArlibCommunity.Foundations.Convex.exists_flat_cut_chain_collinear` (`ArlibCommunity.Foundations.Convexity.LocalizationAssembly`) produces a
+`ArlibCommunity.Foundations.Convex.exists_flat_cut_chain_collinear` (`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly`) produces a
 decreasing chain of convex bodies with `∫ g₁ = 0` and `∫ g₂ > 0` throughout and a **collinear**
 intersection, but the bodies are built by cutting with `ArlibCommunity.Foundations.Convex.halfSpace`, one of whose two sides
 is *open*.  `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact`
-(`ArlibCommunity.Foundations.Convexity.LocalizationTransverse`) consumes **compact** bodies.  This file bridges that
+(`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAffine`) consumes **compact** bodies.  This file bridges that
 mismatch, and positions the limit segment along an axis.
 
 ## The route taken: closures, not a change of cut
@@ -80,7 +80,7 @@ for free and breaks `hspan`.  So the remaining obstruction between
 **not** closedness, and not the positioning either — both are discharged here — but the rigidity of
 the `hslab`/`hspan` pair, which asks the needle to span the starting body.  Relaxing it means
 letting the slab of the `k`-th body shrink to the slab of the needle, i.e. a change to the limit
-passage of `ArlibCommunity.Foundations.Convexity.NeedleLimit`, not to the chain.
+passage of `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleLimit`, not to the chain.
 -/
 
 open MeasureTheory Set Filter _root_.Topology

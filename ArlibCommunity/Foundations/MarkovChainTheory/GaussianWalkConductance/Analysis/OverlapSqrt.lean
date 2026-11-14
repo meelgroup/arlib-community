@@ -22,7 +22,7 @@ Cousins–Vempala, *Gaussian Cooling and `O*(n³)` Algorithms for Volume and Gau
 ([CV18] and `:612`), at the paper's own separation and with the
 paper's own hypotheses.  Nothing is `sorry`ed; see the axiom audit at the bottom.
 
-This is the last step between `ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim`
+This is the last step between `ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim`
 (`LensMin.lean`) and a conductance bound `Ω(δ/(σ√n))`: `12 ≤ 20`, so the bound composes with
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`'s `hoverlap`, which is done in
 `conductance_speedyGaussian_ge_of_ell_comparable`.
@@ -45,7 +45,7 @@ The paper reaches `1/6` because it quotes `1/(e+1) ≈ 0.269` for the lens const
 
 ## The constant, and how `60` became `12`
 
-Feeding `ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim`'s constant `1/40` through the chain
+Feeding `ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim`'s constant `1/40` through the chain
 above gives `1/60`, i.e. `1 ≤ 60·(…)`, which does **not** compose with the `20` that
 `conductance_speedyGaussian_ge` demands.  The `1/40` is not, however, geometric: `LensMin.lean`
 bounds its contraction factor `(1 − 1/n)ⁿ` below by `1/20`
@@ -131,7 +131,7 @@ here.  Nothing below asserts, or may be quoted as asserting, a polynomial mixing
 ## Main results
 
 * `quarter_le_one_sub_inv_pow` — `(1 − 1/n)ⁿ ≥ 1/4`, the sharp uniform bound.
-* `volume_lens_ge_min_ball_inter_sharp`, `kls_lemma35_at_sep_sqrt_dim_sharp` — Lemma 3.5 of
+* `volume_lens_ge_min_ball_inter_sharp`, `lens_volume_ge_at_sep_sqrt_dim_sharp` — Lemma 3.5 of
   [KLS95] at `δ/√n` with `1/8` in place of `1/40`.
 * `one_le_twelve_mul_speedyWalk_add_of_comparable` — the core, constant `12`.
 * `overlap_speedyWalk_sqrt_of_ell_comparable` — `cor:overlap` at `δ/√n`, per-pair hypothesis.
@@ -362,10 +362,10 @@ theorem volume_lens_ge_min_ball_inter_sharp (hn : 2 ≤ n)
   exact (ENNReal.mul_le_mul_iff_right (by norm_num) (by norm_num)).mp hstep
 
 /-- **Lemma 3.5 of [KLS95] at separation `δ/√n`, in the paper's own `ℓ` shape, with the
-constant `1/8`** — `ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim` with `1/40` improved to
+constant `1/8`** — `ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim` with `1/40` improved to
 `1/8`.  Not used below (the proof of the overlap bound works with the ball-slice volumes
 directly); stated because it is the form the paper quotes. -/
-theorem kls_lemma35_at_sep_sqrt_dim_sharp (hn : 2 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem lens_volume_ge_at_sep_sqrt_dim_sharp (hn : 2 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) {u v : EuclideanSpace ℝ (Fin n)} (hu : u ∈ K) (hv : v ∈ K) {δ : ℝ}
     (hδ : 0 < δ) (hsep : ‖u - v‖ ≤ δ / Real.sqrt n) :
     ENNReal.ofReal (1 / 8) * min (ell K δ u) (ell K δ v)
@@ -889,7 +889,7 @@ end ArlibCommunity.Foundations.MarkovChainTheory
 
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.quarter_le_one_sub_inv_pow
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_ge_min_ball_inter_sharp
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim_sharp
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim_sharp
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_le_of_ell_le
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.max_volume_ball_inter_le_of_ell_comparable
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.one_le_twelve_mul_speedyWalk_add_of_comparable

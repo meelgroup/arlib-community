@@ -218,7 +218,7 @@ step.**  The following argument is *informal* — it is not machine-checked, and
 that no one spends effort trying to discharge `hellLip` before reading it.  `hLσ` caps
 `Lf ≤ 2√n/(√3·σ)`, so across a distance `δ ≤ σ/(8√n)` the permitted variation of `log ℓ` is
 `Lf·δ ≤ 2/(8√3) ≈ 0.144`.  But `ℓ ≤ 2⁻ⁿ` at a cube corner
-(`ArlibCommunity.Foundations.MarkovChains.two_pow_mul_ell_cube_corner_le_one`, which *is* machine-checked) and
+(`two_pow_mul_ell_cube_corner_le_one` (not in this repository; see `REFERENCES.md`), which *is* machine-checked) and
 `≈ 1` at distance `δ√n` inward, a rate of `≈ √n·log 2/δ = 8n·log 2/σ`, exceeding the cap for
 every `n ≥ 1`.
 
@@ -235,7 +235,7 @@ with no Lipschitz hypothesis, for `S₁, S₂` open and `S₃` closed:
 is this binder with `hellLip`, `hLσ`, `hKR` and the parameters `R`, `Lf` all removed, and
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond` is the conductance bound built on it,
 with an unconditional witness.  Prefer those.  The theorems in *this* file remain correct but
-carry hypotheses with no known witness at non-constant `ℓ`; see `AUDIT.md` §0i and §0k. -/
+carry hypotheses with no known witness at non-constant `ℓ`. -/
 theorem hiso_speedyMetropolisGaussian (hn : 2 ≤ n) {σ δ R Lf : ℝ} (hσ : 0 < σ) (hδ : 0 < δ)
     (hLf : 0 ≤ Lf) {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
     (hKc : Convex ℝ K) (hKb : Bornology.IsBounded K) (hKR : ∀ x ∈ K, ‖x‖ ≤ R)

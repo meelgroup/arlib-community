@@ -8,9 +8,9 @@ import ArlibCommunity.Algorithms.CV18.Analysis.ZLogconcave
 /-!
 # The Cousins–Vempala per-phase variance bound, unconditional for a convex body
 
-`ArlibCommunity.Foundations.Convexity.GaussianCooling.Variance` proves the gaussian-cooling variance chain for a
+`ArlibCommunity.Algorithms.CV18.Analysis.CoolingVariance` proves the gaussian-cooling variance chain for a
 general weight `f : ℝⁿ → ℝ` carrying `ZLogconcaveHypothesis f` as an explicit hypothesis, and
-`ArlibCommunity.Foundations.Convexity.GaussianCooling.ZLogconcave` shows that hypothesis is **false** for general
+`ArlibCommunity.Algorithms.CV18.Analysis.ZLogconcave` shows that hypothesis is **false** for general
 log-concave `f` but **true** for `f = 1_K` with `K` convex.
 
 This file pushes the specialisation `f := 1_K` all the way to the shape the volume algorithm
@@ -30,7 +30,7 @@ consumes, so that no result below carries a `ZLogconcaveHypothesis` binder:
   algebraic factor `(1-α²)^{-(n+1)}` replaced by an exponential *variance budget*.
 * `ArlibCommunity.Algorithms.CV18.second_moment_le_exp_indicator` — the same bound in estimator form,
   `E(Y²) ≤ exp(phaseVarBudget) · E(Y)²`, which is literally the per-factor hypothesis `hc` of
-  `ArlibCommunity.Foundations.GaussianCooling.prod_sq_div_le` / `prod_sq_div_le_exp`.
+  `prod_sq_div_le` (not in this repository; see `REFERENCES.md`) / `prod_sq_div_le_exp`.
 * `ArlibCommunity.Algorithms.CV18.variance_le_exp_indicator` — the target shape,
   `Var(Y) ≤ (exp(phaseVarBudget) - 1) · E(Y)²`.
 * `ArlibCommunity.Algorithms.CV18.phaseVarBudget_fixed_rate` and the `…_fixed_rate` corollaries — at

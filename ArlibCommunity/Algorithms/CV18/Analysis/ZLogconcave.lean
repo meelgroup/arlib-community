@@ -13,7 +13,7 @@ import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 /-!
 # `ZLogconcaveHypothesis` is a theorem for convex bodies
 
-`ArlibCommunity.Foundations.Convexity.GaussianCooling.Variance` carries paper Lemma 5.9 of Cousins–Vempala as the
+`ArlibCommunity.Algorithms.CV18.Analysis.CoolingVariance` carries paper Lemma 5.9 of Cousins–Vempala as the
 explicit hypothesis
 
 ```
@@ -21,8 +21,8 @@ ZLogconcaveHypothesis f : ∀ a b, 0 < a → 0 < b → zFun f a * zFun f b ≤ z
 ```
 
 with `zFun f a = a^{n+1} · ∫ f(x) e^{-a‖x‖²/2} dx`, on the grounds that Mathlib has neither
-Prékopa–Leindler nor Brunn–Minkowski.  `ArlibCommunity.Foundations.Convexity.PrekopaLeindlerN` and
-`ArlibCommunity.Foundations.Convexity.Localization` now do, so the hypothesis can be discharged.  This file
+Prékopa–Leindler nor Brunn–Minkowski.  `ArlibCommunity.Foundations.Convex.PrekopaLeindler.Analysis.PrekopaLeindlerN` and
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.Localization` now do, so the hypothesis can be discharged.  This file
 discharges it for the case the algorithm actually uses — `f` a (multiple of the) indicator
 of a convex measurable set:
 

@@ -16,7 +16,7 @@ Mathlib has Markov kernels (`ProbabilityTheory.Kernel`), invariance
 definitional layer: the ergodic flow, reversibility, and the conductance of a
 kernel with respect to an invariant measure, on an arbitrary measurable space.
 It is the continuous-state counterpart of
-`ArlibCommunity.Foundations.MarkovChains.Techniques.Conductance` (which is finite-state and real
+`ArlibCommunity.Foundations.MarkovChainTheory.Basic.Conductance` (which is finite-state and real
 valued); everything here is `ℝ≥0∞` valued, so no integrability side conditions
 are ever needed.
 

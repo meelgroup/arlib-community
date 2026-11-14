@@ -22,7 +22,7 @@ evaluates all three and formalises the one that works.
 
 ## Verdict
 
-**Route 3 wins, and the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`'s dismissal of it is wrong.**  §4b is right that a
+**Route 3 wins, and the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean`'s dismissal of it is wrong.**  §4b is right that a
 TV hypothesis buys only an *additive* error; it is wrong that this makes the theorem
 useless.  The whole argument is one line of algebra, `ArlibCommunity.Foundations.MarkovChainTheory.PointwiseRoute.window_of_tvLe`:
 
@@ -86,7 +86,7 @@ pointwise interface: rejection really does give `ε = 0`.
   `S ⊆ B  ⟹  condOn (uniformOn μ B) S = uniformOn μ S`,
 
 *exactly* uniform, with acceptance probability `μ S / μ B` (`uniformOn_acceptance`), and
-`pointwiseAlmostUniform_of_rejection` hands the result straight to `ArlibCommunity.Algorithms.KV97.theorem2` at
+`pointwiseAlmostUniform_of_rejection` hands the result straight to `ArlibCommunity.Algorithms.KV97.hitProbability_bounds` at
 `ε = 0`.
 
 But there is **no polynomial regime**, and `roundBody` / isotropic position does not create
@@ -114,7 +114,7 @@ became
     (ENNReal.ofReal (epsPrime / (4 * contVol i)))` — **the tolerance carries the `1/V`**;
 
 and `sampD_eq`'s numerator `∫ p in P', contDensity i p * prodTent (…) p` becomes
-`∫ p, prodTent (…) p ∂(contLaw i)`.  `theorem2_of_tvLe_inv_volume` then discharges exactly
+`∫ p, prodTent (…) p ∂(contLaw i)`.  `hitProbability_bounds_of_tvLe_inv_volume` then discharges exactly
 what `density_au` used to, and `ratio_bounds_of_tvLe` replaces the `cor:linf` step.  The
 resulting window is the same shape; its lower constant is `1 − (E + θ)` where the pointwise
 route gives `(1 − θ)(1 − E)`, i.e. weaker by `θE`, which is negligible.
@@ -128,12 +128,12 @@ agent — but every lemma it needs is in this file.
   reference average sits in `[(1−a)/V, (1+b)/V]` moves that window to
   `[(1−(a+θ))/V, (1+(b+θ))/V]` for any `θ ≥ ε·V`.  Additive becomes relative at scale `V`.
 * `window_of_tvLe_inv_volume` — the same with the tolerance written as `θ/V`.
-* `theorem2_of_tvLe`, `theorem2_of_tvLe_inv_volume` — **Kannan–Vempala Theorem 2, re-derived
+* `hitProbability_bounds_of_tvLe`, `hitProbability_bounds_of_tvLe_inv_volume` — **Kannan–Vempala Theorem 2, re-derived
   from a total-variation hypothesis**, in measure form (`∫ prodTent x p ∂μ`, which needs no
   density and so applies to laws with atoms).
 * `ratio_bounds_of_tvLe` — **the refutation of §4b**: the `cor:linf` ratio window, from a TV
   hypothesis.  The `ε`s cancel.
-* `theorem2_of_mixesWithin` — the end-to-end statement: a chain mixed to TV `θ/V` satisfies
+* `hitProbability_bounds_of_mixesWithin` — the end-to-end statement: a chain mixed to TV `θ/V` satisfies
   Theorem 2's conclusion.
 * `conductanceMixingTime_inv_volume_le` — the cost, `O(φ⁻²(log M + log V + log(1/θ)))`.
 * `not_pointwiseClose_of_atom`, `not_pointwiseClose_uniformOn_of_atom` — why the pointwise
@@ -145,15 +145,15 @@ agent — but every lemma it needs is in this file.
   `pointwiseAlmostUniform_of_rejection` — route 2, in full.
 * `uniformOn_ball_ball`, `uniformOn_ball_ball_one`, `uniformOn_ball_ball_euclidean` —
   route 2's price, exactly `(r/R)^n`.
-* `exists_theorem2_of_tvLe_witness` — the non-vacuity witness for
-  `theorem2_of_tvLe_inv_volume`'s hypothesis bundle.
+* `exists_hitProbability_bounds_of_tvLe_witness` — the non-vacuity witness for
+  `hitProbability_bounds_of_tvLe_inv_volume`'s hypothesis bundle.
 
 ## What this does NOT close, stated plainly
 
 * **The conductance / isoperimetry bound is still owed.**  Everything here consumes a
   `TVLe` or a `MixesWithin`; nothing here produces one.  Proving the ball walk (or speedy
   walk) has conductance `φ ≥ 1/poly` is the remaining programme, and route 3 neither helps
-  nor hinders it.  `theorem2_of_mixesWithin` is exactly the socket that bound plugs into.
+  nor hinders it.  `hitProbability_bounds_of_mixesWithin` is exactly the socket that bound plugs into.
 * **`log V` is polynomial only in the size of the *discretised* description.**  `log V` is
   `Θ(n·ρ)` where `10^{−ρ}` is the lattice spacing.  If `ρ` were handed over in binary and
   the output were not itself `Θ(nρ)` bits, this would be exponential in the encoding.  It is
@@ -170,7 +170,7 @@ agent — but every lemma it needs is in this file.
 whose fields assume the conclusion.  Nothing here proves the ball walk mixes — that is the
 conductance/isoperimetry programme, untouched.  What is proved is that *once* it mixes, in
 total variation, to tolerance `θ/Vol(P')`, the pointwise hypothesis of
-`ArlibCommunity.Algorithms.KV97.theorem2` is no longer needed at all.
+`ArlibCommunity.Algorithms.KV97.hitProbability_bounds` is no longer needed at all.
 -/
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
@@ -185,7 +185,7 @@ open scoped ENNReal BigOperators
 /-! ## Route 3, the crux: an additive error is a relative error at scale `V`
 
 `ArlibCommunity.Foundations.Convex.TVLe.integral_le` is the honest additive transfer: for `0 ≤ g ≤ 1`,
-`|∫ g dμ − ∫ g dν| ≤ ε`.  the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean` reads that as fatal because the quantity being
+`|∫ g dμ − ∫ g dν| ≤ ε`.  the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean` reads that as fatal because the quantity being
 bounded is of size `1/V` with `V` enormous.  It is fatal only if `ε` is held fixed.  The
 lemma below is the whole of the answer: the *relative* error is `ε·V`, so the tolerance one
 must ask the sampler for is `θ/V`, and nothing else changes. -/
@@ -195,7 +195,7 @@ observable with `0 ≤ g ≤ 1`, and suppose its `ν`-average lies in the window
 `[(1−a)/V, (1+b)/V]`.  Then its `μ`-average lies in `[(1−(a+θ))/V, (1+(b+θ))/V]` for any
 `θ ≥ ε·V`.
 
-**An additive error `ε` is a relative error `ε·V`.**  This is the sentence the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean` is missing.  The additive transfer is not weaker than the relative one; it is the same
+**An additive error `ε` is a relative error `ε·V`.**  This is the sentence the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean` is missing.  The additive transfer is not weaker than the relative one; it is the same
 statement with the error measured in a different unit, and converting the unit costs a
 factor of `V` in the *tolerance*, hence only `log V` in the *mixing time*
 (`conductanceMixingTime_inv_volume_le`). -/
@@ -230,20 +230,20 @@ theorem window_of_tvLe_inv_volume {Ω : Type*} [MeasurableSpace Ω] {μ ν : Mea
 
 /-! ## Route 3, applied: the `cor:linf` ratio window
 
-the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`'s second bullet is the one that looks decisive: "summing an additive
+the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean`'s second bullet is the one that looks decisive: "summing an additive
 `ε` over the `N` lattice points contributes `N·ε`, which does not cancel and does not
 vanish."  It is answered by substituting `ε = θ/V`.  The `N` weights are then pinned in a
 `(1 ± θ)/V` window, `ArlibCommunity.Foundations.Convex.Rejection.ratio_bounds_of_window` applies verbatim, and `V` — the
 enormous quantity — cancels out of the ratio entirely. -/
 
-/-- **The refutation of the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`, bullet 2.**  From a *total-variation*
+/-- **The refutation of the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean`, bullet 2.**  From a *total-variation*
 hypothesis at tolerance `ε` with `ε·V ≤ θ`, the normalised weights `∫ gᵢ dμ / ∑ⱼ ∫ gⱼ dμ`
 lie in the relative window
 
   `[(1−(a+θ)) / ((1+(b+θ))·N),  (1+(b+θ)) / ((1−(a+θ))·N)]`.
 
 `V` has cancelled.  The `ε`s do cancel; §4b's `N·ε` is `Nθ/V` against a total of order
-`N/V`, i.e. a relative `θ`.  This is `ArlibCommunity.Foundations.KV97.cor_linf`'s conclusion obtained without any
+`N/V`, i.e. a relative `θ`.  This is the conclusion of `cor_linf` (not in this repository; see `REFERENCES.md`) obtained without any
 pointwise hypothesis at all. -/
 theorem ratio_bounds_of_tvLe {Ω : Type*} [MeasurableSpace Ω] {ι : Type*} [Fintype ι]
     [Nonempty ι] {μ ν : Measure Ω} [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
@@ -262,7 +262,7 @@ theorem ratio_bounds_of_tvLe {Ω : Type*} [MeasurableSpace Ω] {ι : Type*} [Fin
 
 /-! ## The price of the tolerance `θ / V`: `log V` extra steps
 
-This is the quantitative half of the refutation of the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`.  §4b writes off the
+This is the quantitative half of the refutation of the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean`.  §4b writes off the
 additive reading because `ε ≪ 1/Vol(P')` is required and "no sampler delivers" it.  But
 mixing time is *logarithmic* in the tolerance: `ArlibCommunity.Foundations.MarkovChainTheory.conductanceMixingTime_le`
 gives `O(φ⁻² log(M/ε))` steps, so replacing `ε` by `θ/V` costs an **additive**
@@ -285,7 +285,7 @@ theorem log_one_div_div {V θ : ℝ} (hV : 0 < V) (hθ : 0 < θ) :
   `(log M + 2·log V + 2·log(1/θ)) / φ² + 1`
 
 steps.  The dependence on the volume is `log V`, **not** `V`: this is why demanding a
-tolerance at scale `1/Vol(P')` is affordable, and it is the fact the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`
+tolerance at scale `1/Vol(P')` is affordable, and it is the fact the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean`
 overlooks. -/
 theorem conductanceMixingTime_inv_volume_le {M phi V θ : ℝ} (hM : 1 ≤ M) (hphi0 : 0 < phi)
     (hV : 0 < V) (hθ : 0 < θ) (hle : θ / V ≤ Real.sqrt M) :
@@ -383,7 +383,7 @@ theorem exists_tvLe_with_atom {Ω : Type*} [MeasurableSpace Ω] (ν : Measure Ω
 Route 2 is *correct*, and it is the only route that delivers `ε = 0`.  If one can sample
 exactly uniformly from a superset `B ⊇ S` — a box, a ball — then rejecting until the draw
 lands in `S` gives a draw that is **exactly** uniform on `S`, so the pointwise hypothesis of
-`ArlibCommunity.Algorithms.KV97.theorem2` holds at `ε = 0` and nothing has to be approximated at all.
+`ArlibCommunity.Algorithms.KV97.hitProbability_bounds` holds at `ε = 0` and nothing has to be approximated at all.
 
 This is what `Ttc/Witness/BoxProb.lean` does, and it is the non-vacuity witness for the
 whole pointwise interface.  Its price is the acceptance probability `μ S / μ B`, computed
@@ -434,8 +434,8 @@ theorem pointwiseClose_condOn_uniformOn (μ : Measure Ω) {B S : Set Ω} (hS : M
   exact ArlibCommunity.Foundations.MarkovChainTheory.pointwiseClose_self _
 
 /-- **The density form of the uniform law.**  `∫ g ∂(uniformOn μ S) = ∫_S (1/V)·g`, with
-`V = (μ S).toReal`: the measure-form quantity of `theorem2_of_tvLe` and the density-form
-quantity of `ArlibCommunity.Algorithms.KV97.theorem2` are the same number.  Unconditional, by
+`V = (μ S).toReal`: the measure-form quantity of `hitProbability_bounds_of_tvLe` and the density-form
+quantity of `ArlibCommunity.Algorithms.KV97.hitProbability_bounds` are the same number.  Unconditional, by
 `ArlibCommunity.Foundations.Convex.integral_uniformOn_real`. -/
 theorem integral_uniformOn_eq_setIntegral_const_mul (μ : Measure Ω) (S : Set Ω) (g : Ω → ℝ) :
     ∫ x, g x ∂(uniformOn μ S) = ∫ x in S, (1 / (μ S).toReal) * g x ∂μ := by

@@ -17,7 +17,7 @@ bound `r ≥ 1` on the number of facets, which pays for the union bound over fac
 The algorithm needs a continuous sampler on the inflated polytope `P'`.  Its contract,
 `AlmostUniformSampler`, asks for a density that is within a factor `1 ± ε` of uniform
 **pointwise** on `P'`.  This is stronger than closeness in total variation, and it is what
-the relative-error statement needs; see `Analysis/Theorem2.lean`.
+the relative-error statement needs; see `Analysis/HitProbability.lean`.
 -/
 
 namespace ArlibCommunity.Algorithms.KV97

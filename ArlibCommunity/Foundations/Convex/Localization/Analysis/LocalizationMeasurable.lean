@@ -15,7 +15,7 @@ residual binder `hLoc`, the Localization Lemma applied to
 
 `g₁ = 1_{S₁}h − A·h`   and   `g₂ = (d/σ)·A·1_{S₂}h − 1_{S₃}h`
 
-for **merely measurable** `S₁ S₂ S₃`.  `AUDIT.md:147-149` records two residuals of the
+for **merely measurable** `S₁ S₂ S₃`.  There are two residuals of the
 localisation stack standing between it and `hLoc`: **(C)** the continuity requirement on the
 integrands and **(F)** the `v ≠ 0` nondegeneracy of the needle direction.
 
@@ -26,7 +26,7 @@ genuine obstruction at the shape `hLoc` asks for.
 
 Two halves of the stack were never joined.  `ArlibCommunity.Foundations.Convex.exists_flat_cut_chain_collinear_compact_ge`
 (`LocalizationClosed.lean`) turns a compact convex body into a chain; the needle theorems of
-`ArlibCommunity.Foundations.Convexity.NeedleSlabChain` / `ArlibCommunity.Foundations.Convexity.LocalizationTransport` turn a chain into a
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleSlab` / `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationTransport` turn a chain into a
 needle.  Nothing composed them, so the localisation stack had no single entry point taking a body
 to a needle.  `ArlibCommunity.Foundations.Convex.exists_needle_of_compact_convex` is that entry point.
 
@@ -68,7 +68,7 @@ contains the whole coordinate axis `t ↦ t • e_i` for `i ≠ j`:
 Neither theorem says the Localization Lemma is false for measurable integrands; a needle is a
 null set, so an integrand cannot be arranged to defeat *every* needle (Fubini forbids a null set
 meeting every line in positive length).  What they say is that the two routes available to this
-repository are closed, and that `ArlibCommunity.Foundations.Convexity.LocalizationLSC`'s boundary — `S` open for the
+repository are closed, and that `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLSC`'s boundary — `S` open for the
 positivity slot, an unremovable `η`-slack for the equality slot — is where the approximation
 route genuinely stops.
 
@@ -131,7 +131,7 @@ theorem exists_needleIntegral_eq_zero_and_pos_of_compact_chain_ne_zero (hm : m �
 /-- **The `v ≠ 0` form, on `EuclideanSpace`.**
 
 `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact_chain_euclidean` with the nondegeneracy
-clause retained.  The transport is the one of `ArlibCommunity.Foundations.Convexity.LocalizationTransport`; `v ≠ 0`
+clause retained.  The transport is the one of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationTransport`; `v ≠ 0`
 crosses it because `WithLp.toLp` is injective and sends `0` to `0`. -/
 theorem exists_needleIntegral_eq_zero_and_pos_of_compact_chain_euclidean_ne_zero (hm : m ≠ 0)
     {D : ℕ → Set (EuclideanSpace ℝ (Fin (m + 1)))} (hDcomp : ∀ k, IsCompact (D k))
@@ -440,7 +440,7 @@ hypothesis of the Localization Lemma and moves its conclusion by `1`.  So no arg
 controls `1_{S₁}` only through its almost-everywhere class can produce `hLoc`: not `L¹`-density
 of continuous functions, not Lusin's theorem, not Vitali–Carathéodory, not any regularisation
 that is accurate only in measure.  Continuous approximants must be compared to `1_{S₁}`
-*pointwise*, which is why `ArlibCommunity.Foundations.Convexity.LocalizationLSC` proceeds by monotone minorants and
+*pointwise*, which is why `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLSC` proceeds by monotone minorants and
 stops where monotone minorants stop — at lower semicontinuity, i.e. at `S₁` open. -/
 theorem exists_null_measurableSet_needleIntegral_eq_one (hn : 2 ≤ n) :
     ∃ (S : Set (EuclideanSpace ℝ (Fin n))) (b v : EuclideanSpace ℝ (Fin n)) (W : ℝ → ℝ),

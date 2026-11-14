@@ -18,7 +18,7 @@ The headline results are
   `volume A ^ lam * volume B ^ (1 - lam) ≤ volume (lam • A + (1 - lam) • B)`.
 
 Mathlib (v4.32) has neither, in any dimension; the one-dimensional case is proved in
-`ArlibCommunity.Foundations.Convexity.PrekopaLeindler`, and this file runs the induction on the dimension.
+`ArlibCommunity.Foundations.Convex.PrekopaLeindler.Analysis.PrekopaLeindler`, and this file runs the induction on the dimension.
 
 ## The `ℝ≥0∞` formulation
 

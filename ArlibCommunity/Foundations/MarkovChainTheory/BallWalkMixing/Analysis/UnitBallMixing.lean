@@ -36,7 +36,7 @@ actually compose, and that their joint hypotheses are satisfiable by a real body
 
 The route to a polynomial constant is unchanged and still open: it is the localization
 argument, whose remaining obstruction is recorded as (P1) in
-`Arlib/Convexity/PositionalCut.lean`.  `ArlibCommunity.Foundations.Convex.uniformOn_iso_of_convex` gives `κ = 2⁻ⁿ/D`
+`PositionalCut.lean` (not in this repository; see `REFERENCES.md`).  `ArlibCommunity.Foundations.Convex.uniformOn_iso_of_convex` gives `κ = 2⁻ⁿ/D`
 for *every* bounded convex body by an elementary chord argument that deliberately does not
 touch that obstruction; `ArlibCommunity.Foundations.Convex.uniformOn_dyerFrieze_dim_one` gives the sharp `κ = 2/D`, but
 only in dimension one.
@@ -65,8 +65,8 @@ only in dimension one.
   blind to it, because nothing is ever *assumed* — the degeneracy lives in *which objects*
   satisfy the hypotheses.
 
-  **Use `ArlibCommunity.Foundations.MarkovChains.exists_unconditional_mixing_unitBall_nonstationary`**
-  (`Arlib/MarkovChains/Continuous/WarmStart.lean`) instead. It starts from the uniform law
+  **Use `exists_unconditional_mixing_unitBall_nonstationary` (not in this repository; see `REFERENCES.md`)**
+  (`WarmStart.lean` (not in this repository; see `REFERENCES.md`)) instead. It starts from the uniform law
   on the half-radius ball, which is `2ⁿ`-warm and **provably not** the stationary measure —
   `mu0 ≠ π` is a conjunct *inside* the existential, so that witness cannot be satisfied by
   the stationary measure. Its content is a strict superset of this one's.

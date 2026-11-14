@@ -11,7 +11,7 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 /-!
 # Residue (F) of the Localization assembly: nondegeneracy, and the Euclidean transport
 
-`ArlibCommunity.Foundations.Convexity.LocalizationAssembly` lists two genuinely open residues of its assembly of the
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly` lists two genuinely open residues of its assembly of the
 Kannan–Lovász–Simonovits Localization Lemma.  This file closes **(F)**, which has two halves:
 
 > The limit body must contain two distinct points — a chain collapsing to a point gives a
@@ -83,7 +83,7 @@ a `structure` or a name asserting an unproved identity:
   pointwise argument can use; it is *not* claimed to be the weakest possible hypothesis (see the
   docstring of `ArlibCommunity.Foundations.Convex.exists_ne_mem_iInter_of_chain` for a counterexample to that stronger claim).
 
-Nothing else is assumed.  Residue **(C)** of `ArlibCommunity.Foundations.Convexity.LocalizationAssembly` (lower
+Nothing else is assumed.  Residue **(C)** of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly` (lower
 semicontinuity) is untouched by this file, and the integrands are asked to be bounded continuous
 exactly as `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact_chain` asks.
 

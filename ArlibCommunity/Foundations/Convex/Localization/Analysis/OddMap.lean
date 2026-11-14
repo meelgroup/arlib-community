@@ -26,7 +26,7 @@ What Mathlib *does* have is the covering-space substrate:
   is homeomorphic to a normed space, hence contractible.
 
 This file assembles those into Borsuk–Ulam for maps into the plane, which is the exact form the
-two-measure ham sandwich of `ArlibCommunity.Foundations.Topology.HamSandwich` consumes.
+two-measure ham sandwich of `ArlibCommunity.Foundations.Convex.Localization.Analysis.HamSandwich` consumes.
 
 ## The argument
 
@@ -57,7 +57,7 @@ two-measure ham sandwich of `ArlibCommunity.Foundations.Topology.HamSandwich` co
 Nothing in this file mentions measures, convexity, or the application that motivated it: it is a
 self-contained piece of general topology and is the natural home for `Arlib`'s Borsuk–Ulam.  The
 statement proved is the `ℝ²`-valued form, `Sⁿ → ℝ²` for `n ≥ 2`, which is what a *two*-measure ham
-sandwich needs (`ArlibCommunity.Foundations.Topology.HamSandwich`).  The full form `Sⁿ → ℝⁿ` — needed only for `n`
+sandwich needs (`ArlibCommunity.Foundations.Convex.Localization.Analysis.HamSandwich`).  The full form `Sⁿ → ℝⁿ` — needed only for `n`
 measures, `n ≥ 3` — is **not** proved here and would need a genuinely different argument: the
 `π₁`-level obstruction used below is specific to the target `S¹`, and higher targets need
 `πₙ₋₁(Sⁿ⁻¹)` or degree theory, neither of which Mathlib `v4.32` has.

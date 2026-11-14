@@ -44,7 +44,7 @@ conductance.  `hf0` is `ENNReal.toReal_nonneg`, `hflc` is `ArlibCommunity.Founda
 The two binders that are **not** discharged here are the new ones: `hellKpos` (strict positivity
 of `ℓ` on `K`) and `hellLip` (`ℓ` log-Lipschitz on `K` with constant `Lf`), together with the
 compatibility `hLσ`.  They are genuinely extra content about `ℓ`, not isoperimetry, and this
-file does not prove them for a general convex body — `ArlibCommunity.Foundations.Geometry.ellGaussian_isoperimetry_measurable_logTwo_strict_witness`
+file does not prove them for a general convex body — `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_measurable_logTwo_strict_witness`
 exhibits a body on which they hold with `Lf = 0`, so the statement is not vacuous.
 
 **Scope.**  This is an isoperimetric inequality and nothing else.  It is not a conductance
@@ -87,7 +87,7 @@ theorem ellGaussian_isoperimetry_measurable_logTwo (hn : 2 ≤ n) {σ d δ R Lf 
     (fun _ => ENNReal.toReal_nonneg) (isLogConcave_ell_toReal hK hKc δ)
     (continuous_ell_toReal hn0 hδ) hell1 hellKpos hellLip hLσ hpart hS₁ hS₂ hS₃ hsep
 
-/-- **Strict non-vacuity for `ArlibCommunity.Foundations.Geometry.ellGaussian_isoperimetry_measurable_logTwo`.**
+/-- **Strict non-vacuity for `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_measurable_logTwo`.**
 
 The two binders that instantiation does not discharge — `ℓ` strictly positive on `K` and `ℓ`
 log-Lipschitz on `K` — are met **with `Lf = 0`** on a body where `ℓ` is *constant*:
@@ -266,14 +266,14 @@ theorem ellGaussian_isoperimetry_measurable_logTwo_strict_witness (hn : 2 ≤ n)
 /-- **Cousins–Vempala's `thm:iso` for measurable `S₁, S₂, S₃`, at the indicator density
 `h = 1_K·ℓ·γ`** — the density `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` consumes.
 
-Compare `ArlibCommunity.Foundations.Geometry.ellGaussian_isoperimetry_measurable_logTwo`
+Compare `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_measurable_logTwo`
 (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`), which reaches the measurable case by converting the
 density branch of the separation disjunction into the metric branch and therefore carries
 
     hellLip : ∀ u ∈ K, ∀ v ∈ K, ℓ(u) ≤ ℓ(v)·exp(Lf·‖u − v‖)
     hLσ     : √3·(σ²·Lf + R) ≤ 2σ√n
 
-for which `AUDIT.md` §0i(b) argues there is no witness with non-constant `ℓ` at the operative
+for which, by an informal argument, there is no witness with non-constant `ℓ` at the operative
 step `δ ≤ σ/(8√n)`.  **Both are gone here, along with the parameters `R` and `Lf`.**
 
 See the module docstring for why the mollification limit closes without any comparison
@@ -415,14 +415,14 @@ This is `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_o
 (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`) with `IsOpen S₁`, `IsOpen S₂`, `IsClosed S₃`
 replaced by `MeasurableSet`.
 
-Compare `ArlibCommunity.Foundations.Geometry.ellGaussian_isoperimetry_measurable_logTwo`
+Compare `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_measurable_logTwo`
 (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`), which reaches the measurable case through the
 metric-enlargement detour and therefore carries
 
     hellLip : ∀ u ∈ K, ∀ v ∈ K, ℓ(u) ≤ ℓ(v)·exp(Lf·‖u − v‖)
     hLσ     : √3·(σ²·Lf + R) ≤ 2σ√n
 
-which `AUDIT.md` §0i(b) argues admit no witness with non-constant `ℓ` at the operative step.
+which, by an informal argument, admit no witness with non-constant `ℓ` at the operative step.
 **Both are gone here**, together with `R` and `Lf` themselves.  The log-concavity of `ℓ`
 (`ArlibCommunity.Foundations.MarkovChainTheory.isLogConcave_ell_toReal`) does all the work that log-Lipschitzness was being asked
 for, because the route never converts the density branch into the metric branch.
@@ -434,7 +434,7 @@ discontinuous across `∂K` and so fails `hhc`.  Bridging to it needs the mollif
 argument that `ArlibCommunity.Foundations.Convex.gaussianIndicator_isoperimetry_measurable`
 (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`) performs for `1_K·γ`, carried out with the extra
 factor `ℓ`.  Until that lands, nothing here may be quoted as a conductance, mixing-time or
-runtime bound.  See `AUDIT.md` §0j. -/
+runtime bound. -/
 theorem ellGaussian_isoperimetry_measurable_logTwo_uncond (hn : 2 ≤ n) {σ d δ : ℝ}
     (hσ : 0 < σ) (hd : 0 < d) (hδ : 0 < δ)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (hKc : Convex ℝ K)

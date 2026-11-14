@@ -11,7 +11,7 @@ import Mathlib.MeasureTheory.Function.AEEqOfLIntegral
 /-!
 # Pointwise closeness, and why mixing does not deliver it
 
-the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean` records the sharpest discrepancy found in the Kannan–Vempala
+the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean` records the sharpest discrepancy found in the Kannan–Vempala
 formalisation.  Both KV97's Theorem 2 and the consuming paper state the hypothesis on the
 continuous draw as *"`p` is drawn from a density whose **variational distance** to uniform
 on `P'` is at most `ε`"*, and both then use the conclusion as if `ε` were a **relative**
@@ -19,7 +19,7 @@ error.  It is not: a total-variation hypothesis buys only an *additive* error, b
 integrand lies in `[0,1]` and `|∫f dμ − ∫f dν| ≤ TV(μ,ν)` is sharp
 (`ArlibCommunity.Foundations.Convex.TVLe.integral_le`).  Under the additive reading the corollary is false — summing
 over the `N` lattice points contributes `N·ε`, which does not cancel.  So
-`ArlibCommunity.Algorithms.KV97.theorem2` takes a **pointwise** hypothesis, `(1−ε)/V ≤ f p ≤ (1+ε)/V`.
+`ArlibCommunity.Algorithms.KV97.hitProbability_bounds` takes a **pointwise** hypothesis, `(1−ε)/V ≤ f p ≤ (1+ε)/V`.
 
 The consequence for the sampler is what this file is about.  A mixing-time bound
 (`ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin`, `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_decay`)
@@ -91,7 +91,7 @@ machinery and is not closed here.**  The routes that remain, none of which this 
 formalises, are (a) prove the pointwise bound for the *whole trajectory* by a local
 Harnack/smoothing estimate on the ball-walk density, which is what "one more step of a
 δ-ball average makes the density Hölder" would give; (b) change the reduction so that
-KV97's Theorem 2 consumes an additive error, which the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean` argues is impossible
+KV97's Theorem 2 consumes an additive error, which the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean` argues is impossible
 at the required scale `1/Vol(P')`; or (c) supply the pointwise draw by rejection against a
 proposal whose density is known exactly, paying an acceptance-probability factor.  Naming
 this precisely is the point of the file: the roadmap did not anticipate it.
@@ -376,7 +376,7 @@ theorem absolutelyContinuous_twoPoint {p q : ℝ≥0∞} (hq0 : q ≠ 0) (hq1 : 
 /-! ### The counterexample
 
 Two distinct failures, both at total variation distance at most `δ` for `δ` as small as one
-likes. They are genuinely different, and both matter for the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`.
+likes. They are genuinely different, and both matter for the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean`.
 
 **Failure 1 — no density at all.**  `twoPoint δ` puts mass `δ` on `true`; `twoPoint 0` puts
 none. So `twoPoint δ` is not absolutely continuous with respect to `twoPoint 0`, and
@@ -433,7 +433,7 @@ theorem not_pointwiseClose_twoPoint_sq {δ ε : ℝ≥0∞} (hδ0 : δ ≠ 0) (h
 For every `δ ≠ 0` there are two probability measures on `Bool` at total variation distance
 at most `δ` which are **not** pointwise `ε`-close for **any** `ε` — not even `ε = ⊤`.
 
-This is the formal content of the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`: a mixing-time bound produces a `TVLe`,
+This is the formal content of the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean`: a mixing-time bound produces a `TVLe`,
 and no amount of mixing, by itself, produces a `PointwiseClose`. -/
 theorem exists_tvLe_not_pointwiseClose_forall {δ : ℝ≥0∞} (hδ0 : δ ≠ 0) (hδ1 : δ ≤ 1) :
     ∃ μ ν : Measure Bool, IsProbabilityMeasure μ ∧ IsProbabilityMeasure ν ∧

@@ -75,17 +75,17 @@ The **kernel** data-processing inequality is not here either, but it is *not* mi
 the library — this paragraph used to say it was, and that was wrong long enough to mislead a
 reader. It is proved twice, downstream:
 
-* `ArlibCommunity.Foundations.tvLe_step` / `ArlibCommunity.Foundations.tvLe_iterate` (`ArlibCommunity/Foundations/MarkovChainTheory/Basic/Warmness.lean`,
-  `:302`), resting on `ArlibCommunity.Foundations.lintegral_le_of_tvLe` (`:241`), which runs the layer cake
+* `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_step` / `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate` (`ArlibCommunity/Foundations/MarkovChainTheory/Basic/Warmness.lean`,
+  `:302`), resting on `ArlibCommunity.Foundations.MarkovChainTheory.lintegral_le_of_tvLe` (`:241`), which runs the layer cake
   directly in `ℝ≥0∞`. **This is the strong form**: no `IsProbabilityMeasure`, no `ε ≠ ⊤`.
   Prefer it.
-* `ArlibCommunity.Foundations.Convex.TVLe.bind` (`Arlib/Probability/TVKernel.lean`), reached instead through the
+* `TVLe.bind` (`TVKernel.lean` (not in this repository; see `REFERENCES.md`)), reached instead through the
   real-valued `ArlibCommunity.Foundations.Convex.TVLe.integral_le` below, and so carrying both of those hypotheses. It exists
   only because it lives in this layer, which cannot see `ArlibCommunity.Foundations`.
 
 The absence of the *coupling* characterisation, by contrast, is real and load-bearing: it is
-why the phase composition in `Arlib/Convexity/GaussianCooling/PhaseInduction.lean` accumulates
-error geometrically where Cousins–Vempala accumulate it additively. See `AUDIT.md` §0o.
+why the phase composition in `PhaseInduction.lean` (not in this repository; see `REFERENCES.md`) accumulates
+error geometrically where Cousins–Vempala accumulate it additively.
 -/
 
 namespace ArlibCommunity.Foundations.Convex

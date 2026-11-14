@@ -13,7 +13,7 @@ import ArlibCommunity.Algorithms.KV97.Analysis.Inflate
 > is close to uniform. Then for every lattice point `x ∈ P ∩ ℤⁿ`,
 > `(1 − loss)/Vol(P') ≤ Pr[rnd p = x] ≤ 1/Vol(P')`.
 
-`ArlibCommunity.Algorithms.KV97.theorem2` is that statement. `Pr[rnd p = x]` is
+`ArlibCommunity.Algorithms.KV97.hitProbability_bounds` is that statement. `Pr[rnd p = x]` is
 `∫_{P'} f p · prodTent x p dp`, where `f` is the sampler's density and
 `prodTent x p = ∏ᵢ tent(pᵢ − xᵢ)` is `Pr[rnd p = x ∣ p]`
 (`ArlibCommunity/Algorithms/KV97/Analysis/ProdKernel.lean`).
@@ -23,7 +23,7 @@ import ArlibCommunity.Algorithms.KV97.Analysis.Inflate
 Both Kannan–Vempala and the restatement it is used through (`claim:linf`) say the sampler's density is
 within **total variation** `ε` of uniform on `P'`. That reading does not survive
 contact with the corollary, and this development does not use it. In detail
-(the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`):
+(the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean`):
 
 * A TV hypothesis buys an **additive** error: the integrand `prodTent x ·` lies in
   `[0,1]`, so `|∫f dν − ∫f dunif| ≤ TV(ν, unif)` and no better. That is exactly
@@ -63,7 +63,7 @@ the *averaging* against the sampler's density (here) and the *tail bound* on the
 escape (`ArlibCommunity/Algorithms/KV97/Analysis/Escape.lean`, `ArlibCommunity/Algorithms/KV97/Analysis/ContTent.lean`)
 — are independent, and keeping them separate makes each checkable on its own.
 
-`ArlibCommunity.Algorithms.KV97.theorem2` is conditional on `E`. **`ArlibCommunity.Algorithms.KV97.theorem2_of_body`
+`ArlibCommunity.Algorithms.KV97.hitProbability_bounds` is conditional on `E`. **`ArlibCommunity.Algorithms.KV97.hitProbability_bounds_of_body`
 below is not**: it discharges `E` at `exp(−c²/2)` using
 `ArlibCommunity.Algorithms.KV97.setIntegral_prodTent_compl_inflate_le_exp`, which
 transports the facet tail bound of `Escape.lean` to the *continuous* tent density
@@ -117,7 +117,7 @@ end PointwiseAlmostUniform
 The whole content is double stochasticity: the kernel integrates to `1` in the
 `p` variable (`ArlibCommunity.Algorithms.KV97.integral_prodTent`), hence to at most `1`
 over any measurable set. -/
-theorem theorem2_upper {f : EuclideanSpace ℝ (Fin n) → ℝ}
+theorem hitProbability_upper {f : EuclideanSpace ℝ (Fin n) → ℝ}
     {S : Set (EuclideanSpace ℝ (Fin n))} {V ε : ℝ} {x : EuclideanSpace ℝ (Fin n)}
     (hS : MeasurableSet S) (hV : 0 < V) (hε : -1 ≤ ε)
     (hf : PointwiseAlmostUniform f S V ε)
@@ -140,7 +140,7 @@ the escape mass `∫_{Sᶜ} prodTent x p dp`.
 The kernel's total mass is `1`, so what stays inside `S` is `1` minus what
 escapes (`ArlibCommunity.Algorithms.KV97.setIntegral_prodTent_compl`); the sampler's
 density is at least `(1−ε)/V` there. -/
-theorem theorem2_lower {f : EuclideanSpace ℝ (Fin n) → ℝ}
+theorem hitProbability_lower {f : EuclideanSpace ℝ (Fin n) → ℝ}
     {S : Set (EuclideanSpace ℝ (Fin n))} {V ε E : ℝ} {x : EuclideanSpace ℝ (Fin n)}
     (hS : MeasurableSet S) (hV : 0 < V) (hε : ε ≤ 1)
     (hf : PointwiseAlmostUniform f S V ε)
@@ -173,8 +173,8 @@ a `(1+ε)`. Both are corrections, not conveniences.
 
 `E` is discharged by the tail bound of `ArlibCommunity/Algorithms/KV97/Analysis/Escape.lean`
 transported to the continuous tent density; at `κ = kappaOf c r` that gives
-`E = exp(−c²/2)` (**not** `exp(−c²)` — the escape-term discussion in `Algorithms/KV97/Analysis/Theorem2.lean`). -/
-theorem theorem2 {A : ι → EuclideanSpace ℝ (Fin n)} {b : ι → ℝ} {c r : ℝ}
+`E = exp(−c²/2)` (**not** `exp(−c²)` — the escape-term discussion in `Algorithms/KV97/Analysis/HitProbability.lean`). -/
+theorem hitProbability_bounds {A : ι → EuclideanSpace ℝ (Fin n)} {b : ι → ℝ} {c r : ℝ}
     {f : EuclideanSpace ℝ (Fin n) → ℝ} {V ε E : ℝ} {x : EuclideanSpace ℝ (Fin n)}
     (hV : 0 < V) (hε0 : -1 ≤ ε) (hε1 : ε ≤ 1)
     (hf : PointwiseAlmostUniform f (inflated A b c r) V ε)
@@ -182,13 +182,13 @@ theorem theorem2 {A : ι → EuclideanSpace ℝ (Fin n)} {b : ι → ℝ} {c r :
     (hesc : ∫ p in (inflated A b c r)ᶜ, prodTent x p ≤ E) :
     (1 - ε) * (1 - E) / V ≤ ∫ p in inflated A b c r, f p * prodTent x p ∧
       ∫ p in inflated A b c r, f p * prodTent x p ≤ (1 + ε) / V :=
-  ⟨theorem2_lower (measurableSet_inflated A b c r) hV hε1 hf hint hesc,
-   theorem2_upper (measurableSet_inflated A b c r) hV hε0 hf hint⟩
+  ⟨hitProbability_lower (measurableSet_inflated A b c r) hV hε1 hf hint hesc,
+   hitProbability_upper (measurableSet_inflated A b c r) hV hε0 hf hint⟩
 
 
 /-! ## The unconditional form
 
-`ArlibCommunity.Algorithms.KV97.theorem2` leaves the escape mass `E` as a hypothesis. Everything
+`ArlibCommunity.Algorithms.KV97.hitProbability_bounds` leaves the escape mass `E` as a hypothesis. Everything
 needed to discharge it is now proved, so this section closes it.
 -/
 
@@ -201,7 +201,7 @@ factor of uniform,
 `(1−ε)(1 − e^{−c²/2})/V  ≤  Pr[rnd p = x]  ≤  (1+ε)/V`,   `V = Vol(P')`.
 
 The escape term is `exp(−c²/2)` — **not** the paper's `2e^{−c²}`. The paper's
-inflation `κ = c + √(2 log r)` supports only the former; see the escape-term discussion in `Algorithms/KV97/Analysis/Theorem2.lean`
+inflation `κ = c + √(2 log r)` supports only the former; see the escape-term discussion in `Algorithms/KV97/Analysis/HitProbability.lean`
 and `ArlibCommunity.Algorithms.KV97.mul_exp_kappaOf_le`. Reaching `e^{−c²}` needs the larger
 inflation `√2·c + √(2 log r)`, available as
 `ArlibCommunity.Algorithms.KV97.mul_exp_kappaOf_sqrt_two_le`.
@@ -209,7 +209,7 @@ inflation `√2·c + √(2 log r)`, available as
 Both the escape bound and the union bound over facets are discharged here; the
 only remaining hypotheses are about the *sampler* (`hf`, `hint`) and the input
 geometry (`hx`, `hr`). -/
-theorem theorem2_of_body [Fintype ι] {A : ι → EuclideanSpace ℝ (Fin n)} {b : ι → ℝ}
+theorem hitProbability_bounds_of_body [Fintype ι] {A : ι → EuclideanSpace ℝ (Fin n)} {b : ι → ℝ}
     {c r : ℝ} {f : EuclideanSpace ℝ (Fin n) → ℝ} {V ε : ℝ}
     {x : EuclideanSpace ℝ (Fin n)}
     (hV : 0 < V) (hε0 : -1 ≤ ε) (hε1 : ε ≤ 1)
@@ -220,7 +220,7 @@ theorem theorem2_of_body [Fintype ι] {A : ι → EuclideanSpace ℝ (Fin n)} {b
     (1 - ε) * (1 - Real.exp (-c ^ 2 / 2)) / V
         ≤ ∫ p in inflated A b c r, f p * prodTent x p ∧
       ∫ p in inflated A b c r, f p * prodTent x p ≤ (1 + ε) / V :=
-  theorem2 hV hε0 hε1 hf hint
+  hitProbability_bounds hV hε0 hε1 hf hint
     (setIntegral_prodTent_compl_inflate_le_exp A b hx hc hr1 hr)
 
 end ArlibCommunity.Algorithms.KV97

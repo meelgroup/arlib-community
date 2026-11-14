@@ -2,7 +2,7 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import ArlibCommunity.Algorithms.KV97.Analysis.Theorem2
+import ArlibCommunity.Algorithms.KV97.Analysis.HitProbability
 import ArlibCommunity.Foundations.MarkovChainTheory.PointwiseMixing.Analysis.PointwiseRoute
 import ArlibCommunity.Foundations.MarkovChainTheory.BallWalkMixing.Analysis.BallWalkConductance
 
@@ -13,21 +13,21 @@ Kannan–Vempala's Theorem 2 needs a continuous sampler on the inflated polytope
 connects it to samplers the Markov-chain theory provides:
 
 * a law within total variation `θ / V` of uniform gives the same two-sided window as a
-  pointwise almost-uniform density (`theorem2_of_tvLe`, `theorem2_of_mixesWithin`);
+  pointwise almost-uniform density (`hitProbability_bounds_of_tvLe`, `hitProbability_bounds_of_mixesWithin`);
 * exact rejection from a superset meets the pointwise hypothesis at error `0`
   (`pointwiseAlmostUniform_of_rejection`);
 * the lazy ball walk, run long enough from a warm start, meets it from an isoperimetric
-  inequality for the body (`theorem2_of_lazy_ballWalk`).
+  inequality for the body (`hitProbability_bounds_of_lazy_ballWalk`).
 
 These results moved here from the Markov-chain theory, which no longer depends on this
 algorithm.
 
 ## Main results
 
-* `theorem2_of_tvLe`, `theorem2_of_mixesWithin`
+* `hitProbability_bounds_of_tvLe`, `hitProbability_bounds_of_mixesWithin`
 * `pointwiseAlmostUniform_of_rejection`
-* `theorem2_of_lazy_ballWalk`
-* `exists_theorem2_of_tvLe_witness`
+* `hitProbability_bounds_of_lazy_ballWalk`
+* `exists_hitProbability_bounds_of_tvLe_witness`
 -/
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.MarkovChainTheory.PointwiseRoute
@@ -41,7 +41,7 @@ variable {n : ℕ}
 
 /-! ## Route 3 applied: Kannan–Vempala Theorem 2 from a total-variation hypothesis
 
-`ArlibCommunity.Algorithms.KV97.theorem2` takes a *density* `f` and computes `Pr[rnd p = x]` as
+`ArlibCommunity.Algorithms.KV97.hitProbability_bounds` takes a *density* `f` and computes `Pr[rnd p = x]` as
 `∫_{P'} f p · prodTent x p dp`.  The statements below take the sampler's **law** `μ` and
 compute the same quantity as `∫ prodTent x p ∂μ`.  The measure form is the primitive one —
 a sampler returns a law, not a density — and it is strictly more general: a law with an
@@ -59,7 +59,7 @@ variable {n : ℕ}
 
 /-- The rounding kernel is bounded by `1`: it is a product of `tent` values, and
 `tent u = max (1 − |u|) 0 ≤ 1`.  This is what makes `ArlibCommunity.Foundations.Convex.TVLe.integral_le` applicable to
-it — that lemma transfers `[0,1]`-valued observables, and `ArlibCommunity.Foundations.Lattice.Rounding` records
+it — that lemma transfers `[0,1]`-valued observables, and `ArlibCommunity.Algorithms.KV97.Analysis.ProdKernel` records
 only `prodTent_nonneg`. -/
 theorem prodTent_le_one (x p : EuclideanSpace ℝ (Fin n)) : prodTent x p ≤ 1 := by
   have h : ∀ i : Fin n, tent (p i - x i) ≤ 1 := by
@@ -105,14 +105,14 @@ If the sampler's law `μ` is within total variation `ε` of the uniform law on `
 
   `(1 − (E + θ))/V  ≤  Pr[rnd p = x]  ≤  (1 + θ)/V`,
 
-with `E` the escape mass — **exactly the shape `ArlibCommunity.Algorithms.KV97.theorem2` produces from its
+with `E` the escape mass — **exactly the shape `ArlibCommunity.Algorithms.KV97.hitProbability_bounds` produces from its
 pointwise hypothesis**, with `θ` in place of the pointwise `ε`.
 
-This is what the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean` claims is impossible "at the required scale `1/Vol(P')`".
+This is what the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean` claims is impossible "at the required scale `1/Vol(P')`".
 It is not impossible; it is a change of unit.  The cost is that the tolerance handed to the
 mixing bound is `θ/V` rather than `θ`, i.e. `log V` extra steps
 (`conductanceMixingTime_inv_volume_le`). -/
-theorem theorem2_of_tvLe {S : Set (EuclideanSpace ℝ (Fin n))}
+theorem hitProbability_bounds_of_tvLe {S : Set (EuclideanSpace ℝ (Fin n))}
     {μ : Measure (EuclideanSpace ℝ (Fin n))} [IsProbabilityMeasure μ] {V E θ : ℝ}
     {ε : ℝ≥0∞} {x : EuclideanSpace ℝ (Fin n)} (hS : MeasurableSet S)
     (h0 : volume S ≠ 0) (htop : volume S ≠ ⊤) (hVS : (volume S).toReal = V)
@@ -130,7 +130,7 @@ theorem theorem2_of_tvLe {S : Set (EuclideanSpace ℝ (Fin n))}
 
 /-- **The same, with the tolerance written as `θ / V`.**  This is the form to run a mixing
 bound to: *ask for total variation `θ / Vol(P')`*. -/
-theorem theorem2_of_tvLe_inv_volume {S : Set (EuclideanSpace ℝ (Fin n))}
+theorem hitProbability_bounds_of_tvLe_inv_volume {S : Set (EuclideanSpace ℝ (Fin n))}
     {μ : Measure (EuclideanSpace ℝ (Fin n))} [IsProbabilityMeasure μ] {V E θ : ℝ}
     {x : EuclideanSpace ℝ (Fin n)} (hS : MeasurableSet S)
     (h0 : volume S ≠ 0) (htop : volume S ≠ ⊤) (hVS : (volume S).toReal = V)
@@ -139,14 +139,14 @@ theorem theorem2_of_tvLe_inv_volume {S : Set (EuclideanSpace ℝ (Fin n))}
     (1 - (E + θ)) / V ≤ ∫ p, prodTent x p ∂μ ∧
       ∫ p, prodTent x p ∂μ ≤ (1 + θ) / V := by
   have hV : 0 < V := hVS ▸ ENNReal.toReal_pos h0 htop
-  refine theorem2_of_tvLe hS h0 htop hVS htv ENNReal.ofReal_ne_top ?_ hesc
+  refine hitProbability_bounds_of_tvLe hS h0 htop hVS htv ENNReal.ofReal_ne_top ?_ hesc
   rw [ENNReal.toReal_ofReal (by positivity), div_mul_cancel₀ _ hV.ne']
 
 /-- **End to end.**  A chain that has mixed, *in total variation*, to tolerance `θ / Vol(P')`
 satisfies Kannan–Vempala Theorem 2's conclusion.  No pointwise hypothesis, no minorisation,
 no density: `ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin` is exactly what a conductance bound delivers,
 and this is it being consumed. -/
-theorem theorem2_of_mixesWithin {S : Set (EuclideanSpace ℝ (Fin n))}
+theorem hitProbability_bounds_of_mixesWithin {S : Set (EuclideanSpace ℝ (Fin n))}
     {P : Kernel (EuclideanSpace ℝ (Fin n)) (EuclideanSpace ℝ (Fin n))} [IsMarkovKernel P]
     {μ₀ : Measure (EuclideanSpace ℝ (Fin n))} [IsProbabilityMeasure μ₀] {V E θ : ℝ}
     {t : ℕ} {x : EuclideanSpace ℝ (Fin n)} (hS : MeasurableSet S)
@@ -156,14 +156,14 @@ theorem theorem2_of_mixesWithin {S : Set (EuclideanSpace ℝ (Fin n))}
     (hesc : ∫ p in Sᶜ, prodTent x p ≤ E) :
     (1 - (E + θ)) / V ≤ ∫ p, prodTent x p ∂(ArlibCommunity.Foundations.MarkovChainTheory.iterate P μ₀ t) ∧
       ∫ p, prodTent x p ∂(ArlibCommunity.Foundations.MarkovChainTheory.iterate P μ₀ t) ≤ (1 + θ) / V :=
-  theorem2_of_tvLe_inv_volume hS h0 htop hVS hmix hθ hesc
+  hitProbability_bounds_of_tvLe_inv_volume hS h0 htop hVS hmix hθ hesc
 
 end KV97
 
-/-- **Route 2 discharges `ArlibCommunity.Algorithms.KV97.theorem2`'s hypothesis outright.**
+/-- **Route 2 discharges `ArlibCommunity.Algorithms.KV97.hitProbability_bounds`'s hypothesis outright.**
 
 Rejecting a uniform draw from a superset `B ⊇ P'` onto `P'` gives a law under which
-`Pr[rnd p = x]` is *literally* the density-form integrand of `ArlibCommunity.Algorithms.KV97.theorem2` at the
+`Pr[rnd p = x]` is *literally* the density-form integrand of `ArlibCommunity.Algorithms.KV97.hitProbability_bounds` at the
 constant density `1/V`, and that density is `ArlibCommunity.Algorithms.KV97.PointwiseAlmostUniform` at error
 `0` — hence at every `ε ≥ 0`.  Nothing is approximated.
 
@@ -182,7 +182,7 @@ theorem pointwiseAlmostUniform_of_rejection {n : ℕ}
 
 /-! ## 11. The sampler contract: Kannan–Vempala Theorem 2 from a geometric hypothesis
 
-`theorem2_of_mixesWithin` consumes a chain that has mixed in
+`hitProbability_bounds_of_mixesWithin` consumes a chain that has mixed in
 total variation to tolerance `acc / Vol(K)` and returns Theorem 2's two-sided window.
 Feeding it `mixesWithin_lazy_ballWalk` closes the chain from a geometric hypothesis about
 `K` all the way to the sampler contract. -/
@@ -201,7 +201,7 @@ Cousins–Vempala's because Mathlib lacks the ball-cap volume estimate, and `hel
 rather than a proof artefact — its only *proved* witness is `θ = 2⁻ⁿ` on the unit ball, so
 the step count this theorem certifies is exponential in `n` unless the caller supplies a
 better `θ`. -/
-theorem theorem2_of_lazy_ballWalk (hn : 1 ≤ n)
+theorem hitProbability_bounds_of_lazy_ballWalk (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
     (hK0 : volume K ≠ 0) (hKtop : volume K ≠ ⊤) {δ : ℝ} (hδ : 0 < δ)
     {θ : ℝ} (hθ : 0 < θ)
@@ -227,24 +227,24 @@ theorem theorem2_of_lazy_ballWalk (hn : 1 ≤ n)
       ∫ p, ArlibCommunity.Algorithms.KV97.prodTent x p
           ∂(iterate (lazy (ballWalk K δ)) mu0 t) ≤ (1 + acc) / V := by
   have hVpos : 0 < V := hV ▸ ENNReal.toReal_pos hK0 hKtop
-  exact theorem2_of_mixesWithin hK hK0 hKtop hV hacc.le
+  exact hitProbability_bounds_of_mixesWithin hK hK0 hKtop hV hacc.le
     (mixesWithin_lazy_ballWalk hn hK hK0 hKtop hδ hθ hell hkappa hiso hM hwarm
       (by positivity) ht)
     hesc
 
 /-! ## Non-vacuity
 
-`theorem2_of_tvLe` is a conditional statement with seven hypotheses; if they could not hold
+`hitProbability_bounds_of_tvLe` is a conditional statement with seven hypotheses; if they could not hold
 together it would be worthless.  They can, at the extreme value `ε = 0`: take the body to be
 the unit ball of `EuclideanSpace ℝ (Fin (n+1))` (positive and finite volume) and the
 sampler's law to be *exactly* the uniform law on it.  Then the total-variation hypothesis
 holds at **every** tolerance, the tolerance `θ/V` included, and the conclusion is the
 genuine two-sided window, not a degenerate one. -/
 
-/-- **The non-vacuity witness.**  Every hypothesis of `theorem2_of_tvLe_inv_volume` is
+/-- **The non-vacuity witness.**  Every hypothesis of `hitProbability_bounds_of_tvLe_inv_volume` is
 simultaneously satisfiable, and the conclusion it yields there is the honest window
 `[(1 − (E+θ))/V, (1+θ)/V]` about a body of positive finite volume. -/
-theorem exists_theorem2_of_tvLe_witness (n : ℕ) (x : EuclideanSpace ℝ (Fin (n + 1)))
+theorem exists_hitProbability_bounds_of_tvLe_witness (n : ℕ) (x : EuclideanSpace ℝ (Fin (n + 1)))
     {θ : ℝ} (hθ : 0 ≤ θ) :
     ∃ (S : Set (EuclideanSpace ℝ (Fin (n + 1))))
       (μ : Measure (EuclideanSpace ℝ (Fin (n + 1)))) (V E : ℝ),
@@ -264,6 +264,6 @@ theorem exists_theorem2_of_tvLe_witness (n : ℕ) (x : EuclideanSpace ℝ (Fin (
   refine ⟨S, uniformOn volume S, (volume S).toReal,
     ∫ p in Sᶜ, ArlibCommunity.Algorithms.KV97.prodTent x p, inferInstance, hS, h0, htop, rfl, hV,
     (ArlibCommunity.Foundations.Convex.TVLe.refl _).mono (by simp), le_rfl, ?_⟩
-  exact theorem2_of_tvLe_inv_volume hS h0 htop rfl ((ArlibCommunity.Foundations.Convex.TVLe.refl _).mono (by simp)) hθ le_rfl
+  exact hitProbability_bounds_of_tvLe_inv_volume hS h0 htop rfl ((ArlibCommunity.Foundations.Convex.TVLe.refl _).mono (by simp)) hθ le_rfl
 
 end ArlibCommunity.Algorithms.KV97

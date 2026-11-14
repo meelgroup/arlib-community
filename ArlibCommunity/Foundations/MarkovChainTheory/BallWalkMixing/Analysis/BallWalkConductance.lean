@@ -55,8 +55,8 @@ carries out all three over the uniform ball walk built in
 
 * `mixesWithin_lazy_ballWalk` — **the lazy ball walk on `K` mixes to total variation `eps`
   from an `M`-warm start** in `conductanceMixingTime M (min (θ/32) (κθ²δ/(128n))) eps` steps.
-* `theorem2_of_lazy_ballWalk` — the same, composed with
-  `ArlibCommunity.Foundations.MarkovChains.Continuous.PointwiseRoute.theorem2_of_mixesWithin`: from an isoperimetric inequality for `K`
+* `hitProbability_bounds_of_lazy_ballWalk` — the same, composed with
+  `ArlibCommunity.Algorithms.KV97.hitProbability_bounds_of_mixesWithin`: from an isoperimetric inequality for `K`
   to Kannan–Vempala Theorem 2's two-sided window on the rounding probability.
 * `mixesWithin_lazy_ballWalk_unitBall` — the joint-satisfiability check:
   every hypothesis except `hiso` discharged concretely on the unit ball.
@@ -65,7 +65,7 @@ carries out all three over the uniform ball walk built in
 
 The **isoperimetric inequality is the only unproved input** anywhere in this file, and every
 theorem that consumes it (`conductance_ballWalk_ge`, `mixesWithin_lazy_ballWalk`,
-`theorem2_of_lazy_ballWalk`, `mixesWithin_lazy_ballWalk_unitBall`) takes it as an **inline
+`hitProbability_bounds_of_lazy_ballWalk`, `mixesWithin_lazy_ballWalk_unitBall`) takes it as an **inline
 `∀`-hypothesis** (`hiso`) — not as a `def`, a `structure` field, or a named `Prop`.  A
 reader of any of those theorems' types sees the inequality written out in full.  There is
 exactly one `def` in this file (`lazy`, a plain kernel construction that names no
@@ -431,8 +431,7 @@ isoperimetric inequality for the uniform measure on `K`, and it is written out *
 a `∀`-hypothesis of the theorem**, so that a reader of the theorem's type sees exactly what
 is assumed.  It is deliberately *not* a `def`, a `structure` field, or a named `Prop`: a
 name would hide the assumption both from the reader and from any audit of what the file
-proves, which is the failure mode `CV-ROADMAP.md` section 2a records for the sibling
-development's `IsoInput`. -/
+proves; see the *non-vacuity rule* in `ArlibCommunity/Foundations.lean`. -/
 
 /-- **The conductance of the ball walk, given an isoperimetric inequality for `K`.**
 
@@ -443,8 +442,7 @@ Two hypotheses carry content; both are written out inline.
 * `hiso` — **the isoperimetric inequality**, spelled out: *for every `d > 0` and every pair
   of measurable subsets `A, B ⊆ K` all of whose points are at distance at least `d` from
   one another, what is left of `K` has mass at least `κ·d·π(A)·π(B)`.*  Nothing in this
-  file proves it; Mathlib has no isoperimetric inequality for log-concave densities and
-  `CV-ROADMAP.md` section 3 records why.  The theorem is stated for an arbitrary `κ`, so
+  file proves it; Mathlib has no isoperimetric inequality for log-concave densities.  The theorem is stated for an arbitrary `κ`, so
   a caller who can prove the inequality with their own constant gets the bound with it.
 
 * `hell` — **a uniform lower bound `ℓ(x) ≥ θ` on the local conductance of `K`.**  This is

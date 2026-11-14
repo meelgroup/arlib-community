@@ -11,7 +11,7 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 /-!
 # Localisation for lower semicontinuous integrands — residual (C) of the assembly
 
-`ArlibCommunity.Foundations.Convexity.LocalizationAssembly` classifies every hypothesis of the localisation
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly` classifies every hypothesis of the localisation
 conclusion and lists residual **(C) Lower semicontinuity** as genuinely open:
 
 > The thin-tube comparison consumes a modulus-of-continuity hypothesis, not lower
@@ -374,7 +374,7 @@ theorem needleIntegral_mono {γ : ℝ → E} (hγ : Measurable γ) {W : ℝ → 
 /-- **The localisation conclusion with the second integrand merely lower semicontinuous.**
 
 `hloc` is the localisation lemma for *bounded continuous* data, in the shape the assembly of
-`ArlibCommunity.Foundations.Convexity.LocalizationAssembly` targets: from `∫_K f₁ = 0` and `0 < ∫_K f₂` it produces a
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly` targets: from `∫_K f₁ = 0` and `0 < ∫_K f₂` it produces a
 needle `γ` carrying a nonnegative integrable profile `W` (with whatever extra property `P`
 records — concavity of `W ^ (1/m)`, support in `[0,1]`, …) such that `∫ W · f₁ ∘ γ = 0` and
 `0 < ∫ W · f₂ ∘ γ`.

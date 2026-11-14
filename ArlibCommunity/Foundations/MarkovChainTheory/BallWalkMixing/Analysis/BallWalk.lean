@@ -83,9 +83,8 @@ theorem, not as an assumed predicate, not as a definition whose name asserts one
 Cousins-Vempala conductance bound `Φ = Ω(δ/(σ√n))` (`thm:speedyconductance`,
 [CV18]) rests on the isoperimetric inequality for log-concave densities,
 which Mathlib does not have and which `ArlibCommunity/Foundations/Convex/Basic/Isoperimetry.lean` deliberately
-stops short of; see `CV-ROADMAP.md` section 3.  A predicate named after that bound would
-be inhabited only by degenerate witnesses, which is the trap `CV-ROADMAP.md` section 2a
-records.  What this file supplies is the object such a bound would be *about*.
+stops short of.  A predicate named after that bound would
+be inhabited only by degenerate witnesses; see the *non-vacuity rule* in `ArlibCommunity/Foundations.lean`.  What this file supplies is the object such a bound would be *about*.
 -/
 
 open ArlibCommunity.Foundations.Convex

@@ -13,11 +13,11 @@ For a convex `K ∋ u, v` in `ℝⁿ` (`n ≥ 2`) and `‖u − v‖ ≤ δ/√n
 
     vol(K ∩ B(u,δ) ∩ B(v,δ))  ≥  (1/4) · min{ℓ(u), ℓ(v)} · vol(δBₙ)
 
-(`kls_lemma35_at_sep_sqrt_dim_quarter`, and `volume_lens_ge_min_ball_inter_quarter` in the
+(`lens_volume_ge_at_sep_sqrt_dim_quarter`, and `volume_lens_ge_min_ball_inter_quarter` in the
 ball-slice form).  This is Lemma 3.5 of [KLS95] as cited by Cousins–Vempala at
 [CV18], at the constant `1/4` in place of `1/40`
-(`ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim`, `LensMin.lean`) and `1/8`
-(`ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim_sharp`, `OverlapSqrt.lean`).  Nothing is
+(`ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim`, `LensMin.lean`) and `1/8`
+(`ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim_sharp`, `OverlapSqrt.lean`).  Nothing is
 `sorry`ed and no hypothesis beyond those two files' is carried — the hypotheses are exactly
 `2 ≤ n`, `Convex ℝ K`, `u ∈ K`, `v ∈ K`, `0 < δ`, `‖u−v‖ ≤ δ/√n`, and the separation is used
 only through `n‖u−v‖² ≤ δ²`.  See the axiom audit at the bottom.
@@ -40,7 +40,7 @@ demand `a·θ ≥ 1/(20κ)`, and since `a ≤ 1` (`acceptance_le_one`) and `ℓ 
 
 | lens constant `κ` | demand `a·θ ≥ …` | verdict |
 | --- | --- | --- |
-| `1/40` (`kls_lemma35_at_sep_sqrt_dim`) | `2` | **impossible**, `floor_unsatisfiable_at_fortieth` |
+| `1/40` (`lens_volume_ge_at_sep_sqrt_dim`) | `2` | **impossible**, `floor_unsatisfiable_at_fortieth` |
 | `1/8` (`…_sharp`) | `2/5 = 0.4` | satisfiable, but `θ ≥ 0.4/a` |
 | `1/4` (here) | `1/5 = 0.2` | `θ ≥ 0.2/a` |
 | `(1−1/n)ⁿ` (the `δ/n` floor in force today) | `1/(20(1−1/n)ⁿ) ∈ (e/20, 1/5]` | `0.2` at `n = 2`, `→ 0.136` |
@@ -120,7 +120,7 @@ unproved in this repository) are untouched.  Nothing here may be quoted as an `O
   `λ = √(1 − 1/n)`, root-free.
 * `half_le_sqrt_one_sub_inv_pow` — `(√(1 − 1/n))ⁿ ≥ 1/2`, sharp at `n = 2`.
 * `midpoint_mem_ball_inter_sharp` — the midpoint step at the exact radius.
-* `volume_lens_ge_min_ball_inter_quarter`, `kls_lemma35_at_sep_sqrt_dim_quarter` — the
+* `volume_lens_ge_min_ball_inter_quarter`, `lens_volume_ge_at_sep_sqrt_dim_quarter` — the
   headline, at `1/4`.
 * `three_exp_div_forty_le_quarter` — `3e/40 ≤ 1/4`, the Metropolis threshold, machine-checked.
 * `acceptance_le_one`, `floor_fortieth_iff`, `floor_eighth_iff`, `floor_quarter_iff`,
@@ -570,7 +570,7 @@ theorem volume_lens_ge_min_ball_inter_quarter (hn : 2 ≤ n)
 /-- **Lemma 3.5 of [KLS95] at separation `δ/√n`, in the paper's own `ℓ` shape, with the
 constant `1/4`.**  The `min` is essential and the `max` form is false; see
 `ArlibCommunity.Foundations.MarkovChainTheory.exists_halfspace_max_lt`. -/
-theorem kls_lemma35_at_sep_sqrt_dim_quarter (hn : 2 ≤ n)
+theorem lens_volume_ge_at_sep_sqrt_dim_quarter (hn : 2 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hKc : Convex ℝ K)
     {u v : EuclideanSpace ℝ (Fin n)} (hu : u ∈ K) (hv : v ∈ K) {δ : ℝ}
     (hδ : 0 < δ) (hsep : ‖u - v‖ ≤ δ / Real.sqrt n) :
@@ -612,17 +612,17 @@ theorem acceptance_le_one {R δ s : ℝ} (hR : 0 ≤ R) (hδ : 0 ≤ δ) (hs : 0
   right
   exact ⟨by nlinarith [sq_nonneg δ], by linarith⟩
 
-/-- At the lens constant `1/40` of `ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim`, the floor
+/-- At the lens constant `1/40` of `ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim`, the floor
 `1 ≤ 20·a·κ·θ` says `a·θ ≥ 2`. -/
 theorem floor_fortieth_iff (a θ : ℝ) : 1 ≤ 20 * a * (1 / 40) * θ ↔ 2 ≤ a * θ := by
   constructor <;> intro h <;> nlinarith
 
 /-- At the lens constant `1/8` of
-`ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim_sharp`, the floor says `a·θ ≥ 2/5`. -/
+`ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim_sharp`, the floor says `a·θ ≥ 2/5`. -/
 theorem floor_eighth_iff (a θ : ℝ) : 1 ≤ 20 * a * (1 / 8) * θ ↔ 2 / 5 ≤ a * θ := by
   constructor <;> intro h <;> nlinarith
 
-/-- At the lens constant `1/4` of `kls_lemma35_at_sep_sqrt_dim_quarter`, the floor says
+/-- At the lens constant `1/4` of `lens_volume_ge_at_sep_sqrt_dim_quarter`, the floor says
 `a·θ ≥ 1/5` — half the demand of `floor_eighth_iff`. -/
 theorem floor_quarter_iff (a θ : ℝ) : 1 ≤ 20 * a * (1 / 4) * θ ↔ 1 / 5 ≤ a * θ := by
   constructor <;> intro h <;> nlinarith
@@ -643,7 +643,7 @@ theorem floor_quarter_le_floor_dim {n : ℕ} (hn : 2 ≤ n) {a θ : ℝ}
   have hq : (1 : ℝ) / 4 ≤ (1 - 1 / (n : ℝ)) ^ n := quarter_le_one_sub_inv_pow hn
   nlinarith
 
-/-- **The `1/40` of `ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim` cannot support this floor
+/-- **The `1/40` of `ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim` cannot support this floor
 at all.**  It demands `a·θ ≥ 2` (`floor_fortieth_iff`), while the acceptance floor satisfies
 `a ≤ 1` (`acceptance_le_one`) and any admissible `θ` satisfies `θ ≤ 1`, local conductance
 being a probability (`ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one`).  So a Metropolis overlap lemma on `1/40`
@@ -749,7 +749,7 @@ end ArlibCommunity.Foundations.MarkovChainTheory
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.half_le_sqrt_one_sub_inv_pow
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.three_exp_div_forty_le_quarter
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_ge_min_ball_inter_quarter
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim_quarter
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim_quarter
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.acceptance_le_one
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.floor_fortieth_iff
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.floor_eighth_iff

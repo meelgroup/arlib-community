@@ -29,7 +29,7 @@ for a convex, **closed** body `K` of finite volume containing a ball of radius `
 quoted as **Lemma 3.3** of Lovász–Vempala, *Hit-and-Run from a Corner*, **at the correct order
 `√n`**, with an explicit absolute constant `C = 10` in place of the paper's `C = 1`.
 
-`Arlib/Convexity/KLS97.lean` proves the same statement with `√n` replaced by `n`, by an
+`KLS97.lean` (not in this repository; see `REFERENCES.md`) proves the same statement with `√n` replaced by `n`, by an
 elementary shrink-and-shift argument; that route is *sharp* (up to a factor `1.21`) and
 therefore cannot reach `√n`.  This file takes the different route sketched in that file's
 docstring and does reach `√n`.  Both files are kept: `KLS97.lean` needs no closedness
@@ -40,11 +40,11 @@ hypothesis and has a much shorter proof; this file has the right order in `n`.
 Write `d(y) = dist(y, K)`.  Four ingredients, none of which needs a surface-area measure, mixed
 volumes, or Cauchy's projection formula (none of which Mathlib v4.32 has):
 
-1. **Swap** (`ArlibCommunity.Foundations.lintegral_sdiff_eq_lintegral_inter`).  Both
+1. **Swap** (`lintegral_sdiff_eq_lintegral_inter`).  Both
    `∫_K vol(B(x,t) \ K) dx` and `∫_{Kᶜ} vol(K ∩ B(y,t)) dy` compute the `2n`-measure of
    `{(x,y) : x ∈ K, y ∉ K, dist x y ≤ t}`.  Tonelli.
 
-2. **Cap** (`ArlibCommunity.Foundations.Convex.volume_inter_closedBall_le_sqrt`, `ArlibCommunity.Foundations.sqrt_pow_le_exp`).  For `y ∉ K` let
+2. **Cap** (`ArlibCommunity.Foundations.Convex.volume_inter_closedBall_le_sqrt`, `sqrt_pow_le_exp`).  For `y ∉ K` let
    `ν` be the unit normal of the supporting hyperplane at the metric projection of `y`
    (Hilbert projection theorem: `exists_norm_eq_iInf_of_complete_convex` and
    `norm_eq_iInf_iff_real_inner_le_zero`).  Then
@@ -55,19 +55,19 @@ volumes, or Cauchy's projection formula (none of which Mathlib v4.32 has):
    (`λ = 2√n/t`) precisely so that the layer cake below needs only one FTC, not a piecewise one;
    the price is the factor `e² = g̃(0)`.
 
-3. **Layer cake** (`ArlibCommunity.Foundations.layercake_infDist`).  `∫_{Kᶜ} e^{2−λ d(y)} dy =
+3. **Layer cake** (`layercake_infDist`).  `∫_{Kᶜ} e^{2−λ d(y)} dy =
    ∫_0^∞ λ e^{2−λh} · vol({d ≤ h} \ K) dh`, again by Tonelli, the `h`-marginal being
    `∫_h^∞ λ e^{2−λu} du = e^{2−λh}` (FTC on `(d,∞)`).  Mathlib's `Layercake.lean` has only the
    *increasing*-weight form `∫ f = ∫ μ{f ≥ t}`, which does not apply here (`Kᶜ` has infinite
    measure and the weight is decreasing), so this is proved from `lintegral_lintegral_swap`.
 
-4. **Shell** (`ArlibCommunity.Foundations.volume_infDist_le_le`, `ArlibCommunity.Foundations.volume_shell_le`).  `{d ≤ h}` is contained in
+4. **Shell** (`volume_infDist_le_le`, `volume_shell_le`).  `{d ≤ h}` is contained in
    the image of `K` under the homothety of ratio `1 + h/r` about `z`, so
    `vol({d ≤ h}) ≤ (1+h/r)ⁿ vol K` and hence `vol({d ≤ h} \ K) ≤ ((1+h/r)ⁿ − 1)·vol K`.
    *Subtracting `vol K` is what produces the `√n`*: without it the `h`-integral is `≈ 1` and one
    gets nothing.
 
-The resulting one-dimensional estimate (`ArlibCommunity.Foundations.lintegral_weight_le`) is, in the regime
+The resulting one-dimensional estimate (`lintegral_weight_le`) is, in the regime
 `4t√n ≤ r`,
 
 `∫_0^∞ λ e^{2−λh}((1+h/r)ⁿ − 1) dh ≤ e²·λ·(n/r)·∫_0^∞ h e^{−7λh/8} dh = e²·(32/49)·t√n/r`,
@@ -90,10 +90,10 @@ Lemma 4.3, Corollary 4.4, or Corollary 4.5.
 
 ## Consequence downstream
 
-`ArlibCommunity.Foundations.Convex.lem33_sqrt` has **exactly** the shape of the `hLem33` hypothesis of
+`ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt_unitBall` has **exactly** the shape of the `hLem33` hypothesis of
 `ArlibCommunity.Foundations.MarkovChainTheory.volume_goodSet_ge` and `ArlibCommunity.Foundations.MarkovChainTheory.lintegral_stepRadius_ge` in
 `ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/StepLength.lean`, except that `Real.sqrt n` is replaced by `10 * Real.sqrt n`.
-Those two theorems are stated with the bare `Real.sqrt n`, so `lem33_sqrt` does not discharge
+Those two theorems are stated with the bare `Real.sqrt n`, so `lintegral_volume_closedBall_sdiff_le_sqrt_unitBall` does not discharge
 them verbatim; restating them with `Real.sqrt n` replaced by `10 * Real.sqrt n` (equivalently,
 carrying an absolute constant `C` through) turns Lemma 3.4's conclusion from
 `∫_K s_α ≥ ((1−α)/√n)·vol K` into `∫_K s_α ≥ ((1−α)/(10√n))·vol K` — the same order in `n`,
@@ -103,7 +103,7 @@ which is all the conductance bound needs.  `lintegral_stepRadius_ge` already car
 ## Main results
 
 * `ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt` — `(KLS-√n)`, general inradius `r`.
-* `ArlibCommunity.Foundations.Convex.lem33_sqrt` — the specialisation to `r = 1`, in the shape of `hLem33`.
+* `ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt_unitBall` — the specialisation to `r = 1`, in the shape of `hLem33`.
 -/
 
 open MeasureTheory Set Filter
@@ -829,7 +829,7 @@ theorem lintegral_volume_closedBall_sdiff_le_sqrt (hn : n ≠ 0) (hKc : Convex �
 /-- **The specialisation to inradius `1`**, in exactly the shape of the `hLem33` hypothesis
 carried by `ArlibCommunity.Foundations.MarkovChainTheory.volume_goodSet_ge` and `ArlibCommunity.Foundations.MarkovChainTheory.lintegral_stepRadius_ge` — with `Real.sqrt n`
 replaced by `10 * Real.sqrt n`. -/
-theorem lem33_sqrt (hn : n ≠ 0) (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKfin : volume K ≠ ⊤)
+theorem lintegral_volume_closedBall_sdiff_le_sqrt_unitBall (hn : n ≠ 0) (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKfin : volume K ≠ ⊤)
     (hball : Metric.closedBall z 1 ⊆ K) :
     ∀ t : ℝ, 0 < t → ∫⁻ x in K, volume (Metric.closedBall x t \ K)
       ≤ ENNReal.ofReal (t * (10 * Real.sqrt n) / 2) * volume K

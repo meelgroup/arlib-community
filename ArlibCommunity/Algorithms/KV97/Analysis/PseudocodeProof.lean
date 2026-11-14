@@ -12,7 +12,7 @@ import ArlibCommunity.Algorithms.KV97.Analysis.ProdKernel
 The law of the program's output, `output sampler`, puts mass
 `∫ Pr[round p = x] dsampler(p)` on a lattice point `x`, and `Pr[round p = x]` is the product
 tent kernel `prodTent (toState x) p`.  These two facts turn the program into the integral
-that `Analysis/Theorem2.lean` bounds.
+that `Analysis/HitProbability.lean` bounds.
 -/
 
 namespace ArlibCommunity.Algorithms.KV97.PseudocodeProof

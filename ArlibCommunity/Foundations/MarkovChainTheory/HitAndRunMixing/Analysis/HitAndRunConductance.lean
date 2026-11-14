@@ -25,7 +25,7 @@ with `conductance` the genuine infimum of `ArlibCommunity/Foundations/MarkovChai
 and `hitAndRun` the kernel of `ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/HitAndRun.lean`.
 
 **`2²⁷`, not the paper's `2²⁴`, and the reason is a constant and nothing else.**  Lemma 3.3
-is proved in this repository (`ArlibCommunity.Foundations.Convex.lem33_sqrt`) at `10·t√n/2r` rather than the paper's
+is proved in this repository (`ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt_unitBall`) at `10·t√n/2r` rather than the paper's
 `t√n/2r`, so Lemma 3.4 reads `∫_K s ≥ ((1−α)/(10√n))·vol K`; that factor `10` propagates
 verbatim to the headline, giving `1/(122880000·n·D)`, and `122880000 > 2²⁴ = 16777216`.  The
 factor `10` is a constant-factor loss in the exponential-envelope majorant that
@@ -50,12 +50,12 @@ to the uniform density (which is all Theorem 4.2 consumes):
 
 The printed hypothesis constrains `h` only on the union of the chords through cross pairs,
 while the conclusion integrates `h` over all of `K`; for `n ≥ 2` that union can miss a set
-of positive measure, on which `h` is unconstrained.  `ArlibCommunity.Foundations.not_hIso_two`
-(`Arlib/Convexity/LovaszVempalaIsoFalse.lean`) is the **negation of the binder as it was
+of positive measure, on which `h` is unconstrained.  `not_hIso_two` (not in this repository; see `REFERENCES.md`)
+(`LovaszVempalaIsoFalse.lean` (not in this repository; see `REFERENCES.md`)) is the **negation of the binder as it was
 previously written here**, machine-checked at `n = 2` and `K = [0,4]²`, with
 `T₁ = [0,1/2]²`, `T₂ = [7/2,4]×[0,1/2]` and `h = 1000·1_{[0,4]×[4/3,4]}`: no cross chord
 rises above height `7/6`, so `h` vanishes on every one of them, yet
-`E_π(h)·min(π T₁, π T₂) = 125/12 > 1 ≥ π(K ∖ T₁ ∖ T₂)`.  `ArlibCommunity.Foundations.cexK_hitAndRun_hypotheses`
+`E_π(h)·min(π T₁, π T₂) = 125/12 > 1 ≥ π(K ∖ T₁ ∖ T₂)`.  `cexK_hitAndRun_hypotheses` (not in this repository; see `REFERENCES.md`)
 checks that this `K` satisfies *every other* hypothesis of `conductance_hitAndRun_ge`, so the
 old binder made this theorem **vacuous at that instance**.
 
@@ -63,8 +63,8 @@ The repair costs the argument nothing: the paper's own §4 application verifies 
 ("clearly"), and that step is `ArlibCommunity.Foundations.MarkovChainTheory.weight_le_third` here — in the stronger
 form `h ≤ 1/(24√n)`.  It is discharged at the use site inside
 `conductance_hitAndRun_ge_of_tv`, so no caller has to supply it.
-`ArlibCommunity.Foundations.cexH_not_le_third` confirms the new clause is exactly what kills the counterexample.
-`ArlibCommunity.Foundations.not_hIso_two_measurable` further shows that adding `Measurable h` would **not** be a
+`cexH_not_le_third` (not in this repository; see `REFERENCES.md`) confirms the new clause is exactly what kills the counterexample.
+`not_hIso_two_measurable` (not in this repository; see `REFERENCES.md`) further shows that adding `Measurable h` would **not** be a
 repair — the counterexample weight is measurable — which is why no measurability binder was
 added; the repo has no measurability lemma for `ArlibCommunity.Foundations.MarkovChainTheory.stepRadius` to discharge one with.
 
@@ -85,7 +85,7 @@ Everything in §2 of the paper except that invocation is now proved, in
 `ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/LovaszVempalaIso.lean`: `ArlibCommunity.Foundations.Convex.oneDim_crossRatio_partition` (the
 one-dimensional cross-ratio inequality for measurable partitions), `ArlibCommunity.Foundations.Convex.needle_iso` (the
 repaired one-dimensional Theorem 2.1) and `ArlibCommunity.Foundations.Convex.needle_iso_of_chord` (Theorem 2.1 on a
-needle inside `K`, unconditional).  `ArlibCommunity.Foundations.Convex.thm21_of_localization` is Theorem 2.1 for the
+needle inside `K`, unconditional).  `ArlibCommunity.Foundations.Convex.crossRatioIso_uniform_of_localization` is Theorem 2.1 for the
 uniform density with the Localization Lemma as its single binder.
 
 The residuals are the two that `ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationAssembly.lean` classifies as
@@ -123,7 +123,7 @@ one-step distributions.  It is being proved in
 It is not an obstruction of the kind `hIso` is: it is ordinary (if laborious) geometry that
 the surrounding development already knows how to do.  As of writing that concurrent file does
 not discharge it *at the paper's constant*, and the difference is recorded here rather than
-hidden: `tvLe_hitAndRun_lemma41` obtains `1 − 1/2880` rather than the paper's `1 − 1/500`
+hidden: `tvLe_hitAndRun_of_close` obtains `1 − 1/2880` rather than the paper's `1 − 1/500`
 (its cap constant is `1/2`, not the paper's erroneous `1/6`), and it hypothesises
 `|u−v| < (2/√n)·F(u)` rather than the paper's `max{F(u),F(v)}` — the latter follows by
 symmetry, since `TVLe` and `crossRatioDist` are symmetric.  **This is why the theorem below
@@ -137,7 +137,7 @@ at the paper's `lam = 1/500` (`conductance_hitAndRun_ge`, giving `1/(2²⁷·n·
 The paper's **Lemma 3.3** (= Corollary 4.6 of Kannan–Lovász–Simonovits 1997), quoted without
 proof by Lovász–Vempala, **is proved in this repository**, as
 `ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt` in `ArlibCommunity/Foundations/Convex/BoundaryLayer/Analysis/KLS97Sharp.lean` (its
-inradius-`1` specialisation being `ArlibCommunity.Foundations.Convex.lem33_sqrt`).  It used to be threaded through this
+inradius-`1` specialisation being `ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt_unitBall`).  It used to be threaded through this
 file as an inline `∀`-hypothesis `hLem33`, because `ArlibCommunity.Foundations.MarkovChainTheory.lintegral_stepRadius_ge` carried one
 of exactly that shape; `StepLength.lean` now discharges it internally from
 `hball : closedBall z 1 ⊆ K` — the paper's own "Suppose `K` contains a unit ball" — and **no
@@ -305,7 +305,7 @@ For `h(x) = s_α(x)/(48·D·√n)` and any `x ∈ K`, `s_α(x) ≤ 2·diam K ≤
 It appears inside `ArlibCommunity.Foundations.MarkovChainTheory.weight_le_of_chord` as an intermediate step, but it is
 needed on its own now: the `hIso` binder of the theorems below carries `∀ x ∈ K, h x ≤ 1/3`
 as an explicit hypothesis, because **without it Theorem 2.1 is false** — see
-`ArlibCommunity.Foundations.not_hIso_two` (`Arlib/Convexity/LovaszVempalaIsoFalse.lean`).  This lemma is what
+`not_hIso_two` (`LovaszVempalaIsoFalse.lean`).  This lemma is what
 discharges that hypothesis at the use site, so the repair costs the argument nothing. -/
 theorem weight_le_third (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKb : Bornology.IsBounded K) {α : ℝ} (hα : 1 / 2 ≤ α)
@@ -574,7 +574,7 @@ hit-and-run on `K` is at least `lam/(245760·n·D)` when Lemma 4.1 holds with lo
   `K`**, the middle piece has mass at least `E_π(h)·min(π T₁, π T₂)`.
 
   The second bound is **not** in the paper, and Theorem 2.1 is false without it:
-  `ArlibCommunity.Foundations.not_hIso_two` refutes the uncorrected binder at `n = 2`, `K = [0,4]²`.  It is
+  `not_hIso_two` refutes the uncorrected binder at `n = 2`, `K = [0,4]²`.  It is
   discharged at the use site below by `ArlibCommunity.Foundations.MarkovChainTheory.weight_le_third`, so it costs no
   caller anything; see §1 of the module docstring.
 
@@ -582,7 +582,7 @@ hit-and-run on `K` is at least `lam/(245760·n·D)` when Lemma 4.1 holds with lo
   a signed pair of integrands — **not** Borsuk–Ulam, which
   `ArlibCommunity.Foundations.Convex.exists_flat_cut_zero_pos` shows is not needed.  Everything else in §2 of the paper
   is proved in `ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/LovaszVempalaIso.lean` (`ArlibCommunity.Foundations.Convex.needle_iso`,
-  `ArlibCommunity.Foundations.Convex.needle_iso_of_chord`, `ArlibCommunity.Foundations.Convex.thm21_of_localization`).  `hIso` is written out inline
+  `ArlibCommunity.Foundations.Convex.needle_iso_of_chord`, `ArlibCommunity.Foundations.Convex.crossRatioIso_uniform_of_localization`).  `hIso` is written out inline
   here, as a `∀`-hypothesis, precisely so that it cannot be mistaken for something proved —
   and that is what made the paper's error findable.
 
@@ -599,13 +599,13 @@ hit-and-run on `K` is at least `lam/(245760·n·D)` when Lemma 4.1 holds with lo
   **unreachable**, because the side condition `chordLow K u v < 0` of the proved Lemma 4.1
   is false at every boundary point (`ArlibCommunity.Foundations.MarkovChainTheory.chordLow_eq_zero_of_notMem_interior`).
   On the interior the binder is discharged outright, at `1 − 1/8000` for `n ≥ 1100`, by
-  `ArlibCommunity.Foundations.MarkovChainTheory.hLem41_interior_uncond`; `conductance_hitAndRun_ge_of_tv` below is this
+  `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_interior`; `conductance_hitAndRun_ge_of_tv` below is this
   theorem with the binder restored to `∀ u ∈ K` for backward compatibility.
 
 **The paper's Lemma 3.3 is no longer among them.**  It used to appear here as a third inline
 hypothesis `hLem33`, forwarded to `ArlibCommunity.Foundations.MarkovChainTheory.lintegral_stepRadius_ge`.  That hypothesis is
 **discharged**: Lemma 3.3 is proved in `ArlibCommunity/Foundations/Convex/BoundaryLayer/Analysis/KLS97Sharp.lean`
-(`ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt`, specialised as `ArlibCommunity.Foundations.Convex.lem33_sqrt`), and
+(`ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt`, specialised as `ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt_unitBall`), and
 `StepLength.lean` now consumes it internally from `hball`.  No `hLem33` binder remains.  The
 price is its constant: the proved form is `10·t√n/2r`, which is why the conclusion below has
 `245760` where the paper's arithmetic gives `24576`.
@@ -621,11 +621,11 @@ paper's own "Suppose `K` contains a unit ball" for Lemma 3.4.
 **Non-vacuity, stated honestly.**  No witness for the hypothesis bundle is exhibited here,
 and none can be until `hIso` is proved.  This is not a formality: in the shape `hIso` had
 before the `∀ x ∈ K, h x ≤ 1/3` clause was inserted, the bundle was **provably
-unsatisfiable** at `n = 2`, `K = [0,4]²` (`ArlibCommunity.Foundations.not_hIso_two`,
-`ArlibCommunity.Foundations.cexK_hitAndRun_hypotheses`), i.e. the theorem was vacuous there.  With the clause the
+unsatisfiable** at `n = 2`, `K = [0,4]²` (`not_hIso_two`,
+`cexK_hitAndRun_hypotheses`), i.e. the theorem was vacuous there.  With the clause the
 binder is the corrected Theorem 2.1, whose one-dimensional and needle forms are proved
 (`ArlibCommunity.Foundations.Convex.needle_iso`, `ArlibCommunity.Foundations.Convex.needle_iso_of_chord`) and whose remaining content is a single
-invocation of the Localization Lemma (`ArlibCommunity.Foundations.Convex.thm21_of_localization`).  What *can* be said
+invocation of the Localization Lemma (`ArlibCommunity.Foundations.Convex.crossRatioIso_uniform_of_localization`).  What *can* be said
 otherwise is that no hypothesis is degenerate on its face — `hLem41` is discharged by the
 paper's Lemma 4.1, and the geometric side conditions hold for, say, the unit ball itself. -/
 theorem conductance_hitAndRun_ge_of_tv_interior (hn : 1 ≤ n)
@@ -815,7 +815,7 @@ theorem conductance_hitAndRun_ge_of_tv_interior (hn : 1 ≤ n)
       (hS1int u hu) (hS2int v hv) huv (hmove u (hS1int u hu)) (hmove v (hS2int v hv))
       (hdich u hu v hv) hxK hxt
   -- the global bound `h ≤ 1/3` of Theorem 2.1, which the paper calls clear and which is
-  -- *not* a consequence of the chord bound (`ArlibCommunity.Foundations.not_hIso_two`)
+  -- *not* a consequence of the chord bound (`not_hIso_two`)
   have hg13 : ∀ x ∈ K, g x ≤ 1 / 3 := by
     intro x hx
     rw [hgapp x]
@@ -992,13 +992,13 @@ The proof is the whole content of the claim that the split is a *strengthening*:
 holding Lemma 4.1 on all of `K` gets it on `interior K` by `interior_subset`, so nothing that
 could be proved from this statement is lost by the weaker binder.  The converse fails, and
 that is the point: **the `∀ u ∈ K` form is not obtainable from the paper's Lemma 4.1.**
-`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_lemma41_uncond` (`SphereCap.lean`) needs
+`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_uncond` (`SphereCap.lean`) needs
 `chordLow K u v < 0`, and for `u ∈ frontier K` and `v ∈ interior K` that is *false*: a point
 `u + t(v−u) ∈ K` with `t < 0` would put `u` on an open segment between a point of `K` and an
 interior point, hence in `interior K`.  So `chordLow K u v = 0` there, for every body, in
 every dimension.  On `interior K` the same side condition is
 `ArlibCommunity.Foundations.Convex.chordLow_neg_of_mem_interior`, and the discharged binder is
-`ArlibCommunity.Foundations.MarkovChainTheory.hLem41_interior_uncond` (`HitAndRunLem41Discharge.lean`). -/
+`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_interior` (`HitAndRunLem41Discharge.lean`). -/
 theorem conductance_hitAndRun_ge_of_tv (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -1036,7 +1036,7 @@ route proves and is not claimed.  The statement is rounded up to the next power 
 `1/(122880000·n·D)` is available by rerunning the final comparison, and is strictly stronger.
 
 The whole gap to the paper is one factor `10`: the proved Lemma 3.3
-(`ArlibCommunity.Foundations.Convex.lem33_sqrt`) reads `10·t√n/2r` where the paper writes `t√n/2r`, so Lemma 3.4 reads
+(`ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt_unitBall`) reads `10·t√n/2r` where the paper writes `t√n/2r`, so Lemma 3.4 reads
 `∫_K s ≥ ((1−α)/(10√n))·vol K`, and `10 · 12288000 = 122880000`.  That `10` is a
 constant-factor loss in the exponential-envelope majorant used by `KLS97Sharp.lean` — **not**
 an error in KLS 1997, and not a change in the order of the bound, which remains the paper's
@@ -1044,7 +1044,7 @@ an error in KLS 1997, and not a change in the order of the bound, which remains 
 
 Read the docstring of `conductance_hitAndRun_ge_of_tv_interior` for the classification of the
 hypotheses: `hIso` is the **open gap, in its corrected form** (the paper's Theorem 2.1, which
-is *false* as printed — `ArlibCommunity.Foundations.not_hIso_two` — and which needs the Localization Lemma on
+is *false* as printed — `not_hIso_two` — and which needs the Localization Lemma on
 signed integrands, but **not** Borsuk–Ulam); `hLem41` is a placeholder for
 work in flight elsewhere in this repository; and the paper's Lemma 3.3 is **proved**, in
 `ArlibCommunity/Foundations/Convex/BoundaryLayer/Analysis/KLS97Sharp.lean`, and is no longer a hypothesis of either theorem. -/

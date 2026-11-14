@@ -12,7 +12,7 @@ import ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLemma
 # The limit passage of the Localization Lemma: Blaschke selection, and what the profile is
 
 This file attacks gap **(G2)** listed in the module docstring of
-`ArlibCommunity.Foundations.Convexity.LocalizationLemma`: the limit passage in the Lovász–Simonovits localisation
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLemma`: the limit passage in the Lovász–Simonovits localisation
 argument.  That gap was described there as needing three things:
 
 1. the **Blaschke selection theorem** (Hausdorff-compactness of the convex bodies inside a fixed
@@ -21,7 +21,7 @@ argument.  That gap was described there as needing three things:
 3. a **convergence theorem** identifying `lim (1/vol Cₖ) ∫_{Cₖ} g` with a needle integral
    `∫₀¹ ℓ(t)^{n-1} g(a + t(b-a)) dt`, with `ℓ` **affine**.
 
-Item 2 has since landed in `ArlibCommunity.Foundations.Convexity.BrunnSharp` (`ArlibCommunity.Foundations.Convex.brunn_slice_sharp`,
+Item 2 has since landed in `ArlibCommunity.Foundations.Convex.BrunnMinkowski.Analysis.BrunnSharp` (`ArlibCommunity.Foundations.Convex.brunn_slice_sharp`,
 `ArlibCommunity.Foundations.Convex.brunn_slice_concaveOn`).  **This file closes item 1 and settles the shape of item 3's
 answer — negatively.**  Concretely:
 
@@ -58,7 +58,7 @@ That is exactly what sharp Brunn buys for the limit passage.
 
 ## What is therefore still missing from (G2), precisely
 
-The docstring of `ArlibCommunity.Foundations.Convexity.LocalizationLemma` records the sharp form of Brunn–Minkowski
+The docstring of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLemma` records the sharp form of Brunn–Minkowski
 as what is needed "to pin the limit profile to a power of an affine function".  Sharp Brunn is
 indeed **necessary** — the log-concave form gives no profile at all — but it is **not
 sufficient**, and `ArlibCommunity.Foundations.Convex.exists_convex_slice_profile_not_affine` is the proof.  Read together,
@@ -85,7 +85,7 @@ for lower semicontinuous integrable `f`, where `G` is the concave limit profile 
 > `∫₀¹ G(t)^m h(a + t(b-a)) dt > 0`, produce `a', b' ∈ ℝⁿ` and `p, q ≥ 0` with
 > `∫₀¹ ((1-t)p + tq)^m g(a' + t(b'-a')) dt > 0` and likewise for `h`.
 
-> **⚠ CORRECTION (see `ArlibCommunity.Foundations.Convexity.NeedleProfile`).**  This section used to continue: "In
+> **⚠ CORRECTION (see `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleProfile`).**  This section used to continue: "In
 > the literature the affine form of the Localization Lemma is reached by a further reduction of
 > this kind on top of the limit body; formalising it is exactly what remains."  That overstated
 > the case: **piece (ii) is not load-bearing for anything in this repository, and dropping it
@@ -107,7 +107,7 @@ for lower semicontinuous integrable `f`, where `G` is the concave limit profile 
 >
 > Piece (i), the weak-convergence statement, **is now proved** — see
 > `ArlibCommunity.Foundations.Convex.abs_setIntegral_sub_slice_profile_le` and
-> `ArlibCommunity.Foundations.Convex.tendsto_average_setIntegral_of_profile` in `ArlibCommunity.Foundations.Convexity.NeedleProfile`, together
+> `ArlibCommunity.Foundations.Convex.tendsto_average_setIntegral_of_profile` in `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleProfile`, together
 > with the Fubini and measurability infrastructure there.  It is proved in coordinates in which
 > the needle is the first coordinate axis, and it consumes a *modulus-of-continuity* hypothesis
 > on `f` rather than lower semicontinuity, so two hypotheses of it remain undischarged (a Helly
@@ -121,7 +121,7 @@ the Localization Lemma remains unproved and unassumed.
 
 ## Honesty note
 
-As in `ArlibCommunity.Foundations.Convexity.LocalizationLemma`, this file contains **no** `def`/`structure`/`class`
+As in `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLemma`, this file contains **no** `def`/`structure`/`class`
 whose name or content asserts the Localization Lemma, the isoperimetric inequality, or Blaschke
 selection.  `ArlibCommunity.Foundations.Convex.profileBody` is a plain explicit set; every other name below is a theorem
 proved outright.  Blaschke selection is *proved* (from Mathlib's compactness of
@@ -220,7 +220,7 @@ theorem exists_subseq_tendsto_hausdorffDist {K : Set E} (hK : IsCompact K) {C : 
 subsets of a fixed compact set has a subsequence converging in Hausdorff distance to a nonempty
 compact **convex** subset of it.
 
-This is the piece of gap (G2) of `ArlibCommunity.Foundations.Convexity.LocalizationLemma` that concerns compactness.
+This is the piece of gap (G2) of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLemma` that concerns compactness.
 It is *proved*, not assumed. -/
 theorem exists_subseq_tendsto_hausdorffDist_convex {K : Set E} (hK : IsCompact K) {C : ℕ → Set E}
     (hne : ∀ n, (C n).Nonempty) (hcpt : ∀ n, IsCompact (C n)) (hconv : ∀ n, Convex ℝ (C n))

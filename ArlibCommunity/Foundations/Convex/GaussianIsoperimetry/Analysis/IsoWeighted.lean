@@ -86,7 +86,7 @@ So the bundle that works adds one quantitative binder and one compatibility bind
 
 ## Is a kernel reversible for `1_K·ℓ·e^{−‖x‖²/(2σ²)}` buildable?  Yes — assessment only
 
-`Arlib/MarkovChains/Continuous/EllFloor.lean` records that nothing in this repository is
+`EllFloor.lean` (not in this repository; see `REFERENCES.md`) records that nothing in this repository is
 reversible for that density: `metropolisGaussian` is reversible for `1_K·γ`
 (`MetropolisGaussian.lean`) and `speedyWalk` for `1_K·ℓ`
 (`SpeedyWalk.lean, 403`).  Reading the two definitions and the two reversibility proofs, the

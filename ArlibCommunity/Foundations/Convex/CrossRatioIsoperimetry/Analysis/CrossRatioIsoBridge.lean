@@ -9,7 +9,7 @@ import ArlibCommunity.Foundations.Convex.Basic.UniformOn
 /-!
 # From Theorem 2.1's conclusion to the `hIso` binder: the encoding gap, closed
 
-`ArlibCommunity.Foundations.Convex.thm21_of_localization` (`ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/LovaszVempalaIso.lean`) proves
+`ArlibCommunity.Foundations.Convex.crossRatioIso_uniform_of_localization` (`ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/LovaszVempalaIso.lean`) proves
 Lovász–Vempala Theorem 2.1 in **ℝ**, against **Lebesgue measure**, with the small mass written
 as an explicit scalar `A`:
 
@@ -36,11 +36,11 @@ where the `min`-form is the weaker statement.
   what licenses the WLOG that turns `A` into a `min`.
 * `ArlibCommunity.Foundations.Convex.two_mul_min_measure_le` — `2·min(vol T₁, vol T₂) ≤ vol K` for disjoint measurable
   `T₁, T₂ ⊆ K`, which is what discharges `A ≤ 1/2` instead of assuming it.
-* `ArlibCommunity.Foundations.Convex.hIso_measurable_of_thm21` — the `hIso` conclusion for **measurable** `h`.
-* `ArlibCommunity.Foundations.Convex.hIso_of_thm21` — **the `hIso` binder, verbatim, for arbitrary `h`**, measurable or
+* `ArlibCommunity.Foundations.Convex.hIso_measurable_of_crossRatioIso` — the `hIso` conclusion for **measurable** `h`.
+* `ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` — **the `hIso` binder, verbatim, for arbitrary `h`**, measurable or
   not.  This is the deliverable: it can be `exact`-ed into the `hIso` slot of
   `conductance_hitAndRun_ge`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_thm21` — Theorem 4.2 with `hIso` replaced by the
+* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso` — Theorem 4.2 with `hIso` replaced by the
   Theorem 2.1 hypothesis, carrying `hLem41` verbatim.
 
 ## Gap 1 — the scalar `A` versus `min (π T₁) (π T₂)`
@@ -48,7 +48,7 @@ where the `min`-form is the weaker statement.
 `hmassK` pins `A` to the relative mass of `T₁`, so the source theorem is *asymmetric*: it
 bounds `A·∫h` with `A` read off `T₁`, whereas the target wants the **smaller** of the two
 masses.  The repair is a WLOG, and the WLOG is legitimate only because every hypothesis of
-`thm21_of_localization` other than `hmassK` is symmetric under `T₁ ↔ T₂`:
+`crossRatioIso_uniform_of_localization` other than `hmassK` is symmetric under `T₁ ↔ T₂`:
 
 * `hT₁`, `hT₂` (measurability) — literally symmetric;
 * `hdisj : Disjoint T₁ T₂` — `Disjoint.symm`;
@@ -59,7 +59,7 @@ masses.  The repair is a WLOG, and the WLOG is legitimate only because every hyp
   identity `lineMap v u (1−r) = lineMap u v r` (`AffineMap.lineMap_apply_one_sub`), so the
   chords through the pair are the same set of points traversed backwards.  Disjointness
   supplies the `u ≠ v` that `crossRatioDist_comm` requires, and the two `⊆ K` hypotheses — which
-  `hIso` carries but `thm21_of_localization` does not — supply its membership arguments.
+  `hIso` carries but `crossRatioIso_uniform_of_localization` does not — supply its membership arguments.
 
 **No hypothesis is genuinely asymmetric.**  That is a positive finding: the swap is sound.
 
@@ -102,7 +102,7 @@ measure, and at the conductance call site they follow from the inball and the ci
 ## Gap 3′ — `h` need not be measurable, and the binder says so
 
 `hIso` quantifies over **every** `h : EuclideanSpace ℝ (Fin n) → ℝ`, with no measurability
-clause; `ArlibCommunity.Foundations.not_hIso_two_measurable` (`LovaszVempalaIsoFalse.lean`) records that adding
+clause; `not_hIso_two_measurable`  (`LovaszVempalaIsoFalse.lean`) records that adding
 one does not rescue the printed statement, so the clause was deliberately left out.  But
 `∫ x in K, h x` is Bochner and returns the junk value `0` for a non-integrable `h`, so the ℝ↔ℝ≥0∞
 bridge of Gap 3 is available only for measurable `h`.  A measurable-only lemma **cannot** be
@@ -114,9 +114,9 @@ minorants (`MeasureTheory.lintegral_eq_nnreal`), and every hypothesis `hIso` pla
 `0 ≤ h`, `h ≤ 1/3` on `K`, and the chord bound — is an **upper** bound, hence inherited by every
 minorant.  So `hIso` for arbitrary `h` follows from `hIso` for the measurable functions
 `x ↦ (φ x : ℝ)`, `φ : _ →ₛ ℝ≥0` ranging over simple minorants of `ofReal ∘ h`, by taking the
-supremum.  `ArlibCommunity.Foundations.Convex.hIso_of_thm21` is that argument, and it is why the hypothesis `hthm21` below
+supremum.  `ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` is that argument, and it is why the hypothesis `hthm21` below
 may carry a `Measurable g` binder for free: the caller supplying it from
-`thm21_of_localization` simply ignores that argument.
+`crossRatioIso_uniform_of_localization` simply ignores that argument.
 -/
 
 open ArlibCommunity.Foundations.Convex
@@ -133,14 +133,14 @@ variable {n : ℕ}
 
 /-! ## Gap 1: the chord hypothesis is symmetric
 
-The one hypothesis of `ArlibCommunity.Foundations.Convex.thm21_of_localization` whose symmetry is not immediate.  A chord
+The one hypothesis of `ArlibCommunity.Foundations.Convex.crossRatioIso_uniform_of_localization` whose symmetry is not immediate.  A chord
 from `u ∈ T₂` to `v ∈ T₁` is the chord from `v` to `u` traversed backwards — parameter `r`
 becoming `1 − r` — and `crossRatioDist` does not see the direction. -/
 
 /-- **The chord bound of Theorem 2.1 is symmetric in `T₁` and `T₂`.**
 
 `ArlibCommunity.Foundations.Convex.crossRatioDist_comm` needs `u ≠ v` and both points in `K`; disjointness gives the first
-and the two `⊆ K` hypotheses give the second.  Note that `thm21_of_localization` does not itself
+and the two `⊆ K` hypotheses give the second.  Note that `crossRatioIso_uniform_of_localization` does not itself
 require `T₁ ⊆ K` or `T₂ ⊆ K`, but the `hIso` binder does, so nothing is added to the caller. -/
 theorem chord_bound_comm {K T₁ T₂ : Set (EuclideanSpace ℝ (Fin n))}
     (hKb : Bornology.IsBounded K) (hT₁K : T₁ ⊆ K) (hT₂K : T₂ ⊆ K) (hdisj : Disjoint T₁ T₂)
@@ -163,7 +163,7 @@ theorem chord_bound_comm {K T₁ T₂ : Set (EuclideanSpace ℝ (Fin n))}
 
 /-- **Two disjoint measurable subsets of `K` cannot both have more than half its volume.**
 
-This is what discharges `ArlibCommunity.Foundations.Convex.thm21_of_localization`'s hypothesis `A ≤ 1/2` once the WLOG of
+This is what discharges `ArlibCommunity.Foundations.Convex.crossRatioIso_uniform_of_localization`'s hypothesis `A ≤ 1/2` once the WLOG of
 Gap 1 has arranged for `A` to be the *smaller* of the two relative masses.  Without the WLOG the
 hypothesis is unavailable, and indeed false when `T₁` is the larger piece. -/
 theorem two_mul_min_measure_le {K T₁ T₂ : Set (EuclideanSpace ℝ (Fin n))}
@@ -205,13 +205,13 @@ theorem lintegral_ofReal_uniformOn {K : Set (EuclideanSpace ℝ (Fin n))}
 
 /-! ## The bridge, for measurable `h`
 
-The hypothesis `hthm21` is the conclusion of `ArlibCommunity.Foundations.Convex.thm21_of_localization`, universally
+The hypothesis `hthm21` is the conclusion of `ArlibCommunity.Foundations.Convex.crossRatioIso_uniform_of_localization`, universally
 quantified over the data it must be applied to.  It carries a `Measurable g` binder, which
-makes it *weaker* — and therefore easier to supply: `thm21_of_localization` needs no
+makes it *weaker* — and therefore easier to supply: `crossRatioIso_uniform_of_localization` needs no
 measurability, so a caller holding the Localization Lemma discharges `hthm21` by
 
     fun g U₁ U₂ _ hU₁ hU₂ hdisj hg0 hg3 hchord A hA0 hA hmass =>
-      thm21_of_localization hKb hU₁ hU₂ hdisj hg0 hg3 hchord hA0 hA hmass (hloc …)
+      crossRatioIso_uniform_of_localization hKb hU₁ hU₂ hdisj hg0 hg3 hchord hA0 hA hmass (hloc …)
 
 with the measurability argument simply ignored. -/
 
@@ -224,7 +224,7 @@ conclusion's set).  Gap 2 is `ArlibCommunity.Foundations.Convex.two_mul_min_meas
 `A` the smaller relative mass.  Gap 3 is `ArlibCommunity.Foundations.Convex.lintegral_ofReal_uniformOn`,
 `ArlibCommunity.Foundations.Convex.uniformOn_apply` and `ArlibCommunity.Foundations.Convex.min_div_div`, plus the `(volume K)⁻¹` bookkeeping at the end —
 where exactly **one** factor of `volume K` survives, absorbed into `A`. -/
-theorem hIso_measurable_of_thm21 {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem hIso_measurable_of_crossRatioIso {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKb : Bornology.IsBounded K) (hKm : MeasurableSet K)
     (hK0 : volume K ≠ 0) (hKtop : volume K ≠ ⊤)
     (hthm21 : ∀ (g : EuclideanSpace ℝ (Fin n) → ℝ)
@@ -340,7 +340,7 @@ theorem hIso_measurable_of_thm21 {K : Set (EuclideanSpace ℝ (Fin n))}
 
 /-! ## The bridge, for arbitrary `h`: the `hIso` binder itself
 
-`hIso` places no measurability clause on `h`, so `hIso_measurable_of_thm21` cannot be handed to
+`hIso` places no measurability clause on `h`, so `hIso_measurable_of_crossRatioIso` cannot be handed to
 `conductance_hitAndRun_ge` by `exact`.  The clause is removed by approximation from below:
 Mathlib defines `∫⁻` as the supremum of the integrals of its simple minorants
 (`MeasureTheory.lintegral_eq_nnreal`), and each of `hIso`'s hypotheses on `h` — `0 ≤ h`,
@@ -355,16 +355,16 @@ discharges the binder by `exact`.
 The only mathematical input is `hthm21`; `hKb`, `hKm`, `hK0`, `hKtop` are the structural facts
 about `K` that the source theorem and the `uniformOn` normalisation need, and all four are
 available at the `conductance_hitAndRun_ge` call site (see
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_thm21`).
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso`).
 
-**This is not a proof that `hIso` is true.**  `ArlibCommunity.Foundations.not_hIso_two` refutes `hIso` at `n = 2`,
+**This is not a proof that `hIso` is true.**  `not_hIso_two` (not in this repository; see `REFERENCES.md`) refutes `hIso` at `n = 2`,
 `K = [0,4]²` *without* the clause `∀ x ∈ K, h x ≤ 1/3`; the clause is present here, in both
 `hthm21` and the conclusion, exactly as in the corrected binder.  What is proved is one
 implication: the ℝ≥0∞-valued, `uniformOn`-normalised, `min`-parameterised encoding **follows
 from** the ℝ-valued, Lebesgue-normalised, `A`-parameterised one.  The converse is not proved
 here, and is not immediate: `hmassK` pins `A` to `U₁`, and when `U₁` is the larger piece the
 `min`-form is strictly the weaker statement. -/
-theorem hIso_of_thm21 {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem hIso_of_crossRatioIso {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKb : Bornology.IsBounded K) (hKm : MeasurableSet K)
     (hK0 : volume K ≠ 0) (hKtop : volume K ≠ ⊤)
     (hthm21 : ∀ (g : EuclideanSpace ℝ (Fin n) → ℝ)
@@ -401,7 +401,7 @@ theorem hIso_of_thm21 {K : Set (EuclideanSpace ℝ (Fin n))}
       have hx := hφ x
       rw [← ENNReal.ofReal_coe_nnreal] at hx
       exact (ENNReal.ofReal_le_ofReal_iff (hh0 x)).mp hx
-    have hcore := hIso_measurable_of_thm21 (h := fun x => ((φ x : ℝ≥0) : ℝ)) hKb hKm hK0 hKtop
+    have hcore := hIso_measurable_of_crossRatioIso (h := fun x => ((φ x : ℝ≥0) : ℝ)) hKb hKm hK0 hKtop
       hthm21 (measurable_coe_nnreal_real.comp φ.measurable)
       (fun x => (φ x).coe_nonneg) (fun x hx => (hgh x).trans (hh3 x hx))
       hT₁ hT₂ hT₁K hT₂K hdisj
@@ -430,22 +430,22 @@ Every declaration of this file, plus the two upstream results it rests on, must 
 file's claim is about what they say, so it checks that both are clean rather than taking their
 own files' word for it.
 
-`#print axioms` cannot see `∀`-binders in a type.  In words: `hIso_of_thm21` assumes `hthm21`
-and the four structural facts about `K`; `conductance_hitAndRun_ge_of_thm21` assumes `hthm21`
-and `hLem41`.  Neither claims that Theorem 2.1 is true — `ArlibCommunity.Foundations.not_hIso_two` shows the
+`#print axioms` cannot see `∀`-binders in a type.  In words: `hIso_of_crossRatioIso` assumes `hthm21`
+and the four structural facts about `K`; `conductance_hitAndRun_ge_of_crossRatioIso` assumes `hthm21`
+and `hLem41`.  Neither claims that Theorem 2.1 is true — `not_hIso_two` shows the
 uncorrected form is false — only that the `hIso` encoding follows from the `hthm21` encoding. -/
 
 section AxiomCheck
 
-#print axioms thm21_of_localization
+#print axioms crossRatioIso_uniform_of_localization
 #print axioms crossRatioDist_comm
 
 #print axioms chord_bound_comm
 #print axioms two_mul_min_measure_le
 #print axioms min_div_div
 #print axioms lintegral_ofReal_uniformOn
-#print axioms hIso_measurable_of_thm21
-#print axioms hIso_of_thm21
+#print axioms hIso_measurable_of_crossRatioIso
+#print axioms hIso_of_crossRatioIso
 
 end AxiomCheck
 

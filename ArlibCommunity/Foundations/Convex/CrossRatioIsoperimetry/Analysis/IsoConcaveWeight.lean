@@ -1007,7 +1007,7 @@ restricted to be continuous.**
 
 Every clause of that binder (`HitAndRunConductance.lean`) is here verbatim — the two
 subset clauses `T₁ ⊆ K`, `T₂ ⊆ K` included, without which the statement is *false*
-(`ArlibCommunity.Foundations.Convex.not_thm21_book`) — with the single clause `Continuous h` inserted after the two set
+(`ArlibCommunity.Foundations.Convex.not_crossRatioIso_printed`) — with the single clause `Continuous h` inserted after the two set
 arguments.
 
 `Continuous h` rather than `ConcaveOn ℝ K h`: the localisation entry points of this repository
@@ -1195,13 +1195,13 @@ Two theorems certify, mechanically, that the conclusion of `ArlibCommunity.Found
 binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` (`HitAndRunConductance.lean`)
 with the single clause `Continuous h` inserted, and nothing else changed — in particular with
 `T₁ ⊆ K` and `T₂ ⊆ K` still present, without which the statement is false
-(`ArlibCommunity.Foundations.Convex.not_thm21_book`).
+(`ArlibCommunity.Foundations.Convex.not_crossRatioIso_printed`).
 
 The copy of the binder written out in `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_hIso_copy` is fed
 *verbatim* to `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`, so any drift between the copy and
 the real binder would fail to typecheck; and `ArlibCommunity.Foundations.Convex.hIso_continuous_of_hIso` feeds the same copy
 to the restricted statement, so any drift between the copy and `ArlibCommunity.Foundations.Convex.hIso_continuous` would fail
-to typecheck as well.  This is the check that `ArlibCommunity.Foundations.Convex.false_of_hIso_of_thm21_binder` performs for
+to typecheck as well.  This is the check that `ArlibCommunity.Foundations.Convex.false_of_crossRatioIso_binder` performs for
 the refuted binder, run in the positive direction. -/
 
 section BinderCheck

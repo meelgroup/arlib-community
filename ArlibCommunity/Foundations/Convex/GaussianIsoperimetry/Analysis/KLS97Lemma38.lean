@@ -30,7 +30,7 @@ is only known to satisfy "`W ^ (1/m)` concave", and `ArlibCommunity.Foundations.
 **refutes** the concave-to-affine upgrade.  The main theorem `ArlibCommunity.Foundations.Convex.kls38_concave` is therefore
 stated for `ℓ` merely **concave and nonnegative**; affineness is never used.  The affine form
 is recovered as the corollary `ArlibCommunity.Foundations.Convex.kls38_affine`, in exactly the shape of the `h1d1` binder
-of `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` (`ArlibCommunity.Foundations.Convexity.SharpIsoperimetry`).
+of `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` (`ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsoperimetry`).
 
 ## The constant
 
@@ -71,7 +71,7 @@ The proof splits on whether it does:
   needle weight, with constant `1` in place of `1/(4√n)`; and
   `ArlibCommunity.Foundations.Convex.logRatio_mul_mass_le`, its sharper log-ratio form.
 * `ArlibCommunity.Foundations.Convex.massRight_sub_mul_le`, `ArlibCommunity.Foundations.Convex.massLeft_sub_mul_le` — the division-free form of the
-  one-dimensional Prékopa inequalities of `ArlibCommunity.Foundations.Convexity.OneDimIsoperimetry`.
+  one-dimensional Prékopa inequalities of `ArlibCommunity.Foundations.Convex.Basic.OneDimIsoperimetry`.
 * `ArlibCommunity.Foundations.Convex.kls38_case2_left`, `ArlibCommunity.Foundations.Convex.kls38_case2_right` — the profile branch and its reflection.
 * `ArlibCommunity.Foundations.Convex.kls38_constant_bound` — the single numerical inequality the whole chain reduces to,
   `√(2πm)·exp(m/(2(4S−1)²) + 1/(4S)) ≤ 4S − 1` for `S = √(m+1)`.
@@ -86,7 +86,7 @@ No discrepancy was found in `(1d-1)` itself: the printed statement — constant 
 Two remarks nonetheless.
 
 1. `d_h ≤ 1` (`ArlibCommunity.Foundations.Convex.densDist_le_one`), so `(1d-1)` never gives a coefficient above
-   `1/(4√n)`; this is the cap already recorded in `ArlibCommunity.Foundations.Convexity.SharpIsoperimetry`.
+   `1/(4√n)`; this is the cap already recorded in `ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsoperimetry`.
 2. The paper's "follows directly from Lemma 3.8 in [KLS97]" hides the whole profile branch.
    Nothing weaker than the Gaussian-width estimate above will do: the cross-ratio inequality
    of Lovász–Simonovits, which is what one first reaches for, is off by a factor `√n`

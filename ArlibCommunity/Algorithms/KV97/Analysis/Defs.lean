@@ -49,7 +49,7 @@ the escape event is one-sided per facet, and the union bound already accounts fo
 multiplicity.
 
 `ArlibCommunity.Algorithms.KV97.lossOf` is therefore defined as `e^{−c²/2} + ε`, matching what is
-proved rather than what is printed. See the escape-term discussion in `Algorithms/KV97/Analysis/Theorem2.lean`.
+proved rather than what is printed. See the escape-term discussion in `Algorithms/KV97/Analysis/HitProbability.lean`.
 
 ## The corollary's choice of `c`
 
@@ -60,7 +60,7 @@ density deviates from uniform by at most `ε/4` it gives a total loss of `ε/2`
 `1/(1−θ) ≤ 1 + 2θ` step of `ArlibCommunity.Foundations.Convex.Rejection.ratio_bounds_of_window`.
 
 Note "deviates by `ε/4`" means **pointwise**, not in total variation —
-the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean` explains why the total-variation reading does not work.
+the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/HitProbability.lean` explains why the total-variation reading does not work.
 -/
 
 

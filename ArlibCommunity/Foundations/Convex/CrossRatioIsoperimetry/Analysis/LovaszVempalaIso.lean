@@ -90,7 +90,7 @@ stronger `h ≤ 1/(24√n)` — the paper's own "clearly `h(x) ≤ 1/3`" — so 
 
 **`Measurable h` was deliberately *not* added.**  An earlier draft of this docstring proposed it
 as a second insertion, on the grounds that a `∫⁻` has to become a Bochner integral somewhere.
-Two facts say otherwise.  (i) It is not part of the repair: `ArlibCommunity.Foundations.not_hIso_two_measurable`
+Two facts say otherwise.  (i) It is not part of the repair: `not_hIso_two_measurable` (not in this repository; see `REFERENCES.md`)
 refutes the old binder even when restricted to measurable `h`, since the counterexample weight
 is an indicator.  (ii) The consumer cannot discharge it: there is no measurability lemma for
 `ArlibCommunity.Foundations.MarkovChainTheory.stepRadius` anywhere in this repository, so the clause would be an obligation nobody can
@@ -144,21 +144,21 @@ Everything in §2 of the paper except the Localization Lemma itself.
 * `ArlibCommunity.Foundations.Convex.needle_iso_of_chord` — **Theorem 2.1 on a needle inside `K`**, from the ambient
   hypotheses.  This is the whole of §2 apart from the localisation step, and it is
   unconditional.
-* `ArlibCommunity.Foundations.Convex.thm21_of_localization` — **Theorem 2.1 for the uniform density**, with the Localization
+* `ArlibCommunity.Foundations.Convex.crossRatioIso_uniform_of_localization` — **Theorem 2.1 for the uniform density**, with the Localization
   Lemma as its single binder `hloc`.
 * `ArlibCommunity.Foundations.Convex.chord_le_of_corner_boxes` — **the geometric core of the counterexample of §1**, proved:
   no chord of `[0,1]²` through `[0,1/8]²` and `[7/8,1]×[0,1/8]` ever reaches height `7/24`, let
   alone `1/3`.
 
 **The counterexample of §1 is machine-checked end to end** in
-`ArlibCommunity.Foundations.Convexity.LovaszVempalaIsoFalse`: `ArlibCommunity.Foundations.not_hIso_two` is the *negation* of the `hIso`
-binder written out verbatim at `n = 2` and `K = [0,4]²`, and `ArlibCommunity.Foundations.cexK_hitAndRun_hypotheses`
+`LovaszVempalaIsoFalse.lean` (not in this repository; see `REFERENCES.md`): `not_hIso_two` (not in this repository; see `REFERENCES.md`) is the *negation* of the `hIso`
+binder written out verbatim at `n = 2` and `K = [0,4]²`, and `cexK_hitAndRun_hypotheses` (not in this repository; see `REFERENCES.md`)
 discharges every other geometric hypothesis of `conductance_hitAndRun_ge` at that same body.
 Nothing in §1 rests on prose any more.
 
 ## 4. What is assumed
 
-Exactly one thing: the binder `hloc` of `ArlibCommunity.Foundations.Convex.thm21_of_localization`, written out inline at its
+Exactly one thing: the binder `hloc` of `ArlibCommunity.Foundations.Convex.crossRatioIso_uniform_of_localization`, written out inline at its
 declaration.  It is Corollary 2.4 of Kannan–Lovász–Simonovits 1995 applied to
 `g₁ = 1_{T₁} − A·1_K` and `g₂ = A·h·1_K − 1_{K∖T₁∖T₂}`, in the same shape as the `hloc` of
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry`.  Nothing in this file is a `def`, `structure`, `class`
@@ -732,7 +732,7 @@ Theorem 2.1 in the form `π(S₃) ≥ E_π(h)·min(π S₁, π S₂)` for the un
 
 **`hh3` is not in the paper's statement and Theorem 2.1 is false without it** — see the module
 docstring. -/
-theorem thm21_of_localization {K T₁ T₂ : Set (EuclideanSpace ℝ (Fin n))}
+theorem crossRatioIso_uniform_of_localization {K T₁ T₂ : Set (EuclideanSpace ℝ (Fin n))}
     (hKb : Bornology.IsBounded K)
     (hT₁ : MeasurableSet T₁) (hT₂ : MeasurableSet T₂) (hdisj : Disjoint T₁ T₂)
     {h : EuclideanSpace ℝ (Fin n) → ℝ} (hh0 : ∀ x, 0 ≤ h x) (hh3 : ∀ x ∈ K, h x ≤ 1 / 3)
@@ -887,7 +887,7 @@ section AxiomCheck
 #print axioms ArlibCommunity.Foundations.Convex.needle_crossRatio_transfer
 #print axioms ArlibCommunity.Foundations.Convex.three_mul_sSup_le_crossRatioDist
 #print axioms ArlibCommunity.Foundations.Convex.needle_iso_of_chord
-#print axioms ArlibCommunity.Foundations.Convex.thm21_of_localization
+#print axioms ArlibCommunity.Foundations.Convex.crossRatioIso_uniform_of_localization
 #print axioms ArlibCommunity.Foundations.Convex.chord_le_of_corner_boxes
 #print axioms ArlibCommunity.Foundations.Convex.oneDim_crossRatio_partition_witness
 #print axioms ArlibCommunity.Foundations.Convex.needle_iso_witness

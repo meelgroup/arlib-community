@@ -9,7 +9,7 @@ import ArlibCommunity.Foundations.Convex.PrekopaLeindler.Analysis.PrekopaLeindle
 /-!
 # The sharp (`1/n`-concave) Brunn–Minkowski inequality, and Brunn's theorem
 
-`ArlibCommunity.Foundations.Convex.brunn_minkowski_pi` (in `ArlibCommunity.Foundations.Convexity.PrekopaLeindlerN`) is the *multiplicative*
+`ArlibCommunity.Foundations.Convex.brunn_minkowski_pi` (in `ArlibCommunity.Foundations.Convex.PrekopaLeindler.Analysis.PrekopaLeindlerN`) is the *multiplicative*
 Brunn–Minkowski inequality
 `volume A ^ lam * volume B ^ (1 - lam) ≤ volume (lam • A + (1 - lam) • B)`.
 This file upgrades it to the **sharp**, `1/n`-concave form

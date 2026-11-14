@@ -11,7 +11,7 @@ import Mathlib.MeasureTheory.Measure.Prod
 # An unconditional isoperimetric inequality for a convex body, with an explicit constant
 
 This file proves — outright, with no hypothesis carried — the three-set isoperimetric
-inequality in the exact shape consumed by `ArlibCommunity.Foundations.conductance_ballWalk_ge`'s `hiso`
+inequality in the exact shape consumed by `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge`'s `hiso`
 argument, for **every** bounded convex body, and in particular for the Euclidean unit
 ball.
 
@@ -346,7 +346,7 @@ theorem volume_mul_volume_le_of_separated
 /-! ### The isoperimetric inequality, in `hiso` shape -/
 
 /-- **The isoperimetric inequality in exactly the shape of the `hiso` hypothesis** of
-`ArlibCommunity.Foundations.conductance_ballWalk_ge` and `ArlibCommunity.Foundations.mixesWithin_lazy_ballWalk`, for any bounded
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge` and `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_lazy_ballWalk`, for any bounded
 convex body `K` of positive finite volume, with `κ = (1/2)ⁿ/D`:
 
     κ · d · π A · π B  ≤  π (K \ A \ B),    π = uniformOn volume K.
@@ -365,7 +365,7 @@ localization: the crude `max(λ, 1-λ) ≥ ½` where localization would give a d
 constant. Consistency check, at `n = 1`, `K = [0,1]`: this gives `κ = 1/2` against the sharp
 `ArlibCommunity.Foundations.Convex.uniformOn_dyerFrieze_dim_one`'s `κ = 2` — strictly weaker, as it must be. A
 polynomial constant in general needs the localization route, whose remaining obstruction is
-(P1) in `Arlib/Convexity/PositionalCut.lean`. -/
+(P1) in `PositionalCut.lean` (not in this repository; see `REFERENCES.md`). -/
 theorem uniformOn_iso_of_convex
     {K : Set (EuclideanSpace ℝ (Fin n))} {D : ℝ}
     (hK : Convex ℝ K) (hKm : MeasurableSet K)
@@ -435,7 +435,7 @@ theorem uniformOn_iso_of_convex
 
 This statement has *no* hypotheses beyond the ones written in it: it is a closed theorem
 about a concrete body, and it discharges the `hiso` argument of
-`ArlibCommunity.Foundations.conductance_ballWalk_ge` and `ArlibCommunity.Foundations.mixesWithin_lazy_ballWalk` at
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge` and `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_lazy_ballWalk` at
 `K = Metric.ball 0 1`, `kappa = (1/2)ⁿ⁺¹`.
 
 **The constant is exponentially small in the dimension, and this caveat belongs with the
@@ -451,7 +451,7 @@ variation chain composes, and that its joint hypotheses are satisfiable by a rea
 thing a *sharp* constant merely assumed for all bodies cannot settle. The sharp constant
 `κ = 2/D` is proved only in dimension one (`ArlibCommunity.Foundations.Convex.uniformOn_dyerFrieze_dim_one`); a
 polynomial constant in general needs the localization route, whose remaining obstruction is
-(P1) in `Arlib/Convexity/PositionalCut.lean`. -/
+(P1) in `PositionalCut.lean`. -/
 theorem uniformOn_iso_unitBall (n : ℕ) :
     ∀ d : ℝ, 0 < d → ∀ A B : Set (EuclideanSpace ℝ (Fin n)),
       MeasurableSet A → MeasurableSet B →

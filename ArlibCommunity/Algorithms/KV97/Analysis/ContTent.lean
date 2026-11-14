@@ -52,7 +52,7 @@ Mathlib has no Fubini theorem for `∫⁻` over a finite product of measures, so
 product formula is routed through the Bochner one
 (`MeasureTheory.integral_fintype_prod_eq_prod`) using nonnegativity and
 integrability of the tent — see
-`ArlibCommunity.Algorithms.KV97.lintegral_pi_prod_indicator_tent`.
+`lintegral_pi_prod_indicator_tent` (not in this repository; see `REFERENCES.md`).
 -/
 
 open ArlibCommunity.Foundations.Convex

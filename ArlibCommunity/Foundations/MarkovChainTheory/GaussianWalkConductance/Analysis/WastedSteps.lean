@@ -36,7 +36,7 @@ repository**; the new content here is their combination.
    This is `ArlibCommunity.Foundations.MarkovChainTheory.lintegral_exitTime_pathMeasure_ballWalk` (`TrajTransfer.lean`),
    which computes the mean of the exit time `inf {i | ωᵢ ≠ x}` of the *actual* ball-walk
    trajectory started at `x` to be exactly `(ell K δ x)⁻¹`.  The count is the
-   trials-including-the-successful-one convention of `Arlib/Probability/Geometric.lean`
+   trials-including-the-successful-one convention of `Geometric.lean` (not in this repository; see `REFERENCES.md`)
    (`integral_geometricMeasure_trials`), which is why the mean is `1/ℓ` and not `(1-ℓ)/ℓ`.
    What is new here is the averaged form `lintegral_lintegral_exitTime_pathMeasure_ballWalk`,
    which lets that mean be integrated against the law of the current speedy state.
@@ -122,7 +122,7 @@ Read this before quoting the capstone.
 ## Audit surface
 
 The non-vacuity rule asks for the audit surface to be findable in minutes.  Since this file is the
-only file being added, it is recorded here rather than in `AUDIT.md`:
+only file being added, it is recorded here:
 
 * **Capstone**: `mul_sum_lintegral_exitTime_iterate_speedyWalk_le` (trajectory form) and
   `mul_sum_lintegral_inv_ell_iterate_speedyWalk_le` (core form).  Read the types only.

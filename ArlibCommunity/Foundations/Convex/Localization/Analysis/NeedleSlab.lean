@@ -16,7 +16,7 @@ section
 **and** span one fixed slab `{y | φ (y - a) ∈ [0,1]}`.  Together those two hypotheses force
 `φ '' (D k - a) = [0,1]` at every stage — the needle has to realise the full height of `D 0` —
 which no genuinely shrinking localisation chain can do: a chain shrinks in *every* direction, so
-its height range shrinks too.  That is item **(E)** of `ArlibCommunity.Foundations.Convexity.LocalizationAssembly`.
+its height range shrinks too.  That is item **(E)** of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly`.
 
 This file removes the rigidity.  The `k`-th body is asked to lie in and span its **own** slab
 `{y | φ (y - a) ∈ [l k, u k]}`, with
@@ -35,7 +35,7 @@ Rescaling the height of the `k`-th body by the affine map `s ↦ l k + s (u k - 
 slab onto `[0,1]`, and — because that map touches only the height coordinate — carries slices to
 slices.  The **rescaled** normalised slice profiles `ArlibCommunity.Foundations.Convex.rescaledProfile` therefore all live on
 `[0,1]`, are nonnegative with concave `1/m`-th powers there, integrate to `1`, and are bounded by
-`2 ^ (m + 1)` uniformly; so the Arzelà–Ascoli selection of `ArlibCommunity.Foundations.Convexity.ConcaveSelection`
+`2 ^ (m + 1)` uniformly; so the Arzelà–Ascoli selection of `ArlibCommunity.Foundations.Convex.Localization.Analysis.ConcaveSelection`
 applies to *them* verbatim.  The only new analytic input is that the needle *point* moves with
 `k`: the height `s` of the rescaled body sits at height `l k + s (u k - l k)` of the original
 one, and the integrand has to be evaluated there.  Continuity of the integrand plus `l k → 0`,
@@ -263,7 +263,7 @@ theorem rescaledProfile_le (hm : m ≠ 0) {C : Set (Fin (m + 1) → ℝ)} (hconv
 
 `ArlibCommunity.Foundations.Convex.exists_subseq_tendsto_of_concaveOn_Ioo` applied to the `1/m`-th powers of the *rescaled*
 profiles.  Because rescaling puts every body's profile on the same interval `[0,1]`, the
-Arzelà–Ascoli argument of `ArlibCommunity.Foundations.Convexity.ConcaveSelection` applies verbatim, with the uniform
+Arzelà–Ascoli argument of `ArlibCommunity.Foundations.Convex.Localization.Analysis.ConcaveSelection` applies verbatim, with the uniform
 bound `2 ^ (m + 1)` supplied by `ArlibCommunity.Foundations.Convex.rescaledProfile_le`.
 
 The limit `W` is delivered nonnegative with a **concave** `1/m`-th power on `(0,1)`, i.e.
@@ -563,10 +563,10 @@ section
 # The localisation needle in general position, from a chain whose slab shrinks
 
 `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_shrinkingSlab`
-(`ArlibCommunity.Foundations.Convexity.NeedleSlab`) is stated in the frame in which the needle is the first coordinate
+(`ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleSlab`) is stated in the frame in which the needle is the first coordinate
 axis.  This file carries it to general position and hands it the geometry that
 `ArlibCommunity.Foundations.Convex.exists_flat_cut_chain_collinear_compact` actually produces, closing item **(E)** of
-`ArlibCommunity.Foundations.Convexity.LocalizationAssembly`.
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly`.
 
 The rigidity that item (E) records is that
 `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact` asks all bodies to lie in *and* span one
@@ -961,7 +961,7 @@ the height functional has been normalised so that the intersection has height ra
 That is the difference from the fixed slab of `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact`,
 which asks the height range of **every** `D k` to be `[0,1]` and hence forces it to be constant
 along the chain (`ArlibCommunity.Foundations.Convex.exists_mem_iInter_height`) — item **(E)** of
-`ArlibCommunity.Foundations.Convexity.LocalizationAssembly`.
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly`.
 
 ## Main results
 

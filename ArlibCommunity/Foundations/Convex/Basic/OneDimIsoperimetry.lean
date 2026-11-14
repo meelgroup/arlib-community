@@ -531,7 +531,7 @@ end Partition
 
 `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry` has coefficient `w z / ∫_a^b w` for a free sample point `z`.
 Cousins–Vempala need the coefficient in terms of the *variance* instead, because
-Brascamp–Lieb (`ArlibCommunity.Foundations.brascampLieb` in `GaussianCooling/Variance.lean`) is what controls
+Brascamp–Lieb (`ArlibCommunity.Algorithms.CV18.brascampLieb` in `GaussianCooling/Variance.lean`) is what controls
 the needle, and it controls its variance. The bridge is Hensley's bound: a density
 bounded by `M` has second moment at least `1 / (12 M ^ 2)`, so a density of variance at
 most `1` must reach height at least `1 / (2√3)` somewhere.

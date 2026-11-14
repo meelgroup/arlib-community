@@ -10,7 +10,7 @@ import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
 /-!
 # From the spectral gap to a total-variation decay rate
 
-`ArlibCommunity.Foundations.MarkovChains.Continuous.Cheeger` proves Cheeger's inequality `Φ²/2 ≤ gap ≤ 2 Φ`.
+`ArlibCommunity.Foundations.MarkovChainTheory.Cheeger.Analysis.Cheeger` proves Cheeger's inequality `Φ²/2 ≤ gap ≤ 2 Φ`.
 A spectral gap is not yet a mixing bound: what a sampler consumes is a *total variation*
 statement about the law of the chain.  This module supplies the two missing steps — the
 `L²` contraction of the chain's action on densities, and the `χ²`/`L²` → TV comparison —
@@ -926,7 +926,7 @@ and conductance at least `phi`, started from an `M`-warm law,
 This is exactly the `hdecay` hypothesis of
 `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_decay`, discharged.  Its ingredients are
 Cheeger's inequality (`sq_conductance_div_two_le_spectralGap`, from
-`ArlibCommunity.Foundations.MarkovChains.Continuous.Cheeger`), the `L²` contraction
+`ArlibCommunity.Foundations.MarkovChainTheory.Cheeger.Analysis.Cheeger`), the `L²` contraction
 `varianceReal_markovIter_le`, and the `χ²` → TV comparison `tvLe_withDensity`. -/
 theorem tvLe_iterate_of_conductance {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
     [IsProbabilityMeasure pi] (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)

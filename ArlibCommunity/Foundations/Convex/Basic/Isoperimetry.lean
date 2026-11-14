@@ -75,7 +75,7 @@ remains is exactly the two cited inputs above.
 
 Deliberately **absent**: any `def IsoInput …` / `def OneDimIso …` predicate whose name
 asserts the conclusion. Such a predicate is inhabited only by degenerate witnesses and
-proves nothing about the case with content; see `CV-ROADMAP.md` §2a.
+proves nothing about the case with content; see the *non-vacuity rule* in `ArlibCommunity/Foundations.lean`.
 
 ## References
 

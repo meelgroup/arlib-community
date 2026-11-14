@@ -11,7 +11,7 @@ import ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleProfile
 /-!
 # (G2a) and (G2b): profile selection and the uniform profile bound
 
-`ArlibCommunity.Foundations.Convexity.NeedleProfile` §3 listed exactly three residual items of gap **(G2)**, all of
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleProfile` §3 listed exactly three residual items of gap **(G2)**, all of
 them inline `∀`-hypotheses of `ArlibCommunity.Foundations.Convex.tendsto_average_setIntegral_of_profile`.  **This file
 proves (G2a) and (G2b).**  (G2c) — the affine change of coordinates carrying a general segment
 to the first axis — is *not* proved here; see §4.
@@ -76,7 +76,7 @@ discharged.
 
 ## 4. What is left of (G2)
 
-**(G2c) is not proved here.**  Everything above, like `ArlibCommunity.Foundations.Convexity.NeedleProfile`, is stated
+**(G2c) is not proved here.**  Everything above, like `ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleProfile`, is stated
 with the needle along the first coordinate axis and the slab `{x | x 0 ∈ [0,1]}`.  Carrying a
 general segment `[a,b] ⊆ ℝⁿ` there needs (i) the transformation rule for `volume` under an
 affine equivalence of `Fin n → ℝ` (`Measure.addHaar_preimage_linearMap`) and (ii) — the part

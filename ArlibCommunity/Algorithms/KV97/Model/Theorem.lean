@@ -13,7 +13,7 @@ Every lattice point of the polytope is returned with probability within a factor
 uniform: between `(1−ε)(1−e^{−c²/2})/V` and `(1+ε)/V`, where `V` is the normaliser of the
 sampler on the inflated polytope.
 
-Two deviations from the paper's statement, both explained in `Analysis/Theorem2.lean`:
+Two deviations from the paper's statement, both explained in `Analysis/HitProbability.lean`:
 the sampler's density is assumed close to uniform pointwise, not merely in total
 variation; and the loss is `e^{−c²/2}`, not `2e^{−c²}`, because the paper's inflation
 `κ = c + √(2 log r)` supports only the former.

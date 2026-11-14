@@ -16,7 +16,7 @@ Cousins–Vempala's volume phases actually sample:
 * `ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian` (`MetropolisGaussian.lean`) is reversible for
   `1_K·γ` — the Gaussian-restricted density, but *unfiltered by the local conductance*, so its
   conductance argument needs a pointwise floor on `ℓ` that
-  `Arlib/MarkovChains/Continuous/EllFloor.lean` shows is unsatisfiable on the cube.
+  `EllFloor.lean` (not in this repository; see `REFERENCES.md`) shows is unsatisfiable on the cube.
 * `ArlibCommunity.Foundations.MarkovChainTheory.speedyWalk` (`SpeedyWalk.lean`) is reversible for `1_K·ℓ` — the
   *speedy* device that removes the `ℓ`-floor, but the target is Lebesgue-flat, not
   Gaussian-tilted.

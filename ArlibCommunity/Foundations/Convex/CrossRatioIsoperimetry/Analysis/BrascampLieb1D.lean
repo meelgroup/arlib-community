@@ -27,9 +27,9 @@ This is the `α = 2` case of the Brascamp–Lieb inequality quoted by Cousins an
 and discharging it turns that theorem into `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry`'s `h1d2`
 binder verbatim, at the constant `1/(2√3)`.
 
-## Why this is not `ArlibCommunity.Foundations.brascampLieb`
+## Why this is not `ArlibCommunity.Algorithms.CV18.brascampLieb`
 
-`ArlibCommunity.Foundations.brascampLieb` (`ArlibCommunity/Algorithms/CV18/Analysis/CoolingVariance.lean`) is the
+`ArlibCommunity.Algorithms.CV18.brascampLieb` (`ArlibCommunity/Algorithms/CV18/Analysis/CoolingVariance.lean`) is the
 *needle-specific* inequality `J₂J₀ − J₁² ≤ (σ²/x)J₀²` for the one-parameter exponential
 family `s(x,·)`, with **no log-concave factor**.  It does not apply to a general `F`, which
 is why this file exists.  Its proof technique (integration by parts) is also not the one
@@ -61,7 +61,7 @@ an approximation argument.  The route taken here needs no regularity of `F` what
    `ArlibCommunity.Foundations.Convex.exp_lower_bound_cubic` and `ArlibCommunity.Foundations.Convex.exp_upper_bound_quadratic`, both immediate from
    `Real.exp_bound`.
 
-Prékopa–Leindler is used, once, in step 2.  `ArlibCommunity.Foundations.Convexity.OneDimIsoperimetry` avoids it
+Prékopa–Leindler is used, once, in step 2.  `ArlibCommunity.Foundations.Convex.Basic.OneDimIsoperimetry` avoids it
 deliberately; here there is no comparable elementary substitute, because the statement is
 genuinely about a *convolution* structure (`k ↦ ∫e^{kt}W` is the Laplace transform of a
 log-concave function) rather than about a monotone rearrangement.
@@ -92,7 +92,7 @@ log-concave function) rather than about a monotone rearrangement.
 factor has variance `σ²`, reaching "variance at most `1`" only after their global rescaling
 `x = y/σ`.  The intrinsic statement at general `σ` is the one proved here, with `σ²` on the
 right; that is also the form `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor` consumes, and it
-matches `ArlibCommunity.Foundations.Convexity.SharpIsoperimetry`'s `d/σ`.  No discrepancy.
+matches `ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsoperimetry`'s `d/σ`.  No discrepancy.
 
 **The range `α ≥ 1`.**  Only `α = 2` is used at [CV18], and only `α = 2` is
 proved here.  Note that `α ∈ [1,2)` does **not** follow from `α = 2`: Jensen gives
@@ -416,7 +416,7 @@ vanishes, then for `|k|·R ≤ 1`
 
 The first-moment term has disappeared because `c` is the barycentre; that is the only
 reason the error term is `O(k³)` rather than `O(k)`, and it is what makes the limit
-`k → 0` in `ArlibCommunity.Foundations.exists_mem_Icc_second_moment_le` give the sharp constant. -/
+`k → 0` in `exists_mem_Icc_second_moment_le` (not in this repository; see `REFERENCES.md`) give the sharp constant. -/
 theorem le_integral_exp_mul_of_barycentre {W : ℝ → ℝ} {α β c k R : ℝ}
     (hW : Integrable W) (hW0 : ∀ t, 0 ≤ W t)
     (hsupp : ∀ t, t ∉ Set.Icc α β → W t = 0)

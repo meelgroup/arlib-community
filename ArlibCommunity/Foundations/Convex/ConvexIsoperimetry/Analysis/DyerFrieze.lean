@@ -43,7 +43,7 @@ sees exactly what is assumed.
   `κ = 2/D`, cleared of the denominator.  `ArlibCommunity.Foundations.Convex.dyerFrieze_dim_one'` restates it in the
   undivided `κ · d · vol A · vol B ≤ vol (K \ A \ B) · vol K` shape with `κ = 2 / vol K`,
   and `ArlibCommunity.Foundations.Convex.uniformOn_dyerFrieze_dim_one` restates it once more in *exactly* the shape of the
-  `hiso` hypothesis of `ArlibCommunity.Foundations.conductance_ballWalk_ge`, so that the match is machine-checked
+  `hiso` hypothesis of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge`, so that the match is machine-checked
   rather than asserted in prose.
 
 * `ArlibCommunity.Foundations.Convex.exists_freeSegment_of_separated` — the `n`-dimensional form of the gap lemma: in a
@@ -81,7 +81,7 @@ be geometrically smaller.  The classical proof closes the loop with a compactnes
 argument — iterate the cut and pass to the limit, where the pieces degenerate to
 one-dimensional needles and `dyerFrieze_dim_one` applies.  That limit is exactly the content
 of the Localization Lemma, and it is not available here (see
-`ArlibCommunity.Foundations.Convexity.LocalizationLemma`).  The precise residual goal is recorded in the docstring
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLemma`).  The precise residual goal is recorded in the docstring
 of `ArlibCommunity.Foundations.Convex.dyerFrieze_step`.
 -/
 
@@ -308,7 +308,7 @@ theorem dyerFrieze_dim_one' {K A B : Set ℝ} {d : ℝ} (hd : 0 < d) (hK : Conve
   exact ENNReal.div_le_div_right hmain _
 
 /-- **The one-dimensional case, in exactly the shape of the `hiso` hypothesis** of
-`ArlibCommunity.Foundations.conductance_ballWalk_ge`.
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge`.
 
 With `κ = 2 / vol K` (i.e. `2/D`, since `D = diam K = vol K` in dimension one) and `π` the
 uniform measure on `K`:
@@ -601,7 +601,7 @@ forced by the proportionality condition rather than by geometry, so neither `K �
 need be geometrically smaller than `K`, and the recursion does not decrease dimension either.
 Closing the argument requires iterating the cut and passing to a limit in which the pieces
 degenerate to one-dimensional needles, where `ArlibCommunity.Foundations.Convex.dyerFrieze_dim_one` applies; that limit is
-exactly the Localization Lemma, which is not available (see `ArlibCommunity.Foundations.Convexity.LocalizationLemma`).
+exactly the Localization Lemma, which is not available (see `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLemma`).
 
 Concretely, what remains unproved is:
 

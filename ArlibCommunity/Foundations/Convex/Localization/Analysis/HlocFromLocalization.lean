@@ -17,8 +17,8 @@ Lovász–Simonovits (KLS 1995, Corollary 2.4, equality form) applied to
 What the localization stack of this repository delivers
 (`ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_collinear`,
 `ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationClosed.lean`, and its siblings in
-`ArlibCommunity.Foundations.Convexity.LocalizationAffine`, `ArlibCommunity.Foundations.Convexity.NeedleSlab*`,
-`ArlibCommunity.Foundations.Convexity.NeedleSlabChain`) has a *different shape* from what `hloc` asks for.  This file
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAffine`, `ArlibCommunity.Foundations.Convexity.NeedleSlab*`,
+`ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleSlab`) has a *different shape* from what `hloc` asks for.  This file
 closes the three differences, and nothing else.
 
 ## Main results
@@ -106,7 +106,7 @@ set of `ℝⁿ`, and a measurable set is only determined up to null sets, so no 
 `1_{S₁}` can control a needle integral.  Approximation from below by continuous minorants requires
 `1_{S₁}` to be *lower* semicontinuous, i.e. `S₁` open; for `S₁` a fat Cantor set every continuous
 minorant of `1_{S₁}` is `≤ 0` (its complement is dense), so the approximation route is not merely
-hard but **false** beyond lower semicontinuity.  See `ArlibCommunity.Foundations.Convexity.LocalizationLSC`.
+hard but **false** beyond lower semicontinuity.  See `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLSC`.
 
 **Why `hLoc` is *one* binder rather than separate `(C)` and `(F)` binders.**  Invoking the stack's
 theorems literally is impossible in a way that no re-shaping fixes: they live in `Fin (m+1) → ℝ`
@@ -147,7 +147,7 @@ be needed.
 
 ## Non-vacuity, and a finding about it
 
-`AUDIT.md` check 4 prefers a witness in which `hloc`'s antecedent is genuinely *satisfied* rather
+The non-vacuity rule prefers a witness in which `hloc`'s antecedent is genuinely *satisfied* rather
 than vacuously discharged.  **That preference is unachievable here, provably.**
 `ArlibCommunity.Foundations.Convex.hloc_antecedent_false_of_isoperimetry` shows the antecedent of `hloc` — `∫_{S₁}h = A∫h`
 together with `∫_{S₃}h < (d/σ)A∫_{S₂}h` — contradicts the conclusion of `thm:iso` outright, given
@@ -181,7 +181,7 @@ side can use it, and so that the claim is machine-checked rather than asserted.
 ## What this file does **not** do
 
 It proves no part of the Localization Lemma, closes neither (C) nor (F), and does not edit
-`ArlibCommunity.Foundations.Convexity.SharpIsoperimetryConcave`.  It imports only that file — deliberately no
+`ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsoperimetryConcave`.  It imports only that file — deliberately no
 `Localization*` module — so that its own build target is independent of the localization stack.
 -/
 
@@ -923,10 +923,10 @@ the very conclusion the theorem establishes.  Concretely, `∫_{S₁}h = A·∫h
 
 the exact negation of the conclusion.
 
-**Consequence for `AUDIT.md` check 4.**  For *any* data satisfying all the other hypotheses of
+**Consequence for the non-vacuity rule.**  For *any* data satisfying all the other hypotheses of
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_of_localization` — in particular any data for which the
 theorem's conclusion holds — the antecedent of `hLoc` is **false**.  So a non-vacuity witness whose
-`hloc` antecedent is genuinely *satisfied* does not exist, and the preference stated in `AUDIT.md`
+`hloc` antecedent is genuinely *satisfied* does not exist, and that preference
 is unachievable here for a principled reason, not for lack of effort.  This lemma is that
 statement, machine-checked. -/
 theorem hloc_antecedent_false_of_isoperimetry {σ d A : ℝ}
