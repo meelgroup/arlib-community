@@ -122,11 +122,11 @@ theorem tentInt_eq_two_point (a : ℝ) :
     smul_eq_mul, smul_eq_mul, hd, hd]
   by_cases h1 : m = ⌊a⌋
   · subst h1
-    rw [if_pos rfl, if_neg (by omega), mul_one, mul_zero, add_zero]
+    rw [ite_eq_left rfl, ite_eq_right (by omega), mul_one, mul_zero, add_zero]
   · by_cases h2 : m = ⌊a⌋ + 1
     · subst h2
-      rw [if_neg (by omega), if_pos rfl, mul_one, mul_zero, zero_add]
-    · rw [if_neg (Ne.symm h1), if_neg (Ne.symm h2), mul_zero, mul_zero, add_zero,
+      rw [ite_eq_right (by omega), ite_eq_left rfl, mul_one, mul_zero, zero_add]
+    · rw [ite_eq_right (Ne.symm h1), ite_eq_right (Ne.symm h2), mul_zero, mul_zero, add_zero,
         tent_eq_zero_of_ne_floor a m h1 h2, ENNReal.ofReal_zero]
 
 /-! ## Integration against the one-dimensional law -/
@@ -173,7 +173,7 @@ theorem ae_tentInt_mem_Icc (a : ℝ) :
     ∀ᵐ m : ℤ ∂(tentInt a), a - (m : ℝ) ∈ Set.Icc (-1 : ℝ) 1 := by
   rw [ae_iff]
   refine tentInt_eq_zero_of_forall a fun m hm => tent_eq_zero_of_one_le ?_
-  simp only [Set.mem_setOf_eq, Set.mem_Icc, not_and_or, not_le] at hm
+  simp only [Set.mem_ofPred_eq, Set.mem_Icc, not_and_or, not_le] at hm
   rcases hm with h | h
   · rw [abs_of_nonpos (by linarith)]; linarith
   · rw [abs_of_nonneg (by linarith)]; linarith

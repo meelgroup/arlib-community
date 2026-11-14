@@ -196,7 +196,7 @@ whichever is larger.  This lemma says the larger of the two is itself a valid co
 
 `Dh` stands for `d_h(x,y)`, `ρ` for `y − x`, and `L`, `R`, `Mid`, `I` for the four needle masses
 `∫_α^x`, `∫_y^β`, `∫_x^y`, `∫_α^β`. -/
-theorem oneDimCoeff_mul_le {n : ℕ} {σ Dh ρ L R I Mid : ℝ} (hn : 0 < n) (hprod : 0 ≤ L * R)
+theorem oneDimCoeff_mul_le {n : ℕ} {σ Dh ρ L R I Mid : ℝ} (hn : 0 < n) (_hprod : 0 ≤ L * R)
     (h1d1 : Dh * (L * R) ≤ 4 * Real.sqrt n * (I * Mid))
     (h1d2 : Real.log 2 / σ * ρ * (L * R) ≤ I * Mid) :
     max (Dh / (4 * Real.sqrt n)) (Real.log 2 / σ * ρ) * (L * R) ≤ I * Mid := by
@@ -560,7 +560,7 @@ theorem isPartition3_slab (e : EuclideanSpace ℝ (Fin n)) {c : ℝ} (hc0 : 0 �
       {x | -c ≤ inner ℝ e x ∧ (inner ℝ e x : ℝ) ≤ c} where
   union := by
     ext x
-    simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+    simp only [Set.mem_union, mem_ofPred_eq, Set.mem_univ, iff_true]
     rcases lt_or_ge (inner ℝ e x : ℝ) (-c) with h | h
     · exact Or.inl (Or.inl h)
     · rcases lt_or_ge c (inner ℝ e x : ℝ) with h' | h'
@@ -569,17 +569,17 @@ theorem isPartition3_slab (e : EuclideanSpace ℝ (Fin n)) {c : ℝ} (hc0 : 0 �
   disjoint₁₂ := by
     rw [Set.disjoint_left]
     rintro x hx hx'
-    simp only [Set.mem_setOf_eq] at hx hx'
+    simp only [mem_ofPred_eq] at hx hx'
     linarith
   disjoint₁₃ := by
     rw [Set.disjoint_left]
     rintro x hx hx'
-    simp only [Set.mem_setOf_eq] at hx hx'
+    simp only [mem_ofPred_eq] at hx hx'
     linarith [hx'.1]
   disjoint₂₃ := by
     rw [Set.disjoint_left]
     rintro x hx hx'
-    simp only [Set.mem_setOf_eq] at hx hx'
+    simp only [mem_ofPred_eq] at hx hx'
     linarith [hx'.2]
 
 /-- A nonnegative integrable function bounded below by `c > 0` on a ball contained in `S` has
@@ -704,7 +704,7 @@ theorem gaussianRestricted_isoperimetry_witness (hn : 0 < n) :
         (hlow (-(1/2)) (by norm_num))
       intro x hx
       obtain ⟨-, hx2⟩ := hballs (-(1/2)) (by norm_num) x hx
-      simp only [Set.mem_setOf_eq]
+      simp only [mem_ofPred_eq]
       rw [abs_lt] at hx2
       linarith [hx2.2]
     have hp2 : 0 < ∫ x in {x | (1/4 : ℝ) < inner ℝ e x}, h x := by
@@ -713,7 +713,7 @@ theorem gaussianRestricted_isoperimetry_witness (hn : 0 < n) :
         (hlow (1/2) (by norm_num))
       intro x hx
       obtain ⟨-, hx2⟩ := hballs (1/2) (by norm_num) x hx
-      simp only [Set.mem_setOf_eq]
+      simp only [mem_ofPred_eq]
       rw [abs_lt] at hx2
       linarith [hx2.1]
     have hd : (0:ℝ) < Real.log 2 / 2 / 1 := by

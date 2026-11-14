@@ -95,7 +95,7 @@ theorem figureOneScheduledAcceptedTargetAt_terminal_positive_mean_and_second_le_
     have hbase := uniformRatioWeight_terminal_secondMoment_le q I
     have hexp53 : Real.exp (1 / 2) ≤ (5 / 3 : ℝ) := by
       convert Real.exp_le_two_add_div_two_sub (x := (1 / 2 : ℝ))
-        (by norm_num) (by norm_num) using 1 <;> norm_num
+        (by norm_num) (by norm_num) using 1; norm_num
     have hexp : Real.exp (1 / 2) ≤ (2 : ℝ) := hexp53.trans (by norm_num)
     have hm0 : 0 ≤ ∫ x, f x ∂nu := le_trans (by norm_num) hmeanOne
     have hmSq : (∫ x, f x ∂nu) ≤ (∫ x, f x ∂nu) ^ 2 := by

@@ -467,7 +467,7 @@ theorem hitAndRunProposal_closedBall_le [NeZero n] {K : Set (EuclideanSpace ℝ 
     intro θ
     have hθ1 : ‖(θ : EuclideanSpace ℝ (Fin n))‖ = 1 := mem_sphere_zero_iff_norm.1 θ.2
     ext r
-    simp only [Set.mem_setOf_eq, Metric.mem_closedBall, dist_eq_norm, add_sub_cancel_left,
+    simp only [Set.mem_ofPred_eq, Metric.mem_closedBall, dist_eq_norm, add_sub_cancel_left,
       norm_smul, hθ1, mul_one, Real.norm_eq_abs, Set.mem_Icc]
     exact abs_le
   have hpt : ∀ θ : Metric.sphere (0 : EuclideanSpace ℝ (Fin n)) 1,
@@ -539,7 +539,7 @@ theorem nonneg_of_mem_medianStepSet {K : Set (EuclideanSpace ℝ (Fin n))}
     {x : EuclideanSpace ℝ (Fin n)} {c : ℝ} (hc : c ∈ medianStepSet K x) : 0 ≤ c := by
   rcases le_or_gt 0 c with h | h
   · exact h
-  · rw [medianStepSet, Set.mem_setOf_eq, Metric.closedBall_eq_empty.2 h, measure_empty] at hc
+  · rw [medianStepSet, Set.mem_ofPred_eq, Metric.closedBall_eq_empty.2 h, measure_empty] at hc
     simp at hc
 
 theorem bddBelow_medianStepSet (K : Set (EuclideanSpace ℝ (Fin n)))
@@ -617,7 +617,7 @@ theorem stepRadius_le_medianStep (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fi
     {α : ℝ} (hα : 63 / 64 ≤ α) (hα1 : α ≤ 1)
     (hmove : hitAndRunProposal K x Set.univ = 1) :
     stepRadius K α x ≤ 32 * medianStep K x := by
-  haveI : NeZero n := ⟨hn⟩
+  have : NeZero n := ⟨hn⟩
   refine csSup_le (stepRadiusSet_nonempty hn K α x) fun t htmem => ?_
   rcases eq_or_lt_of_le htmem.1 with h0 | ht
   · have := medianStep_nonneg K x
@@ -692,7 +692,7 @@ theorem exists_stepRadius_le_medianStep_witness (hn : n ≠ 0) {α : ℝ}
         hitAndRunProposal K x Set.univ = 1 ∧
         0 < stepRadius K α x ∧
         stepRadius K α x ≤ 32 * medianStep K x ∧ 0 < medianStep K x := by
-  haveI : NeZero n := ⟨hn⟩
+  have : NeZero n := ⟨hn⟩
   have hα0 : (0 : ℝ) < α := by linarith
   set K : Set (EuclideanSpace ℝ (Fin n)) := Metric.ball 0 1 with hK
   have hKm : MeasurableSet K := measurableSet_ball

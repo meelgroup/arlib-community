@@ -96,7 +96,7 @@ theorem runEstimate_accuracyImportancePairObservation
   by_cases ht : (scaleFactor q)⁻¹ • current ∈
       accuracyPhaseTruncatedBody q I sigma2
   · have hcond := heligible.mpr ht
-    simp only [hcond, if_true]
+    simp only [hcond]
     congr 2
     unfold accuracyImportanceWeight accuracyAcceptanceWeight
       accuracyGaussianRejectionAcceptance
@@ -107,7 +107,7 @@ theorem runEstimate_accuracyImportancePairObservation
           Real.sqrt (terminalVariance q) ∧
         ‖(scaleFactor q)⁻¹ • current‖ ≤
           accuracyPhaseRadius q sigma2) := fun h => ht (heligible.mp h)
-    simp only [hcond, if_false]
+    simp only [hcond, ite_false]
     congr 2
     · unfold accuracyImportanceWeight accuracyAcceptanceWeight
         accuracyGaussianRejectionAcceptance
@@ -143,10 +143,10 @@ theorem accuracyImportancePairObservation_bind_linear
         Real.sqrt (terminalVariance q) ∧
       ‖(scaleFactor q)⁻¹ • current‖ ≤
         accuracyPhaseRadius q sigma2
-  · simp only [h, if_true]
+  · simp only [h]
     simp
     ring
-  · simp only [h, if_false]
+  · simp only [h, ite_false]
     congr 1
     ring
 
@@ -176,7 +176,7 @@ noncomputable def cappedAccuracyProperCollectPairsAux (q : VolumeParams)
         else
           cappedAccuracyProperCollectPairsAux q sigma2 weight properStride
             rawCap (remainingProper + 1) (samples + 1) total result.2
-termination_by rawCap remainingProper samples total current => (rawCap, samples)
+termination_by rawCap _remainingProper samples _total _current => (rawCap, samples)
 
 noncomputable def cappedAccuracyProperCollectPairs (q : VolumeParams)
     (sigma2 : ℝ) (weight : AmbientSpace q.n → ℝ)
@@ -218,14 +218,14 @@ theorem cappedAccuracyProperCollectPairsAux_queryBound
                 (accuracyMetropolisMarkedBallStep_queryBound
                   q sigma2 current).bind (fun result => by
                     by_cases hmark : result.1 = true
-                    · simp only [hmark, if_true]
+                    · simp only [hmark, ite_true]
                       cases remainingProper with
                       | zero => exact ih 0 (samples + 1) total result.2
                       | succ nextRemaining =>
                           exact ih (nextRemaining + 1) (samples + 1) total result.2
                     · have hfalse : result.1 = false :=
                         Bool.eq_false_of_not_eq_true hmark
-                      simp only [hfalse, if_false]
+                      simp only [hfalse]
                       exact ih (remainingProper + 1) (samples + 1) total result.2)
 
 theorem cappedAccuracyProperCollectPairs_queryBound
@@ -407,11 +407,11 @@ theorem cappedAccuracyProperCollectPairsAux_measurable_and_strong
                           p.1.1 p.2.2).runEstimate oracle.query by
                     funext p
                     by_cases hmark : p.2.1 = true
-                    · simp only [next, hmark, if_true]
+                    · simp only [next, hmark, ite_true]
                       cases remainingProper <;> rfl
                     · have hfalse : p.2.1 = false :=
                         Bool.eq_false_of_not_eq_true hmark
-                      simp only [next, hfalse, Bool.false_eq_true, if_false]]
+                      simp only [next, hfalse, Bool.false_eq_true, ite_false]]
                 apply Measurable.ite
                 · exact (measurable_fst.comp measurable_snd)
                     (measurableSet_singleton true)
@@ -580,14 +580,14 @@ theorem cappedAccuracyProperCollectPairsAux_bind_linear
               congr 1
               funext result
               by_cases hmark : result.1 = true
-              · simp only [hmark, if_true]
+              · simp only [hmark, ite_true]
                 cases remainingProper with
                 | zero => exact ih 0 (samples + 1) total result.2
                 | succ nextRemaining =>
                     exact ih (nextRemaining + 1) (samples + 1) total result.2
               · have hfalse : result.1 = false :=
                   Bool.eq_false_of_not_eq_true hmark
-                simp only [hfalse, if_false]
+                simp only [hfalse]
                 exact ih (remainingProper + 1) (samples + 1) total result.2
 
 theorem cappedAccuracyProperCollectPairs_bind_linear

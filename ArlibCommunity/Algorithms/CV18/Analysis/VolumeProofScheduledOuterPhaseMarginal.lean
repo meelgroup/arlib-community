@@ -38,7 +38,7 @@ theorem map_sequentialPairLaw_snd
   unfold sequentialPairLaw
   have hpair : Measurable fun state : S =>
       (K state).map fun result => (state, result) :=
-    measurable_sequentialPairKernel (rho := source) hK hKprob
+    measurable_sequentialPairKernel hK hKprob
   rw [map_bind_eq_bind_map_of_measurable source hpair measurable_snd]
   apply Measure.bind_congr_right
   filter_upwards with state
@@ -101,7 +101,7 @@ theorem scheduledBalancedTracePhaseObservationLaw_eq_fromRetainedOption
         scheduledBalancedTraceRetainedOption,
         scheduledGaussianObservationFromRetainedOption]
   | true =>
-      simp only [scheduledBalancedTracePhaseObservationLaw, if_true, hphase,
+      simp only [scheduledBalancedTracePhaseObservationLaw, ite_true, hphase,
         scheduledBalancedTraceRetainedOption,
         scheduledGaussianObservationFromRetainedOption]
       rfl
@@ -348,8 +348,8 @@ theorem scheduledBalancedTraceTerminalObservationLaw_eq_fromRetainedOption
         scheduledBalancedTraceRetainedOption,
         scheduledTerminalObservationFromRetainedOption]
   | true =>
-      simp only [scheduledBalancedTracePhaseObservationLaw, if_true,
-        lt_self_iff_false, if_false, scheduledBalancedTraceRetainedOption,
+      simp only [scheduledBalancedTracePhaseObservationLaw, ite_true,
+        lt_self_iff_false, ite_false, scheduledBalancedTraceRetainedOption,
         scheduledTerminalObservationFromRetainedOption]
       rfl
 

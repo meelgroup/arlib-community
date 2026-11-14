@@ -196,7 +196,7 @@ theorem figureOneSharpAcceleratedMoments
     rw [ht_next]
     unfold nextVariance
     refine (min_le_right _ _).trans_eq ?_
-    rw [coolingRate, if_neg]
+    rw [coolingRate, ite_eq_right]
     simpa [s] using not_le_of_gt hsone
   exact gaussianRatioWeight_accelerated_relativeSecondMoment_le_localized
     q I hs hst hsT hraw

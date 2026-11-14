@@ -249,7 +249,7 @@ theorem scheduleValue_fixedRate_relativeSecondMoment_le_of_midpoint
     rw [ht_next]
     unfold nextVariance
     refine (min_le_right _ _).trans_eq ?_
-    rw [coolingRate, if_pos]
+    rw [coolingRate, ite_eq_left]
     simpa [s] using hsone
   have hfactor_lt : 1 + 1 / (q.n : ℝ) < 2 := by
     have : 1 / (q.n : ℝ) < 1 := (div_lt_one hn0).2 (by linarith)
@@ -364,7 +364,7 @@ theorem scheduleValue_accelerated_relativeSecondMoment_le
     rw [ht_next]
     unfold nextVariance
     refine (min_le_right _ _).trans_eq ?_
-    rw [coolingRate, if_neg]
+    rw [coolingRate, ite_eq_right]
     simpa [s] using not_le_of_gt hsone
   have hratio : s / (2 * T) ≤ 1 / 2 := by
     apply (div_le_iff₀ (by positivity : 0 < 2 * T)).2

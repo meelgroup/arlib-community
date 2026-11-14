@@ -461,18 +461,18 @@ theorem logistic_isoperimetry (hc : 0 < c) (hFc : Continuous F) (hFm : Monotone 
     refine Set.mem_iUnion.2 ⟨Nat.find hex, ?_⟩
     have hn0 : t ∈ B (Nat.find hex) := Nat.find_spec hex
     simp only [hAdef]
-    rw [if_pos]
+    rw [ite_eq_left]
     · exact hn0
     · exact fun m hm hEq => Nat.find_min hex hm (hEq ▸ hn0)
   have hAdisj : Pairwise (Function.onFun Disjoint A) := by
     have key : ∀ m n : ℕ, m < n → Disjoint (A m) (A n) := by
       intro m n hmn
       by_cases hn : ∀ k, k < n → B k ≠ B n
-      · have hAn : A n = B n := by simp only [hAdef]; rw [if_pos hn]
+      · have hAn : A n = B n := by simp only [hAdef]; rw [ite_eq_left hn]
         rw [hAn]
         exact ((connectedComponentIn_eq_or_disjoint N _ _).resolve_left (hn m hmn)).mono_left
           (hAsub m)
-      · have hAn : A n = ∅ := by simp only [hAdef]; rw [if_neg hn]
+      · have hAn : A n = ∅ := by simp only [hAdef]; rw [ite_eq_right hn]
         rw [hAn]
         simp
     intro m n hmn
@@ -482,14 +482,14 @@ theorem logistic_isoperimetry (hc : 0 < c) (hFc : Continuous F) (hFm : Monotone 
   have hcomp : ∀ n, logisticShift c (μ.real (Z ∩ A n)) ≤ μ.real (A n) := by
     intro n
     by_cases hn : ∀ k, k < n → B k ≠ B n
-    · have hAn : A n = B n := by simp only [hAdef]; rw [if_pos hn]
+    · have hAn : A n = B n := by simp only [hAdef]; rw [ite_eq_left hn]
       rw [hAn]
       by_cases hmem : ((e n : ℚ) : ℝ) ∈ N
       · exact logisticShift_measureReal_connectedComponentIn hc hFc hFm hF0 hF1 hFα hFβ hpt
           hIoc Z hmem
       · simp only [hBdef, connectedComponentIn_eq_empty hmem]
         simp [logisticShift_zero]
-    · have hAn : A n = ∅ := by simp only [hAdef]; rw [if_neg hn]
+    · have hAn : A n = ∅ := by simp only [hAdef]; rw [ite_eq_right hn]
       rw [hAn]
       simp [logisticShift_zero]
   -- **Step 3.**  Sum the component bounds through the subadditivity ratio of `T`.
@@ -661,7 +661,7 @@ theorem oneDim_partition (D : ℝ → ℝ) (Z₁ Z₂ Z₃ : Set ℝ) (κ : ℝ 
     rw [measureReal_def, hμdef, withDensity_apply _ hS,
       ← ofReal_integral_eq_lintegral_ofReal hDnI.restrict (Filter.Eventually.of_forall hDn0),
       ENNReal.toReal_ofReal (setIntegral_nonneg hS fun t _ => hDn0 t)]
-  haveI : IsFiniteMeasure μ := by
+  have : IsFiniteMeasure μ := by
     refine ⟨?_⟩
     rw [hμdef, withDensity_apply _ MeasurableSet.univ, Measure.restrict_univ,
       ← ofReal_integral_eq_lintegral_ofReal hDnI (Filter.Eventually.of_forall hDn0)]
@@ -751,7 +751,7 @@ theorem oneDim_partition (D : ℝ → ℝ) (Z₁ Z₂ Z₃ : Set ℝ) (κ : ℝ 
   have hθ₃ : μ.real N - μ.real Z₁ ≤ μ.real Z₃ := by
     have h1 : μ.real (N \ Z₁) ≤ μ.real Z₃ := measureReal_mono hNZ3
     have h2 : μ.real N ≤ μ.real (N \ Z₁) + μ.real Z₁ :=
-      le_trans (measureReal_mono (Set.subset_diff_union N Z₁)) (measureReal_union_le _ _)
+      le_trans (measureReal_mono (subset_sdiff_union N Z₁)) (measureReal_union_le _ _)
     linarith
   -- pure algebra
   have hθ₁0 : 0 ≤ μ.real Z₁ := measureReal_nonneg

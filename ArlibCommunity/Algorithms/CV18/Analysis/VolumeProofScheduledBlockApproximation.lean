@@ -25,7 +25,7 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_leUpTo_uncapped
       ((mu.bind <| frontMarkovCollectLaw (P ^ properStride)
         (fun _ => 0) 1).map some) capError := by
   dsimp only
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let K := figureOneScheduledPhaseBody q I sigma2
   let delta := proposalRadius q sigma2
   let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux K
@@ -64,7 +64,7 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_uncapped
       ((ArlibCommunity.Foundations.MarkovChainTheory.iterate (P ^ properStride) mu 1).map some)
       capError := by
   dsimp only
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
     (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
       (figureOneScheduledPhaseBody q I sigma2)

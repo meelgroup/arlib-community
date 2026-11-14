@@ -189,8 +189,7 @@ theorem figureOneScheduledGaussianShadow_dead_real_le_slack_sq
   have herrorLe : stationary + (count - 1) • delta ≤
       2 * stationary + count • delta := by
     apply add_le_add
-    · simpa [two_mul] using
-        self_le_add_right stationary stationary
+    · simp [two_mul]
     · rw [nsmul_eq_mul, nsmul_eq_mul]
       gcongr
       omega
@@ -311,9 +310,7 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower_final_param
             2 * scheduledBalancedStationaryTargetError q +
               count • figureOneCorrectedTransitionBudget q := by
         apply add_le_add
-        · simpa [two_mul] using
-            self_le_add_right (scheduledBalancedStationaryTargetError q)
-              (scheduledBalancedStationaryTargetError q)
+        · simp [two_mul]
         · rw [nsmul_eq_mul, nsmul_eq_mul]
           gcongr
           omega

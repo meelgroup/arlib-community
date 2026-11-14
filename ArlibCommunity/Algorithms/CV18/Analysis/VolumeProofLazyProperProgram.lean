@@ -129,14 +129,14 @@ theorem truncatedMetropolisMarkedProposalProgram_stronglyMeasurable
     MembershipOracleProgram.StronglyMeasurable]
   by_cases hproper : oracle.query proposal = true ∧
       ‖proposal‖ ≤ Real.sqrt (terminalVariance q)
-  · simp only [if_pos hproper, MembershipOracleProgram.runEstimate,
+  · simp only [ite_eq_left hproper, MembershipOracleProgram.runEstimate,
       MembershipOracleProgram.StronglyMeasurable]
     constructor
     · apply Measure.measurable_dirac.comp
       exact measurable_const.prodMk <|
         Measurable.ite measurableSet_Iic measurable_const measurable_const
     · exact fun _ => trivial
-  · simp only [if_neg hproper, MembershipOracleProgram.runEstimate,
+  · simp only [ite_eq_right hproper, MembershipOracleProgram.runEstimate,
       MembershipOracleProgram.StronglyMeasurable]
     exact ⟨Measure.measurable_dirac.comp measurable_const, fun _ => trivial⟩
 
@@ -258,7 +258,7 @@ theorem runEstimate_truncatedMetropolisMarkedBallStep_apply_false_prod
     · simp only [
         (oracle_and_radius_iff_mem_truncatedBody q I oracle proposal).mpr hp]
       rw [Measure.bind_apply hset]
-      · simp only [true_and, if_true,
+      · simp only [true_and, ite_true,
           MembershipOracleProgram.runEstimate]
         rw [Set.indicator_of_notMem (by simpa using hp)]
         change (∫⁻ coin, Measure.dirac
@@ -271,7 +271,7 @@ theorem runEstimate_truncatedMetropolisMarkedBallStep_apply_false_prod
             Measurable.ite measurableSet_Iic measurable_const measurable_const).aemeasurable
     · simp only [
         (oracle_and_radius_iff_mem_truncatedBody q I oracle proposal).not.mpr hp]
-      simp only [if_false, MembershipOracleProgram.runEstimate]
+      simp only [ite_false, MembershipOracleProgram.runEstimate]
       rw [Measure.bind_const, measure_univ, one_smul]
       change Measure.dirac (false, current) ({false} ×ˢ t) =
         (truncatedBody q I)ᶜ.indicator

@@ -353,7 +353,7 @@ theorem nontrivial_euclideanSpace (hn : n ≠ 0) : Nontrivial (EuclideanSpace �
 theorem volume_ball_toReal (hn : n ≠ 0) (y : EuclideanSpace ℝ (Fin n)) {r : ℝ} (hr : 0 ≤ r) :
     (volume (ball y r)).toReal
       = r ^ n * (volume (ball (0 : EuclideanSpace ℝ (Fin n)) 1)).toReal := by
-  haveI := nontrivial_euclideanSpace hn
+  have := nontrivial_euclideanSpace hn
   rw [Measure.addHaar_ball volume y hr, finrank_euclideanSpace_fin, ENNReal.toReal_mul,
     ENNReal.toReal_ofReal (by positivity)]
 
@@ -716,23 +716,23 @@ theorem ellGaussian_isoperimetry_openClosed_logTwo_strict_witness (hn : 2 ≤ n)
     exact (measure_ball_pos volume 0 one_pos).ne'
   · refine { union := ?_, disjoint₁₂ := ?_, disjoint₁₃ := ?_, disjoint₂₃ := ?_ }
     · ext x
-      simp only [Set.mem_union, Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+      simp only [Set.mem_union, Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_univ, iff_true]
       rcases lt_or_ge (x j) (-(1 / 4) : ℝ) with hx | hx
       · exact Or.inl (Or.inl hx)
       · rcases lt_or_ge (1 / 4 : ℝ) (x j) with hx' | hx'
         · exact Or.inl (Or.inr hx')
         · exact Or.inr ⟨hx, hx'⟩
     · exact Set.disjoint_left.2 (by
-        intro a ha ha'; simp only [Set.mem_setOf_eq] at ha ha'; linarith)
+        intro a ha ha'; simp only [Set.mem_ofPred_eq] at ha ha'; linarith)
     · exact Set.disjoint_left.2 (by
-        intro a ha ha'; simp only [Set.mem_inter_iff, Set.mem_setOf_eq] at ha ha'
+        intro a ha ha'; simp only [Set.mem_inter_iff, Set.mem_ofPred_eq] at ha ha'
         linarith [ha'.1])
     · exact Set.disjoint_left.2 (by
-        intro a ha ha'; simp only [Set.mem_inter_iff, Set.mem_setOf_eq] at ha ha'
+        intro a ha ha'; simp only [Set.mem_inter_iff, Set.mem_ofPred_eq] at ha ha'
         linarith [ha'.2])
   · intro u hu v hv
     left
-    simp only [Set.mem_setOf_eq] at hu hv
+    simp only [Set.mem_ofPred_eq] at hu hv
     have hlog : (1 / 4 : ℝ) ≤ Real.log 2 := by
       have := Real.log_two_gt_d9
       linarith
@@ -746,10 +746,10 @@ theorem ellGaussian_isoperimetry_openClosed_logTwo_strict_witness (hn : 2 ≤ n)
       _ ≤ ‖u - v‖ := le_trans habs.le (hcoord (u - v))
   · have h₁ : 0 < ∫ x in {x : EuclideanSpace ℝ (Fin n) | x j < -(1 / 4 : ℝ)}, h x :=
       hintpos _ (isOpen_lt hproj continuous_const) p (by
-        simp only [Set.mem_setOf_eq, hpj]; norm_num) (hhpos p (by rw [hpn]))
+        simp only [Set.mem_ofPred_eq, hpj]; norm_num) (hhpos p (by rw [hpn]))
     have h₂ : 0 < ∫ x in {x : EuclideanSpace ℝ (Fin n) | (1 / 4 : ℝ) < x j}, h x :=
       hintpos _ (isOpen_lt continuous_const hproj) q (by
-        simp only [Set.mem_setOf_eq, hqj]; norm_num) (hhpos q (by rw [hqn]))
+        simp only [Set.mem_ofPred_eq, hqj]; norm_num) (hhpos q (by rw [hqn]))
     positivity
 
 end Isoperimetry

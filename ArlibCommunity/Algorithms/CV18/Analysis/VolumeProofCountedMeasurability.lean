@@ -280,7 +280,7 @@ theorem cappedAccuracyProperCollectWeightsAux_countedMeasurable
       (cappedAccuracyProperCollectWeightsAux q sigma2 weight properStride
         rawCap remainingProper samples total current).CountedStronglyMeasurable
           oracle.query) := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux
     (accuracyPhaseTruncatedBody q I sigma2)
     (accuracyPhaseTruncatedBody_measurable q I sigma2)

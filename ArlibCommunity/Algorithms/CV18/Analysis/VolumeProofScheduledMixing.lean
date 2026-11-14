@@ -22,7 +22,6 @@ theorem proposalRadius_le_sigma_div_eight_sqrt
   have hb : 0 < b := by dsimp [b]; positivity
   have hrnb : rn ≤ b := by
     apply Real.sqrt_le_sqrt
-    change (q.n : ℝ) ≤ (q.n : ℝ) * L
     nlinarith
   have hmin : min s 1 ≤ s := min_le_left _ _
   unfold proposalRadius

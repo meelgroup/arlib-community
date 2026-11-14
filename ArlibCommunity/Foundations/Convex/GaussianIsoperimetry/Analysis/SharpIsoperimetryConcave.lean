@@ -586,7 +586,7 @@ theorem gaussianRestricted_isoperimetry_concave_witness (hn : 0 < n) :
     intro x hx
     obtain ⟨-, hx2⟩ := hballs (-(1/2)) (by norm_num) x hx
     rw [hS₁def]
-    simp only [Set.mem_setOf_eq]
+    simp only [mem_ofPred_eq]
     rw [abs_lt] at hx2
     linarith [hx2.2]
   have hp2 : 0 < ∫ x in S₂, h x := by
@@ -596,7 +596,7 @@ theorem gaussianRestricted_isoperimetry_concave_witness (hn : 0 < n) :
     intro x hx
     obtain ⟨-, hx2⟩ := hballs (1/2) (by norm_num) x hx
     rw [hS₂def]
-    simp only [Set.mem_setOf_eq]
+    simp only [mem_ofPred_eq]
     rw [abs_lt] at hx2
     linarith [hx2.1]
   have hp3 : 0 < ∫ x in S₃, h x := by
@@ -606,7 +606,7 @@ theorem gaussianRestricted_isoperimetry_concave_witness (hn : 0 < n) :
     intro x hx
     obtain ⟨-, hx2⟩ := hballs 0 (by norm_num) x hx
     rw [hS₃def]
-    simp only [Set.mem_setOf_eq]
+    simp only [mem_ofPred_eq]
     rw [sub_zero, abs_lt] at hx2
     exact ⟨by linarith [hx2.1], by linarith [hx2.2]⟩
   -- the separation parameter

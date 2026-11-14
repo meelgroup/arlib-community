@@ -248,7 +248,7 @@ theorem one_add_lintegral_totalLazyProperExpectedRawCost_le
         lintegral_smul_measure,
         lintegral_map hg htrue,
         lintegral_dirac' _ hg]
-      simp only [g, if_true, smul_eq_mul]
+      simp only [g, ite_true, smul_eq_mul]
       rfl
     rw [show (fun result => totalLazyProperExpectedRawCost K hK delta s
           (if result.1 then properSteps else properSteps + 1) result.2) = g from rfl,

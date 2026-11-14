@@ -138,12 +138,12 @@ theorem convex_setOf_lt_of_isLogConcave {G : ℝ → ℝ} (hG : IsLogConcave G)
   rcases lt_or_ge c 0 with hc | hc
   · have hall : {x : ℝ | c < G x} = (Set.univ : Set ℝ) := by
       ext x
-      simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]
+      simp only [mem_ofPred_eq, Set.mem_univ, iff_true]
       exact lt_of_lt_of_le hc (hG0 x)
     rw [hall]
     exact convex_univ
   intro x hx y hy a b ha hb hab
-  simp only [Set.mem_setOf_eq] at hx hy ⊢
+  simp only [mem_ofPred_eq] at hx hy ⊢
   rcases eq_or_lt_of_le ha with rfl | ha'
   · have hb1 : b = 1 := by linarith
     subst hb1

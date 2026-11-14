@@ -196,7 +196,7 @@ theorem body_normTail_dyadic_sub_nonpos
       {y : EuclideanSpace ℝ (Fin n) | rad < ‖y‖} := by
     ext y
     dsimp only [T]
-    simp only [mem_setOf_eq]
+    simp only [mem_ofPred_eq]
     constructor <;> intro h
     · nlinarith [norm_nonneg y]
     · nlinarith [norm_nonneg y]

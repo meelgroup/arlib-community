@@ -337,7 +337,7 @@ theorem figureOneIdealProduct_memLp_two
   have htop : MemLp
       (fun samples => ∏ i, figureOneIdealCoordinate q i samples) ⊤
       (figureOneIdealExperimentLaw q I) := by
-    have h := MemLp.prod'
+    have h := MemLp.fun_prod
       (s := (Finset.univ : Finset (FigureOneIdealPhase q)))
       (p := fun _ : FigureOneIdealPhase q => (⊤ : ENNReal))
       (fun i _ => hcoordinate i)
@@ -384,7 +384,7 @@ theorem figureOneIdealCoordinate_secondMoment_le
           ∂figureOneIdealPhaseLaw q I i := by
     convert integral_comp_eval
       ((figureOneIdealPhaseEstimator_memLp q I i 2).aestronglyMeasurable.pow 2)
-      using 1 <;> rfl
+      using 1
   rw [heq]
   exact (figureOneIdealPhase_moments q I hsharp i).2
 

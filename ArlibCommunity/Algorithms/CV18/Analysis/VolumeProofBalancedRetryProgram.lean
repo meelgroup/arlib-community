@@ -67,7 +67,7 @@ noncomputable def balancedAccuracyRetryCollectAux (q : VolumeParams)
                 else
                   balancedAccuracyRetryCollectAux q sigma2 weight proposalCap
                     properStride retryLimit attempts (samples + 1) total mixed
-termination_by attempts samples total current => (samples, attempts)
+termination_by attempts samples _total _current => (samples, attempts)
 
 theorem measurable_balancedAccuracyRetryOutput (q : VolumeParams) :
     Measurable (balancedAccuracyRetryOutput q) := by
@@ -176,7 +176,7 @@ theorem balancedAccuracyRetryCollectAux_queryBound
                         q sigma2 mixed)
                     intro result
                     by_cases hresult : result.1 = true
-                    · simp only [hresult, if_true]
+                    · simp only [hresult, ite_true]
                       have hrec := ihSamples future (by omega) retryLimit
                         (total + weight result.2) mixed
                       rw [balancedRetryQueryBudget_full] at hrec
@@ -184,7 +184,7 @@ theorem balancedAccuracyRetryCollectAux_queryBound
                         (proposalCap + 2) (Nat.le_add_right _ attempts)
                     · have hfalse : result.1 = false :=
                         Bool.eq_false_of_not_eq_true hresult
-                      simp only [hfalse, Bool.false_eq_true, if_false]
+                      simp only [hfalse, Bool.false_eq_true, ite_false]
                       exact ihAttempts total mixed
               have hbound := hblock.bind htail
               change (block.bind tail).QueryBound
@@ -236,7 +236,7 @@ noncomputable def balancedRetryCollectLawAux
               else
                 balancedRetryCollectLawAux B R weight retryLimit attempts
                   (samples + 1) total mixed
-termination_by attempts samples total current => (samples, attempts)
+termination_by attempts samples _total _current => (samples, attempts)
 
 theorem balancedRetryCollectLawAux_measurable_and_probability
     {S : Type*} [MeasurableSpace S]
@@ -377,9 +377,9 @@ theorem balancedRetryCollectLawAux_measurable_and_probability
                         balancedRetryCollectLawAux B R weight retryLimit
                           attempts (future + 1) total mixed)
                     cases hresult : result.1
-                    · simpa only [hresult, Bool.false_eq_true, if_false] using
+                    · simpa only [hresult, Bool.false_eq_true, ite_false] using
                         ihAttempts.2 total mixed
-                    · simpa only [hresult, if_true] using
+                    · simpa only [hresult, ite_true] using
                         (ihSamples future (by omega) retryLimit).2
                           (total + weight result.2) mixed
 
@@ -462,7 +462,7 @@ theorem balancedAccuracyRetryCollectAux_semantics
               properStride)
             (balancedAccuracyGaussianRejectionKernel q I sigma2)
             weight retryLimit attempts samples total current) := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let B := balancedAccuracyRetryBlockKernel q I sigma2 proposalCap properStride
   let R := balancedAccuracyGaussianRejectionKernel q I sigma2
   intro attempts samples

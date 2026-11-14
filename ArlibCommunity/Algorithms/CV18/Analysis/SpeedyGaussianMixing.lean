@@ -147,7 +147,7 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_uncond (hn : 21 ≤ n) {σ δ 
   have hKb : Bornology.IsBounded K := Metric.isBounded_closedBall.subset hKcb
   have hKtop : volume K ≠ ⊤ :=
     ne_of_lt (lt_of_le_of_lt (measure_mono hKcb) measure_closedBall_lt_top)
-  haveI : IsProbabilityMeasure (ellGaussianProb K δ (σ ^ 2)) :=
+  have : IsProbabilityMeasure (ellGaussianProb K δ (σ ^ 2)) :=
     isProbabilityMeasure_ellGaussianProb
       (ellGaussianMeasure_univ_ne_zero hK hKc hKb hK0 hδ (σ ^ 2))
       (ne_top_of_le_ne_top hKtop (ellGaussianMeasure_univ_le hs K δ))
@@ -270,7 +270,7 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_uncond_witness :
   have hRσ : (1 : ℝ) ≤ 2 * 100 * Real.sqrt ((21 : ℕ) : ℝ) := by
     rw [hcast]; linarith
   have hs : (0 : ℝ) < (100 : ℝ) ^ 2 := by norm_num
-  haveI hprob : IsProbabilityMeasure (ellGaussianProb K (1 : ℝ) ((100 : ℝ) ^ 2)) :=
+  have hprob : IsProbabilityMeasure (ellGaussianProb K (1 : ℝ) ((100 : ℝ) ^ 2)) :=
     isProbabilityMeasure_ellGaussianProb
       (ellGaussianMeasure_univ_ne_zero hKm hKc hKb hK0 (by norm_num) ((100 : ℝ) ^ 2))
       (ne_top_of_le_ne_top hKtop (ellGaussianMeasure_univ_le hs K 1))

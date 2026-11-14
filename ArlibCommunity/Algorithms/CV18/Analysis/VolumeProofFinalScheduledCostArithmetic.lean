@@ -356,8 +356,8 @@ theorem figureOneScheduledProperWork_cast_le_old
     simp only [figureOneScheduledBalancedParameters_properStride,
       figureOneFinalScheduledBalancedParameters_properStride] at hs ⊢
     convert mul_le_mul_of_nonneg_left hs
-      (Nat.cast_nonneg (phaseSampleCount q (scheduleValue q k))) using 1 <;>
-        ring
+      (Nat.cast_nonneg (phaseSampleCount q (scheduleValue q k))) using 1
+    ring
   have hterminal := figureOneFinalScheduledStride_cast_le_walk q
     (terminalVariance_pos' q)
   have hterminal' :
@@ -517,7 +517,7 @@ theorem one_add_figureOneWarmShadowScheduledWork_le
 after multiplication by one corrected block-error budget, its ceiling costs
 only an absolute constant times the scheduled stride. -/
 theorem figureOneFinalScheduledLocalCapCeil_mul_blockError_le
-    (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
+    (q : VolumeParams) {sigma2 : ℝ} (_hsigma2 : 0 < sigma2) :
     let attempts := maxRetries q - 1
     let e := blockMixingError q attempts
     let stride := figureOneFinalScheduledBalancedParameters.properStride q sigma2

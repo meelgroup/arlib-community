@@ -768,7 +768,7 @@ theorem lintegral_Ioi_flow_add_flow (pi : Measure Ω) (P : Kernel Ω Ω) [IsMark
     rw [flow_add_flow_compl_eq_lintegral_compProd pi P hS]
     refine lintegral_congr fun p => ?_
     by_cases h1 : t < g p.1 <;> by_cases h2 : t < g p.2 <;>
-      simp [Set.mem_setOf_eq, h1, h2]
+      simp [Set.mem_ofPred_eq, h1, h2]
   simp_rw [hA]
   rw [lintegral_lintegral_swap hFmeas.aemeasurable]
   exact lintegral_congr fun p => lintegral_Ioi_abs_sub_indicator_lt (hg0 p.1) (hg0 p.2)
@@ -818,7 +818,7 @@ theorem two_mul_globalConductance_mul_lintegral_le_lintegral_abs_sub {P : Kernel
   have hS : MeasurableSet {x : Ω | t < g x} := measurableSet_lt measurable_const hg
   have hsub : {x : Ω | t < g x} ⊆ {x : Ω | 0 < g x} := by
     intro x hx
-    simp only [Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.mem_ofPred_eq] at hx ⊢
     exact lt_trans ht hx
   have hhalf : pi {x : Ω | t < g x} ≤ 1 / 2 := le_trans (measure_mono hsub) hsupp
   have hflow := globalConductance_mul_measure_le_flow pi P hS hhalf
@@ -938,11 +938,11 @@ theorem exists_median {pi : Measure Ω} [IsProbabilityMeasure pi] {f : Ω → �
   have hne : B.Nonempty := by
     have hU : (⋃ n : ℕ, {x : Ω | f x ≤ (n : ℝ)}) = Set.univ := by
       ext x
-      simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+      simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_univ, iff_true]
       exact exists_nat_ge (f x)
     have hm : Monotone fun n : ℕ => {x : Ω | f x ≤ (n : ℝ)} := by
       intro a b hab x hx
-      simp only [Set.mem_setOf_eq] at hx ⊢
+      simp only [Set.mem_ofPred_eq] at hx ⊢
       exact le_trans hx (by exact_mod_cast hab)
     have h := tendsto_measure_iUnion_atTop (μ := pi) hm
     rw [hU, measure_univ] at h
@@ -952,13 +952,13 @@ theorem exists_median {pi : Measure Ω} [IsProbabilityMeasure pi] {f : Ω → �
   have hbdd : BddBelow B := by
     have hI : (⋂ n : ℕ, {x : Ω | f x ≤ -(n : ℝ)}) = ∅ := by
       ext x
-      simp only [Set.mem_iInter, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_forall,
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_forall,
         not_le]
       obtain ⟨n, hn⟩ := exists_nat_gt (-(f x))
       exact ⟨n, by linarith⟩
     have hm : Antitone fun n : ℕ => {x : Ω | f x ≤ -(n : ℝ)} := by
       intro a b hab x hx
-      simp only [Set.mem_setOf_eq] at hx ⊢
+      simp only [Set.mem_ofPred_eq] at hx ⊢
       have : (a : ℝ) ≤ (b : ℝ) := by exact_mod_cast hab
       linarith
     have h := tendsto_measure_iInter_atTop (μ := pi)
@@ -973,7 +973,7 @@ theorem exists_median {pi : Measure Ω} [IsProbabilityMeasure pi] {f : Ω → �
   have hmB : (1 : ℝ≥0∞) / 2 ≤ pi {x : Ω | f x ≤ m} := by
     have hI : (⋂ n : ℕ, {x : Ω | f x ≤ m + 1 / (n + 1 : ℝ)}) = {x : Ω | f x ≤ m} := by
       ext x
-      simp only [Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq]
       refine ⟨fun h => le_of_forall_pos_le_add fun ε hε => ?_, fun h n => ?_⟩
       · obtain ⟨n, hn⟩ := exists_nat_one_div_lt hε
         exact le_trans (h n) (by linarith)
@@ -981,7 +981,7 @@ theorem exists_median {pi : Measure Ω} [IsProbabilityMeasure pi] {f : Ω → �
         linarith
     have hm : Antitone fun n : ℕ => {x : Ω | f x ≤ m + 1 / (n + 1 : ℝ)} := by
       intro a b hab x hx
-      simp only [Set.mem_setOf_eq] at hx ⊢
+      simp only [Set.mem_ofPred_eq] at hx ⊢
       have hab' : ((a : ℝ) + 1) ≤ ((b : ℝ) + 1) := by
         have : (a : ℝ) ≤ (b : ℝ) := by exact_mod_cast hab
         linarith
@@ -1013,7 +1013,7 @@ theorem exists_median {pi : Measure Ω} [IsProbabilityMeasure pi] {f : Ω → �
   · -- No `t < m` lies in `B`, and `{f < m} = ⋃ n, {f ≤ m − 1/(n+1)}`.
     have hU : (⋃ n : ℕ, {x : Ω | f x ≤ m - 1 / (n + 1 : ℝ)}) = {x : Ω | f x < m} := by
       ext x
-      simp only [Set.mem_iUnion, Set.mem_setOf_eq]
+      simp only [Set.mem_iUnion, Set.mem_ofPred_eq]
       constructor
       · rintro ⟨n, hn⟩
         have : (0 : ℝ) < 1 / (n + 1 : ℝ) := by positivity
@@ -1023,7 +1023,7 @@ theorem exists_median {pi : Measure Ω} [IsProbabilityMeasure pi] {f : Ω → �
         exact ⟨n, by linarith⟩
     have hm : Monotone fun n : ℕ => {x : Ω | f x ≤ m - 1 / (n + 1 : ℝ)} := by
       intro a b hab x hx
-      simp only [Set.mem_setOf_eq] at hx ⊢
+      simp only [Set.mem_ofPred_eq] at hx ⊢
       have hab' : ((a : ℝ) + 1) ≤ ((b : ℝ) + 1) := by
         have : (a : ℝ) ≤ (b : ℝ) := by exact_mod_cast hab
         linarith
@@ -1232,7 +1232,7 @@ theorem sq_globalConductance_mul_lintegral_sq_le_lintegral_sub_sq {P : Kernel Ω
   -- the support of `g²` is the support of `g`
   have hset : {x : Ω | 0 < g x ^ 2} = {x : Ω | 0 < g x} := by
     ext x
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · intro h
       by_contra hc

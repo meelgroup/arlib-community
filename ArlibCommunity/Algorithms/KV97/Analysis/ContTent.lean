@@ -112,7 +112,7 @@ theorem ae_tentReal_mem_Icc : ∀ᵐ u ∂tentReal, u ∈ Set.Icc (-1 : ℝ) 1 :
     (measurableSet_Icc (a := (-1 : ℝ)) (b := 1)).compl
   rw [tentReal, withDensity_apply _ hmeas]
   refine setLIntegral_eq_zero hmeas fun u hu => ?_
-  simp only [Set.mem_setOf_eq] at hu
+  simp only [Set.mem_ofPred_eq] at hu
   simp [tent_eq_zero_of_notMem hu]
 
 /-! ## The `n`-fold product: the law of the vector `Y`
@@ -332,7 +332,7 @@ theorem setIntegral_prodTent_eq_tentPi_real (x : EuclideanSpace ℝ (Fin n))
   have hset : (fun v : Fin n → ℝ => v + WithLp.ofLp x) ⁻¹' (WithLp.toLp 2 ⁻¹' T)
       = {u : Fin n → ℝ | x + contDispVec u ∈ T} := by
     ext u
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, contDispVec]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, contDispVec]
     rw [WithLp.toLp_add, WithLp.toLp_ofLp, add_comm]
   have hfun : ∀ u : Fin n → ℝ,
       prodTent x (WithLp.toLp 2 (u + WithLp.ofLp x)) = ∏ i, tent (u i) := by

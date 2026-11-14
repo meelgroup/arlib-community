@@ -140,7 +140,7 @@ theorem map_snd_properProposalCostedKernel_eq_speedy
     rw [← Kernel.map_apply _ measurable_firstProperMarkedState,
       ← properProposalStoppedKernel]
     exact properProposalStoppedKernel_apply_eq_speedy hK δ s x (by
-      simpa only [StuckPoints, Set.mem_setOf_eq] using hx)
+      simpa only [StuckPoints, mem_ofPred_eq] using hx)
 
 /-- At a non-stuck state, the one-step realized proposal count has mean exactly `ell⁻¹`. -/
 theorem lintegral_fst_properProposalCostedKernelRaw
@@ -164,7 +164,7 @@ theorem lintegral_fst_properProposalCostedKernelRaw
       unfold properProposalWaitCost
       apply tsum_congr
       intro k
-      simp only [Set.indicator_apply, Set.mem_setOf_eq, Pi.one_apply]
+      simp only [Set.indicator_apply, mem_ofPred_eq, Pi.one_apply]
     rw [lintegral_congr hcost]
     exact lintegral_firstProperTime_pathMeasure_properProposalGaussianLift hK δ s x
   · exact measurable_properProposalWaitCost

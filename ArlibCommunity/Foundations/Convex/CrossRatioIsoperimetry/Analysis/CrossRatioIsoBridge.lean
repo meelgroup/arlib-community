@@ -256,7 +256,7 @@ theorem hIso_measurable_of_crossRatioIso {K : Set (EuclideanSpace ℝ (Fin n))}
   have hVR : 0 < (volume K).toReal := ENNReal.toReal_pos hK0 hKtop
   have hVR0 : (volume K).toReal ≠ 0 := hVR.ne'
   -- `h` is integrable on `K`: it is bounded by `1/3` there and `K` has finite volume
-  haveI : IsFiniteMeasure (volume.restrict K) :=
+  have : IsFiniteMeasure (volume.restrict K) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact hKtop.lt_top⟩
   have hInt : IntegrableOn h K volume := by
     refine Integrable.mono' (integrable_const (1 / 3 : ℝ)) hhm.aestronglyMeasurable ?_
@@ -387,7 +387,7 @@ theorem hIso_of_crossRatioIso {K : Set (EuclideanSpace ℝ (Fin n))}
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂) := by
   intro h T₁ T₂ hh0 hh3 hT₁ hT₂ hT₁K hT₂K hdisj hchord
-  haveI : IsProbabilityMeasure (uniformOn volume K) :=
+  have : IsProbabilityMeasure (uniformOn volume K) :=
     isProbabilityMeasure_uniformOn volume hK0 hKtop
   -- the measurable case, applied to an arbitrary simple minorant of `ofReal ∘ h`
   have main : ∀ φ : SimpleFunc (EuclideanSpace ℝ (Fin n)) ℝ≥0,

@@ -56,7 +56,7 @@ theorem figureOneFinalScheduledIdealPhaseStart_scaled_isWarm
   dsimp only
   by_cases hzero : phase = 0
   · subst phase
-    simp only [if_pos]
+    simp only [ite_eq_left]
     have hwarm8 := initialContractedAcceptedTarget_isWarm_eight q I
     apply hwarm8.mono
     have hC : (1 : ENNReal) ≤ ENNReal.ofReal (warmConstant q) := by
@@ -992,7 +992,7 @@ theorem figureOneFinalScheduledTerminalIdealExpectedCost_le
     intro state
     exact figureOneFinalScheduledRetainedTerminalProgram_cost q I oracle state
   rw [hcost]
-  exact hbound.trans (by push_cast; simp [mul_comm, mul_left_comm, mul_assoc])
+  exact hbound.trans (by push_cast; simp [mul_comm, mul_assoc])
 
 /-- Forward-associated retained execution through the terminal collector. -/
 noncomputable def figureOneFinalScheduledRetainedCompleteProgram
@@ -1159,7 +1159,7 @@ theorem figureOneFinalScheduledCountReferenceError_le
           (Or.inl (by norm_num)) (Or.inl (by norm_num))).2
         calc
           delta = delta * 1 := by simp
-          _ ≤ delta * 4 := by gcongr <;> norm_num
+          _ ≤ delta * 4 := by gcongr; norm_num
   have hdeltaMax : delta ≤ maxSamples • delta := by
     rw [nsmul_eq_mul]
     calc

@@ -148,7 +148,7 @@ noncomputable def chordLength (K : Set (EuclideanSpace ℝ (Fin n)))
 theorem chordSet_smul (K : Set (EuclideanSpace ℝ (Fin n))) (u v : EuclideanSpace ℝ (Fin n))
     (r : ℝ) : chordSet K u (r • v) = (fun t => t * r) ⁻¹' chordSet K u v := by
   ext t
-  simp only [chordSet, Set.mem_setOf_eq, Set.mem_preimage, smul_smul]
+  simp only [chordSet, Set.mem_ofPred_eq, Set.mem_preimage, smul_smul]
 
 theorem volume_chordSet_smul (K : Set (EuclideanSpace ℝ (Fin n))) (u v : EuclideanSpace ℝ (Fin n))
     {r : ℝ} (hr : r ≠ 0) :
@@ -159,7 +159,7 @@ theorem volume_chordSet_smul (K : Set (EuclideanSpace ℝ (Fin n))) (u v : Eucli
 theorem chordSet_comm (K : Set (EuclideanSpace ℝ (Fin n))) (u x : EuclideanSpace ℝ (Fin n)) :
     chordSet K x (u - x) = (fun t => 1 - t) ⁻¹' chordSet K u (x - u) := by
   ext t
-  simp only [chordSet, Set.mem_setOf_eq, Set.mem_preimage]
+  simp only [chordSet, Set.mem_ofPred_eq, Set.mem_preimage]
   congr! 1
   module
 
@@ -396,7 +396,7 @@ noncomputable def hitAndRun (K : Set (EuclideanSpace ℝ (Fin n))) :
 
 open scoped Classical in
 theorem hitAndRun_eq {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) :
-    hitAndRun K = hitAndRunAux K hK := dif_pos hK
+    hitAndRun K = hitAndRunAux K hK := dite_eq_left hK
 
 instance isMarkovKernel_hitAndRun (K : Set (EuclideanSpace ℝ (Fin n))) :
     IsMarkovKernel (hitAndRun K) := by

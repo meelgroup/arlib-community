@@ -21,7 +21,7 @@ open Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex ArlibCom
 most the ratio of proposal-ball volumes times the new local conductance. -/
 theorem ell_le_ballVolumeRatio_of_subset {n : ℕ}
     {K L : Set (EuclideanSpace ℝ (Fin n))} {delta Delta : ℝ}
-    (hdelta : 0 < delta) (hDelta : 0 < Delta) (hsubK : K ⊆ L)
+    (_hdelta : 0 < delta) (hDelta : 0 < Delta) (hsubK : K ⊆ L)
     (hrad : delta ≤ Delta) (x : EuclideanSpace ℝ (Fin n)) :
     ell K delta x ≤
       (volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) Delta) /
@@ -92,7 +92,7 @@ theorem ell_le_radiusRatioPow_of_subset {n : ℕ}
     ell_le_ballVolumeRatio_of_subset hdelta hDelta hsubK hrad x
 
 theorem accuracyPhaseRadius_mono (q : VolumeParams) {s t : ℝ}
-    (hs : 0 ≤ s) (hst : s ≤ t) :
+    (_hs : 0 ≤ s) (hst : s ≤ t) :
     accuracyPhaseRadius q s ≤ accuracyPhaseRadius q t := by
   unfold accuracyPhaseRadius
   gcongr
@@ -164,7 +164,7 @@ theorem figureOneProposalRadius_succ_le_sqrtTwo_mul
   · have htone : 1 ≤ t := hsone.trans hst
     rw [min_eq_right (Real.one_le_sqrt.mpr hsone),
       min_eq_right (Real.one_le_sqrt.mpr htone)]
-    simpa using (Real.one_le_sqrt.mpr (by norm_num : (1 : ℝ) ≤ 2))
+    simp
   · have hslt : s < 1 := lt_of_not_ge hsone
     have hsqrt_s_le : Real.sqrt s ≤ 1 := by
       exact Real.sqrt_le_one.mpr hslt.le
@@ -214,14 +214,13 @@ theorem figureOneProposalRadius_succ_le_fixedFactor_mul
   · have htone : 1 ≤ t := hsone.trans hst
     rw [min_eq_right (Real.one_le_sqrt.mpr hsone),
       min_eq_right (Real.one_le_sqrt.mpr htone)]
-    simpa using Real.one_le_sqrt.mpr
-      (show (1 : ℝ) ≤ 1 + 1 / (q.n : ℝ) by positivity)
+    simp
   · have hslt : s < 1 := lt_of_not_ge hsone
     have htbound : t ≤ s * (1 + 1 / (q.n : ℝ)) := by
       rw [show t = nextVariance q s by
         simpa [s, t] using scheduleValue_succ q k]
       unfold nextVariance coolingRate
-      rw [if_pos hslt.le]
+      rw [ite_eq_left hslt.le]
       exact min_le_right _ _
     have hsqrt_s_le : Real.sqrt s ≤ 1 := Real.sqrt_le_one.mpr hslt.le
     rw [min_eq_left hsqrt_s_le]
@@ -529,8 +528,7 @@ theorem gaussianIntegral_adjacent_le_expHalf
     gaussianIntegral_pos q (truncatedVolumeInput q I) (scheduleValue_pos q k)
   have hZt : 0 < gaussianIntegral (truncatedBody q I) (scheduleValue q (k + 1)) :=
     gaussianIntegral_pos q (truncatedVolumeInput q I) (scheduleValue_pos q (k + 1))
-  simp only [gaussianDensity, norm_zero, zero_pow, Nat.ofNat_pos,
-    zero_div, neg_zero, Real.exp_zero] at hw
+  simp only [gaussianDensity, norm_zero] at hw
   field_simp [hZs.ne', hZt.ne'] at hw
   simpa [mul_comm, mul_left_comm, mul_assoc] using hw
 

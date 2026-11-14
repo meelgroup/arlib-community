@@ -108,7 +108,7 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_none_le_of_isWarm
   have hcoeff0 : coefficient ≠ 0 := by
     simp [coefficient, hproposalCap.ne']
   have hcoeffTop : coefficient ≠ ⊤ := by
-    exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top (by simp [coefficient])
+    exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top (by simp)
   have hcombined : coefficient * fail ≤ coefficient * capError :=
     hmoment'.trans hbudget
   calc

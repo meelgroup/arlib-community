@@ -335,8 +335,8 @@ theorem concaveOn_Icc_extendZero {α β : ℝ} {g : ℝ → ℝ}
   have hl0 : ∀ t : ℝ, 0 ≤ (if t ∈ Set.Ioo α β then g t else 0) := by
     intro t
     by_cases ht : t ∈ Set.Ioo α β
-    · rw [if_pos ht]; exact hg0 t ht
-    · rw [if_neg ht]
+    · rw [ite_eq_left ht]; exact hg0 t ht
+    · rw [ite_eq_right ht]
   refine ⟨convex_Icc α β, ?_⟩
   intro x hx y hy a b ha hb hab
   simp only [smul_eq_mul]
@@ -352,10 +352,10 @@ theorem concaveOn_Icc_extendZero {α β : ℝ} {g : ℝ → ℝ}
     by_cases hxo : x ∈ Set.Ioo α β
     · have hkey := hg.2 hxo hyo ha hb hab
       simp only [smul_eq_mul] at hkey
-      rw [if_pos hxo, if_pos hyo, if_pos hzo]
+      rw [ite_eq_left hxo, ite_eq_left hyo, ite_eq_left hzo]
       exact hkey
     · -- `x` is an endpoint of `Icc α β`
-      rw [if_neg hxo, if_pos hyo, if_pos hzo, mul_zero, zero_add]
+      rw [ite_eq_right hxo, ite_eq_left hyo, ite_eq_left hzo, mul_zero, zero_add]
       rcases eq_or_lt_of_le hx.1 with hxα | hxα
       · have hxa : x = α := hxα.symm
         have hkey := concaveOn_Ioo_left_endpoint_le hg hg0 hyo ha0 hb0 hab
@@ -369,7 +369,7 @@ theorem concaveOn_Icc_extendZero {α β : ℝ} {g : ℝ → ℝ}
     · have hzo : a * x + b * y ∈ Set.Ioo α β := by
         have h := mem_Ioo_of_mem_Icc_of_mem_Ioo hy hxo hb0 ha0 (by linarith)
         rwa [add_comm (b * y) (a * x)] at h
-      rw [if_neg hyo, if_pos hxo, if_pos hzo, mul_zero, add_zero]
+      rw [ite_eq_right hyo, ite_eq_left hxo, ite_eq_left hzo, mul_zero, add_zero]
       rcases eq_or_lt_of_le hy.1 with hyα | hyα
       · have hya : y = α := hyα.symm
         have hkey := concaveOn_Ioo_left_endpoint_le hg hg0 hxo hb0 ha0 (by linarith)
@@ -381,7 +381,7 @@ theorem concaveOn_Icc_extendZero {α β : ℝ} {g : ℝ → ℝ}
         have hkey := concaveOn_Ioo_right_endpoint_le hg hg0 hxo hb0 ha0 (by linarith)
         rw [← hyb, add_comm (b * y) (a * x)] at hkey
         exact hkey
-    · rw [if_neg hxo, if_neg hyo, mul_zero, mul_zero, add_zero]
+    · rw [ite_eq_right hxo, ite_eq_right hyo, mul_zero, mul_zero, add_zero]
       exact hl0 _
 
 /-- The extension by zero of a nonnegative function is nonnegative — everywhere, not only on
@@ -389,8 +389,8 @@ theorem concaveOn_Icc_extendZero {α β : ℝ} {g : ℝ → ℝ}
 theorem nonneg_extendZero_of_nonneg {α β : ℝ} {g : ℝ → ℝ} (hg0 : ∀ t ∈ Set.Ioo α β, 0 ≤ g t)
     (t : ℝ) : 0 ≤ (if t ∈ Set.Ioo α β then g t else 0) := by
   by_cases ht : t ∈ Set.Ioo α β
-  · rw [if_pos ht]; exact hg0 t ht
-  · rw [if_neg ht]
+  · rw [ite_eq_left ht]; exact hg0 t ht
+  · rw [ite_eq_right ht]
 
 end EndpointExtension
 
@@ -653,11 +653,11 @@ theorem exists_concave_profile_of_localization (hn : 2 ≤ n) {c : ℝ} (hc : 0 
   refine ⟨fun s => if s ∈ Set.Ioo (0 : ℝ) c then W (c⁻¹ * s) ^ (1 / ((n : ℝ) - 1)) else 0,
     nonneg_extendZero_of_nonneg hVnn, concaveOn_Icc_extendZero hVconc hVnn, ?_, ?_⟩
   · intro s hs
-    simp only [if_pos hs, hcast]
+    simp only [ite_eq_left hs, hcast]
     exact Real.rpow_inv_natCast_pow (hW0 _) hnm
   · intro s hs
     have hs' : s ∉ Set.Ioo (0 : ℝ) c := fun hmem => hs (Set.Ioo_subset_Icc_self hmem)
-    simp only [if_neg hs']
+    simp only [ite_eq_right hs']
     exact zero_pow hnm
 
 /-- **The three shape gaps closed: `hloc` from the localization stack's needle.**

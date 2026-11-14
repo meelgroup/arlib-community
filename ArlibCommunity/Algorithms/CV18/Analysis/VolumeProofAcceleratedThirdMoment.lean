@@ -72,7 +72,7 @@ theorem scheduleValue_accelerated_thirdMoment_le_rational_mean_cube
     rw [ht_next]
     unfold nextVariance
     refine (min_le_right _ _).trans_eq ?_
-    rw [coolingRate, if_neg]
+    rw [coolingRate, ite_eq_right]
     simpa [s] using hsone
   have hdelta : t - s ≤ s * t / (2 * terminalVariance q) := by
     have hfirst : t - s ≤ s ^ 2 / (2 * terminalVariance q) := by
@@ -111,7 +111,7 @@ theorem scheduleValue_accelerated_thirdMoment_le_rational_mean_cube
         exact Filter.Eventually.of_forall hlower
   have hexp53 : Real.exp (1 / 2) ≤ (5 / 3 : ℝ) := by
     convert Real.exp_le_two_add_div_two_sub (x := (1 / 2 : ℝ))
-      (by norm_num) (by norm_num) using 1 <;> norm_num
+      (by norm_num) (by norm_num) using 1; norm_num
   have hexp : Real.exp (1 / 4) ≤ (129 / 64 : ℝ) := by
     calc
       Real.exp (1 / 4) ≤ Real.exp (1 / 2) :=

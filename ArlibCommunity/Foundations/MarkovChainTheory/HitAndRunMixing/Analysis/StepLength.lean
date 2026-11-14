@@ -276,7 +276,7 @@ lemma mem_stepRadiusSet_iff_ballFraction {K : Set (EuclideanSpace ℝ (Fin n))} 
   have hpos : 0 < (volume (Metric.closedBall x t)).toReal :=
     ENNReal.toReal_pos hball0 hballtop
   unfold ballFraction stepRadiusSet
-  rw [Set.mem_setOf_eq, le_div_iff₀ hpos]
+  rw [mem_ofPred_eq, le_div_iff₀ hpos]
   constructor
   · rintro ⟨-, h⟩
     have := ENNReal.toReal_mono hinter h
@@ -554,7 +554,7 @@ lemma measurableSet_goodSet {K : Set (EuclideanSpace ℝ (Fin n))} (hK : Measura
           (ENNReal.ofReal t ^ n * volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1))
             ≤ volume (K ∩ Metric.closedBall x t)} := by
     ext x
-    simp only [goodSet, stepRadiusSet, Set.mem_setOf_eq, Set.mem_inter_iff,
+    simp only [goodSet, stepRadiusSet, mem_ofPred_eq, Set.mem_inter_iff,
       volume_closedBall_euclidean ht x]
     tauto
   rw [hrw]

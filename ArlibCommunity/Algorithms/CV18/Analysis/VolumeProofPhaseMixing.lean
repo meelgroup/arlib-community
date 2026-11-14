@@ -226,7 +226,7 @@ theorem phaseTruncatedBody_radius_bundle (q : VolumeParams)
 /-- The executable Figure-1 radius is far below the generic speedy-mixing
 step cap. -/
 theorem figureOneProposalRadius_le_phaseMixingStep
-    (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
+    (q : VolumeParams) {sigma2 : ℝ} (_hsigma2 : 0 < sigma2) :
     figureOneProposalRadius q sigma2 ≤
       Real.sqrt sigma2 / (8 * Real.sqrt q.n) := by
   have hn0 : (0 : ℝ) < q.n := by
@@ -256,7 +256,7 @@ theorem figureOneProposalRadius_le_phaseMixingStep
 /-- The same executable radius satisfies the KLS core condition with the
 algorithm's global accuracy parameter as core error. -/
 theorem figureOneProposalRadius_le_paperCoreStep
-    (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
+    (q : VolumeParams) {sigma2 : ℝ} (_hsigma2 : 0 < sigma2) :
     figureOneProposalRadius q sigma2 ≤
       1 / (8 * Real.sqrt
         ((q.n : ℝ) * Real.log ((q.n : ℝ) / q.eps))) := by

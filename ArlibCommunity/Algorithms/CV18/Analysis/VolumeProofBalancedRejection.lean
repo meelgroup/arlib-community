@@ -132,7 +132,7 @@ theorem balancedAccuracyGaussianRejectionAttempt_stronglyMeasurable
               (scaleFactor q) target) := by
         intro coin h
         exact heligible ⟨h.1, h.2.1, h.2.2.1⟩
-      simp only [output, hfalse, if_false]
+      simp only [output, hfalse, ite_false]
       exact measurable_const
   constructor
   · rw [show (fun coin => MembershipOracleProgram.runEstimate oracle.query
@@ -278,7 +278,7 @@ theorem runEstimate_balancedAccuracyGaussianRejectionAttempt
       intro coin h
       exact hineligible ⟨h.1, h.2.1, h.2.2.1⟩
     dsimp only [c, target] at hfalse
-    simp_rw [hfalse, if_false]
+    simp_rw [hfalse, ite_false]
     simp only [MembershipOracleProgram.runEstimate]
     rw [Measure.bind_const, measure_univ, one_smul]
     unfold balancedAccuracyGaussianRejectionLaw
@@ -340,8 +340,8 @@ theorem balancedAccuracyGaussianRejectionKernel_true_prod
   simp only [balancedAccuracyGaussianRejectionLaw, Measure.add_apply,
     Measure.smul_apply, smul_eq_mul, Measure.dirac_apply' _ hprod]
   by_cases ht : (scaleFactor q)⁻¹ • current ∈ B
-  · simp [ht, Set.indicator_of_mem, hprod]
-  · simp [ht, Set.indicator_of_notMem, hprod]
+  · simp [ht, Set.indicator_of_mem]
+  · simp [ht, Set.indicator_of_notMem]
 
 /-- Normalized target-point law returned by a successful balanced attempt. -/
 noncomputable def balancedAccuracyGaussianAcceptedTargetLaw
@@ -373,9 +373,6 @@ theorem balancedAccuracyGaussianAcceptedTargetLaw_eq
         Set.univ = _
   rw [withDensity_smul (2 : ENNReal)⁻¹
     (measurable_accuracyGaussianRejectionAcceptance q I sigma2)]
-  change ArlibCommunity.Foundations.Convex.condOn (((2 : ENNReal)⁻¹ •
-      mu.withDensity (accuracyGaussianRejectionAcceptance q I sigma2)).map
-        scale) Set.univ = _
   rw [Measure.map_smul (hf := by fun_prop)]
   exact ArlibCommunity.Algorithms.CV18.condOn_smul_cv18 _ MeasurableSet.univ
     (by norm_num) (by norm_num)

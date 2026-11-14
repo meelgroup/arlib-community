@@ -53,7 +53,7 @@ noncomputable def sequentialPairLaw (rho : Measure H) (K : H -> Measure T) :
   rho.bind fun h => (K h).map fun t => (h, t)
 
 /-- The pointwise pair kernel is measurable. -/
-theorem measurable_sequentialPairKernel {rho : Measure H} {K : H -> Measure T}
+theorem measurable_sequentialPairKernel {K : H -> Measure T}
     (hK : Measurable K) (hKprob : forall h, IsProbabilityMeasure (K h)) :
     Measurable fun h => (K h).map fun t => (h, t) := by
   exact measurable_measure_map_param_variable hK hKprob
@@ -65,7 +65,7 @@ theorem sequentialPairLaw_isProbabilityMeasure
     (hK : Measurable K) (hKprob : forall h, IsProbabilityMeasure (K h)) :
     IsProbabilityMeasure (sequentialPairLaw rho K) := by
   unfold sequentialPairLaw
-  have hpair := measurable_sequentialPairKernel (rho := rho) hK hKprob
+  have hpair := measurable_sequentialPairKernel hK hKprob
   exact isProbabilityMeasure_bind hpair.aemeasurable <|
     ae_of_all rho fun h => ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
 
@@ -78,7 +78,7 @@ theorem sequentialPairLaw_rectangle
     sequentialPairLaw rho K (Prod.fst ⁻¹' A ∩ Prod.snd ⁻¹' B) =
       (rho.restrict A).bind K B := by
   unfold sequentialPairLaw
-  have hpair := measurable_sequentialPairKernel (rho := rho) hK hKprob
+  have hpair := measurable_sequentialPairKernel hK hKprob
   rw [Measure.bind_apply (hA.preimage measurable_fst |>.inter
       (hB.preimage measurable_snd)) hpair.aemeasurable,
     Measure.bind_apply hB (hK.aemeasurable.mono_measure Measure.restrict_le_self)]
@@ -123,8 +123,8 @@ theorem sequentialPairLaw_snd
 times binding from the conditional previous law. -/
 theorem real_restrict_bind_eq_mul_condOn_bind
     (rho : Measure H) [IsProbabilityMeasure rho] {K : H -> Measure T}
-    (hK : Measurable K) {A : Set H} (hA : MeasurableSet A)
-    (hA0 : rho A ≠ 0) {B : Set T} (hB : MeasurableSet B) :
+    (hK : Measurable K) {A : Set H} (_hA : MeasurableSet A)
+    (hA0 : rho A ≠ 0) {B : Set T} (_hB : MeasurableSet B) :
     ((rho.restrict A).bind K).real B =
       rho.real A * ((ArlibCommunity.Foundations.Convex.condOn rho A).bind K).real B := by
   have hAtop : rho A ≠ ⊤ := measure_ne_top rho A
@@ -143,7 +143,7 @@ one half produces a `2`-warm measure.  This is the warm-start observation used
 in the proof of CV18 Lemma 7.17(b). -/
 theorem isWarm_condOn_two_of_half
     (rho : Measure H) [IsProbabilityMeasure rho]
-    {A : Set H} (hA : MeasurableSet A)
+    {A : Set H} (_hA : MeasurableSet A)
     (hhalf : 1 / 2 <= rho.real A) :
     ArlibCommunity.Foundations.Convex.IsWarm 2 (ArlibCommunity.Foundations.Convex.condOn rho A) rho := by
   have hhalfENN : (2 : ENNReal)⁻¹ <= rho A := by

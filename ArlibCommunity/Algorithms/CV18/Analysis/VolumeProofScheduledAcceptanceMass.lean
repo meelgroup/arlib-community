@@ -120,12 +120,12 @@ theorem figureOneScheduled_stationaryCoreMap_tv_proposal
       (Real.sqrt_pos.2 hsigma2) (coreMixingError_pos q)
       (coreMixingError_le_one_div_sixteen q)
       (proposalRadius_le_coreStep q hsigma2)
-      (by convert hgaussCore0 using 1 <;>
-        simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
-          Real.sq_sqrt hsigma2.le])
-      (by convert hgaussCoretop using 1 <;>
-        simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
-          Real.sq_sqrt hsigma2.le])
+      (by convert hgaussCore0 using 1
+          simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
+            Real.sq_sqrt hsigma2.le])
+      (by convert hgaussCoretop using 1
+          simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
+            Real.sq_sqrt hsigma2.le])
       (by simpa [Real.sq_sqrt hsigma2.le] using hmass0)
       (by simpa [Real.sq_sqrt hsigma2.le] using hmasstop)
     have hcompare := TVLe.condOn_ellGaussianProb_gaussian_of_coreDefect_cv18

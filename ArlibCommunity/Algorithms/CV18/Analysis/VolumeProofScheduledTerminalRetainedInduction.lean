@@ -60,10 +60,10 @@ theorem map_scheduledBalancedTerminalTracePhaseKernel_retainedOption
         (scaleFactor q • history.2.2.2)
       unfold scheduledBalancedTracePhaseKernel
         scheduledBalancedTracePhaseObservationLaw
-      simp only [if_true, lt_self_iff_false, if_false]
+      simp only [ite_true, lt_self_iff_false, ite_false]
       unfold scheduledBalancedCoolingUniformTransitionLaw
         figureOneFinalScheduledCompleteRetainedKernel
-      simp only [scheduledBalancedTraceRetainedOption, if_true]
+      simp only [scheduledBalancedTraceRetainedOption, ite_true]
       rw [Nat.sub_add_cancel hcount]
       change ((collect.map avg).map append).map
           scheduledBalancedTraceRetainedOption = collect.map optionSnd
@@ -72,7 +72,7 @@ theorem map_scheduledBalancedTerminalTracePhaseKernel_retainedOption
           (measurable_scheduledBalancedTraceRetainedOption.comp happend) havg]
       apply Measure.map_congr
       filter_upwards with result
-      simpa [append, avg, scheduledBalancedTraceRetainedOption_append,
+      simp [append, avg, scheduledBalancedTraceRetainedOption_append,
         optionSnd_balancedCoolingAverage]
 
 theorem map_bind_scheduledBalancedTerminalTracePhaseKernel_retainedOption

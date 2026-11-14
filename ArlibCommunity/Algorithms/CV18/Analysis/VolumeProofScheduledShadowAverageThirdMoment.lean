@@ -99,7 +99,7 @@ theorem exactShadowHistory_prefix_thirdMoment_le
     (hcoordinates : ∀ j, j < count →
       reference.map (fun history => history.1 j) =
         scheduledRetainedExactSome q I phase)
-    {A : ℝ} (hA : 0 < A)
+    {A : ℝ} (_hA : 0 < A)
     (hthird :
       (∫ x, gaussianRatioWeight (n := q.n) (scheduleValue q phase)
           (scheduleValue q (phase + 1)) x ^ 3
@@ -194,7 +194,7 @@ theorem exactShadowHistory_prefix_thirdMoment_le
         (hsumCubeInt.const_mul ((i : ℝ) ^ 2)) hpoint
     _ = (i : ℝ) ^ 2 *
           ∑ j ∈ Finset.range i, ∫ history, Y j history ^ 3 ∂reference := by
-      rw [integral_const_mul, integral_finset_sum (s := Finset.range i)
+      rw [integral_const_mul, integral_finsetSum (s := Finset.range i)
         (fun j hj => (hY3 j (by
           have : j < i := Finset.mem_range.mp hj
           omega)).integrable_norm_pow'.congr (by

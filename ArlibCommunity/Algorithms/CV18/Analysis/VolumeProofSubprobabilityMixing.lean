@@ -58,7 +58,7 @@ theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.smul_measure
 theorem isWarm_normalized_branch
     {S : Type*} [MeasurableSpace S]
     {mu pi : Measure S} {M p : ENNReal}
-    (hwarm : IsWarm M mu pi) (hp : p ≠ 0) :
+    (hwarm : IsWarm M mu pi) (_hp : p ≠ 0) :
     IsWarm (p⁻¹ * M) (p⁻¹ • mu) pi := by
   intro A hA
   simp only [Measure.smul_apply, smul_eq_mul]

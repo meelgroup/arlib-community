@@ -486,7 +486,7 @@ theorem approxIndepFun_balancedCompletePhase_of_warm_first
     (k m : ℕ) (nu : ℝ)
     (hbudget : (delta + delta).toReal ≤
       3 * (k : ℝ) * (m : ℝ) * nu) :
-    let phaseTarget := target.bind fun result =>
+    let _phaseTarget := target.bind fun result =>
       match result with
       | none => Measure.dirac none
       | some point =>

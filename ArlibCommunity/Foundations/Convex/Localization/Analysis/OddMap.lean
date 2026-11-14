@@ -175,7 +175,7 @@ theorem exists_circle_lift_of_cover {X : Type*} [TopologicalSpace X]
     (hWc : PreconnectedSpace (U ∩ V : Set X)) (hWne : (U ∩ V).Nonempty)
     {f : X → Circle} (hf : Continuous f) :
     ∃ F : X → ℝ, Continuous F ∧ ∀ x, Circle.exp (F x) = f x := by
-  haveI := hSU; haveI := hLU; haveI := hSV; haveI := hLV; haveI := hWc
+  have := hSU; have := hLU; have := hSV; have := hLV; have := hWc
   obtain ⟨w₀, hw₀⟩ := hWne
   -- the two local lifts
   have hcov := Circle.isCoveringMap_exp
@@ -230,14 +230,14 @@ theorem exists_circle_lift_of_cover {X : Type*} [TopologicalSpace X]
     funext u
     change F u = FU u
     rw [hFdef]
-    exact dif_pos u.2
+    exact dite_eq_left u.2
   have hFVres : V.domRestrict F = fun v : ↥V => FV v + c := by
     funext v
     change F v = FV v + c
     rw [hFdef]
     by_cases hu : (v : X) ∈ U
-    · exact (dif_pos hu).trans (hagree (v : X) hu v.2)
-    · exact dif_neg hu
+    · exact (dite_eq_left hu).trans (hagree (v : X) hu v.2)
+    · exact dite_eq_right hu
   have hFUon : ContinuousOn F U := by
     rw [continuousOn_iff_continuous_domRestrict, hFUres]; exact FU.continuous
   have hFVon : ContinuousOn F V := by
@@ -251,11 +251,11 @@ theorem exists_circle_lift_of_cover {X : Type*} [TopologicalSpace X]
     · exact hFVon.continuousAt (hV.mem_nhds h)
   · intro x
     by_cases hx : x ∈ U
-    · have : F x = FU ⟨x, hx⟩ := by simp only [hFdef, dif_pos hx]
+    · have : F x = FU ⟨x, hx⟩ := by simp only [hFdef, dite_eq_left hx]
       rw [this, hFU' ⟨x, hx⟩]
     · have hxV : x ∈ V := ((hUV ▸ mem_univ x : x ∈ U ∪ V)).resolve_left hx
       have : F x = FV ⟨x, hxV⟩ + c := by
-        simp only [hFdef, dif_neg hx]
+        simp only [hFdef, dite_eq_right hx]
       rw [this, Circle.exp_add, hexpc, mul_one, hFV' ⟨x, hxV⟩]
 
 /-! ### Borsuk–Ulam into the plane, from the lifting property -/
@@ -275,7 +275,7 @@ theorem exists_eq_zero_of_odd_pair {X : Type*} [TopologicalSpace X] [Preconnecte
     (hao : ∀ x, a (σ x) = -a x) (hbo : ∀ x, b (σ x) = -b x) :
     ∃ x, a x = 0 ∧ b x = 0 := by
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   set G : X → ℂ := fun x => Complex.mk (a x) (b x) with hG
   have hGc : Continuous G := by
     have : G = fun x => (a x : ℂ) + (b x : ℂ) * Complex.I := by
@@ -314,6 +314,7 @@ open Module
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
 
+omit [FiniteDimensional ℝ E] in
 /-- No point of the unit sphere is its own antipode. -/
 theorem sphere_neg_ne_self (p : sphere (0 : E) 1) : -p ≠ p := by
   intro h
@@ -330,6 +331,7 @@ theorem sphere_neg_ne_self (p : sphere (0 : E) 1) : -p ≠ p := by
   rw [this, norm_zero] at hn
   exact absurd hn (by norm_num)
 
+omit [FiniteDimensional ℝ E] in
 /-- Stereographic projection identifies the sphere minus a point with the orthogonal complement
 of that point's line, so the sphere minus a point is contractible. -/
 theorem contractible_sphere_compl (p : sphere (0 : E) 1) :
@@ -425,8 +427,8 @@ theorem exists_circle_lift_sphere (h3 : 3 ≤ finrank ℝ E)
   set p : sphere (0 : E) 1 := ⟨‖u‖⁻¹ • u, mem_sphere_zero_iff_norm.mpr hnu⟩ with hp
   obtain ⟨hcU, hlU⟩ := contractible_sphere_compl p
   obtain ⟨hcV, hlV⟩ := contractible_sphere_compl (-p)
-  haveI := hcU
-  haveI := hcV
+  have := hcU
+  have := hcV
   have hW := isConnected_sphere_compl_pair h3 p
   refine exists_circle_lift_of_cover (U := ({p} : Set (sphere (0 : E) 1))ᶜ)
     (V := ({-p} : Set (sphere (0 : E) 1))ᶜ) isOpen_compl_singleton isOpen_compl_singleton
@@ -454,8 +456,8 @@ theorem exists_eq_zero_of_odd_pair_sphere (h3 : 3 ≤ finrank ℝ E)
     have : 1 < finrank ℝ E := by omega
     exact_mod_cast this
   have hS : IsConnected (sphere (0 : E) 1) := isConnected_sphere hrank 0 zero_le_one
-  haveI : PreconnectedSpace ↥(sphere (0 : E) 1) := Subtype.preconnectedSpace hS.isPreconnected
-  haveI : Nonempty ↥(sphere (0 : E) 1) := hS.nonempty.to_subtype
+  have : PreconnectedSpace ↥(sphere (0 : E) 1) := Subtype.preconnectedSpace hS.isPreconnected
+  have : Nonempty ↥(sphere (0 : E) 1) := hS.nonempty.to_subtype
   exact exists_eq_zero_of_odd_pair (fun f hf => exists_circle_lift_sphere h3 hf)
     continuous_neg (fun x => neg_neg x) ha hb hao hbo
 

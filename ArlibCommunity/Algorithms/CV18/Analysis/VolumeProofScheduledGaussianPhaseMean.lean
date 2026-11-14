@@ -53,8 +53,8 @@ theorem integral_retainedLiveTotal_loss_le_sqrt
     | none =>
         simpa [retainedLiveTotal] using hstate0
     | some value =>
-        simpa [retainedLiveTotal, Real.norm_eq_abs,
-          abs_of_nonneg hstate0] using hstate0
+        simp [retainedLiveTotal, Real.norm_eq_abs,
+          abs_of_nonneg hstate0]
   have hloss : (∫ state, state.1 ∂mu) -
         ∫ state, retainedLiveTotal state ∂mu =
       ∫ state, state.1 * killed state ∂mu := by
@@ -726,13 +726,13 @@ theorem integral_figureOneScheduledGaussianPhaseTarget_liveRaw_lower
     filter_upwards [htotal0] with state hstate0
     rcases state with ⟨total, state⟩
     cases state with
-    | none => simp [Function.comp_def, retainedSumOutput,
+    | none => simp [retainedSumOutput,
         balancedCoolingAverage, figureOneScheduledTraceLiveRawOutput,
         retainedLiveTotal]
     | some value =>
         have havg0 : 0 ≤ total / (count : ℝ) :=
           div_nonneg hstate0 hcountR.le
-        simp [Function.comp_def, retainedSumOutput, balancedCoolingAverage,
+        simp [retainedSumOutput, balancedCoolingAverage,
           figureOneScheduledTraceLiveRawOutput, retainedLiveTotal,
           max_eq_right havg0]
   rw [htargetMean]
@@ -821,9 +821,7 @@ theorem figureOneScheduledGaussianShadow_dead_real_le
         2 * scheduledBalancedStationaryTargetError q +
           count • figureOneCorrectedTransitionBudget q := by
     apply add_le_add
-    · simpa [two_mul] using
-        (self_le_add_right (scheduledBalancedStationaryTargetError q)
-          (scheduledBalancedStationaryTargetError q))
+    · simp [two_mul]
     · rw [nsmul_eq_mul, nsmul_eq_mul]
       gcongr
   have herrorTop :

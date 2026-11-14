@@ -576,8 +576,8 @@ theorem bind_figureOneScheduledScaledGaussianPhaseLaw_leUpTo_target_of_warmSixte
       (balancedCoolingAverage count))
     (figureOneScheduledGaussianPhaseTarget q I phase)
     (figureOneCorrectedTransitionBudget q)
-  convert hmapped using 1 <;>
-    simp [figureOneScheduledGaussianPhaseTarget, count, collect]
+  convert hmapped using 1
+  simp [figureOneScheduledGaussianPhaseTarget, count]
   congr 1
 
 /-- Splitting a trace law into live and dead restrictions identifies its
@@ -631,7 +631,7 @@ theorem bind_scheduledBalancedTracePhaseObservationLaw_eq_live_dead
         simp [liveSet, scheduledBalancedTraceLiveSet] at htrace
     | true =>
         simp only [obs, scheduledBalancedTracePhaseObservationLaw,
-          if_true, hphase, K, state, scale, Function.comp_apply,
+          ite_true, hphase, state, scale, Function.comp_apply,
           scheduledBalancedTraceRetainedState]
         rfl
   have hdead : (law.restrict deadSet).bind obs =
@@ -847,7 +847,7 @@ theorem bind_scheduledBalancedTracePhaseOutputLaw_eq_live_dead
     cases live with
     | false => simp [liveSet, scheduledBalancedTraceLiveSet] at htrace
     | true =>
-        simp only [outK, scheduledBalancedTracePhaseOutputLaw, if_true,
+        simp only [outK, scheduledBalancedTracePhaseOutputLaw, ite_true,
           K, state, scale, Function.comp_apply,
           scheduledBalancedTraceRetainedState]
         rw [show scheduledBalancedTracePhaseObservationLaw
@@ -855,7 +855,7 @@ theorem bind_scheduledBalancedTracePhaseOutputLaw_eq_live_dead
               (history, true) =
             figureOneScheduledScaledGaussianPhaseLaw q I phase
               (scaleFactor q • history.2.2.2) by
-          simp only [scheduledBalancedTracePhaseObservationLaw, if_true,
+          simp only [scheduledBalancedTracePhaseObservationLaw, ite_true,
             hphase, figureOneScheduledScaledGaussianPhaseLaw,
             scheduledBalancedCoolingRatioTransitionLaw]
           ]
@@ -1157,7 +1157,6 @@ theorem map_pair_sequentialTracePhaseOutput_eq_forwardTrace_succ
           (scheduledBalancedCoolingTraceAppend trace)).map
             (fun next => (X next, Y next)) :=
       (Measure.map_map htracePair happend).symm
-  all_goals exact rho
 
 /-- The dead trace mass is bounded by the same optional-retained exact-chance
 error: the ideal accepted target is supported on `some`. -/
@@ -2001,8 +2000,8 @@ theorem bind_figureOneScheduledScaledTerminalPhaseLaw_leUpTo_target_of_warmSixte
       (balancedCoolingAverage count))
     (figureOneScheduledTerminalPhaseTarget q I)
     (figureOneCorrectedTransitionBudget q)
-  convert hmapped using 1 <;>
-    simp [figureOneScheduledTerminalPhaseTarget, count, collect]
+  convert hmapped using 1
+  simp [figureOneScheduledTerminalPhaseTarget, count]
   congr 1
 
 theorem bind_scheduledBalancedTerminalTracePhaseOutputLaw_eq_live_dead
@@ -2060,14 +2059,14 @@ theorem bind_scheduledBalancedTerminalTracePhaseOutputLaw_eq_live_dead
     cases live with
     | false => simp [liveSet, scheduledBalancedTraceLiveSet] at htrace
     | true =>
-        simp only [outK, scheduledBalancedTracePhaseOutputLaw, if_true,
+        simp only [outK, scheduledBalancedTracePhaseOutputLaw, ite_true,
           K, state, scale, Function.comp_apply,
           scheduledBalancedTraceRetainedState]
         simp only [scheduledBalancedTracePhaseObservationLaw,
-          lt_self_iff_false, if_false,
+          lt_self_iff_false, ite_false,
           scheduledBalancedCoolingUniformTransitionLaw,
           figureOneScheduledScaledTerminalPhaseLaw]
-        simp only [if_true]
+        simp only [ite_true]
   have hdead : (law.restrict deadSet).bind outK =
       (law.restrict deadSet) Set.univ • Measure.dirac deadOutput := by
     have heq : ∀ᵐ trace ∂(law.restrict deadSet),

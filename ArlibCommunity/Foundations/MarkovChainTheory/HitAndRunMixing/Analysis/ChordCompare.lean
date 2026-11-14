@@ -333,7 +333,7 @@ parameter set `ArlibCommunity.Foundations.Convex.chordParam` of the chord throug
 theorem chordSet_eq_chordParam (K : Set (EuclideanSpace ℝ (Fin n)))
     (u x : EuclideanSpace ℝ (Fin n)) : chordSet K u (x - u) = chordParam K u x := by
   ext t
-  simp only [chordSet, Set.mem_setOf_eq, mem_chordParam, lineMap_apply']
+  simp only [chordSet, mem_ofPred_eq, mem_chordParam, lineMap_apply']
   rw [add_comm]
 
 /-- **`ℓ(u,x) = |x − u|·(chordHigh − chordLow)`** — the chord length in chord parameters. -/
@@ -428,7 +428,7 @@ theorem measurableSet_chordLow_lt (hKm : MeasurableSet K) (hKc : Convex ℝ K)
       = (⋃ q : ℚ, ⋃ (_ : (q : ℝ) < -3),
           (fun x : EuclideanSpace ℝ (Fin n) => (q : ℝ) • (x - u) + u) ⁻¹' K) ∩ {u}ᶜ := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iUnion, Set.mem_preimage,
+    simp only [mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iUnion, Set.mem_preimage,
       Set.mem_compl_iff, Set.mem_singleton_iff]
     constructor
     · intro hx
@@ -462,7 +462,7 @@ theorem measurableSet_chordHigh_gt (hKm : MeasurableSet K) (hKc : Convex ℝ K)
       = (⋃ q : ℚ, ⋃ (_ : (3 : ℝ) < (q : ℝ)),
           (fun x : EuclideanSpace ℝ (Fin n) => (q : ℝ) • (x - u) + u) ⁻¹' K) ∩ {u}ᶜ := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iUnion, Set.mem_preimage,
+    simp only [mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iUnion, Set.mem_preimage,
       Set.mem_compl_iff, Set.mem_singleton_iff]
     constructor
     · intro hx
@@ -494,7 +494,7 @@ theorem convex_chordSet (hKc : Convex ℝ K) (u w : EuclideanSpace ℝ (Fin n)) 
     Convex ℝ (chordSet K u w) := by
   have hrw : chordSet K u w = chordParam K u (u + w) := by
     ext t
-    simp only [chordSet, Set.mem_setOf_eq, mem_chordParam, lineMap_apply', add_sub_cancel_left]
+    simp only [chordSet, mem_ofPred_eq, mem_chordParam, lineMap_apply', add_sub_cancel_left]
     rw [add_comm]
   rw [hrw]
   exact convex_chordParam hKc
@@ -504,7 +504,7 @@ admissible parameter for the former iff `s·t` is one for the latter. -/
 theorem mem_chordParam_iff_mul_mem (K : Set (EuclideanSpace ℝ (Fin n)))
     (u θ : EuclideanSpace ℝ (Fin n)) (t s : ℝ) :
     s ∈ chordParam K u (u + t • θ) ↔ s * t ∈ chordSet K u θ := by
-  simp only [mem_chordParam, lineMap_apply', chordSet, Set.mem_setOf_eq, add_sub_cancel_left,
+  simp only [mem_chordParam, lineMap_apply', chordSet, mem_ofPred_eq, add_sub_cancel_left,
     smul_smul]
   rw [add_comm]
 
@@ -612,7 +612,7 @@ theorem hitAndRun_chordLow_lt_le (hKm : MeasurableSet K) (hKc : Convex ℝ K)
       ≤ ENNReal.ofReal (1 / 3) := by
   have hA3m := measurableSet_chordLow_lt hKm hKc hKb hu
   have hnot : u ∉ {x : EuclideanSpace ℝ (Fin n) | chordLow K u x < -3} := by
-    simp only [Set.mem_setOf_eq, chordLow_self]
+    simp only [mem_ofPred_eq, chordLow_self]
     norm_num
   rw [hitAndRun_apply_set hKm u hA3m, Set.indicator_of_notMem hnot, mul_zero, add_zero]
   exact hitAndRunProposal_chordLow_lt_le hKm hKc hKb hu
@@ -625,7 +625,7 @@ theorem hitAndRun_chordHigh_gt_le (hKm : MeasurableSet K) (hKc : Convex ℝ K)
       ≤ ENNReal.ofReal (1 / 3) := by
   have hA4m := measurableSet_chordHigh_gt hKm hKc hKb hu
   have hnot : u ∉ {x : EuclideanSpace ℝ (Fin n) | 3 < chordHigh K u x} := by
-    simp only [Set.mem_setOf_eq, chordHigh_self]
+    simp only [mem_ofPred_eq, chordHigh_self]
     norm_num
   rw [hitAndRun_apply_set hKm u hA4m, Set.indicator_of_notMem hnot, mul_zero, add_zero]
   exact hitAndRunProposal_chordHigh_gt_le hKm hKc hKb hu
@@ -750,7 +750,7 @@ theorem uniformOn_chord_bad_le (hKm : MeasurableSet K) (hKc : Convex ℝ K) (hu 
   have hTm : MeasurableSet T := hbadm.preimage (by fun_prop)
   have hSconv : Convex ℝ S := convex_chordSet hKc u θ
   have h0 : (0 : ℝ) ∈ S := by
-    simp only [hSdef, chordSet, Set.mem_setOf_eq, zero_smul, add_zero]; exact hu
+    simp only [hSdef, chordSet, mem_ofPred_eq, zero_smul, add_zero]; exact hu
   rw [ArlibCommunity.Foundations.Convex.uniformOn_apply _ hSm hTm]
   refine ENNReal.div_le_of_le_mul ?_
   have hsub : T ∩ S ⊆
@@ -802,7 +802,7 @@ theorem hitAndRun_chord_bad_le (hKm : MeasurableSet K) (hKc : Convex ℝ K)
     (measurableSet_chordHigh_gt hKm hKc hKb hu)
   have hnot : u ∉ ({x : EuclideanSpace ℝ (Fin n) | chordLow K u x < -3}
       ∪ {x : EuclideanSpace ℝ (Fin n) | 3 < chordHigh K u x}) := by
-    simp only [Set.mem_union, Set.mem_setOf_eq, chordLow_self, chordHigh_self]
+    simp only [Set.mem_union, mem_ofPred_eq, chordLow_self, chordHigh_self]
     norm_num
   rw [hitAndRun_apply_set hKm u hbadm, Set.indicator_of_notMem hnot, mul_zero, add_zero]
   exact hitAndRunProposal_chord_bad_le hKm hKc hKb hu

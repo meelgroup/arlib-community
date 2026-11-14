@@ -528,8 +528,8 @@ theorem tvLe_iterate_lazy_hitAndRun_param {n : ℕ} (hn : 1 ≤ n)
     {m : ℕ} (hm : 4 * lsThreshold M phi eps ≤ (m : ℝ)) :
     ArlibCommunity.Foundations.Convex.TVLe (iterate (lazy (hitAndRun K)) sigma m) (uniformOn volume K)
       (ENNReal.ofReal eps) := by
-  haveI : NeZero n := ⟨by omega⟩
-  haveI : IsProbabilityMeasure (uniformOn volume K) :=
+  have : NeZero n := ⟨by omega⟩
+  have : IsProbabilityMeasure (uniformOn volume K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume hK0 hKtop
   obtain ⟨S0, hS0m, hS0pos, hS0half⟩ := exists_smallSet_uniformOn hn hKm hK0 hKtop
   exact tvLe_iterate_lazy_of_exceptional (isReversible_hitAndRun hKm)
@@ -979,7 +979,7 @@ theorem tvLe_hitAndRun_of_close_interior (hn : 21 ≤ n) {K : Set (EuclideanSpac
     ∀ u ∈ interior K, ∀ v ∈ interior K, crossRatioDist K u v < 1 / 8 →
       dist u v < 2 / Real.sqrt n * max (medianStep K u) (medianStep K v) →
       ArlibCommunity.Foundations.Convex.TVLe (hitAndRun K u) (hitAndRun K v) (ENNReal.ofReal (1 - 1 / 8000)) := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   obtain ⟨R, hR⟩ := hKb.subset_closedBall (0 : EuclideanSpace ℝ (Fin n))
   -- the walk leaves every interior point with probability one
   have hmove : ∀ x ∈ interior K, hitAndRunProposal K x Set.univ = 1 := by
@@ -1492,7 +1492,7 @@ theorem tvLe_iterate_lazy_hitAndRun_uncond_witness :
   set K : Set (EuclideanSpace ℝ (Fin 1100)) := Metric.closedBall 0 1 with hK
   have hK0 : volume K ≠ 0 := (Metric.measure_closedBall_pos volume 0 one_pos).ne'
   have hKtop : volume K ≠ ⊤ := measure_closedBall_lt_top.ne
-  haveI : IsProbabilityMeasure (uniformOn volume K) :=
+  have : IsProbabilityMeasure (uniformOn volume K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume hK0 hKtop
   have hD : Metric.diam K ≤ 2 := by
     simpa using Metric.diam_closedBall (x := (0 : EuclideanSpace ℝ (Fin 1100)))

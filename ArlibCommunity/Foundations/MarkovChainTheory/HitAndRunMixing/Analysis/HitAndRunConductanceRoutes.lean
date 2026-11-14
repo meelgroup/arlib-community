@@ -85,7 +85,7 @@ theorem globalConductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
     ENNReal.ofReal (lam / (245760 * (n : ℝ) * D))
       ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hn' : n ≠ 0 := Nat.one_le_iff_ne_zero.mp hn
-  haveI : NeZero n := ⟨hn'⟩
+  have : NeZero n := ⟨hn'⟩
   have hnR : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
   have hnR0 : (0 : ℝ) < (n : ℝ) := by linarith
   have hsq : 0 < Real.sqrt n := Real.sqrt_pos.mpr hnR0
@@ -99,7 +99,7 @@ theorem globalConductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
   have hD0 : (0 : ℝ) < D := by linarith
   have hnD : (0 : ℝ) < (n : ℝ) * D := by positivity
   have hnD1 : (1 : ℝ) ≤ (n : ℝ) * D := by nlinarith
-  haveI : IsProbabilityMeasure (uniformOn volume K) :=
+  have : IsProbabilityMeasure (uniformOn volume K) :=
     isProbabilityMeasure_uniformOn volume hK0 hKtop
   set pi : Measure (EuclideanSpace ℝ (Fin n)) := uniformOn volume K with hpidef
   set P : Kernel (EuclideanSpace ℝ (Fin n)) (EuclideanSpace ℝ (Fin n)) := hitAndRun K with hPdef
@@ -188,9 +188,9 @@ theorem globalConductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
   have hS2m : MeasurableSet S2 :=
     (hIm.diff hSm).inter (measurableSet_lt (Kernel.measurable_coe P hSm) measurable_const)
   have hmem1 : ∀ x, x ∈ S1 ↔ ((x ∈ S ∧ x ∈ interior K) ∧ P x Sᶜ < eps) := by
-    intro x; rw [hS1def]; simp only [Set.mem_inter_iff, Set.mem_setOf_eq]
+    intro x; rw [hS1def]; simp only [Set.mem_inter_iff, mem_ofPred_eq]
   have hmem2 : ∀ x, x ∈ S2 ↔ ((x ∈ interior K ∧ x ∉ S) ∧ P x S < eps) := by
-    intro x; rw [hS2def]; simp only [Set.mem_inter_iff, Set.mem_sdiff, Set.mem_setOf_eq]
+    intro x; rw [hS2def]; simp only [Set.mem_inter_iff, Set.mem_sdiff, mem_ofPred_eq]
   have hS1int : ∀ x ∈ S1, x ∈ interior K := fun x hx => ((hmem1 x).1 hx).1.2
   have hS2int : ∀ x ∈ S2, x ∈ interior K := fun x hx => ((hmem2 x).1 hx).1.1
   have hS1K : S1 ⊆ K := fun x hx => interior_subset (hS1int x hx)

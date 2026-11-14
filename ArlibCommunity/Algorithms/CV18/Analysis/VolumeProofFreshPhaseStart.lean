@@ -196,7 +196,7 @@ theorem freshPhaseStartMeasure_isWarm
       nu Set.univ ≤ G Set.univ := hnuG
       _ = (G Set.univ / G B) * G B := by
         exact (ENNReal.div_mul_cancel hGB0 hGBtop).symm
-      _ = D * mu Set.univ := by simp [D, mu, Measure.restrict_apply_univ]
+      _ = D * mu Set.univ := by simp [D, mu]
   have hw := isWarm_normalize_of_le_smul hmu0 hmutop hnu0 hnutop hdom hmass
   have hmuMass : mu Set.univ = G B := by
     simp [mu]

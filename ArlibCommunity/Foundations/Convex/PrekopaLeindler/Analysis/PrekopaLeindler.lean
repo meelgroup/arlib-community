@@ -121,8 +121,8 @@ theorem volume_add_volume_le_volume_add {A B : Set ℝ} (hA : MeasurableSet A)
     calc volume K + volume L ≤ volume (K + L) :=
           volume_add_le_volume_add_of_isCompact hKc hLc hKne hLne
       _ ≤ volume (A + B) := measure_mono (Set.add_subset_add hKA hLB)
-  haveI : Nonempty {K : Set ℝ // IsCompact K ∧ K ⊆ A} := ⟨⟨∅, isCompact_empty, empty_subset _⟩⟩
-  haveI : Nonempty {K : Set ℝ // IsCompact K ∧ K ⊆ B} := ⟨⟨∅, isCompact_empty, empty_subset _⟩⟩
+  have : Nonempty {K : Set ℝ // IsCompact K ∧ K ⊆ A} := ⟨⟨∅, isCompact_empty, empty_subset _⟩⟩
+  have : Nonempty {K : Set ℝ // IsCompact K ∧ K ⊆ B} := ⟨⟨∅, isCompact_empty, empty_subset _⟩⟩
   rw [volume_eq_iSup_isCompact_subtype hA, volume_eq_iSup_isCompact_subtype hB]
   exact ENNReal.iSup_add_iSup_le fun K L => key K L K.2.1 K.2.2 L.2.1 L.2.2
 
@@ -134,14 +134,14 @@ variable {lam : ℝ} {f g h : ℝ → ℝ}
 for all `x y`, then for every `t > 0` the Minkowski combination of the level sets of `f`
 and `g` at height `t` is contained in the level set of `h` at height `t`. -/
 theorem smul_setOf_add_smul_setOf_subset (hlam0 : 0 ≤ lam) (hlam1 : lam ≤ 1)
-    (hf : ∀ x, 0 ≤ f x) (hg : ∀ x, 0 ≤ g x)
+    (hf : ∀ x, 0 ≤ f x) (_hg : ∀ x, 0 ≤ g x)
     (hyp : ∀ x y, f x ^ lam * g y ^ (1 - lam) ≤ h (lam * x + (1 - lam) * y))
     {t : ℝ} (ht : 0 < t) :
     lam • {x : ℝ | t ≤ f x} + (1 - lam) • {y : ℝ | t ≤ g y} ⊆ {z : ℝ | t ≤ h z} := by
   rintro z ⟨u, hu, v, hv, rfl⟩
   obtain ⟨x, hx, rfl⟩ := hu
   obtain ⟨y, hy, rfl⟩ := hv
-  simp only [Set.mem_setOf_eq, smul_eq_mul] at hx hy ⊢
+  simp only [mem_ofPred_eq, smul_eq_mul] at hx hy ⊢
   have h1 : t ^ lam ≤ f x ^ lam := Real.rpow_le_rpow ht.le hx hlam0
   have h2 : t ^ (1 - lam) ≤ g y ^ (1 - lam) := Real.rpow_le_rpow ht.le hy (by linarith)
   have ht1 : (0 : ℝ) ≤ t ^ lam := Real.rpow_nonneg ht.le _
@@ -324,13 +324,13 @@ theorem nonempty_setOf_le_div_iff {F : ℝ → ℝ} {P : ℝ} (hP : 0 < P) (hub 
     {x : ℝ | t ≤ F x / P}.Nonempty ↔ t < 1 := by
   constructor
   · rintro ⟨x, hx⟩
-    simp only [Set.mem_setOf_eq, le_div_iff₀ hP] at hx
+    simp only [mem_ofPred_eq, le_div_iff₀ hP] at hx
     have h1 : t * P ≤ P := le_trans hx (hub x)
     have h2 : t ≤ 1 := by nlinarith
     exact lt_of_le_of_ne h2 ht1
   · intro ht
     obtain ⟨x, hx⟩ := hlub (t * P) (by nlinarith)
-    exact ⟨x, by simpa only [Set.mem_setOf_eq, le_div_iff₀ hP] using hx.le⟩
+    exact ⟨x, by simpa only [mem_ofPred_eq, le_div_iff₀ hP] using hx.le⟩
 
 /-- **One-dimensional Prékopa–Leindler inequality, normalized form.**  Here `M` and `N` are
 least upper bounds for `f` and `g` respectively (`hfM`/`hfM'` and `hgN`/`hgN'`).  No

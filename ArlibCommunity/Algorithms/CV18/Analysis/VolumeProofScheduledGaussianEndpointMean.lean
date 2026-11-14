@@ -104,7 +104,7 @@ theorem iterated_figureOneFinalScheduledRetainedOptionKernel_from_truncated_ae_m
         q I (scheduleValue_pos q phase)
       let R : Kernel (Option (AmbientSpace q.n))
           (Option (AmbientSpace q.n)) := ⟨K, hK.1⟩
-      letI : IsMarkovKernel R := ⟨hK.2⟩
+      let : IsMarkovKernel R := ⟨hK.2⟩
       change ∀ᵐ result ∂R ∘ₘ iteratedKernelLaw
         (fun _ => K)
         ((truncatedGaussianProbability q I (scheduleValue q phase)

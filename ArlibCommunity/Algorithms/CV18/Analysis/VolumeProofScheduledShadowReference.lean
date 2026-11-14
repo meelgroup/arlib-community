@@ -80,9 +80,7 @@ theorem measurable_retainedSampleHistoryPrefix
   · simpa [retainedSampleHistoryPrefix, hj] using
       (measurable_pi_apply j :
         Measurable fun history : ℕ → Option S => history j)
-  · simpa [retainedSampleHistoryPrefix, hj] using
-      (measurable_const : Measurable fun _ : ℕ → Option S =>
-        (none : Option S))
+  · simp [retainedSampleHistoryPrefix, hj]
 
 theorem retainedSampleHistoryPrefix_update_at_limit
     {S : Type*} (limit : ℕ) (history : ℕ → Option S)
@@ -209,7 +207,7 @@ theorem scheduledRetainedEndpointError_one_toReal_le
   rw [scheduledRetainedEndpointError,
     ENNReal.toReal_add htwiceTop (by simpa using hdeltaTop),
     ENNReal.toReal_mul, ENNReal.toReal_ofNat]
-  simp only [one_nsmul, delta, figureOneCorrectedTransitionBudget,
+  simp only [one_nsmul, figureOneCorrectedTransitionBudget,
     ENNReal.toReal_ofReal hnu.le]
   nlinarith
 
@@ -887,7 +885,7 @@ theorem exists_initializedScheduledRetainedShadowReference
       prefixLaw K record id target readNew hK.1 hK.2 hrecord
       measurable_id hreadNew (by
         intro history next
-        simp [record, readNew, Function.update]) hnext
+        simp [record, readNew]) hnext
   refine ⟨reference, hreferenceProb, ?_, ?_, ?_⟩
   · rw [initializedScheduledRetainedHistoryLaw,
       iteratedKernelLaw_succ]

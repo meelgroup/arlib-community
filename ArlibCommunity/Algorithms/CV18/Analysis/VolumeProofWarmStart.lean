@@ -311,13 +311,13 @@ theorem scheduleValue_adjacent_warm (q : VolumeParams) (I : VolumeInput q.n)
     rw [ht_next]
     unfold nextVariance
     refine (min_le_right _ _).trans_eq ?_
-    rw [coolingRate, if_pos hsone]
+    rw [coolingRate, ite_eq_left hsone]
   · apply truncatedGaussian_accelerated_warm q I hs hst
     have hraw : t ≤ s * (1 + s / (2 * terminalVariance q)) := by
       rw [ht_next]
       unfold nextVariance
       refine (min_le_right _ _).trans_eq ?_
-      rw [coolingRate, if_neg hsone]
+      rw [coolingRate, ite_eq_right hsone]
     have hT := terminalVariance_pos' q
     have hfirst : t - s ≤ s ^ 2 / (2 * terminalVariance q) := by
       calc

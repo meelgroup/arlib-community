@@ -268,7 +268,7 @@ theorem tendsto_setIntegral_lipschitzMinorant {K : Set E} (hKfin : μ K ≠ ⊤)
     Tendsto (fun n : ℕ => ∫ x in K, lipschitzMinorant g n x ∂μ) atTop
       (𝓝 (∫ x in K, g x ∂μ)) := by
   have hc : ∀ y, -M ≤ g y := fun y => (abs_le.mp (hM y)).1
-  haveI : IsFiniteMeasure (μ.restrict K) :=
+  have : IsFiniteMeasure (μ.restrict K) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact lt_top_iff_ne_top.mpr hKfin⟩
   refine tendsto_integral_of_dominated_convergence (fun _ => M)
     (fun n => (continuous_lipschitzMinorant hc n).aestronglyMeasurable)
@@ -310,7 +310,7 @@ theorem exists_continuous_setIntegral_eq_zero {K : Set E} (hKfin : μ K ≠ ⊤)
       (∀ x, |f x| ≤ M + η) ∧ (∫ x in K, f x ∂μ) = 0 := by
   have hc : ∀ y, -M ≤ g y := fun y => (abs_le.mp (hM y)).1
   have hVpos : 0 < (μ K).toReal := ENNReal.toReal_pos hK0 hKfin
-  haveI : IsFiniteMeasure (μ.restrict K) :=
+  have : IsFiniteMeasure (μ.restrict K) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact lt_top_iff_ne_top.mpr hKfin⟩
   have hlim := tendsto_setIntegral_lipschitzMinorant (μ := μ) hKfin hg hM
   rw [hzero] at hlim

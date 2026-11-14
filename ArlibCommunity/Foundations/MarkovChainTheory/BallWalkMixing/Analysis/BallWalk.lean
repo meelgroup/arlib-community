@@ -178,7 +178,7 @@ the entire mathematical content of reversibility of the ball walk. -/
 theorem preimage_swap_nearRel (A B : Set (EuclideanSpace ℝ (Fin n))) (δ : ℝ) :
     Prod.swap ⁻¹' nearRel A B δ = nearRel B A δ := by
   ext p
-  simp only [Set.mem_preimage, nearRel, Set.mem_setOf_eq, Prod.fst_swap, Prod.snd_swap]
+  simp only [Set.mem_preimage, nearRel, Set.mem_ofPred_eq, Prod.fst_swap, Prod.snd_swap]
   rw [dist_comm]
   tauto
 
@@ -193,13 +193,13 @@ theorem prod_nearRel {A B : Set (EuclideanSpace ℝ (Fin n))} (hA : MeasurableSe
   by_cases hx : x ∈ A
   · have : Prod.mk x ⁻¹' nearRel A B δ = B ∩ Metric.ball x δ := by
       ext y
-      simp only [Set.mem_preimage, nearRel, Set.mem_setOf_eq, Set.mem_inter_iff,
+      simp only [Set.mem_preimage, nearRel, Set.mem_ofPred_eq, Set.mem_inter_iff,
         Metric.mem_ball']
       tauto
     rw [this, Set.indicator_of_mem hx]
   · have : Prod.mk x ⁻¹' nearRel A B δ = ∅ := by
       ext y
-      simp only [Set.mem_preimage, nearRel, Set.mem_setOf_eq, Set.mem_empty_iff_false,
+      simp only [Set.mem_preimage, nearRel, Set.mem_ofPred_eq, Set.mem_empty_iff_false,
         iff_false, not_and]
       exact fun h => absurd h hx
     rw [this, Set.indicator_of_notMem hx, measure_empty]
@@ -273,7 +273,7 @@ noncomputable def ballWalk (K : Set (EuclideanSpace ℝ (Fin n))) (δ : ℝ) :
 open scoped Classical in
 /-- On a measurable `K`, `ballWalk` is `ballWalkAux`. -/
 theorem ballWalk_eq {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (δ : ℝ) :
-    ballWalk K δ = ballWalkAux K hK δ := dif_pos hK
+    ballWalk K δ = ballWalkAux K hK δ := dite_eq_left hK
 
 /-- **The value of `ballWalkAux` on a measurable event.**  The mass
 `ballWalkAux K hK δ x t` splits into the proposal part

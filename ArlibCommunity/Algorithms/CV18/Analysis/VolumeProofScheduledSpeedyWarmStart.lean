@@ -16,7 +16,7 @@ open scoped ENNReal Pointwise
 open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 theorem phaseRadius_mono (q : VolumeParams) {s t : ℝ}
-    (hs : 0 ≤ s) (hst : s ≤ t) :
+    (_hs : 0 ≤ s) (hst : s ≤ t) :
     phaseRadius q s ≤ phaseRadius q t := by
   unfold phaseRadius
   gcongr
@@ -63,14 +63,13 @@ theorem proposalRadius_succ_le_fixedFactor_mul
   · have htone : 1 ≤ t := hsone.trans hst
     rw [min_eq_right (Real.one_le_sqrt.mpr hsone),
       min_eq_right (Real.one_le_sqrt.mpr htone)]
-    simpa using Real.one_le_sqrt.mpr
-      (show (1 : ℝ) ≤ 1 + 1 / (q.n : ℝ) by positivity)
+    simp
   · have hslt : s < 1 := lt_of_not_ge hsone
     have htbound : t ≤ s * (1 + 1 / (q.n : ℝ)) := by
       rw [show t = nextVariance q s by
         simpa [s, t] using scheduleValue_succ q k]
       unfold nextVariance coolingRate
-      rw [if_pos hslt.le]
+      rw [ite_eq_left hslt.le]
       exact min_le_right _ _
     have hsqrt_s_le : Real.sqrt s ≤ 1 := Real.sqrt_le_one.mpr hslt.le
     rw [min_eq_left hsqrt_s_le]

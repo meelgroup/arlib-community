@@ -306,7 +306,7 @@ theorem volume_mul_volume_le_of_separated
         have hset : ((fun u => (u, v)) ⁻¹' ((fun q => (q, lam)) ⁻¹' W)) ∩ A
             = {x : EuclideanSpace ℝ (Fin n) | lam • v + (1 - lam) • x ∈ (K \ A) \ B} ∩ A := by
           ext x
-          simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_setOf_eq, hWdef, and_congr_left_iff]
+          simp only [Set.mem_inter_iff, Set.mem_preimage, mem_ofPred_eq, hWdef, and_congr_left_iff]
           intro _
           rw [add_comm]
         rw [hset]

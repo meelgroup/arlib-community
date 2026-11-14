@@ -80,7 +80,7 @@ theorem exists_historyPreservingReset_of_shared
   let bad : Measure (A × X) := mu - shared
   let missing : Measure X := tau - Measure.map Prod.snd shared
   let d : ENNReal := bad Set.univ
-  letI : IsFiniteMeasure shared := isFiniteMeasure_of_le mu hshared
+  let : IsFiniteMeasure shared := isFiniteMeasure_of_le mu hshared
   have hbad_add : bad + shared = mu := by
     exact Measure.sub_add_cancel_of_le hshared
   have hmissing_add : missing + Measure.map Prod.snd shared = tau := by
@@ -137,7 +137,7 @@ theorem exists_historyPreservingReset_of_shared
           rw [Measure.map_apply measurable_snd MeasurableSet.univ]
           simp
         _ = 1 := by rw [hnu_snd, measure_univ]
-    letI : IsProbabilityMeasure nu := hnu_prob
+    let : IsProbabilityMeasure nu := hnu_prob
     have hdom : MeasureLeUpTo mu nu epsilon := by
       refine ⟨bad, ?_, hbadMass⟩
       rw [← hbad_add]
@@ -147,9 +147,7 @@ theorem exists_historyPreservingReset_of_shared
       calc
         bad s + shared s = shared s + bad s := add_comm _ _
         _ ≤ shared s + replacement s + bad s := by
-          simpa [add_comm, add_left_comm, add_assoc] using
-            add_le_add_right
-              (show shared s ≤ shared s + replacement s from le_add_right le_rfl) (bad s)
+          simp [add_comm, add_left_comm]
     exact ⟨nu, hnu_prob, hnu_fst, hnu_snd, hdom.to_tvLe⟩
 
 private theorem sub_univ_le_of_tvLe
@@ -198,9 +196,9 @@ theorem exists_historyPreservingReset_of_tvLe
   let shared : Measure (A × X) := liftSecondSubmeasure mu good
   have hexcess_le : excess ≤ marginal := by
     exact Measure.sub_le
-  letI : IsFiniteMeasure excess := isFiniteMeasure_of_le marginal hexcess_le
+  let : IsFiniteMeasure excess := isFiniteMeasure_of_le marginal hexcess_le
   have hgood_le_marginal : good ≤ marginal := Measure.sub_le
-  letI : IsFiniteMeasure good := isFiniteMeasure_of_le marginal hgood_le_marginal
+  let : IsFiniteMeasure good := isFiniteMeasure_of_le marginal hgood_le_marginal
   have hmarginal_le : marginal ≤ tau + excess := by
     have hle := (Measure.sub_le_iff_le_add
       (μ := marginal) (ν := tau) (ξ := excess)).mp le_rfl
@@ -211,7 +209,7 @@ theorem exists_historyPreservingReset_of_tvLe
     exact map_snd_liftSecondSubmeasure mu good hgood_le_marginal
   have hshared_le : shared ≤ mu :=
     liftSecondSubmeasure_le mu good hgood_le_marginal
-  letI : IsFiniteMeasure shared := isFiniteMeasure_of_le mu hshared_le
+  let : IsFiniteMeasure shared := isFiniteMeasure_of_le mu hshared_le
   have hshared_univ : shared Set.univ = good Set.univ := by
     calc
       shared Set.univ = Measure.map Prod.snd shared Set.univ := by

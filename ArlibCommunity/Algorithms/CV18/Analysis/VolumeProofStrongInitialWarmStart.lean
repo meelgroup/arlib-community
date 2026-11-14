@@ -186,7 +186,7 @@ theorem initialGaussian_interior_tail_le (q : VolumeParams) :
   have hset : (Metric.closedBall (0 : AmbientSpace q.n) r)ᶜ =
       (Set.univ : Set (AmbientSpace q.n)) \ Metric.closedBall 0 r := by
     ext x
-    simp only [Set.mem_compl_iff, Set.mem_diff, Set.mem_univ, true_and]
+    simp only [Set.mem_compl_iff, mem_sdiff, Set.mem_univ, true_and]
   calc
     (∫ x in (Metric.closedBall (0 : AmbientSpace q.n) r)ᶜ,
         gaussianDensity s x) =
@@ -372,7 +372,7 @@ theorem initialAccuracySpeedy_interior_restrictOff_isWarm
       sigma (A \ bad) ≤ 1 * pi A := by
     intro A hA
     have h := initialTruncatedGaussian_interior_dom_speedy q I A hA
-    simpa [sigma, pi, bad, good, Set.diff_compl] using h
+    simpa [sigma, pi, bad, good, Set.sdiff_compl] using h
   have hw := isWarm_restrictOff (sigma := sigma) (pi := pi)
     (measurableSet_closedBall.compl) hbad hdom
   simpa [sigma, pi, bad, good] using hw

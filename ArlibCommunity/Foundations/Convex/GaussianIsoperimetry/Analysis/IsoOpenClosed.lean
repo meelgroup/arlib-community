@@ -994,7 +994,7 @@ theorem gaussianRestricted_isoperimetry_openClosed_witness (hn : 2 ≤ n) :
     intro x hx
     obtain ⟨-, hx2⟩ := hballs (-(1/2)) (by norm_num) x hx
     rw [hS₁def]
-    simp only [Set.mem_setOf_eq]
+    simp only [mem_ofPred_eq]
     rw [abs_lt] at hx2
     linarith [hx2.2]
   have hp2 : 0 < ∫ x in S₂, h x := by
@@ -1004,7 +1004,7 @@ theorem gaussianRestricted_isoperimetry_openClosed_witness (hn : 2 ≤ n) :
     intro x hx
     obtain ⟨-, hx2⟩ := hballs (1/2) (by norm_num) x hx
     rw [hS₂def]
-    simp only [Set.mem_setOf_eq]
+    simp only [mem_ofPred_eq]
     rw [abs_lt] at hx2
     linarith [hx2.1]
   refine ⟨fun _ => (1 : ℝ), h, S₁, S₂, S₃, 1, 1/8, 1, one_pos, by norm_num,
@@ -1303,7 +1303,7 @@ theorem exists_separated_no_disjoint_open_enlargement (hn : 2 ≤ n) :
     obtain ⟨hb1, hb2⟩ := hb
     rcases ha with ha | ha
     · exact ha hb1
-    · simp only [Set.mem_setOf_eq] at ha hb2; linarith
+    · simp only [mem_ofPred_eq] at ha hb2; linarith
   have hpart : IsPartition3 Set.univ S₁ S₂ S₃ :=
     { union := Set.union_compl_self (S₁ ∪ S₂)
       disjoint₁₂ := hdisj12
@@ -1322,7 +1322,7 @@ theorem exists_separated_no_disjoint_open_enlargement (hn : 2 ≤ n) :
     intro x hx
     obtain ⟨-, hx2⟩ := hballs (-(1/2)) (by norm_num) x hx
     rw [abs_lt] at hx2
-    exact Or.inr (by simp only [Set.mem_setOf_eq]; linarith [hx2.2])
+    exact Or.inr (by simp only [mem_ofPred_eq]; linarith [hx2.2])
   have hp2 : 0 < ∫ x in S₂, h x := by
     refine setIntegral_pos_of_ball_le (z := ((1/2 : ℝ) • e)) (r := 1/8)
       (c := Real.exp (-(1:ℝ)/2)) hhi h0 (by norm_num) (Real.exp_pos _) ?_
@@ -1330,7 +1330,7 @@ theorem exists_separated_no_disjoint_open_enlargement (hn : 2 ≤ n) :
     intro x hx
     obtain ⟨hx1, hx2⟩ := hballs (1/2) (by norm_num) x hx
     rw [abs_lt] at hx2
-    exact ⟨hx1, by simp only [Set.mem_setOf_eq]; linarith [hx2.1]⟩
+    exact ⟨hx1, by simp only [mem_ofPred_eq]; linarith [hx2.1]⟩
   -- the separation parameter: small enough for both branches
   have hsqrt : 0 < Real.sqrt n := Real.sqrt_pos.mpr (by positivity)
   set d : ℝ := min (1/8) (1 / (4 * Real.sqrt n)) with hddef
@@ -1348,7 +1348,7 @@ theorem exists_separated_no_disjoint_open_enlargement (hn : 2 ≤ n) :
   · -- separation, by cases on which half of `S₁` the point lies in
     intro u hu v hv
     obtain ⟨hv1, hv2⟩ := hv
-    simp only [Set.mem_setOf_eq] at hv1 hv2
+    simp only [mem_ofPred_eq] at hv1 hv2
     by_cases huin : ‖u‖ < 1
     · -- the metric branch
       left
@@ -1379,7 +1379,7 @@ theorem exists_separated_no_disjoint_open_enlargement (hn : 2 ≤ n) :
     exact mul_pos h1 (mul_pos hp1 hp2)
   · -- no disjoint open enlargement: `e ∈ S₁` is a limit of points of `S₂`
     intro U₁ U₂ hU₁ hU₂ hs₁ hs₂ hdisj
-    have heS₁ : e ∈ S₁ := Or.inl (by simp only [Set.mem_setOf_eq, he]; norm_num)
+    have heS₁ : e ∈ S₁ := Or.inl (by simp only [mem_ofPred_eq, he]; norm_num)
     obtain ⟨δ, hδ, hball⟩ := Metric.isOpen_iff.mp hU₁ e (hs₁ heS₁)
     set t : ℝ := min (δ / 2) (1/2) with htdef
     have ht0 : 0 < t := lt_min (by linarith) (by norm_num)
@@ -1391,7 +1391,7 @@ theorem exists_separated_no_disjoint_open_enlargement (hn : 2 ≤ n) :
     have hxin : ‖x‖ < 1 := by rw [hxnorm]; linarith
     have hxip : (inner ℝ e x : ℝ) = 1 - t := by
       rw [hxdef, real_inner_smul_right, hee, mul_one]
-    have hxS₂ : x ∈ S₂ := ⟨by simpa using hxin, by simp only [Set.mem_setOf_eq, hxip]; linarith⟩
+    have hxS₂ : x ∈ S₂ := ⟨by simpa using hxin, by simp only [mem_ofPred_eq, hxip]; linarith⟩
     have hxU₁ : x ∈ U₁ := by
       refine hball ?_
       rw [Metric.mem_ball, dist_eq_norm, hxdef]

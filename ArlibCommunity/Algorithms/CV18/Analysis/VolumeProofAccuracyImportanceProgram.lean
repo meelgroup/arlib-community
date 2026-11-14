@@ -61,7 +61,7 @@ theorem runEstimate_accuracyImportanceObservation
   by_cases ht : (scaleFactor q)⁻¹ • current ∈
       accuracyPhaseTruncatedBody q I sigma2
   · have hcond := heligible.mpr ht
-    simp only [hcond, if_true]
+    simp only [hcond]
     congr 2
     unfold accuracyImportanceWeight accuracyAcceptanceWeight
       accuracyGaussianRejectionAcceptance
@@ -72,7 +72,7 @@ theorem runEstimate_accuracyImportanceObservation
           Real.sqrt (terminalVariance q) ∧
         ‖(scaleFactor q)⁻¹ • current‖ ≤
           accuracyPhaseRadius q sigma2) := fun h => ht (heligible.mp h)
-    simp only [hcond, if_false]
+    simp only [hcond, ite_false]
     congr 2
     unfold accuracyImportanceWeight accuracyAcceptanceWeight
       accuracyGaussianRejectionAcceptance
@@ -111,7 +111,7 @@ noncomputable def cappedAccuracyProperCollectWeightsAux (q : VolumeParams)
         else
           cappedAccuracyProperCollectWeightsAux q sigma2 weight properStride
             rawCap (remainingProper + 1) (samples + 1) total result.2
-termination_by rawCap remainingProper samples total current => (rawCap, samples)
+termination_by rawCap _remainingProper samples _total _current => (rawCap, samples)
 
 noncomputable def cappedAccuracyProperCollectWeights (q : VolumeParams)
     (sigma2 : ℝ) (weight : AmbientSpace q.n → ℝ)
@@ -157,7 +157,7 @@ theorem cappedAccuracyProperCollectWeightsAux_queryBound
                 (accuracyMetropolisMarkedBallStep_queryBound
                   q sigma2 current).bind (fun result => by
                     by_cases hmark : result.1 = true
-                    · simp only [hmark, if_true]
+                    · simp only [hmark, ite_true]
                       cases remainingProper with
                       | zero =>
                           exact ih 0 (samples + 1) total result.2
@@ -165,7 +165,7 @@ theorem cappedAccuracyProperCollectWeightsAux_queryBound
                           exact ih (nextRemaining + 1) (samples + 1) total result.2
                     · have hfalse : result.1 = false :=
                         Bool.eq_false_of_not_eq_true hmark
-                      simp only [hfalse, if_false]
+                      simp only [hfalse]
                       exact ih (remainingProper + 1) (samples + 1) total result.2)
 
 theorem cappedAccuracyProperCollectWeights_queryBound
@@ -196,6 +196,9 @@ noncomputable def accuracyImportanceRatioEstimate (q : VolumeParams)
           | none => none
           | some (den, last) => some (num / den, last)
 
+-- The `change` below fixes the type of a goal that is still being elaborated inside
+-- `bind`; the unused-tactic linter cannot see that, and removing it breaks the proof.
+set_option linter.unusedTactic false in
 theorem accuracyImportanceRatioEstimate_queryBound (q : VolumeParams)
     (sigma2 : ℝ) (weight : AmbientSpace q.n → ℝ)
     (rawCap properStride samples : ℕ) (current : AmbientSpace q.n) :

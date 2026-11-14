@@ -399,7 +399,7 @@ the step splits `ℝⁿ⁺¹ = ℝ × ℝⁿ` using `MeasurableEquiv.piFinSuccAb
 theorem prekopa_leindler_lintegral_pi :
     ∀ n : ℕ, PrekopaLeindlerLIntegral (volume : Measure (Fin n → ℝ))
   | 0 => by
-      haveI : Subsingleton (Fin 0 → ℝ) := ⟨fun a b => funext fun i => i.elim0⟩
+      have : Subsingleton (Fin 0 → ℝ) := ⟨fun a b => funext fun i => i.elim0⟩
       exact prekopaLeindlerLIntegral_of_subsingleton _
   | (n + 1) => by
       have hprod : PrekopaLeindlerLIntegral (volume : Measure (ℝ × (Fin n → ℝ))) := by

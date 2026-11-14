@@ -255,7 +255,7 @@ theorem ls_of_hasNonnegSpectrum {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Meas
   have hne : (rayleighSet P pi).Nonempty := rayleighSet_nonempty_of_smallSets_nonempty P hsmall
   have hc : globalConductance pi P ≠ ⊤ := globalConductance_ne_top_of_rayleighSet_nonempty hne
   intro ph W hph0 _ hW hcond mu hmu hwarm t
-  haveI := hmu
+  have := hmu
   exact tvLe_iterate_of_ofReal_le_globalConductance hrev hpsd hne hW hwarm hph0 hc hcond t
 
 /-- **The `hLS` binder for a lazy chain**, with *no* spectral hypothesis: laziness supplies
@@ -388,8 +388,8 @@ theorem tvLe_iterate_lazy_hitAndRun {n : ℕ} (hn : 1 ≤ n)
     {m : ℕ} (hm : 4 * lvThreshold n r R M eps ≤ (m : ℝ)) :
     ArlibCommunity.Foundations.Convex.TVLe (iterate (lazy (hitAndRun K)) sigma m) (ArlibCommunity.Foundations.Convex.uniformOn volume K)
       (ENNReal.ofReal eps) := by
-  haveI : NeZero n := ⟨by omega⟩
-  haveI : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
+  have : NeZero n := ⟨by omega⟩
+  have : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume hK0 hKtop
   have hnpos : (0 : ℝ) < (n : ℝ) := by exact_mod_cast Nat.lt_of_lt_of_le Nat.zero_lt_one hn
   have hn1 : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn

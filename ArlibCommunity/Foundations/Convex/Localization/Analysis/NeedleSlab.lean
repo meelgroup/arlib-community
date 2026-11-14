@@ -854,24 +854,24 @@ theorem exists_needleIntegral_eq_zero_and_pos_shrinking_box (hm : m ≠ 0) :
     intro k
     refine isCompact_univ_pi fun i => ?_
     by_cases hi : i = 0
-    · rw [if_pos hi]; exact isCompact_Icc
-    · rw [if_neg hi]; exact isCompact_Icc
+    · rw [ite_eq_left hi]; exact isCompact_Icc
+    · rw [ite_eq_right hi]; exact isCompact_Icc
   have hDconv : ∀ k, Convex ℝ (D k) := by
     intro k
     refine convex_pi fun i _ => ?_
     by_cases hi : i = 0
-    · rw [if_pos hi]; exact convex_Icc _ _
-    · rw [if_neg hi]; exact convex_Icc _ _
+    · rw [ite_eq_left hi]; exact convex_Icc _ _
+    · rw [ite_eq_right hi]; exact convex_Icc _ _
   have hDmono : ∀ k, D (k + 1) ⊆ D k := by
     intro k y hy
     refine Set.mem_univ_pi.mpr fun i => ?_
     have hyi := Set.mem_univ_pi.mp hy i
     have hr := hρanti k
     by_cases hi : i = 0
-    · rw [if_pos hi] at hyi ⊢
+    · rw [ite_eq_left hi] at hyi ⊢
       exact Set.Icc_subset_Icc (by rw [hldef]; simp only; linarith)
         (by rw [hudef]; simp only; linarith) hyi
-    · rw [if_neg hi] at hyi ⊢
+    · rw [ite_eq_right hi] at hyi ⊢
       exact Set.Icc_subset_Icc (by linarith) (by linarith) hyi
   have hDpos : ∀ k, 0 < volume (D k) := by
     intro k
@@ -881,23 +881,23 @@ theorem exists_needleIntegral_eq_zero_and_pos_shrinking_box (hm : m ≠ 0) :
     rw [volume_pi_pi, pos_iff_ne_zero, Finset.prod_ne_zero_iff]
     intro i _
     by_cases hi : i = 0
-    · rw [if_pos hi, Real.volume_Icc]
+    · rw [ite_eq_left hi, Real.volume_Icc]
       refine (ENNReal.ofReal_pos.mpr ?_).ne'
       rw [hldef, hudef]; simp only; linarith
-    · rw [if_neg hi, Real.volume_Icc]
+    · rw [ite_eq_right hi, Real.volume_Icc]
       exact (ENNReal.ofReal_pos.mpr (by linarith)).ne'
   set φ : (Fin (m + 1) → ℝ) →ₗ[ℝ] ℝ := LinearMap.proj 0 with hφ
   have hslab : ∀ k, ∀ y ∈ D k, φ (y - 0) ∈ Icc (l k) (u k) := by
     intro k y hy
     have h0 := Set.mem_univ_pi.mp hy 0
-    rw [if_pos rfl] at h0
+    rw [ite_eq_left rfl] at h0
     simpa [hφ] using h0
   have hspan : ∀ k, ∀ t ∈ Icc (l k) (u k), ∃ y ∈ D k, φ (y - 0) = t := by
     intro k t ht
     refine ⟨fun i => if i = 0 then t else 0, Set.mem_univ_pi.mpr fun i => ?_, by simp [hφ]⟩
     by_cases hi : i = 0
-    · rw [if_pos hi, if_pos hi]; exact ht
-    · rw [if_neg hi, if_neg hi]
+    · rw [ite_eq_left hi, ite_eq_left hi]; exact ht
+    · rw [ite_eq_right hi, ite_eq_right hi]
       exact ⟨by linarith [hρpos k], (hρpos k).le⟩
   have hρ0 : Tendsto ρ atTop (𝓝 0) := tendsto_one_div_add_atTop_nhds_zero_nat
   have hl : Tendsto l atTop (𝓝 0) := by simpa [hldef] using hρ0.neg
@@ -913,7 +913,7 @@ theorem exists_needleIntegral_eq_zero_and_pos_shrinking_box (hm : m ≠ 0) :
     have habs : 0 < |y i| := abs_pos.mpr hne
     obtain ⟨n, hn⟩ := exists_nat_one_div_lt habs
     have hmem := Set.mem_univ_pi.mp (hy' n) i
-    rw [if_neg hi] at hmem
+    rw [ite_eq_right hi] at hmem
     have : |y i| ≤ ρ n := abs_le.mpr ⟨hmem.1, hmem.2⟩
     rw [hρ] at this
     simp only at this

@@ -211,7 +211,7 @@ theorem setOf_sub_smul_notMem_eq_preimage_neg (x : E) (c : ℝ) (K : Set E) :
     {θ : sphere (0 : E) 1 | x - c • (θ : E) ∉ K}
       = Neg.neg ⁻¹' {θ : sphere (0 : E) 1 | x + c • (θ : E) ∉ K} := by
   ext θ
-  simp only [Set.mem_setOf_eq, Set.mem_preimage, coe_neg_sphere, smul_neg, ← sub_eq_add_neg]
+  simp only [mem_ofPred_eq, Set.mem_preimage, coe_neg_sphere, smul_neg, ← sub_eq_add_neg]
 
 end Invariance
 
@@ -228,7 +228,7 @@ omit [MeasurableSpace E] [BorelSpace E] in
 theorem exists_linearIsometryEquiv_apply_eq {w w' : E} (hw : ‖w‖ = 1) (hw' : ‖w'‖ = 1) :
     ∃ f : E ≃ₗᵢ[ℝ] E, f w = w' := by
   have hwne : w ≠ 0 := fun h => by simp [h] at hw
-  haveI : Nontrivial E := ⟨⟨w, 0, hwne⟩⟩
+  have : Nontrivial E := ⟨⟨w, 0, hwne⟩⟩
   have hpos : 0 < finrank ℝ E := Module.finrank_pos
   have hcard : finrank ℝ E = Fintype.card (Fin (finrank ℝ E)) := by simp
   set i₀ : Fin (finrank ℝ E) := ⟨0, hpos⟩ with hi₀
@@ -305,18 +305,18 @@ theorem toSphere_abs_inner_gt (w : E) {c : ℝ} (hc : 0 ≤ c) :
     measurableSet_sphere_setOf_inner (w := w) (B := Set.Iio (-c)) measurableSet_Iio
   have hNP : N = Neg.neg ⁻¹' P := by
     ext θ
-    simp only [hN, hP, Set.mem_setOf_eq, Set.mem_preimage, coe_neg_sphere, inner_neg_left]
+    simp only [hN, hP, mem_ofPred_eq, Set.mem_preimage, coe_neg_sphere, inner_neg_left]
     constructor
     · intro h; linarith
     · intro h; linarith
   have hunion : {θ : sphere (0 : E) 1 | c < |⟪(θ : E), w⟫|} = P ∪ N := by
     ext θ
-    simp only [hP, hN, Set.mem_setOf_eq, Set.mem_union, lt_abs, lt_neg]
+    simp only [hP, hN, mem_ofPred_eq, Set.mem_union, lt_abs, lt_neg]
   have hdisj : Disjoint P N := by
     rw [Set.disjoint_left]
     intro θ hθP hθN
-    simp only [hP, Set.mem_setOf_eq] at hθP
-    simp only [hN, Set.mem_setOf_eq] at hθN
+    simp only [hP, mem_ofPred_eq] at hθP
+    simp only [hN, mem_ofPred_eq] at hθN
     linarith
   rw [hunion, measure_union hdisj hNm, hNP, toSphere_preimage_neg hPm, two_mul]
 
@@ -360,7 +360,7 @@ theorem finrank_mul_lintegral_inner_sq {w : E} (hw : ‖w‖ = 1) :
       = (volume : Measure E).toSphere Set.univ := by
   classical
   have hwne : w ≠ 0 := fun h => by simp [h] at hw
-  haveI : Nontrivial E := ⟨⟨w, 0, hwne⟩⟩
+  have : Nontrivial E := ⟨⟨w, 0, hwne⟩⟩
   set b := stdOrthonormalBasis ℝ E with hb
   have hg : Measurable fun t : ℝ => ENNReal.ofReal (t ^ 2) :=
     (measurable_id.pow_const 2).ennreal_ofReal
@@ -394,9 +394,9 @@ theorem toSphere_univ_le_finrank_mul_cap {w : E} (hw : ‖w‖ = 1) :
           {θ : sphere (0 : E) 1 | ⟪(θ : E), w⟫ ∈ {t : ℝ | 1 ≤ (finrank ℝ E : ℝ) * t ^ 2}} := by
   classical
   have hwne : w ≠ 0 := fun h => by simp [h] at hw
-  haveI : Nontrivial E := ⟨⟨w, 0, hwne⟩⟩
+  have : Nontrivial E := ⟨⟨w, 0, hwne⟩⟩
   have hpos : 0 < finrank ℝ E := Module.finrank_pos
-  haveI : Nonempty (Fin (finrank ℝ E)) := ⟨⟨0, hpos⟩⟩
+  have : Nonempty (Fin (finrank ℝ E)) := ⟨⟨0, hpos⟩⟩
   set b := stdOrthonormalBasis ℝ E with hb
   set B : Set ℝ := {t : ℝ | 1 ≤ (finrank ℝ E : ℝ) * t ^ 2} with hB
   have hBm : MeasurableSet B := measurableSet_le measurable_const (by fun_prop)
@@ -450,9 +450,9 @@ theorem finrank_mul_toSphere_cap_lt_le {w : E} (hw : ‖w‖ = 1) :
       ≤ ((finrank ℝ E - 1 : ℕ) : ℝ≥0∞) * (volume : Measure E).toSphere Set.univ := by
   classical
   have hwne : w ≠ 0 := fun h => by simp [h] at hw
-  haveI : Nontrivial E := ⟨⟨w, 0, hwne⟩⟩
+  have : Nontrivial E := ⟨⟨w, 0, hwne⟩⟩
   have hpos : 0 < finrank ℝ E := Module.finrank_pos
-  haveI : Nonempty (Fin (finrank ℝ E)) := ⟨⟨0, hpos⟩⟩
+  have : Nonempty (Fin (finrank ℝ E)) := ⟨⟨0, hpos⟩⟩
   set b := stdOrthonormalBasis ℝ E with hb
   set B : Set ℝ := {t : ℝ | 1 < (finrank ℝ E : ℝ) * t ^ 2} with hB
   have hBm : MeasurableSet B := measurableSet_lt measurable_const (by fun_prop)
@@ -614,9 +614,9 @@ theorem hitAndRun_almostOrthogonal_le {K : Set (EuclideanSpace ℝ (Fin n))}
     (measurableSet_almostOrthogonalDir u v) ?_
   · simp
   · intro θ t ht hmem
-    simp only [Set.mem_setOf_eq, add_sub_cancel_left, norm_smul, Real.norm_eq_abs,
+    simp only [mem_ofPred_eq, add_sub_cancel_left, norm_smul, Real.norm_eq_abs,
       mem_sphere_zero_iff_norm.1 θ.2, mul_one, real_inner_smul_left, abs_mul] at hmem
-    simp only [Set.mem_setOf_eq]
+    simp only [mem_ofPred_eq]
     have habs : 0 < |t| := abs_pos.2 ht
     nlinarith [hmem, habs]
 
@@ -643,7 +643,7 @@ theorem almostOrthogonalDir_eq {w : EuclideanSpace ℝ (Fin n)} (hw : w ≠ 0) :
   have hsplit : ⟪(θ : EuclideanSpace ℝ (Fin n)), w⟫
       = ‖w‖ * ⟪(θ : EuclideanSpace ℝ (Fin n)), ‖w‖⁻¹ • w⟫ := by
     rw [real_inner_smul_right, ← mul_assoc, mul_inv_cancel₀ hn0, one_mul]
-  simp only [Set.mem_setOf_eq, hsplit, abs_mul, abs_of_pos hnpos]
+  simp only [mem_ofPred_eq, hsplit, abs_mul, abs_of_pos hnpos]
   rw [← one_lt_sqrt_mul_abs_iff n]
   constructor
   · intro h
@@ -663,7 +663,7 @@ theorem unifSphere_almostOrthogonalDir_le (hn : n ≠ 0) (w : EuclideanSpace ℝ
     unifSphere n {θ : sphere (0 : EuclideanSpace ℝ (Fin n)) 1 |
         ‖w‖ < Real.sqrt n * |⟪(θ : EuclideanSpace ℝ (Fin n)), w⟫|}
       ≤ ENNReal.ofReal (1 - 1 / (n : ℝ)) := by
-  haveI : NeZero n := ⟨hn⟩
+  have : NeZero n := ⟨hn⟩
   have hnR : (0 : ℝ) < (n : ℝ) := by positivity
   have hq0 : (0 : ℝ) ≤ 1 - 1 / (n : ℝ) := by
     rw [sub_nonneg, div_le_one hnR]
@@ -737,7 +737,7 @@ theorem almostOrthogonalDirClosed_eq {w : EuclideanSpace ℝ (Fin n)} (hw : w �
   have hsplit : ⟪(θ : EuclideanSpace ℝ (Fin n)), w⟫
       = ‖w‖ * ⟪(θ : EuclideanSpace ℝ (Fin n)), ‖w‖⁻¹ • w⟫ := by
     rw [real_inner_smul_right, ← mul_assoc, mul_inv_cancel₀ hn0, one_mul]
-  simp only [Set.mem_setOf_eq, hsplit, abs_mul, abs_of_pos hnpos]
+  simp only [mem_ofPred_eq, hsplit, abs_mul, abs_of_pos hnpos]
   rw [← one_le_sqrt_mul_abs_iff n]
   constructor
   · intro h
@@ -755,7 +755,7 @@ theorem inv_le_unifSphere_almostOrthogonalDirClosed (hn : n ≠ 0)
     {w : EuclideanSpace ℝ (Fin n)} (hw : w ≠ 0) :
     ((n : ℝ≥0∞))⁻¹ ≤ unifSphere n {θ : sphere (0 : EuclideanSpace ℝ (Fin n)) 1 |
         ‖w‖ ≤ Real.sqrt n * |⟪(θ : EuclideanSpace ℝ (Fin n)), w⟫|} := by
-  haveI : NeZero n := ⟨hn⟩
+  have : NeZero n := ⟨hn⟩
   have hunit : ‖‖w‖⁻¹ • w‖ = 1 := norm_smul_inv_norm hw
   have hfr : finrank ℝ (EuclideanSpace ℝ (Fin n)) = n := finrank_euclideanSpace_fin
   set S : Set (sphere (0 : EuclideanSpace ℝ (Fin n)) 1) :=

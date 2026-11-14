@@ -232,7 +232,7 @@ theorem volume_slab_le (n : ℕ) {h δ : ℝ} (hδ : 0 ≤ δ) :
     rw [← hpre]
     congr 1
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, hBdef,
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, hBdef,
       EuclideanSpace.ball_zero_eq δ hδ]
   -- the cross-section in `EuclideanSpace` is the `ofLp`-preimage of `C`
   have hcross : volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) δ) = volume C := by
@@ -240,7 +240,7 @@ theorem volume_slab_le (n : ℕ) {h δ : ℝ} (hδ : 0 ≤ δ) :
     rw [← hpre]
     congr 1
     ext x
-    simp only [Set.mem_preimage, hCdef, Set.mem_setOf_eq, EuclideanSpace.ball_zero_eq δ hδ]
+    simp only [Set.mem_preimage, hCdef, Set.mem_ofPred_eq, EuclideanSpace.ball_zero_eq δ hδ]
   rw [hslab, hcross]
   -- `B` sits inside the product slab
   have hsub : B ⊆ (MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) => ℝ) 0) ⁻¹'
@@ -372,7 +372,7 @@ theorem volume_ball_le_volume_inter_ball_add_sqrt (n : ℕ)
         have hx : y - w - u = (y - u) - w := by abel
         rw [hx, inner_sub_left, real_inner_self_eq_norm_sq, ← htdef]
       have := hy2
-      simp only [Set.mem_setOf_eq] at this
+      simp only [Set.mem_ofPred_eq] at this
       rw [hEq] at this
       linarith
     exact ⟨hin2 y hyv hkey, hyv⟩
@@ -380,7 +380,7 @@ theorem volume_ball_le_volume_inter_ball_add_sqrt (n : ℕ)
     rw [Set.disjoint_left]
     rintro x ⟨-, hx1⟩ hxQ
     obtain ⟨-, hx3⟩ := hxQ
-    simp only [Set.mem_setOf_eq] at hx1 hx3
+    simp only [Set.mem_ofPred_eq] at hx1 hx3
     have hEq : ⟪x - w - u, w⟫_ℝ = ⟪x - u, w⟫_ℝ - t ^ 2 := by
       have hx : x - w - u = (x - u) - w := by abel
       rw [hx, inner_sub_left, real_inner_self_eq_norm_sq, ← htdef]
@@ -417,8 +417,8 @@ theorem volume_ball_le_volume_inter_ball_add_sqrt (n : ℕ)
     have hwh1 : ‖wh‖ = 1 := by
       rw [hwhdef, norm_smul, norm_inv, Real.norm_eq_abs, abs_of_pos ht0, ← htdef]
       field_simp
-    haveI : Unique (({0} : Set (Fin (n + 2))) : Type) := Set.uniqueSingleton _
-    have hon : Orthonormal ℝ (({0} : Set (Fin (n + 2))).restrict (fun _ => wh)) := by
+    have : Unique (({0} : Set (Fin (n + 2))) : Type) := Set.uniqueSingleton _
+    have hon : Orthonormal ℝ (({0} : Set (Fin (n + 2))).domRestrict (fun _ => wh)) := by
       constructor
       · intro i
         change ‖wh‖ = 1
@@ -435,7 +435,7 @@ theorem volume_ball_le_volume_inter_ball_add_sqrt (n : ℕ)
     -- `P2` is the preimage of `S` under `x ↦ b.repr (x - u)`
     have hP2eq : P2 = (fun x => b.repr (x - u)) ⁻¹' S := by
       ext x
-      simp only [hP2def, hSdef, Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_preimage,
+      simp only [hP2def, hSdef, Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_preimage,
         Metric.mem_ball, dist_eq_norm, sub_zero]
       rw [b.repr.norm_map, b.repr_apply_apply, hb0, hwhdef, real_inner_smul_left,
         real_inner_comm (x - u) w]

@@ -135,7 +135,7 @@ theorem map_sequentialPairLaw_scheduledResetTraceAppend_eq_bind
     figureOneFinalScheduledBalancedParameters q I phase
   have hlift : Measurable fun trace : ScheduledBalancedCoolingTrace q.n =>
       (K trace).map fun result => (trace, result) :=
-    measurable_sequentialPairKernel (rho := source) hK.1 hK.2
+    measurable_sequentialPairKernel hK.1 hK.2
   have hout : Measurable fun state : ScheduledBalancedCoolingTrace q.n ×
       Option (ℝ × AmbientSpace q.n) =>
       scheduledResetTraceAppend
@@ -156,7 +156,7 @@ theorem map_sequentialPairLaw_scheduledResetTraceAppend_eq_bind
     figureOneFinalScheduledBalancedParameters q I phase trace]
       with result hresult
   unfold scheduledResetTraceAppend
-  simp only [Function.comp_apply, Prod.fst, Prod.snd]
+  simp only [Function.comp_apply]
   rw [scheduledResetPairToResult_pairOutput_eq result hresult]
 
 /-- A retained-option marginal supported on `some` forces the trace to be
@@ -198,7 +198,7 @@ theorem scheduledBalancedTracePhaseVariable_resetAppend_eq_fst
   unfold scheduledResetTraceAppend
   rw [scheduledBalancedTracePhaseVariable_append_eq_rawOutput q phase hphase
     trace hvalid]
-  simp only [hlive, if_true]
+  simp only [hlive, ite_true]
   rw [liveRaw_scheduledResetPairToResult]
   simp [hpoint, max_eq_right hscore]
 
@@ -251,9 +251,8 @@ theorem scheduledResetPairOutput_good
     | none => simp [scheduledResetPairOutput,
         figureOneScheduledTraceLiveRawOutput]
     | some result =>
-        simpa [scheduledResetPairOutput,
-          figureOneScheduledTraceLiveRawOutput,
-          ScheduledCollectedTotalNonnegative] using hresult
+        simp [scheduledResetPairOutput,
+          figureOneScheduledTraceLiveRawOutput]
   · rw [scheduledResetPairToResult_pairOutput_eq result hresult]
     rfl
 
@@ -283,7 +282,7 @@ theorem scheduledBalancedTracePhaseVariable_resetAppend_eq_fst_of_good
   unfold scheduledResetTraceAppend
   rw [scheduledBalancedTracePhaseVariable_append_eq_rawOutput q phase hphase
     trace hvalid]
-  simp only [hlive, if_true]
+  simp only [hlive, ite_true]
   exact hresult.2
 
 theorem scheduledResetPrefixCoordinates_resetAppend_eq
@@ -581,12 +580,12 @@ theorem exists_acceptedEndpointResetJoint_of_joint
       (joint.map figureOneScheduledTraceLiveRawOutput) := by
     apply (memLp_map_measure_iff measurable_id.aestronglyMeasurable
       measurable_figureOneScheduledTraceLiveRawOutput.aemeasurable).2
-    convert hmem using 1 <;> rfl
+    convert hmem using 1; rfl
   rw [← hscore] at hmemId
   have hmemFst : MemLp Prod.fst 2 target := by
     exact (memLp_map_measure_iff measurable_id.aestronglyMeasurable
       measurable_fst.aemeasurable).1
-        (by convert hmemId using 1 <;> rfl)
+        (by convert hmemId using 1)
   have hnonneg : ∀ᵐ result ∂target, 0 ≤ result.1 :=
     ae_fst_nonnegative_of_map_eq_liveRaw joint target hscore
   have hmeanTarget : (∫ result, result.1 ∂target) = mean := by
@@ -839,7 +838,7 @@ theorem exists_scheduledGaussianExactPairTarget
   have hmemTarget : MemLp Prod.fst 2 target := by
     apply (memLp_map_measure_iff measurable_fst.aestronglyMeasurable
       houtput.aemeasurable).2
-    convert hmem using 1 <;> rfl
+    convert hmem using 1; rfl
   have hnonnegTarget : ∀ᵐ result ∂target, 0 ≤ result.1 := by
     apply ae_fst_nonnegative_of_map_eq_liveRaw joint target
     rw [Measure.map_map measurable_fst houtput]
@@ -921,7 +920,7 @@ theorem exists_scheduledTerminalPairTarget
   have hmemTarget : MemLp Prod.fst 2 target := by
     apply (memLp_map_measure_iff measurable_fst.aestronglyMeasurable
       houtput.aemeasurable).2
-    convert hmem using 1 <;> rfl
+    convert hmem using 1; rfl
   have hnonnegTarget : ∀ᵐ result ∂target, 0 ≤ result.1 := by
     apply ae_fst_nonnegative_of_map_eq_liveRaw joint target
     rw [Measure.map_map measurable_fst houtput]

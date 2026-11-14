@@ -437,7 +437,7 @@ the last equality being exactly the proportionality hypothesis.  Proportionality
 convenience: `2√(a₁b₂·a₂b₁) ≤ a₁b₂ + a₂b₁` is an equality **iff** `a₁b₂ = a₂b₁`, so any other
 split loses. -/
 theorem mul_add_le_of_proportional {κ a₁ b₁ c₁ V₁ a₂ b₂ c₂ V₂ : ℝ}
-    (hκ : 0 ≤ κ) (ha₁ : 0 ≤ a₁) (hb₁ : 0 ≤ b₁) (hc₁ : 0 ≤ c₁) (hV₁ : 0 ≤ V₁)
+    (hκ : 0 ≤ κ) (ha₁ : 0 ≤ a₁) (_hb₁ : 0 ≤ b₁) (hc₁ : 0 ≤ c₁) (hV₁ : 0 ≤ V₁)
     (ha₂ : 0 ≤ a₂) (hb₂ : 0 ≤ b₂) (hc₂ : 0 ≤ c₂) (hV₂ : 0 ≤ V₂)
     (h₁ : κ * a₁ * b₁ ≤ c₁ * V₁) (h₂ : κ * a₂ * b₂ ≤ c₂ * V₂)
     (hprop : a₁ * b₂ = a₂ * b₁) :
@@ -517,7 +517,7 @@ theorem exists_halfSpace_proportional {A B K : Set E} (hA : MeasurableSet A)
     ∃ s : ℝ, μ (A ∩ halfSpace L s true) * μ (B \ halfSpace L s true)
       = μ (A \ halfSpace L s true) * μ (B ∩ halfSpace L s true) := by
   classical
-  haveI hfin : IsFiniteMeasure (μ.restrict K) :=
+  have hfin : IsFiniteMeasure (μ.restrict K) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact lt_top_iff_ne_top.2 hKtop⟩
   set α : ℝ := (μ A).toReal with hα
   set β : ℝ := (μ B).toReal with hβ
@@ -578,6 +578,7 @@ theorem exists_halfSpace_proportional {A B K : Set E} (hA : MeasurableSet A)
     rw [← hsplitA, ← hsplitB]; ring
   linarith [hrw, hkey]
 
+omit [NormedAddCommGroup E] [NormedSpace ℝ E] [BorelSpace E] [FiniteDimensional ℝ E] [μ.IsAddHaarMeasure] in
 /-- **The induction step of the Dyer–Frieze proof, proved outright.**
 
 Let `P` be *any* measurable set (the intended instance is a halfspace `halfSpace L s true`

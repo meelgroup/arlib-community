@@ -635,7 +635,6 @@ theorem needleWeight_le_gaussian_left (hl : ConcaveOn ℝ (Set.Icc a b) l)
     have hkey : l u * (1 - (u - t) / q) = l u - (u - t) * (l v - l u) / (v - u) := by
       rw [hq]
       field_simp
-      try ring
     rw [hkey]
     have hmul : l t * (v - u) ≤ (l u - (u - t) * (l v - l u) / (v - u)) * (v - u) := by
       rw [sub_mul, div_mul_cancel₀ _ hvu.ne']
@@ -667,11 +666,9 @@ theorem needleWeight_le_gaussian_left (hl : ConcaveOn ℝ (Set.Icc a b) l)
   apply Real.exp_le_exp.mpr
   have hsq : m * ((u - t) / q) ^ 2 / 2 = (m / (2 * q ^ 2)) * (u - t) ^ 2 := by
     field_simp
-    try ring
   have hlin : (u - t) * (Real.log (g u) - Real.log (g v)) / (v - u) - m * ((u - t) / q)
       = ((Real.log (g u) - Real.log (g v)) / (v - u) - m / q) * (u - t) := by
     field_simp
-    try ring
   nlinarith [mul_le_mul_of_nonneg_right hβ hs, hsq, hlin]
 
 /-- **The mass to the left of `u` is at most a Gaussian mass of width `q/√m`.** -/
@@ -716,7 +713,7 @@ theorem needleMass_left_le (hl : ConcaveOn ℝ (Set.Icc a b) l)
   have h1 : β ^ 2 / (4 * α) = β ^ 2 * q ^ 2 / (2 * m) := by
     rw [hα]; field_simp; try ring
   have h2 : Real.pi / α = q ^ 2 * (2 * Real.pi / m) := by
-    rw [hα]; field_simp; try ring
+    rw [hα]; field_simp
   rw [h1, h2, Real.sqrt_mul (by positivity), Real.sqrt_sq hqpos.le]
 
 end GaussianDomination
@@ -1017,7 +1014,6 @@ theorem kls38_case2_left {a b u v : ℝ} {l g : ℝ → ℝ} {m : ℕ} (hm : 1 �
     rcases max_cases (Δ / (v - u) - m / q) 0 with ⟨he, _⟩ | ⟨he, _⟩
     · have hexp : (Δ / (v - u) - m / q) * q = Δ * q / (v - u) - m := by
         field_simp
-        try ring
       rw [hβdef, he, hexp]
       have hkey : Δ * q / (v - u) * (4 * S - 1) ≤ 4 * S * m := by
         rw [div_mul_eq_mul_div, div_le_iff₀ hep]

@@ -121,7 +121,7 @@ theorem exists_compact_subset_setIntegral_ge {n : ℕ}
     ∃ C : Set (EuclideanSpace ℝ (Fin n)), IsCompact C ∧ C ⊆ S ∧ (∀ x ∈ C, 0 < h x) ∧
       ∫ x in S, h x ≤ (∫ x in C, h x) + ε := by
   classical
-  haveI : IsFiniteMeasure (volume.withDensity fun x => ENNReal.ofReal (h x)) :=
+  have : IsFiniteMeasure (volume.withDensity fun x => ENNReal.ofReal (h x)) :=
     isFiniteMeasure_withDensity_ofReal hhi.2
   have hopen : IsOpen {x : EuclideanSpace ℝ (Fin n) | 0 < h x} :=
     isOpen_lt continuous_const hhc
@@ -289,7 +289,7 @@ geometry.  In the consumer, `m` is the minimum of a continuous positive `h` on a
 and `η` is supplied by uniform continuity *after* `m` is known, so the two are chosen in the
 order that makes the estimate free. -/
 theorem densDist_ge_sub_of_perturb {a b a' b' m η : ℝ} (hm : 0 < m)
-    (ha : m ≤ a) (hb : m ≤ b) (ha' : m ≤ a') (hb' : m ≤ b')
+    (ha : m ≤ a) (hb : m ≤ b) (ha' : m ≤ a') (_hb' : m ≤ b')
     (hη : 0 ≤ η) (hda : |a - a'| ≤ η) (hdb : |b - b'| ≤ η) :
     |a - b| / max a b - 3 * η / m ≤ |a' - b'| / max a' b' := by
   set M : ℝ := max a b with hMdef
@@ -325,7 +325,7 @@ theorem densDist_ge_sub_of_perturb {a b a' b' m η : ℝ} (hm : 0 < m)
       have hle : |a - b| / M ≤ 2 * η / m := by
         calc |a - b| / M ≤ (2 * η) / M := by gcongr
           _ ≤ (2 * η) / m := by gcongr
-      have : 2 * η / m ≤ 3 * η / m := by gcongr <;> linarith
+      have : 2 * η / m ≤ 3 * η / m := by gcongr; linarith
       linarith
     have h2 : 0 ≤ |a' - b'| / M' := div_nonneg (abs_nonneg _) hM'0.le
     linarith
@@ -1079,7 +1079,7 @@ theorem isPartition3_closedSlab (e : EuclideanSpace ℝ (Fin n)) {c : ℝ} (hc0 
       {x | -c < (inner ℝ e x : ℝ) ∧ (inner ℝ e x : ℝ) < c} where
   union := by
     ext x
-    simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+    simp only [Set.mem_union, mem_ofPred_eq, Set.mem_univ, iff_true]
     rcases le_or_gt (inner ℝ e x : ℝ) (-c) with h | h
     · exact Or.inl (Or.inl h)
     · rcases le_or_gt c (inner ℝ e x : ℝ) with h' | h'
@@ -1088,17 +1088,17 @@ theorem isPartition3_closedSlab (e : EuclideanSpace ℝ (Fin n)) {c : ℝ} (hc0 
   disjoint₁₂ := by
     rw [Set.disjoint_left]
     rintro x hx hx'
-    simp only [Set.mem_setOf_eq] at hx hx'
+    simp only [mem_ofPred_eq] at hx hx'
     linarith
   disjoint₁₃ := by
     rw [Set.disjoint_left]
     rintro x hx hx'
-    simp only [Set.mem_setOf_eq] at hx hx'
+    simp only [mem_ofPred_eq] at hx hx'
     linarith [hx'.1]
   disjoint₂₃ := by
     rw [Set.disjoint_left]
     rintro x hx hx'
-    simp only [Set.mem_setOf_eq] at hx hx'
+    simp only [mem_ofPred_eq] at hx hx'
     linarith [hx'.2]
 
 /-- A closed half-space bounded by a unit normal is **not** open: its boundary point `c·e` is a
@@ -1109,7 +1109,7 @@ theorem not_isOpen_inner_le {e : EuclideanSpace ℝ (Fin n)} (he : ‖e‖ = 1) 
   intro hopen
   have hmem : (c • e : EuclideanSpace ℝ (Fin n)) ∈ {x : EuclideanSpace ℝ (Fin n) |
       (inner ℝ e x : ℝ) ≤ c} := by
-    simp only [Set.mem_setOf_eq, real_inner_smul_right, hee, mul_one]
+    simp only [mem_ofPred_eq, real_inner_smul_right, hee, mul_one]
     exact le_rfl
   obtain ⟨r, hr, hball⟩ := Metric.isOpen_iff.mp hopen _ hmem
   have hy : (c • e + (r / 2) • e : EuclideanSpace ℝ (Fin n)) ∈ Metric.ball (c • e) r := by
@@ -1118,7 +1118,7 @@ theorem not_isOpen_inner_le {e : EuclideanSpace ℝ (Fin n)} (he : ‖e‖ = 1) 
     rw [this, norm_smul, Real.norm_eq_abs, he, mul_one, abs_of_nonneg (by linarith)]
     linarith
   have := hball hy
-  simp only [Set.mem_setOf_eq, inner_add_right, real_inner_smul_right, hee, mul_one] at this
+  simp only [mem_ofPred_eq, inner_add_right, real_inner_smul_right, hee, mul_one] at this
   linarith
 
 /-- The mirror of `ArlibCommunity.Foundations.Convex.not_isOpen_inner_le` for the opposite half-space. -/
@@ -1128,7 +1128,7 @@ theorem not_isOpen_le_inner {e : EuclideanSpace ℝ (Fin n)} (he : ‖e‖ = 1) 
   intro hopen
   have hmem : (c • e : EuclideanSpace ℝ (Fin n)) ∈ {x : EuclideanSpace ℝ (Fin n) |
       c ≤ (inner ℝ e x : ℝ)} := by
-    simp only [Set.mem_setOf_eq, real_inner_smul_right, hee, mul_one]
+    simp only [mem_ofPred_eq, real_inner_smul_right, hee, mul_one]
     exact le_rfl
   obtain ⟨r, hr, hball⟩ := Metric.isOpen_iff.mp hopen _ hmem
   have hy : (c • e - (r / 2) • e : EuclideanSpace ℝ (Fin n)) ∈ Metric.ball (c • e) r := by
@@ -1138,7 +1138,7 @@ theorem not_isOpen_le_inner {e : EuclideanSpace ℝ (Fin n)} (he : ‖e‖ = 1) 
     rw [this, norm_smul, Real.norm_eq_abs, he, mul_one, abs_of_nonpos (by linarith)]
     linarith
   have := hball hy
-  simp only [Set.mem_setOf_eq, inner_sub_right, real_inner_smul_right, hee, mul_one] at this
+  simp only [mem_ofPred_eq, inner_sub_right, real_inner_smul_right, hee, mul_one] at this
   linarith
 
 /-- **Non-vacuity of `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_measurable_of_enlargements`** — in
@@ -1254,7 +1254,7 @@ theorem exists_enlargements_witness (hn : 2 ≤ n) :
     intro x hx
     obtain ⟨-, hx2⟩ := hballs (-(1 / 2)) (by norm_num) x hx
     rw [hS₁def]
-    simp only [Set.mem_setOf_eq]
+    simp only [mem_ofPred_eq]
     rw [abs_lt] at hx2
     linarith [hx2.2]
   have hp2 : 0 < ∫ x in S₂, h x := by
@@ -1264,7 +1264,7 @@ theorem exists_enlargements_witness (hn : 2 ≤ n) :
     intro x hx
     obtain ⟨-, hx2⟩ := hballs (1 / 2) (by norm_num) x hx
     rw [hS₂def]
-    simp only [Set.mem_setOf_eq]
+    simp only [mem_ofPred_eq]
     rw [abs_lt] at hx2
     linarith [hx2.1]
   refine ⟨fun _ => (1 : ℝ), h, S₁, S₂, S₃, 1, Real.log 2 / 4, 1, one_pos, by linarith,
@@ -1278,20 +1278,20 @@ theorem exists_enlargements_witness (hn : 2 ≤ n) :
       rintro x hx hx'
       rw [hU₁def] at hx
       rw [hU₂def] at hx'
-      simp only [Set.mem_setOf_eq] at hx hx'
+      simp only [mem_ofPred_eq] at hx hx'
       linarith
     · have hsub : S₁ ⊆ U₁ := by
         intro x hx
         rw [hS₁def] at hx
         rw [hU₁def]
-        simp only [Set.mem_setOf_eq] at hx ⊢
+        simp only [mem_ofPred_eq] at hx ⊢
         linarith
       linarith [hmono hsub]
     · have hsub : S₂ ⊆ U₂ := by
         intro x hx
         rw [hS₂def] at hx
         rw [hU₂def]
-        simp only [Set.mem_setOf_eq] at hx ⊢
+        simp only [mem_ofPred_eq] at hx ⊢
         linarith
       linarith [hmono hsub]
     · have hsub : (U₁ ∪ U₂)ᶜ ⊆ S₃ := by
@@ -1300,16 +1300,16 @@ theorem exists_enlargements_witness (hn : 2 ≤ n) :
         have hx2 : x ∉ U₂ := fun hc => hx (Or.inr hc)
         rw [hU₁def] at hx1
         rw [hU₂def] at hx2
-        simp only [Set.mem_setOf_eq, not_lt] at hx1 hx2
+        simp only [mem_ofPred_eq, not_lt] at hx1 hx2
         rw [hS₃def]
-        simp only [Set.mem_setOf_eq]
+        simp only [mem_ofPred_eq]
         constructor <;> linarith
       linarith [hmono hsub]
     · intro u hu v hv
       left
       rw [hU₁def] at hu
       rw [hU₂def] at hv
-      simp only [Set.mem_setOf_eq] at hu hv
+      simp only [mem_ofPred_eq] at hu hv
       have hgeo := two_mul_le_norm_sub_of_inner_lt (e := e) he (c := (1 / 8 : ℝ)) hu hv
       have hd'l : d' / Real.log 2 ≤ 1 / 4 := by
         rw [div_le_iff₀ hlog2]

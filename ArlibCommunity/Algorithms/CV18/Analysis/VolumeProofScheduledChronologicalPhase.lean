@@ -776,7 +776,7 @@ theorem scheduledChronologicalCommonInitial_map_snd
   unfold scheduledChronologicalCommonInitial
   let _ : IsProbabilityMeasure (figureOneIdealExperimentLaw q I) :=
     figureOneIdealExperimentLaw_isProbabilityMeasure q I
-  simpa using Measure.map_snd_prod
+  simp
 
 theorem scheduledChronologicalActualIteration_map_snd
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
@@ -920,7 +920,7 @@ theorem figureOneIdealChronologicalState_product
       have hnext : (figureOneIdealChronologicalState q (phases + 1)
           (samples, some initialHistory)).2 = next := by
         simp only [figureOneIdealChronologicalState]
-        rw [dif_pos hphase]
+        rw [dite_eq_left hphase]
         rw [show figureOneIdealChronologicalState q phases
             (samples, some initialHistory) = (samples, some history) by
           apply Prod.ext
@@ -1840,7 +1840,7 @@ theorem approxIndepFun_scheduledBalancedCompletePhase_of_warm_first
     (k m : ℕ) (nu : ℝ)
     (hbudget : (delta + delta).toReal ≤
       3 * (k : ℝ) * (m : ℝ) * nu) :
-    let phaseTarget := target.bind fun result =>
+    let _phaseTarget := target.bind fun result =>
       match result with
       | none => Measure.dirac none
       | some point =>

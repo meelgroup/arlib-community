@@ -96,7 +96,7 @@ theorem scheduledBalancedAccuracyTransitionLawAux_measurable_and_probability
       ∀ current, IsProbabilityMeasure
         (scheduledBalancedAccuracyTransitionLawAux q I sigma2 proposalCap
           properStride attempts current) := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let B := scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
     properStride
   let R := scheduledBalancedAccuracyGaussianRejectionKernel q I sigma2
@@ -182,9 +182,9 @@ theorem scheduledBalancedAccuracyTransitionLawAux_measurable_and_probability
                else scheduledBalancedAccuracyTransitionLawAux q I sigma2
                 proposalCap properStride attempts mixed)
             cases hresult : result.1
-            · simpa only [hresult, Bool.false_eq_true, if_false] using
+            · simpa only [hresult, Bool.false_eq_true, ite_false] using
                 ih.2 mixed
-            · simp only [hresult, if_true]
+            · simp only [ite_true]
               infer_instance
 
 #print axioms scheduledBalancedAccuracyTransitionLawAux_measurable_and_probability

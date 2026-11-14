@@ -75,7 +75,7 @@ theorem figureOneResetReferenceMomentFactor_budget
 from `eps²/2048` to at most `5 eps²/4096`. -/
 theorem figureOneResetReference_momentMultiplier_le
     (q : VolumeParams) {epsilon : ℝ}
-    (hepsilon0 : 0 ≤ epsilon)
+    (_hepsilon0 : 0 ≤ epsilon)
     (hepsilon : epsilon ≤ (5 / 2 : ℝ) * dependenceError q)
     {i : ℕ} (hi : i ≤ numPhases q) :
     1 + 2 * epsilon * truncationLevel q ^ 4 * i ≤
@@ -107,7 +107,7 @@ The large truncation parameter makes this substantially sharper than merely
 scaling `figureOneDependent_smallness`. -/
 theorem figureOneResetReference_smallness
     (q : VolumeParams) {epsilon : ℝ}
-    (hepsilon0 : 0 ≤ epsilon)
+    (_hepsilon0 : 0 ≤ epsilon)
     (hepsilon : epsilon ≤ (5 / 2 : ℝ) * dependenceError q) :
     4 * epsilon * truncationLevel q ^ 3 ≤ 1 := by
   have ha := truncationLevel_pos q
@@ -141,7 +141,7 @@ theorem figureOneResetReference_smallness
 transport. -/
 theorem figureOneResetReference_coefficient
     (q : VolumeParams) {epsilon : ℝ}
-    (hepsilon0 : 0 ≤ epsilon)
+    (_hepsilon0 : 0 ≤ epsilon)
     (hepsilon : epsilon ≤ (5 / 2 : ℝ) * dependenceError q)
     {i : ℕ} (hi : i < numPhases q) :
     2 * epsilon * truncationLevel q ^ 2 * (i + 1) ≤ 1 := by

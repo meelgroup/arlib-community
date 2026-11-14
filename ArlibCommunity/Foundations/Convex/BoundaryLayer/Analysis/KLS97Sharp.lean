@@ -468,7 +468,7 @@ private lemma volume_shell_le (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKfin : 
     intro y hyK
     have h0 : Metric.infDist y K ≤ 0 := by
       simpa using Metric.infDist_le_dist_of_mem (x := y) hyK
-    simp only [Set.mem_setOf_eq]
+    simp only [mem_ofPred_eq]
     linarith
   have hdiff : volume ({y : EuclideanSpace ℝ (Fin n) | Metric.infDist y K ≤ h} \ K)
       = volume {y : EuclideanSpace ℝ (Fin n) | Metric.infDist y K ≤ h} - volume K :=
@@ -515,7 +515,7 @@ private lemma lintegral_sdiff_eq_lintegral_inter (t : ℝ) :
     have hrw : ∀ y, f x y
         = (Metric.closedBall x t).indicator (1 : EuclideanSpace ℝ (Fin n) → ℝ≥0∞) y := by
       intro y
-      simp only [hf, Set.indicator_apply, hS, Set.mem_setOf_eq, Metric.mem_closedBall,
+      simp only [hf, Set.indicator_apply, hS, mem_ofPred_eq, Metric.mem_closedBall,
         Pi.one_apply]
       rw [dist_comm y x]
     simp_rw [hrw]
@@ -527,7 +527,7 @@ private lemma lintegral_sdiff_eq_lintegral_inter (t : ℝ) :
     have hrw : ∀ x, f x y
         = (Metric.closedBall y t).indicator (1 : EuclideanSpace ℝ (Fin n) → ℝ≥0∞) x := by
       intro x
-      simp only [hf, Set.indicator_apply, hS, Set.mem_setOf_eq, Metric.mem_closedBall,
+      simp only [hf, Set.indicator_apply, hS, mem_ofPred_eq, Metric.mem_closedBall,
         Pi.one_apply]
     simp_rw [hrw]
     rw [lintegral_indicator_one measurableSet_closedBall,
@@ -577,7 +577,7 @@ private lemma layercake_infDist {a : ℝ} (ha : 0 < a) (c : ℝ) :
         = (Set.Ici (Metric.infDist y K)).indicator
             (fun h => ENNReal.ofReal (a * Real.exp (c - a * h))) h := by
       intro h
-      simp only [hF, Set.indicator_apply, hT, Set.mem_setOf_eq, Set.mem_Ici]
+      simp only [hF, Set.indicator_apply, hT, mem_ofPred_eq, Set.mem_Ici]
     simp_rw [hrw]
     rw [lintegral_indicator measurableSet_Ici, Measure.restrict_restrict measurableSet_Ici]
     have hae : ((Set.Ici (Metric.infDist y K) ∩ Set.Ioi (0:ℝ) : Set ℝ))
@@ -607,7 +607,7 @@ private lemma layercake_infDist {a : ℝ} (ha : 0 < a) (c : ℝ) :
         = ({y : EuclideanSpace ℝ (Fin n) | Metric.infDist y K ≤ h}).indicator
             (fun _ => ENNReal.ofReal (a * Real.exp (c - a * h))) y := by
       intro y
-      simp only [hF, Set.indicator_apply, hT, Set.mem_setOf_eq]
+      simp only [hF, Set.indicator_apply, hT, mem_ofPred_eq]
     simp_rw [hrw]
     rw [lintegral_indicator hSm, setLIntegral_const, Measure.restrict_apply hSm, Set.sdiff_eq]
   have hswap := lintegral_lintegral_swap

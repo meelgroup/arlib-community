@@ -203,7 +203,7 @@ theorem figureOneIdealPhaseHistoryIndex_chronologicalOrder
     change i.1 < terminalPhaseSteps q + 1 at hilimit
     have hieq : i.1 = terminalPhaseSteps q := by omega
     simp [figureOneChronologicalPhaseOrder,
-      figureOneChronologicalPhaseOfFin, figureOneIdealPhaseHistoryIndex, hi,
+      figureOneChronologicalPhaseOfFin, figureOneIdealPhaseHistoryIndex,
       hieq]
 
 /-- Raw coordinate of a completed balanced history.  Failure is represented
@@ -491,9 +491,9 @@ theorem prod_range_snoc_sequence (ratio : ℝ) (sequence : ℕ → ℝ) (m : ℕ
   congr 1
   · apply Finset.prod_congr rfl
     intro j hj
-    rw [if_neg]
+    rw [ite_eq_right]
     exact ne_of_lt (Finset.mem_range.mp hj)
-  · rw [if_pos rfl]
+  · rw [ite_eq_left rfl]
 
 theorem BalancedCoolingHistoryHasProduct.cons
     {history : Option (BalancedCoolingHistory n)}
@@ -535,7 +535,6 @@ theorem dependentPhaseSampleProduct_balancedCoolingChronological_eq
   cases history with
   | none =>
       simp only [dependentPhaseSampleProduct,
-        balancedCoolingChronologicalPhaseVariable_apply_succ,
         balancedCoolingHistoryProduct]
       rw [Finset.prod_eq_zero (Finset.mem_range.mpr
         (numPhases_pos q))]

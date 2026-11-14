@@ -95,7 +95,7 @@ theorem scheduledSuccessfulBlockEndpointLaw_measurable
     (proposalCap properStride : ℕ) :
     Measurable (scheduledSuccessfulBlockEndpointLaw q I sigma2 proposalCap
       properStride) := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let B := scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
     properStride
   unfold scheduledSuccessfulBlockEndpointLaw successfulEndpointLaw

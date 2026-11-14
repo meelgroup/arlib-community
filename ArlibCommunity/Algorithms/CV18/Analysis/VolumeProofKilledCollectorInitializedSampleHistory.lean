@@ -31,8 +31,7 @@ theorem measurable_retainedSampleHistoryWithFirst
     · subst j
       simpa [retainedSampleHistoryWithFirst, Function.update] using
         (measurable_some : Measurable fun x : S => some x)
-    · simpa [retainedSampleHistoryWithFirst, Function.update, hj] using
-        (measurable_const : Measurable fun _ : S => (none : Option S))
+    · simp [Function.update, hj]
   · exact measurable_some
 
 @[simp] theorem retainedSampleHistoryWithFirst_state
@@ -100,7 +99,7 @@ theorem map_iterated_initializedRetainedSampleHistoryKernel_state
           (measurable_retainedSampleHistoryUpdate (tail + 1)).comp
             (measurable_const.prodMk measurable_id)
         rw [Measure.map_map measurable_snd hupdate]
-        simpa [retainedSampleHistoryUpdate, Function.comp_def]
+        simp [retainedSampleHistoryUpdate, Function.comp_def]
       calc
         (old.bind (retainedSampleHistoryKernel K (tail + 1))).map
               retainedSampleHistoryState =
@@ -226,7 +225,7 @@ theorem map_initializedRetainedSample_prefix_next_succ_eq_sequentialPairLaw
   have hpairKernel : Measurable fun history : RetainedSampleHistory S =>
       ((K ∘ retainedSampleHistoryState) history).map
         (fun next => (history, next)) :=
-    measurable_sequentialPairKernel (rho := rho)
+    measurable_sequentialPairKernel
       (hK.comp measurable_snd) (fun history => hKprob history.2)
   have hleft :
       (rho.bind (retainedSampleHistoryKernel K (i + 1))).map

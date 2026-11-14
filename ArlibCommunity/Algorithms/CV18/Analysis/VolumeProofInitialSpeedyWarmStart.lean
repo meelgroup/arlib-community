@@ -420,7 +420,7 @@ theorem initialAccuracySpeedy_restrictOff_isWarm
       sigma (A \ bad) ≤ ENNReal.ofReal ((2 : ℝ) ^ q.n) * pi A := by
     intro A hA
     have h := initialTruncatedGaussian_inball_dom_speedy q I A hA
-    simpa [sigma, pi, bad, good, Set.diff_compl] using h
+    simpa [sigma, pi, bad, good, Set.sdiff_compl] using h
   have hw := isWarm_restrictOff (sigma := sigma) (pi := pi)
     (measurableSet_closedBall.compl) hbad hdom
   simpa [initialSpeedyWarmConstant, sigma, pi, bad, good,

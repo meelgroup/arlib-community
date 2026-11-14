@@ -873,7 +873,7 @@ theorem slab_setIntegral_pos {g : EuclideanSpace ℝ (Fin n) → ℝ} (hgi : Int
       hgi hg0 (by norm_num) hc ?_ ?_
     · intro x hx
       obtain ⟨-, hx2⟩ := hballs (-(1 / 4)) (by rw [abs_le]; norm_num) x hx
-      simp only [Set.mem_setOf_eq]
+      simp only [mem_ofPred_eq]
       rw [abs_lt] at hx2
       linarith [hx2.2]
     · intro x hx
@@ -882,7 +882,7 @@ theorem slab_setIntegral_pos {g : EuclideanSpace ℝ (Fin n) → ℝ} (hgi : Int
       hgi hg0 (by norm_num) hc ?_ ?_
     · intro x hx
       obtain ⟨-, hx2⟩ := hballs (1 / 4) (by rw [abs_le]; norm_num) x hx
-      simp only [Set.mem_setOf_eq]
+      simp only [mem_ofPred_eq]
       rw [abs_lt] at hx2
       linarith [hx2.1]
     · intro x hx
@@ -1061,10 +1061,10 @@ theorem weightedIndicator_isoperimetry_measurable_logTwo_strict_witness (hn : 2 
     have := thirtysecond_div_logTwo_le
     linarith
   · exact ⟨(-(1 / 4 : ℝ)) • e, by
-      simp only [Set.mem_setOf_eq, real_inner_smul_right, hee, mul_one]; norm_num,
+      simp only [mem_ofPred_eq, real_inner_smul_right, hee, mul_one]; norm_num,
       hKmem _ (by rw [hnrmp]; norm_num)⟩
   · exact ⟨((1 / 4 : ℝ)) • e, by
-      simp only [Set.mem_setOf_eq, real_inner_smul_right, hee, mul_one]; norm_num,
+      simp only [mem_ofPred_eq, real_inner_smul_right, hee, mul_one]; norm_num,
       hKmem _ (by rw [hnrmq]; norm_num)⟩
   · have h1 : (0:ℝ) < (1 / 32 : ℝ) / 1 := by norm_num
     exact mul_pos h1 (mul_pos hp1 hp2)

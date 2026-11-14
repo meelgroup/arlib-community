@@ -151,7 +151,7 @@ theorem markovSumLaw_map_fst
 accumulator.  This supplies all integrability facts needed below. -/
 theorem markovSumLaw_ae_abs_snd_le
     (P : Kernel S S) [IsMarkovKernel P] {f : S → ℝ}
-    (hf : Measurable f) {B : ℝ} (hB : 0 ≤ B)
+    (hf : Measurable f) {B : ℝ} (_hB : 0 ≤ B)
     (hbound : ∀ x, |f x| ≤ B) (mu : Measure S) : ∀ samples : ℕ,
     ∀ᵐ stateSum ∂markovSumLaw P f samples mu,
       |stateSum.2| ≤ (samples : ℝ) * B := by
@@ -163,7 +163,7 @@ theorem markovSumLaw_ae_abs_snd_le
       apply (ae_map_iff (by fun_prop)
         (measurableSet_le habs measurable_const)).2
       filter_upwards with x
-      simp [hB]
+      simp
   | succ samples ih =>
       rw [markovSumLaw_succ_eq_comp P f hf]
       apply Measure.ae_comp_of_ae_ae
@@ -185,7 +185,7 @@ theorem integrable_snd_mul_fst_markovSumLaw
     (hf : Measurable f) {B : ℝ} (hB : 0 ≤ B)
     (hbound : ∀ x, |f x| ≤ B) (mu : Measure S)
     [IsProbabilityMeasure mu] {g : S → ℝ} (hg : Measurable g)
-    {C : ℝ} (hC : 0 ≤ C) (hgbound : ∀ x, |g x| ≤ C)
+    {C : ℝ} (_hC : 0 ≤ C) (hgbound : ∀ x, |g x| ≤ C)
     (samples : ℕ) :
     Integrable (fun stateSum => stateSum.2 * g stateSum.1)
       (markovSumLaw P f samples mu) := by
@@ -219,7 +219,7 @@ theorem integral_fst_markovSumLaw_of_invariant
 
 theorem abs_markovOp_le_of_abs_le
     (P : Kernel S S) [IsMarkovKernel P] {g : S → ℝ}
-    (hg : Measurable g) {C : ℝ} (hC : 0 ≤ C)
+    (hg : Measurable g) {C : ℝ} (_hC : 0 ≤ C)
     (hbound : ∀ x, |g x| ≤ C) (x : S) :
     |markovOp P g x| ≤ C := by
   let _ : IsProbabilityMeasure (P x) := IsMarkovKernel.isProbabilityMeasure x

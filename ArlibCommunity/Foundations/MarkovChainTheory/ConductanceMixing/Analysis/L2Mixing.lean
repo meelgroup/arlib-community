@@ -103,7 +103,7 @@ theorem map_swap_compProd_of_isReversible {P : Kernel Ω Ω} [IsMarkovKernel P] 
   have hswap : Measurable (Prod.swap : Ω × Ω → Ω × Ω) := measurable_swap
   refine ext_of_generate_finite _ generateFrom_prod.symm isPiSystem_prod ?_ ?_
   · rintro _ ⟨S, hS, T, hT, rfl⟩
-    simp only [Set.mem_setOf_eq] at hS hT
+    simp only [Set.mem_ofPred_eq] at hS hT
     rw [Measure.map_apply hswap (hS.prod hT)]
     have hpre : Prod.swap ⁻¹' (S ×ˢ T) = T ×ˢ S := by
       ext p; simp [Set.mem_prod, and_comm]
@@ -752,7 +752,7 @@ theorem tvLe_withDensity {pi : Measure Ω} [IsProbabilityMeasure pi] {h : Ω →
     rw [withDensity_apply _ MeasurableSet.univ, Measure.restrict_univ,
       ← ofReal_integral_eq_lintegral_ofReal hint (Filter.Eventually.of_forall hnn), hmean]
     simp
-  haveI : IsProbabilityMeasure (pi.withDensity fun x => ENNReal.ofReal (h x)) := ⟨hmuuniv⟩
+  have : IsProbabilityMeasure (pi.withDensity fun x => ENNReal.ofReal (h x)) := ⟨hmuuniv⟩
   refine tvLe_of_forall_le fun S hS => ?_
   have hmuS : (pi.withDensity fun x => ENNReal.ofReal (h x)) S
       = ENNReal.ofReal (∫ x in S, h x ∂pi) := by

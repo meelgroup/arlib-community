@@ -73,7 +73,7 @@ theorem scheduledBalancedAccuracyTransitionLawAux_ae_mem_phaseBody
       exact Set.mem_union_left _ (Set.mem_singleton none)
     | succ attempts ih =>
       intro current
-      letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+      let : Fact (0 < sigma2) := ⟨hsigma2⟩
       let R := scheduledBalancedAccuracyGaussianRejectionKernel q I sigma2
       let tail : Option (ℝ × AmbientSpace q.n) →
           Measure (Option (AmbientSpace q.n)) := fun block =>
@@ -154,7 +154,7 @@ theorem scheduledBalancedAccuracyTransitionLawAux_ae_mem_phaseBody
                 exact hresult haccepted
               have hmem : some result.2 ∈ good :=
                 Set.mem_union_right _ hsome
-              simpa [Measure.dirac_apply' _ hgood.compl, hmem]
+              simp [hmem]
             · exact MeasureTheory.mem_ae_iff.mp (ih mixed)
           · have hbranch : Measurable fun result :
                 Bool × AmbientSpace q.n =>

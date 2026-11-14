@@ -371,7 +371,7 @@ theorem truncatedGaussianProbability_accuracyPhase_compl_le
       K \ Metric.closedBall 0 R := by
     ext x
     simp only [accuracyPhaseTruncatedBody, K, R, mem_inter_iff, mem_compl_iff,
-      mem_diff]
+      mem_sdiff]
     tauto
   rw [truncatedGaussianProbability_apply q I hsigma2
     (accuracyPhaseTruncatedBody_measurable q I sigma2).compl]

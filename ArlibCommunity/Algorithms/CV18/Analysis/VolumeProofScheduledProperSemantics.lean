@@ -21,14 +21,14 @@ theorem scheduledAccuracyMetropolisMarkedProposalProgram_stronglyMeasurable
   by_cases hproper : oracle.query proposal = true ∧
       ‖proposal‖ ≤ Real.sqrt (terminalVariance q) ∧
       ‖proposal‖ ≤ phaseRadius q sigma2
-  · simp only [if_pos hproper, MembershipOracleProgram.runEstimate,
+  · simp only [ite_eq_left hproper, MembershipOracleProgram.runEstimate,
       MembershipOracleProgram.StronglyMeasurable]
     constructor
     · apply Measure.measurable_dirac.comp
       exact measurable_const.prodMk <|
         Measurable.ite measurableSet_Iic measurable_const measurable_const
     · exact fun _ => trivial
-  · simp only [if_neg hproper, MembershipOracleProgram.runEstimate,
+  · simp only [ite_eq_right hproper, MembershipOracleProgram.runEstimate,
       MembershipOracleProgram.StronglyMeasurable]
     exact ⟨Measure.measurable_dirac.comp measurable_const, fun _ => trivial⟩
 
@@ -66,7 +66,7 @@ theorem scheduledAccuracyMetropolisMarkedBallStep_stronglyMeasurable
           hphase using 1
       ext p
       simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_singleton_iff,
-        Set.mem_setOf_eq]
+        Set.mem_ofPred_eq]
       tauto
     · apply measurable_const.prodMk
       exact Measurable.ite (measurableSet_le measurable_snd haccept)
@@ -119,7 +119,7 @@ theorem map_snd_runEstimate_scheduledAccuracyMetropolisMarkedProposalProgram
   · have heligible := (oracle_and_radii_iff_mem_scheduledPhaseBody
       q I oracle sigma2 proposal).mpr hp
     simp only [scheduledAccuracyMetropolisMarkedProposalProgram,
-      MembershipOracleProgram.runEstimate, heligible, true_and, if_true]
+      MembershipOracleProgram.runEstimate, heligible, true_and, ite_true]
     have hpair : Measurable fun coin : ℝ =>
         (true, if coin ≤ lazyAcceptance sigma2 current proposal
           then proposal else current) :=
@@ -138,8 +138,7 @@ theorem map_snd_runEstimate_scheduledAccuracyMetropolisMarkedProposalProgram
         ‖proposal‖ ≤ phaseRadius q sigma2) := by
       rwa [oracle_and_radii_iff_mem_scheduledPhaseBody]
     simp only [scheduledAccuracyMetropolisMarkedProposalProgram,
-      MembershipOracleProgram.runEstimate, hineligible, if_false,
-      Measure.map_dirac]
+      MembershipOracleProgram.runEstimate, hineligible, ite_false]
     unfold radialLazyMetropolisAcceptance
     rw [Set.indicator_of_notMem hp]
     simp
@@ -262,7 +261,7 @@ theorem runEstimate_scheduledAccuracyMetropolisMarkedBallStep_apply_false_prod
           ‖proposal‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖proposal‖ ≤ phaseRadius q sigma2) := by
         rwa [oracle_and_radii_iff_mem_scheduledPhaseBody]
-      simp only [hnot, if_false, MembershipOracleProgram.runEstimate]
+      simp only [hnot, ite_false, MembershipOracleProgram.runEstimate]
       rw [Measure.bind_const, measure_univ, one_smul]
       change Measure.dirac (false, current) ({false} ×ˢ t) =
         (figureOneScheduledPhaseBody q I sigma2)ᶜ.indicator
@@ -358,8 +357,7 @@ theorem scheduledAccuracyZeroObservation_stronglyMeasurable
     (scheduledAccuracyZeroObservation q sigma2 current).StronglyMeasurable
       oracle.query := by
   unfold scheduledAccuracyZeroObservation
-  simp only [MembershipOracleProgram.StronglyMeasurable,
-    MembershipOracleProgram.runEstimate]
+  simp only [MembershipOracleProgram.StronglyMeasurable]
 
 theorem runEstimate_scheduledAccuracyZeroObservation
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
@@ -657,7 +655,7 @@ theorem scheduledBalancedAccuracyGaussianRejectionAttempt_stronglyMeasurable
             gaussianScaleAcceptance sigma2 (scaleFactor q) target) := by
         intro coin h
         exact heligible ⟨h.1, h.2.1, h.2.2.1⟩
-      simp only [output, hfalse, if_false]
+      simp only [output, hfalse, ite_false]
       exact measurable_const
   constructor
   · rw [show (fun coin => MembershipOracleProgram.runEstimate oracle.query

@@ -207,7 +207,7 @@ theorem runEstimate_scheduledBalancedAccuracyGaussianRejectionAttempt
       intro coin h
       exact hineligible ⟨h.1, h.2.1, h.2.2.1⟩
     dsimp only [c, target] at hfalse
-    simp_rw [hfalse, if_false]
+    simp_rw [hfalse, ite_false]
     simp only [MembershipOracleProgram.runEstimate]
     rw [Measure.bind_const, measure_univ, one_smul]
     unfold scheduledBalancedAccuracyGaussianRejectionLaw
@@ -278,10 +278,6 @@ theorem scheduledBalancedAccuracyGaussianAcceptedTargetLaw_eq
         Set.univ = _
   rw [withDensity_smul (2 : ENNReal)⁻¹
     (measurable_scheduledAccuracyGaussianRejectionAcceptance q I sigma2)]
-  change ArlibCommunity.Foundations.Convex.condOn (((2 : ENNReal)⁻¹ •
-      mu.withDensity
-        (scheduledAccuracyGaussianRejectionAcceptance q I sigma2)).map
-          scale) Set.univ = _
   rw [Measure.map_smul (hf := by fun_prop)]
   exact ArlibCommunity.Algorithms.CV18.condOn_smul_cv18 _ MeasurableSet.univ
     (by norm_num) (by norm_num)

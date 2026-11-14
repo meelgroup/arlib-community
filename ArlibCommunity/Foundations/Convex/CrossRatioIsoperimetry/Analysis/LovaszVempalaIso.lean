@@ -344,11 +344,11 @@ theorem oneDim_crossRatio_partition {D : ℝ → ℝ} {α β c : ℝ} (hαβ : �
         · exact Or.inr (Or.inr hxP)
         · rcases hx3 with (h | h) | h
           exacts [Or.inl (Or.inl ⟨h, hxP⟩), Or.inl (Or.inr ⟨h, hxP⟩), Or.inr (Or.inl h)]
-    · exact hpart.disjoint₁₂.mono Set.diff_subset Set.diff_subset
+    · exact hpart.disjoint₁₂.mono sdiff_subset sdiff_subset
     · rw [Set.disjoint_union_right]
-      exact ⟨hpart.disjoint₁₃.mono Set.diff_subset le_rfl, Set.disjoint_sdiff_left⟩
+      exact ⟨hpart.disjoint₁₃.mono sdiff_subset le_rfl, Set.disjoint_sdiff_left⟩
     · rw [Set.disjoint_union_right]
-      exact ⟨hpart.disjoint₂₃.mono Set.diff_subset le_rfl, Set.disjoint_sdiff_left⟩
+      exact ⟨hpart.disjoint₂₃.mono sdiff_subset le_rfl, Set.disjoint_sdiff_left⟩
   -- the separation hypothesis in quotient form, now that every cross pair is interior
   have hcross' : ∀ s ∈ Z₁ \ P, ∀ t ∈ Z₂ \ P,
       c ≤ (β - α) * (max s t - min s t) / ((min s t - α) * (β - max s t)) := by
@@ -856,7 +856,7 @@ on `[0,1]`, the partition of `ArlibCommunity.Foundations.Convex.witness_isPartit
 hypothesis is discharged and the conclusion reads `0 ≤ 1/2`.  In particular the hypothesis
 `∫_{Z₁} D = A·∫_α^β D` is satisfiable with `A > 0` and a nondegenerate partition. -/
 theorem needle_iso_witness :
-    (1 / 4 : ℝ) * (∫ t in (0 : ℝ)..1, (0 : ℝ) * (1 : ℝ))
+    (1 / 4 : ℝ) * (∫ _t in (0 : ℝ)..1, (0 : ℝ) * (1 : ℝ))
       ≤ ∫ _t in Set.Ioo (1 / 4 : ℝ) (3 / 4), (1 : ℝ) := by
   have hmass : (∫ _t in Set.Icc (0 : ℝ) (1 / 4), (1 : ℝ))
       = (1 / 4 : ℝ) * ∫ _t in (0 : ℝ)..1, (1 : ℝ) := by
@@ -866,8 +866,7 @@ theorem needle_iso_witness :
   refine needle_iso (D := fun _ => (1 : ℝ)) (G := fun _ => (0 : ℝ)) (by norm_num)
     (fun t _ => zero_le_one) (logConcaveOn_const (convex_Icc 0 1) zero_le_one)
     intervalIntegrable_const (fun t _ => le_rfl) le_rfl (by norm_num)
-    (by simpa using (intervalIntegrable_const : IntervalIntegrable (fun _ => (0 : ℝ) * (1 : ℝ))
-      volume 0 1))
+    (by simp)
     witness_isPartition3 measurableSet_Icc measurableSet_Icc measurableSet_Ioo (by norm_num)
     (by norm_num) hmass ?_
   intro s _ t _

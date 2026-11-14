@@ -860,7 +860,7 @@ theorem volume_closedBall_sdiff_unitBall_le_exp_cv18
       have hexpand : ‖y‖ ^ 2 =
           ‖x‖ ^ 2 + 2 * inner ℝ x (y - x) + ‖y - x‖ ^ 2 := by
         calc
-          ‖y‖ ^ 2 = ‖x + (y - x)‖ ^ 2 := by congr 2 <;> abel
+          ‖y‖ ^ 2 = ‖x + (y - x)‖ ^ 2 := by congr 2; abel
           _ = _ := norm_add_sq_real _ _
       have hinnerx : q * (1 - c) / 2 ≤ inner ℝ x (y - x) := by
         have hqle : q ≤ c := by simpa [q] using hx
@@ -972,7 +972,7 @@ theorem setLIntegral_one_sub_ell_levelCore_le_uniform_cv18
     (hcoeffPoint : ENNReal.ofReal
         (Real.exp (-((n : ℝ) * ((1 - c) / 2) ^ 2 /
           (2 * delta ^ 2)))) ≤ eta)
-    {r : ℝ} (hr0 : 0 ≤ r) :
+    {r : ℝ} (_hr0 : 0 ≤ r) :
     ∫⁻ x in c • K ∩ closedBall 0 r, (1 - ell K delta x) ≤
       eta * volume (c • K ∩ closedBall 0 r) := by
   by_cases hr : c ≤ r
@@ -1149,7 +1149,6 @@ theorem condOn_gaussian_coreDefect_le_cv18
       withDensity_apply _ hSm]
   have hraw : ∫⁻ x in S, bad x ∂gammaK =
       ∫⁻ x in S, bad x * w x := by
-    change (∫⁻ x, bad x ∂gammaK.restrict S) = _
     dsimp [gammaK]
     rw [Measure.restrict_restrict hSm, hSK]
     change (∫⁻ x in S, bad x ∂
@@ -1312,7 +1311,7 @@ theorem seven_sixteenths_le_ellGaussianProb_standardCore_of_defect_cv18
             ENNReal.ofReal (15 / 16 : ℝ) * G := by
           rw [← add_mul, ← ENNReal.ofReal_add (by norm_num) (by norm_num)]
           norm_num
-        _ ≤ 1 * G := by gcongr <;> norm_num
+        _ ≤ 1 * G := by gcongr; norm_num
         _ = G := one_mul _
 
 /-- The elementary parameter calculation behind CV18's choice of proposal

@@ -116,7 +116,7 @@ theorem roundBox_subset_closedBall (x : EuclideanSpace ℝ (Fin n)) :
 and that factor of the product is `0`. -/
 theorem prodTent_eq_zero_of_notMem {x p : EuclideanSpace ℝ (Fin n)} (h : p ∉ roundBox x) :
     prodTent x p = 0 := by
-  simp only [roundBox, Set.mem_setOf_eq, not_forall, not_le] at h
+  simp only [roundBox, Set.mem_ofPred_eq, not_forall, not_le] at h
   obtain ⟨i, hi⟩ := h
   exact Finset.prod_eq_zero (Finset.mem_univ i) (tent_eq_zero_of_one_le hi.le)
 

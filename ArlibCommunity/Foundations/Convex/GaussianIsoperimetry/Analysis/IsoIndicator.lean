@@ -483,7 +483,7 @@ theorem gaussianIndicator_isoperimetry_measurable (hn : 2 ≤ n) {σ d R : ℝ} 
     (hRσ : Real.sqrt 3 * R ≤ 2 * σ * Real.sqrt n)
     {S₁ S₂ S₃ : Set (EuclideanSpace ℝ (Fin n))}
     (hpart : IsPartition3 Set.univ S₁ S₂ S₃)
-    (hS₁ : MeasurableSet S₁) (_hS₂ : MeasurableSet S₂) (_hS₃ : MeasurableSet S₃)
+    (_hS₁ : MeasurableSet S₁) (_hS₂ : MeasurableSet S₂) (_hS₃ : MeasurableSet S₃)
     (hsep : ∀ u ∈ S₁, ∀ v ∈ S₂,
       2 * Real.sqrt 3 * d ≤ ‖u - v‖ ∨
         4 * (d / σ) * Real.sqrt n
@@ -969,7 +969,7 @@ theorem gaussianIndicator_isoperimetry_measurable_witness (hn : 2 ≤ n) :
     intro x hx
     obtain ⟨-, hx2⟩ := hballs (-(1/4)) (by rw [abs_le]; norm_num) x hx
     rw [hS₁def]
-    simp only [Set.mem_setOf_eq]
+    simp only [mem_ofPred_eq]
     rw [abs_lt] at hx2
     linarith [hx2.2]
   have hp2 : 0 < ∫ x in S₂, Set.indicator K (gaussianWeightReal ((1:ℝ) ^ 2)) x := by
@@ -979,7 +979,7 @@ theorem gaussianIndicator_isoperimetry_measurable_witness (hn : 2 ≤ n) :
     intro x hx
     obtain ⟨-, hx2⟩ := hballs (1/4) (by rw [abs_le]; norm_num) x hx
     rw [hS₂def]
-    simp only [Set.mem_setOf_eq]
+    simp only [mem_ofPred_eq]
     rw [abs_lt] at hx2
     linarith [hx2.1]
   have hcore₁ne : (S₁ ∩ K).Nonempty := by
@@ -987,7 +987,7 @@ theorem gaussianIndicator_isoperimetry_measurable_witness (hn : 2 ≤ n) :
     · have hval : (inner ℝ e ((-(1/4 : ℝ)) • e) : ℝ) = -(1/4) := by
         rw [real_inner_smul_right, hee, mul_one]
       rw [hS₁def]
-      simp only [Set.mem_setOf_eq, hval]
+      simp only [mem_ofPred_eq, hval]
       norm_num
     · have hnrm : ‖(-(1/4 : ℝ)) • e‖ = 1/4 := by
         rw [norm_smul, Real.norm_eq_abs, he, mul_one, abs_neg,
@@ -999,7 +999,7 @@ theorem gaussianIndicator_isoperimetry_measurable_witness (hn : 2 ≤ n) :
     · have hval : (inner ℝ e (((1/4 : ℝ)) • e) : ℝ) = 1/4 := by
         rw [real_inner_smul_right, hee, mul_one]
       rw [hS₂def]
-      simp only [Set.mem_setOf_eq, hval]
+      simp only [mem_ofPred_eq, hval]
       norm_num
     · have hnrm : ‖((1/4 : ℝ)) • e‖ = 1/4 := by
         rw [norm_smul, Real.norm_eq_abs, he, mul_one,

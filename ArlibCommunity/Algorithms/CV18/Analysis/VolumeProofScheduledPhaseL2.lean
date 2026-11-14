@@ -212,7 +212,7 @@ theorem exists_scheduledBalancedTracePhaseObservation_ratio_bound
         simp [scheduledBalancedPhaseRatio, zero_le_one.trans hB1]
     | true =>
         unfold scheduledBalancedTracePhaseObservationLaw
-        simp only [if_true, hphase]
+        simp only [ite_true, hphase]
         simpa [scheduledBalancedCoolingRatioTransitionLaw] using
           hbound (scaleFactor q • history.2.2.2)
   · have hcontinuous : Continuous
@@ -238,7 +238,7 @@ theorem exists_scheduledBalancedTracePhaseObservation_ratio_bound
         simp [scheduledBalancedPhaseRatio, zero_le_one.trans hB1]
     | true =>
         unfold scheduledBalancedTracePhaseObservationLaw
-        simp only [if_true, hphase, if_false]
+        simp only [ite_true, hphase, ite_false]
         simpa [scheduledBalancedCoolingUniformTransitionLaw] using
           hbound (scaleFactor q • history.2.2.2)
 
@@ -261,7 +261,7 @@ theorem scheduledBalancedTrace_append_new_coordinate_le
   rw [balancedCoolingChronologicalPhaseVariable_apply_succ q phase hphase]
   cases live <;> cases result <;>
     simp only [scheduledBalancedCoolingTraceAppend, Bool.false_eq_true,
-      if_false, if_true, balancedCoolingHistoryAppend]
+      ite_false, ite_true, balancedCoolingHistoryAppend]
   · simpa [hcount] using hB1
   · simpa [hcount] using hB1
   · simpa [hcount]

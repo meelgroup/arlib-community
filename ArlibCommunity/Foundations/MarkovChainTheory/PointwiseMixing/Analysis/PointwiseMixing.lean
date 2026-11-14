@@ -417,8 +417,8 @@ theorem not_pointwiseClose_twoPoint_sq {δ ε : ℝ≥0∞} (hδ0 : δ ≠ 0) (h
     ¬ PointwiseClose (twoPoint δ) (twoPoint (δ * δ)) ε := by
   have hδ1 : δ < 1 := lt_one_of_one_add_mul_lt_one hδε
   have hδt : δ ≠ ⊤ := hδ1.ne_top
-  haveI := isProbabilityMeasure_twoPoint hδ1.le
-  haveI := isProbabilityMeasure_twoPoint (mul_self_lt_one hδ1).le
+  have := isProbabilityMeasure_twoPoint hδ1.le
+  have := isProbabilityMeasure_twoPoint (mul_self_lt_one hδ1).le
   intro hpc
   have hle := hpc.measure_le (measurableSet_singleton true)
   rw [twoPoint_apply_true, twoPoint_apply_true, ← mul_assoc] at hle

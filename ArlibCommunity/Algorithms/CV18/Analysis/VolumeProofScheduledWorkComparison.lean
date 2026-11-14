@@ -139,8 +139,8 @@ theorem figureOneScheduledProperWork_le_mul_old
       apply congrArg₂ (· + ·)
       · apply Finset.sum_congr rfl
         intro k hk
-        simp [mul_assoc, mul_left_comm, mul_comm]
-      · simp [mul_assoc, mul_left_comm, mul_comm]
+        simp [mul_assoc, mul_comm]
+      · simp [mul_left_comm]
 
 /-- The old explicit rate theorem controls scheduled work exactly when the
 scheduled stride has a uniform constant overhead.  The expanded scheduled

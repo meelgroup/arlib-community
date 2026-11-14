@@ -151,7 +151,7 @@ noncomputable def accuracyPairedProposalCap
   2 ^ 20 * samples * (terminalPhaseSteps q + 1)
 
 theorem figureOneWalkSteps_pos (q : VolumeParams) {sigma2 : ℝ}
-    (hsigma2 : 0 < sigma2) : 0 < figureOneWalkSteps q sigma2 := by
+    (_hsigma2 : 0 < sigma2) : 0 < figureOneWalkSteps q sigma2 := by
   apply Nat.ceil_pos.mpr
   have hn : (0 : ℝ) < q.n := by
     exact_mod_cast (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)

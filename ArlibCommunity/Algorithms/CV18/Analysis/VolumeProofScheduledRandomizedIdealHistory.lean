@@ -71,7 +71,7 @@ theorem bind_map_fresh_eq_map_append_of_indepFun
     have hprodKernel : Measurable fun history : H =>
         (mu.map fresh).map (Prod.mk history) :=
       Measurable.map_prodMk_left
-    rw [Measure.prod, if_pos (by infer_instance)]
+    rw [Measure.prod, ite_eq_left (by infer_instance)]
     rw [map_bind_eq_bind_map_of_measurable
       (mu.map past) hprodKernel happend]
     apply Measure.bind_congr_right
@@ -260,7 +260,7 @@ theorem figureOneRandomizedIdealHistoryLaw_succ_of_indepFun
   apply Measure.map_congr
   filter_upwards with state
   simp only [Function.comp_apply, figureOneIdealChronologicalState]
-  rw [dif_pos hphase]
+  rw [dite_eq_left hphase]
   dsimp only [append, past, fresh,
     figureOneRandomizedIdealHistoryAppend,
     figureOneIdealChronologicalAppend]

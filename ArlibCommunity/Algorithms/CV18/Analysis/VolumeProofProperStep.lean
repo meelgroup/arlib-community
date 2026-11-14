@@ -110,7 +110,7 @@ theorem geometricCostKernel_snd
     {p : Omega → ℝ≥0∞} (hp : Measurable p) (hp1 : ∀ x, p x ≤ 1)
     (hp0 : ∀ x, p x ≠ 0) (Q : Kernel Omega Omega) [IsMarkovKernel Q] :
     Kernel.snd (geometricCostKernel p Q) = Q := by
-  letI : IsMarkovKernel (geometricCostKernel p Q) :=
+  let : IsMarkovKernel (geometricCostKernel p Q) :=
     isMarkovKernel_geometricCostKernel hp hp1 hp0 Q
   ext x S hS
   rw [Kernel.snd_apply' _ _ hS]
@@ -259,7 +259,7 @@ theorem totalGeometricCostKernel_eq_geometricCostKernel
     (p : Omega → ℝ≥0∞) (hp : Measurable p) (Q : Kernel Omega Omega)
     [IsMarkovKernel Q] (x : Omega) (hx : p x ≠ 0) :
     totalGeometricCostKernel p hp Q x = geometricCostKernel p Q x := by
-  rw [totalGeometricCostKernel_apply, if_neg hx]
+  rw [totalGeometricCostKernel_apply, ite_eq_right hx]
 
 /-- Totalization preserves the requested state marginal even at zero-success
 ambient states. -/
@@ -292,7 +292,7 @@ theorem totalGeometricCostKernel_snd
     {p : Omega → ℝ≥0∞} (hp : Measurable p) (hp1 : ∀ x, p x ≤ 1)
     (Q : Kernel Omega Omega) [IsMarkovKernel Q] :
     Kernel.snd (totalGeometricCostKernel p hp Q) = Q := by
-  letI : IsMarkovKernel (totalGeometricCostKernel p hp Q) :=
+  let : IsMarkovKernel (totalGeometricCostKernel p hp Q) :=
     isMarkovKernel_totalGeometricCostKernel hp hp1 Q
   ext x S hS
   rw [Kernel.snd_apply' _ _ hS]
@@ -311,7 +311,7 @@ theorem isMarkovKernel_accumulatedCostStep
     (C : Kernel Omega (ℕ × Omega)) [IsMarkovKernel C] :
     IsMarkovKernel (accumulatedCostStep C) := by
   unfold accumulatedCostStep
-  letI : IsMarkovKernel
+  let : IsMarkovKernel
       ((Kernel.id : Kernel (ℕ × Omega) (ℕ × Omega)) ⊗ₖ
         C.comap (fun z : (ℕ × Omega) × (ℕ × Omega) => z.2.2) (by fun_prop)) :=
     inferInstance
@@ -504,7 +504,7 @@ theorem isMarkovKernel_accumulatedGaussianProperCostStep
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
     (delta variance : ℝ) :
     IsMarkovKernel (accumulatedGaussianProperCostStep hK delta variance) := by
-  letI : IsMarkovKernel (totalGaussianProperStepWithCost hK delta variance) :=
+  let : IsMarkovKernel (totalGaussianProperStepWithCost hK delta variance) :=
     isMarkovKernel_totalGaussianProperStepWithCost hK delta variance
   rw [accumulatedGaussianProperCostStep]
   exact isMarkovKernel_accumulatedCostStep _
@@ -517,7 +517,7 @@ theorem accumulatedGaussianProperCostStep_pow_snd
     Kernel.snd ((accumulatedGaussianProperCostStep hK delta variance) ^ t) =
       (speedyMetropolisGaussian K delta variance ^ t).comap
         Prod.snd measurable_snd := by
-  letI : IsMarkovKernel (totalGaussianProperStepWithCost hK delta variance) :=
+  let : IsMarkovKernel (totalGaussianProperStepWithCost hK delta variance) :=
     isMarkovKernel_totalGaussianProperStepWithCost hK delta variance
   rw [accumulatedGaussianProperCostStep]
   exact accumulatedCostStep_pow_snd

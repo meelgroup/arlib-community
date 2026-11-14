@@ -414,7 +414,7 @@ theorem one_le_diam_bisection_chain (L : ℕ → ((ℝ × ℝ) →L[ℝ] ℝ)) (
       (∀ k, k ≤ N → MeasurableSet (C k) ∧ IsBounded (C k) ∧ Convex ℝ (C k) ∧
         ∫ z in C k, gapG z = (1/2) / 2 ^ k ∧ 0 < ∫ z in C k, gapH z ∧
         1 ≤ Metric.diam (C k)) := by
-  haveI : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
+  have : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
     rw [Measure.volume_eq_prod]; infer_instance
   have hgpos : (0:ℝ) < ∫ z in gapBox, gapG z := by rw [integral_gapG_gapBox]; norm_num
   have hhpos : (0:ℝ) < ∫ z in gapBox, gapH z := by rw [integral_gapH_gapBox]; norm_num
@@ -717,7 +717,7 @@ theorem bisection_chain_gapBox (L : ℕ → ((ℝ × ℝ) →L[ℝ] ℝ)) (hL : 
       ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∃ D : Set (ℝ × ℝ), D.Nonempty ∧ IsCompact D ∧ Convex ℝ D ∧
         D ⊆ gapBox ∧ Tendsto (fun n => hausdorffDist (closure (C (φ n))) D) atTop (𝓝 0) ∧
         ∃ x ∈ D, ∃ y ∈ D, 1 ≤ dist x y ∧ segment ℝ x y ⊆ D := by
-  haveI : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
+  have : (volume : Measure (ℝ × ℝ)).IsAddHaarMeasure := by
     rw [Measure.volume_eq_prod]; infer_instance
   have hgpos : (0:ℝ) < ∫ z in gapBox, gapG z := by rw [integral_gapG_gapBox]; norm_num
   have hhpos : (0:ℝ) < ∫ z in gapBox, gapH z := by rw [integral_gapH_gapBox]; norm_num

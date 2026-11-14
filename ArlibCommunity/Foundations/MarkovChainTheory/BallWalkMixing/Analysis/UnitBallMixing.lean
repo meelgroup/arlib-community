@@ -169,7 +169,7 @@ theorem exists_unconditional_mixing_unitBall (n : ℕ) (hn : 1 ≤ n)
       MixesWithin (lazy (ballWalk (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1) δ))
         (ArlibCommunity.Foundations.Convex.uniformOn volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1)) mu0 t
         (ENNReal.ofReal eps) := by
-  haveI hprob : IsProbabilityMeasure
+  have hprob : IsProbabilityMeasure
       (ArlibCommunity.Foundations.Convex.uniformOn volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1)) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume volume_unitBall_ne_zero volume_unitBall_ne_top
   refine ⟨ArlibCommunity.Foundations.Convex.uniformOn volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1), hprob,

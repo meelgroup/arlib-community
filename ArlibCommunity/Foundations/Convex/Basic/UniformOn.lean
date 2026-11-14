@@ -216,7 +216,7 @@ integrable against a finite measure, by `ArlibCommunity.Foundations.Convex.integ
 theorem integral_uniformOn_le_one (μ : Measure Ω) {S : Set Ω} (h0 : μ S ≠ 0)
     (htop : μ S ≠ ⊤) {f : Ω → ℝ} (hf : Measurable f) (hf0 : ∀ x, 0 ≤ f x)
     (hf1 : ∀ x, f x ≤ 1) : ∫ x, f x ∂(uniformOn μ S) ≤ 1 := by
-  haveI : IsProbabilityMeasure (uniformOn μ S) := isProbabilityMeasure_uniformOn μ h0 htop
+  have : IsProbabilityMeasure (uniformOn μ S) := isProbabilityMeasure_uniformOn μ h0 htop
   calc ∫ x, f x ∂(uniformOn μ S)
       ≤ ∫ _x, (1 : ℝ) ∂(uniformOn μ S) :=
         integral_mono (integrable_of_forall_mem_Icc hf hf0 hf1) (integrable_const 1) hf1

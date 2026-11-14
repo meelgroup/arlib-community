@@ -205,7 +205,7 @@ theorem scheduledBalancedTracePhaseObservationLaw_ae_total_positive
       trivial
   | true =>
       unfold scheduledBalancedTracePhaseObservationLaw
-      simp only [if_true]
+      simp only [ite_true]
       split_ifs
       · exact scheduledBalancedCoolingRatioTransitionLaw_ae_ratio_positive
           parameters q I (scheduleValue_pos q phase)
@@ -238,7 +238,7 @@ theorem measurableSet_balancedCoolingHistoryHasPositiveCoordinates
   have hAB : A =
       {history : BalancedCoolingHistory n | history.2.1 = m} ∩ B := by
     ext history
-    simp only [A, B, Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_iInter,
+    simp only [A, B, Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_iInter,
       Finset.mem_range]
   have hA : MeasurableSet A := by
     rw [hAB]
@@ -270,7 +270,7 @@ theorem BalancedCoolingHistoryHasPositiveCoordinates.snocTerminal
         by_cases heq : j = history.2.1
         · change 0 < terminal.1 at hterminal
           simpa [heq] using hterminal
-        · simp only [heq, if_false]
+        · simp only [heq, ite_false]
           exact hcoordinates.2 j (by omega)
 
 /-- Dead traces are irrelevant to positivity; every coordinate stored by a
@@ -317,7 +317,7 @@ theorem ScheduledBalancedCoolingTraceLiveCoordinatesPositive.append
             scheduledBalancedCoolingTraceAppend]
       | some result =>
           simp only [ScheduledBalancedCoolingTraceLiveCoordinatesPositive,
-            scheduledBalancedCoolingTraceAppend, if_true,
+            scheduledBalancedCoolingTraceAppend, ite_true,
             Bool.true_eq_false, false_or] at hcoordinates ⊢
           have h := hcoordinates.snocTerminal hresult
           rw [balancedCoolingHistorySnocTerminal_some] at h

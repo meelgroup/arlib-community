@@ -44,7 +44,7 @@ integrable. This is the Fubini side condition for the dependent recurrence. -/
 theorem integrable_markovSum_compProd_add_mul
     (P : Kernel S S) [IsMarkovKernel P] {f g : S → ℝ}
     (hf : Measurable f) (hg : Measurable g)
-    {B C : ℝ} (hB : 0 ≤ B) (hC : 0 ≤ C)
+    {B C : ℝ} (hB : 0 ≤ B) (_hC : 0 ≤ C)
     (hfbound : ∀ x, |f x| ≤ B) (hgbound : ∀ x, |g x| ≤ C)
     (samples : ℕ) (mu : Measure S) [IsProbabilityMeasure mu] :
     Integrable (fun p : (S × ℝ) × S =>

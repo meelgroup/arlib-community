@@ -449,7 +449,7 @@ theorem stationary_accuracyAcceptedTarget_integral_bias_le
     (by simpa [nu] using hfmem)
     (accuracyAcceptedBiasScale_pos q)
     (accuracyPhase_stationary_tvError_toReal_le_biasScale_sq q)
-  convert h using 1 <;> norm_num [mu, nu, pi]
+  convert h using 1; norm_num [mu, nu, pi]
 
 /-- Homogeneous stationary accepted-law bias for a signed observable.  A
 target `L²` bound `R²` yields an expectation defect proportional to `R`, with
@@ -499,6 +499,6 @@ theorem stationary_accuracyAcceptedTarget_integral_bias_le_sqrt_secondMoment
     (accuracyAcceptedBiasScale_pos q) hR
     (accuracyPhase_stationary_tvError_toReal_le_biasScale_sq q)
     (by simpa [nu] using hsecond)
-  convert h using 1 <;> norm_num [mu, nu, pi]
+  convert h using 1; norm_num [mu, nu, pi]
 
 end ArlibCommunity.Algorithms.CV18

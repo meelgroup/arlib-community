@@ -60,10 +60,10 @@ theorem ApproxIndepFun.of_tvLe
   have hnuIndep := hind A hA B hB
   have hmuLeft0 : 0 ≤ mu.real XA := measureReal_nonneg
   have hmuLeft1 : mu.real XA ≤ 1 := by
-    simpa using probReal_le_one (μ := mu) XA
+    simp
   have hnuRight0 : 0 ≤ nu.real YB := measureReal_nonneg
   have hnuRight1 : nu.real YB ≤ 1 := by
-    simpa using probReal_le_one (μ := nu) YB
+    simp
   have hproduct :
       |nu.real XA * nu.real YB - mu.real XA * mu.real YB| ≤
         2 * delta.toReal := by

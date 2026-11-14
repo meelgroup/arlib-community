@@ -572,7 +572,7 @@ theorem initializedScheduledRetainedHistory_terminal_relativeDeviation_le
     (target := figureOneIdealPhaseMean q I .terminal) (eps := eps)
     (eta := 0) (delta := delta)
     (figureOneIdealPhaseMean_pos q I .terminal) heps (by norm_num) hdelta
-    (by simpa [X, hmean]) (hsecond.trans hmomentBudget)
+    (by simp [hmean]) (hsecond.trans hmomentBudget)
   have href' : reference
       {history | eps * figureOneIdealPhaseMean q I .terminal ≤
         |X history - figureOneIdealPhaseMean q I .terminal|} ≤

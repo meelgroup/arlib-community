@@ -64,8 +64,7 @@ private theorem scheduledAccuracyZeroObservation_stronglyMeasurable_for_cost
     (scheduledAccuracyZeroObservation q sigma2 current).StronglyMeasurable
       oracle.query := by
   simp [scheduledAccuracyZeroObservation,
-    MembershipOracleProgram.StronglyMeasurable,
-    MembershipOracleProgram.runEstimate]
+    MembershipOracleProgram.StronglyMeasurable]
 
 theorem scheduledAccuracyZeroObservation_countedStronglyMeasurable
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
@@ -331,7 +330,7 @@ theorem cappedScheduledAccuracyProperBlockAux_countedQueryCost_le
             rw [lintegral_dirac' _ measurable_countedQueryCost_integrand]
             simp
           simp_rw [hzero]
-          simp [E, totalLazyProperExpectedRawCost]
+          simp [totalLazyProperExpectedRawCost]
       | succ remainingProper =>
           let step := scheduledAccuracyMetropolisMarkedBallStep q sigma2 current
           let next : Bool × AmbientSpace q.n → MembershipOracleProgram q.n

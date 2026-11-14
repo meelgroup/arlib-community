@@ -63,13 +63,13 @@ theorem cappedScheduledAccuracyProperBlockAux_queryBound
             (scheduledAccuracyMetropolisMarkedBallStep_queryBound
               q sigma2 current).bind (fun result => by
                 by_cases hmark : result.1 = true
-                · simp only [hmark, if_true]
+                · simp only [hmark, ite_true]
                   cases remainingProper with
                   | zero => exact ih 0 result.2
                   | succ nextRemaining => exact ih (nextRemaining + 1) result.2
                 · have hfalse : result.1 = false :=
                     Bool.eq_false_of_not_eq_true hmark
-                  simp only [hfalse, if_false]
+                  simp only [hfalse]
                   exact ih (remainingProper + 1) result.2)
 
 theorem cappedScheduledAccuracyProperBlock_queryBound
@@ -150,7 +150,7 @@ theorem scheduledBalancedAccuracyRetryCollectAux_queryBound
                         q sigma2 mixed)
                     intro result
                     by_cases hresult : result.1 = true
-                    · simp only [hresult, if_true]
+                    · simp only [hresult, ite_true]
                       have hrec := ihSamples future (by omega) retryLimit
                         (total + weight result.2) mixed
                       rw [balancedRetryQueryBudget_full] at hrec
@@ -158,7 +158,7 @@ theorem scheduledBalancedAccuracyRetryCollectAux_queryBound
                         (proposalCap + 2) (Nat.le_add_right _ attempts)
                     · have hfalse : result.1 = false :=
                         Bool.eq_false_of_not_eq_true hresult
-                      simp only [hfalse, Bool.false_eq_true, if_false]
+                      simp only [hfalse, Bool.false_eq_true, ite_false]
                       exact ihAttempts total mixed
               have hbound := hblock.bind htail
               change (block.bind tail).QueryBound

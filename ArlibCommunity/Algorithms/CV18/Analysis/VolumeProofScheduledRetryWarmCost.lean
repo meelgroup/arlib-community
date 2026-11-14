@@ -112,7 +112,7 @@ private theorem MembershipOracleProgram.FixedQueryCount.countedQueryCost_eq
     countedQueryCost (program.run oracle) = count := by
   rw [hcount.run_eq_map_runEstimate oracle hstrong]
   unfold countedQueryCost
-  letI : IsProbabilityMeasure (program.runEstimate oracle) :=
+  let : IsProbabilityMeasure (program.runEstimate oracle) :=
     MembershipOracleProgram.runEstimate_isProbabilityMeasure oracle program
       hstrong.estimateMeasurable
   rw [lintegral_map]

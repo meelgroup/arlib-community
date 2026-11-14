@@ -198,7 +198,7 @@ theorem measurableSet_balancedCoolingHistoryHasNonnegativeCoordinates
   have hAB : A =
       {history : BalancedCoolingHistory n | history.2.1 = m} ∩ B := by
     ext history
-    simp only [A, B, Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_iInter,
+    simp only [A, B, Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_iInter,
       Finset.mem_range]
   have hA : MeasurableSet A := by
     rw [hAB]
@@ -230,7 +230,7 @@ theorem BalancedCoolingHistoryHasNonnegativeCoordinates.snocTerminal
         by_cases heq : j = history.2.1
         · change 0 ≤ terminal.1 at hterminal
           simpa [heq] using hterminal
-        · simp only [heq, if_false]
+        · simp only [heq, ite_false]
           exact hcoordinates.2 j (by omega)
 
 /-- One scheduled phase preserves nonnegativity of every chronological

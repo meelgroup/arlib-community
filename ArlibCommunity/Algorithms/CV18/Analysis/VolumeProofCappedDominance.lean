@@ -440,12 +440,12 @@ theorem cappedProperCollectLawAux_optionSomeEvent_le_ideal
                   cases remainingProper with
                   | zero =>
                       dsimp only [g, C]
-                      simp only [if_true]
+                      simp only [ite_true]
                       rw [idealProperCollectLawAux_zero_succ P hf]
                       exact ihRaw properStride samples (total + f next) next A hA
                   | succ nextRemaining =>
                       dsimp only [g, C]
-                      simp only [if_true]
+                      simp only [ite_true]
                       exact ihRaw (nextRemaining + 1) (samples + 1)
                         total next A hA
                 · exact ((idealProperCollectLawAux_measurable_and_probability
@@ -455,7 +455,7 @@ theorem cappedProperCollectLawAux_optionSomeEvent_le_ideal
                   idealProperCollectLawAux P f properStride
                     (remainingProper + 1) (samples + 1) total current A := by
                 dsimp only [g, C]
-                simp only [Bool.false_eq_true, if_false]
+                simp only [Bool.false_eq_true, ite_false]
                 exact ihRaw (remainingProper + 1) (samples + 1)
                   total current A hA
               rw [cappedProperCollectLawAux]

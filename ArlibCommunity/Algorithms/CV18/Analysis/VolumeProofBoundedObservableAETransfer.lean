@@ -19,7 +19,7 @@ namespace ArlibCommunity.Algorithms.CV18
 `L²` under a finite measure. -/
 theorem memLp_two_of_ae_nonnegative_le
     {S : Type*} [MeasurableSpace S] {mu : Measure S} [IsFiniteMeasure mu]
-    {f : S → ℝ} (hf : Measurable f) {B : ℝ} (hB : 0 ≤ B)
+    {f : S → ℝ} (hf : Measurable f) {B : ℝ} (_hB : 0 ≤ B)
     (hf0 : ∀ᵐ x ∂mu, 0 ≤ f x) (hfB : ∀ᵐ x ∂mu, f x ≤ B) :
     MemLp f 2 mu := by
   apply MemLp.of_bound hf.aestronglyMeasurable B
@@ -99,7 +99,7 @@ theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_l
     exact ENNReal.toReal_mono ENNReal.ofReal_ne_top hepsilon
   have hexp : Real.exp (1 / 2) ≤ (5 / 3 : ℝ) := by
     convert Real.exp_le_two_add_div_two_sub (x := (1 / 2 : ℝ))
-      (by norm_num) (by norm_num) using 1 <;> norm_num
+      (by norm_num) (by norm_num) using 1; norm_num
   have hidealMeanPos : 0 < idealMean := lt_of_lt_of_le zero_lt_one hidealMeanOne
   have hmeanError : Real.exp (1 / 2) * epsilon.toReal ≤ idealMean / 8 := by
     have hepsilon0 : 0 ≤ epsilon.toReal := ENNReal.toReal_nonneg

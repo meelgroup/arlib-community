@@ -46,11 +46,13 @@ theorem dependentPhaseMeanProduct_succ (mean : ℕ → ℝ) (i : ℕ) :
       dependentPhaseMeanProduct mean i * mean (i + 1) := by
   simp [dependentPhaseMeanProduct, Finset.prod_range_succ]
 
+omit [MeasurableSpace Omega] in
 @[simp]
 theorem dependentPhaseSampleProduct_zero (W : ℕ → Omega → ℝ) (omega : Omega) :
     dependentPhaseSampleProduct W 0 omega = 1 := by
   simp [dependentPhaseSampleProduct]
 
+omit [MeasurableSpace Omega] in
 theorem dependentPhaseSampleProduct_succ (W : ℕ → Omega → ℝ)
     (i : ℕ) (omega : Omega) :
     dependentPhaseSampleProduct W (i + 1) omega =
@@ -71,12 +73,14 @@ def dependentTruncatedProduct (alpha : ℝ) (mean : ℕ → ℝ)
       min (dependentTruncatedProduct alpha mean V i omega * V (i + 1) omega)
         (alpha * dependentPhaseMeanProduct mean (i + 1))
 
+omit [MeasurableSpace Omega] in
 @[simp]
 theorem dependentTruncatedProduct_zero (alpha : ℝ) (mean : ℕ → ℝ)
     (V : ℕ → Omega → ℝ) (omega : Omega) :
     dependentTruncatedProduct alpha mean V 0 omega = 1 := by
   rfl
 
+omit [MeasurableSpace Omega] in
 theorem dependentTruncatedProduct_succ (alpha : ℝ) (mean : ℕ → ℝ)
     (V : ℕ → Omega → ℝ) (i : ℕ) (omega : Omega) :
     dependentTruncatedProduct alpha mean V (i + 1) omega =
@@ -92,6 +96,7 @@ theorem measurable_dependentTruncatedProduct (alpha : ℝ) (mean : ℕ → ℝ)
       ((measurable_dependentTruncatedProduct alpha mean V hV i).mul
         (hV (i + 1))).min measurable_const
 
+omit [MeasurableSpace Omega] in
 theorem dependentTruncatedProduct_nonneg (alpha : ℝ) (mean : ℕ → ℝ)
     (V : ℕ → Omega → ℝ) (halpha : 0 ≤ alpha)
     (hmean : ∀ j, 0 ≤ mean j) (hV : ∀ j omega, 0 ≤ V j omega) :
@@ -105,6 +110,7 @@ theorem dependentTruncatedProduct_nonneg (alpha : ℝ) (mean : ℕ → ℝ)
           (hV (i + 1) omega))
         (mul_nonneg halpha (dependentPhaseMeanProduct_nonneg mean hmean (i + 1)))
 
+omit [MeasurableSpace Omega] in
 /-- `Uᵢ Vᵢ₊₁` is the untruncated candidate for `Uᵢ₊₁`. -/
 theorem dependentTruncatedProduct_succ_le_mul (alpha : ℝ) (mean : ℕ → ℝ)
     (V : ℕ → Omega → ℝ) (i : ℕ) (omega : Omega) :
@@ -113,6 +119,7 @@ theorem dependentTruncatedProduct_succ_le_mul (alpha : ℝ) (mean : ℕ → ℝ)
   rw [dependentTruncatedProduct_succ]
   exact min_le_left _ _
 
+omit [MeasurableSpace Omega] in
 /-- The deterministic cap on `Uᵢ` used in equations (8)--(11). -/
 theorem dependentTruncatedProduct_succ_le_cap (alpha : ℝ) (mean : ℕ → ℝ)
     (V : ℕ → Omega → ℝ) (i : ℕ) (omega : Omega) :
@@ -121,6 +128,7 @@ theorem dependentTruncatedProduct_succ_le_cap (alpha : ℝ) (mean : ℕ → ℝ)
   rw [dependentTruncatedProduct_succ]
   exact min_le_right _ _
 
+omit [MeasurableSpace Omega] in
 /-- Uniform cap on `Uᵢ`, including `i = 0`.  The paper always chooses
 `alpha ≥ 1`, so the base value `U₀ = 1` obeys the same formula. -/
 theorem dependentTruncatedProduct_le_cap (alpha : ℝ) (mean : ℕ → ℝ)
@@ -148,8 +156,8 @@ theorem integrable_dependentTruncatedProduct (mu : Measure Omega)
 
 theorem integrable_phase_of_le_two_mul_alpha_mean (mu : Measure Omega)
     [IsFiniteMeasure mu] (alpha : ℝ) (mean : ℕ → ℝ)
-    (V : ℕ → Omega → ℝ) (halpha : 0 ≤ alpha)
-    (hmean : ∀ j, 0 ≤ mean j) (hVmeas : ∀ j, Measurable (V j))
+    (V : ℕ → Omega → ℝ) (_halpha : 0 ≤ alpha)
+    (_hmean : ∀ j, 0 ≤ mean j) (hVmeas : ∀ j, Measurable (V j))
     (hV0 : ∀ j omega, 0 ≤ V j omega)
     (hVcap : ∀ j omega, V j omega ≤ 2 * alpha * mean j) (j : ℕ) :
     Integrable (V j) mu := by
@@ -337,7 +345,7 @@ theorem ApproxIndepFun.abs_integral_sq_mul_sq_sub_mul_integral_sq_le
 /-- Products of first moments squared are bounded by products of second
 moments.  This is the finite-product form used between (10) and (11). -/
 theorem dependentPhaseMeanProduct_sq_le (mean second : ℕ → ℝ)
-    (hsecond0 : ∀ j, 0 ≤ second j)
+    (_hsecond0 : ∀ j, 0 ≤ second j)
     (hmeanSecond : ∀ j, mean j ^ 2 ≤ second j) (i : ℕ) :
     dependentPhaseMeanProduct mean i ^ 2 ≤
       dependentPhaseMeanProduct second i := by
@@ -983,7 +991,7 @@ theorem measure_relativeDeviation_le_of_target_moments
   have hevent : {omega | threshold ^ 2 ≤ deviationSq omega} =
       {omega | eps * target ≤ |X omega - target|} := by
     ext omega
-    simp only [Set.mem_setOf_eq, threshold, deviationSq]
+    simp only [Set.mem_ofPred_eq, threshold, deviationSq]
     have habsSq : (X omega - target) ^ 2 = |X omega - target| ^ 2 := by
       exact (sq_abs (X omega - target)).symm
     rw [habsSq]
@@ -1072,7 +1080,7 @@ probability at most `factor / alpha`. -/
 theorem measure_min_ne_self_le_of_integral_le
     (mu : Measure Omega) [IsProbabilityMeasure mu]
     (f : Omega → ℝ) (alpha scale factor : ℝ)
-    (hfmeas : Measurable f) (hf0 : ∀ omega, 0 ≤ f omega)
+    (_hfmeas : Measurable f) (hf0 : ∀ omega, 0 ≤ f omega)
     (hfint : Integrable f mu)
     (halpha : 0 < alpha) (hscale : 0 < scale) (hfactor : 0 ≤ factor)
     (hintegral : (∫ omega, f omega ∂mu) ≤ factor * scale) :
@@ -1084,7 +1092,7 @@ theorem measure_min_ne_self_le_of_integral_le
       {omega | min (f omega) threshold ≠ f omega} ⊆
         {omega | threshold ≤ f omega} := by
     intro omega hchanged
-    simp only [Set.mem_setOf_eq] at hchanged ⊢
+    simp only [Set.mem_ofPred_eq] at hchanged ⊢
     by_contra hnot
     exact hchanged (min_eq_left (le_of_not_ge hnot))
   have hmarkov := mul_meas_ge_le_integral_of_nonneg
@@ -1220,6 +1228,7 @@ theorem measure_dependentTruncatedProduct_succ_ne_mul_le
       hcandidateInt (zero_lt_one.trans_le halpha) hscalePos (by norm_num)
       hcandidateMean)
 
+omit [MeasurableSpace Omega] in
 /-- If neither level of truncation fires through phase `i`, the recursive
 variable `Uᵢ` equals the original estimator product. -/
 theorem dependentTruncatedProduct_eq_sampleProduct_of_eq

@@ -385,7 +385,7 @@ theorem globalConductance_metropolisGaussian_ge (hn : 1 ≤ n)
           (metropolisGaussian K δ s) := by
   set ν : Measure (EuclideanSpace ℝ (Fin n)) :=
     (volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity (gaussianWeight s) with hνdef
-  haveI : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn ν K) :=
+  have : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn ν K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn ν hν0 hνtop
   have hnR : (0:ℝ) < (n : ℝ) := by exact_mod_cast hn
   set th : ℝ := α * θ with hthdef
@@ -431,11 +431,11 @@ theorem globalConductance_metropolisGaussian_ge (hn : 1 ≤ n)
   have hmem1 : ∀ x, x ∈ S1 ↔ ((x ∈ S ∧ x ∈ K) ∧ 4 * P x Sᶜ < ENNReal.ofReal th) := by
     intro x
     rw [hS1def]
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq]
   have hmem2 : ∀ x, x ∈ S2 ↔ ((x ∈ K ∧ x ∉ S) ∧ 4 * P x S < ENNReal.ofReal th) := by
     intro x
     rw [hS2def]
-    simp only [Set.mem_inter_iff, Set.mem_sdiff, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Set.mem_sdiff, Set.mem_ofPred_eq]
   have hS1K : S1 ⊆ K := fun x hx => ((hmem1 x).1 hx).1.2
   have hS2K : S2 ⊆ K := fun x hx => ((hmem2 x).1 hx).1.1
   have hSA : S \ (S1 ∪ Kᶜ) = (S ∩ K) \ S1 := by
@@ -654,7 +654,7 @@ theorem exists_smallSet_uniformOn_gaussian (hn : 1 ≤ n)
     (volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity (gaussianWeight s) with hνdef
   have hν0 : ν K ≠ 0 := withDensity_gaussianWeight_ne_zero s hK0
   have hνtop : ν K ≠ ⊤ := withDensity_gaussianWeight_ne_top hs hK hKtop
-  haveI : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn ν K) :=
+  have : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn ν K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn ν hν0 hνtop
   obtain ⟨r, hrpos, hrlt⟩ := exists_volume_inter_ball_pos_lt hn hK0 hKtop
   set S : Set (EuclideanSpace ℝ (Fin n)) := Metric.ball (0 : EuclideanSpace ℝ (Fin n)) r with hS
@@ -712,7 +712,7 @@ theorem isReversible_and_hasNonnegSpectrum_lazy_metropolisGaussian
       ∧ HasNonnegSpectrum (lazy (metropolisGaussian K δ s))
         (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight s)) K) := by
-  haveI : IsProbabilityMeasure
+  have : IsProbabilityMeasure
       (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
         (gaussianWeight s)) K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn _ hν0 hνtop
@@ -769,7 +769,7 @@ theorem mixesWithin_lazy_metropolisGaussian (hn : 1 ≤ n)
       (gaussianWeight s)) K ≠ 0 := withDensity_gaussianWeight_ne_zero s hK0
   have hνtop : ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
       (gaussianWeight s)) K ≠ ⊤ := withDensity_gaussianWeight_ne_top hs hK hKtop
-  haveI : IsProbabilityMeasure
+  have : IsProbabilityMeasure
       (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
         (gaussianWeight s)) K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn _ hν0 hνtop
@@ -1051,7 +1051,7 @@ theorem exists_mixesWithin_lazy_metropolisGaussian_convex (hn : 1 ≤ n)
           (gaussianWeight s)) K) mu0 t (ENNReal.ofReal eps) := by
   obtain ⟨R, hR0, hR⟩ := ArlibCommunity.Foundations.Convex.exists_closedBall_superset_of_convex hconv hball hKtop
   have hK0 : volume K ≠ 0 := volume_ne_zero_of_ball_subset one_pos hball
-  haveI hprob : IsProbabilityMeasure
+  have hprob : IsProbabilityMeasure
       (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
         (gaussianWeight s)) K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn _ (withDensity_gaussianWeight_ne_zero s hK0)

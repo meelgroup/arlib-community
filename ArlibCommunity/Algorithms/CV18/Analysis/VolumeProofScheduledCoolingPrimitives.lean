@@ -28,7 +28,7 @@ theorem scheduledBalancedAccuracyRetryCollectLaw_measurable_and_probability
     ∀ current, IsProbabilityMeasure
       (scheduledBalancedAccuracyRetryCollectLaw q I sigma2 weight
         proposalCap properStride retryLimit samples current) := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let B := scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
     properStride
   let R := scheduledBalancedAccuracyGaussianRejectionKernel q I sigma2
@@ -41,7 +41,7 @@ theorem scheduledBalancedAccuracyRetryCollectLaw_measurable_and_probability
       hraw.1.comp (measurable_const.prodMk measurable_id)
   · intro current
     unfold scheduledBalancedAccuracyRetryCollectLaw
-    letI : IsProbabilityMeasure
+    let : IsProbabilityMeasure
         (balancedRetryCollectLawAux B R weight retryLimit retryLimit samples
           0 current) := hraw.2 0 current
     exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hout.aemeasurable

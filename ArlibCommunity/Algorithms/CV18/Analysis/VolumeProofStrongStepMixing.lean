@@ -22,7 +22,7 @@ variable {n : ℕ}
 not on a separate paper-radius bound.  This form permits accuracy-dependent
 radial truncations while retaining a constant acceptance probability. -/
 theorem acceptance_floor_of_radiusStepProduct_cv18
-    (hn : 1 ≤ n) {σ δ R : ℝ} (hσ : 0 < σ) (hδ : 0 < δ)
+    (_hn : 1 ≤ n) {σ δ R : ℝ} (hσ : 0 < σ) (hδ : 0 < δ)
     (hδσ : δ ≤ σ / 8) (hRδ : R * δ ≤ σ ^ 2 / 9) :
     1 ≤ 20 * Real.exp (-(2 * R * δ + δ ^ 2) / (2 * σ ^ 2)) *
       (1 / 8) * (2 / 3) := by
@@ -450,7 +450,7 @@ open scoped ENNReal Pointwise
 /-- Figure 1's executable proposal radius satisfies the strong step cap used
 to remove the old `n ≥ 21` restriction. -/
 theorem figureOneProposalRadius_le_strongMixingStep
-    (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
+    (q : VolumeParams) {sigma2 : ℝ} (_hsigma2 : 0 < sigma2) :
     figureOneProposalRadius q sigma2 ≤
       Real.sqrt sigma2 / (4096 * Real.sqrt q.n) := by
   have hn0 : (0 : ℝ) < q.n := by

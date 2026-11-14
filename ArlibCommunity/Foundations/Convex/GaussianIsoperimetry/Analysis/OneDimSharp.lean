@@ -681,7 +681,7 @@ theorem gaussianIndicator_isoperimetry_measurable_logTwo (hn : 2 ≤ n) {σ d R 
     (hRσ : Real.sqrt 3 * R ≤ 2 * σ * Real.sqrt n)
     {S₁ S₂ S₃ : Set (EuclideanSpace ℝ (Fin n))}
     (hpart : IsPartition3 Set.univ S₁ S₂ S₃)
-    (hS₁ : MeasurableSet S₁) (_hS₂ : MeasurableSet S₂) (_hS₃ : MeasurableSet S₃)
+    (_hS₁ : MeasurableSet S₁) (_hS₂ : MeasurableSet S₂) (_hS₃ : MeasurableSet S₃)
     (hsep : ∀ u ∈ S₁, ∀ v ∈ S₂,
       d / Real.log 2 ≤ ‖u - v‖ ∨
         4 * (d / σ) * Real.sqrt n

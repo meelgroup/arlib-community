@@ -137,13 +137,13 @@ theorem accuracyPhase_stationaryCoreMap_tv_proposal
       (accuracyCoreError_le_one_div_sixteen q)
       (figureOneProposalRadius_le_accuracyCoreErrorStep q hsigma2)
       (by
-        convert hgaussCore0 using 1 <;>
-          simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
-            Real.sq_sqrt hsigma2.le])
+        convert hgaussCore0 using 1
+        simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
+          Real.sq_sqrt hsigma2.le])
       (by
-        convert hgaussCoretop using 1 <;>
-          simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
-            Real.sq_sqrt hsigma2.le])
+        convert hgaussCoretop using 1
+        simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
+          Real.sq_sqrt hsigma2.le])
       (by simpa [Real.sq_sqrt hsigma2.le] using hmass0)
       (by simpa [Real.sq_sqrt hsigma2.le] using hmasstop)
     have hcompare := TVLe.condOn_ellGaussianProb_gaussian_of_coreDefect_cv18

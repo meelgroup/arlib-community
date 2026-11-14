@@ -805,13 +805,13 @@ nonzero denominator forces either a bad centered numerator or a bad
 denominator. -/
 theorem paired_ratio_bad_implies_centered_or_denominator
     {k p r eta numerator denominator : ℝ}
-    (hk : 0 < k) (hp : 0 < p) (heta : 0 < eta)
+    (_hk : 0 < k) (_hp : 0 < p) (heta : 0 < eta)
     (hden : denominator ≠ 0)
     (hbad : eta ≤ |numerator / denominator - r|) :
     k * p * eta / 2 ≤ |numerator - r * denominator| ∨
       k * p / 2 ≤ |denominator - k * p| := by
   by_contra h
-  push_neg at h
+  push Not at h
   have hdenBounds := (abs_lt.mp h.2)
   have hdenPos : 0 < denominator := by nlinarith
   have hcenter : |numerator - r * denominator| < eta * denominator := by
@@ -855,7 +855,7 @@ theorem bind_accuracyImportancePairProgram_success_ratio_deviation_le_of_isWarm
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {weight : AmbientSpace q.n → ℝ} (hweight : Continuous weight)
-    (hweight0 : ∀ x, 0 ≤ weight x)
+    (_hweight0 : ∀ x, 0 ≤ weight x)
     (hweightMem : MemLp weight 2
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n)))

@@ -443,7 +443,7 @@ theorem figureOneFinalScheduledRetainedComplete_expensive_le_ideal
       figureOneFinalScheduledCountedLawFromInitial q I oracle none E = 0 := by
     rw [figureOneFinalScheduledCountedLawFromInitial_none q I oracle]
     rw [Measure.dirac_apply' _ hE]
-    simp only [E, Set.mem_ofPred_eq, Prod.snd]
+    simp only [E]
     simp [not_lt_of_ge hbudget]
   have hcheap := initialTruncatedOption_bind_apply_le_of_none_zero
     q I (figureOneFinalScheduledCountedLawFromInitial q I oracle)

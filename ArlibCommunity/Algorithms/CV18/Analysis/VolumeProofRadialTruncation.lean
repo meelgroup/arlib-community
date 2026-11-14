@@ -22,7 +22,7 @@ open Ttc.CVAdaptive
 
 private theorem uniformSecondMoment_pos (q : VolumeParams) (I : VolumeInput q.n) :
     0 < uniformSecondMoment I := by
-  letI : NeZero q.n :=
+  let : NeZero q.n :=
     ⟨Nat.ne_of_gt (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)⟩
   let K : Set (AmbientSpace q.n) := I.body
   have hKtop : volume K ≠ ⊤ := I.body.isCompact.measure_lt_top.ne
@@ -42,7 +42,7 @@ private theorem uniformSecondMoment_pos (q : VolumeParams) (I : VolumeInput q.n)
       ((measurableSet_singleton (0 : AmbientSpace q.n)).compl)]
     rw [inter_comm]
     change 0 < volume (K \ ({0} : Set (AmbientSpace q.n)))
-    rw [measure_diff_null (measure_singleton 0)]
+    rw [measure_sdiff_null (measure_singleton 0)]
     exact bot_lt_iff_ne_bot.mpr hK0
   unfold uniformSecondMoment euclideanVolume
   exact div_pos hintegral (ENNReal.toReal_pos hK0 hKtop)
@@ -168,16 +168,16 @@ theorem figureOneRadialTruncationBound
       (volume (K \ closedBall 0 rterminal)).toReal ≤ eta * (volume K).toReal :=
     by
       have hdyTop : volume (K \ closedBall 0 rdyadic) ≠ ⊤ :=
-        ne_of_lt (lt_of_le_of_lt (measure_mono diff_subset)
+        ne_of_lt (lt_of_le_of_lt (measure_mono sdiff_subset)
           I.body.isCompact.measure_lt_top)
       exact (ENNReal.toReal_mono hdyTop (measure_mono htailSubset)).trans htailDyadic
   have haddENN : volume (K ∩ closedBall 0 rterminal) +
       volume (K \ closedBall 0 rterminal) = volume K :=
-    measure_inter_add_diff K measurableSet_closedBall
+    measure_inter_add_sdiff K measurableSet_closedBall
   have htruncTop : volume (K ∩ closedBall 0 rterminal) ≠ ⊤ :=
     ne_of_lt (lt_of_le_of_lt (measure_mono inter_subset_left) I.body.isCompact.measure_lt_top)
   have htailTop : volume (K \ closedBall 0 rterminal) ≠ ⊤ :=
-    ne_of_lt (lt_of_le_of_lt (measure_mono diff_subset) I.body.isCompact.measure_lt_top)
+    ne_of_lt (lt_of_le_of_lt (measure_mono sdiff_subset) I.body.isCompact.measure_lt_top)
   have hadd : (volume (K ∩ closedBall 0 rterminal)).toReal +
       (volume (K \ closedBall 0 rterminal)).toReal = (volume K).toReal := by
     rw [← ENNReal.toReal_add htruncTop htailTop, haddENN]

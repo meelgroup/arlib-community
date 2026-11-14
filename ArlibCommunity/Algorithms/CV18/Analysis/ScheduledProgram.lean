@@ -141,7 +141,7 @@ noncomputable def scheduledAccuracyMetropolisMarkedBallStep
 
 /-- The dummy endpoint observation retained by the proper-proposal clock. -/
 noncomputable def scheduledAccuracyZeroObservation
-    (q : VolumeParams) (sigma2 : ℝ) (current : AmbientSpace q.n) :
+    (q : VolumeParams) (_sigma2 : ℝ) (current : AmbientSpace q.n) :
     MembershipOracleProgram q.n ℝ :=
   let target := (scaleFactor q)⁻¹ • current
   .query target fun _ => .pure 0
@@ -152,7 +152,7 @@ noncomputable def cappedScheduledAccuracyProperBlockAux
     ℕ → ℕ → AmbientSpace q.n →
       MembershipOracleProgram q.n (Option (ℝ × AmbientSpace q.n))
   | 0, _, _ => .pure none
-  | rawCap + 1, 0, current =>
+  | _rawCap + 1, 0, current =>
       (scheduledAccuracyZeroObservation q sigma2 current).bind fun observed =>
         .pure (some (observed, current))
   | rawCap + 1, remainingProper + 1, current =>
@@ -167,7 +167,7 @@ noncomputable def cappedScheduledAccuracyProperBlockAux
                   rawCap (nextRemaining + 1) result.2
           else cappedScheduledAccuracyProperBlockAux q sigma2 properStride
             rawCap (remainingProper + 1) result.2
-termination_by rawCap remainingProper current => rawCap
+termination_by rawCap _remainingProper _current => rawCap
 
 /-- Walk until `properStride` proper proposals have been made, giving up
 (`none`) after `rawCap` raw proposals. -/
@@ -230,7 +230,7 @@ noncomputable def scheduledBalancedAccuracyRetryCollectAux
                   scheduledBalancedAccuracyRetryCollectAux q sigma2 weight
                     proposalCap properStride retryLimit attempts
                     (samples + 1) total mixed
-termination_by attempts samples total current => (samples, attempts)
+termination_by attempts samples _total _current => (samples, attempts)
 
 /-- One phase's sample collector: `samples` accepted target draws, each obtained
 by a capped proper-step block followed by at most `retryLimit` rejection

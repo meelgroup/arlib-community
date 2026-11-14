@@ -493,7 +493,7 @@ noncomputable def walkRequirement
 
 /-- A real-valued warmness constant for carrying speedy endpoints between
 successive cooling phases. -/
-noncomputable def warmConstant (q : VolumeParams) : ℝ :=
+noncomputable def warmConstant (_q : VolumeParams) : ℝ :=
   Real.exp (1 / 2) * (4 * Real.exp (1 / 2))
 
 /-- First proper block: accepted-state warmness followed by adjacent-phase

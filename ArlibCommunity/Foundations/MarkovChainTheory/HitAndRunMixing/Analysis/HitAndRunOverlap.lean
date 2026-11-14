@@ -601,7 +601,7 @@ theorem tvLe_hitAndRun_of_close (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin
     TVLe (hitAndRun K u) (hitAndRun K v)
       (ENNReal.ofReal
         (1 - 1 / (2 * (1 + 4 / (n : ℝ)) ^ n) * (1 - (1 / 8 + q₂ + 1 / 2)))) := by
-  haveI : NeZero n := ⟨hn⟩
+  have : NeZero n := ⟨hn⟩
   have hnR : (0 : ℝ) < (n : ℝ) := by positivity
   have hspos : 0 < Real.sqrt n := Real.sqrt_pos.2 hnR
   set N : ℝ := 1 + 4 / (n : ℝ) with hN
@@ -653,11 +653,11 @@ theorem tvLe_hitAndRun_of_close (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin
       rw [hA₁, Metric.mem_ball, dist_eq_norm]
       exact lt_of_not_ge hcon
     have h8 : Real.sqrt n * |⟪x - u, u - v⟫| ≤ ‖x - u‖ * ‖u - v‖ := by
-      rw [hA₂, Set.mem_setOf_eq, not_lt] at h2
+      rw [hA₂, Set.mem_ofPred_eq, not_lt] at h2
       exact h2
     -- the two chord conditions, from `x ∉ A₃`
     obtain ⟨hlow, hhigh⟩ : (-3 : ℝ) ≤ chordLow K u x ∧ chordHigh K u x ≤ 3 := by
-      rw [hA₃def, Set.mem_union, not_or, Set.mem_setOf_eq, Set.mem_setOf_eq,
+      rw [hA₃def, Set.mem_union, not_or, Set.mem_ofPred_eq, Set.mem_ofPred_eq,
         not_lt, not_lt] at h3
       exact h3
     -- the paper's (7)

@@ -163,7 +163,7 @@ theorem exists_forall_abs_sub_le_of_chain_collapse {D : ℕ → Set E} (hDcomp :
   have hsub : (⋂ k, D k) ⊆ {y : E | |g y - g p| < η} := by
     intro y hy
     have hyp : y = p := hp hy
-    simp only [mem_setOf_eq, hyp, sub_self, abs_zero]
+    simp only [mem_ofPred_eq, hyp, sub_self, abs_zero]
     exact hη
   obtain ⟨N, hN⟩ := eventually_subset_of_antitone_isCompact hDcomp hDmono hopen hsub
   exact ⟨N, fun k hk y hy => (hN k hk hy).le⟩
@@ -682,9 +682,9 @@ theorem le_setIntegral_min_sq_coord (ρ : Fin (m + 1) → ℝ) (hρ0 : ρ 0 = 1)
       ≤ ∫ y in Set.univ.pi fun i => Icc (-(ρ i)) (ρ i), min 1 ((y 0) ^ 2) := by
   classical
   set a : Fin (m + 1) → ℝ := fun i => if i = 0 then 1 / 2 else -(ρ i) with hadef
-  have ha0 : a 0 = 1 / 2 := if_pos rfl
+  have ha0 : a 0 = 1 / 2 := ite_eq_left rfl
   have hasucc : ∀ i : Fin m, a (Fin.succ i) = -(ρ (Fin.succ i)) :=
-    fun i => if_neg (Fin.succ_ne_zero i)
+    fun i => ite_eq_right (Fin.succ_ne_zero i)
   have hf : Continuous fun y : Fin (m + 1) → ℝ => min 1 ((y 0) ^ 2) := by fun_prop
   have hTcomp : IsCompact (Set.univ.pi fun i => Icc (-(ρ i)) (ρ i)) :=
     isCompact_univ_pi fun _ => isCompact_Icc
@@ -749,20 +749,20 @@ theorem exists_chain_euclidean_of_sep_data :
       (∀ x, g₁ x = 0 → g₂ x < ε) := by
   classical
   set ρ : ℕ → Fin (m + 1) → ℝ := fun k i => if i = 0 then 1 else 1 / ((k : ℝ) + 1) with hρdef
-  have hρ0 : ∀ k, ρ k 0 = 1 := fun k => if_pos rfl
+  have hρ0 : ∀ k, ρ k 0 = 1 := fun k => ite_eq_left rfl
   have hρpos : ∀ k i, 0 < ρ k i := by
     intro k i
     rw [hρdef]
     by_cases hi : i = 0
     · simp [hi]
-    · simp only [hi, if_false]
+    · simp only [hi, ite_false]
       positivity
   have hρmono : ∀ k i, ρ (k + 1) i ≤ ρ k i := by
     intro k i
     rw [hρdef]
     by_cases hi : i = 0
     · simp [hi]
-    · simp only [hi, if_false]
+    · simp only [hi, ite_false]
       have h1 : (0 : ℝ) < (k : ℝ) + 1 := by positivity
       have h2 : (k : ℝ) + 1 ≤ ((k + 1 : ℕ) : ℝ) + 1 := by push_cast; linarith
       exact one_div_le_one_div_of_le h1 h2

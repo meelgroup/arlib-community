@@ -171,7 +171,7 @@ theorem iterated_retainedSumKernel_ae_total_nonnegative
       rw [iteratedKernelLaw_succ]
       let R : Kernel (ℝ × Option S) (ℝ × Option S) :=
         ⟨retainedSumKernel K weight, hsum.1⟩
-      letI : IsMarkovKernel R := ⟨hsum.2⟩
+      let : IsMarkovKernel R := ⟨hsum.2⟩
       change ∀ᵐ state ∂R ∘ₘ iteratedKernelLaw
         (fun _ => retainedSumKernel K weight) initial steps, 0 ≤ state.1
       apply Measure.ae_comp_of_ae_ae (κ := R)
@@ -214,7 +214,7 @@ theorem iterated_retainedSumKernel_ae_total_le
       rw [iteratedKernelLaw_succ]
       let R : Kernel (ℝ × Option S) (ℝ × Option S) :=
         ⟨retainedSumKernel K weight, hsum.1⟩
-      letI : IsMarkovKernel R := ⟨hsum.2⟩
+      let : IsMarkovKernel R := ⟨hsum.2⟩
       change ∀ᵐ state ∂R ∘ₘ iteratedKernelLaw
         (fun _ => retainedSumKernel K weight) initial steps,
         state.1 ≤ C + ((steps + 1 : ℕ) : ℝ) * B
@@ -345,7 +345,7 @@ theorem integral_iterated_retainedSumKernel_total_eq_sum_marginals
     (K : Option S → Measure (Option S)) (hK : Measurable K)
     (hKprob : ∀ state, IsProbabilityMeasure (K state))
     (weight : S → ℝ) (hweight : Measurable weight)
-    {B C : ℝ} (hB : 0 ≤ B) (hC : 0 ≤ C)
+    {B C : ℝ} (hB : 0 ≤ B) (_hC : 0 ≤ C)
     (hweight0 : ∀ state, 0 ≤ weight state)
     (hweightB : ∀ state, weight state ≤ B)
     (initial : Measure (ℝ × Option S)) [IsProbabilityMeasure initial]

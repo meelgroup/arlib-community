@@ -342,7 +342,7 @@ theorem continuous_pencilMass {e₁ e₂ : E} (h11 : inner ℝ e₁ e₁ = (1 : 
   have hset : ∀ θ : ℝ, {x : E | φ θ x ≤ 0}
       = halfSpace (pencilFun e₁ e₂ θ) (pencilLevel r s θ) true := by
     intro θ; ext x
-    simp only [hφ, halfSpace_true, mem_setOf_eq]
+    simp only [hφ, halfSpace_true, mem_ofPred_eq]
     constructor <;> intro h <;> linarith
   have hcont : ∀ x : E, Continuous fun θ : ℝ => φ θ x := by
     intro x
@@ -358,7 +358,7 @@ theorem continuous_pencilMass {e₁ e₂ : E} (h11 : inner ℝ e₁ e₁ = (1 : 
     have hset0 : {x : E | φ θ₀ x = 0}
         = {x : E | pencilFun e₁ e₂ θ₀ x = pencilLevel r s θ₀} := by
       ext x
-      simp only [hφ, mem_setOf_eq]
+      simp only [hφ, mem_ofPred_eq]
       constructor <;> intro h <;> linarith
     have hμ : μ {x : E | pencilFun e₁ e₂ θ₀ x = pencilLevel r s θ₀} = 0 :=
       measure_hyperplane_eq_zero μ (pencilFun_ne_zero h11 h22 h12 θ₀) _
@@ -453,7 +453,7 @@ theorem notMem_interior_halfSpace {L : E →L[ℝ] ℝ} (hL : L ≠ 0) {c : ℝ}
   obtain ⟨y, hy⟩ : ∃ y : E, 0 < L y := by
     have hex : ∃ z : E, L z ≠ 0 := by
       by_contra hcon
-      push_neg at hcon
+      push Not at hcon
       exact hL (by ext z; simp [hcon z])
     obtain ⟨z, hz⟩ := hex
     rcases lt_or_gt_of_ne hz with hlt | hgt
@@ -467,7 +467,7 @@ theorem notMem_interior_halfSpace {L : E →L[ℝ] ℝ} (hL : L ≠ 0) {c : ℝ}
   cases side
   · intro hmem
     have hxx : x ∈ halfSpace L c false := interior_subset hmem
-    rw [halfSpace_false, mem_setOf_eq] at hxx
+    rw [halfSpace_false, mem_ofPred_eq] at hxx
     exact absurd hx (ne_of_gt hxx)
   · intro hmem
     rw [mem_interior_iff_mem_nhds, Metric.mem_nhds_iff] at hmem
@@ -483,7 +483,7 @@ theorem notMem_interior_halfSpace {L : E →L[ℝ] ℝ} (hL : L ≠ 0) {c : ℝ}
       field_simp
       linarith
     have hin := hball hmemball
-    rw [halfSpace_true, mem_setOf_eq, map_add, map_smul, smul_eq_mul] at hin
+    rw [halfSpace_true, mem_ofPred_eq, map_add, map_smul, smul_eq_mul] at hin
     nlinarith
 
 /-- **A cut removes its flat from the interior of the successor, hence of every later body.**
@@ -808,10 +808,10 @@ theorem minor_eq_of_pencil_exhaustion {S : Set (EuclideanSpace ℝ (Fin n))} (hS
     linear_combination (ε / 2) * hpy
   cases side
   · have hin := hsub hw₀S
-    rw [halfSpace_false, mem_setOf_eq, hL₀] at hin
+    rw [halfSpace_false, mem_ofPred_eq, hL₀] at hin
     exact lt_irrefl _ hin
   · have hin := hsub hw₁S
-    rw [halfSpace_true, mem_setOf_eq, hL₁] at hin
+    rw [halfSpace_true, mem_ofPred_eq, hL₁] at hin
     linarith
 
 /-- Vanishing of all `2 × 2` minors of all difference vectors is exactly collinearity. -/
@@ -824,11 +824,11 @@ theorem collinear_of_minor_eq {S : Set (EuclideanSpace ℝ (Fin n))}
   rw [collinear_iff_of_mem hx]
   by_cases hall : ∀ y ∈ S, y = x
   · exact ⟨0, fun p hp => ⟨0, by rw [hall p hp]; simp⟩⟩
-  push_neg at hall
+  push Not at hall
   obtain ⟨y, hy, hyx⟩ := hall
   have hex : ∃ i₀ : Fin n, y i₀ - x i₀ ≠ 0 := by
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     exact hyx (PiLp.ext fun i => by have := hcon i; linarith)
   obtain ⟨i₀, hi₀⟩ := hex
   refine ⟨y - x, fun z hz => ⟨(z i₀ - x i₀) / (y i₀ - x i₀), PiLp.ext fun j => ?_⟩⟩

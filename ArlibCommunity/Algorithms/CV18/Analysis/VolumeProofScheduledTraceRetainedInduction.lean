@@ -109,10 +109,10 @@ theorem map_scheduledBalancedTracePhaseKernel_retainedOption
             (scheduleValue q phase)) count).2 _ _
       unfold scheduledBalancedTracePhaseKernel
         scheduledBalancedTracePhaseObservationLaw
-      simp only [if_true, hphase]
+      simp only [ite_true, hphase]
       unfold scheduledBalancedCoolingRatioTransitionLaw
       unfold figureOneFinalScheduledCompleteRetainedKernel
-      simp only [scheduledBalancedTraceRetainedOption, if_true]
+      simp only [scheduledBalancedTraceRetainedOption, ite_true]
       rw [show phaseSampleCount q (scheduleValue q phase) - 1 + 1 =
           phaseSampleCount q (scheduleValue q phase) by
         simpa [count] using hcountEq]
@@ -124,7 +124,7 @@ theorem map_scheduledBalancedTracePhaseKernel_retainedOption
           (measurable_scheduledBalancedTraceRetainedOption.comp happend) havg]
       apply Measure.map_congr
       filter_upwards with result
-      simpa [append, avg,
+      simp [append, avg,
         scheduledBalancedTraceRetainedOption_append,
         optionSnd_balancedCoolingAverage]
 

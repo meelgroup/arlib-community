@@ -294,7 +294,7 @@ theorem measurable_medianOf (m : ℕ) :
   classical
   by_cases hm : 0 < m
   · unfold Arlib.Probability.medianOf
-    simp only [dif_pos hm]
+    simp only [dite_eq_left hm]
     apply measurable_of_Iic
     intro a
     let k : Fin m := ⟨m / 2, Nat.div_lt_self hm one_lt_two⟩

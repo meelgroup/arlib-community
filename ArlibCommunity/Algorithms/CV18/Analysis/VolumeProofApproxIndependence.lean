@@ -249,7 +249,7 @@ theorem ApproxIndepFun.abs_integral_mul_sub_mul_integral_le
     filter_upwards with omega
     rw [Real.norm_eq_abs, abs_of_nonneg (hY0 omega)]
     exact hYb omega
-  letI : IsFiniteMeasure nu := by
+  let : IsFiniteMeasure nu := by
     dsimp only [nu]
     exact isFiniteMeasure_withDensity_ofReal hYint.hasFiniteIntegral
   have hXintNu : Integrable X nu := by

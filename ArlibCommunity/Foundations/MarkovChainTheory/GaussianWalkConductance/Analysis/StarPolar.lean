@@ -782,7 +782,7 @@ theorem volume_eq_lintegral_polar {n : ℕ} (hn : 1 ≤ n) (u : EuclideanSpace �
           ENNReal.ofReal (r ^ (n - 1))
             * S.indicator (fun _ => (1 : ℝ≥0∞)) (u + r • (θ : EuclideanSpace ℝ (Fin n)))
         ∂(volume : Measure ℝ) ∂((volume : Measure (EuclideanSpace ℝ (Fin n))).toSphere) := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   have hmeas : Measurable (S.indicator (fun _ => (1 : ℝ≥0∞))) :=
     measurable_const.indicator hS
   rw [← lintegral_polar_at u hmeas, lintegral_indicator hS]

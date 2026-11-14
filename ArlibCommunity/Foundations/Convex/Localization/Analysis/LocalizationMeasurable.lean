@@ -373,7 +373,7 @@ theorem exists_needle_of_compact_convex_witness (hm : m ≠ 0) :
     rw [norm_smul, he₀, mul_one, Real.norm_eq_abs]; norm_num
   have hUne : ({x : EuclideanSpace ℝ (Fin (m + 1)) | c x ≠ 0} ∩ Metric.ball 0 1).Nonempty := by
     refine ⟨(1 / 2 : ℝ) • e₀, ?_, ?_⟩
-    · rw [Set.mem_setOf_eq, hx₀c]; norm_num
+    · rw [mem_ofPred_eq, hx₀c]; norm_num
     · rw [Metric.mem_ball, dist_zero_right, hx₀n]; norm_num
   have hUsub : ({x : EuclideanSpace ℝ (Fin (m + 1)) | c x ≠ 0} ∩ Metric.ball 0 1)
       ⊆ Function.support g₂ ∩ K := by

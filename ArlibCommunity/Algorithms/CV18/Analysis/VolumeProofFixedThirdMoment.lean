@@ -157,7 +157,7 @@ theorem fixedRate_thirdMoment_dimensionFactor_pow_le
         nlinarith [sq_nonneg (N - 5)]
   have hexpFour : Real.exp (6 / 5 : ℝ) ≤ 4 := by
     convert Real.exp_le_two_add_div_two_sub (x := (6 / 5 : ℝ))
-      (by norm_num) (by norm_num) using 1 <;> norm_num
+      (by norm_num) (by norm_num) using 1; norm_num
   calc
     (N ^ 3 / ((N + 1) ^ 2 * (N - 2))) ^ (n + 1) ≤
         (1 + 5 / N ^ 2) ^ (n + 1) := hpow
@@ -190,7 +190,7 @@ theorem scheduleValue_fixedRate_relativeThirdMoment_le
     rw [ht_next]
     unfold nextVariance
     refine (min_le_right _ _).trans ?_
-    rw [coolingRate, if_pos]
+    rw [coolingRate, ite_eq_left]
     simpa [s] using hsone
   have hstepThree : t ≤ s * (4 / 3 : ℝ) := by
     have hinv : 1 / (q.n : ℝ) ≤ 1 / 3 :=
@@ -281,8 +281,8 @@ theorem scheduleValue_fixedRate_relativeThirdMoment_le_dim_three
     rw [ht_next]
     unfold nextVariance
     refine (min_le_right _ _).trans ?_
-    rw [coolingRate, if_pos]
-    · simpa [hn]
+    rw [coolingRate, ite_eq_left]
+    · simp [hn]
     · simpa [s] using hsone
   have hthree : 2 * t < 3 * s := by nlinarith
   have hraw := gaussianRatioWeight_relativeThirdMoment_le_of_oneThird
@@ -355,7 +355,7 @@ theorem four_le_figureOneDependentPhaseCount (q : VolumeParams) :
     calc
       nextVariance q s ≤ s * coolingRate q s := min_le_right _ _
       _ = s * (1 + 1 / (q.n : ℝ)) := by
-        rw [coolingRate, if_pos hsone]
+        rw [coolingRate, ite_eq_left hsone]
       _ ≤ s * (4 / 3 : ℝ) := by
         apply mul_le_mul_of_nonneg_left _ hs
         have hinv : 1 / (q.n : ℝ) ≤ 1 / 3 :=
@@ -406,7 +406,7 @@ theorem eight_le_figureOneDependentPhaseCount (q : VolumeParams) :
     calc
       nextVariance q s ≤ s * coolingRate q s := min_le_right _ _
       _ = s * (1 + 1 / (q.n : ℝ)) := by
-        rw [coolingRate, if_pos hsone]
+        rw [coolingRate, ite_eq_left hsone]
       _ ≤ s * (4 / 3 : ℝ) := by
         apply mul_le_mul_of_nonneg_left _ hs
         have hinv : 1 / (q.n : ℝ) ≤ 1 / 3 :=

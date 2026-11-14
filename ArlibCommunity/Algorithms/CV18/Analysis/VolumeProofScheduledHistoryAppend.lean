@@ -40,9 +40,9 @@ theorem measurable_balancedCoolingHistoryConcat_left
   apply Measurable.prodMk
   · refine Measurable.of_eval fun k => ?_
     by_cases hk : k < head.2.1
-    · simp only [hk, if_true]
+    · simp only [hk, ite_true]
       exact measurable_const
-    · simp only [hk, if_false]
+    · simp only [hk, ite_false]
       apply Measurable.ite
       · exact measurableSet_lt measurable_const
           (measurable_const.add (measurable_fst.comp measurable_snd))
@@ -92,7 +92,7 @@ theorem balancedCoolingHistoryConcat_snoc_cons
     · have hlt : k < prefixCount + (tailCount + 1) := by omega
       have hlt' : k < prefixCount + 1 := by omega
       have hne : k ≠ prefixCount := by omega
-      simp [hk, hlt, hlt', hne]
+      simp [hk, hlt', hne]
     · have hkp : prefixCount ≤ k := Nat.le_of_not_gt hk
       by_cases heq : k = prefixCount
       · subst k
@@ -143,7 +143,7 @@ theorem scheduledExecutableCoolingHistoryFrom_singleton
 theorem scheduledExecutableCoolingHistoryFrom_cons_cons
     (parameters : BalancedCoolingParameters) (q : VolumeParams)
     (I : VolumeInput q.n) (sigma2 tau2 : ℝ) (rest : List ℝ)
-    (hsigma2 : 0 < sigma2)
+    (_hsigma2 : 0 < sigma2)
     (htailPositive : ∀ s ∈ tau2 :: rest, 0 < s)
     (head : BalancedCoolingHistory q.n) :
     scheduledExecutableCoolingHistoryFrom parameters q I
@@ -414,7 +414,7 @@ theorem scheduledExecutableFrontHistoryLaw_eq_iterated
               (iteratedKernelLaw_dirac_measurable_and_probability
                 KS hKS hKSprob steps).1
             simp only [K, scheduledBalancedForwardPhaseKernel, Nat.add_zero,
-              hoffset, if_true]
+              hoffset, ite_true]
             rw [← scheduledBalancedCoolingRatioLaw_eq_transitionLaw parameters q I
               (scheduleValue_pos q offset) (scheduleValue q (offset + 1))
               head.2.2.2]
@@ -423,8 +423,7 @@ theorem scheduledExecutableFrontHistoryLaw_eq_iterated
             filter_upwards with phase
             cases phase with
             | none =>
-                simp only [balancedCoolingHistorySnocTerminal,
-                  Function.comp_apply]
+                simp only [balancedCoolingHistorySnocTerminal]
                 calc
                   Measure.dirac none =
                       scheduledExecutableFrontHistoryLaw parameters q I
@@ -448,7 +447,6 @@ theorem coolingSchedule_eq_scheduledVarianceSegment
       scheduledVarianceSegment q 0 (terminalPhaseSteps q) := by
   unfold explicitVolumeCoolingSchedule coolingSchedule
     scheduledVarianceSegment
-  congr 1
   apply List.ofFn_inj.mpr
   funext i
   congr 1
@@ -637,7 +635,7 @@ theorem scheduledBalancedForwardHistoryLawFromPoint_succ_terminal
   | some history =>
       unfold scheduledBalancedForwardPhaseKernel
         scheduledExecutableTerminalHistoryKernel
-      simp only [lt_self_iff_false, if_false]
+      simp only [lt_self_iff_false, ite_false]
       rw [scheduledBalancedCoolingUniformLaw_eq_transitionLaw parameters q I
         (terminalVariance_pos' q) history.2.2.2]
 

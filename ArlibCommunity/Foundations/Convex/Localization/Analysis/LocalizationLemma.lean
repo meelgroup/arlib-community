@@ -416,8 +416,8 @@ of `ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationAssembly
 theorem closure_halfSpace_false_subset (L : E →L[ℝ] ℝ) (s : ℝ) :
     closure (halfSpace L s false) ⊆ halfSpace (-L) (-s) true := by
   refine closure_minimal (fun x hx => ?_) (isClosed_halfSpace_true (-L) (-s))
-  rw [halfSpace_false, mem_setOf_eq] at hx
-  simp only [halfSpace_true, mem_setOf_eq, ContinuousLinearMap.neg_apply]
+  rw [halfSpace_false, mem_ofPred_eq] at hx
+  simp only [halfSpace_true, mem_ofPred_eq, neg_apply]
   linarith
 
 /-- **Closing up a cut, uniformly in the side.**  The closure of either side of the cut
@@ -479,7 +479,7 @@ theorem measure_hyperplane_eq_zero {L : E →L[ℝ] ℝ} (hL : L ≠ 0) (s : ℝ
     have hpre : (fun y : E => x₀ + y) ⁻¹' {x : E | L x = s}
         = ((LinearMap.ker (L : E →ₗ[ℝ] ℝ) : Submodule ℝ E) : Set E) := by
       ext y
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, map_add, SetLike.mem_coe,
+      simp only [Set.mem_preimage, mem_ofPred_eq, map_add, SetLike.mem_coe,
         LinearMap.mem_ker, ContinuousLinearMap.coe_coe]
       rw [hx₀']
       constructor
@@ -734,8 +734,8 @@ theorem exists_bisection_chain {g h : E → ℝ} (hg : Integrable g μ) (hh : In
       exists_halfSpace_cut_pos hg.integrableOn hh.integrableOn hNm hNb (hL N) hgN hNh
     obtain ⟨C', hC'⟩ : ∃ C' : ℕ → Set E, ∀ k,
         C' k = if k = N + 1 then C N ∩ halfSpace (L N) s side else C k := ⟨_, fun _ => rfl⟩
-    have hlow : ∀ k, k ≠ N + 1 → C' k = C k := fun k hk => by rw [hC' k, if_neg hk]
-    have htop : C' (N + 1) = C N ∩ halfSpace (L N) s side := by rw [hC' (N + 1), if_pos rfl]
+    have hlow : ∀ k, k ≠ N + 1 → C' k = C k := fun k hk => by rw [hC' k, ite_eq_right hk]
+    have htop : C' (N + 1) = C N ∩ halfSpace (L N) s side := by rw [hC' (N + 1), ite_eq_left rfl]
     refine ⟨C', ?_, ?_, ?_⟩
     · rw [hlow 0 (by omega)]
       exact hC0

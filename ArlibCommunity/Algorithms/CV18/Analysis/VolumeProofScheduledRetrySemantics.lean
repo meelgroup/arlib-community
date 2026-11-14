@@ -26,7 +26,7 @@ theorem scheduledBalancedAccuracyRetryCollectAux_semantics
               properStride)
             (scheduledBalancedAccuracyGaussianRejectionKernel q I sigma2)
             weight retryLimit attempts samples total current) := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let B := scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
     properStride
   let R := scheduledBalancedAccuracyGaussianRejectionKernel q I sigma2

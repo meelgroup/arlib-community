@@ -89,7 +89,7 @@ theorem cappedAccuracyProperCollectOne_countedQueryCost_le
             rw [lintegral_dirac' _ measurable_countedQueryCost_integrand]
             simp
           simp_rw [hzero]
-          simp [E, totalLazyProperExpectedRawCost]
+          simp [totalLazyProperExpectedRawCost]
       | succ remainingProper =>
           let step := accuracyMetropolisMarkedBallStep q sigma2 current
           let next : Bool × AmbientSpace q.n → MembershipOracleProgram q.n

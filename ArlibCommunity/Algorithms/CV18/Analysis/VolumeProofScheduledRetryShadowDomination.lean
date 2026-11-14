@@ -46,8 +46,7 @@ theorem finiteKilledChainExpectedCost_mono
     {S : Type*} [MeasurableSpace S]
     (next : S → Measure S) (trialCost : S → ENNReal) :
     Monotone fun trials => finiteKilledChainExpectedCost next trialCost trials := by
-  intro first second hle
-  intro current
+  intro first second hle current
   induction second generalizing first current with
   | zero =>
       have : first = 0 := Nat.eq_zero_of_le_zero hle

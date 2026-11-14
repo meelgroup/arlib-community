@@ -122,7 +122,7 @@ theorem convex_apexConeBody (u v : EuclideanSpace ℝ (Fin n)) :
     Convex ℝ (apexConeBody u v) := by
   refine Convex.inter ?_ (convex_closedBall v 4)
   intro x hx y hy p q hp hq hpq
-  simp only [Set.mem_setOf_eq] at hx hy ⊢
+  simp only [Set.mem_ofPred_eq] at hx hy ⊢
   have hvv : p • v + q • v = v := by rw [← add_smul, hpq, one_smul]
   have key : p • x + q • y - v = p • (x - v) + q • (y - v) := by
     rw [smul_sub, smul_sub]
@@ -174,7 +174,7 @@ theorem apexConeBody_subset_halfspace_right {u v : EuclideanSpace ℝ (Fin n)} :
   intro x hx
   rw [mem_apexConeBody_iff] at hx
   have h1 : (0 : ℝ) ≤ ‖x - v‖ * ‖u - v‖ := mul_nonneg (norm_nonneg _) (norm_nonneg _)
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   linarith [hx.1]
 
 /-- **The cone meets the half-space through `u` facing `v` only in a ball of radius `2t`
@@ -570,7 +570,7 @@ theorem exists_overlap_speedyWalk_fails_apexConeBody (hn : 0 < n)
     ∃ T : Set (EuclideanSpace ℝ (Fin n)), MeasurableSet T ∧ u ∈ T ∧ v ∉ T ∧
       ¬ (1 ≤ 20 * (speedyWalk (apexConeBody u v) 1 u Tᶜ
           + speedyWalk (apexConeBody u v) 1 v T)) := by
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   set K : Set (EuclideanSpace ℝ (Fin n)) := apexConeBody u v with hKdef
   have hK : MeasurableSet K := measurableSet_apexConeBody u v
   have huv : u ≠ v := by

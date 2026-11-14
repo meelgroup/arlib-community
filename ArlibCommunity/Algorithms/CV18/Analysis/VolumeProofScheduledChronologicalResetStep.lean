@@ -81,7 +81,7 @@ theorem sequentialPairLaw_scheduledResetPairKernel_eq_map
       (measurable_scheduledResetPairOutput.comp measurable_snd)
   have hlift : Measurable fun trace : ScheduledBalancedCoolingTrace q.n =>
       (observation trace).map fun result => (trace, result) :=
-    measurable_sequentialPairKernel (rho := source) hobs.1 hobs.2
+    measurable_sequentialPairKernel hobs.1 hobs.2
   unfold sequentialPairLaw
   rw [map_bind_eq_bind_map_of_measurable source hlift hpair]
   apply Measure.bind_congr_right
@@ -115,11 +115,11 @@ theorem sequentialRecordedOutputLaw_scheduledResetPairKernel_eq_bind
       (measurable_scheduledResetPairOutput.comp measurable_snd)
   have hlift : Measurable fun trace : ScheduledBalancedCoolingTrace q.n =>
       (observation trace).map fun result => (trace, result) :=
-    measurable_sequentialPairKernel (rho := source) hobs.1 hobs.2
+    measurable_sequentialPairKernel hobs.1 hobs.2
   have hpairLift : Measurable fun trace : ScheduledBalancedCoolingTrace q.n =>
       (scheduledResetPairKernel q I phase trace).map
         fun result => (trace, result) :=
-    measurable_sequentialPairKernel (rho := source)
+    measurable_sequentialPairKernel
       (scheduledResetPairKernel_measurable_and_probability q I phase).1
       (scheduledResetPairKernel_measurable_and_probability q I phase).2
   have hseq : sequentialPairLaw source (scheduledResetPairKernel q I phase) =

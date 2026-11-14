@@ -188,7 +188,7 @@ theorem scheduledBalancedAccuracyTransitionLawAux_succ_eq_recovered
         (optionKernel (scheduledBalancedAccuracyDecisionKernel q I sigma2))).bind
           (scheduledBalancedAccuracyTransitionOptionTail q I sigma2 proposalCap
             properStride attempts) := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let B := scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
     properStride
   let R := scheduledBalancedAccuracyGaussianRejectionKernel q I sigma2
@@ -247,14 +247,14 @@ theorem scheduledBalancedAccuracyTransitionLawAux_succ_eq_recovered
           unfold balancedRetryRecover T
             scheduledBalancedAccuracyTransitionDecisionTail
           by_cases hresult : result.1 = true
-          · simp only [hresult, if_true]
+          · simp only [hresult, ite_true]
             have hc0 : scaleFactor q ≠ 0 :=
               (scaleFactor_pos q).ne'
             congr 2
             rw [← mul_smul, inv_mul_cancel₀ hc0, one_smul]
           · have hfalse : result.1 = false :=
               Bool.eq_false_of_not_eq_true hresult
-            simp only [hfalse, Bool.false_eq_true, if_false]
+            simp only [hfalse, Bool.false_eq_true, ite_false]
             have hc0 : scaleFactor q ≠ 0 :=
               (scaleFactor_pos q).ne'
             congr 1
@@ -381,7 +381,7 @@ theorem bind_scheduledStationaryOptionDecision_transitionTail_eq
       (pi.bind (scheduledBalancedAccuracyDecisionKernel q I sigma2)).bind
         (scheduledBalancedAccuracyTransitionDecisionTail q I sigma2 proposalCap
           properStride attempts) := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let D := scheduledBalancedAccuracyDecisionKernel q I sigma2
   let T := scheduledBalancedAccuracyTransitionDecisionTail q I sigma2
     proposalCap properStride attempts
@@ -429,7 +429,7 @@ theorem bind_scheduledBalancedAccuracyTransitionLawAux_succ_eq_pipeline
             (scheduledBalancedAccuracyDecisionKernel q I sigma2))).bind
         (scheduledBalancedAccuracyTransitionOptionTail q I sigma2 proposalCap
           properStride attempts)) := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let B := scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
     properStride
   let D := scheduledBalancedAccuracyDecisionKernel q I sigma2
@@ -512,7 +512,7 @@ theorem bind_scheduledBalancedAccuracyTransitionLawAux_succ_leUpTo_stationary
         (scheduledBalancedRejectedStateMeasure q I sigma2 pi).bind
           (scheduledBalancedAccuracyTransitionLawAux q I sigma2 proposalCap
             properStride attempts)) delta := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let D := scheduledBalancedAccuracyDecisionKernel q I sigma2
   let OT := scheduledBalancedAccuracyTransitionOptionTail q I sigma2
     proposalCap properStride attempts

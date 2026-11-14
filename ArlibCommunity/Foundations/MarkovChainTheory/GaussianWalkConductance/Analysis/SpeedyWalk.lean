@@ -160,7 +160,7 @@ def StuckPoints (K : Set (EuclideanSpace ℝ (Fin n))) (δ : ℝ) :
 theorem mem_stuckPoints_iff {K : Set (EuclideanSpace ℝ (Fin n))} {δ : ℝ}
     {x : EuclideanSpace ℝ (Fin n)} :
     x ∈ StuckPoints K δ ↔ volume (Metric.ball x δ ∩ K) = 0 := by
-  rw [StuckPoints, Set.mem_setOf_eq, ell_apply, ENNReal.div_eq_zero_iff]
+  rw [StuckPoints, Set.mem_ofPred_eq, ell_apply, ENNReal.div_eq_zero_iff]
   simp [measure_ball_lt_top.ne]
 
 /-- `StuckPoints K δ` is measurable when `K` is: it is a level set of `ell K δ`. -/
@@ -237,7 +237,7 @@ noncomputable def speedyWalk (K : Set (EuclideanSpace ℝ (Fin n))) (δ : ℝ) :
 open scoped Classical in
 /-- On a measurable `K`, `speedyWalk` is `speedyWalkAux`. -/
 theorem speedyWalk_eq {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (δ : ℝ) :
-    speedyWalk K δ = speedyWalkAux K hK δ := dif_pos hK
+    speedyWalk K δ = speedyWalkAux K hK δ := dite_eq_left hK
 
 /-- **The value of the speedy walk on a measurable event.** -/
 theorem speedyWalk_apply_set {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
@@ -744,7 +744,7 @@ theorem ellMeasure_univ_ne_zero {K : Set (EuclideanSpace ℝ (Fin n))} (hK : Mea
   -- some ball of radius `δ/2` meets `K` in a set of positive volume
   have hex : ∃ x0 : EuclideanSpace ℝ (Fin n), volume (K ∩ Metric.ball x0 (δ / 2)) ≠ 0 := by
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     obtain ⟨D, hDc, hDd⟩ :=
       TopologicalSpace.exists_countable_dense (EuclideanSpace ℝ (Fin n))
     have hcov : K ⊆ ⋃ d ∈ D, K ∩ Metric.ball d (δ / 2) := by
@@ -803,8 +803,8 @@ theorem exists_smallSet_of_absolutelyContinuous (hn : 1 ≤ n)
     ∃ S : Set (EuclideanSpace ℝ (Fin n)), MeasurableSet S ∧ 0 < pi S ∧ pi S ≤ 1 / 2 := by
   classical
   by_contra hcon
-  push_neg at hcon
-  haveI : Nontrivial (EuclideanSpace ℝ (Fin n)) :=
+  push Not at hcon
+  have : Nontrivial (EuclideanSpace ℝ (Fin n)) :=
     Module.nontrivial_of_finrank_pos (R := ℝ)
       (by rw [finrank_euclideanSpace_fin]; omega)
   have hdich : ∀ S : Set (EuclideanSpace ℝ (Fin n)), MeasurableSet S →
@@ -840,7 +840,7 @@ theorem exists_smallSet_of_absolutelyContinuous (hn : 1 ≤ n)
   have hBpos : ∀ r ∈ B, (0 : ℝ) ≤ r := by
     intro r hr
     by_contra hneg
-    push_neg at hneg
+    push Not at hneg
     have hemp : Metric.ball (0 : EuclideanSpace ℝ (Fin n)) r = ∅ :=
       Metric.ball_eq_empty.2 hneg.le
     have h := (hBmem r).1 hr
@@ -882,7 +882,7 @@ theorem exists_smallSet_of_absolutelyContinuous (hn : 1 ≤ n)
   have hEm : ∀ k, MeasurableSet (E k) := fun k => measurableSet_ball.diff measurableSet_ball
   have hEanti : Antitone E := by
     intro k l hkl
-    refine Set.diff_subset_diff_left (Metric.ball_subset_ball ?_)
+    refine Set.sdiff_subset_sdiff_left (Metric.ball_subset_ball ?_)
     have h1 : (0:ℝ) < (k : ℝ) + 1 := by positivity
     have h2 : (0:ℝ) < (l : ℝ) + 1 := by positivity
     have : (k : ℝ) + 1 ≤ (l : ℝ) + 1 := by exact_mod_cast Nat.add_le_add_right hkl 1
@@ -904,15 +904,15 @@ theorem exists_smallSet_of_absolutelyContinuous (hn : 1 ≤ n)
       _ = pi (E k) := by rw [hballR, add_zero]
   have hiInter : (⋂ k, E k) = Metric.sphere (0 : EuclideanSpace ℝ (Fin n)) R := by
     ext x
-    simp only [Set.mem_iInter, hEdef, Set.mem_diff, Metric.mem_ball, Metric.mem_sphere,
+    simp only [Set.mem_iInter, hEdef, Set.mem_sdiff, Metric.mem_ball, Metric.mem_sphere,
       dist_zero_right, not_lt]
     constructor
     · intro hx
       refine le_antisymm ?_ (hx 0).2
       by_contra hgtx
-      push_neg at hgtx
+      push Not at hgtx
       obtain ⟨k, hk⟩ := exists_nat_one_div_lt (by linarith : (0:ℝ) < ‖x‖ - R)
-      exact absurd (hx k).1 (by push_neg; linarith)
+      exact absurd (hx k).1 (by push Not; linarith)
     · intro hx k
       have hkpos : (0:ℝ) < 1 / ((k : ℝ) + 1) := by positivity
       exact ⟨by rw [hx]; linarith, by rw [hx]⟩
@@ -985,7 +985,7 @@ theorem globalConductance_speedyWalk_ge (hn : 1 ≤ n)
         ≤ ellProb K δ ((K \ A) \ B)) :
     min (1 / 16) (kappa * ENNReal.ofReal (δ / (2 * (n : ℝ))) / 64)
       ≤ globalConductance (ellProb K δ) (speedyWalk K δ) := by
-  haveI : IsProbabilityMeasure (ellProb K δ) :=
+  have : IsProbabilityMeasure (ellProb K δ) :=
     isProbabilityMeasure_ellProb_of_volume hK hK0 hKtop hδ
   have hnR : (0:ℝ) < (n : ℝ) := by exact_mod_cast hn
   have hdpos : (0:ℝ) < δ / (2 * (n : ℝ)) := by positivity
@@ -1021,9 +1021,9 @@ theorem globalConductance_speedyWalk_ge (hn : 1 ≤ n)
     (hK0m.diff hSm).inter
       (measurableSet_lt ((Kernel.measurable_coe P hSm).const_mul 4) measurable_const)
   have hmem1 : ∀ x, x ∈ S1 ↔ ((x ∈ S ∧ x ∈ K0) ∧ 4 * P x Sᶜ < 1) := by
-    intro x; rw [hS1def]; simp only [Set.mem_inter_iff, Set.mem_setOf_eq]
+    intro x; rw [hS1def]; simp only [Set.mem_inter_iff, Set.mem_ofPred_eq]
   have hmem2 : ∀ x, x ∈ S2 ↔ ((x ∈ K0 ∧ x ∉ S) ∧ 4 * P x S < 1) := by
-    intro x; rw [hS2def]; simp only [Set.mem_inter_iff, Set.mem_sdiff, Set.mem_setOf_eq]
+    intro x; rw [hS2def]; simp only [Set.mem_inter_iff, Set.mem_sdiff, Set.mem_ofPred_eq]
   have hS1K : S1 ⊆ K := fun x hx => hK0K ((hmem1 x).1 hx).1.2
   have hS2K : S2 ⊆ K := fun x hx => hK0K ((hmem2 x).1 hx).1.1
   -- the flow accounting
@@ -1222,7 +1222,7 @@ theorem mixesWithin_lazy_speedyWalk (hn : 1 ≤ n)
     {eps : ℝ} (heps : 0 < eps) {t : ℕ}
     (ht : conductanceMixingTime M (min (1 / 32) (kappa * δ / (256 * (n : ℝ)))) eps ≤ t) :
     MixesWithin (lazy (speedyWalk K δ)) (ellProb K δ) mu0 t (ENNReal.ofReal eps) := by
-  haveI : IsProbabilityMeasure (ellProb K δ) :=
+  have : IsProbabilityMeasure (ellProb K δ) :=
     isProbabilityMeasure_ellProb_of_volume hK hK0 hKtop hδ
   have hnR : (0:ℝ) < (n : ℝ) := by exact_mod_cast hn
   have hrev : Kernel.IsReversible (lazy (speedyWalk K δ)) (ellProb K δ) :=
@@ -1340,12 +1340,12 @@ theorem mixesWithin_lazy_speedyWalk_unitBall (hn : 1 ≤ n) {δ : ℝ} (hδ : 0 
       (ellProb (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1) δ)
       (ellProb (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1) δ) t
       (ENNReal.ofReal eps) := by
-  haveI : IsProbabilityMeasure (ellProb (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1) δ) :=
+  have : IsProbabilityMeasure (ellProb (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1) δ) :=
     isProbabilityMeasure_ellProb_of_volume measurableSet_ball volume_unitBall_ne_zero
       volume_unitBall_ne_top hδ
   refine mixesWithin_lazy_speedyWalk hn measurableSet_ball (convex_ball _ _)
     volume_unitBall_ne_zero volume_unitBall_ne_top hδ hkappa hiso le_rfl ?_ heps ht
-  simpa using ArlibCommunity.Foundations.Convex.IsWarm.refl (ellProb (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1) δ)
+  simp
 
 /-- **The witness in packaged form.**  For every dimension `n ≥ 1` and every step `δ > 0`
 there is a convex body `K` — the unit ball — such that the speedy walk on it is a Markov
@@ -1407,7 +1407,7 @@ theorem ellMeasure_add_volume_le (K : Set (EuclideanSpace ℝ (Fin n))) (δ : �
     rw [Measure.restrict_restrict hS, Measure.restrict_restrict hS.compl,
       show Sᶜ ∩ K = K \ S by
         ext y
-        simp only [Set.mem_inter_iff, Set.mem_compl_iff, Set.mem_diff]
+        simp only [Set.mem_inter_iff, Set.mem_compl_iff, Set.mem_sdiff]
         tauto] at h
     exact h
   have hsplitV : volume K = volume (S ∩ K) + volume (K \ S) := by

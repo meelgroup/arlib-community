@@ -168,7 +168,7 @@ theorem setIntegral_halfSpace_add_neg {C : Set E} {g : E → ℝ} (hC : Measurab
       + (∫ x in C ∩ halfSpace (-L) (-s) true, g x ∂μ) = ∫ x in C, g x ∂μ := by
   have hsecond : C ∩ halfSpace (-L) (-s) true = C ∩ {x : E | s ≤ L x} := by
     ext x
-    simp only [halfSpace_true, mem_inter_iff, mem_setOf_eq, ContinuousLinearMap.neg_apply]
+    simp only [halfSpace_true, mem_inter_iff, mem_ofPred_eq, neg_apply]
     constructor
     · rintro ⟨hx, hle⟩; exact ⟨hx, by linarith⟩
     · rintro ⟨hx, hle⟩; exact ⟨hx, by linarith⟩
@@ -176,7 +176,7 @@ theorem setIntegral_halfSpace_add_neg {C : Set E} {g : E → ℝ} (hC : Measurab
   have hclosed : C ∩ {x : E | s ≤ L x}
       = (C ∩ halfSpace L s false) ∪ (C ∩ {x : E | L x = s}) := by
     ext x
-    simp only [halfSpace_false, mem_inter_iff, mem_union, mem_setOf_eq]
+    simp only [halfSpace_false, mem_inter_iff, mem_union, mem_ofPred_eq]
     constructor
     · rintro ⟨hx, hle⟩
       rcases eq_or_lt_of_le hle with heq | hlt
@@ -209,6 +209,7 @@ section Continuity
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E]
   {μ : Measure E}
 
+omit [NormedAddCommGroup E] [NormedSpace ℝ E] [BorelSpace E] in
 /-- **The mass on one side of a moving cut depends continuously on the cut.**
 
 If `φ v x` is continuous in the parameter `v` for each fixed `x`, the sets `{x | φ v x ≤ 0}` are
@@ -268,15 +269,18 @@ functional is `⟪v₀ • e₁ + v₁ • e₂, ·⟫` and the level is `-v₂`
 private noncomputable def cutFun (e₁ e₂ : E) (v : EuclideanSpace ℝ (Fin 3)) : E →L[ℝ] ℝ :=
   v 0 • innerSL ℝ e₁ + v 1 • innerSL ℝ e₂
 
+omit [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] in
 private theorem cutFun_apply (e₁ e₂ : E) (v : EuclideanSpace ℝ (Fin 3)) (x : E) :
     cutFun e₁ e₂ v x = v 0 * inner ℝ e₁ x + v 1 * inner ℝ e₂ x := rfl
 
+omit [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] in
 private theorem cutFun_neg (e₁ e₂ : E) (v : EuclideanSpace ℝ (Fin 3)) :
     cutFun e₁ e₂ (-v) = -cutFun e₁ e₂ v := by
   ext x
   simp [cutFun_apply]
   ring
 
+omit [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] in
 /-- If `e₁, e₂` are orthonormal and `(v 0, v 1) ≠ (0,0)`, the cut functional is nonzero. -/
 private theorem cutFun_ne_zero {e₁ e₂ : E} (h11 : inner ℝ e₁ e₁ = (1 : ℝ))
     (h22 : inner ℝ e₂ e₂ = (1 : ℝ)) (h12 : inner ℝ e₁ e₂ = (0 : ℝ))
@@ -284,7 +288,7 @@ private theorem cutFun_ne_zero {e₁ e₂ : E} (h11 : inner ℝ e₁ e₁ = (1 :
   intro hzero
   have h21 : inner ℝ e₂ e₁ = (0 : ℝ) := by rw [real_inner_comm]; exact h12
   have hval := congrArg (fun T : E →L[ℝ] ℝ => T (v 0 • e₁ + v 1 • e₂)) hzero
-  simp only [cutFun_apply, ContinuousLinearMap.zero_apply, inner_add_right, inner_smul_right,
+  simp only [cutFun_apply, zero_apply, inner_add_right, inner_smul_right,
     h11, h22, h12, h21] at hval
   have : v 0 * v 0 + v 1 * v 1 = 0 := by linarith
   have h0 : v 0 = 0 := by nlinarith [sq_nonneg (v 0), sq_nonneg (v 1)]
@@ -339,7 +343,7 @@ theorem exists_halfSpace_bisecting_pair {e₁ e₂ : E} (h11 : inner ℝ e₁ e�
   have hset : ∀ v : EuclideanSpace ℝ (Fin 3),
       {x : E | φ v x ≤ 0} = halfSpace (cutFun e₁ e₂ v) (-(v 2)) true := by
     intro v; ext x
-    simp only [hφdef, halfSpace_true, mem_setOf_eq]
+    simp only [hφdef, halfSpace_true, mem_ofPred_eq]
     constructor <;> intro hx <;> linarith
   have hφcont : ∀ x : E, Continuous fun v : EuclideanSpace ℝ (Fin 3) => φ v x := by
     intro x
@@ -376,7 +380,7 @@ theorem exists_halfSpace_bisecting_pair {e₁ e₂ : E} (h11 : inner ℝ e₁ e�
       (μ.restrict C) {x : E | φ v x = 0} = 0 := by
     intro v hv
     have hEq : {x : E | φ v x = 0} = {x : E | cutFun e₁ e₂ v x = -(v 2)} := by
-      ext x; simp only [hφdef, mem_setOf_eq]; constructor <;> intro hx <;> linarith
+      ext x; simp only [hφdef, mem_ofPred_eq]; constructor <;> intro hx <;> linarith
     have h0 : μ {x : E | φ v x = 0} = 0 := by
       rw [hEq]; exact measure_level_eq_zero μ (hnd v hv)
     have hle : (μ.restrict C) {x : E | φ v x = 0} ≤ μ {x : E | φ v x = 0} :=
@@ -468,7 +472,7 @@ theorem exists_halfSpace_bisecting_pair {e₁ e₂ : E} (h11 : inner ℝ e₁ e�
         have hset2 : {x : E | φ (↑v) x ≤ 0} = Set.univ := by
           rw [hset]
           ext x
-          simp only [halfSpace_true, mem_setOf_eq, hzero, ContinuousLinearMap.zero_apply,
+          simp only [halfSpace_true, mem_ofPred_eq, hzero, zero_apply,
             mem_univ, iff_true]
           exact hs
         show (∫ x in C ∩ {x : E | φ (↑v) x ≤ 0}, g x ∂μ) = G
@@ -477,7 +481,7 @@ theorem exists_halfSpace_bisecting_pair {e₁ e₂ : E} (h11 : inner ℝ e₁ e�
         have hset2 : {x : E | φ (↑v) x ≤ 0} = (∅ : Set E) := by
           rw [hset]
           ext x
-          simp only [halfSpace_true, mem_setOf_eq, hzero, ContinuousLinearMap.zero_apply,
+          simp only [halfSpace_true, mem_ofPred_eq, hzero, zero_apply,
             mem_empty_iff_false, iff_false, not_le]
           exact hs
         show (∫ x in C ∩ {x : E | φ (↑v) x ≤ 0}, g x ∂μ) = 0

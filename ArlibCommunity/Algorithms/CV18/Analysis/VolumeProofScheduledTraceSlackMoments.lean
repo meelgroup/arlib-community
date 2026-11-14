@@ -312,7 +312,7 @@ theorem figureOneIdealPhaseFactor_le_five_thirds
       have hc0 : (0 : ℝ) < sampleCount q := by linarith
       have hexp : Real.exp (1 / 2) ≤ (5 / 3 : ℝ) := by
         convert Real.exp_le_two_add_div_two_sub (x := (1 / 2 : ℝ))
-          (by norm_num) (by norm_num) using 1 <;> norm_num
+          (by norm_num) (by norm_num) using 1; norm_num
       have hfrac : (Real.exp (1 / 2) - 1) /
           sampleCount q ≤ 2 / 3 := by
         apply (div_le_iff₀ hc0).2

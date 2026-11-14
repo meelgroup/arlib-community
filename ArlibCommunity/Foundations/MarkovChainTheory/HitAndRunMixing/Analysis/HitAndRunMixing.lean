@@ -759,7 +759,7 @@ theorem lsS_deterministic_id :
         (iterate (Kernel.deterministic (id : Bool → Bool) measurable_id) mu t) piHalf
         (H + H / s * ENNReal.ofReal ((1 - ph ^ 2 / 2) ^ t)) := by
   intro s H ph hph0 hph1 _ hshalf hcond mu hmu hdisc t
-  haveI := hmu
+  have := hmu
   rcases lt_or_eq_of_le hshalf with hlt | heq
   · exfalso
     rw [conductanceS_deterministic_id_piHalf hlt, le_zero_iff, ENNReal.ofReal_eq_zero] at hcond
@@ -806,7 +806,7 @@ theorem ls_const (pi : Measure Ω) [IsProbabilityMeasure pi] :
         ∀ t : ℕ, ArlibCommunity.Foundations.Convex.TVLe (iterate (Kernel.const Ω pi) mu t) pi
           (ENNReal.ofReal (Real.sqrt W * (1 - ph ^ 2 / 2) ^ t)) := by
   intro ph W _ _ hW _ mu hmu _ t
-  haveI := hmu
+  have := hmu
   cases t with
   | zero =>
       have hsq : (1 : ℝ) ≤ Real.sqrt W := by

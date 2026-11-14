@@ -264,7 +264,7 @@ theorem accuracyPhase_stationaryAcceptedTargetLaw_tv
   let _ : IsProbabilityMeasure pi :=
     ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   have hwarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal (1 : ℝ)) pi pi := by
-    simpa using ArlibCommunity.Foundations.Convex.IsWarm.refl pi
+    simp
   have ht : 4 * ((Real.log (1 : ℝ) + 2 * Real.log (1 / mixError)) /
       (delta * Real.log 2 /
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤ (t : ℝ) := by
@@ -295,7 +295,7 @@ theorem accuracyPhase_stationaryAcceptedTargetLaw_tv
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n))
       _ at hphase
-  convert hphase using 1 <;> ring
+  convert hphase using 1; ring
 
 /-- Consequently, the ratio of the two stationary speedy-chain importance
 means differs from the desired Gaussian expectation by only the explicit

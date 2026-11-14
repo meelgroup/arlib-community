@@ -298,7 +298,7 @@ theorem properCount_lt_of_lt_jumpTime {ω : ℕ → Om} {k j : ℕ} (h : j < jum
     properCount ω j < k := by
   have hj : j ∉ {t | k ≤ properCount ω t} :=
     Nat.notMem_of_lt_sInf (s := {t | k ≤ properCount ω t}) h
-  simpa [Set.mem_setOf_eq] using hj
+  simpa [Set.mem_ofPred_eq] using hj
 
 /-- **At the `k`-th jump time, at least `k` proper steps have been made.**  Needs the `k`-th
 jump to exist. -/
@@ -313,7 +313,7 @@ theorem jumpTime_eq_zero_of_not_exists {ω : ℕ → Om} {k : ℕ}
     (h : ¬ ∃ t, k ≤ properCount ω t) : jumpTime ω k = 0 := by
   have : {t | k ≤ properCount ω t} = (∅ : Set ℕ) := by
     ext t
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
     exact fun ht => h ⟨t, ht⟩
   rw [jumpTime, this, Nat.sInf_empty]
 
@@ -441,7 +441,7 @@ theorem tsum_indicator_holdsUntil_eq_jumpTime_one {ω : ℕ → Om} {x : Om} (hx
       = (jumpTime ω 1 : ℝ≥0∞) := by
   have hmem : ∀ k : ℕ, (ω ∈ {ω' : ℕ → Om | ∀ i ≤ k, ω' i = x}) ↔ k < jumpTime ω 1 := by
     intro k
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · intro hk
       by_contra hcon
@@ -543,7 +543,7 @@ theorem measurable_jumpTime (k : ℕ) : Measurable fun ω : ℕ → Om => jumpTi
           = {ω : ℕ → Om | k ≤ properCount ω 0} ∪
             ⋂ t : ℕ, {ω : ℕ → Om | k ≤ properCount ω t}ᶜ := by
         ext ω
-        simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_union, Set.mem_setOf_eq,
+        simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_union, Set.mem_ofPred_eq,
           Set.mem_iInter, Set.mem_compl_iff, jumpTime]
         rw [Nat.sInf_eq_zero]
         constructor
@@ -561,7 +561,7 @@ theorem measurable_jumpTime (k : ℕ) : Measurable fun ω : ℕ → Om => jumpTi
           = {ω : ℕ → Om | k ≤ properCount ω (j + 1)} ∩
             {ω : ℕ → Om | k ≤ properCount ω j}ᶜ := by
         ext ω
-        simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_inter_iff, Set.mem_setOf_eq,
+        simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_inter_iff, Set.mem_ofPred_eq,
           Set.mem_compl_iff, jumpTime]
         exact Nat.sInf_upward_closed_eq_succ_iff (hup ω) j
       rw [hset]
@@ -604,7 +604,7 @@ theorem measurableSet_comap_frestrictLe_le_properCount (k m : ℕ) :
   refine ⟨{h | k ≤ properCount (e h) m}, ?_, ?_⟩
   · exact (((measurable_properCount m).comp hemeas)) (MeasurableSet.of_discrete (s := {c | k ≤ c}))
   · ext ω
-    simp only [Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq]
     rw [properCount_congr (fun i hi => (hcoord ω i hi).symm)]
 
 end Measurability
@@ -651,8 +651,8 @@ theorem pathMeasure_ballWalk_properStep [NeZero n] {K : Set (EuclideanSpace ℝ 
   -- the two events differ only inside the null event `ω 0 ≠ x`
   refine hone ▸ measure_congr ?_
   refine measure_symmDiff_eq_zero_iff.1 (measure_mono_null (fun ω hω => ?_) hzero)
-  simp only [Set.mem_symmDiff, Set.mem_setOf_eq] at hω
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_symmDiff, Set.mem_ofPred_eq] at hω
+  simp only [Set.mem_ofPred_eq]
   intro hcon
   rcases hω with ⟨h1, h2⟩ | ⟨h1, h2⟩ <;> exact h1 (by rw [not_not.1 h2, hcon])
 
@@ -1055,7 +1055,7 @@ theorem markedCount_lt_of_lt_markedTime {mark : ℕ → Bool} {k j : ℕ}
     (h : j < markedTime mark k) : markedCount mark j < k := by
   have hj : j ∉ {t | k ≤ markedCount mark t} :=
     Nat.notMem_of_lt_sInf (s := {t | k ≤ markedCount mark t}) h
-  simpa [Set.mem_setOf_eq] using hj
+  simpa [Set.mem_ofPred_eq] using hj
 
 theorem le_markedCount_markedTime {mark : ℕ → Bool} {k : ℕ}
     (h : ∃ t, k ≤ markedCount mark t) : k ≤ markedCount mark (markedTime mark k) :=
@@ -1068,7 +1068,7 @@ theorem markedTime_eq_zero_of_not_exists {mark : ℕ → Bool} {k : ℕ}
     (h : ¬ ∃ t, k ≤ markedCount mark t) : markedTime mark k = 0 := by
   have hempty : {t | k ≤ markedCount mark t} = (∅ : Set ℕ) := by
     ext t
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
     exact fun ht => h ⟨t, ht⟩
   rw [markedTime, hempty, Nat.sInf_empty]
 
@@ -1237,7 +1237,7 @@ theorem measurable_markedTime (k : ℕ) :
           {mark : ℕ → Bool | k ≤ markedCount mark 0} ∪
             ⋂ t : ℕ, {mark : ℕ → Bool | k ≤ markedCount mark t}ᶜ := by
         ext mark
-        simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_union, Set.mem_setOf_eq,
+        simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_union, Set.mem_ofPred_eq,
           Set.mem_iInter, Set.mem_compl_iff, markedTime]
         rw [Nat.sInf_eq_zero]
         constructor
@@ -1257,7 +1257,7 @@ theorem measurable_markedTime (k : ℕ) :
           {mark : ℕ → Bool | k ≤ markedCount mark (j + 1)} ∩
             {mark : ℕ → Bool | k ≤ markedCount mark j}ᶜ := by
         ext mark
-        simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_inter_iff, Set.mem_setOf_eq,
+        simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_inter_iff, Set.mem_ofPred_eq,
           Set.mem_compl_iff, markedTime]
         exact Nat.sInf_upward_closed_eq_succ_iff (hup mark) j
       rw [hset]

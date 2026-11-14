@@ -229,7 +229,7 @@ theorem slowPhase_reaches_one_or_terminal (q : VolumeParams) :
         rw [min_def] at hmin ⊢
         split_ifs at hmin ⊢ with hcap
         · exact (hmin rfl).elim
-        · rw [coolingRate, if_pos]
+        · rw [coolingRate, ite_eq_left]
           · rw [ih hkN, pow_succ]
             dsimp [b]
             ring
@@ -269,7 +269,7 @@ theorem fast_reciprocal_step (q : VolumeParams) {s : ℝ}
     rw [min_def] at hnext ⊢
     split_ifs at hnext ⊢ with hcap
     · exact (hnext rfl).elim
-    · rw [coolingRate, if_neg (not_le.mpr hs1)]
+    · rw [coolingRate, ite_eq_right (not_le.mpr hs1)]
   rw [hform]
   have hden1 : 0 < s * (1 + s / (2 * t)) := by positivity
   have hden2 : 0 < 3 * t := by positivity
@@ -400,7 +400,7 @@ theorem scheduleValue_accelerated_charge_to_logPotential
     rw [min_def] at hnextNot ⊢
     split_ifs at hnextNot ⊢ with hcap
     · exact (hnextNot rfl).elim
-    · rw [coolingRate, if_neg (not_le.mpr hsone)]
+    · rw [coolingRate, ite_eq_right (not_le.mpr hsone)]
   have hx0 : 0 < s / (2 * t) := by positivity
   have hxhalf : s / (2 * t) ≤ 1 / 2 := by
     rw [div_le_iff₀ (by positivity : 0 < 2 * t)]
@@ -456,7 +456,7 @@ theorem scheduleValue_charge_to_logPotential (q : VolumeParams) {k : ℕ}
       rw [min_def] at hnextNot ⊢
       split_ifs at hnextNot ⊢ with hcap
       · exact (hnextNot rfl).elim
-      · rw [coolingRate, if_neg (not_le.mpr hsone')]
+      · rw [coolingRate, ite_eq_right (not_le.mpr hsone')]
     have hx0 : 0 < s / (2 * t) := by positivity
     have hxhalf : s / (2 * t) ≤ 1 / 2 := by
       rw [div_le_iff₀ (by positivity : 0 < 2 * t)]

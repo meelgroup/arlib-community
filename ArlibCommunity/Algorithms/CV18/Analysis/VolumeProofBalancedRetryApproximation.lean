@@ -131,7 +131,7 @@ theorem optionMeasure_le_map_some_add_failure
       intro value hvalue hnoneValue
       have heq : value = none := by simpa using hnoneValue
       subst value
-      simpa [optionSomeEvent] using hvalue
+      simp [optionSomeEvent] at hvalue
     have hsplit : L S = L (optionSomeEvent (some ⁻¹' S)) + L {none} := by
       calc
         L S = L (optionSomeEvent (some ⁻¹' S) ∪ {none}) := congrArg L hset
@@ -190,7 +190,7 @@ theorem bind_balancedAccuracyRetryBlockKernel_leUpTo_uncapped
         (P ^ properStride) f 1).map some)
       capError := by
   dsimp only
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let K := accuracyPhaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
   let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux K
@@ -233,7 +233,7 @@ theorem bind_balancedAccuracyRetryBlockKernel_endpoint_leUpTo_uncapped
       ((ArlibCommunity.Foundations.MarkovChainTheory.iterate (P ^ properStride) mu 1).map some)
       capError := by
   dsimp only
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
     (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
       (accuracyPhaseTruncatedBody q I sigma2)
@@ -361,7 +361,7 @@ theorem bind_balancedAccuracyRetryBlockKernel_trial_leUpTo_stationary
           optionSnd).bind (optionKernel R))
       ((pi.map some).bind (optionKernel R)) (capError + mixError) := by
   dsimp only
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   apply MeasureLeUpTo.bind_same
     (bind_balancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationary
       q I hsigma2 proposalCap properStride mu pi hfail hmix)
@@ -498,7 +498,7 @@ theorem balancedAccuracyTransitionLawAux_measurable_and_probability
       ∀ current, IsProbabilityMeasure
         (balancedAccuracyTransitionLawAux q I sigma2 proposalCap properStride
           attempts current) := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let B := balancedAccuracyRetryBlockKernel q I sigma2 proposalCap properStride
   let R := balancedAccuracyGaussianRejectionKernel q I sigma2
   intro attempts
@@ -584,8 +584,8 @@ theorem balancedAccuracyTransitionLawAux_measurable_and_probability
                else balancedAccuracyTransitionLawAux q I sigma2 proposalCap
                 properStride attempts mixed)
             cases hresult : result.1
-            · simpa only [hresult, Bool.false_eq_true, if_false] using ih.2 mixed
-            · simp only [hresult, if_true]
+            · simpa only [hresult, Bool.false_eq_true, ite_false] using ih.2 mixed
+            · simp only [ite_true]
               infer_instance
 
 /-- Mapping before a measurable continuation is the same as composing the
@@ -698,7 +698,7 @@ theorem balancedAccuracyTransitionLawAux_succ_eq_recovered
         (optionKernel (balancedAccuracyDecisionKernel q I sigma2))).bind
           (balancedAccuracyTransitionOptionTail q I sigma2 proposalCap
             properStride attempts) := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let B := balancedAccuracyRetryBlockKernel q I sigma2 proposalCap properStride
   let R := balancedAccuracyGaussianRejectionKernel q I sigma2
   let D := balancedAccuracyDecisionKernel q I sigma2
@@ -757,14 +757,14 @@ theorem balancedAccuracyTransitionLawAux_succ_eq_recovered
           unfold balancedRetryRecover T
             balancedAccuracyTransitionDecisionTail
           by_cases hresult : result.1 = true
-          · simp only [hresult, if_true]
+          · simp only [hresult, ite_true]
             have hc0 : scaleFactor q ≠ 0 :=
               (scaleFactor_pos q).ne'
             congr 2
             rw [← mul_smul, inv_mul_cancel₀ hc0, one_smul]
           · have hfalse : result.1 = false :=
               Bool.eq_false_of_not_eq_true hresult
-            simp only [hfalse, Bool.false_eq_true, if_false]
+            simp only [hfalse, Bool.false_eq_true, ite_false]
             have hc0 : scaleFactor q ≠ 0 :=
               (scaleFactor_pos q).ne'
             congr 1
@@ -936,7 +936,7 @@ theorem bind_stationaryOptionDecision_transitionTail_eq
       (pi.bind (balancedAccuracyDecisionKernel q I sigma2)).bind
         (balancedAccuracyTransitionDecisionTail q I sigma2 proposalCap
           properStride attempts) := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let D := balancedAccuracyDecisionKernel q I sigma2
   let T := balancedAccuracyTransitionDecisionTail q I sigma2 proposalCap
     properStride attempts
@@ -984,7 +984,7 @@ theorem bind_balancedAccuracyTransitionLawAux_succ_eq_pipeline
           (optionKernel (balancedAccuracyDecisionKernel q I sigma2))).bind
         (balancedAccuracyTransitionOptionTail q I sigma2 proposalCap
           properStride attempts)) := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let B := balancedAccuracyRetryBlockKernel q I sigma2 proposalCap properStride
   let D := balancedAccuracyDecisionKernel q I sigma2
   let OT := balancedAccuracyTransitionOptionTail q I sigma2 proposalCap
@@ -1065,7 +1065,7 @@ theorem bind_balancedAccuracyTransitionLawAux_succ_leUpTo_stationary
         (balancedRejectedStateMeasure q I sigma2 pi).bind
           (balancedAccuracyTransitionLawAux q I sigma2 proposalCap
             properStride attempts)) delta := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let D := balancedAccuracyDecisionKernel q I sigma2
   let OT := balancedAccuracyTransitionOptionTail q I sigma2 proposalCap
     properStride attempts
@@ -1131,7 +1131,7 @@ theorem balancedAcceptedRejected_mass_add_eq_one
     (pi : Measure (AmbientSpace q.n)) [IsProbabilityMeasure pi] :
     balancedAcceptedStateMeasure q I sigma2 pi Set.univ +
       balancedRejectedStateMeasure q I sigma2 pi Set.univ = 1 := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let D := balancedAccuracyDecisionKernel q I sigma2
   have hmass := congrArg (fun mu : Measure (Bool × AmbientSpace q.n) =>
       mu Set.univ)
@@ -1482,7 +1482,7 @@ theorem bind_balancedAccuracyRetryBlockKernel_none_le_of_isWarm
   have hcoeff0 : coefficient ≠ 0 := by
     simp [coefficient, hproposalCap.ne']
   have hcoeffTop : coefficient ≠ ⊤ := by
-    exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top (by simp [coefficient])
+    exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top (by simp)
   have hcombined : coefficient * fail ≤ coefficient * capError :=
     hmoment'.trans hbudget
   calc

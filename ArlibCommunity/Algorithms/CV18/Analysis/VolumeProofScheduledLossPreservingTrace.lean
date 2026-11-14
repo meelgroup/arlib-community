@@ -238,7 +238,7 @@ theorem map_scheduledBalancedTracePhaseKernel_project
       unfold scheduledBalancedTracePhaseKernel
         scheduledBalancedTracePhaseObservationLaw
         scheduledBalancedForwardPhaseKernel
-      simp only [scheduledBalancedCoolingTraceProject, if_true]
+      simp only [scheduledBalancedCoolingTraceProject, ite_true]
       split_ifs
       all_goals
         rw [Measure.map_map measurable_scheduledBalancedCoolingTraceProject
@@ -372,7 +372,7 @@ theorem measurableSet_scheduledBalancedCoolingTraceValid (m : ℕ) :
           ({trace | trace.2 = true} ∪ {trace | trace.1.2.2.1 = 0})) by
     ext trace
     rcases trace with ⟨history, live⟩
-    cases live <;> simp [ScheduledBalancedCoolingTraceValid, and_assoc]]
+    cases live <;> simp [ScheduledBalancedCoolingTraceValid]]
   exact (measurableSet_eq_fun hcount measurable_const).inter <|
     (measurableSet_eq_fun hproduct hsequence).inter (hlive.union hzero)
 
@@ -404,21 +404,21 @@ theorem ScheduledBalancedCoolingTraceValid.append
       cases result with
       | none =>
           simp only [scheduledBalancedCoolingTraceAppend, Bool.false_eq_true,
-            if_false]
+            ite_false]
           exact happend 1 history.2.2.2 false fun _ => by
             simpa using hvalid.2.2 rfl
       | some result =>
           simp only [scheduledBalancedCoolingTraceAppend, Bool.false_eq_true,
-            if_false]
+            ite_false]
           exact happend 1 history.2.2.2 false fun _ => by
             simpa using hvalid.2.2 rfl
   | true =>
       cases result with
       | none =>
-          simp only [scheduledBalancedCoolingTraceAppend, if_true]
+          simp only [scheduledBalancedCoolingTraceAppend, ite_true]
           exact happend 0 history.2.2.2 false fun _ => by simp
       | some result =>
-          simp only [scheduledBalancedCoolingTraceAppend, if_true]
+          simp only [scheduledBalancedCoolingTraceAppend, ite_true]
           exact happend result.1 result.2 true fun h => by simp at h
 
 /-- Appending a later phase does not alter any earlier chronological
@@ -449,9 +449,9 @@ theorem scheduledBalancedTraceChronologicalPhaseVariable_append_eq
     (by omega) (some history)]
   cases live <;> cases result <;>
     simp only [scheduledBalancedCoolingTraceAppend,
-      balancedCoolingHistoryAppend, Bool.false_eq_true, if_false, if_true]
+      balancedCoolingHistoryAppend, Bool.false_eq_true, ite_false, ite_true]
   all_goals
-    rw [if_neg hne]
+    rw [ite_eq_right hne]
 
 /-- The trace's stored product agrees pointwise with the public executable
 product after projection: dead traces have stored product zero. -/
@@ -579,7 +579,7 @@ theorem scheduledBalancedTracePhaseObservationLaw_ae_total_nonnegative
       trivial
   | true =>
       unfold scheduledBalancedTracePhaseObservationLaw
-      simp only [if_true]
+      simp only [ite_true]
       split_ifs
       · exact scheduledBalancedCoolingRatioTransitionLaw_ae_ratio_nonnegative
           parameters q I (scheduleValue_pos q phase)
@@ -599,7 +599,7 @@ theorem ScheduledBalancedCoolingTraceCoordinatesNonnegative.append
   | false =>
       cases result <;>
         simp only [ScheduledBalancedCoolingTraceCoordinatesNonnegative,
-          scheduledBalancedCoolingTraceAppend, Bool.false_eq_true, if_false]
+          scheduledBalancedCoolingTraceAppend, Bool.false_eq_true, ite_false]
       all_goals
         have hone : ScheduledCollectedTotalNonnegative
             (some ((1 : ℝ), history.2.2.2)) := by
@@ -611,7 +611,7 @@ theorem ScheduledBalancedCoolingTraceCoordinatesNonnegative.append
       cases result with
       | none =>
           simp only [ScheduledBalancedCoolingTraceCoordinatesNonnegative,
-            scheduledBalancedCoolingTraceAppend, if_true]
+            scheduledBalancedCoolingTraceAppend, ite_true]
           have hzero : ScheduledCollectedTotalNonnegative
               (some ((0 : ℝ), history.2.2.2)) := by
             norm_num [ScheduledCollectedTotalNonnegative]
@@ -620,7 +620,7 @@ theorem ScheduledBalancedCoolingTraceCoordinatesNonnegative.append
           exact h
       | some result =>
           simp only [ScheduledBalancedCoolingTraceCoordinatesNonnegative,
-            scheduledBalancedCoolingTraceAppend, if_true]
+            scheduledBalancedCoolingTraceAppend, ite_true]
           have h := hcoordinates.snocTerminal hresult
           rw [balancedCoolingHistorySnocTerminal_some] at h
           exact h
@@ -655,7 +655,7 @@ theorem scheduledBalancedForwardTraceLaw_ae_coordinatesNonnegative
         (measurableSet_scheduledBalancedCoolingTraceCoordinatesNonnegative 0)).2
       filter_upwards with point
       simp [ScheduledBalancedCoolingTraceCoordinatesNonnegative,
-        ScheduledBalancedCoolingTraceValid, scheduledBalancedInitialTrace,
+        scheduledBalancedInitialTrace,
         BalancedCoolingHistoryHasNonnegativeCoordinates]
   | succ phases ih =>
       let prefixLaw :=

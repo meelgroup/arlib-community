@@ -694,7 +694,7 @@ theorem exists_needleIntegral_eq_zero_and_pos_of_compact_box (hm : m ≠ 0) :
     rw [hr]
     by_cases hi : i = 0
     · simp [hi]
-    · simp only [hi, if_false]
+    · simp only [hi, ite_false]
       positivity
   set D : ℕ → Set (Fin (m + 1) → ℝ) := fun k => univ.pi fun i => Icc (0 : ℝ) (r k i) with hD
   have hDcomp : ∀ k, IsCompact (D k) := fun k => isCompact_univ_pi fun _ => isCompact_Icc
@@ -707,7 +707,7 @@ theorem exists_needleIntegral_eq_zero_and_pos_of_compact_box (hm : m ≠ 0) :
     rw [hr]
     by_cases hi : i = 0
     · simp [hi]
-    · simp only [hi, if_false]
+    · simp only [hi, ite_false]
       have h1 : (0 : ℝ) < (k : ℝ) + 1 := by positivity
       have h2 : (k : ℝ) + 1 ≤ ((k + 1 : ℕ) : ℝ) + 1 := by push_cast; linarith
       exact one_div_le_one_div_of_le h1 h2
@@ -731,9 +731,9 @@ theorem exists_needleIntegral_eq_zero_and_pos_of_compact_box (hm : m ≠ 0) :
     intro k t ht
     refine ⟨fun i => if i = 0 then t else 0, Set.mem_univ_pi.mpr fun i => ?_, by simp [hφ]⟩
     by_cases hi : i = 0
-    · simp only [hi, if_true, hr]
+    · simp only [hi, ite_true, hr]
       simpa using ht
-    · simp only [hi, if_false]
+    · simp only [hi, ite_false]
       exact ⟨le_rfl, (hrpos k i).le⟩
   have haxis : ∀ y ∈ ⋂ k, D k, y = 0 + φ (y - 0) • v := by
     intro y hy
@@ -746,7 +746,7 @@ theorem exists_needleIntegral_eq_zero_and_pos_of_compact_box (hm : m ≠ 0) :
       obtain ⟨n, hn⟩ := exists_nat_one_div_lt hcon
       have := (Set.mem_univ_pi.mp (hy' n) i).2
       rw [hr] at this
-      simp only [hi, if_false] at this
+      simp only [hi, ite_false] at this
       linarith
     funext i
     by_cases hi : i = 0

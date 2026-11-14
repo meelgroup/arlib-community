@@ -153,7 +153,7 @@ theorem figureOneChronologicalIdealTruncatedFinCoordinates_iIndepFun
       (truncationLevel q *
         figureOneChronologicalRawMean q I (i.1 + 1)))
     (figureOneIdealExperimentLaw q I)
-  convert hc using 1 <;> rfl
+  convert hc using 1; rfl
 
 noncomputable def figureOneChronologicalPrefixIndices
     (q : VolumeParams) (i : ℕ) :
@@ -230,7 +230,7 @@ theorem figureOneChronologicalTruncatedProductFromPrefix_apply
           dependentTruncatedProduct_succ, ih (by omega)]
         congr 2
         simp only [figureOneChronologicalPrefixValue]
-        rw [dif_pos ⟨by omega, hm⟩]
+        rw [dite_eq_left ⟨by omega, hm⟩]
         congr 2
   exact haux i le_rfl
 

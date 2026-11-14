@@ -291,7 +291,7 @@ theorem preimage_frestrictLe_constHistory (x : Om) (k : ℕ) :
     (Preorder.frestrictLe k) ⁻¹' {h : (_i : ↥(Finset.Iic k)) → Om | ∀ i, h i = x}
       = {ω : ℕ → Om | ∀ i ≤ k, ω i = x} := by
   ext ω
-  simp only [Set.mem_preimage, Set.mem_setOf_eq, Preorder.frestrictLe_apply]
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq, Preorder.frestrictLe_apply]
   constructor
   · intro h i hi; exact h ⟨i, Finset.mem_Iic.2 hi⟩
   · intro h i; exact h i.1 (Finset.mem_Iic.1 i.2)
@@ -339,7 +339,7 @@ theorem pathMeasure_dirac_holdsUntil (P : Kernel Om Om) [IsMarkovKernel P] (x : 
       have hR : (fun ω : ℕ → Om => (Preorder.frestrictLe k ω, ω (k + 1)))
             ⁻¹' (H ×ˢ ({x} : Set Om)) = {ω : ℕ → Om | ∀ i ≤ k + 1, ω i = x} := by
         ext ω
-        simp only [Set.mem_preimage, Set.mem_prod, Set.mem_singleton_iff, Set.mem_setOf_eq, hH,
+        simp only [Set.mem_preimage, Set.mem_prod, Set.mem_singleton_iff, Set.mem_ofPred_eq, hH,
           Preorder.frestrictLe_apply]
         constructor
         · rintro ⟨h1, h2⟩ i hi
@@ -565,7 +565,7 @@ theorem exists_trajTransfer_witness [NeZero n] {δ₁ δ₂ : ℝ} (h1 : 1 < δ�
       (∀ m : ℕ, (pathMeasure (ballWalk K δ₂) (ArlibCommunity.Foundations.Convex.uniformOn volume K)).map (fun ω => ω m)
           = ArlibCommunity.Foundations.Convex.uniformOn volume K) := by
   have hn : n ≠ 0 := NeZero.ne n
-  haveI hprob : IsProbabilityMeasure
+  have hprob : IsProbabilityMeasure
       (ArlibCommunity.Foundations.Convex.uniformOn volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1)) :=
     isProbabilityMeasure_uniformOn_unitBall
   have h2 : 1 < δ₂ := h1.trans h12

@@ -362,7 +362,7 @@ theorem truncatedGaussianProbability_scheduledPhase_compl_le
       K \ Metric.closedBall 0 R := by
     ext x
     simp only [figureOneScheduledPhaseBody, K, R, mem_inter_iff,
-      mem_compl_iff, mem_diff]
+      mem_compl_iff, mem_sdiff]
     tauto
   rw [truncatedGaussianProbability_apply q I hsigma2
     (figureOneScheduledPhaseBody_measurable q I sigma2).compl]
@@ -435,7 +435,7 @@ theorem TVLe.scheduledPhase_condOn_truncatedGaussian
 /-- The smaller proposal satisfies KLS's paper-step condition at the
 schedule-targeted core error. -/
 theorem proposalRadius_le_coreStep
-    (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
+    (q : VolumeParams) {sigma2 : ℝ} (_hsigma2 : 0 < sigma2) :
     proposalRadius q sigma2 ≤
       1 / (8 * Real.sqrt ((q.n : ℝ) *
         Real.log ((q.n : ℝ) / coreMixingError q))) := by

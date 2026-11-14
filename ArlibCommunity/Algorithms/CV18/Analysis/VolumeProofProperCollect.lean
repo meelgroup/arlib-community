@@ -37,7 +37,7 @@ noncomputable def cappedProperCollectWeightsAux (q : VolumeParams)
         else
           cappedProperCollectWeightsAux q sigma2 weight properStride
             rawCap (remainingProper + 1) (samples + 1) total result.2
-termination_by rawCap remainingProper samples total current => (rawCap, samples)
+termination_by rawCap _remainingProper samples _total _current => (rawCap, samples)
 
 /-- Public zero-initialized proper-step collector. -/
 noncomputable def cappedProperCollectWeights (q : VolumeParams)
@@ -70,7 +70,7 @@ noncomputable def cappedProperCollectLawAux
         else
           cappedProperCollectLawAux Q f properStride rawCap (remainingProper + 1)
             (samples + 1) total result.2
-termination_by rawCap remainingProper samples total current => (rawCap, samples)
+termination_by rawCap _remainingProper samples _total _current => (rawCap, samples)
 
 noncomputable def cappedProperCollectLaw
     {S : Type*} [MeasurableSpace S]
@@ -110,7 +110,6 @@ theorem cappedProperCollectLawAux_measurable_and_probability
           · exact Measure.measurable_dirac.comp <| measurable_some.comp <|
               measurable_fst.prodMk measurable_snd
           · intro total current
-            change IsProbabilityMeasure (Measure.dirac (some (total, current)))
             infer_instance
       | succ samples ihSamples =>
           cases remainingProper with
@@ -127,7 +126,6 @@ theorem cappedProperCollectLawAux_measurable_and_probability
               constructor
               · exact Measure.measurable_dirac.comp measurable_const
               · intro total current
-                change IsProbabilityMeasure (Measure.dirac none)
                 infer_instance
   | succ rawCap ih =>
       intro remainingProper samples
@@ -138,7 +136,6 @@ theorem cappedProperCollectLawAux_measurable_and_probability
           · exact Measure.measurable_dirac.comp <| measurable_some.comp <|
               measurable_fst.prodMk measurable_snd
           · intro total current
-            change IsProbabilityMeasure (Measure.dirac (some (total, current)))
             infer_instance
       | succ samples ihSamples =>
           cases remainingProper with
@@ -334,7 +331,7 @@ theorem cappedProperCollectLawAux_none_eq_cappedProperMarkedLaw_none
               intro result
               dsimp only [L, R]
               by_cases hmark : result.1 = true
-              · simp only [hmark, if_true]
+              · simp only [hmark, ite_true]
                 cases remainingProper with
                 | zero =>
                     have h := ih properStride samples
@@ -747,7 +744,7 @@ theorem cappedProperCollectWeightsAux_queryBound
                 (truncatedMetropolisMarkedBallStep_queryBound
                   q sigma2 current).bind (fun result => by
                     by_cases hmark : result.1 = true
-                    · simp only [hmark, if_true]
+                    · simp only [hmark, ite_true]
                       cases remainingProper with
                       | zero =>
                           exact ih properStride samples
@@ -756,7 +753,7 @@ theorem cappedProperCollectWeightsAux_queryBound
                           exact ih (nextRemaining + 1) (samples + 1) total result.2
                     · have hfalse : result.1 = false :=
                         Bool.eq_false_of_not_eq_true hmark
-                      simp only [hfalse, if_false]
+                      simp only [hfalse]
                       exact ih (remainingProper + 1) (samples + 1) total result.2)
 
 theorem cappedProperCollectWeights_queryBound

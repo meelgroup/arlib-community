@@ -53,7 +53,7 @@ theorem pathMeasure_dirac_holdsUntil_then_mem (P : Kernel Om Om) [IsMarkovKernel
       (fun ω : ℕ → Om => (Preorder.frestrictLe k ω, ω (k + 1))) ⁻¹' (H ×ˢ s) =
         {ω : ℕ → Om | (∀ i ≤ k, ω i = x) ∧ ω (k + 1) ∈ s} := by
     ext ω
-    simp only [Set.mem_preimage, Set.mem_prod, Set.mem_setOf_eq, H,
+    simp only [Set.mem_preimage, Set.mem_prod, Set.mem_ofPred_eq, H,
       Preorder.frestrictLe_apply]
     constructor
     · rintro ⟨hconst, hnext⟩
@@ -172,7 +172,7 @@ theorem iUnion_firstProperCylinder_eq_inter_markedChain
       (⋃ j : ℕ, firstProperCylinder x Set.univ j) ∩
         {ω | markedChain (fun q => (ω q).2) (fun q => (ω (q + 1)).1) 1 ∈ t} := by
   ext ω
-  simp only [Set.mem_iUnion, Set.mem_inter_iff, Set.mem_setOf_eq]
+  simp only [Set.mem_iUnion, Set.mem_inter_iff, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨j, hjHold, hjTerm⟩
     have htime : markedTime (fun q => (ω (q + 1)).1) 1 = j + 1 :=
@@ -333,7 +333,7 @@ theorem properProposalStoppedKernelTotal_eq_speedy
   split_ifs with hx
   · rfl
   · rw [properProposalStoppedKernel_apply_eq_speedy hK δ s x (by
-      simpa only [StuckPoints, Set.mem_setOf_eq] using hx)]
+      simpa only [StuckPoints, Set.mem_ofPred_eq] using hx)]
 
 /-- Consequently, every finite iterate of independently restarted stopped experiments is
 exactly the corresponding speedy-chain iterate. -/

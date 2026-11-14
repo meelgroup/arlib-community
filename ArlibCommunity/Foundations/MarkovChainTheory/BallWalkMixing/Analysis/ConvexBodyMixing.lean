@@ -271,7 +271,7 @@ theorem exists_unconditional_mixing_convex (hn : 1 ≤ n)
     ∃ (mu0 : Measure (EuclideanSpace ℝ (Fin n))) (_ : IsProbabilityMeasure mu0) (t : ℕ),
       MixesWithin (lazy (ballWalk K δ)) (ArlibCommunity.Foundations.Convex.uniformOn volume K) mu0 t
         (ENNReal.ofReal eps) := by
-  haveI hprob : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
+  have hprob : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume hK0 hKtop
   refine ⟨ArlibCommunity.Foundations.Convex.uniformOn volume K, hprob,
     conductanceMixingTime 1

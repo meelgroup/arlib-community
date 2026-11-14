@@ -255,10 +255,10 @@ theorem ellGaussian_isoperimetry_measurable_logTwo_strict_witness (hn : 2 ≤ n)
     have := thirtysecond_div_logTwo_le
     linarith
   · exact ⟨(-(1 / 4 : ℝ)) • e, by
-      simp only [Set.mem_setOf_eq, real_inner_smul_right, hee, mul_one]; norm_num,
+      simp only [mem_ofPred_eq, real_inner_smul_right, hee, mul_one]; norm_num,
       hKmem _ (by rw [hnrmp]; norm_num)⟩
   · exact ⟨((1 / 4 : ℝ)) • e, by
-      simp only [Set.mem_setOf_eq, real_inner_smul_right, hee, mul_one]; norm_num,
+      simp only [mem_ofPred_eq, real_inner_smul_right, hee, mul_one]; norm_num,
       hKmem _ (by rw [hnrmq]; norm_num)⟩
   · have h1 : (0:ℝ) < (1 / 32 : ℝ) / 1 := by norm_num
     exact mul_pos h1 (mul_pos hp1 hp2)

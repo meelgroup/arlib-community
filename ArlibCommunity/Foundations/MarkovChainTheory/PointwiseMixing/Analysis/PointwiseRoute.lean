@@ -429,7 +429,7 @@ even though it is unaffordable. -/
 theorem pointwiseClose_condOn_uniformOn (μ : Measure Ω) {B S : Set Ω} (hS : MeasurableSet S)
     (hSB : S ⊆ B) (hB0 : μ B ≠ 0) (hBtop : μ B ≠ ⊤) (hS0 : μ S ≠ 0) (hStop : μ S ≠ ⊤) :
     ArlibCommunity.Foundations.MarkovChainTheory.PointwiseClose (condOn (uniformOn μ B) S) (uniformOn μ S) 0 := by
-  haveI : IsProbabilityMeasure (uniformOn μ S) := isProbabilityMeasure_uniformOn μ hS0 hStop
+  have : IsProbabilityMeasure (uniformOn μ S) := isProbabilityMeasure_uniformOn μ hS0 hStop
   rw [condOn_uniformOn_eq_uniformOn μ hS hSB hB0 hBtop]
   exact ArlibCommunity.Foundations.MarkovChainTheory.pointwiseClose_self _
 

@@ -477,7 +477,7 @@ theorem globalConductance_ballWalk_ge (hn : 1 ≤ n)
         ≤ ArlibCommunity.Foundations.Convex.uniformOn volume K ((K \ A) \ B)) :
     min (ENNReal.ofReal θ / 16) (kappa * ENNReal.ofReal (θ ^ 2 * δ / (n : ℝ)) / 64)
       ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (ballWalk K δ) := by
-  haveI : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
+  have : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume hK0 hKtop
   have hnR : (0:ℝ) < (n : ℝ) := by exact_mod_cast hn
   have hdpos : (0:ℝ) < θ * δ / (n : ℝ) := by positivity
@@ -516,11 +516,11 @@ theorem globalConductance_ballWalk_ge (hn : 1 ≤ n)
   have hmem1 : ∀ x, x ∈ S1 ↔ ((x ∈ S ∧ x ∈ K) ∧ 4 * P x Sᶜ < ENNReal.ofReal θ) := by
     intro x
     rw [hS1def]
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq]
   have hmem2 : ∀ x, x ∈ S2 ↔ ((x ∈ K ∧ x ∉ S) ∧ 4 * P x S < ENNReal.ofReal θ) := by
     intro x
     rw [hS2def]
-    simp only [Set.mem_inter_iff, Set.mem_sdiff, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Set.mem_sdiff, Set.mem_ofPred_eq]
   have hS1K : S1 ⊆ K := fun x hx => ((hmem1 x).1 hx).1.2
   have hS2K : S2 ⊆ K := fun x hx => ((hmem2 x).1 hx).1.1
   -- the flow bound
@@ -994,7 +994,7 @@ theorem isReversible_and_hasNonnegSpectrum_lazy_ballWalk
     (hK0 : volume K ≠ 0) (hKtop : volume K ≠ ⊤) :
     Kernel.IsReversible (lazy (ballWalk K δ)) (ArlibCommunity.Foundations.Convex.uniformOn volume K)
       ∧ HasNonnegSpectrum (lazy (ballWalk K δ)) (ArlibCommunity.Foundations.Convex.uniformOn volume K) := by
-  haveI : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
+  have : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume hK0 hKtop
   exact ⟨isReversible_lazy (isReversible_ballWalk hK δ),
     hasNonnegSpectrum_lazy (isReversible_ballWalk hK δ)⟩
@@ -1024,7 +1024,7 @@ theorem exists_volume_inter_ball_pos_lt (hn : 1 ≤ n)
       volume (K ∩ Metric.ball (0 : EuclideanSpace ℝ (Fin n)) r) < volume K := by
   classical
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   have hfle : ∀ r : ℝ, volume (K ∩ Metric.ball (0 : EuclideanSpace ℝ (Fin n)) r) ≤ volume K :=
     fun _ => measure_mono Set.inter_subset_left
   have hfmono : ∀ r r' : ℝ, r ≤ r' →
@@ -1043,7 +1043,7 @@ theorem exists_volume_inter_ball_pos_lt (hn : 1 ≤ n)
   have hBne : ∃ r : ℝ,
       volume K ≤ volume (K ∩ Metric.ball (0 : EuclideanSpace ℝ (Fin n)) r) := by
     by_contra h
-    push_neg at h
+    push Not at h
     have hall : ∀ m : ℕ,
         volume (K ∩ Metric.ball (0 : EuclideanSpace ℝ (Fin n)) (m : ℝ)) = 0 :=
       fun m => (hdich m).resolve_right (h m).ne
@@ -1065,7 +1065,7 @@ theorem exists_volume_inter_ball_pos_lt (hn : 1 ≤ n)
   have hBpos : ∀ r ∈ B, (0 : ℝ) ≤ r := by
     intro r hr
     by_contra hneg
-    push_neg at hneg
+    push Not at hneg
     have hemp : Metric.ball (0 : EuclideanSpace ℝ (Fin n)) r = ∅ :=
       Metric.ball_eq_empty.2 hneg.le
     have h := (hBmem r).1 hr
@@ -1193,7 +1193,7 @@ theorem exists_smallSet_uniformOn (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (F
     (hK : MeasurableSet K) (hK0 : volume K ≠ 0) (hKtop : volume K ≠ ⊤) :
     ∃ S : Set (EuclideanSpace ℝ (Fin n)), MeasurableSet S ∧
       0 < ArlibCommunity.Foundations.Convex.uniformOn volume K S ∧ ArlibCommunity.Foundations.Convex.uniformOn volume K S ≤ 1 / 2 := by
-  haveI : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
+  have : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume hK0 hKtop
   obtain ⟨r, hrpos, hrlt⟩ := exists_volume_inter_ball_pos_lt hn hK0 hKtop
   set S : Set (EuclideanSpace ℝ (Fin n)) := Metric.ball (0 : EuclideanSpace ℝ (Fin n)) r with hS
@@ -1297,7 +1297,7 @@ theorem mixesWithin_lazy_ballWalk (hn : 1 ≤ n)
     {eps : ℝ} (heps : 0 < eps) {t : ℕ}
     (ht : conductanceMixingTime M (min (θ / 32) (kappa * θ ^ 2 * δ / (128 * (n : ℝ)))) eps ≤ t) :
     MixesWithin (lazy (ballWalk K δ)) (ArlibCommunity.Foundations.Convex.uniformOn volume K) mu0 t (ENNReal.ofReal eps) := by
-  haveI : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
+  have : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume hK0 hKtop
   have hnR : (0:ℝ) < (n : ℝ) := by exact_mod_cast hn
   obtain ⟨hrev, hpsd⟩ := isReversible_and_hasNonnegSpectrum_lazy_ballWalk hK δ hK0 hKtop
@@ -1408,12 +1408,11 @@ theorem mixesWithin_lazy_ballWalk_unitBall (hn : 1 ≤ n) {δ : ℝ} (hδ : 0 < 
       (ArlibCommunity.Foundations.Convex.uniformOn volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1))
       (ArlibCommunity.Foundations.Convex.uniformOn volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1)) t
       (ENNReal.ofReal eps) := by
-  haveI := isProbabilityMeasure_uniformOn_unitBall (n := n)
+  have := isProbabilityMeasure_uniformOn_unitBall (n := n)
   refine mixesWithin_lazy_ballWalk hn measurableSet_ball volume_unitBall_ne_zero
     volume_unitBall_ne_top hδ (by positivity)
     (fun x hx => ofReal_le_ell_unitBall hδ hδ1 hx) hkappa hiso le_rfl ?_ heps ht
-  simpa using ArlibCommunity.Foundations.Convex.IsWarm.refl
-    (ArlibCommunity.Foundations.Convex.uniformOn volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1))
+  simp
 
 
 /-! ## Axiom check -/

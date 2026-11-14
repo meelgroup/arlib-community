@@ -120,7 +120,7 @@ theorem hitProbability_bounds_of_tvLe {S : Set (EuclideanSpace ℝ (Fin n))}
     (hesc : ∫ p in Sᶜ, prodTent x p ≤ E) :
     (1 - (E + θ)) / V ≤ ∫ p, prodTent x p ∂μ ∧
       ∫ p, prodTent x p ∂μ ≤ (1 + θ) / V := by
-  haveI : IsProbabilityMeasure (uniformOn volume S) :=
+  have : IsProbabilityMeasure (uniformOn volume S) :=
     isProbabilityMeasure_uniformOn volume h0 htop
   have hV : 0 < V := hVS ▸ ENNReal.toReal_pos h0 htop
   obtain ⟨href1, href2⟩ := uniformOn_window hS hVS hV hesc
@@ -259,7 +259,7 @@ theorem exists_hitProbability_bounds_of_tvLe_witness (n : ℕ) (x : EuclideanSpa
   have h0 : volume S ≠ 0 := (Metric.measure_ball_pos volume 0 one_pos).ne'
   have htop : volume S ≠ ⊤ := measure_ball_ne_top
   have hV : 0 < (volume S).toReal := ENNReal.toReal_pos h0 htop
-  haveI : IsProbabilityMeasure (uniformOn volume S) :=
+  have : IsProbabilityMeasure (uniformOn volume S) :=
     isProbabilityMeasure_uniformOn volume h0 htop
   refine ⟨S, uniformOn volume S, (volume S).toReal,
     ∫ p in Sᶜ, ArlibCommunity.Algorithms.KV97.prodTent x p, inferInstance, hS, h0, htop, rfl, hV,

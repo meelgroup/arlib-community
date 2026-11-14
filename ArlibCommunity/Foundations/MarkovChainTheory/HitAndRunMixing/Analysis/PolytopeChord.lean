@@ -75,19 +75,23 @@ noncomputable def upper (A : ι → State n) (b : ι → Real) (x theta : State 
 
 /-! ## Measurability -/
 
+omit [Fintype ι] in
 theorem measurable_coeff (A : ι → State n) (i : ι) :
     Measurable (fun theta => coeff A theta i) := by
   exact (continuous_const.inner continuous_id).measurable
 
+omit [Fintype ι] in
 theorem measurable_slack (A : ι → State n) (b : ι → Real) (i : ι) :
     Measurable (fun x => slack A b x i) := by
   exact measurable_const.sub (continuous_const.inner continuous_id).measurable
 
+omit [Fintype ι] in
 theorem measurable_ratio (A : ι → State n) (b : ι → Real) (i : ι) :
     Measurable (fun p : State n × State n => ratio A b p.1 p.2 i) := by
   exact ((measurable_slack A b i).comp measurable_fst).div
     ((measurable_coeff A i).comp measurable_snd)
 
+omit [Fintype ι] in
 theorem measurable_lowerCandidate (A : ι → State n) (b : ι → Real) (i : ι) :
     Measurable (fun p : State n × State n => lowerCandidate A b p.1 p.2 i) := by
   unfold lowerCandidate
@@ -96,6 +100,7 @@ theorem measurable_lowerCandidate (A : ι → State n) (b : ι → Real) (i : ι
   · exact (measurable_ratio A b i).coe_real_ereal
   · exact measurable_const
 
+omit [Fintype ι] in
 theorem measurable_upperCandidate (A : ι → State n) (b : ι → Real) (i : ι) :
     Measurable (fun p : State n × State n => upperCandidate A b p.1 p.2 i) := by
   unfold upperCandidate
@@ -124,6 +129,7 @@ theorem measurable_upper (A : ι → State n) (b : ι → Real) :
 
 /-! ## Finite endpoint order characterizations -/
 
+omit [Fintype ι] in
 theorem lowerE_le_coe_iff (A : ι → State n) (b : ι → Real)
     (x theta : State n) (t : Real) :
     lowerE A b x theta ≤ (t : EReal) ↔
@@ -132,15 +138,16 @@ theorem lowerE_le_coe_iff (A : ι → State n) (b : ι → Real)
   constructor
   · intro h i hi
     have := h i
-    rw [if_pos hi] at this
+    rw [ite_eq_left hi] at this
     exact EReal.coe_le_coe_iff.mp this
   · intro h i
     by_cases hi : coeff A theta i < 0
-    · rw [if_pos hi]
+    · rw [ite_eq_left hi]
       exact EReal.coe_le_coe_iff.mpr (h i hi)
-    · rw [if_neg hi]
+    · rw [ite_eq_right hi]
       exact bot_le
 
+omit [Fintype ι] in
 theorem coe_le_upperE_iff (A : ι → State n) (b : ι → Real)
     (x theta : State n) (t : Real) :
     (t : EReal) ≤ upperE A b x theta ↔
@@ -149,15 +156,16 @@ theorem coe_le_upperE_iff (A : ι → State n) (b : ι → Real)
   constructor
   · intro h i hi
     have := h i
-    rw [if_pos hi] at this
+    rw [ite_eq_left hi] at this
     exact EReal.coe_le_coe_iff.mp this
   · intro h i
     by_cases hi : 0 < coeff A theta i
-    · rw [if_pos hi]
+    · rw [ite_eq_left hi]
       exact EReal.coe_le_coe_iff.mpr (h i hi)
-    · rw [if_neg hi]
+    · rw [ite_eq_right hi]
       exact le_top
 
+omit [Fintype ι] in
 theorem lowerE_le_zero_of_mem
     {A : ι → State n} {b : ι → Real} {x theta : State n}
     (hx : x ∈ ArlibCommunity.Foundations.Convex.Polytope.body A b) :
@@ -168,6 +176,7 @@ theorem lowerE_le_zero_of_mem
   have hs : 0 ≤ slack A b x i := sub_nonneg.mpr (hx i)
   exact div_nonpos_of_nonneg_of_nonpos hs hi.le
 
+omit [Fintype ι] in
 theorem zero_le_upperE_of_mem
     {A : ι → State n} {b : ι → Real} {x theta : State n}
     (hx : x ∈ ArlibCommunity.Foundations.Convex.Polytope.body A b) :
@@ -178,6 +187,7 @@ theorem zero_le_upperE_of_mem
   have hs : 0 ≤ slack A b x i := sub_nonneg.mpr (hx i)
   exact div_nonneg hs hi.le
 
+omit [Fintype ι] in
 theorem lowerE_ne_bot_of_exists_neg
     {A : ι → State n} {b : ι → Real} {x theta : State n}
     (hneg : ∃ i, coeff A theta i < 0) : lowerE A b x theta ≠ ⊥ := by
@@ -188,6 +198,7 @@ theorem lowerE_ne_bot_of_exists_neg
   rw [hbot] at hle
   exact EReal.coe_ne_bot _ (le_bot_iff.mp hle)
 
+omit [Fintype ι] in
 theorem upperE_ne_top_of_exists_pos
     {A : ι → State n} {b : ι → Real} {x theta : State n}
     (hpos : ∃ i, 0 < coeff A theta i) : upperE A b x theta ≠ ⊤ := by
@@ -198,16 +209,19 @@ theorem upperE_ne_top_of_exists_pos
   rw [htop] at hle
   exact EReal.coe_ne_top _ (top_le_iff.mp hle)
 
+omit [Fintype ι] in
 theorem lowerE_ne_top_of_mem
     {A : ι → State n} {b : ι → Real} {x theta : State n}
     (hx : x ∈ ArlibCommunity.Foundations.Convex.Polytope.body A b) : lowerE A b x theta ≠ ⊤ :=
   ne_top_of_le_ne_top (EReal.coe_ne_top (0 : Real)) (lowerE_le_zero_of_mem hx)
 
+omit [Fintype ι] in
 theorem upperE_ne_bot_of_mem
     {A : ι → State n} {b : ι → Real} {x theta : State n}
     (hx : x ∈ ArlibCommunity.Foundations.Convex.Polytope.body A b) : upperE A b x theta ≠ ⊥ :=
   ne_bot_of_le_ne_bot (EReal.coe_ne_bot (0 : Real)) (zero_le_upperE_of_mem hx)
 
+omit [Fintype ι] in
 theorem lower_le_iff
     {A : ι → State n} {b : ι → Real} {x theta : State n}
     (hx : x ∈ ArlibCommunity.Foundations.Convex.Polytope.body A b) (hneg : ∃ i, coeff A theta i < 0)
@@ -219,6 +233,7 @@ theorem lower_le_iff
   rw [← EReal.coe_le_coe_iff, EReal.coe_toReal
     (lowerE_ne_top_of_mem hx) (lowerE_ne_bot_of_exists_neg hneg)]
 
+omit [Fintype ι] in
 theorem le_upper_iff
     {A : ι → State n} {b : ι → Real} {x theta : State n}
     (hx : x ∈ ArlibCommunity.Foundations.Convex.Polytope.body A b) (hpos : ∃ i, 0 < coeff A theta i)
@@ -277,6 +292,7 @@ theorem exists_neg_coeff_of_isBounded
 
 /-! ## Exact chord interval -/
 
+omit [Fintype ι] in
 theorem mem_chordSet_iff
     {A : ι → State n} {b : ι → Real} {x theta : State n}
     (hx : x ∈ ArlibCommunity.Foundations.Convex.Polytope.body A b)
@@ -317,6 +333,7 @@ theorem mem_chordSet_iff
       dsimp [ratio, slack, coeff] at this ⊢
       nlinarith
 
+omit [Fintype ι] in
 theorem chordSet_eq_Icc
     {A : ι → State n} {b : ι → Real} {x theta : State n}
     (hx : x ∈ ArlibCommunity.Foundations.Convex.Polytope.body A b)
@@ -399,7 +416,7 @@ noncomputable def intervalKernel (A : ι → State n) (b : ι → Real) :
     congr 1
     · congr 1
       ext t
-      simp only [S, mem_inter_iff, mem_Icc, mem_setOf_eq]
+      simp only [S, mem_inter_iff, mem_Icc, mem_ofPred_eq]
       tauto
 theorem intervalKernel_apply (A : ι → State n) (b : ι → Real)
     (p : State n × State n) :
@@ -554,7 +571,7 @@ theorem finiteFacetProposal_eq_hitAndRunProposal
   have htheta : (theta : State n) ≠ 0 := by
     intro hz
     have hnorm := theta.property
-    simp [mem_sphere, dist_zero_right, hz] at hnorm
+    simp [hz] at hnorm
   rw [Measure.map_apply (by fun_prop) hT,
     chordSet_eq_Icc_of_isBounded hK hx htheta]
   rfl
@@ -608,13 +625,13 @@ theorem finiteFacetHitAndRun_eq_hitAndRun
     finiteFacetHitAndRun A b = hitAndRun (ArlibCommunity.Foundations.Convex.Polytope.body A b) := by
   ext x T hT
   by_cases hx : x ∈ ArlibCommunity.Foundations.Convex.Polytope.body A b
-  · rw [finiteFacetHitAndRun, Kernel.piecewise_apply, if_pos hx,
+  · rw [finiteFacetHitAndRun, Kernel.piecewise_apply, ite_eq_left hx,
       finiteFacetHitAndRunAux_apply,
       hitAndRun_apply_set (ArlibCommunity.Foundations.Convex.Polytope.measurableSet_body A b) x hT,
       Measure.add_apply, Measure.smul_apply, smul_eq_mul,
       Measure.dirac_apply' _ hT]
     rw [finiteFacetProposal_eq_hitAndRunProposal A b hK x hx]
-  · rw [finiteFacetHitAndRun, Kernel.piecewise_apply, if_neg hx]
+  · rw [finiteFacetHitAndRun, Kernel.piecewise_apply, ite_eq_right hx]
 
 #print axioms finiteFacetHitAndRun_eq_hitAndRun
 

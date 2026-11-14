@@ -235,7 +235,7 @@ noncomputable def speedyMetropolisGaussian (K : Set (EuclideanSpace ℝ (Fin n))
 open scoped Classical in
 /-- On a measurable `K`, `speedyMetropolisGaussian` is `speedyMetropolisGaussianAux`. -/
 theorem speedyMetropolisGaussian_eq {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
-    (δ s : ℝ) : speedyMetropolisGaussian K δ s = speedyMetropolisGaussianAux K hK δ s := dif_pos hK
+    (δ s : ℝ) : speedyMetropolisGaussian K δ s = speedyMetropolisGaussianAux K hK δ s := dite_eq_left hK
 
 /-- **The value of the kernel on a measurable event.**  The mass splits into the moving part
 `vol(B(x,δ) ∩ K)⁻¹ ∫_{t ∩ K} p(x,y) dy` and the stay-put part `(1 − m(x))·1[x ∈ t]`. -/

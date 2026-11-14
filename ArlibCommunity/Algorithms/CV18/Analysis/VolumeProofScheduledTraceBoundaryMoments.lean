@@ -58,7 +58,7 @@ theorem scheduledBalancedForwardTraceLaw_zero_liveStateLaw
 theorem scheduledBalancedForwardTraceLaw_zero_deadStateLaw
     (q : VolumeParams) (I : VolumeInput q.n)
     (transform : AmbientSpace q.n → AmbientSpace q.n)
-    (htransform : Measurable transform) :
+    (_htransform : Measurable transform) :
     scheduledBalancedTraceDeadStateLaw
         (scheduledBalancedForwardTraceLaw
           figureOneFinalScheduledBalancedParameters q I 0) transform = 0 := by

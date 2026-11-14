@@ -41,8 +41,8 @@ theorem accuracyGaussianRejectionKernel_true_prod
   simp only [accuracyGaussianRejectionLaw, Measure.add_apply,
     Measure.smul_apply, smul_eq_mul, Measure.dirac_apply' _ hprod]
   by_cases ht : (scaleFactor q)⁻¹ • current ∈ B
-  · simp [ht, Set.indicator_of_mem, hprod]
-  · simp [ht, Set.indicator_of_notMem, hprod]
+  · simp [ht, Set.indicator_of_mem]
+  · simp [ht, Set.indicator_of_notMem]
 
 /-- The accepted subprobability measure is exactly the homothetic-core
 proposal used by the analytic KLS theorem, before normalization. -/

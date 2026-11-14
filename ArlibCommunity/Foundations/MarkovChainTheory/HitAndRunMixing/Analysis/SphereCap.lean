@@ -101,7 +101,7 @@ theorem smul_sqLt_one {R : ℝ} (hR : 0 < R) (n : ℕ) :
     exact Finset.sum_congr rfl fun i _ => by
       simp [Pi.smul_apply, smul_eq_mul, mul_pow]
   ext x
-  simp only [Set.mem_smul_set, Set.mem_setOf_eq]
+  simp only [Set.mem_smul_set, mem_ofPred_eq]
   constructor
   · rintro ⟨y, hy, rfl⟩
     rw [key]
@@ -121,7 +121,7 @@ theorem volume_cone_inter_sqLt {C : Set (Fin n → ℝ)} (hn : n ≠ 0)
   · subst_vars
     have hempty : {x : Fin n → ℝ | ∑ i, x i ^ 2 < (0 : ℝ) ^ 2} = ∅ := by
       ext x
-      simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_lt]
+      simp only [mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_lt]
       exact le_trans (by norm_num) (Finset.sum_nonneg fun i _ => sq_nonneg (x i))
     rw [hempty, Set.inter_empty, measure_empty, zero_pow hn, ENNReal.ofReal_zero, zero_mul]
   · have hCR : C ∩ {x : Fin n → ℝ | ∑ i, x i ^ 2 < R ^ 2}
@@ -455,7 +455,7 @@ theorem lintegral_gauss_cone_le (m : ℕ) {c lam : ℝ} (hlam : 0 < lam) :
       have hsum : ∑ i, x i ^ 2 = x 0 ^ 2 + ∑ j : Fin m, x j.succ ^ 2 := Fin.sum_univ_succ _
       have hS : ∑ j : Fin m, x j.succ ^ 2 < (m : ℝ) * x 0 ^ 2 := by
         have := hx
-        simp only [Set.mem_setOf_eq, hsum] at this
+        simp only [mem_ofPred_eq, hsum] at this
         nlinarith [this]
       by_cases h1 : c ≤ |x 0|
       · exact le_add_right (Set.indicator_of_mem
@@ -498,7 +498,7 @@ theorem smul_image_cap_eq [NeZero n] :
       = {x : EuclideanSpace ℝ (Fin n) | ‖x‖ < 1 ∧
           ‖x‖ ^ 2 < (n : ℝ) * ⟪x, EuclideanSpace.single (0 : Fin n) (1 : ℝ)⟫ ^ 2} := by
   ext x
-  simp only [Set.mem_smul, Set.mem_image, Set.mem_setOf_eq, Set.mem_Ioo]
+  simp only [Set.mem_smul, Set.mem_image, mem_ofPred_eq, Set.mem_Ioo]
   constructor
   · rintro ⟨r, ⟨hr0, hr1⟩, y, ⟨θ, hθ, rfl⟩, rfl⟩
     have hθ1 : ‖(θ : EuclideanSpace ℝ (Fin n))‖ = 1 := mem_sphere_zero_iff_norm.1 θ.2
@@ -539,7 +539,7 @@ theorem preimage_ofLp_cone [NeZero n] :
   have hinner : ⟪x, EuclideanSpace.single (0 : Fin n) (1 : ℝ)⟫ = x 0 := by
     rw [EuclideanSpace.inner_single_right]
     simp
-  simp only [Set.mem_preimage, Set.mem_inter_iff, Set.mem_setOf_eq, hinner]
+  simp only [Set.mem_preimage, Set.mem_inter_iff, mem_ofPred_eq, hinner]
   constructor
   · rintro ⟨h1, h2⟩
     refine ⟨?_, by rw [hnorm]; exact h1⟩
@@ -578,7 +578,7 @@ theorem toSphere_cap_le_of_volume_le [NeZero n] {q : ℝ}
     have hnorm : ‖x‖ ^ 2 = ∑ i, x i ^ 2 := by
       rw [EuclideanSpace.norm_sq_eq]
       exact Finset.sum_congr rfl fun i _ => by rw [Real.norm_eq_abs, sq_abs]
-    simp only [Metric.mem_ball, dist_zero_right, Set.mem_preimage, Set.mem_setOf_eq, ← hnorm]
+    simp only [Metric.mem_ball, dist_zero_right, Set.mem_preimage, mem_ofPred_eq, ← hnorm]
     constructor
     · intro h; nlinarith [norm_nonneg x]
     · intro h; nlinarith [norm_nonneg x]
@@ -663,7 +663,7 @@ theorem gauss_tail_le :
     rw [integral_add_compl hSm integrable_gauss_half, integral_gauss_half]
   have hcompl : {t : ℝ | (23 / 25 : ℝ) ≤ |t|}ᶜ = Set.Ioo (-(23 / 25 : ℝ)) (23 / 25) := by
     ext t
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_le, Set.mem_Ioo, abs_lt]
+    simp only [Set.mem_compl_iff, mem_ofPred_eq, not_le, Set.mem_Ioo, abs_lt]
   have hIoo : (∫ t in Set.Ioo (-(23 / 25 : ℝ)) (23 / 25), Real.exp (-(t ^ 2) / 2))
       = ∫ t in (-(23 / 25 : ℝ))..(23 / 25), Real.exp (-(t ^ 2) / 2) := by
     rw [intervalIntegral.integral_of_le (by norm_num), integral_Ioc_eq_integral_Ioo]
@@ -877,7 +877,7 @@ theorem unitVol_ne_top (m : ℕ) : unitVol m ≠ ⊤ := by
   have hsub : {y : Fin m → ℝ | ∑ j, y j ^ 2 < 1}
       ⊆ Set.univ.pi fun _ : Fin m => Set.Ioo (-1 : ℝ) 1 := by
     intro y hy j _
-    simp only [Set.mem_setOf_eq] at hy
+    simp only [mem_ofPred_eq] at hy
     have hj : y j ^ 2 ≤ ∑ i, y i ^ 2 :=
       Finset.single_le_sum (f := fun i => y i ^ 2) (fun i _ => sq_nonneg _) (Finset.mem_univ j)
     have h1 : y j ^ 2 < 1 := lt_of_le_of_lt hj hy
@@ -903,7 +903,7 @@ theorem volume_sqLt_sqrt {m : ℕ} (hm : m ≠ 0) (c : ℝ) :
     rw [← hsq, volume_sqLt_eq hm (Real.sqrt_nonneg c), hsq]
   · have hempty : {y : Fin m → ℝ | ∑ j, y j ^ 2 < c} = ∅ := by
       ext y
-      simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_lt]
+      simp only [mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_lt]
       exact le_trans hc.le (Finset.sum_nonneg fun j _ => sq_nonneg (y j))
     rw [hempty, measure_empty, Real.sqrt_eq_zero_of_nonpos hc.le, zero_pow hm,
       ENNReal.ofReal_zero, zero_mul]
@@ -947,7 +947,7 @@ theorem sliceBallVol {m : ℕ} (hm : m ≠ 0) :
   have hset : {y : Fin m → ℝ | (Fin.cons s y : Fin (m+1) → ℝ) ∈
       {x : Fin (m + 1) → ℝ | ∑ i, x i ^ 2 < 1}}
       = {y : Fin m → ℝ | ∑ j, y j ^ 2 < 1 - s ^ 2} := by
-    ext y; simp only [Set.mem_setOf_eq, sum_sq_cons]; constructor <;> intro h <;> linarith
+    ext y; simp only [mem_ofPred_eq, sum_sq_cons]; constructor <;> intro h <;> linarith
   rw [hset, volume_sqLt_sqrt hm]
   rfl
 
@@ -969,7 +969,7 @@ theorem sliceConeVol {m : ℕ} (hm : m ≠ 0) :
         ∩ {x : Fin (m + 1) → ℝ | ∑ i, x i ^ 2 < 1})}
       = {y : Fin m → ℝ | ∑ j, y j ^ 2 < min ((m : ℝ) * s ^ 2) (1 - s ^ 2)} := by
     ext y
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq, sum_sq_cons, Fin.cons_zero, lt_min_iff]
+    simp only [Set.mem_inter_iff, mem_ofPred_eq, sum_sq_cons, Fin.cons_zero, lt_min_iff]
     constructor
     · rintro ⟨h1, h2⟩; exact ⟨by nlinarith, by linarith⟩
     · rintro ⟨h1, h2⟩; exact ⟨by nlinarith, by linarith⟩
@@ -1055,7 +1055,7 @@ theorem crossover_eq (m : ℕ) :
     {t : ℝ | ((m : ℝ) + 1) * t ^ 2 ≤ 1} = Set.Icc (-(s0 m)) (s0 m) := by
   have hden : (0 : ℝ) < (m : ℝ) + 1 := by positivity
   ext t
-  simp only [Set.mem_setOf_eq, Set.mem_Icc]
+  simp only [mem_ofPred_eq, Set.mem_Icc]
   rw [← abs_le, ← Real.sqrt_sq_eq_abs]
   constructor
   · intro h
@@ -1316,7 +1316,7 @@ theorem smul_cone_eq (n : ℕ) [NeZero n] {r : ℝ} (hr : 0 < r) :
     exact Finset.sum_congr rfl fun i _ => by simp [Pi.smul_apply, smul_eq_mul, mul_pow]
   have hzero : ∀ (s : ℝ) (y : Fin n → ℝ), (s • y) 0 = s * y 0 := fun s y => rfl
   ext x
-  simp only [Set.mem_smul_set, Set.mem_setOf_eq]
+  simp only [Set.mem_smul_set, mem_ofPred_eq]
   constructor
   · rintro ⟨y, hy, rfl⟩
     rw [key, hzero, mul_pow]
@@ -1404,7 +1404,7 @@ theorem unifSphere_cap_le {n : ℕ} (hn : 21 ≤ n) (w : EuclideanSpace ℝ (Fin
     unifSphere n {θ : sphere (0 : EuclideanSpace ℝ (Fin n)) 1 |
         ‖w‖ < Real.sqrt n * |⟪(θ : EuclideanSpace ℝ (Fin n)), w⟫|}
       ≤ ENNReal.ofReal (9 / 25) := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   rcases eq_or_ne w 0 with rfl | hw
   · have hempty : {θ : sphere (0 : EuclideanSpace ℝ (Fin n)) 1 |
         ‖(0 : EuclideanSpace ℝ (Fin n))‖ < Real.sqrt n *

@@ -185,7 +185,7 @@ theorem map_balancedRetryCollectLawAux_eq_transitionCollectLawFirst
           (balancedAccuracyRetryOutput q) =
         balancedAccuracyTransitionCollectLawFirst q I sigma2 weight
           proposalCap properStride retryLimit attempts samples total current := by
-  letI : Fact (0 < sigma2) := ⟨hsigma2⟩
+  let : Fact (0 < sigma2) := ⟨hsigma2⟩
   let B := balancedAccuracyRetryBlockKernel q I sigma2 proposalCap properStride
   let R := balancedAccuracyGaussianRejectionKernel q I sigma2
   let Out := balancedAccuracyRetryOutput q
@@ -483,7 +483,7 @@ theorem map_balancedRetryCollectLawAux_eq_transitionCollectLawFirst
                   by_cases hresult : result.1 = true
                   · have hc0 : scaleFactor q ≠ 0 :=
                       (scaleFactor_pos q).ne'
-                    simp only [rawNext, endpointResult, hresult, if_true]
+                    simp only [rawNext, endpointResult, hresult, ite_true]
                     rw [Measure.dirac_bind hnextTarget]
                     have hrecover : scaleFactor q • result.2 = mixed := by
                       rw [hsecondResult, ← mul_smul, mul_inv_cancel₀ hc0,
@@ -508,7 +508,7 @@ theorem map_balancedRetryCollectLawAux_eq_transitionCollectLawFirst
                   · have hfalse : result.1 = false :=
                       Bool.eq_false_of_not_eq_true hresult
                     simp only [rawNext, endpointResult, hfalse,
-                      Bool.false_eq_true, if_false]
+                      Bool.false_eq_true, ite_false]
                     exact ihAttempts total mixed
 
 /-- Exact public-law form of the multi-sample bridge. -/

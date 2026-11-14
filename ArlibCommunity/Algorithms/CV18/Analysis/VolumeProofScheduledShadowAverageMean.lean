@@ -170,7 +170,7 @@ theorem integral_exactShadowHistory_average_eq_gaussianMean
         (scheduleValue_pos q (phase + 1)) 2).integrable (by norm_num)
   have hcountR : (count : ℝ) ≠ 0 := by exact_mod_cast hcount.ne'
   rw [integral_div]
-  rw [integral_finset_sum (s := Finset.range count) (fun j hj =>
+  rw [integral_finsetSum (s := Finset.range count) (fun j hj =>
     hcoordInt j (Finset.mem_range.mp hj))]
   have hterm : ∀ j ∈ Finset.range count,
       (∫ history, retainedSampleObservation weight j history ∂reference) =
@@ -293,7 +293,7 @@ theorem integral_exactShadowHistory_average_sq_le_gaussianSecond
     _ = (∑ j ∈ Finset.range count,
           ∫ history, retainedSampleObservation weight j history ^ 2
             ∂reference) / (count : ℝ) := by
-      rw [integral_div, integral_finset_sum (s := Finset.range count)
+      rw [integral_div, integral_finsetSum (s := Finset.range count)
         (fun j hj => hcoordSqInt j (Finset.mem_range.mp hj))]
     _ = _ := by
       have hterm : ∀ j ∈ Finset.range count,

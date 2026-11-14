@@ -37,7 +37,7 @@ noncomputable def cappedImportanceCollectLawAux
         else
           cappedImportanceCollectLawAux Q f properStride rawCap
             (remainingProper + 1) (samples + 1) total result.2
-termination_by rawCap remainingProper samples total current => (rawCap, samples)
+termination_by rawCap _remainingProper samples _total _current => (rawCap, samples)
 
 noncomputable def cappedImportanceCollectLaw
     {S : Type*} [MeasurableSpace S]
@@ -196,7 +196,7 @@ theorem cappedImportanceCollectLawAux_eq_dirac_none_of_lt_samples
                     (remainingProper + 1) (samples + 1) total result.2) =
                     Measure.dirac none := by
                 rintro ⟨mark, state⟩
-                cases mark <;> simp only [Bool.false_eq_true, if_false, if_true]
+                cases mark <;> simp only [Bool.false_eq_true, ite_false, ite_true]
                 · exact ih (remainingProper + 1) (samples + 1) total state hlt'
                 · cases remainingProper with
                   | zero => exact ih 0 (samples + 1) total state hlt'
@@ -252,7 +252,7 @@ theorem cappedImportanceCollectLawAux_add_samples_eq_cappedProperCollectLawAux
                     Measure.dirac none := by
                 rintro ⟨mark, state⟩
                 cases mark <;>
-                  simp only [Bool.false_eq_true, if_false, if_true]
+                  simp only [Bool.false_eq_true, ite_false, ite_true]
                 · apply cappedImportanceCollectLawAux_eq_dirac_none_of_lt_samples
                   omega
                 · cases remainingProper with
@@ -287,7 +287,7 @@ theorem cappedImportanceCollectLawAux_add_samples_eq_cappedProperCollectLawAux
               apply Measure.bind_congr_right
               filter_upwards with result
               by_cases hmark : result.1 = true
-              · simp only [hmark, if_true]
+              · simp only [hmark, ite_true]
                 cases remainingProper with
                 | zero =>
                     change cappedImportanceCollectLawAux Q f properStride
@@ -303,7 +303,7 @@ theorem cappedImportanceCollectLawAux_add_samples_eq_cappedProperCollectLawAux
                       ih (nextRemaining + 1) (samples + 1) total result.2
               · have hfalse : result.1 = false :=
                   Bool.eq_false_of_not_eq_true hmark
-                simp only [hfalse, Bool.false_eq_true, if_false]
+                simp only [hfalse, Bool.false_eq_true, ite_false]
                 simpa only [Nat.add_assoc] using
                   ih (remainingProper + 1) (samples + 1) total result.2
 

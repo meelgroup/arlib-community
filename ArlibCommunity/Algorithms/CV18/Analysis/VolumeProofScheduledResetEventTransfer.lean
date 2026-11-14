@@ -176,7 +176,7 @@ theorem initializedScheduledRetainedHistory_relativeDeviation_le_of_coordinate_m
     initializedScheduledRetainedHistory_relativeDeviation_le_of_resetReference
       q I phase count reference hcomparison (target := mean) (eps := eps)
       (eta := 0) (delta := delta) hmean heps (by norm_num) hdelta hmem
-      (by simpa [hrefMean'])
+      (by simp [hrefMean'])
       (hrefSecond.trans (by simpa [mean] using hmomentBudget))
   simpa [mean] using hresult
 

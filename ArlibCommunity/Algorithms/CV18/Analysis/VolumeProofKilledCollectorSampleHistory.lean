@@ -46,7 +46,7 @@ theorem measurable_retainedSampleHistoryUpdate
           Measurable fun value : RetainedSampleHistory S × Option S =>
             value.1.1 j) using 1
       funext value
-      simp [retainedSampleHistoryUpdate, Function.update, hji]
+      simp [Function.update, hji]
   · exact measurable_snd
 
 /-- One step of the coordinate-recording shadow. -/
@@ -264,7 +264,7 @@ theorem map_retainedSample_prefix_next_succ_eq_sequentialPairLaw
   have hpairKernel : Measurable fun history : RetainedSampleHistory S =>
       ((K ∘ retainedSampleHistoryState) history).map
         (fun next => (history, next)) :=
-    measurable_sequentialPairKernel (rho := rho)
+    measurable_sequentialPairKernel
       (hK.comp measurable_snd) (fun history => hKprob history.2)
   have hleft :
       (rho.bind (retainedSampleHistoryKernel K i)).map

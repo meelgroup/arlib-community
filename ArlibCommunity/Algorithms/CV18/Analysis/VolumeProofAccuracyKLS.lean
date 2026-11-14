@@ -97,7 +97,7 @@ theorem log_n_div_accuracyCoreError_le (q : VolumeParams) :
 /-- Figure 1's actual proposal radius satisfies the KLS large-core condition
 at the concrete error above; no phase-local analytic premise remains. -/
 theorem figureOneProposalRadius_le_accuracyCoreErrorStep
-    (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
+    (q : VolumeParams) {sigma2 : ℝ} (_hsigma2 : 0 < sigma2) :
     figureOneProposalRadius q sigma2 ≤
       1 / (8 * Real.sqrt
         ((q.n : ℝ) * Real.log ((q.n : ℝ) / accuracyCoreError q))) := by
@@ -225,13 +225,13 @@ theorem accuracyPhase_speedy_core_mass
       (accuracyCoreError_le_one_div_sixteen q)
       (figureOneProposalRadius_le_accuracyCoreErrorStep q hsigma2)
       (by
-        convert hgaussCore0 using 1 <;>
-          simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
-            Real.sq_sqrt hsigma2.le])
+        convert hgaussCore0 using 1
+        simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
+          Real.sq_sqrt hsigma2.le])
       (by
-        convert hgaussCoretop using 1 <;>
-          simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
-            Real.sq_sqrt hsigma2.le])
+        convert hgaussCoretop using 1
+        simp [c, scaleFactor, div_eq_mul_inv, mul_comm,
+          Real.sq_sqrt hsigma2.le])
       (by simpa [Real.sq_sqrt hsigma2.le] using hmass0)
       (by simpa [Real.sq_sqrt hsigma2.le] using hmasstop)
     simpa [K, delta, c, scaleFactor, Real.sq_sqrt hsigma2.le] using hpaper.2

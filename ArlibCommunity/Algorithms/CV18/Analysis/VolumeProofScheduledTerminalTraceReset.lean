@@ -139,7 +139,7 @@ theorem approxIndepFun_oldStatistic_terminal_traceAppend_of_accepted
     rw [scheduledResetPairToResult_pairOutput_eq state.2 htotal]
     rw [scheduledBalancedTracePhaseVariable_append_eq_rawOutput
       q phase hphase state.1 hstateValid]
-    simp only [hstateLive, if_true]
+    simp only [hstateLive, ite_true]
   have hrawInd :=
     approxIndepFun_oldStatistic_terminal_liveRaw_of_accepted
       q I source hretained oldStatistic holdMeas

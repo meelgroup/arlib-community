@@ -309,7 +309,7 @@ positive retry contribution.  Consequently a theorem bounding this expression
 by `sampleMixingError` cannot hold with the present allocation. -/
 theorem sampleMixingError_lt_globalBalancedTransitionError
     (q : VolumeParams) (I : VolumeInput q.n)
-    {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
+    {sigma2 : ℝ} (_hsigma2 : 0 < sigma2) :
     ENNReal.ofReal (sampleMixingError q) <
       figureOneGlobalBalancedTransitionError q I sigma2 := by
   unfold figureOneGlobalBalancedTransitionError

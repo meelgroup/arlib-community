@@ -352,7 +352,7 @@ theorem globalConductance_speedyGaussian_ge {n : ℕ} (hn : 2 ≤ n) {σ δ : �
     simp only [ne_eq, ENNReal.ofReal_eq_zero, not_le]
     exact hmass
   have hMtop : ENNReal.ofReal (∫ x, h x) ≠ ⊤ := ENNReal.ofReal_ne_top
-  haveI : IsProbabilityMeasure pi :=
+  have : IsProbabilityMeasure pi :=
     ⟨by rw [hpi _ MeasurableSet.univ, setIntegral_univ, ENNReal.div_self hMne hMtop]⟩
   -- the certified constant, written as `c/640`
   set c : ℝ≥0∞ := ENNReal.ofReal (δ * Real.log 2 / Real.sqrt n / σ) with hcdef
@@ -393,11 +393,11 @@ theorem globalConductance_speedyGaussian_ge {n : ℕ} (hn : 2 ≤ n) {σ δ : �
   have hmem1 : ∀ x, x ∈ S1 ↔ ((x ∈ S ∧ x ∈ K) ∧ 40 * P x Sᶜ < 1) := by
     intro x
     rw [hS1def]
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq]
   have hmem2 : ∀ x, x ∈ S2 ↔ ((x ∈ K ∧ x ∉ S) ∧ 40 * P x S < 1) := by
     intro x
     rw [hS2def]
-    simp only [Set.mem_inter_iff, Set.mem_sdiff, Set.mem_setOf_eq]
+    simp only [Set.mem_inter_iff, Set.mem_sdiff, Set.mem_ofPred_eq]
   set A : Set (EuclideanSpace ℝ (Fin n)) := S1 ∪ Kᶜ with hAdef
   set B : Set (EuclideanSpace ℝ (Fin n)) := S2 ∪ Kᶜ with hBdef
   have hAm : MeasurableSet A := hS1m.union hK.compl
@@ -665,7 +665,7 @@ theorem exists_globalConductance_speedyGaussian_pos :
   have hBtop : volume B ≠ ⊤ := measure_ball_lt_top.ne
   set h : EuclideanSpace ℝ (Fin 4) → ℝ := Set.indicator B (fun _ => (1 : ℝ)) with hhdef
   set pi : Measure (EuclideanSpace ℝ (Fin 4)) := ArlibCommunity.Foundations.Convex.uniformOn volume B with hpidef
-  haveI hprob : IsProbabilityMeasure pi := ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume hB0 hBtop
+  have hprob : IsProbabilityMeasure pi := ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume hB0 hBtop
   have hh0 : ∀ x, 0 ≤ h x := fun x => Set.indicator_nonneg (fun _ _ => zero_le_one) x
   have hint : ∀ A : Set (EuclideanSpace ℝ (Fin 4)),
       (∫ x in A, h x) = (volume (A ∩ B)).toReal := by

@@ -192,7 +192,7 @@ theorem memLp_scheduledBalancedTransitionCollect_average
       hset).2
     filter_upwards [htotal0] with result hresult
     cases result with
-    | none => simp [average, balancedCoolingAverage, scheduledBalancedPhaseRatio]
+    | none => simp [balancedCoolingAverage, scheduledBalancedPhaseRatio]
     | some result =>
         simpa [average, balancedCoolingAverage, scheduledBalancedPhaseRatio] using
           div_nonneg hresult (Nat.cast_nonneg samples)
@@ -211,7 +211,7 @@ theorem memLp_scheduledBalancedTransitionCollect_average
           scheduledBalancedPhaseRatio] using hB
     | some result =>
         dsimp only [ScheduledCollectedTotalLe] at hresult
-        simp only [average, balancedCoolingAverage, scheduledBalancedPhaseRatio]
+        simp only [balancedCoolingAverage, scheduledBalancedPhaseRatio]
         rw [div_le_iff₀ (by exact_mod_cast hsamples)]
         simpa [mul_comm] using hresult
   exact memLp_two_of_ae_nonnegative_le measurable_scheduledBalancedPhaseRatio

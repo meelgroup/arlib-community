@@ -69,7 +69,7 @@ theorem exists_facet_crossed {n : ℕ} {ι : Type*} {A : ι → EuclideanSpace �
     {b : ι → ℝ} {κ : ℝ} {x z : EuclideanSpace ℝ (Fin n)} (hx : x ∈ ArlibCommunity.Foundations.Convex.Polytope.body A b)
     (hz : x + z ∉ ArlibCommunity.Foundations.Convex.Polytope.inflate A b κ) :
     ∃ i, κ * ‖A i‖ < ⟪A i, z⟫_ℝ := by
-  simp only [ArlibCommunity.Foundations.Convex.Polytope.inflate, Set.mem_setOf_eq, not_forall, not_le] at hz
+  simp only [ArlibCommunity.Foundations.Convex.Polytope.inflate, Set.mem_ofPred_eq, not_forall, not_le] at hz
   obtain ⟨i, hi⟩ := hz
   refine ⟨i, ?_⟩
   rw [inner_add_right] at hi
@@ -128,7 +128,7 @@ theorem facet_escape_prob_le (Z : Ω → EuclideanSpace ℝ (Fin n))
     have hsub : {ω | κ * ‖a‖ < ⟪a, Z ω⟫_ℝ}
         ⊆ {ω | κ * ArlibCommunity.Algorithms.KV97.coeffNorm (fun k => a k) ≤ ∑ k, a k * Z ω k} := by
       intro ω hω
-      simp only [Set.mem_setOf_eq] at hω ⊢
+      simp only [Set.mem_ofPred_eq] at hω ⊢
       rw [coeffNorm_coords, ← inner_eq_sum_coords]
       exact hω.le
     refine le_trans (measureReal_mono hsub (measure_ne_top _ _)) ?_

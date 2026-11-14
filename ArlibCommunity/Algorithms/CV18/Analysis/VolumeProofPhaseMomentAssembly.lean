@@ -146,7 +146,7 @@ theorem figureOneIdealPhaseFactor_le_two (q : VolumeParams) (i : FigureOneIdealP
       have hc0 : (0 : ℝ) < sampleCount q := by linarith
       have hexp : Real.exp (1 / 2) ≤ (5 / 3 : ℝ) := by
         convert Real.exp_le_two_add_div_two_sub (x := (1 / 2 : ℝ))
-          (by norm_num) (by norm_num) using 1 <;> norm_num
+          (by norm_num) (by norm_num) using 1; norm_num
       have hfrac : (Real.exp (1 / 2) - 1) /
           sampleCount q ≤ 2 / 3 := by
         apply (div_le_iff₀ hc0).2
@@ -281,7 +281,7 @@ theorem figureOneHistoryTruncatedMean_ge_three_quarters_rawMean
     {Omega : Type*} [MeasurableSpace Omega]
     (q : VolumeParams) (I : VolumeInput q.n) (mu : Measure Omega)
     [IsProbabilityMeasure mu]
-    (W : ℕ → Omega → ℝ) (hWmeas : ∀ j, Measurable (W j))
+    (W : ℕ → Omega → ℝ) (_hWmeas : ∀ j, Measurable (W j))
     (hW0 : ∀ j omega, 0 ≤ W j omega)
     (hWmem : ∀ j, MemLp (W j) 2 mu)
     (hWmean : ∀ j, (∫ omega, W j omega ∂mu) = figureOneDependentRawMean q I j)
@@ -312,7 +312,7 @@ theorem figureOneRawMean_le_one_add_inv_alpha_mul_truncatedMean
     {Omega : Type*} [MeasurableSpace Omega]
     (q : VolumeParams) (I : VolumeInput q.n) (mu : Measure Omega)
     [IsProbabilityMeasure mu]
-    (W : ℕ → Omega → ℝ) (hWmeas : ∀ j, Measurable (W j))
+    (W : ℕ → Omega → ℝ) (_hWmeas : ∀ j, Measurable (W j))
     (hW0 : ∀ j omega, 0 ≤ W j omega)
     (hWmem : ∀ j, MemLp (W j) 2 mu)
     (hWmean : ∀ j, (∫ omega, W j omega ∂mu) = figureOneDependentRawMean q I j)
