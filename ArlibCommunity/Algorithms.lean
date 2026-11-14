@@ -23,10 +23,9 @@ and their names (`tpaTail`, and whatever follows) would otherwise collide.
 
 ## Sub-areas
 
-* `ArlibCommunity.Algorithms.TPA` — the Tootsie Pop Algorithm (Huber; the
-  sub-area root records that which of his papers it follows is unresolved): the
-  Poisson law of its contraction counter, almost-sure termination, and the
-  two-phase run-count schedule.
+* `ArlibCommunity.Algorithms.TPA` — the Tootsie Pop Algorithm (Huber–Schott
+  [Hub10]): the Poisson law of its contraction counter, almost-sure
+  termination, and the two-phase run-count schedule.
 * `ArlibCommunity.Algorithms.HitAndRun` — the hit-and-run sampler: its
   direction/chord kernel, a finite-facet realization, stationarity, and a fully
   discharged corrected mixing theorem.

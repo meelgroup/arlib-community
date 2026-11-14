@@ -1,18 +1,14 @@
 # The Tootsie Pop Algorithm (TPA)
 
-**Paper — unresolved.** These modules are attributed to Mark Huber, but to two
-different papers, and nothing in this repository decides which is meant:
+**Paper.** Mark Huber, Sarah Schott. *Using TPA for Bayesian Inference.*
+Bayesian Statistics 9, OUP, 2010, pp. 257–282. arXiv:0907.2989. Key `[Hub10]` in
+`REFERENCES.md`.
 
-- Mark Huber, Sarah Schott. *Using TPA for Bayesian Inference.* Bayesian
-  Statistics 9, OUP, 2010, pp. 257–282. arXiv:0907.2989. Key `[Hub10]`.
-- Mark Huber. *Approximation Algorithms for the Normalizing Constant of Gibbs
-  Distributions.* Annals of Applied Probability 25(2):974–985, 2015.
-  arXiv:1206.2689. Key `[Hub15]`.
-
-`TwoPhase.lean` analyses a "Theorem 5" and a two-phase run-count schedule that
-match [Hub15]; elsewhere the area is described as following [Hub10]. See *Known
-gaps* in `REFERENCES.md`. No result here depends on the answer: everything is
-proved from scratch.
+The two-phase run-count schedule in `TwoPhase.lean` is also analysed in Mark
+Huber, *Approximation Algorithms for the Normalizing Constant of Gibbs
+Distributions*, Annals of Applied Probability 25(2):974–985, 2015,
+arXiv:1206.2689, key `[Hub15]`; the "Theorem 5" that file refers to is
+[Hub15]'s.
 
 ## The problem
 

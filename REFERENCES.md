@@ -66,9 +66,7 @@ citation is worse than an acknowledged missing one — it survives review. Each
 needs an answer from the author, and until it has one the corresponding
 docstrings say the source is unknown instead of naming a paper.
 
-| Where | What is cited | What is known |
-| --- | --- | --- |
-| `ArlibCommunity/Algorithms/TPA/**` | "Huber, 2010" in three files, but `TwoPhase.lean` cites "its Theorem 5" and a two-phase schedule matching Huber 2015. | One of the two attributions is wrong; they are different papers (`Hub10` vs `Hub15`). A third Huber paper, `BGHP`, is cited correctly in arlib. Inherited from arlib, where the area originally lived. |
+None at present.
 
 ## Results cited but not in this repository
 

@@ -29,7 +29,7 @@ Two areas: four algorithm entries, and the general theory they rest on.
 
 | Area | Contents | Start here |
 | --- | --- | --- |
-| `Algorithms/TPA` | Huber's Tootsie Pop Algorithm: its contraction-counter tail, Poisson law, almost-sure termination, and two-phase run-count schedule. | [README](ArlibCommunity/Algorithms/TPA/README.md) |
+| `Algorithms/TPA` | Huber–Schott's Tootsie Pop Algorithm [Hub10]: its contraction-counter tail, Poisson law, almost-sure termination, and two-phase run-count schedule. | [README](ArlibCommunity/Algorithms/TPA/README.md) |
 | `Algorithms/HitAndRun` | Lovász's hit-and-run walk on a convex body [Lov99]: a fully proved mixing theorem with a corrected constant, and the facet-scan walk for polytopes. | [README](ArlibCommunity/Algorithms/HitAndRun/README.md) |
 | `Algorithms/KV97` | Kannan–Vempala lattice-point sampling [KV97]: every lattice point of a polytope is returned with probability within a stated factor of uniform. | [README](ArlibCommunity/Algorithms/KV97/README.md) |
 | `Algorithms/CV18` | Cousins–Vempala Gaussian cooling [CV18]: Theorem 1.1, accuracy and an explicit membership-query bound, for the program `cv18Program`, with no assumptions beyond the input promise. | [README](ArlibCommunity/Algorithms/CV18/README.md) |
