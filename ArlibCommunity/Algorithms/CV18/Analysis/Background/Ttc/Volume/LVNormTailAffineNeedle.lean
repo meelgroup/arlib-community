@@ -3,7 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.Ttc.Volume.LVNormTailLocalizationBridge
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Convexity.SharpIsoperimetry
+import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsoperimetry
 
 /-!
 # Affine-coordinate moment transport for the LV tail needle
@@ -16,7 +16,7 @@ is the geometric identity needed to feed `LVNormTailHazard` at scale
 namespace Ttc.CVAdaptive
 
 open MeasureTheory Set
-open Arlib
+open ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex
 
 variable {n : ℕ}
 

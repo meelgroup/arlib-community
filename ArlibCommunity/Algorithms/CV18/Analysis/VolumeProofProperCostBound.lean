@@ -3,7 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofProperCostedRestart
-import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.MarkovChains.Continuous.WastedSteps
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.WastedSteps
 
 /-!
 # Warm-start bound for CV18 proper-proposal cost
@@ -18,8 +18,9 @@ cost bound.  The remaining analytic input is precisely the paper's weighted
 average-local-conductance lower bound.
 -/
 
-namespace Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory ProbabilityTheory Metric
 open scoped ENNReal
 
@@ -194,4 +195,4 @@ theorem mul_mul_measure_properProposalTotalCost_ge_le
       mul_lintegral_properProposalTotalCost_le hK hdelta variance
         hZ0 hZtop hlambda hwarm t
 
-end Arlib.MarkovChains
+end ArlibCommunity.Algorithms.CV18

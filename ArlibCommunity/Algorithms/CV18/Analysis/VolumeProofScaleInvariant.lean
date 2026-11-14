@@ -8,8 +8,10 @@ records the exact dilation identities needed to apply unit-inball KLS results
 after rescaling by that inradius.
 -/
 
-namespace Arlib.MarkovChains
+open Arlib
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory Metric Set
 open scoped ENNReal Pointwise
 
@@ -47,7 +49,7 @@ theorem inv_smul_ball_inter_cv18 {r delta : ℝ} (hr : 0 < r)
 theorem volume_inv_smul_cv18 {r : ℝ} (hr : 0 < r)
     (A : Set (EuclideanSpace ℝ (Fin n))) :
     volume (r⁻¹ • A) = ENNReal.ofReal ((r⁻¹) ^ n) * volume A := by
-  rw [Arlib.volume_smul_euclidean (inv_pos.2 hr).le]
+  rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean (inv_pos.2 hr).le]
 
 /-- Local conductance is invariant under a simultaneous dilation of the
 body, proposal radius, and current point. -/
@@ -65,4 +67,4 @@ theorem ell_inv_smul_cv18 {r delta : ℝ} (hr : 0 < r)
   have hatop : a ≠ ⊤ := ENNReal.ofReal_ne_top
   exact ENNReal.mul_div_mul_left _ _ ha0 hatop
 
-end Arlib.MarkovChains
+end ArlibCommunity.Algorithms.CV18

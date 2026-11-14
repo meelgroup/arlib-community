@@ -136,7 +136,7 @@ noncomputable def rejectionAttempt (sigma2 : ℝ) (x : AmbientSpace q.n) :
   if inside = true ∧ ‖y‖ ≤ Real.sqrt (terminalVariance q) ∧
       ‖y‖ ≤ phaseRadius q sigma2 ∧
       ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-        Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c y then
+        ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c y then
     pure (true, y)
   else
     pure (false, y)

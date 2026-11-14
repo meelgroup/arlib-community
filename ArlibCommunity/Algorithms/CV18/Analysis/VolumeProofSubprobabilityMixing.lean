@@ -19,7 +19,7 @@ open ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open Arlib Arlib.MarkovChains
+open Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 open scoped ENNReal
 
 /-- Markov iteration is linear in the initial finite mass. -/
@@ -37,7 +37,7 @@ theorem iterate_smul_measure
 
 /-- Total variation scales linearly when both finite measures are multiplied
 by the same coefficient. -/
-theorem Arlib.TVLe.smul_measure
+theorem ArlibCommunity.Foundations.Convex.TVLe.smul_measure
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} {epsilon c : ENNReal}
     (h : TVLe mu nu epsilon) : TVLe (c • mu) (c • nu) (c * epsilon) := by

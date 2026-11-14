@@ -17,7 +17,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Set
 open scoped ENNReal
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 noncomputable def retainedOptionScaledLiveLaw
     (mu : Measure (Option (AmbientSpace n)))
@@ -227,7 +227,7 @@ twice, while the new transition contributes one fresh corrected budget. -/
 theorem bind_figureOneFinalScheduledRetainedOptionKernel_leUpTo_of_warm_iterated_truncated
     (q : VolumeParams) (I : VolumeInput q.n) (phase i : ℕ)
     (mu : Measure (Option (AmbientSpace q.n))) [IsProbabilityMeasure mu]
-    (hwarm : Arlib.IsWarm 2 mu
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm 2 mu
       (iteratedKernelLaw
         (fun _ => figureOneFinalScheduledRetainedOptionKernel q I
           (scheduleValue q phase))
@@ -337,11 +337,11 @@ theorem bind_figureOneFinalScheduledRetainedOptionKernel_leUpTo_of_warm_iterated
         gcongr
       _ = good2 + bad2 := by
         simp only [good2, bad2, smul_add]
-  have hgood : Arlib.IsWarm 8 good pi := by
+  have hgood : ArlibCommunity.Foundations.Convex.IsWarm 8 good pi := by
     simpa [good, target, scale, pi, sigma2,
       figureOneScheduledAcceptedTargetAt, figureOneScheduledSpeedyPiAt] using
       map_scheduledBalancedAcceptedTarget_scale_isWarm_eight q I hsigma2
-  have hgood2 : Arlib.IsWarm
+  have hgood2 : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (16 * warmConstant q)) good2 pi := by
     intro S hS
     rw [show good2 = (2 : ENNReal) • good by rfl,

@@ -77,8 +77,8 @@ theorem tvLe_bind_of_pointwise
     (actualK idealK : S → Measure T)
     (hactualMeas : Measurable actualK) (hidealMeas : Measurable idealK)
     {nu : ENNReal}
-    (hpoint : ∀ state, Arlib.TVLe (actualK state) (idealK state) nu) :
-    Arlib.TVLe (prefixLaw.bind actualK) (prefixLaw.bind idealK) nu := by
+    (hpoint : ∀ state, ArlibCommunity.Foundations.Convex.TVLe (actualK state) (idealK state) nu) :
+    ArlibCommunity.Foundations.Convex.TVLe (prefixLaw.bind actualK) (prefixLaw.bind idealK) nu := by
   intro event hevent
   have hactualEvent : Measurable fun state => actualK state event :=
     (Measure.measurable_coe hevent).comp hactualMeas
@@ -112,7 +112,7 @@ theorem MeasureLeUpTo.bind_of_pointwise_tvLe
     (hactualProb : ∀ state, IsProbabilityMeasure (actualK state))
     (hidealProb : ∀ state, IsProbabilityMeasure (idealK state))
     {nu : ENNReal}
-    (hpoint : ∀ state, Arlib.TVLe (actualK state) (idealK state) nu) :
+    (hpoint : ∀ state, ArlibCommunity.Foundations.Convex.TVLe (actualK state) (idealK state) nu) :
     MeasureLeUpTo (prefixLaw.bind actualK) (prefixLaw.bind idealK) nu := by
   let _ : IsProbabilityMeasure (prefixLaw.bind actualK) :=
     MeasureTheory.isProbabilityMeasure_bind hactualMeas.aemeasurable
@@ -207,7 +207,7 @@ theorem MeasureLeUpTo.iteratedKernelLaw_exactChance_of_pointwise
     (hidealMeas : ∀ i, Measurable (idealK i))
     (hidealProb : ∀ i state, IsProbabilityMeasure (idealK i state))
     (hpoint : ∀ i state,
-      Arlib.TVLe (actualK i state) (idealK i state) nu)
+      ArlibCommunity.Foundations.Convex.TVLe (actualK i state) (idealK i state) nu)
     (t : ℕ) :
     MeasureLeUpTo
       (iteratedKernelLaw actualK initial t)
@@ -272,7 +272,7 @@ theorem ApproxIndepFun.of_tvLe_of_exact
     {delta : ENNReal} (hdelta : delta ≠ ⊤)
     (X : Omega → S) (Y : Omega → T)
     (hX : Measurable X) (hY : Measurable Y)
-    (htv : Arlib.TVLe mu nu delta)
+    (htv : ArlibCommunity.Foundations.Convex.TVLe mu nu delta)
     (hexact : ApproxIndepFun 0 X Y nu) :
     ApproxIndepFun (3 * delta.toReal) X Y mu := by
   intro A hA B hB

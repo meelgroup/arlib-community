@@ -16,7 +16,7 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open _root_.Arlib
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- Asymmetric form of Lemma 7.17(b): conditioned and unconditional starts
 may have different additive errors relative to their common target. -/
@@ -32,7 +32,7 @@ theorem approxIndepFun_history_next_of_state_warm_base_leUpTo
     (hconditionedTop : conditionedError ≠ ⊤)
     (hbaseTop : baseError ≠ ⊤)
     (hconditioned : ∀ mu : Measure S, IsProbabilityMeasure mu →
-      Arlib.IsWarm 2 mu (rho.map state) →
+      ArlibCommunity.Foundations.Convex.IsWarm 2 mu (rho.map state) →
       MeasureLeUpTo (mu.bind K) target conditionedError)
     (hbase : MeasureLeUpTo ((rho.map state).bind K) target baseError) :
     ApproxIndepFun (conditionedError + baseError).toReal Prod.fst Prod.snd
@@ -46,22 +46,22 @@ theorem approxIndepFun_history_next_of_state_warm_base_leUpTo
     intro hzero
     rw [measureReal_def, hzero] at hAposReal
     simp at hAposReal
-  let hcondProb : IsProbabilityMeasure (Arlib.condOn rho A) :=
-    Arlib.isProbabilityMeasure_condOn rho hA0 (measure_ne_top rho A)
-  let _ : IsProbabilityMeasure (Arlib.condOn rho A) := hcondProb
+  let hcondProb : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn rho A) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn rho hA0 (measure_ne_top rho A)
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn rho A) := hcondProb
   let _ : IsProbabilityMeasure
-      ((Arlib.condOn rho A).bind (K ∘ state)) :=
+      ((ArlibCommunity.Foundations.Convex.condOn rho A).bind (K ∘ state)) :=
     isProbabilityMeasure_bind (hK.comp hstate).aemeasurable
       (ae_of_all _ fun history => hKprob (state history))
   let _ : IsProbabilityMeasure (rho.bind (K ∘ state)) :=
     isProbabilityMeasure_bind (hK.comp hstate).aemeasurable
       (ae_of_all _ fun history => hKprob (state history))
   have hprojectedProb : IsProbabilityMeasure
-      ((Arlib.condOn rho A).map state) :=
+      ((ArlibCommunity.Foundations.Convex.condOn rho A).map state) :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hstate.aemeasurable
-  have hcond := hconditioned ((Arlib.condOn rho A).map state)
+  have hcond := hconditioned ((ArlibCommunity.Foundations.Convex.condOn rho A).map state)
     hprojectedProb (isWarm_map (isWarm_condOn_two_of_half rho hA hhalf) hstate)
-  rw [map_bind_eq_bind_comp_state (Arlib.condOn rho A) hstate hK] at hcond
+  rw [map_bind_eq_bind_comp_state (ArlibCommunity.Foundations.Convex.condOn rho A) hstate hK] at hcond
   rw [map_bind_eq_bind_comp_state rho hstate hK] at hbase
   exact hcond.to_tvLe.trans hbase.to_tvLe.symm
 

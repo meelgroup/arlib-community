@@ -10,7 +10,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory Metric Set
 open scoped ENNReal
-open Arlib Arlib.MarkovChains
+open Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- Half of the centered inradius available in the first accuracy phase. -/
 noncomputable def initialSpeedyInteriorRadius (q : VolumeParams) : ℝ :=

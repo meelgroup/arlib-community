@@ -7,7 +7,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
-open _root_.Arlib.MarkovChains
+open _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- Expected accumulated trial cost along at most `trials` transitions of a
 possibly killed (subprobability) transition law. -/
@@ -40,11 +40,11 @@ theorem lintegral_finiteKilledChainExpectedCost_le
     {next : S → Measure S} (hnext : Measurable next)
     {trialCost : S → ENNReal} (htrial : Measurable trialCost)
     {pi : Measure S} {M C : ENNReal}
-    (hcost : ∀ mu : Measure S, _root_.Arlib.IsWarm M mu pi →
+    (hcost : ∀ mu : Measure S, _root_.ArlibCommunity.Foundations.Convex.IsWarm M mu pi →
       ∫⁻ current, trialCost current ∂mu ≤ C)
-    (hwarmNext : ∀ mu : Measure S, _root_.Arlib.IsWarm M mu pi →
-      _root_.Arlib.IsWarm M (mu.bind next) pi) :
-    ∀ (trials : ℕ) (mu : Measure S), _root_.Arlib.IsWarm M mu pi →
+    (hwarmNext : ∀ mu : Measure S, _root_.ArlibCommunity.Foundations.Convex.IsWarm M mu pi →
+      _root_.ArlibCommunity.Foundations.Convex.IsWarm M (mu.bind next) pi) :
+    ∀ (trials : ℕ) (mu : Measure S), _root_.ArlibCommunity.Foundations.Convex.IsWarm M mu pi →
       ∫⁻ current, finiteKilledChainExpectedCost next trialCost trials current ∂mu ≤
         (trials : ENNReal) * C := by
   intro trials
@@ -107,10 +107,10 @@ theorem bind_scheduledSuccessfulBlockEndpointLaw_isWarm
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (proposalCap properStride : ℕ)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : _root_.Arlib.IsWarm M mu
+    (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2)) :
-    _root_.Arlib.IsWarm M
+    _root_.ArlibCommunity.Foundations.Convex.IsWarm M
       (mu.bind (scheduledSuccessfulBlockEndpointLaw q I sigma2 proposalCap
         properStride))
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
@@ -121,7 +121,7 @@ theorem bind_scheduledSuccessfulBlockEndpointLaw_isWarm
     successfulEndpointLaw_bind_scheduledBalancedAccuracyRetryBlockKernel_isWarm
       q I sigma2 proposalCap properStride hwarm
         (scheduledPhaseLazySpeedyPow_invariant q I sigma2 properStride)
-  change _root_.Arlib.IsWarm M
+  change _root_.ArlibCommunity.Foundations.Convex.IsWarm M
     (mu.bind fun current => (B current).bind successfulEndpointKernel)
     (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
       (proposalRadius q sigma2) sigma2)
@@ -158,7 +158,7 @@ theorem lintegral_scheduledPaddedTrialCost_le_of_isWarm
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : _root_.Arlib.IsWarm M mu
+    (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (proposalCap properStride : ℕ) :
@@ -188,7 +188,7 @@ theorem lintegral_scheduledFixedLiveTrialShadowCost_le_of_isWarm
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : _root_.Arlib.IsWarm M mu
+    (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (proposalCap properStride trials : ℕ) :
@@ -250,7 +250,7 @@ theorem lintegral_scheduledFixedPaddedTrialShadowCost_le_of_isWarm
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : _root_.Arlib.IsWarm M mu
+    (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (proposalCap properStride trials : ℕ) :

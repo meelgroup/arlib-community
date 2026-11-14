@@ -11,7 +11,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.Background.Ttc.Volume.LVNormTailH
 namespace Ttc.CVAdaptive
 
 open MeasureTheory Set
-open Arlib
+open ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex
 
 variable {n : ℕ}
 
@@ -63,8 +63,8 @@ theorem rightHalf_at_sqrtTwo_of_variance
   have hs2 : (Real.sqrt 2) ^ 2 = 2 := Real.sq_sqrt (by norm_num)
   have hsqint : IntervalIntegrable (fun t => (t - z) ^ 2 * D t) volume a b :=
     hDint.continuousOn_mul (Continuous.continuousOn (by fun_prop))
-  have hsqtail := Arlib.intervalIntegrable_of_subinterval hsqint har hrb le_rfl
-  have hconsttail := (Arlib.intervalIntegrable_of_subinterval hDint har hrb le_rfl).const_mul
+  have hsqtail := ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hsqint har hrb le_rfl
+  have hconsttail := (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint har hrb le_rfl).const_mul
     (2 * s ^ 2)
   have hlower : (2 * s ^ 2) * (∫ t in r..b, D t) ≤
       ∫ t in r..b, (t - z) ^ 2 * D t := by
@@ -79,12 +79,12 @@ theorem rightHalf_at_sqrtTwo_of_variance
     intervalIntegral.integral_nonneg har fun t ht =>
       mul_nonneg (sq_nonneg _) (hD0 t ⟨ht.1, ht.2.trans hrb⟩)
   have haddsq := intervalIntegral.integral_add_adjacent_intervals
-    (Arlib.intervalIntegrable_of_subinterval hsqint le_rfl har hrb) hsqtail
+    (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hsqint le_rfl har hrb) hsqtail
   have htailTotal : (∫ t in r..b, (t - z) ^ 2 * D t) ≤
       ∫ t in a..b, (t - z) ^ 2 * D t := by linarith
   have hadd := intervalIntegral.integral_add_adjacent_intervals
-    (Arlib.intervalIntegrable_of_subinterval hDint le_rfl har hrb)
-    (Arlib.intervalIntegrable_of_subinterval hDint har hrb le_rfl)
+    (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint le_rfl har hrb)
+    (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint har hrb le_rfl)
   dsimp [r] at *
   nlinarith [sq_pos_of_pos hs]
 
@@ -103,8 +103,8 @@ theorem leftHalf_at_sqrtTwo_of_variance
   have hs2 : (Real.sqrt 2) ^ 2 = 2 := Real.sq_sqrt (by norm_num)
   have hsqint : IntervalIntegrable (fun t => (t - z) ^ 2 * D t) volume a b :=
     hDint.continuousOn_mul (Continuous.continuousOn (by fun_prop))
-  have hsqtail := Arlib.intervalIntegrable_of_subinterval hsqint le_rfl hal hlb
-  have hconsttail := (Arlib.intervalIntegrable_of_subinterval hDint le_rfl hal hlb).const_mul
+  have hsqtail := ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hsqint le_rfl hal hlb
+  have hconsttail := (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint le_rfl hal hlb).const_mul
     (2 * s ^ 2)
   have hlower : (2 * s ^ 2) * (∫ t in a..l, D t) ≤
       ∫ t in a..l, (t - z) ^ 2 * D t := by
@@ -119,12 +119,12 @@ theorem leftHalf_at_sqrtTwo_of_variance
     intervalIntegral.integral_nonneg hlb fun t ht =>
       mul_nonneg (sq_nonneg _) (hD0 t ⟨hal.trans ht.1, ht.2⟩)
   have haddsq := intervalIntegral.integral_add_adjacent_intervals hsqtail
-    (Arlib.intervalIntegrable_of_subinterval hsqint hal hlb le_rfl)
+    (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hsqint hal hlb le_rfl)
   have htailTotal : (∫ t in a..l, (t - z) ^ 2 * D t) ≤
       ∫ t in a..b, (t - z) ^ 2 * D t := by linarith
   have hadd := intervalIntegral.integral_add_adjacent_intervals
-    (Arlib.intervalIntegrable_of_subinterval hDint le_rfl hal hlb)
-    (Arlib.intervalIntegrable_of_subinterval hDint hal hlb le_rfl)
+    (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint le_rfl hal hlb)
+    (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint hal hlb le_rfl)
   dsimp [l] at *
   nlinarith [sq_pos_of_pos hs]
 
@@ -187,15 +187,15 @@ theorem rightTail_pow_two_succ_le_mass
     have hmid0 : 0 ≤ ∫ t in u 0..u k, D t :=
       intervalIntegral.integral_nonneg hu0k fun t ht => hD0 t ⟨hau0.trans ht.1, ht.2.trans hukb⟩
     have hadd := intervalIntegral.integral_add_adjacent_intervals
-      (Arlib.intervalIntegrable_of_subinterval hDint le_rfl hau0 (hu0N.trans huNb))
-      (Arlib.intervalIntegrable_of_subinterval hDint hau0 hu0k hukb)
+      (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint le_rfl hau0 (hu0N.trans huNb))
+      (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint hau0 hu0k hukb)
     rw [← hu0] at hhalf0
     nlinarith
   have hp := oneDim_logConcave_rightTail_pow_two hs hDlc hD0 hDint hz hvar u N hgrid hhalf
   have htail0 : 2 * (∫ t in u 0..b, D t) ≤ ∫ t in a..b, D t := by
     have hadd := intervalIntegral.integral_add_adjacent_intervals
-      (Arlib.intervalIntegrable_of_subinterval hDint le_rfl hau0 (hu0N.trans huNb))
-      (Arlib.intervalIntegrable_of_subinterval hDint hau0 (hu0N.trans huNb) le_rfl)
+      (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint le_rfl hau0 (hu0N.trans huNb))
+      (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint hau0 (hu0N.trans huNb) le_rfl)
     rw [← hu0] at hhalf0
     nlinarith
   have hp2 := mul_le_mul_of_nonneg_left hp (by norm_num : (0 : ℝ) ≤ 2)
@@ -262,15 +262,15 @@ theorem leftTail_pow_two_succ_le_mass
     have hmid0 : 0 ≤ ∫ t in u k..u N, D t :=
       intervalIntegral.integral_nonneg hukN fun t ht => hD0 t ⟨hauk.trans ht.1, ht.2.trans huNb⟩
     have hadd := intervalIntegral.integral_add_adjacent_intervals
-      (Arlib.intervalIntegrable_of_subinterval hDint hauk hukN huNb)
-      (Arlib.intervalIntegrable_of_subinterval hDint (hauk.trans hukN) huNb le_rfl)
+      (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint hauk hukN huNb)
+      (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint (hauk.trans hukN) huNb le_rfl)
     rw [← huN] at hhalfN
     nlinarith
   have hp := oneDim_logConcave_leftTail_pow_two hs hDlc hD0 hDint hz hvar u N hgrid hhalf
   have htailN : 2 * (∫ t in a..u N, D t) ≤ ∫ t in a..b, D t := by
     have hadd := intervalIntegral.integral_add_adjacent_intervals
-      (Arlib.intervalIntegrable_of_subinterval hDint le_rfl (hau0.trans hu0N) huNb)
-      (Arlib.intervalIntegrable_of_subinterval hDint (hau0.trans hu0N) huNb le_rfl)
+      (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint le_rfl (hau0.trans hu0N) huNb)
+      (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint (hau0.trans hu0N) huNb le_rfl)
     rw [← huN] at hhalfN
     nlinarith
   have hp2 := mul_le_mul_of_nonneg_left hp (by norm_num : (0 : ℝ) ≤ 2)

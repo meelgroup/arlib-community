@@ -18,7 +18,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
-open _root_.Arlib.MarkovChains
+open _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 theorem scheduledAccuracyMetropolisMarkedProposalProgram_fixedQueryCount
     (q : VolumeParams) (sigma2 : ℝ)
@@ -542,7 +542,7 @@ theorem lintegral_cappedScheduledAccuracyProperBlock_countedQueryCost_le_of_isWa
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : _root_.Arlib.IsWarm M mu
+    (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (rawCap properStride : ℕ) :

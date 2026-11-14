@@ -76,7 +76,7 @@ theorem exists_historyPreservingReset_of_shared
       IsProbabilityMeasure nu ∧
       Measure.map Prod.fst nu = Measure.map Prod.fst mu ∧
       Measure.map Prod.snd nu = tau ∧
-      Arlib.TVLe mu nu epsilon := by
+      ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon := by
   let bad : Measure (A × X) := mu - shared
   let missing : Measure X := tau - Measure.map Prod.snd shared
   let d : ENNReal := bad Set.univ
@@ -106,7 +106,7 @@ theorem exists_historyPreservingReset_of_shared
       infer_instance
     · rw [hshared_eq]
     · rw [hshared_eq]
-      exact (Arlib.TVLe.refl mu).mono bot_le
+      exact (ArlibCommunity.Foundations.Convex.TVLe.refl mu).mono bot_le
   · have hd_top : d ≠ ⊤ := by
       exact (measure_ne_top bad Set.univ)
     let replacement : Measure (A × X) :=
@@ -155,7 +155,7 @@ theorem exists_historyPreservingReset_of_shared
 private theorem sub_univ_le_of_tvLe
     {X : Type*} [MeasurableSpace X]
     (mu tau : Measure X) [IsFiniteMeasure mu] [IsFiniteMeasure tau]
-    {epsilon : ENNReal} (h : Arlib.TVLe mu tau epsilon) :
+    {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu tau epsilon) :
     (mu - tau) Set.univ ≤ epsilon := by
   obtain ⟨S, hS⟩ := exists_isHahnDecomposition mu tau
   have hzero : (mu - tau) S = 0 :=
@@ -186,12 +186,12 @@ theorem exists_historyPreservingReset_of_tvLe
     (mu : Measure (A × X)) (tau : Measure X)
     [IsProbabilityMeasure mu] [IsProbabilityMeasure tau]
     {epsilon : ENNReal}
-    (h : Arlib.TVLe (Measure.map Prod.snd mu) tau epsilon) :
+    (h : ArlibCommunity.Foundations.Convex.TVLe (Measure.map Prod.snd mu) tau epsilon) :
     ∃ nu : Measure (A × X),
       IsProbabilityMeasure nu ∧
       Measure.map Prod.fst nu = Measure.map Prod.fst mu ∧
       Measure.map Prod.snd nu = tau ∧
-      Arlib.TVLe mu nu epsilon := by
+      ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon := by
   let marginal : Measure X := Measure.map Prod.snd mu
   let excess : Measure X := marginal - tau
   let good : Measure X := marginal - excess

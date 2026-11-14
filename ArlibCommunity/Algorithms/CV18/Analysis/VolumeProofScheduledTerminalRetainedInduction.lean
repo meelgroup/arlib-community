@@ -6,7 +6,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceRetained
 namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Set
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 set_option maxHeartbeats 1000000 in
 section

@@ -134,7 +134,7 @@ theorem integrableOn_measureReal_tail_Ioc
       (Ioc (0 : ℝ) b) volume :=
     integrableOn_const (by simp [Real.volume_Ioc])
   refine Integrable.mono' hconst
-    ((Arlib.measurable_measureReal_tail mu f).aestronglyMeasurable) ?_
+    ((ArlibCommunity.Foundations.Convex.measurable_measureReal_tail mu f).aestronglyMeasurable) ?_
   filter_upwards with t
   rw [Real.norm_eq_abs, abs_of_nonneg measureReal_nonneg]
   exact measureReal_mono (subset_univ _) (measure_ne_top mu Set.univ)

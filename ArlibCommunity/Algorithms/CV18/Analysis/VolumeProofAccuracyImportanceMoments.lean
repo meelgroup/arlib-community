@@ -19,7 +19,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal Pointwise
-open Arlib MarkovChains
+open Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- The unnormalised speedy stationary measure on an accuracy core is
 dominated by the ordinary Gaussian measure on the full truncated body. -/
@@ -199,7 +199,7 @@ theorem truncatedGaussianProbability_acceptance_map_le_self
   have hgaussianCore0 : gaussian core ≠ 0 := by
     have hvol0 : volume core ≠ 0 := by
       dsimp [core]
-      rw [Arlib.volume_smul_euclidean hc0.le]
+      rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
       exact mul_ne_zero
         (ENNReal.ofReal_ne_zero_iff.mpr (pow_pos hc0 q.n))
         (accuracyPhaseTruncatedBody_volume_ne_zero q I hsigma2)
@@ -244,28 +244,28 @@ theorem truncatedGaussianProbability_acceptance_map_le_self
         (truncatedGaussianProbability q I sigma2 hsigma2 :
           Measure (AmbientSpace q.n)) by rfl,
       truncatedGaussianProbability_toMeasure q I hsigma2, hraw]
-  have hcondNu : Arlib.condOn nu core = Arlib.condOn gaussian core := by
+  have hcondNu : ArlibCommunity.Foundations.Convex.condOn nu core = ArlibCommunity.Foundations.Convex.condOn gaussian core := by
     rw [hnuEq]
     calc
-      Arlib.condOn
+      ArlibCommunity.Foundations.Convex.condOn
           ((ENNReal.ofReal
             (gaussianIntegral (truncatedBody q I) sigma2))⁻¹ •
               gaussian.restrict (truncatedBody q I)) core =
-          Arlib.condOn (gaussian.restrict (truncatedBody q I)) core :=
+          ArlibCommunity.Foundations.Convex.condOn (gaussian.restrict (truncatedBody q I)) core :=
         condOn_smul_cv18 _ hcore
           (ENNReal.inv_ne_zero.mpr ENNReal.ofReal_ne_top)
           (ENNReal.inv_ne_top.mpr <|
             ENNReal.ofReal_ne_zero_iff.mpr
               (gaussianIntegral_pos q (truncatedVolumeInput q I) hsigma2))
-      _ = Arlib.condOn gaussian core :=
+      _ = ArlibCommunity.Foundations.Convex.condOn gaussian core :=
         condOn_restrict_eq_condOn_of_subset_cv18 gaussian hcore hcoreFull
-  have hmapCond : (Arlib.condOn nu core).map scale =
-      Arlib.condOn proposalGaussian K := by
+  have hmapCond : (ArlibCommunity.Foundations.Convex.condOn nu core).map scale =
+      ArlibCommunity.Foundations.Convex.condOn proposalGaussian K := by
     rw [hcondNu]
     simpa [scale, core, gaussian, proposalGaussian] using
       map_condOn_gaussian_smul_cv18 hK hc0 (variance := sigma2)
-  have hrestrict : nu.restrict core = nu core • Arlib.condOn nu core := by
-    rw [Arlib.condOn_def, smul_smul,
+  have hrestrict : nu.restrict core = nu core • ArlibCommunity.Foundations.Convex.condOn nu core := by
+    rw [ArlibCommunity.Foundations.Convex.condOn_def, smul_smul,
       ENNReal.mul_inv_cancel hnuCore0 hnuCoreTop, one_smul]
   have hsource := map_withDensity_accuracyRejectionAcceptance
     q I sigma2 nu
@@ -274,7 +274,7 @@ theorem truncatedGaussianProbability_acceptance_map_le_self
   rw [hsource, hrestrict, Measure.map_smul (hf := by fun_prop), withDensity_smul_measure,
     hmapCond]
   have hproposalDensity :
-      (Arlib.condOn proposalGaussian K).withDensity g =
+      (ArlibCommunity.Foundations.Convex.condOn proposalGaussian K).withDensity g =
         (proposalGaussian K)⁻¹ • gaussian.restrict K := by
     simpa [proposalGaussian, gaussian, g, c] using
       condOn_gaussian_withDensity_scaleAcceptance_cv18 hK sigma2 c
@@ -489,8 +489,8 @@ theorem stationary_accuracyAcceptedTarget_isWarm
       _ ≤ 16 * accepted Set.univ := mul_le_mul' le_rfl hacceptedLower
   have hw := isWarm_normalize_of_le_smul
     haccepted0 hacceptedTop hnu0 hnuTop hdom hmass
-  change IsWarm 64 (Arlib.condOn accepted Set.univ) nu
-  rw [Arlib.condOn_def, Measure.restrict_univ]
+  change IsWarm 64 (ArlibCommunity.Foundations.Convex.condOn accepted Set.univ) nu
+  rw [ArlibCommunity.Foundations.Convex.condOn_def, Measure.restrict_univ]
   convert hw using 1 <;> norm_num
 
 /-- Warmness transfers every square-integrable real second moment.  This

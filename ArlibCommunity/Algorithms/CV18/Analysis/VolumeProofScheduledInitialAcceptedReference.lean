@@ -16,7 +16,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
-open _root_.Arlib
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 noncomputable section
 
@@ -52,7 +52,7 @@ theorem scheduledBalancedForwardTraceLaw_zero_leUpTo_initialAcceptedReference
   let _ : IsProbabilityMeasure
       (scheduledBalancedAccuracyGaussianAcceptedTargetLaw q I
         (initialVariance q)
-        (Arlib.MarkovChains.ellGaussianProb
+        (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
           (figureOneScheduledPhaseBody q I (initialVariance q))
           (proposalRadius q (initialVariance q))
           (initialVariance q))) := by

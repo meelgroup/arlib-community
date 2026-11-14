@@ -15,7 +15,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Metric Set
 open scoped ENNReal Pointwise
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- A slightly sharper version of the acceptance-mass transfer used in the
 branch-mass layer.  The scheduled core error is much smaller than the generic
@@ -23,7 +23,7 @@ quarter used there. -/
 theorem TVLe.withDensity_mass_ge_two_sevenths_cv18
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
-    {epsilon : ENNReal} (h : Arlib.TVLe mu nu epsilon)
+    {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
     (hepsilon : epsilon ≤ ENNReal.ofReal (3 / 14 : ℝ))
     {accept : S → ENNReal} (haccept : Measurable accept)
     (haccept_one : ∀ x, accept x ≤ 1)
@@ -67,8 +67,8 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge_one_eighth
   let core := c • K
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
   let g : AmbientSpace q.n → ENNReal := gaussianScaleAcceptance sigma2 c
-  let source := (Arlib.condOn pi core).map scale
-  let proposal := Arlib.condOn
+  let source := (ArlibCommunity.Foundations.Convex.condOn pi core).map scale
+  let proposal := ArlibCommunity.Foundations.Convex.condOn
     ((volume : Measure (AmbientSpace q.n)).withDensity
       (gaussianWeight (sigma2 / c ^ 2))) K
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
@@ -92,8 +92,8 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge_one_eighth
   have hcore0 : pi core ≠ 0 :=
     ne_of_gt ((by norm_num : 0 < ENNReal.ofReal (7 / 16 : ℝ)).trans_le hcoreMass)
   have hcoretop : pi core ≠ ⊤ := measure_ne_top pi core
-  let _ : IsProbabilityMeasure (Arlib.condOn pi core) :=
-    Arlib.isProbabilityMeasure_condOn pi hcore0 hcoretop
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn pi core) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn pi hcore0 hcoretop
   let _ : IsProbabilityMeasure source :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
   have hscaled : 0 < sigma2 / c ^ 2 := by positivity
@@ -106,8 +106,8 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge_one_eighth
         (gaussianWeight (sigma2 / c ^ 2))) K ≠ ⊤ :=
     withDensity_gaussianWeight_ne_top hscaled hKmeas hKtop
   let _ : IsProbabilityMeasure proposal :=
-    Arlib.isProbabilityMeasure_condOn _ hprop0 hproptop
-  have hsourceTv : Arlib.TVLe source proposal
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn _ hprop0 hproptop
+  have hsourceTv : ArlibCommunity.Foundations.Convex.TVLe source proposal
       (4 * ENNReal.ofReal (coreMixingError q)) := by
     simpa [source, proposal, pi, core, scale, K, delta, c] using
       figureOneScheduled_stationaryCoreMap_tv_proposal q I hsigma2
@@ -139,8 +139,8 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge_one_eighth
   have hsourceAccept : ENNReal.ofReal (2 / 7 : ℝ) ≤
       (source.withDensity g) Set.univ :=
     TVLe.withDensity_mass_ge_two_sevenths_cv18 hsourceTv herr hg hg1 hhalf
-  have hrestrict : pi.restrict core = pi core • Arlib.condOn pi core := by
-    rw [Arlib.condOn_def, smul_smul,
+  have hrestrict : pi.restrict core = pi core • ArlibCommunity.Foundations.Convex.condOn pi core := by
+    rw [ArlibCommunity.Foundations.Convex.condOn_def, smul_smul,
       ENNReal.mul_inv_cancel hcore0 hcoretop, one_smul]
   have hsourceScale :
       ((pi.restrict core).map scale).withDensity g =
@@ -218,8 +218,8 @@ theorem map_scheduledBalancedAcceptedTarget_scale_eq
   have hcontract : Measurable contract := by fun_prop
   have hc0 : scaleFactor q ≠ 0 := (scaleFactor_pos q).ne'
   unfold scheduledBalancedAccuracyGaussianAcceptedTargetLaw
-  change (Arlib.condOn (accepted.map expand) Set.univ).map contract = _
-  rw [Arlib.condOn_def, Measure.map_smul (hf := by fun_prop),
+  change (ArlibCommunity.Foundations.Convex.condOn (accepted.map expand) Set.univ).map contract = _
+  rw [ArlibCommunity.Foundations.Convex.condOn_def, Measure.map_smul (hf := by fun_prop),
     Measure.map_apply hexpand MeasurableSet.univ, Set.preimage_univ,
     Measure.restrict_univ,
     Measure.map_map hcontract hexpand]
@@ -239,7 +239,7 @@ theorem map_scheduledBalancedAcceptedTarget_scale_isWarm_eight
     let K := figureOneScheduledPhaseBody q I sigma2
     let delta := proposalRadius q sigma2
     let pi := ellGaussianProb K delta sigma2
-    Arlib.IsWarm 8
+    ArlibCommunity.Foundations.Convex.IsWarm 8
       ((scheduledBalancedAccuracyGaussianAcceptedTargetLaw
         q I sigma2 pi).map (fun x => scaleFactor q • x)) pi := by
   dsimp only
@@ -289,7 +289,7 @@ theorem map_scheduledBalancedAcceptedTarget_scale_adjacent_isWarm
       (figureOneScheduledPhaseBody q I (scheduleValue q (phase + 1)))
       (proposalRadius q (scheduleValue q (phase + 1)))
       (scheduleValue q (phase + 1))
-    Arlib.IsWarm (ENNReal.ofReal (8 * warmConstant q))
+    ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal (8 * warmConstant q))
       ((scheduledBalancedAccuracyGaussianAcceptedTargetLaw
         q I sigma2 pi).map (fun x => scaleFactor q • x)) nextPi := by
   dsimp only
@@ -308,13 +308,13 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_acceptedTarget
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (rho : Measure (AmbientSpace q.n)) [IsProbabilityMeasure rho]
-    (hbaseWarm : Arlib.IsWarm
+    (hbaseWarm : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q)) rho
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2)) :
     ∀ mu : Measure (AmbientSpace q.n),
-      IsProbabilityMeasure mu → Arlib.IsWarm 2 mu rho →
+      IsProbabilityMeasure mu → ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho →
       MeasureLeUpTo
         (mu.bind
           (scheduledBalancedAccuracyTransitionLawAux q I sigma2
@@ -358,7 +358,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_acceptedTarget
         mu hmu hwarm
   have hretry :
       let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -524,10 +524,10 @@ theorem bind_figureOneFinalScheduledAcceptedTarget_retainedOptionKernel_leUpTo
   let _ : IsProbabilityMeasure target :=
     scheduledBalancedAccuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_of_lower
       q I hsigma2 pi haccepted
-  have hcontractWarm : Arlib.IsWarm
+  have hcontractWarm : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q))
       (target.map contract) pi := by
-    have h8 : Arlib.IsWarm 8 (target.map contract) pi := by
+    have h8 : ArlibCommunity.Foundations.Convex.IsWarm 8 (target.map contract) pi := by
       simpa [target, pi, contract] using
         map_scheduledBalancedAcceptedTarget_scale_isWarm_eight q I hsigma2
     apply h8.mono
@@ -540,7 +540,7 @@ theorem bind_figureOneFinalScheduledAcceptedTarget_retainedOptionKernel_leUpTo
     bind_figureOneFinalScheduledBalancedTransition_leUpTo_acceptedTarget
       q I hsigma2 (target.map contract) hcontractWarm
         (target.map contract) inferInstance
-        ((Arlib.IsWarm.refl (target.map contract)).mono (by norm_num))
+        ((ArlibCommunity.Foundations.Convex.IsWarm.refl (target.map contract)).mono (by norm_num))
   have hleft :
       (target.map some).bind
           (figureOneFinalScheduledRetainedOptionKernel q I sigma2) =

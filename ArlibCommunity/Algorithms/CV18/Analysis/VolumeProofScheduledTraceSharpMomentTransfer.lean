@@ -132,7 +132,7 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_mapped_tv
     (q : VolumeParams) (I : VolumeInput q.n) (j : ℕ)
     {epsilon : ENNReal} (hepsilonTop : epsilon ≠ ⊤)
     {B : ℝ} (hB : 0 < B)
-    (hscalar : Arlib.TVLe
+    (hscalar : ArlibCommunity.Foundations.Convex.TVLe
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
         (numPhases q)).map
@@ -218,8 +218,8 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_mapped_tv
       (figureOneIdealPhaseEstimator_measurable q phase).aemeasurable
       (measurable_id.pow_const 2).aestronglyMeasurable]
     simpa [phase, figureOneChronologicalMomentFactor] using hidealMoments.2
-  have htransport := Arlib.TVLe.second_le_factor_mul_mean_sq_of_ae
-    (show Arlib.TVLe actualScalar idealScalar epsilon from hscalar)
+  have htransport := ArlibCommunity.Foundations.Convex.TVLe.second_le_factor_mul_mean_sq_of_ae
+    (show ArlibCommunity.Foundations.Convex.TVLe actualScalar idealScalar epsilon from hscalar)
     hepsilonTop measurable_id hB hactual0 hactualB hideal0 hidealScalarB
     hidealMean (figureOneIdealPhaseMean_pos q I phase) hidealSecond
     (zero_le_one.trans (figureOneChronologicalMomentFactor_one_le q j))
@@ -249,7 +249,7 @@ theorem scheduledFigureOneTrace_second_le_executableMomentFactor_of_mapped_tv_ei
     (q : VolumeParams) (I : VolumeInput q.n) (j : ℕ)
     {epsilon : ENNReal} (hepsilonTop : epsilon ≠ ⊤)
     {B : ℝ} (hB : 0 < B)
-    (hscalar : Arlib.TVLe
+    (hscalar : ArlibCommunity.Foundations.Convex.TVLe
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
         (numPhases q)).map

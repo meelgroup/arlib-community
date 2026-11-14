@@ -370,18 +370,18 @@ theorem half_mul_natCast_mul_bind_cappedProperCollectLaw_none_le
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {weight : AmbientSpace q.n → ℝ} (hweight : Measurable weight)
     {M : ℝ≥0∞} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : Arlib.IsWarm M mu
-      (Arlib.MarkovChains.ellGaussianProb (truncatedBody q I)
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb (truncatedBody q I)
         (figureOneProposalRadius q sigma2) sigma2))
     (rawCap properStride samples : ℕ) :
     ENNReal.ofReal (1 / 2) * (rawCap : ℝ≥0∞) *
         (mu.bind fun current => cappedProperCollectLaw
-          (Arlib.MarkovChains.lazyProperProposalGaussianAux (truncatedBody q I)
+          (ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux (truncatedBody q I)
             (truncatedBody_measurable q I) (figureOneProposalRadius q sigma2)
             sigma2)
           weight rawCap properStride samples current) {none} ≤
       ((properStride * samples : ℕ) : ℝ≥0∞) * M := by
-  let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux (truncatedBody q I)
+  let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux (truncatedBody q I)
     (truncatedBody_measurable q I) (figureOneProposalRadius q sigma2) sigma2
   have hcollect : Measurable fun current =>
       cappedProperCollectLaw Q weight rawCap properStride samples current := by
@@ -437,7 +437,7 @@ theorem cappedProperCollectWeightsAux_semantics
       (cappedProperCollectWeightsAux q sigma2 weight properStride rawCap
         remainingProper samples total current).runEstimate oracle.query =
       cappedProperCollectLawAux
-        (Arlib.MarkovChains.lazyProperProposalGaussianAux (truncatedBody q I)
+        (ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux (truncatedBody q I)
           (truncatedBody_measurable q I) (figureOneProposalRadius q sigma2)
           sigma2)
         weight properStride rawCap remainingProper samples total current) := by
@@ -522,7 +522,7 @@ theorem cappedProperCollectWeightsAux_semantics
                   cappedProperCollectLawAux] using
                     ih'.2.2 (total + weight current) current
           | succ remainingProper =>
-              let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux
+              let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux
                 (truncatedBody q I) (truncatedBody_measurable q I)
                 (figureOneProposalRadius q sigma2) sigma2
               let next (total : ℝ) : Bool × AmbientSpace q.n →
@@ -658,7 +658,7 @@ theorem cappedProperCollectWeights_semantics
       (cappedProperCollectWeights q sigma2 weight rawCap properStride samples
         current).runEstimate oracle.query =
       cappedProperCollectLaw
-        (Arlib.MarkovChains.lazyProperProposalGaussianAux (truncatedBody q I)
+        (ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux (truncatedBody q I)
           (truncatedBody_measurable q I) (figureOneProposalRadius q sigma2)
           sigma2)
         weight rawCap properStride samples current) := by
@@ -679,8 +679,8 @@ theorem half_mul_natCast_mul_bind_cappedProperCollectWeights_none_le
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {weight : AmbientSpace q.n → ℝ} (hweight : Measurable weight)
     {M : ℝ≥0∞} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : Arlib.IsWarm M mu
-      (Arlib.MarkovChains.ellGaussianProb (truncatedBody q I)
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb (truncatedBody q I)
         (figureOneProposalRadius q sigma2) sigma2))
     (rawCap properStride samples : ℕ) :
     ENNReal.ofReal (1 / 2) * (rawCap : ℝ≥0∞) *
@@ -688,7 +688,7 @@ theorem half_mul_natCast_mul_bind_cappedProperCollectWeights_none_le
           (cappedProperCollectWeights q sigma2 weight rawCap properStride samples
             current).runEstimate oracle.query) {none} ≤
       ((properStride * samples : ℕ) : ℝ≥0∞) * M := by
-  let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux (truncatedBody q I)
+  let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux (truncatedBody q I)
     (truncatedBody_measurable q I) (figureOneProposalRadius q sigma2) sigma2
   have hlaw : (fun current =>
         (cappedProperCollectWeights q sigma2 weight rawCap properStride samples

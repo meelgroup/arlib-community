@@ -18,7 +18,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Set
 open scoped ENNReal
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 noncomputable section
 
@@ -84,11 +84,11 @@ theorem bind_gaussian_observation_leUpTo_of_warm_two_accepted_retained
     (accepted : Measure (AmbientSpace q.n))
     (hretained : rho.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
-    (hgood : Arlib.IsWarm
+    (hgood : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q))
       (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase))
-    (hwarm : Arlib.IsWarm 2 mu rho) :
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho) :
     MeasureLeUpTo
       (mu.bind (scheduledBalancedTracePhaseObservationLaw
         figureOneFinalScheduledBalancedParameters q I phase))
@@ -119,7 +119,7 @@ theorem bind_gaussian_observation_leUpTo_of_warm_two_accepted_retained
         scheduledBalancedTraceLiveStateLaw_mono_smul
           q mu rho 2 scale hscale hmule
       _ = good := by rw [hliveRho]
-  have hgood16 : Arlib.IsWarm
+  have hgood16 : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (16 * warmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I phase) := by
     intro S hS
@@ -172,7 +172,7 @@ theorem approxIndepFun_gaussian_phase_of_accepted_retained
     (accepted : Measure (AmbientSpace q.n)) [IsProbabilityMeasure accepted]
     (hretained : rho.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
-    (hgood : Arlib.IsWarm
+    (hgood : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q))
       (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase)) :
@@ -192,7 +192,7 @@ theorem approxIndepFun_gaussian_phase_of_accepted_retained
   let _ : IsProbabilityMeasure target :=
     figureOneScheduledGaussianPhaseTarget_isProbabilityMeasure q I phase
   have hconditioned : ∀ mu : Measure (ScheduledBalancedCoolingTrace q.n),
-      IsProbabilityMeasure mu → Arlib.IsWarm 2 mu (rho.map id) →
+      IsProbabilityMeasure mu → ArlibCommunity.Foundations.Convex.IsWarm 2 mu (rho.map id) →
       MeasureLeUpTo (mu.bind K) target
         (figureOneCorrectedTransitionBudget q) := by
     intro mu hmu hwarm
@@ -225,7 +225,7 @@ theorem approxIndepFun_oldStatistic_gaussian_liveRaw_of_accepted_retained
     (accepted : Measure (AmbientSpace q.n)) [IsProbabilityMeasure accepted]
     (hretained : rho.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
-    (hgood : Arlib.IsWarm
+    (hgood : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q))
       (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase))
@@ -311,11 +311,11 @@ theorem bind_terminal_observation_leUpTo_of_warm_two_accepted_retained
     (accepted : Measure (AmbientSpace q.n))
     (hretained : rho.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
-    (hgood : Arlib.IsWarm
+    (hgood : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q))
       (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q)))
-    (hwarm : Arlib.IsWarm 2 mu rho) :
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho) :
     MeasureLeUpTo
       (mu.bind (scheduledBalancedTracePhaseObservationLaw
         figureOneFinalScheduledBalancedParameters q I
@@ -347,7 +347,7 @@ theorem bind_terminal_observation_leUpTo_of_warm_two_accepted_retained
         scheduledBalancedTraceLiveStateLaw_mono_smul
           q mu rho 2 scale hscale hmule
       _ = good := by rw [hliveRho]
-  have hgood16 : Arlib.IsWarm
+  have hgood16 : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (16 * warmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q)) := by
     intro S hS
@@ -411,7 +411,7 @@ theorem approxIndepFun_terminal_phase_of_accepted_retained
     (accepted : Measure (AmbientSpace q.n)) [IsProbabilityMeasure accepted]
     (hretained : rho.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
-    (hgood : Arlib.IsWarm
+    (hgood : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q))
       (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q))) :
@@ -432,7 +432,7 @@ theorem approxIndepFun_terminal_phase_of_accepted_retained
   let _ : IsProbabilityMeasure target :=
     figureOneScheduledTerminalPhaseTarget_isProbabilityMeasure q I
   have hconditioned : ∀ mu : Measure (ScheduledBalancedCoolingTrace q.n),
-      IsProbabilityMeasure mu → Arlib.IsWarm 2 mu (rho.map id) →
+      IsProbabilityMeasure mu → ArlibCommunity.Foundations.Convex.IsWarm 2 mu (rho.map id) →
       MeasureLeUpTo (mu.bind K) target
         (figureOneCorrectedTransitionBudget q) := by
     intro mu hmu hwarm

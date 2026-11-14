@@ -29,8 +29,8 @@ theorem scheduleValue_accelerated_accuracyPairedNumerator_variance_le
       ∂(truncatedGaussianProbability q I s (scheduleValue_pos q k) :
         Measure (AmbientSpace q.n))
     let R := Real.sqrt (s / terminalVariance q) * mean
-    Arlib.MarkovChains.varianceReal
-      (Arlib.MarkovChains.ellGaussianProb
+    ArlibCommunity.Foundations.MarkovChainTheory.varianceReal
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I s)
         (figureOneProposalRadius q s) s)
       (fun x => accuracyImportanceWeight q I s
@@ -100,8 +100,8 @@ theorem scheduleValue_fixedRate_accuracyPairedNumerator_variance_le
       ∂(truncatedGaussianProbability q I s (scheduleValue_pos q k) :
         Measure (AmbientSpace q.n))
     let R := Real.sqrt (2 / (q.n : ℝ)) * mean
-    Arlib.MarkovChains.varianceReal
-      (Arlib.MarkovChains.ellGaussianProb
+    ArlibCommunity.Foundations.MarkovChainTheory.varianceReal
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I s)
         (figureOneProposalRadius q s) s)
       (fun x => accuracyImportanceWeight q I s
@@ -159,8 +159,8 @@ theorem terminal_accuracyPairedNumerator_variance_le
       ∂(truncatedGaussianProbability q I s (terminalVariance_pos' q) :
         Measure (AmbientSpace q.n))
     let R := Real.sqrt (Real.exp (1 / 2) - 1) * mean
-    Arlib.MarkovChains.varianceReal
-      (Arlib.MarkovChains.ellGaussianProb
+    ArlibCommunity.Foundations.MarkovChainTheory.varianceReal
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I s)
         (figureOneProposalRadius q s) s)
       (fun x => accuracyImportanceWeight q I s

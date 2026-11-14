@@ -17,8 +17,9 @@ At the paper's larger step size, an averaged boundary-shell/smoothing argument
 is still required.
 -/
 
-namespace Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory Metric
 open scoped ENNReal Pointwise
 
@@ -319,4 +320,4 @@ theorem half_mul_mul_measure_properProposalTotalCost_ge_le_smallStep_cv18
       hn hK hKc hball hdelta hdelta_n hvariance)
     hwarm t cutoff
 
-end Arlib.MarkovChains
+end ArlibCommunity.Algorithms.CV18

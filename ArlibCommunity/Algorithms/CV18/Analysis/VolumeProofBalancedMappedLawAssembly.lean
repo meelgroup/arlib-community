@@ -475,7 +475,7 @@ theorem approxIndepFun_balancedCompletePhase_of_warm_first
     {delta : ENNReal} (hdelta : delta ≠ ⊤)
     (hfirst : ∀ mu : Measure (AmbientSpace q.n),
       IsProbabilityMeasure mu →
-      Arlib.IsWarm 2 mu (history.map state) →
+      ArlibCommunity.Foundations.Convex.IsWarm 2 mu (history.map state) →
       MeasureLeUpTo
         (mu.bind (balancedAccuracyTransitionLawAux q I sigma2 proposalCap
           properStride retryLimit)) target delta)
@@ -579,7 +579,7 @@ theorem approxIndepFun_balancedCompletePhase_history_of_warm_blocks
       balancedRejectedStateMeasure q I sigma2 pi Set.univ)
     (hfirstBlock : ∀ mu : Measure (AmbientSpace q.n),
       IsProbabilityMeasure mu →
-      Arlib.IsWarm 2 mu (history.map state) →
+      ArlibCommunity.Foundations.Convex.IsWarm 2 mu (history.map state) →
       MeasureLeUpTo
         ((mu.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -587,7 +587,7 @@ theorem approxIndepFun_balancedCompletePhase_history_of_warm_blocks
         (pi.map some) firstError)
     (hretryBlock :
       let rejected := balancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap

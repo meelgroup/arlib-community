@@ -36,8 +36,8 @@ that run `finiteFacetStep` and charge one facet scan per step use this to
 transfer the mixing bound to the walk they execute. -/
 theorem finiteFacetStep_eq_step {n : ℕ} {ι : Type*} [Fintype ι]
     (A : ι → State n) (b : ι → ℝ)
-    (hK : Bornology.IsBounded (Arlib.Polytope.body A b)) [NeZero n] :
-    finiteFacetStep A b = step (Arlib.Polytope.body A b) :=
+    (hK : Bornology.IsBounded (ArlibCommunity.Foundations.Convex.Polytope.body A b)) [NeZero n] :
+    finiteFacetStep A b = step (ArlibCommunity.Foundations.Convex.Polytope.body A b) :=
   PseudocodeProof.finiteFacetStep_eq_step A b hK
 
 /-- The unconditional corrected hit-and-run mixing theorem.
@@ -51,7 +51,7 @@ theorem hitAndRun_mixes {n : ℕ} (hn : 21 ≤ n) (p : Problem n)
     {M eps : ℝ} (hM : 1 ≤ M) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     {S : Set (State n)} (hWarm : WarmStart p.body sigma M eps S)
     {m : ℕ} (hm : deadline n p.diameter M eps ≤ (m : ℝ)) :
-    Arlib.TVLe (run p.body sigma m) (target p.body) (ENNReal.ofReal eps) :=
+    TVLe (run p.body sigma m) (target p.body) (ENNReal.ofReal eps) :=
   TheoremProof.hitAndRun_mixes hn p hM heps0 heps1 hWarm hm
 
 end ArlibCommunity.Algorithms.HitAndRun

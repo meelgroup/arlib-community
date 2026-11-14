@@ -39,7 +39,7 @@ top-level theorem mechanically.
 -/
 
 open MeasureTheory Set
-open scoped ENNReal NNReal Pointwise Topology
+open scoped ENNReal NNReal Pointwise _root_.Topology
 
 namespace AsymptoticStatistics
 

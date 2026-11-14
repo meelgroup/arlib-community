@@ -15,7 +15,7 @@ open MeasureTheory ProbabilityTheory
 namespace ArlibCommunity.Algorithms.CV18
 
 open scoped ENNReal
-open _root_.Arlib
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- The stationary accepted-target correction is far below the numerical
 budget needed by the bounded terminal-moment transfer. -/
@@ -80,7 +80,7 @@ theorem figureOneScheduledAcceptedTargetAt_terminal_positive_mean_and_second_le_
     figureOneScheduledAcceptedTargetAt_isProbabilityMeasure q I
       (terminalPhaseSteps q)
   let _ : IsProbabilityMeasure nu := inferInstance
-  have htv : Arlib.TVLe mu nu (scheduledBalancedStationaryTargetError q) := by
+  have htv : ArlibCommunity.Foundations.Convex.TVLe mu nu (scheduledBalancedStationaryTargetError q) := by
     simpa [mu, nu, figureOneScheduledAcceptedTargetAt,
       figureOneScheduledSpeedyPiAt, scheduleValue_terminalPhaseSteps] using
       scheduledBalancedAccuracyGaussianAcceptedTargetLaw_tv
@@ -106,7 +106,7 @@ theorem figureOneScheduledAcceptedTargetAt_terminal_positive_mean_and_second_le_
             2 * (∫ x, f x ∂nu) :=
           mul_le_mul_of_nonneg_right hexp hm0
         _ ≤ 2 * (∫ x, f x ∂nu) ^ 2 := by nlinarith
-  apply Arlib.TVLe.positive_mean_and_second_le_four_of_ae_expHalf htv
+  apply ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four_of_ae_expHalf htv
     (scheduledBalancedStationaryTargetError_le_one_div_sixtyFour q)
     (measurable_uniformRatioWeight (terminalVariance q))
   · exact hmu.mono fun _ hx => le_trans (by norm_num) hx.1

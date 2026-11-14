@@ -95,10 +95,10 @@ theorem integral_optionZeroLift_sq_le_of_success_dom
 Unlike the older coarse factor-four adapter, this theorem retains an
 arbitrary ideal factor and makes the exact finite-walk slack arithmetic
 explicit. -/
-theorem Arlib.TVLe.second_le_factor_mul_mean_sq_of_ae
+theorem ArlibCommunity.Foundations.Convex.TVLe.second_le_factor_mul_mean_sq_of_ae
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
-    {epsilon : ENNReal} (htv : Arlib.TVLe mu nu epsilon)
+    {epsilon : ENNReal} (htv : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
     (hepsilonTop : epsilon ≠ ⊤)
     {f : S → ℝ} (hf : Measurable f) {B : ℝ} (hB : 0 < B)
     (hf0mu : ∀ᵐ x ∂mu, 0 ≤ f x) (hfBmu : ∀ᵐ x ∂mu, f x ≤ B)
@@ -138,9 +138,9 @@ theorem Arlib.TVLe.second_le_factor_mul_mean_sq_of_ae
     integral_congr_ae <| by
       filter_upwards [hgeqnu] with x hx
       rw [hx]
-  have hmeanAbs := Arlib.TVLe.integral_le_of_nonnegative_le
+  have hmeanAbs := ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_nonnegative_le
     htv hepsilonTop hg hB hg0 hgB
-  have hsecondAbs := Arlib.TVLe.integral_sq_le_of_nonnegative_le
+  have hsecondAbs := ArlibCommunity.Foundations.Convex.TVLe.integral_sq_le_of_nonnegative_le
     htv hepsilonTop hg hB hg0 hgB
   rw [hmeanMu, hmeanNu, ← hidealMean] at hmeanAbs
   rw [hsecondMu, hsecondNu] at hsecondAbs
@@ -176,6 +176,6 @@ theorem Arlib.TVLe.second_le_factor_mul_mean_sq_of_ae
       mul_le_mul_of_nonneg_left hsquare hcoeff0
 
 #print axioms integral_optionZeroLift_sq_le_of_success_dom
-#print axioms Arlib.TVLe.second_le_factor_mul_mean_sq_of_ae
+#print axioms ArlibCommunity.Foundations.Convex.TVLe.second_le_factor_mul_mean_sq_of_ae
 
 end ArlibCommunity.Algorithms.CV18

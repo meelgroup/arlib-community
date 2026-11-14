@@ -7,7 +7,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
-open _root_.Arlib.MarkovChains
+open _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- A complete finite retry collector keeps the cap-independent shadow bound
 on its warm component.  Only the explicitly separated error submeasure is
@@ -19,7 +19,7 @@ theorem lintegral_scheduledBalancedAccuracyRetryCollect_countedQueryCost_le_of_l
     {M error : ENNReal}
     {mu good bad : Measure (AmbientSpace q.n)}
     (hle : mu ≤ good + bad)
-    (hwarm : _root_.Arlib.IsWarm M good
+    (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M good
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (hbad : bad Set.univ ≤ error)
@@ -75,7 +75,7 @@ theorem lintegral_scheduledBalancedAccuracyRetryCollect_countedQueryCost_le_fina
     {M error : ENNReal}
     {mu good bad : Measure (AmbientSpace q.n)}
     (hle : mu ≤ good + bad)
-    (hwarm : _root_.Arlib.IsWarm M good
+    (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M good
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (hM : M ≤ 96) (hbad : bad Set.univ ≤ error)

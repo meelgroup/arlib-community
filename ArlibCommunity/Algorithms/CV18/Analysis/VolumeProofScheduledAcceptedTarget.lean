@@ -21,7 +21,7 @@ noncomputable def scheduledAccuracyGaussianRejectionAcceptance
   let c := scaleFactor q
   let target := c⁻¹ • current
   (figureOneScheduledPhaseBody q I sigma2).indicator
-    (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c) target
+    (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c) target
 
 theorem scheduledAccuracyGaussianRejectionAcceptance_le_one
     (q : VolumeParams) (I : VolumeInput q.n) {sigma2 : ℝ}
@@ -31,7 +31,7 @@ theorem scheduledAccuracyGaussianRejectionAcceptance_le_one
   by_cases ht : (scaleFactor q)⁻¹ • current ∈
       figureOneScheduledPhaseBody q I sigma2
   · rw [Set.indicator_of_mem ht]
-    exact Arlib.MarkovChains.gaussianScaleAcceptance_le_one hsigma2
+    exact ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance_le_one hsigma2
       (scaleFactor_pos q) (scaleFactor_le_one q) _
   · rw [Set.indicator_of_notMem ht]
     exact bot_le
@@ -40,7 +40,7 @@ theorem measurable_scheduledAccuracyGaussianRejectionAcceptance
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ) :
     Measurable (scheduledAccuracyGaussianRejectionAcceptance q I sigma2) := by
   unfold scheduledAccuracyGaussianRejectionAcceptance
-  exact ((Arlib.MarkovChains.measurable_gaussianScaleAcceptance sigma2
+  exact ((ArlibCommunity.Algorithms.CV18.measurable_gaussianScaleAcceptance sigma2
       (scaleFactor q)).indicator
         (figureOneScheduledPhaseBody_measurable q I sigma2)).comp
           ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
@@ -140,13 +140,13 @@ theorem runEstimate_scheduledBalancedAccuracyGaussianRejectionAttempt
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ phaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-            Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target) =
+            ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target) =
         (coin ≤ accept.toReal) := by
       intro coin
       have hacceptEq :
           scheduledBalancedAccuracyGaussianAcceptance q I sigma2 current =
             (2 : ENNReal)⁻¹ *
-              Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target := by
+              ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target := by
         unfold scheduledBalancedAccuracyGaussianAcceptance
           scheduledAccuracyGaussianRejectionAcceptance
         rw [Set.indicator_of_mem ht]
@@ -203,7 +203,7 @@ theorem runEstimate_scheduledBalancedAccuracyGaussianRejectionAttempt
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ phaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-            Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target) := by
+            ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target) := by
       intro coin h
       exact hineligible ⟨h.1, h.2.1, h.2.2.1⟩
     dsimp only [c, target] at hfalse
@@ -245,7 +245,7 @@ instance scheduledBalancedAccuracyGaussianRejectionKernel_isMarkovKernel
 noncomputable def scheduledAccuracyGaussianAcceptedTargetLaw
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (mu : Measure (AmbientSpace q.n)) : Measure (AmbientSpace q.n) :=
-  Arlib.condOn
+  ArlibCommunity.Foundations.Convex.condOn
     ((mu.withDensity
       (scheduledAccuracyGaussianRejectionAcceptance q I sigma2)).map
         (fun x => (scaleFactor q)⁻¹ • x)) Set.univ
@@ -253,7 +253,7 @@ noncomputable def scheduledAccuracyGaussianAcceptedTargetLaw
 noncomputable def scheduledBalancedAccuracyGaussianAcceptedTargetLaw
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (mu : Measure (AmbientSpace q.n)) : Measure (AmbientSpace q.n) :=
-  Arlib.condOn
+  ArlibCommunity.Foundations.Convex.condOn
     ((mu.withDensity
       (scheduledBalancedAccuracyGaussianAcceptance q I sigma2)).map
         (fun x => (scaleFactor q)⁻¹ • x)) Set.univ
@@ -272,18 +272,18 @@ theorem scheduledBalancedAccuracyGaussianAcceptedTargetLaw_eq
   unfold scheduledBalancedAccuracyGaussianAcceptedTargetLaw
     scheduledAccuracyGaussianAcceptedTargetLaw
     scheduledBalancedAccuracyGaussianAcceptance
-  change Arlib.condOn
+  change ArlibCommunity.Foundations.Convex.condOn
       ((mu.withDensity ((2 : ENNReal)⁻¹ •
         scheduledAccuracyGaussianRejectionAcceptance q I sigma2)).map scale)
         Set.univ = _
   rw [withDensity_smul (2 : ENNReal)⁻¹
     (measurable_scheduledAccuracyGaussianRejectionAcceptance q I sigma2)]
-  change Arlib.condOn (((2 : ENNReal)⁻¹ •
+  change ArlibCommunity.Foundations.Convex.condOn (((2 : ENNReal)⁻¹ •
       mu.withDensity
         (scheduledAccuracyGaussianRejectionAcceptance q I sigma2)).map
           scale) Set.univ = _
   rw [Measure.map_smul (hf := by fun_prop)]
-  exact Arlib.MarkovChains.condOn_smul_cv18 _ MeasurableSet.univ
+  exact ArlibCommunity.Algorithms.CV18.condOn_smul_cv18 _ MeasurableSet.univ
     (by norm_num) (by norm_num)
 
 theorem map_withDensity_scheduledAccuracyRejectionAcceptance
@@ -295,13 +295,13 @@ theorem map_withDensity_scheduledAccuracyRejectionAcceptance
         (scheduledAccuracyGaussianRejectionAcceptance q I sigma2)).map
         (fun x => c⁻¹ • x) =
       ((mu.restrict (c • K)).map (fun x => c⁻¹ • x)).withDensity
-        (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c) := by
+        (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c) := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
   let c := scaleFactor q
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
   let g : AmbientSpace q.n → ENNReal :=
-    Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c
+    ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c
   have hc0 : 0 < c := by simpa [c] using scaleFactor_pos q
   have hK : MeasurableSet K := figureOneScheduledPhaseBody_measurable q I sigma2
   have hcore : MeasurableSet (c • K) :=
@@ -313,7 +313,7 @@ theorem map_withDensity_scheduledAccuracyRejectionAcceptance
       measurable_id
   have hg : Measurable g := by
     dsimp [g]
-    exact Arlib.MarkovChains.measurable_gaussianScaleAcceptance sigma2 c
+    exact ArlibCommunity.Algorithms.CV18.measurable_gaussianScaleAcceptance sigma2 c
   have haccept : scheduledAccuracyGaussianRejectionAcceptance q I sigma2 =
       (c • K).indicator (fun x => g (scale x)) := by
     funext x
@@ -355,44 +355,44 @@ theorem scheduledAccuracyGaussianAcceptedTargetLaw_eq_kls
     scheduledAccuracyGaussianAcceptedTargetLaw q I sigma2 mu =
       let K := figureOneScheduledPhaseBody q I sigma2
       let c := scaleFactor q
-      Arlib.condOn
-        (((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
-          (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c)) Set.univ := by
+      ArlibCommunity.Foundations.Convex.condOn
+        (((ArlibCommunity.Foundations.Convex.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
+          (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c)) Set.univ := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
   let c := scaleFactor q
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
   let g : AmbientSpace q.n → ENNReal :=
-    Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c
+    ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c
   have hscale : Measurable scale := by
     dsimp [scale]
     exact (measurable_const : Measurable fun _ : AmbientSpace q.n => c⁻¹).smul
       measurable_id
   have hproposal :
-      ((Arlib.condOn mu (c • K)).map scale).withDensity g =
+      ((ArlibCommunity.Foundations.Convex.condOn mu (c • K)).map scale).withDensity g =
         (mu (c • K))⁻¹ •
           (((mu.restrict (c • K)).map scale).withDensity g) := by
-    rw [Arlib.condOn_def, Measure.map_smul (hf := by fun_prop), withDensity_smul_measure]
+    rw [ArlibCommunity.Foundations.Convex.condOn_def, Measure.map_smul (hf := by fun_prop), withDensity_smul_measure]
   rw [hproposal]
   have hunscaled := map_withDensity_scheduledAccuracyRejectionAcceptance
     q I sigma2 mu
-  change Arlib.condOn
+  change ArlibCommunity.Foundations.Convex.condOn
       ((mu.withDensity
         (scheduledAccuracyGaussianRejectionAcceptance q I sigma2)).map
           scale) Set.univ = _
   rw [← hunscaled]
   symm
-  exact Arlib.MarkovChains.condOn_smul_cv18 _ MeasurableSet.univ
+  exact ArlibCommunity.Algorithms.CV18.condOn_smul_cv18 _ MeasurableSet.univ
     (ENNReal.inv_ne_zero.mpr hcoretop) (ENNReal.inv_ne_top.mpr hcore0)
 
 theorem condOn_gaussian_scheduledPhase_eq_truncatedGaussian
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    Arlib.condOn
+    ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (AmbientSpace q.n)).withDensity
-          (Arlib.MarkovChains.gaussianWeight sigma2))
+          (ArlibCommunity.Foundations.Convex.gaussianWeight sigma2))
         (figureOneScheduledPhaseBody q I sigma2) =
-      Arlib.condOn
+      ArlibCommunity.Foundations.Convex.condOn
         (truncatedGaussianProbability q I sigma2 hsigma2 :
           Measure (AmbientSpace q.n))
         (figureOneScheduledPhaseBody q I sigma2) := by
@@ -406,17 +406,17 @@ theorem condOn_gaussian_scheduledPhase_eq_truncatedGaussian
   have hsub : figureOneScheduledPhaseBody q I sigma2 ⊆ truncatedBody q I :=
     fun _ hx => hx.1
   rw [truncatedGaussianProbability_toMeasure q I hsigma2]
-  change _ = Arlib.condOn (Z⁻¹ • truncatedGaussianMeasure q I sigma2) _
-  rw [Arlib.MarkovChains.condOn_smul_cv18 _
+  change _ = ArlibCommunity.Foundations.Convex.condOn (Z⁻¹ • truncatedGaussianMeasure q I sigma2) _
+  rw [ArlibCommunity.Algorithms.CV18.condOn_smul_cv18 _
     (figureOneScheduledPhaseBody_measurable q I sigma2) hZ0 hZtop]
   unfold truncatedGaussianMeasure
   rw [← restrict_withDensity (truncatedBody_measurable q I)]
-  rw [Arlib.MarkovChains.condOn_restrict_eq_condOn_of_subset_cv18 _
+  rw [ArlibCommunity.Algorithms.CV18.condOn_restrict_eq_condOn_of_subset_cv18 _
     (figureOneScheduledPhaseBody_measurable q I sigma2) hsub]
   congr 2
   funext x
-  simp [gaussianDensity_eq, Arlib.MarkovChains.gaussianWeight,
-    Arlib.MarkovChains.gaussianWeightReal]
+  simp [gaussianDensity_eq, ArlibCommunity.Foundations.Convex.gaussianWeight,
+    ArlibCommunity.Foundations.Convex.gaussianWeightReal]
 
 /-- Exact scheduled stationary target error used by the balanced transition. -/
 noncomputable def scheduledBalancedStationaryTargetError
@@ -432,32 +432,32 @@ theorem figureOneScheduled_speedy_core_mass
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     let K := figureOneScheduledPhaseBody q I sigma2
     let delta := proposalRadius q sigma2
-    let pi := Arlib.MarkovChains.ellGaussianProb K delta sigma2
+    let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta sigma2
     ENNReal.ofReal (7 / 16 : ℝ) ≤
       pi (scaleFactor q • K) := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
   let delta := proposalRadius q sigma2
-  let pi := Arlib.MarkovChains.ellGaussianProb K delta sigma2
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta sigma2
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
   have hdelta : 0 < delta := proposalRadius_pos q hsigma2
-  have hmass0 : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2
+  have hmass0 : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2
       Set.univ ≠ 0 := by
     dsimp [K]
-    exact Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+    exact ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
       (figureOneScheduledPhaseBody_measurable q I sigma2)
       (figureOneScheduledPhaseBody_convex q I sigma2)
       (figureOneScheduledPhaseBody_isCompact q I sigma2).isBounded
       (figureOneScheduledPhaseBody_volume_ne_zero q I hsigma2)
       hdelta sigma2
-  have hmasstop : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2
+  have hmasstop : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2
       Set.univ ≠ ⊤ := by
     dsimp [K]
-    exact Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+    exact ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
       (figureOneScheduledPhaseBody_volume_ne_top q I sigma2) delta hsigma2
   by_cases hsmall : phaseRadius q sigma2 ≤ 1
   · have hhalf :=
-      Arlib.MarkovChains.half_le_ellGaussianProb_standardCore_radius_cv18
+      ArlibCommunity.Algorithms.CV18.half_le_ellGaussianProb_standardCore_radius_cv18
         hn (figureOneScheduledPhaseBody_measurable q I sigma2)
         (figureOneScheduledPhaseBody_convex q I sigma2)
         (figureOneScheduledPhaseInradius_pos q hsigma2)
@@ -497,29 +497,29 @@ theorem figureOneScheduled_speedy_core_mass
       exact (figureOneScheduledPhaseBody_convex q I sigma2).smul_mem_of_zero_mem
         (hball (Metric.mem_closedBall_self zero_le_one)) hx ⟨hc0.le, hc1.le⟩
     have hcoreVol0 : volume (c • K) ≠ 0 := by
-      rw [Arlib.volume_smul_euclidean hc0.le]
+      rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
       exact mul_ne_zero
         (ENNReal.ofReal_ne_zero_iff.mpr (pow_pos hc0 q.n))
         (figureOneScheduledPhaseBody_volume_ne_zero q I hsigma2)
     have hcoreVoltop : volume (c • K) ≠ ⊤ := by
-      rw [Arlib.volume_smul_euclidean hc0.le]
+      rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
       exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top
         (figureOneScheduledPhaseBody_volume_ne_top q I sigma2)
     have hgaussCore0 :
         (((volume : Measure (AmbientSpace q.n)).withDensity
-          (Arlib.MarkovChains.gaussianWeight sigma2)).restrict K)
+          (ArlibCommunity.Foundations.Convex.gaussianWeight sigma2)).restrict K)
             (c • K) ≠ 0 := by
       rw [Measure.restrict_apply hcoreM, Set.inter_eq_left.2 hsub]
-      exact Arlib.MarkovChains.withDensity_gaussianWeight_ne_zero _ hcoreVol0
+      exact ArlibCommunity.Foundations.MarkovChainTheory.withDensity_gaussianWeight_ne_zero _ hcoreVol0
     have hgaussCoretop :
         (((volume : Measure (AmbientSpace q.n)).withDensity
-          (Arlib.MarkovChains.gaussianWeight sigma2)).restrict K)
+          (ArlibCommunity.Foundations.Convex.gaussianWeight sigma2)).restrict K)
             (c • K) ≠ ⊤ := by
       rw [Measure.restrict_apply hcoreM, Set.inter_eq_left.2 hsub]
-      exact Arlib.MarkovChains.withDensity_gaussianWeight_ne_top hsigma2
+      exact ArlibCommunity.Foundations.MarkovChainTheory.withDensity_gaussianWeight_ne_top hsigma2
         hcoreM hcoreVoltop
     have hpaper :=
-      Arlib.MarkovChains.standardCore_defect_and_speedyMass_cv18
+      ArlibCommunity.Algorithms.CV18.standardCore_defect_and_speedyMass_cv18
         hn (figureOneScheduledPhaseBody_convex q I sigma2)
         (figureOneScheduledPhaseBody_isCompact q I sigma2).isClosed
         (figureOneScheduledPhaseBody_volume_ne_top q I sigma2) hball
@@ -542,8 +542,8 @@ theorem scheduledBalancedAccuracyGaussianAcceptedTargetLaw_tv
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     let K := figureOneScheduledPhaseBody q I sigma2
     let delta := proposalRadius q sigma2
-    let pi := Arlib.MarkovChains.ellGaussianProb K delta sigma2
-    Arlib.TVLe
+    let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta sigma2
+    ArlibCommunity.Foundations.Convex.TVLe
       (scheduledBalancedAccuracyGaussianAcceptedTargetLaw q I sigma2 pi)
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n))
@@ -551,29 +551,29 @@ theorem scheduledBalancedAccuracyGaussianAcceptedTargetLaw_tv
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
   let delta := proposalRadius q sigma2
-  let pi := Arlib.MarkovChains.ellGaussianProb K delta sigma2
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta sigma2
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
   have hdelta : 0 < delta := proposalRadius_pos q hsigma2
-  have hmass0 : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2
+  have hmass0 : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2
       Set.univ ≠ 0 := by
     dsimp [K]
-    exact Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+    exact ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
       (figureOneScheduledPhaseBody_measurable q I sigma2)
       (figureOneScheduledPhaseBody_convex q I sigma2)
       (figureOneScheduledPhaseBody_isCompact q I sigma2).isBounded
       (figureOneScheduledPhaseBody_volume_ne_zero q I hsigma2)
       hdelta sigma2
-  have hmasstop : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2
+  have hmasstop : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2
       Set.univ ≠ ⊤ := by
     dsimp [K]
-    exact Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+    exact ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
       (figureOneScheduledPhaseBody_volume_ne_top q I sigma2) delta hsigma2
   let _ : IsProbabilityMeasure pi :=
-    Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
+    ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   have hcore0 : pi (scaleFactor q • K) ≠ 0 := by
     by_cases hsmall : phaseRadius q sigma2 ≤ 1
     · have hhalf :=
-        Arlib.MarkovChains.half_le_ellGaussianProb_standardCore_radius_cv18
+        ArlibCommunity.Algorithms.CV18.half_le_ellGaussianProb_standardCore_radius_cv18
           hn (figureOneScheduledPhaseBody_measurable q I sigma2)
           (figureOneScheduledPhaseBody_convex q I sigma2)
           (figureOneScheduledPhaseInradius_pos q hsigma2)
@@ -614,29 +614,29 @@ theorem scheduledBalancedAccuracyGaussianAcceptedTargetLaw_tv
           (hball (Metric.mem_closedBall_self zero_le_one)) hx
           ⟨hc0.le, hc1.le⟩
       have hcoreVol0 : volume (c • K) ≠ 0 := by
-        rw [Arlib.volume_smul_euclidean hc0.le]
+        rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
         exact mul_ne_zero
           (ENNReal.ofReal_ne_zero_iff.mpr (pow_pos hc0 q.n))
           (figureOneScheduledPhaseBody_volume_ne_zero q I hsigma2)
       have hcoreVoltop : volume (c • K) ≠ ⊤ := by
-        rw [Arlib.volume_smul_euclidean hc0.le]
+        rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
         exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top
           (figureOneScheduledPhaseBody_volume_ne_top q I sigma2)
       have hgaussCore0 :
           (((volume : Measure (AmbientSpace q.n)).withDensity
-            (Arlib.MarkovChains.gaussianWeight sigma2)).restrict K)
+            (ArlibCommunity.Foundations.Convex.gaussianWeight sigma2)).restrict K)
               (c • K) ≠ 0 := by
         rw [Measure.restrict_apply hcoreM, Set.inter_eq_left.2 hsub]
-        exact Arlib.MarkovChains.withDensity_gaussianWeight_ne_zero _ hcoreVol0
+        exact ArlibCommunity.Foundations.MarkovChainTheory.withDensity_gaussianWeight_ne_zero _ hcoreVol0
       have hgaussCoretop :
           (((volume : Measure (AmbientSpace q.n)).withDensity
-            (Arlib.MarkovChains.gaussianWeight sigma2)).restrict K)
+            (ArlibCommunity.Foundations.Convex.gaussianWeight sigma2)).restrict K)
               (c • K) ≠ ⊤ := by
         rw [Measure.restrict_apply hcoreM, Set.inter_eq_left.2 hsub]
-        exact Arlib.MarkovChains.withDensity_gaussianWeight_ne_top hsigma2
+        exact ArlibCommunity.Foundations.MarkovChainTheory.withDensity_gaussianWeight_ne_top hsigma2
           hcoreM hcoreVoltop
       have hpaper :=
-        Arlib.MarkovChains.standardCore_defect_and_speedyMass_cv18
+        ArlibCommunity.Algorithms.CV18.standardCore_defect_and_speedyMass_cv18
           hn (figureOneScheduledPhaseBody_convex q I sigma2)
           (figureOneScheduledPhaseBody_isCompact q I sigma2).isClosed
           (figureOneScheduledPhaseBody_volume_ne_top q I sigma2) hball
@@ -658,31 +658,31 @@ theorem scheduledBalancedAccuracyGaussianAcceptedTargetLaw_tv
   rw [scheduledBalancedAccuracyGaussianAcceptedTargetLaw_eq,
     scheduledAccuracyGaussianAcceptedTargetLaw_eq_kls q I sigma2 pi
       hcore0 hcoretop]
-  have hstationary : Arlib.TVLe pi pi
+  have hstationary : ArlibCommunity.Foundations.Convex.TVLe pi pi
       (ENNReal.ofReal (coreMixingError q)) :=
-    (Arlib.TVLe.refl pi).mono bot_le
-  have hcore : Arlib.TVLe
-      (Arlib.condOn
-        (((Arlib.condOn pi (scaleFactor q • K)).map
+    (ArlibCommunity.Foundations.Convex.TVLe.refl pi).mono bot_le
+  have hcore : ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn
+        (((ArlibCommunity.Foundations.Convex.condOn pi (scaleFactor q • K)).map
           (fun x => (scaleFactor q)⁻¹ • x)).withDensity
-            (Arlib.MarkovChains.gaussianScaleAcceptance sigma2
+            (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2
               (scaleFactor q))) Set.univ)
-      (Arlib.condOn
+      (ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (AmbientSpace q.n)).withDensity
-          (Arlib.MarkovChains.gaussianWeight sigma2)) K)
+          (ArlibCommunity.Foundations.Convex.gaussianWeight sigma2)) K)
       (96 * ENNReal.ofReal (coreMixingError q)) := by
     by_cases hsmall : phaseRadius q sigma2 ≤ 1
     · have hprop0 :
           ((volume : Measure (AmbientSpace q.n)).withDensity
-            (Arlib.MarkovChains.gaussianWeight
+            (ArlibCommunity.Foundations.Convex.gaussianWeight
               (sigma2 / (1 - 1 / (2 * (q.n : ℝ))) ^ 2))) K ≠ 0 :=
-        Arlib.MarkovChains.withDensity_gaussianWeight_ne_zero _
+        ArlibCommunity.Foundations.MarkovChainTheory.withDensity_gaussianWeight_ne_zero _
           (figureOneScheduledPhaseBody_volume_ne_zero q I hsigma2)
       have hproptop :
           ((volume : Measure (AmbientSpace q.n)).withDensity
-            (Arlib.MarkovChains.gaussianWeight
+            (ArlibCommunity.Foundations.Convex.gaussianWeight
               (sigma2 / (1 - 1 / (2 * (q.n : ℝ))) ^ 2))) K ≠ ⊤ :=
-        Arlib.MarkovChains.withDensity_gaussianWeight_ne_top
+        ArlibCommunity.Foundations.MarkovChainTheory.withDensity_gaussianWeight_ne_top
           (by
             have hc : 0 < 1 - 1 / (2 * (q.n : ℝ)) := by
               have hnR : (1 : ℝ) ≤ q.n := by exact_mod_cast hn
@@ -693,7 +693,7 @@ theorem scheduledBalancedAccuracyGaussianAcceptedTargetLaw_tv
             positivity)
           (figureOneScheduledPhaseBody_measurable q I sigma2)
           (figureOneScheduledPhaseBody_volume_ne_top q I sigma2)
-      have hsmallK := Arlib.MarkovChains.TVLe.speedyToGaussian_twoStage_cv18
+      have hsmallK := ArlibCommunity.Algorithms.CV18.TVLe.speedyToGaussian_twoStage_cv18
         hn (figureOneScheduledPhaseBody_measurable q I sigma2)
         (figureOneScheduledPhaseBody_convex q I sigma2)
         (figureOneScheduledPhaseInradius_pos q hsigma2)
@@ -713,13 +713,13 @@ theorem scheduledBalancedAccuracyGaussianAcceptedTargetLaw_tv
         refine ⟨unitBall_subset_truncatedBody q I ?_, ?_⟩
         · simpa [unitBall] using hx
         · exact hx.trans hlarge
-      have hstationarySq : Arlib.TVLe pi
-          (Arlib.MarkovChains.ellGaussianProb K delta
+      have hstationarySq : ArlibCommunity.Foundations.Convex.TVLe pi
+          (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta
             ((Real.sqrt sigma2) ^ 2))
           (ENNReal.ofReal (coreMixingError q)) := by
         simpa [Real.sq_sqrt hsigma2.le] using hstationary
       have hlargeK :=
-        Arlib.MarkovChains.TVLe.speedyToGaussian_of_paperStep_of_body_cv18
+        ArlibCommunity.Algorithms.CV18.TVLe.speedyToGaussian_of_paperStep_of_body_cv18
           hn (figureOneScheduledPhaseBody_convex q I sigma2)
           (figureOneScheduledPhaseBody_isCompact q I sigma2).isClosed
           (figureOneScheduledPhaseBody_isCompact q I sigma2).isBounded
@@ -742,11 +742,11 @@ theorem scheduledBalancedAccuracyGaussianAcceptedTargetLaw_tv
     q I hsigma2
   rw [condOn_gaussian_scheduledPhase_eq_truncatedGaussian q I hsigma2]
     at hcore
-  change Arlib.TVLe
-      (Arlib.condOn
-        (((Arlib.condOn pi (scaleFactor q • K)).map
+  change ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn
+        (((ArlibCommunity.Foundations.Convex.condOn pi (scaleFactor q • K)).map
           (fun x => (scaleFactor q)⁻¹ • x)).withDensity
-            (Arlib.MarkovChains.gaussianScaleAcceptance sigma2
+            (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2
               (scaleFactor q))) Set.univ)
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n))

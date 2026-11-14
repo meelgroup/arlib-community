@@ -19,13 +19,13 @@ noncomputable def scheduledBalancedAccuracyRetryBlockKernel
     Kernel (AmbientSpace q.n) (Option (ℝ × AmbientSpace q.n)) where
   toFun current :=
     cappedProperCollectLaw
-      (Arlib.MarkovChains.lazyProperProposalGaussianAux
+      (ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux
         (figureOneScheduledPhaseBody q I sigma2)
         (figureOneScheduledPhaseBody_measurable q I sigma2)
         (proposalRadius q sigma2) sigma2)
       (fun _ => 0) proposalCap properStride 1 current
   measurable' := by
-    let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux
+    let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux
       (figureOneScheduledPhaseBody q I sigma2)
       (figureOneScheduledPhaseBody_measurable q I sigma2)
       (proposalRadius q sigma2) sigma2
@@ -44,7 +44,7 @@ instance scheduledBalancedAccuracyRetryBlockKernel_isMarkovKernel
         properStride) := by
   constructor
   intro current
-  let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux
+  let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux
     (figureOneScheduledPhaseBody q I sigma2)
     (figureOneScheduledPhaseBody_measurable q I sigma2)
     (proposalRadius q sigma2) sigma2

@@ -15,7 +15,7 @@ theorem.
 -/
 
 open MeasureTheory ProbabilityTheory
-open _root_.Arlib.MarkovChains
+open _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
@@ -81,7 +81,7 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_good_bad
     · simp [figureOneCorrectedTransitionBudget]
     · exact ENNReal.mul_ne_top (by norm_num) heta
   have hfirst : ∀ mu : Measure (AmbientSpace q.n),
-      IsProbabilityMeasure mu → Arlib.IsWarm 2 mu rho →
+      IsProbabilityMeasure mu → ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho →
       MeasureLeUpTo
         (mu.bind (scheduledBalancedAccuracyTransitionLawAux q I
           (scheduleValue q (phase + 1))
@@ -193,7 +193,7 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_accepted_good_bad
     constructor
     · simp [figureOneCorrectedTransitionBudget]
     · exact ENNReal.mul_ne_top (by norm_num) heta
-  have hgood : Arlib.IsWarm
+  have hgood : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q)) good
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I (scheduleValue q (phase + 1)))
@@ -203,7 +203,7 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_accepted_good_bad
       figureOneScheduledSpeedyPiAt] using
       map_scheduledBalancedAcceptedTarget_scale_adjacent_isWarm q I phase
   have hfirst : ∀ mu : Measure (AmbientSpace q.n),
-      IsProbabilityMeasure mu → Arlib.IsWarm 2 mu rho →
+      IsProbabilityMeasure mu → ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho →
       MeasureLeUpTo
         (mu.bind (scheduledBalancedAccuracyTransitionLawAux q I
           (scheduleValue q (phase + 1))

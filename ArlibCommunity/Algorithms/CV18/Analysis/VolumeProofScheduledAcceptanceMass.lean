@@ -10,7 +10,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Metric Set
 open scoped ENNReal Pointwise
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 noncomputable def scheduledBalancedAcceptedStateMeasure
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
@@ -33,18 +33,18 @@ theorem figureOneScheduled_stationaryCoreMap_tv_proposal
     let delta := proposalRadius q sigma2
     let c := scaleFactor q
     let pi := ellGaussianProb K delta sigma2
-    let proposal := Arlib.condOn
+    let proposal := ArlibCommunity.Foundations.Convex.condOn
       ((volume : Measure (AmbientSpace q.n)).withDensity
         (gaussianWeight (sigma2 / c ^ 2))) K
-    Arlib.TVLe
-      ((Arlib.condOn pi (c • K)).map (fun x => c⁻¹ • x))
+    ArlibCommunity.Foundations.Convex.TVLe
+      ((ArlibCommunity.Foundations.Convex.condOn pi (c • K)).map (fun x => c⁻¹ • x))
       proposal (4 * ENNReal.ofReal (coreMixingError q)) := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
   let delta := proposalRadius q sigma2
   let c := scaleFactor q
   let pi := ellGaussianProb K delta sigma2
-  let proposal := Arlib.condOn
+  let proposal := ArlibCommunity.Foundations.Convex.condOn
     ((volume : Measure (AmbientSpace q.n)).withDensity
       (gaussianWeight (sigma2 / c ^ 2))) K
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
@@ -83,10 +83,10 @@ theorem figureOneScheduled_stationaryCoreMap_tv_proposal
     have hmap := congrArg
       (fun mu : Measure (AmbientSpace q.n) => mu.map (fun x => c⁻¹ • x)) hcoreEq
     rw [map_condOn_gaussian_smul_cv18 hKmeas hc0] at hmap
-    have heq : (Arlib.condOn pi (c • K)).map (fun x => c⁻¹ • x) =
+    have heq : (ArlibCommunity.Foundations.Convex.condOn pi (c • K)).map (fun x => c⁻¹ • x) =
         proposal := by simpa [pi, proposal] using hmap
     rw [heq]
-    exact (Arlib.TVLe.refl proposal).mono bot_le
+    exact (ArlibCommunity.Foundations.Convex.TVLe.refl proposal).mono bot_le
   · have hlarge : 1 ≤ phaseRadius q sigma2 :=
       le_of_not_ge hsmall
     have hunit : Metric.closedBall (0 : AmbientSpace q.n) 1 ⊆ K := by
@@ -100,10 +100,10 @@ theorem figureOneScheduled_stationaryCoreMap_tv_proposal
       exact hKconv.smul_mem_of_zero_mem
         (hunit (Metric.mem_closedBall_self zero_le_one)) hx ⟨hc0.le, hc1.le⟩
     have hcoreVol0 : volume (c • K) ≠ 0 := by
-      rw [Arlib.volume_smul_euclidean hc0.le]
+      rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
       exact mul_ne_zero (ENNReal.ofReal_ne_zero_iff.mpr (pow_pos hc0 q.n)) hK0
     have hcoreVoltop : volume (c • K) ≠ ⊤ := by
-      rw [Arlib.volume_smul_euclidean hc0.le]
+      rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
       exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top hKtop
     have hgaussCore0 :
         (((volume : Measure (AmbientSpace q.n)).withDensity
@@ -135,10 +135,10 @@ theorem figureOneScheduled_stationaryCoreMap_tv_proposal
         ((coreMixingError_le_one_div_sixteen q).trans (by norm_num)))
       (by simpa [c, scaleFactor, Real.sq_sqrt hsigma2.le] using hpaper.1)
     have hgaussRestrict :
-        Arlib.condOn
+        ArlibCommunity.Foundations.Convex.condOn
             (((volume : Measure (AmbientSpace q.n)).withDensity
               (gaussianWeight sigma2)).restrict K) (c • K) =
-          Arlib.condOn
+          ArlibCommunity.Foundations.Convex.condOn
             ((volume : Measure (AmbientSpace q.n)).withDensity
               (gaussianWeight sigma2)) (c • K) :=
       condOn_restrict_eq_condOn_of_subset_cv18 _ hcoreM hsub

@@ -60,15 +60,15 @@ power to the initial measure. -/
 theorem iterate_eq_pow_bind
     {S : Type*} [MeasurableSpace S]
     (P : Kernel S S) [IsMarkovKernel P] (mu : Measure S) :
-    ∀ t, Arlib.MarkovChains.iterate P mu t = mu.bind (P ^ t) := by
+    ∀ t, ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu t = mu.bind (P ^ t) := by
   intro t
   induction t with
   | zero =>
-      simp only [Arlib.MarkovChains.iterate_zero, pow_zero]
+      simp only [ArlibCommunity.Foundations.MarkovChainTheory.iterate_zero, pow_zero]
       exact Measure.id_comp.symm
   | succ t ih =>
-      rw [Arlib.MarkovChains.iterate_succ, ih, pow_succ']
-      unfold Arlib.MarkovChains.step
+      rw [ArlibCommunity.Foundations.MarkovChainTheory.iterate_succ, ih, pow_succ']
+      unfold ArlibCommunity.Foundations.MarkovChainTheory.step
       rw [Measure.bind_bind (P ^ t).measurable.aemeasurable
         P.measurable.aemeasurable]
       apply Measure.bind_congr_right
@@ -78,8 +78,8 @@ theorem iterate_eq_pow_bind
 theorem iterate_pow_one
     {S : Type*} [MeasurableSpace S]
     (P : Kernel S S) [IsMarkovKernel P] (mu : Measure S) (t : ℕ) :
-    Arlib.MarkovChains.iterate (P ^ t) mu 1 =
-      Arlib.MarkovChains.iterate P mu t := by
+    ArlibCommunity.Foundations.MarkovChainTheory.iterate (P ^ t) mu 1 =
+      ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu t := by
   rw [iterate_eq_pow_bind (P ^ t) mu 1,
     iterate_eq_pow_bind P mu t, pow_one]
 
@@ -100,10 +100,10 @@ theorem bind_frontMarkovCollectLaw_map_snd
     (P : Kernel S S) [IsMarkovKernel P] {f : S → ℝ}
     (hf : Measurable f) (samples : ℕ) (mu : Measure S) :
     (mu.bind (frontMarkovCollectLaw P f samples)).map Prod.snd =
-      Arlib.MarkovChains.iterate P mu samples := by
+      ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu samples := by
   rw [bind_frontMarkovCollectLaw_eq_markovSumLaw_map_swap P hf samples mu]
   rw [Measure.map_map measurable_snd (by fun_prop)]
-  convert Arlib.MarkovChains.markovSumLaw_map_fst P hf mu samples using 1
+  convert ArlibCommunity.Algorithms.CV18.markovSumLaw_map_fst P hf mu samples using 1
   ext stateSum
   rfl
 
@@ -178,8 +178,8 @@ theorem bind_balancedAccuracyRetryBlockKernel_leUpTo_uncapped
       (mu.bind
         (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap properStride))
           {none} ≤ capError) :
-    let P := Arlib.MarkovChains.lazy
-      (Arlib.MarkovChains.speedyMetropolisGaussian
+    let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+      (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2)
     let f := accuracyImportanceWeight q I sigma2 (fun _ => 0)
@@ -193,10 +193,10 @@ theorem bind_balancedAccuracyRetryBlockKernel_leUpTo_uncapped
   letI : Fact (0 < sigma2) := ⟨hsigma2⟩
   let K := accuracyPhaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
-  let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux K
+  let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux K
     (accuracyPhaseTruncatedBody_measurable q I sigma2) delta sigma2
-  let P := Arlib.MarkovChains.lazy
-    (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2)
+  let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+    (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K delta sigma2)
   let f := accuracyImportanceWeight q I sigma2 (fun _ => 0)
   let L := mu.bind
     (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap properStride)
@@ -222,20 +222,20 @@ theorem bind_balancedAccuracyRetryBlockKernel_endpoint_leUpTo_uncapped
       (mu.bind
         (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap properStride))
           {none} ≤ capError) :
-    let P := Arlib.MarkovChains.lazy
-      (Arlib.MarkovChains.speedyMetropolisGaussian
+    let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+      (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2)
     MeasureLeUpTo
       ((mu.bind
         (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap properStride)).map
           optionSnd)
-      ((Arlib.MarkovChains.iterate (P ^ properStride) mu 1).map some)
+      ((ArlibCommunity.Foundations.MarkovChainTheory.iterate (P ^ properStride) mu 1).map some)
       capError := by
   dsimp only
   letI : Fact (0 < sigma2) := ⟨hsigma2⟩
-  let P := Arlib.MarkovChains.lazy
-    (Arlib.MarkovChains.speedyMetropolisGaussian
+  let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+    (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
       (accuracyPhaseTruncatedBody q I sigma2)
       (figureOneProposalRadius q sigma2) sigma2)
   let f := accuracyImportanceWeight q I sigma2 (fun _ => 0)
@@ -244,13 +244,13 @@ theorem bind_balancedAccuracyRetryBlockKernel_endpoint_leUpTo_uncapped
   have hmap := h.map (measurable_optionSnd (S := AmbientSpace q.n))
   have hendpoint :
       (mu.bind (frontMarkovCollectLaw (P ^ properStride) f 1)).map Prod.snd =
-        Arlib.MarkovChains.iterate (P ^ properStride) mu 1 :=
+        ArlibCommunity.Foundations.MarkovChainTheory.iterate (P ^ properStride) mu 1 :=
     bind_frontMarkovCollectLaw_map_snd (P ^ properStride)
       (measurable_accuracyImportanceWeight q I sigma2 measurable_const) 1 mu
   have hnu :
       ((mu.bind (frontMarkovCollectLaw (P ^ properStride) f 1)).map some).map
           optionSnd =
-        (Arlib.MarkovChains.iterate (P ^ properStride) mu 1).map some := by
+        (ArlibCommunity.Foundations.MarkovChainTheory.iterate (P ^ properStride) mu 1).map some := by
     rw [Measure.map_map measurable_optionSnd measurable_some]
     rw [show (optionSnd ∘ some : ℝ × AmbientSpace q.n →
           Option (AmbientSpace q.n)) = some ∘ Prod.snd by
@@ -273,10 +273,10 @@ theorem bind_balancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationary
       (mu.bind
         (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap properStride))
           {none} ≤ capError)
-    (hmix : Arlib.TVLe
-      (Arlib.MarkovChains.iterate
-        (Arlib.MarkovChains.lazy
-          (Arlib.MarkovChains.speedyMetropolisGaussian
+    (hmix : ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.MarkovChainTheory.iterate
+        (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+          (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
             (accuracyPhaseTruncatedBody q I sigma2)
             (figureOneProposalRadius q sigma2) sigma2))
         mu properStride)
@@ -286,8 +286,8 @@ theorem bind_balancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationary
         (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap properStride)).map
           optionSnd)
       (pi.map some) (capError + mixError) := by
-  let P := Arlib.MarkovChains.lazy
-    (Arlib.MarkovChains.speedyMetropolisGaussian
+  let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+    (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
       (accuracyPhaseTruncatedBody q I sigma2)
       (figureOneProposalRadius q sigma2) sigma2)
   have hcap :=
@@ -295,8 +295,8 @@ theorem bind_balancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationary
       q I hsigma2 proposalCap properStride mu hfail
   dsimp only at hcap
   rw [iterate_pow_one P mu properStride] at hcap
-  have hmixSome : Arlib.TVLe
-      ((Arlib.MarkovChains.iterate P mu properStride).map some)
+  have hmixSome : ArlibCommunity.Foundations.Convex.TVLe
+      ((ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu properStride).map some)
       (pi.map some) mixError := hmix.map measurable_some
   exact hcap.trans (MeasureLeUpTo.of_tvLe hmixSome)
 
@@ -346,10 +346,10 @@ theorem bind_balancedAccuracyRetryBlockKernel_trial_leUpTo_stationary
       (mu.bind
         (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap properStride))
           {none} ≤ capError)
-    (hmix : Arlib.TVLe
-      (Arlib.MarkovChains.iterate
-        (Arlib.MarkovChains.lazy
-          (Arlib.MarkovChains.speedyMetropolisGaussian
+    (hmix : ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.MarkovChainTheory.iterate
+        (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+          (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
             (accuracyPhaseTruncatedBody q I sigma2)
             (figureOneProposalRadius q sigma2) sigma2))
         mu properStride)
@@ -1120,8 +1120,8 @@ whole space. -/
 theorem measure_eq_mass_smul_condOn_univ
     {A : Type*} [MeasurableSpace A] (mu : Measure A)
     (h0 : mu Set.univ ≠ 0) (htop : mu Set.univ ≠ ⊤) :
-    mu = mu Set.univ • Arlib.condOn mu Set.univ := by
-  rw [Arlib.condOn_def, Measure.restrict_univ, smul_smul,
+    mu = mu Set.univ • ArlibCommunity.Foundations.Convex.condOn mu Set.univ := by
+  rw [ArlibCommunity.Foundations.Convex.condOn_def, Measure.restrict_univ, smul_smul,
     ENNReal.mul_inv_cancel h0 htop, one_smul]
 
 /-- Accepted and rejected stationary current-state masses sum to one. -/
@@ -1189,7 +1189,7 @@ theorem balancedAcceptedTargetSubmeasure_eq_mass_smul
   have hnormalize := measure_eq_mass_smul_condOn_univ acceptedTarget
     htarget0 htargetTop
   change acceptedTarget = accepted Set.univ •
-    Arlib.condOn acceptedTarget Set.univ
+    ArlibCommunity.Foundations.Convex.condOn acceptedTarget Set.univ
   rw [← htargetMass]
   exact hnormalize
 
@@ -1216,7 +1216,7 @@ theorem bind_balancedRejectedTransition_leUpTo_acceptedTarget
       balancedRejectedStateMeasure q I sigma2 pi Set.univ)
     (hblock :
       let rejected := balancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -1224,7 +1224,7 @@ theorem bind_balancedRejectedTransition_leUpTo_acceptedTarget
         (pi.map some) delta) :
     let rejected := balancedRejectedStateMeasure q I sigma2 pi
     let rejectMass := rejected Set.univ
-    let rejectedProb := Arlib.condOn rejected Set.univ
+    let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
     ∀ attempts,
       MeasureLeUpTo
         (rejectedProb.bind
@@ -1237,7 +1237,7 @@ theorem bind_balancedRejectedTransition_leUpTo_acceptedTarget
   let rejected := balancedRejectedStateMeasure q I sigma2 pi
   let acceptMass := accepted Set.univ
   let rejectMass := rejected Set.univ
-  let rejectedProb := Arlib.condOn rejected Set.univ
+  let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
   let target := balancedAccuracyGaussianAcceptedTargetLaw q I sigma2 pi
   let targetSome := target.map some
   let E := balancedAccuracyTransitionLawAux q I sigma2 proposalCap properStride
@@ -1251,7 +1251,7 @@ theorem bind_balancedRejectedTransition_leUpTo_acceptedTarget
     exact ne_top_of_le_ne_top (measure_ne_top pi Set.univ) <|
       Measure.le_iff'.mp hle Set.univ
   let _ : IsProbabilityMeasure rejectedProb :=
-    Arlib.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
   have hmass : acceptMass + rejectMass = 1 := by
     simpa [acceptMass, rejectMass, accepted, rejected] using
       balancedAcceptedRejected_mass_add_eq_one q I hsigma2 pi
@@ -1380,7 +1380,7 @@ theorem bind_balancedTransition_leUpTo_acceptedTarget
       (pi.map some) firstError)
     (hretryBlock :
       let rejected := balancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -1399,7 +1399,7 @@ theorem bind_balancedTransition_leUpTo_acceptedTarget
   let rejected := balancedRejectedStateMeasure q I sigma2 pi
   let acceptMass := accepted Set.univ
   let rejectMass := rejected Set.univ
-  let rejectedProb := Arlib.condOn rejected Set.univ
+  let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
   let target := balancedAccuracyGaussianAcceptedTargetLaw q I sigma2 pi
   let targetSome := target.map some
   let E := balancedAccuracyTransitionLawAux q I sigma2 proposalCap properStride
@@ -1413,7 +1413,7 @@ theorem bind_balancedTransition_leUpTo_acceptedTarget
     exact ne_top_of_le_ne_top (measure_ne_top pi Set.univ) <|
       Measure.le_iff'.mp hle Set.univ
   let _ : IsProbabilityMeasure rejectedProb :=
-    Arlib.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
   have hmass : acceptMass + rejectMass = 1 := by
     simpa [acceptMass, rejectMass, accepted, rejected] using
       balancedAcceptedRejected_mass_add_eq_one q I hsigma2 pi
@@ -1454,8 +1454,8 @@ theorem bind_balancedAccuracyRetryBlockKernel_none_le_of_isWarm
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : Arlib.IsWarm M mu
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (proposalCap properStride : ℕ) (hproposalCap : 0 < proposalCap)

@@ -60,7 +60,7 @@ noncomputable def accuracyImportancePairObservation (q : VolumeParams)
         ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
         ‖target‖ ≤ accuracyPhaseRadius q sigma2 then
       let accept :=
-        (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target).toReal
+        (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target).toReal
       (accept * weight target, accept)
     else (0, 0)
 
@@ -251,7 +251,7 @@ theorem cappedAccuracyProperCollectPairsAux_measurable_and_strong
       (cappedAccuracyProperCollectPairsAux q sigma2 weight properStride
         rawCap remainingProper samples total current).StronglyMeasurable
           oracle.query) := by
-  let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux
+  let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux
     (accuracyPhaseTruncatedBody q I sigma2)
     (accuracyPhaseTruncatedBody_measurable q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
@@ -652,21 +652,21 @@ theorem bind_accuracyImportancePairProgram_success_linear_deviation_le_of_isWarm
     {weight : AmbientSpace q.n → ℝ} (hweight : Measurable weight)
     (a b : ℝ) (proposalCap samples : ℕ)
     {mu : Measure (AmbientSpace q.n)} {M : ENNReal}
-    (hwarm : Arlib.IsWarm M mu
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (m : ℝ)
     (hmean : ∫ x,
         (accuracyImportanceWeight q I sigma2
           (fun y => a * weight y + b) x - m)
-        ∂Arlib.MarkovChains.ellGaussianProb
+        ∂ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
           (accuracyPhaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2 = 0)
     (hmem : MemLp (fun x =>
         accuracyImportanceWeight q I sigma2
           (fun y => a * weight y + b) x - m) 2
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     {B : ℝ} (hB : 0 ≤ B)
@@ -680,16 +680,16 @@ theorem bind_accuracyImportancePairProgram_success_linear_deviation_le_of_isWarm
       (optionSomeEvent {output | c ≤
         |a * output.1.1 + b * output.1.2 - (samples : ℝ) * m|}) ≤
       M * ENNReal.ofReal (((samples : ℝ) *
-        (3 * ((Arlib.MarkovChains.spectralGap
-          (Arlib.MarkovChains.lazy
-            (Arlib.MarkovChains.speedyMetropolisGaussian
+        (3 * ((ArlibCommunity.Foundations.MarkovChainTheory.spectralGap
+          (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+            (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
               (accuracyPhaseTruncatedBody q I sigma2)
               (figureOneProposalRadius q sigma2) sigma2))
-          (Arlib.MarkovChains.ellGaussianProb
+          (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
             (accuracyPhaseTruncatedBody q I sigma2)
             (figureOneProposalRadius q sigma2) sigma2))⁻¹ *
-          Arlib.MarkovChains.varianceReal
-            (Arlib.MarkovChains.ellGaussianProb
+          ArlibCommunity.Foundations.MarkovChainTheory.varianceReal
+            (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
               (accuracyPhaseTruncatedBody q I sigma2)
               (figureOneProposalRadius q sigma2) sigma2)
             (fun x => accuracyImportanceWeight q I sigma2

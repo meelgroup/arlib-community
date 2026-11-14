@@ -411,13 +411,13 @@ theorem integral_sq_le_factor_mul_integral_sq_of_centered
         (∫ x, f x ^ 2 ∂mu) - (∫ x, f x ∂mu) ^ 2 := by
     calc
       (∫ x, (f x - ∫ y, f y ∂mu) ^ 2 ∂mu) =
-          Arlib.MarkovChains.varianceReal mu f := by
+          ArlibCommunity.Foundations.MarkovChainTheory.varianceReal mu f := by
         symm
         change ProbabilityTheory.variance f mu = _
         simpa using
           (ProbabilityTheory.variance_eq_integral hf.aemeasurable)
       _ = (∫ x, f x ^ 2 ∂mu) - (∫ x, f x ∂mu) ^ 2 :=
-        Arlib.MarkovChains.varianceReal_eq_sub hf
+        ArlibCommunity.Foundations.MarkovChainTheory.varianceReal_eq_sub hf
   rw [hcenterEq] at hcenter
   linarith
 
@@ -438,13 +438,13 @@ theorem integral_sq_le_four_mul_integral_sq_of_centered_three
         (∫ x, f x ^ 2 ∂mu) - (∫ x, f x ∂mu) ^ 2 := by
     calc
       (∫ x, (f x - ∫ y, f y ∂mu) ^ 2 ∂mu) =
-          Arlib.MarkovChains.varianceReal mu f := by
+          ArlibCommunity.Foundations.MarkovChainTheory.varianceReal mu f := by
         symm
         change ProbabilityTheory.variance f mu = _
         simpa using
           (ProbabilityTheory.variance_eq_integral hf.aemeasurable)
       _ = (∫ x, f x ^ 2 ∂mu) - (∫ x, f x ∂mu) ^ 2 :=
-        Arlib.MarkovChains.varianceReal_eq_sub hf
+        ArlibCommunity.Foundations.MarkovChainTheory.varianceReal_eq_sub hf
   rw [hcenterEq] at hcenter
   linarith
 

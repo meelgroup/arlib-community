@@ -11,7 +11,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
-open Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- The successful output of the actual, query-bounded importance collector
 inherits the warm-start spectral concentration of the lazy speedy chain.  One
@@ -23,7 +23,7 @@ theorem bind_accuracyImportanceProgram_success_deviation_le_of_isWarm
     (proposalCap samples : ℕ)
     {mu : Measure (AmbientSpace q.n)}
     {M : ℝ≥0∞}
-    (hwarm : Arlib.IsWarm M mu
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu
       (ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))

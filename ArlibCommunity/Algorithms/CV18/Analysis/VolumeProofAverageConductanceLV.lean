@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAverageConductance
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofStationary
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Convexity.KLS97Sharp
+import ArlibCommunity.Foundations.Convex.BoundaryLayer.Analysis.KLS97Sharp
 import Mathlib.MeasureTheory.Integral.Layercake
 
 /-!
@@ -24,8 +24,10 @@ HitAndRun development.
 open MeasureTheory Metric Set Filter
 open scoped ENNReal Pointwise
 
-namespace Arlib.MarkovChains
+open Arlib
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
+namespace ArlibCommunity.Algorithms.CV18
 variable {n : ℕ}
 
 /-! Gaussian roundedness at one fixed quarter-mass level.  This is the
@@ -271,7 +273,7 @@ theorem setLIntegral_one_sub_ell_le_of_innerBody
     change (1 - ell K delta x) * volume (ball (0 : EuclideanSpace ℝ (Fin n)) delta) ≤ _
     rw [← volume_ball_eq x delta, one_sub_ell_mul_volume_ball_eq hK hdelta]
     exact measure_mono fun y hy => ⟨Metric.ball_subset_closedBall hy.1, fun hyL => hy.2 (hLK hyL)⟩
-  have hmain := Arlib.lintegral_volume_closedBall_sdiff_le_sqrt
+  have hmain := ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt
     hn hLc hLcl hLfin hball hr hdelta
   have hclosed : volume (closedBall (0 : EuclideanSpace ℝ (Fin n)) delta) = V :=
     Measure.addHaar_closedBall_eq_addHaar_ball volume 0 delta
@@ -657,8 +659,7 @@ theorem half_mul_mul_measure_properProposalTotalCost_ge_le_LVStep
       hn hKc hKcl hKfin hball hsigma hdelta hstep)
     hwarm t cutoff
 
-end Arlib.MarkovChains
-
+end ArlibCommunity.Algorithms.CV18
 namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory Metric
@@ -671,8 +672,8 @@ theorem half_mul_lintegral_gaussianWeight_le_figureOne
     (hsigma2 : 0 < sigma2) :
     ENNReal.ofReal (1 / 2) *
         (∫⁻ x in truncatedBody q I,
-          Arlib.MarkovChains.gaussianWeight sigma2 x) ≤
-      Arlib.MarkovChains.ellGaussianMeasure (truncatedBody q I)
+          ArlibCommunity.Foundations.Convex.gaussianWeight sigma2 x) ≤
+      ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure (truncatedBody q I)
         (figureOneProposalRadius q sigma2) sigma2 Set.univ := by
   have hn : 2 ≤ q.n := le_trans (by norm_num) q.dim_ok
   have hnR : (0 : ℝ) < q.n := by exact_mod_cast (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)
@@ -695,7 +696,7 @@ theorem half_mul_lintegral_gaussianWeight_le_figureOne
     (truncatedVolumeInput q I).body.isCompact.measure_lt_top.ne
   have hball : ball (0 : AmbientSpace q.n) 1 ⊆ truncatedBody q I :=
     fun _ hx => unitBall_subset_truncatedBody q I (Metric.ball_subset_closedBall hx)
-  have h := Arlib.MarkovChains.half_mul_lintegral_gaussianWeight_le_ellGaussianMeasure_univ_direct
+  have h := ArlibCommunity.Algorithms.CV18.half_mul_lintegral_gaussianWeight_le_ellGaussianMeasure_univ_direct
       hn hKc hKcl hKfin hball hsigma (figureOneProposalRadius_pos q hsigma2) hstep
   simpa [Real.sq_sqrt hsigma2.le] using h
 

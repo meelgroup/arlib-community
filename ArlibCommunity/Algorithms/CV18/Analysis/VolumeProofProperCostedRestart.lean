@@ -8,8 +8,9 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofCostedRestartTrajector
 # Costed independent restarts for the Gaussian proper-proposal experiment
 -/
 
-namespace Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory ProbabilityTheory Function Set
 open scoped ENNReal ProbabilityTheory
 
@@ -221,7 +222,6 @@ theorem lintegral_properProposalTotalCost_le_exitMeanSum
   exact lintegral_mono fun x =>
     lintegral_fst_properProposalCostedKernel_le_exitMean hK δ s x
 
-end Arlib.MarkovChains
-
-#print axioms Arlib.MarkovChains.map_properProposalCostedExecution_output
-#print axioms Arlib.MarkovChains.lintegral_properProposalTotalCost_le_exitMeanSum
+end ArlibCommunity.Algorithms.CV18
+#print axioms ArlibCommunity.Algorithms.CV18.map_properProposalCostedExecution_output
+#print axioms ArlibCommunity.Algorithms.CV18.lintegral_properProposalTotalCost_le_exitMeanSum

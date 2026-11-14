@@ -153,7 +153,7 @@ theorem accuracyPhase_speedy_core_mass
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     ENNReal.ofReal (7 / 16 : ℝ) ≤
-      Arlib.MarkovChains.ellGaussianProb
+      ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2
         (scaleFactor q • accuracyPhaseTruncatedBody q I sigma2) := by
@@ -167,14 +167,14 @@ theorem accuracyPhase_speedy_core_mass
   have hKcompact : IsCompact K := accuracyPhaseTruncatedBody_isCompact q I sigma2
   have hK0 : volume K ≠ 0 := accuracyPhaseTruncatedBody_volume_ne_zero q I hsigma2
   have hKtop : volume K ≠ ⊤ := accuracyPhaseTruncatedBody_volume_ne_top q I sigma2
-  have hmass0 : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 :=
-    Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero hKmeas hKconv
+  have hmass0 : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 :=
+    ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero hKmeas hKconv
       hKcompact.isBounded hK0 hdelta sigma2
-  have hmasstop : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2 Set.univ ≠ ⊤ :=
-    Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18 hKtop delta hsigma2
+  have hmasstop : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2 Set.univ ≠ ⊤ :=
+    ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18 hKtop delta hsigma2
   by_cases hsmall : accuracyPhaseRadius q sigma2 ≤ 1
   · have hhalf :=
-      Arlib.MarkovChains.half_le_ellGaussianProb_standardCore_radius_cv18
+      ArlibCommunity.Algorithms.CV18.half_le_ellGaussianProb_standardCore_radius_cv18
         hn hKmeas hKconv (accuracyPhaseInradius_pos q hsigma2)
         (ball_accuracyPhaseInradius_subset q I sigma2) hdelta
         (figureOneProposalRadius_le_accuracyPhaseCoreStep q hsigma2 hsmall)
@@ -203,23 +203,23 @@ theorem accuracyPhase_speedy_core_mass
       exact hKconv.smul_mem_of_zero_mem
         (hunit (Metric.mem_closedBall_self zero_le_one)) hx ⟨hc0.le, hc1.le⟩
     have hcoreVol0 : volume (c • K) ≠ 0 := by
-      rw [Arlib.volume_smul_euclidean hc0.le]
+      rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
       exact mul_ne_zero (ENNReal.ofReal_ne_zero_iff.mpr (pow_pos hc0 q.n)) hK0
     have hcoreVoltop : volume (c • K) ≠ ⊤ := by
-      rw [Arlib.volume_smul_euclidean hc0.le]
+      rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
       exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top hKtop
     have hgaussCore0 :
         (((volume : Measure (AmbientSpace q.n)).withDensity
-          (Arlib.MarkovChains.gaussianWeight sigma2)).restrict K) (c • K) ≠ 0 := by
+          (ArlibCommunity.Foundations.Convex.gaussianWeight sigma2)).restrict K) (c • K) ≠ 0 := by
       rw [Measure.restrict_apply hcoreM, Set.inter_eq_left.2 hsub]
-      exact Arlib.MarkovChains.withDensity_gaussianWeight_ne_zero _ hcoreVol0
+      exact ArlibCommunity.Foundations.MarkovChainTheory.withDensity_gaussianWeight_ne_zero _ hcoreVol0
     have hgaussCoretop :
         (((volume : Measure (AmbientSpace q.n)).withDensity
-          (Arlib.MarkovChains.gaussianWeight sigma2)).restrict K) (c • K) ≠ ⊤ := by
+          (ArlibCommunity.Foundations.Convex.gaussianWeight sigma2)).restrict K) (c • K) ≠ ⊤ := by
       rw [Measure.restrict_apply hcoreM, Set.inter_eq_left.2 hsub]
-      exact Arlib.MarkovChains.withDensity_gaussianWeight_ne_top hsigma2
+      exact ArlibCommunity.Foundations.MarkovChainTheory.withDensity_gaussianWeight_ne_top hsigma2
         hcoreM hcoreVoltop
-    have hpaper := Arlib.MarkovChains.standardCore_defect_and_speedyMass_cv18
+    have hpaper := ArlibCommunity.Algorithms.CV18.standardCore_defect_and_speedyMass_cv18
       hn hKconv hKcompact.isClosed hKtop hunit hdelta
       (Real.sqrt_pos.2 hsigma2) (accuracyCoreError_pos q)
       (accuracyCoreError_le_one_div_sixteen q)
@@ -243,30 +243,30 @@ theorem accuracyPhase_iterate_core_ne_zero
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {mu0 : Measure (AmbientSpace q.n)} [IsProbabilityMeasure mu0]
     {M mixError : ℝ} (hM : 1 ≤ M)
-    (hwarm : Arlib.IsWarm (ENNReal.ofReal M) mu0
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (hmixError0 : 0 < mixError) (hmixError64 : mixError ≤ 1 / 64)
     {t : ℕ} (ht : 4 * ((Real.log M + 2 * Real.log (1 / mixError)) /
       (figureOneProposalRadius q sigma2 * Real.log 2 /
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤ (t : ℝ)) :
-    (Arlib.MarkovChains.iterate
-      (Arlib.MarkovChains.lazy
-        (Arlib.MarkovChains.speedyMetropolisGaussian
+    (ArlibCommunity.Foundations.MarkovChainTheory.iterate
+      (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+        (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
           (accuracyPhaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2)) mu0 t)
       (scaleFactor q • accuracyPhaseTruncatedBody q I sigma2) ≠ 0 := by
   let K := accuracyPhaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
-  let P := Arlib.MarkovChains.lazy
-    (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2)
-  let pi := Arlib.MarkovChains.ellGaussianProb K delta sigma2
-  let mu := Arlib.MarkovChains.iterate P mu0 t
+  let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+    (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K delta sigma2)
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta sigma2
+  let mu := ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu0 t
   have hmixPhase := mixesWithin_accuracyPhaseTruncatedBody_figureOne_cv18
     q I hsigma2 hM hwarm hmixError0 (hmixError64.trans (by norm_num)) ht
-  have hmix : Arlib.TVLe mu pi (ENNReal.ofReal mixError) := by
-    simpa [Arlib.MarkovChains.MixesWithin, mu, pi, P, K, delta] using hmixPhase
+  have hmix : ArlibCommunity.Foundations.Convex.TVLe mu pi (ENNReal.ofReal mixError) := by
+    simpa [ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin, mu, pi, P, K, delta] using hmixPhase
   have hcoreM : MeasurableSet
       (scaleFactor q • accuracyPhaseTruncatedBody q I sigma2) :=
     ((isClosedMap_smul_of_ne_zero (scaleFactor_pos q).ne')
@@ -293,8 +293,8 @@ theorem accuracyPhaseSampleToGaussian_cv18
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {mu0 : Measure (AmbientSpace q.n)} [IsProbabilityMeasure mu0]
     {M mixError : ℝ} (hM : 1 ≤ M)
-    (hwarm : Arlib.IsWarm (ENNReal.ofReal M) mu0
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (hmixError0 : 0 < mixError) (hmixError64 : mixError ≤ 1 / 64)
@@ -303,14 +303,14 @@ theorem accuracyPhaseSampleToGaussian_cv18
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤ (t : ℝ)) :
     let K := accuracyPhaseTruncatedBody q I sigma2
     let delta := figureOneProposalRadius q sigma2
-    let P := Arlib.MarkovChains.lazy
-      (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2)
-    let mu := Arlib.MarkovChains.iterate P mu0 t
+    let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+      (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K delta sigma2)
+    let mu := ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu0 t
     let c : ℝ := 1 - 1 / (2 * (q.n : ℝ))
-    Arlib.TVLe
-      (Arlib.condOn
-        (((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
-          (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c)) Set.univ)
+    ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn
+        (((ArlibCommunity.Foundations.Convex.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
+          (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c)) Set.univ)
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n))
       (64 * ENNReal.ofReal mixError +

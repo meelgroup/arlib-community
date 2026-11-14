@@ -1829,7 +1829,7 @@ theorem approxIndepFun_scheduledBalancedCompletePhase_of_warm_first
     {delta : ENNReal} (hdelta : delta ≠ ⊤)
     (hfirst : ∀ mu : Measure (AmbientSpace q.n),
       IsProbabilityMeasure mu →
-      Arlib.IsWarm 2 mu (history.map state) →
+      ArlibCommunity.Foundations.Convex.IsWarm 2 mu (history.map state) →
       MeasureLeUpTo
         (mu.bind (scheduledBalancedAccuracyTransitionLawAux q I sigma2
           proposalCap properStride retryLimit)) target delta)

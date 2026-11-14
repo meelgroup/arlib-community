@@ -18,7 +18,7 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open _root_.Arlib
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 noncomputable section
 

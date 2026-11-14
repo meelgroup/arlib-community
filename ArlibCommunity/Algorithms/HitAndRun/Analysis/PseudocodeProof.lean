@@ -20,12 +20,12 @@ open scoped ENNReal
 theorem proposal_apply {n : ℕ} {K : Body n} (hK : MeasurableSet K)
     (u : State n) {A : Set (State n)} (hA : MeasurableSet A) :
     proposal K u A =
-      ∫⁻ theta, Arlib.uniformOn (volume : Measure ℝ)
-        (Arlib.MarkovChains.chordSet K u (theta : State n))
+      ∫⁻ theta, ArlibCommunity.Foundations.Convex.uniformOn (volume : Measure ℝ)
+        (ArlibCommunity.Foundations.MarkovChainTheory.chordSet K u (theta : State n))
         {t : ℝ | u + t • (theta : State n) ∈ A}
-        ∂(Arlib.MarkovChains.unifSphere n) := by
+        ∂(ArlibCommunity.Foundations.MarkovChainTheory.unifSphere n) := by
   simpa [proposal] using
-    Arlib.MarkovChains.hitAndRunProposal_apply_uniformOn hK u hA
+    ArlibCommunity.Foundations.MarkovChainTheory.hitAndRunProposal_apply_uniformOn hK u hA
 
 theorem step_isMarkovKernel {n : ℕ} (K : Body n) :
     IsMarkovKernel (step K) := by
@@ -34,13 +34,13 @@ theorem step_isMarkovKernel {n : ℕ} (K : Body n) :
 
 theorem target_invariant {n : ℕ} [NeZero n] {K : Body n} (hK : MeasurableSet K) :
     Kernel.Invariant (step K) (target K) := by
-  simpa [step, target] using Arlib.MarkovChains.invariant_hitAndRun hK
+  simpa [step, target] using ArlibCommunity.Foundations.MarkovChainTheory.invariant_hitAndRun hK
 
 theorem finiteFacetStep_eq_step {n : ℕ} {ι : Type*} [Fintype ι]
     (A : ι → State n) (b : ι → ℝ)
-    (hK : Bornology.IsBounded (Arlib.Polytope.body A b)) [NeZero n] :
-    finiteFacetStep A b = step (Arlib.Polytope.body A b) := by
+    (hK : Bornology.IsBounded (ArlibCommunity.Foundations.Convex.Polytope.body A b)) [NeZero n] :
+    finiteFacetStep A b = step (ArlibCommunity.Foundations.Convex.Polytope.body A b) := by
   simpa [finiteFacetStep, step] using
-    Arlib.MarkovChains.PolytopeHitAndRunExecution.finiteFacetHitAndRun_eq_hitAndRun A b hK
+    ArlibCommunity.Foundations.MarkovChainTheory.PolytopeHitAndRunExecution.finiteFacetHitAndRun_eq_hitAndRun A b hK
 
 end ArlibCommunity.Algorithms.HitAndRun.PseudocodeProof

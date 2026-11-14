@@ -402,8 +402,8 @@ budget. -/
 theorem TVLe.scheduledPhase_condOn_truncatedGaussian
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    Arlib.TVLe
-      (Arlib.condOn
+    ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn
         (truncatedGaussianProbability q I sigma2 hsigma2 :
           Measure (AmbientSpace q.n))
         (figureOneScheduledPhaseBody q I sigma2))

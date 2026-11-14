@@ -3,8 +3,8 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.HitAndRun.Model.Prelude
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.MarkovChains.Continuous.HitAndRunMixingUncond
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.MarkovChains.Continuous.PolytopeHitAndRunExecution
+import ArlibCommunity.Foundations.MarkovChainTheory.HitAndRunMixing.Analysis.HitAndRunMixingUncond
+import ArlibCommunity.Foundations.MarkovChainTheory.HitAndRunMixing.Analysis.PolytopeHitAndRunExecution
 
 /-!
 # Hit-and-run pseudocode
@@ -26,29 +26,29 @@ open MeasureTheory ProbabilityTheory
 /-- The direction-then-chord proposal of one hit-and-run step.  Its measurable
 completion is `step`. -/
 noncomputable def proposal {n : ℕ} (K : Body n) : State n → Measure (State n) :=
-  Arlib.MarkovChains.hitAndRunProposal K
+  ArlibCommunity.Foundations.MarkovChainTheory.hitAndRunProposal K
 
 /-- The completed hit-and-run Markov kernel. -/
 noncomputable def step {n : ℕ} (K : Body n) : Kernel (State n) (State n) :=
-  Arlib.MarkovChains.hitAndRun K
+  ArlibCommunity.Foundations.MarkovChainTheory.hitAndRun K
 
 /-- The lazy walk used by the mixing theorem. -/
 noncomputable def lazyStep {n : ℕ} (K : Body n) : Kernel (State n) (State n) :=
-  Arlib.MarkovChains.lazy (step K)
+  ArlibCommunity.Foundations.MarkovChainTheory.lazy (step K)
 
 /-- The target distribution: normalized Lebesgue measure on the body. -/
 noncomputable def target {n : ℕ} (K : Body n) : Measure (State n) :=
-  Arlib.uniformOn volume K
+  ArlibCommunity.Foundations.Convex.uniformOn volume K
 
 /-- The law after `m` lazy hit-and-run steps from `sigma`. -/
 noncomputable def run {n : ℕ} (K : Body n) (sigma : Measure (State n))
     (m : ℕ) : Measure (State n) :=
-  Arlib.MarkovChains.iterate (lazyStep K) sigma m
+  ArlibCommunity.Foundations.MarkovChainTheory.iterate (lazyStep K) sigma m
 
 /-- An implementation-oriented kernel for a polytope `A i • x ≤ b i`, using a
 finite scan to compute both chord endpoints. -/
 noncomputable def finiteFacetStep {n : ℕ} {ι : Type*} [Fintype ι]
     (A : ι → State n) (b : ι → ℝ) : Kernel (State n) (State n) :=
-  Arlib.MarkovChains.PolytopeHitAndRunExecution.finiteFacetHitAndRun A b
+  ArlibCommunity.Foundations.MarkovChainTheory.PolytopeHitAndRunExecution.finiteFacetHitAndRun A b
 
 end ArlibCommunity.Algorithms.HitAndRun

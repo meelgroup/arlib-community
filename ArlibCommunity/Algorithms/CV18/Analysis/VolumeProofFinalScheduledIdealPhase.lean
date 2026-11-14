@@ -10,7 +10,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- The exact retained endpoint marginal from which chronological phase
 `phase` is charged.  Phase zero starts from target zero; every later phase
@@ -220,7 +220,7 @@ theorem figureOneAbortInitialRetained_leUpTo_truncated
   let _ : IsProbabilityMeasure target :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable measurable_some.aemeasurable
   apply MeasureLeUpTo.of_tvLe
-  apply Arlib.tvLe_of_forall_le
+  apply ArlibCommunity.Foundations.Convex.tvLe_of_forall_le
   intro event hevent
   have h := initialTruncatedOption_bind_apply_le q I
     (Measure.dirac (none : Option (AmbientSpace q.n))) inferInstance

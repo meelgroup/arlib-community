@@ -61,7 +61,7 @@ theorem exists_historyRecordedOutputReset_of_tvLe_with_approxIndep
     (hprojectRecord : ∀ history result,
       projectOld (record history (observe result)) = projectOld history)
     {delta : ENNReal} (hdelta : delta ≠ ⊤)
-    (hnext : Arlib.TVLe
+    (hnext : ArlibCommunity.Foundations.Convex.TVLe
       ((historyRawOutputLaw sourceLaw K).map Prod.snd) target delta)
     {eta : ℝ}
     (hind : ApproxIndepFun eta oldStatistic (readNew ∘ Prod.fst)

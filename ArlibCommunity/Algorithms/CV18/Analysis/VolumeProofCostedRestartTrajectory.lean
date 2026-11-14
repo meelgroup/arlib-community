@@ -15,8 +15,9 @@ that experiment independently at every Markov step is itself a Markov chain on
 increments, so a finite sum is an honest total-cost random variable.
 -/
 
-namespace Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 
@@ -163,7 +164,6 @@ theorem lintegral_restartedTotalCost_eq_sum_stateMeans
   intro i hi
   exact lintegral_increment_iterate_eq Q P hforget μ i
 
-end Arlib.MarkovChains
-
-#print axioms Arlib.MarkovChains.map_restartedCostExecution_output
-#print axioms Arlib.MarkovChains.lintegral_restartedTotalCost_eq_sum_stateMeans
+end ArlibCommunity.Algorithms.CV18
+#print axioms ArlibCommunity.Algorithms.CV18.map_restartedCostExecution_output
+#print axioms ArlibCommunity.Algorithms.CV18.lintegral_restartedTotalCost_eq_sum_stateMeans

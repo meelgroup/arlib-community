@@ -12,7 +12,7 @@ remaining sample of a phase collector and then forgets the accumulated ratio.
 namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 set_option maxHeartbeats 500000 in
 section
@@ -132,7 +132,7 @@ theorem map_bind_figureOneFinalScheduledTransitionCollectLaw_optionSnd_leUpTo
     simpa [T, target, cap, stride, retries] using
       bind_figureOneFinalScheduledBalancedTransition_leUpTo_acceptedTarget
         q I hsigma2 rho hbaseWarm rho inferInstance
-          ((IsWarm.refl rho).mono (by norm_num))
+          ((ArlibCommunity.Foundations.Convex.IsWarm.refl rho).mono (by norm_num))
   have hiter := iterated_figureOneFinalScheduledRetainedOptionKernel_leUpTo
     q I hsigma2 (rho.bind T) hfirst samples
   rw [hsource]

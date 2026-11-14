@@ -61,7 +61,7 @@ theorem exists_sequentialRecordedOutputReset_of_tvLe_with_approxIndep
     (holdUpdate : ∀ state result,
       oldStatistic (update state result) = oldStatistic state)
     {delta : ENNReal} (hdelta : delta ≠ ⊤)
-    (hnext : Arlib.TVLe
+    (hnext : ArlibCommunity.Foundations.Convex.TVLe
       ((sequentialPairLaw source K).map Prod.snd) target delta)
     {eta : ℝ}
     (hind : ApproxIndepFun eta
@@ -93,7 +93,7 @@ theorem exists_sequentialRecordedOutputReset_of_tvLe_with_approxIndep
   have hreferenceProb : IsProbabilityMeasure reference :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hupdate.aemeasurable
   let _ : IsProbabilityMeasure reference := hreferenceProb
-  have hresetMapped : Arlib.TVLe actual reference delta := by
+  have hresetMapped : ArlibCommunity.Foundations.Convex.TVLe actual reference delta := by
     simpa only [actual, reference, raw, applyUpdate,
       sequentialRecordedOutputLaw] using hresetTV.map hupdate
   have hdom : MeasureLeUpTo actual reference delta :=

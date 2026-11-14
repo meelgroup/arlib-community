@@ -3,7 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license, as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofMeasureApproximation
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.MarkovChains.Continuous.L2Mixing
+import ArlibCommunity.Foundations.MarkovChainTheory.ConductanceMixing.Analysis.L2Mixing
 import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
@@ -15,8 +15,10 @@ the trajectory domination and covariance estimates needed to formalize the
 paper's dependent-sample argument.
 -/
 
-namespace Arlib.MarkovChains
+open Arlib
+open ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 
@@ -287,7 +289,7 @@ finite sampling experiment. -/
 theorem markovSumLaw_le_smul_of_isWarm
     (P : Kernel S S) [IsMarkovKernel P]
     {f : S → ℝ} (hf : Measurable f) {mu pi : Measure S}
-    {M : ENNReal} (h : Arlib.IsWarm M mu pi) (samples : ℕ) :
+    {M : ENNReal} (h : ArlibCommunity.Foundations.Convex.IsWarm M mu pi) (samples : ℕ) :
     markovSumLaw P f samples mu ≤ M • markovSumLaw P f samples pi :=
   markovSumLaw_le_smul_of_le_smul P hf
     ((isWarm_iff_le_smul _ _).1 h) samples
@@ -363,9 +365,8 @@ theorem integral_mul_markovIter_le
             _ = |1 - spectralGap P pi| ^ t * varianceReal pi f := by
               rw [Real.mul_self_sqrt (varianceReal_nonneg pi f)]
 
-end Arlib.MarkovChains
-
-#print axioms Arlib.MarkovChains.markovSumLaw_le_smul_of_isWarm
-#print axioms Arlib.MarkovChains.markovSumLaw_isProbabilityMeasure
-#print axioms Arlib.MarkovChains.integral_mul_le_sqrt_mul_sqrt
-#print axioms Arlib.MarkovChains.integral_mul_markovIter_le
+end ArlibCommunity.Algorithms.CV18
+#print axioms ArlibCommunity.Algorithms.CV18.markovSumLaw_le_smul_of_isWarm
+#print axioms ArlibCommunity.Algorithms.CV18.markovSumLaw_isProbabilityMeasure
+#print axioms ArlibCommunity.Algorithms.CV18.integral_mul_le_sqrt_mul_sqrt
+#print axioms ArlibCommunity.Algorithms.CV18.integral_mul_markovIter_le

@@ -1,9 +1,11 @@
-import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.Convexity.SpeedyGaussianMixing
+import ArlibCommunity.Algorithms.CV18.Analysis.SpeedyGaussianMixing
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofTruncation
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofKLSCore
 
-namespace Arlib.MarkovChains
+open Arlib
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory Metric Set
 open scoped ENNReal Pointwise
 
@@ -131,8 +133,7 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_phaseRadius_cv18
     (conductance_speedyMetropolisGaussian_ge_phaseRadius_cv18
       hn hσ hδ hδσ hK hKc hK0 hR hKR hRσ) ht
 
-end Arlib.MarkovChains
-
+end ArlibCommunity.Algorithms.CV18
 namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory Metric Set
@@ -302,28 +303,28 @@ theorem mixesWithin_phaseTruncatedBody_cv18
       Real.sqrt sigma2 / (8 * Real.sqrt q.n))
     {mu0 : Measure (AmbientSpace q.n)} [IsProbabilityMeasure mu0]
     {M eps : ℝ} (hM : 1 ≤ M)
-    (hwarm : Arlib.IsWarm (ENNReal.ofReal M) mu0
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (phaseTruncatedBody q I sigma2) delta sigma2))
     (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     {t : ℕ} (ht : 4 * ((Real.log M + 2 * Real.log (1 / eps)) /
       (delta * Real.log 2 /
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤ (t : ℝ)) :
-    Arlib.MarkovChains.MixesWithin
-      (Arlib.MarkovChains.lazy
-        (Arlib.MarkovChains.speedyMetropolisGaussian
+    ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin
+      (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+        (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
           (phaseTruncatedBody q I sigma2) delta sigma2))
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (phaseTruncatedBody q I sigma2) delta sigma2)
       mu0 t (ENNReal.ofReal eps) := by
   have hsigma : 0 < Real.sqrt sigma2 := Real.sqrt_pos.2 hsigma2
   have hR : 0 ≤ 4 * Real.sqrt sigma2 * Real.sqrt q.n := by positivity
-  have hwarm' : Arlib.IsWarm (ENNReal.ofReal M) mu0
-      (Arlib.MarkovChains.ellGaussianProb
+  have hwarm' : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (phaseTruncatedBody q I sigma2) delta (Real.sqrt sigma2 ^ 2)) := by
     simpa [Real.sq_sqrt hsigma2.le] using hwarm
   have hmix :=
-    Arlib.MarkovChains.mixesWithin_lazy_speedyMetropolisGaussian_phaseRadius_cv18
+    ArlibCommunity.Algorithms.CV18.mixesWithin_lazy_speedyMetropolisGaussian_phaseRadius_cv18
       hn hsigma hdelta0 hdeltaStep
       (phaseTruncatedBody_measurable q I sigma2)
       (phaseTruncatedBody_convex q I sigma2)
@@ -347,8 +348,8 @@ theorem phaseSampleToGaussian_of_paperStep_cv18
         ((q.n : ℝ) * Real.log ((q.n : ℝ) / coreError))))
     {mu0 : Measure (AmbientSpace q.n)} [IsProbabilityMeasure mu0]
     {M : ℝ} (hM : 1 ≤ M)
-    (hwarm : Arlib.IsWarm (ENNReal.ofReal M) mu0
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (phaseTruncatedBody q I sigma2) delta sigma2))
     (hmixError0 : 0 < mixError) (hmixError1 : mixError ≤ 1)
     {t : ℕ} (ht : 4 * ((Real.log M + 2 * Real.log (1 / mixError)) /
@@ -357,36 +358,36 @@ theorem phaseSampleToGaussian_of_paperStep_cv18
     (hcombined : 8 * ENNReal.ofReal mixError +
         4 * ENNReal.ofReal coreError ≤ ENNReal.ofReal (1 / 4 : ℝ)) :
     let K := phaseTruncatedBody q I sigma2
-    let P := Arlib.MarkovChains.lazy
-      (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2)
-    let mu := Arlib.MarkovChains.iterate P mu0 t
+    let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+      (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K delta sigma2)
+    let mu := ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu0 t
     let c : ℝ := 1 - 1 / (2 * (q.n : ℝ))
-    Arlib.TVLe
-      (Arlib.condOn
-        (((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
-          (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c)) Set.univ)
-      (Arlib.condOn
+    ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn
+        (((ArlibCommunity.Foundations.Convex.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
+          (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c)) Set.univ)
+      (ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (AmbientSpace q.n)).withDensity
-          (Arlib.MarkovChains.gaussianWeight sigma2)) K)
+          (ArlibCommunity.Foundations.Convex.gaussianWeight sigma2)) K)
       (64 * ENNReal.ofReal mixError + 32 * ENNReal.ofReal coreError) := by
   dsimp only
   let K := phaseTruncatedBody q I sigma2
-  let P := Arlib.MarkovChains.lazy
-    (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2)
-  let mu := Arlib.MarkovChains.iterate P mu0 t
+  let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+    (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K delta sigma2)
+  let mu := ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu0 t
   have hmixPhase := mixesWithin_phaseTruncatedBody_cv18 q I hn hsigma2
     hdelta0 hmixingStep hM hwarm hmixError0 hmixError1 ht
-  have hmix : Arlib.TVLe mu
-      (Arlib.MarkovChains.ellGaussianProb K delta sigma2)
+  have hmix : ArlibCommunity.Foundations.Convex.TVLe mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta sigma2)
       (ENNReal.ofReal mixError) := by
-    simpa [Arlib.MarkovChains.MixesWithin, mu, P, K] using hmixPhase
+    simpa [ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin, mu, P, K] using hmixPhase
   have hsigma : 0 < Real.sqrt sigma2 := Real.sqrt_pos.2 hsigma2
-  have hmix' : Arlib.TVLe mu
-      (Arlib.MarkovChains.ellGaussianProb K delta (Real.sqrt sigma2 ^ 2))
+  have hmix' : ArlibCommunity.Foundations.Convex.TVLe mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta (Real.sqrt sigma2 ^ 2))
       (ENNReal.ofReal mixError) := by
     simpa [Real.sq_sqrt hsigma2.le] using hmix
   have htransfer :=
-    Arlib.MarkovChains.TVLe.speedyToGaussian_of_paperStep_of_body_cv18
+    ArlibCommunity.Algorithms.CV18.TVLe.speedyToGaussian_of_paperStep_of_body_cv18
       (n := q.n) (K := K) (le_trans (by norm_num) q.dim_ok)
       (phaseTruncatedBody_convex q I sigma2)
       (phaseTruncatedBody_isClosed q I sigma2)

@@ -24,7 +24,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
-open _root_.Arlib
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 noncomputable section
 
@@ -116,7 +116,7 @@ theorem sequentialPairLaw_gaussian_output_leUpTo_of_retainedSome_warm
     [IsProbabilityMeasure source]
     (mu : Measure (AmbientSpace q.n)) [IsProbabilityMeasure mu]
     (hretained : source.map scheduledBalancedTraceRetainedOption = mu.map some)
-    (hwarm : Arlib.IsWarm
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (16 * warmConstant q))
       (mu.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase)) :
@@ -211,7 +211,7 @@ theorem sequentialPairLaw_gaussian_output_tvLe_resetTarget_of_accepted_same
     {delta : ENNReal}
     (htarget : MeasureLeUpTo
       (figureOneScheduledGaussianPhaseTarget q I phase) target delta) :
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       ((sequentialPairLaw source
         (scheduledBalancedTracePhaseObservationLaw
           figureOneFinalScheduledBalancedParameters q I phase)).map Prod.snd)
@@ -274,7 +274,7 @@ theorem sequentialPairLaw_gaussian_output_tvLe_resetTarget_of_accepted_adjacent
     (htarget : MeasureLeUpTo
       (figureOneScheduledGaussianPhaseTarget q I (previous + 1))
       target delta) :
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       ((sequentialPairLaw source
         (scheduledBalancedTracePhaseObservationLaw
           figureOneFinalScheduledBalancedParameters q I (previous + 1))).map
@@ -360,7 +360,7 @@ theorem sequentialPairLaw_terminal_output_leUpTo_of_retainedSome_warm
     [IsProbabilityMeasure source]
     (mu : Measure (AmbientSpace q.n)) [IsProbabilityMeasure mu]
     (hretained : source.map scheduledBalancedTraceRetainedOption = mu.map some)
-    (hwarm : Arlib.IsWarm
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (16 * warmConstant q))
       (mu.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q))) :
@@ -461,7 +461,7 @@ theorem sequentialPairLaw_terminal_output_tvLe_resetTarget_of_accepted
     {delta : ENNReal}
     (htarget : MeasureLeUpTo
       (figureOneScheduledTerminalPhaseTarget q I) target delta) :
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       ((sequentialPairLaw source
         (scheduledBalancedTracePhaseObservationLaw
           figureOneFinalScheduledBalancedParameters q I

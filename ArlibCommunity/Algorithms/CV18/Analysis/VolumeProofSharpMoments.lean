@@ -3,7 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofIdealProduct
-import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.Convexity.GaussianCooling.LogConcaveProfileVariance
+import ArlibCommunity.Algorithms.CV18.Analysis.LogConcaveProfileVariance
 
 open MeasureTheory
 
@@ -71,7 +71,7 @@ theorem gaussianRatioWeight_accelerated_relativeSecondMoment_le_localized
   have hsqrtT : (Real.sqrt T) ^ 2 = T := Real.sq_sqrt hT.le
   have hsqrtt : (Real.sqrt t) ^ 2 = t := Real.sq_sqrt ht.le
   have hproduct :=
-    Arlib.GaussianCooling.compactConvex_gaussian_product_le
+    ArlibCommunity.Algorithms.CV18.compactConvex_gaussian_product_le
       (le_trans (by norm_num : 2 ≤ 3) q.dim_ok) hKc hKcl hKb
       hvol (sigma := Real.sqrt t) (alpha := alpha) (R := Real.sqrt T)
       (Real.sqrt_pos.2 ht) halpha0 halpha hKR

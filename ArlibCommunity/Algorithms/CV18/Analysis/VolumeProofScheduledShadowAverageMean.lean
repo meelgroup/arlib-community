@@ -17,17 +17,17 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open _root_.Arlib
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 noncomputable section
 
 /-- Symmetric square-root first-moment transfer when both probability laws
 have the same second-moment bound. -/
-theorem Arlib.TVLe.abs_integral_sub_le_of_nonnegative_secondMoment_sqrt
+theorem ArlibCommunity.Foundations.Convex.TVLe.abs_integral_sub_le_of_nonnegative_secondMoment_sqrt
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal}
-    (htv : Arlib.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
+    (htv : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
     {f : S → ℝ} (hf : Measurable f) (hf0 : ∀ x, 0 ≤ f x)
     (hfmemMu : MemLp f 2 mu) (hfmemNu : MemLp f 2 nu)
     {eta R : ℝ} (heta : 0 < eta) (hR : 0 < R)
@@ -36,10 +36,10 @@ theorem Arlib.TVLe.abs_integral_sub_le_of_nonnegative_secondMoment_sqrt
     (hsecondNu : (∫ x, f x ^ 2 ∂nu) ≤ R ^ 2) :
     |(∫ x, f x ∂mu) - ∫ x, f x ∂nu| ≤ 2 * eta * R := by
   have hlowerMu :=
-    Arlib.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
+    ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
       htv hepsilon hf hf0 hfmemMu hfmemNu heta hR hepsEta hsecondNu
   have hlowerNu :=
-    Arlib.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
+    ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
       htv.symm hepsilon hf hf0 hfmemNu hfmemMu heta hR hepsEta hsecondMu
   rw [abs_le]
   constructor <;> linarith
@@ -424,11 +424,11 @@ theorem integral_initializedScheduledRetainedHistory_average_lower_of_shadowRefe
           simp only [retainedSampleObservation, hstate, retainedOptionWeight]
           exact gaussianRatioWeight_nonnegative _ _ x
     · positivity
-  have htv : Arlib.TVLe actual reference
+  have htv : ArlibCommunity.Foundations.Convex.TVLe actual reference
       (scheduledShadowReferenceError q (count - 1)) := by
     exact hmlu.to_tvLe
   have htransfer :=
-    Arlib.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
+    ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
       htv herrorTop havgMeas havg0 (by simpa [average, actual, weight] using hactualMem)
       hrefMoments.1 heta hR herror (hrefMoments.2.trans hexactSecond)
   rw [hrefMean] at htransfer
@@ -512,10 +512,10 @@ theorem integral_initializedScheduledRetainedHistory_average_abs_sub_gaussianMea
           simp only [retainedSampleObservation, hstate, retainedOptionWeight]
           exact gaussianRatioWeight_nonnegative _ _ x
     · positivity
-  have htv : Arlib.TVLe actual reference
+  have htv : ArlibCommunity.Foundations.Convex.TVLe actual reference
       (scheduledShadowReferenceError q (count - 1)) := hmlu.to_tvLe
   have htransfer :=
-    Arlib.TVLe.abs_integral_sub_le_of_nonnegative_secondMoment_sqrt
+    ArlibCommunity.Foundations.Convex.TVLe.abs_integral_sub_le_of_nonnegative_secondMoment_sqrt
       htv herrorTop havgMeas havg0
       (by simpa [average, actual, weight] using hactualMem)
       hrefMoments.1 heta hR herror
@@ -526,7 +526,7 @@ theorem integral_initializedScheduledRetainedHistory_average_abs_sub_gaussianMea
 
 #print axioms integral_retainedSampleObservation_eq_gaussianMean_of_map_eq
 #print axioms
-  Arlib.TVLe.abs_integral_sub_le_of_nonnegative_secondMoment_sqrt
+  ArlibCommunity.Foundations.Convex.TVLe.abs_integral_sub_le_of_nonnegative_secondMoment_sqrt
 #print axioms integral_retainedSampleObservation_sq_eq_gaussianSecond_of_map_eq
 #print axioms integral_exactShadowHistory_average_eq_gaussianMean
 #print axioms integral_exactShadowHistory_average_sq_le_gaussianSecond

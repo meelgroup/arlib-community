@@ -724,7 +724,7 @@ theorem iterated_figureOneFinalScheduledRetainedOptionKernel_from_truncated_leUp
   let _ : IsProbabilityMeasure exact := inferInstance
   let _ : IsProbabilityMeasure target :=
     figureOneScheduledAcceptedTargetAt_isProbabilityMeasure q I phase
-  have htv : Arlib.TVLe target exact
+  have htv : ArlibCommunity.Foundations.Convex.TVLe target exact
       (scheduledBalancedStationaryTargetError q) := by
     simpa [target, exact, figureOneScheduledAcceptedTargetAt,
       figureOneScheduledSpeedyPiAt] using

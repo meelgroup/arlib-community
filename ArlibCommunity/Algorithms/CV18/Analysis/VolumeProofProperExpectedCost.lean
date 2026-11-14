@@ -17,7 +17,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
-open _root_.Arlib.MarkovChains
+open _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 theorem cappedAccuracyProperCollectOne_countedQueryCost_le
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
@@ -234,7 +234,7 @@ theorem lintegral_cappedAccuracyProperCollectOne_countedQueryCost_le_of_isWarm
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (weight : AmbientSpace q.n → ℝ) (hweight : Measurable weight)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)} [IsProbabilityMeasure mu]
-    (hwarm : _root_.Arlib.IsWarm M mu
+    (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M mu
       (ellGaussianProb (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (rawCap properStride : ℕ) :

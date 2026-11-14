@@ -47,10 +47,10 @@ rescaling used by the chronological collector. -/
 theorem balancedAccuracyGaussianAcceptedTargetLaw_tv_truncatedGaussian
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
-    let pi := Arlib.MarkovChains.ellGaussianProb
+    let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
       (accuracyPhaseTruncatedBody q I sigma2)
       (figureOneProposalRadius q sigma2) sigma2
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       (balancedAccuracyGaussianAcceptedTargetLaw q I sigma2 pi)
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n))
@@ -73,25 +73,25 @@ theorem bind_balancedTransition_tvLe_truncatedGaussian
       ((rho.bind
         (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
           properStride)).map optionSnd)
-      ((Arlib.MarkovChains.ellGaussianProb
+      ((ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2).map some) firstError)
     (hretryBlock :
-      let pi := Arlib.MarkovChains.ellGaussianProb
+      let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2
       let rejected := balancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
             properStride)).map optionSnd)
         (pi.map some) retryError) :
-    let pi := Arlib.MarkovChains.ellGaussianProb
+    let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
       (accuracyPhaseTruncatedBody q I sigma2)
       (figureOneProposalRadius q sigma2) sigma2
     let rejectMass := balancedRejectedStateMeasure q I sigma2 pi Set.univ
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       (rho.bind
         (balancedAccuracyTransitionLawAux q I sigma2 proposalCap
           properStride (attempts + 1)))
@@ -101,22 +101,22 @@ theorem bind_balancedTransition_tvLe_truncatedGaussian
           balancedRetryError retryError rejectMass attempts +
         balancedStationaryTargetError q) := by
   dsimp only
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   have hdelta : 0 < figureOneProposalRadius q sigma2 :=
     figureOneProposalRadius_pos q hsigma2
-  have hmass0 := Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+  have hmass0 := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
     (accuracyPhaseTruncatedBody_measurable q I sigma2)
     (accuracyPhaseTruncatedBody_convex q I sigma2)
     (accuracyPhaseTruncatedBody_isCompact q I sigma2).isBounded
     (accuracyPhaseTruncatedBody_volume_ne_zero q I hsigma2)
     hdelta sigma2
-  have hmasstop := Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+  have hmasstop := ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
     (accuracyPhaseTruncatedBody_volume_ne_top q I sigma2)
     (figureOneProposalRadius q sigma2) hsigma2
   let _ : IsProbabilityMeasure pi :=
-    Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
+    ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   have hacceptedLower : ENNReal.ofReal (7 / 128 : ℝ) ≤
       balancedAcceptedStateMeasure q I sigma2 pi Set.univ := by
     simpa [pi] using balancedAcceptedStateMeasure_mass_ge q I hsigma2
@@ -135,7 +135,7 @@ theorem bind_balancedTransition_tvLe_truncatedGaussian
 both proper blocks consume the current full per-sample block budget. -/
 noncomputable def figureOneGlobalBalancedTransitionError
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ) : ENNReal :=
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   let rejectMass := balancedRejectedStateMeasure q I sigma2 pi Set.univ
@@ -152,8 +152,8 @@ theorem bind_figureOneGlobalBalancedTransition_tvLe_truncatedGaussian
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (rho : Measure (AmbientSpace q.n)) [IsProbabilityMeasure rho]
-    (hbaseWarm : Arlib.IsWarm (ENNReal.ofReal (warmConstant q)) rho
-      (Arlib.MarkovChains.ellGaussianProb
+    (hbaseWarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal (warmConstant q)) rho
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (hfirstCap :
@@ -167,7 +167,7 @@ theorem bind_figureOneGlobalBalancedTransition_tvLe_truncatedGaussian
         (ENNReal.ofReal (1 / 2) *
             (figureOneGlobalQueryBudget q : ENNReal)) *
           ENNReal.ofReal (sampleMixingError q / 2)) :
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       (rho.bind
         (balancedAccuracyTransitionLawAux q I sigma2
           (figureOneGlobalBalancedParameters.proposalCap q sigma2)
@@ -181,7 +181,7 @@ theorem bind_figureOneGlobalBalancedTransition_tvLe_truncatedGaussian
   let retries := largestSampleCount q *
     numPhases q
   let attempts := retries - 1
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   let blockError := ENNReal.ofReal (sampleMixingError q)
@@ -212,10 +212,10 @@ theorem bind_figureOneGlobalBalancedTransition_tvLe_truncatedGaussian
       q I hsigma2 cap stride hcapPos rho hM hbaseWarm hfirstWalk
         (by simpa [cap, stride] using hfirstCap)
     exact hall rho inferInstance
-      ((Arlib.IsWarm.refl rho).mono (by norm_num))
+      ((ArlibCommunity.Foundations.Convex.IsWarm.refl rho).mono (by norm_num))
   have hretryBlock :
       let rejected := balancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 cap stride)).map optionSnd)
@@ -255,10 +255,10 @@ theorem bind_figureOneGlobalBalancedTransition_adjacent_tvLe
           ENNReal.ofReal (sampleMixingError q / 2)) :
     let previousSigma2 := scheduleValue q phase
     let sigma2 := scheduleValue q (phase + 1)
-    let previousPi := Arlib.MarkovChains.ellGaussianProb
+    let previousPi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
       (accuracyPhaseTruncatedBody q I previousSigma2)
       (figureOneProposalRadius q previousSigma2) previousSigma2
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       (previousPi.bind
         (balancedAccuracyTransitionLawAux q I sigma2
           (figureOneGlobalBalancedParameters.proposalCap q sigma2)
@@ -271,29 +271,29 @@ theorem bind_figureOneGlobalBalancedTransition_adjacent_tvLe
   dsimp only
   let previousSigma2 := scheduleValue q phase
   let sigma2 := scheduleValue q (phase + 1)
-  let previousPi := Arlib.MarkovChains.ellGaussianProb
+  let previousPi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I previousSigma2)
     (figureOneProposalRadius q previousSigma2) previousSigma2
   have hpreviousSigma2 : 0 < previousSigma2 := scheduleValue_pos q phase
   have hpreviousDelta : 0 < figureOneProposalRadius q previousSigma2 :=
     figureOneProposalRadius_pos q hpreviousSigma2
   have hpreviousMass0 :=
-    Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+    ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
       (accuracyPhaseTruncatedBody_measurable q I previousSigma2)
       (accuracyPhaseTruncatedBody_convex q I previousSigma2)
       (accuracyPhaseTruncatedBody_isCompact q I previousSigma2).isBounded
       (accuracyPhaseTruncatedBody_volume_ne_zero q I hpreviousSigma2)
       hpreviousDelta previousSigma2
   have hpreviousMassTop :=
-    Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+    ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
       (accuracyPhaseTruncatedBody_volume_ne_top q I previousSigma2)
       (figureOneProposalRadius q previousSigma2) hpreviousSigma2
   let _ : IsProbabilityMeasure previousPi :=
-    Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb
+    ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb
       hpreviousMass0 hpreviousMassTop
-  have hwarm : Arlib.IsWarm
+  have hwarm : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (warmConstant q)) previousPi
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2) := by
     simpa only [previousSigma2, sigma2, previousPi] using
@@ -317,12 +317,12 @@ theorem sampleMixingError_lt_globalBalancedTransitionError
   have htarget := balancedStationaryTargetError_pos q
   have hretry : 0 ≤
       balancedRejectedStateMeasure q I sigma2
-          (Arlib.MarkovChains.ellGaussianProb
+          (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
             (accuracyPhaseTruncatedBody q I sigma2)
             (figureOneProposalRadius q sigma2) sigma2) Set.univ *
         balancedRetryError (ENNReal.ofReal (sampleMixingError q))
           (balancedRejectedStateMeasure q I sigma2
-            (Arlib.MarkovChains.ellGaussianProb
+            (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
               (accuracyPhaseTruncatedBody q I sigma2)
               (figureOneProposalRadius q sigma2) sigma2) Set.univ)
           (figureOneGlobalBalancedParameters.retryLimit q sigma2 - 1) :=
@@ -334,13 +334,13 @@ theorem sampleMixingError_lt_globalBalancedTransitionError
       ENNReal.lt_add_right (by simp) htarget.ne'
     _ ≤ ENNReal.ofReal (sampleMixingError q) +
           balancedRejectedStateMeasure q I sigma2
-              (Arlib.MarkovChains.ellGaussianProb
+              (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
                 (accuracyPhaseTruncatedBody q I sigma2)
                 (figureOneProposalRadius q sigma2) sigma2) Set.univ *
             balancedRetryError
               (ENNReal.ofReal (sampleMixingError q))
               (balancedRejectedStateMeasure q I sigma2
-                (Arlib.MarkovChains.ellGaussianProb
+                (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
                   (accuracyPhaseTruncatedBody q I sigma2)
                   (figureOneProposalRadius q sigma2) sigma2) Set.univ)
               (figureOneGlobalBalancedParameters.retryLimit q sigma2 - 1) +
@@ -348,13 +348,13 @@ theorem sampleMixingError_lt_globalBalancedTransitionError
       have hbase : ENNReal.ofReal (sampleMixingError q) ≤
           ENNReal.ofReal (sampleMixingError q) +
             balancedRejectedStateMeasure q I sigma2
-                (Arlib.MarkovChains.ellGaussianProb
+                (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
                   (accuracyPhaseTruncatedBody q I sigma2)
                   (figureOneProposalRadius q sigma2) sigma2) Set.univ *
               balancedRetryError
                 (ENNReal.ofReal (sampleMixingError q))
                 (balancedRejectedStateMeasure q I sigma2
-                  (Arlib.MarkovChains.ellGaussianProb
+                  (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
                     (accuracyPhaseTruncatedBody q I sigma2)
                     (figureOneProposalRadius q sigma2) sigma2) Set.univ)
                 (figureOneGlobalBalancedParameters.retryLimit q sigma2 - 1) :=

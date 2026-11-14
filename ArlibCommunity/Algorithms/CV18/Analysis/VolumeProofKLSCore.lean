@@ -1,7 +1,7 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofSpeedyToTarget
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAverageConductanceLV
-import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.MarkovChains.Continuous.SpeedyGaussianConductance
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Convexity.KLS97Sharp
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.SpeedyGaussianConductance
+import ArlibCommunity.Foundations.Convex.BoundaryLayer.Analysis.KLS97Sharp
 
 /-!
 # KLS97 homothetic-core estimates used by CV18
@@ -12,8 +12,10 @@ geometry: if `K` contains the unit ball, then `c • K` is at distance at least
 `a - c` from the complement of `a • K`.
 -/
 
-namespace Arlib.MarkovChains
+open Arlib
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory Metric Set
 open scoped ENNReal Pointwise
 
@@ -115,9 +117,9 @@ theorem volume_inter_closedBall_le_gaussian_infDist_cv18
           (Real.exp (-((n : ℝ) * Metric.infDist z L ^ 2 /
             (2 * delta ^ 2)))) *
         volume (closedBall (0 : EuclideanSpace ℝ (Fin n)) delta) := by
-  have hcap := Arlib.volume_inter_closedBall_le_sqrt
+  have hcap := ArlibCommunity.Foundations.Convex.volume_inter_closedBall_le_sqrt
     hLc hLcl hLne hz delta
-  have hpow := Arlib.sqrt_pow_le_gaussian_exp
+  have hpow := ArlibCommunity.Foundations.Convex.sqrt_pow_le_gaussian_exp
     (n := n) (t := delta) (h := Metric.infDist z L) hdelta
   calc
     volume (L ∩ closedBall z delta) ≤
@@ -160,11 +162,11 @@ theorem volume_core_inter_closedBall_le_exp_cv18
     intro hzmem
     rw [Metric.infDist_zero_of_mem hzmem] at hsep
     linarith
-  have hcap := Arlib.volume_inter_closedBall_le_sqrt
+  have hcap := ArlibCommunity.Foundations.Convex.volume_inter_closedBall_le_sqrt
     (hKc.smul c)
     ((isClosedMap_smul_of_ne_zero hc0.ne') K hKcl)
     hcoreNonempty hzcore delta
-  have hpow := Arlib.sqrt_pow_le_gaussian_exp
+  have hpow := ArlibCommunity.Foundations.Convex.sqrt_pow_le_gaussian_exp
     (n := n) (t := delta) (h := Metric.infDist z (c • K)) hdelta
   have hdist0 : 0 ≤ Metric.infDist z (c • K) := Metric.infDist_nonneg
   have hac0 : 0 ≤ a - c := sub_nonneg.mpr hca.le
@@ -306,7 +308,7 @@ theorem layercake_infDist_on_cv18
             Set.mem_Ioi.mpr (lt_of_le_of_lt hd0 hx)⟩
         rw [Set.sdiff_eq_empty.mpr hsub, measure_empty]
     rw [MeasureTheory.setLIntegral_congr hae]
-    exact Arlib.lintegral_Ioi_exp_neg hrate shift _
+    exact ArlibCommunity.Foundations.Convex.lintegral_Ioi_exp_neg hrate shift _
   have hx : ∀ h : ℝ, ∫⁻ y in A, F y h =
       ENNReal.ofReal (rate * Real.exp (shift - rate * h)) *
         volume (A ∩ {y | Metric.infDist y K ≤ h}) := by
@@ -372,7 +374,7 @@ theorem volume_compl_inter_infDist_core_le_cv18
     _ = volume ((c + h) • K) - volume K :=
       measure_sdiff hKouter hKcl.measurableSet.nullMeasurableSet hKfin
     _ = ENNReal.ofReal ((c + h) ^ n) * volume K - volume K := by
-      rw [Arlib.volume_smul_euclidean ha0]
+      rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean ha0]
     _ = (ENNReal.ofReal ((c + h) ^ n) - 1) * volume K := by
       rw [ENNReal.sub_mul (fun _ _ => hKfin), one_mul]
     _ = ENNReal.ofReal ((c + h) ^ n - 1) * volume K := by
@@ -421,7 +423,7 @@ theorem lintegral_kls_exp_majorant_le_cv18
           (decay * Real.exp (-dim * h0 - decay * h)) := by
         field_simp
   rw [hfun, lintegral_const_mul' _ _ ENNReal.ofReal_ne_top,
-    Arlib.lintegral_Ioi_exp_neg hdecay (-dim * h0) h0]
+    ArlibCommunity.Foundations.Convex.lintegral_Ioi_exp_neg hdecay (-dim * h0) h0]
   rw [← ENNReal.ofReal_mul (by positivity)]
   apply ENNReal.ofReal_le_ofReal
   have hexpEq : Real.exp (-dim * h0 - decay * h0) =
@@ -773,7 +775,7 @@ theorem setLIntegral_one_sub_ell_levelCore_le_cv18
         hballL hc0 hc1 hdelta hscale
     _ ≤ (eta * ENNReal.ofReal (c ^ n)) * volume L := by gcongr
     _ = eta * volume (c • L) := by
-      rw [Arlib.volume_smul_euclidean hc0.le]
+      rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
       ac_rfl
 
 /-- A proposal ball centred at norm at most `c` can leave the unit ball only
@@ -1116,7 +1118,7 @@ theorem condOn_gaussian_coreDefect_le_cv18
       (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
         (gaussianWeight (sigma ^ 2))).restrict K) (c • K) ≠ ⊤) :
     ∫⁻ x, (1 - ell K delta x)
-      ∂Arlib.condOn
+      ∂ArlibCommunity.Foundations.Convex.condOn
         (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight (sigma ^ 2))).restrict K) (c • K) ≤ eta := by
   let S : Set (EuclideanSpace ℝ (Fin n)) := c • K
@@ -1160,7 +1162,7 @@ theorem condOn_gaussian_coreDefect_le_cv18
       eta * ∫⁻ x in S, w x := by
     exact gaussianWeighted_coreDefect_le_cv18 hn hKc hKcl hKfin hball
       hc0 hc1 hdelta hsigma hscale hcoeffCore hcoeffPoint
-  rw [Arlib.condOn_def, lintegral_smul_measure]
+  rw [ArlibCommunity.Foundations.Convex.condOn_def, lintegral_smul_measure]
   change (gammaK S)⁻¹ * (∫⁻ x in S, bad x ∂gammaK) ≤ eta
   rw [hraw, hmass]
   calc
@@ -1269,7 +1271,7 @@ theorem seven_sixteenths_le_ellGaussianProb_standardCore_of_defect_cv18
     calc
       (∫⁻ x in c • K, gaussianWeight variance x) ≤
           ∫⁻ _x in c • K, (1 : ENNReal) :=
-        setLIntegral_mono' hcoreM fun x _ => gaussianWeight_le_one hvariance x
+        setLIntegral_mono' hcoreM fun x _ => ArlibCommunity.Foundations.Convex.gaussianWeight_le_one hvariance x
       _ = volume (c • K) := by simp
       _ ≤ volume K := measure_mono hsub
   have hDtop : D ≠ ⊤ := ne_top_of_le_ne_top
@@ -1511,7 +1513,7 @@ theorem standardCore_defect_and_speedyMass_cv18
     (hspeedytop : ellGaussianMeasure K delta (sigma ^ 2) Set.univ ≠ ⊤) :
     let c : ℝ := 1 - 1 / (2 * (n : ℝ))
     (∫⁻ x, (1 - ell K delta x)
-        ∂Arlib.condOn
+        ∂ArlibCommunity.Foundations.Convex.condOn
           (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
             (gaussianWeight (sigma ^ 2))).restrict K) (c • K)) ≤
           ENNReal.ofReal eps ∧
@@ -1586,16 +1588,16 @@ theorem TVLe.speedyToGaussian_of_paperStep_cv18
           (sigma ^ 2 / (1 - 1 / (2 * (n : ℝ))) ^ 2))) K ≠ ⊤)
     {mu : Measure (EuclideanSpace ℝ (Fin n))} [IsProbabilityMeasure mu]
     {mixError : ENNReal}
-    (hmix : Arlib.TVLe mu (ellGaussianProb K delta (sigma ^ 2)) mixError)
+    (hmix : ArlibCommunity.Foundations.Convex.TVLe mu (ellGaussianProb K delta (sigma ^ 2)) mixError)
     (hmixTop : mixError ≠ ⊤)
     (hcombined : 8 * mixError + 4 * ENNReal.ofReal coreError ≤
       ENNReal.ofReal (1 / 4 : ℝ)) :
     let c : ℝ := 1 - 1 / (2 * (n : ℝ))
-    Arlib.TVLe
-      (Arlib.condOn
-        (((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
+    ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn
+        (((ArlibCommunity.Foundations.Convex.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
           (gaussianScaleAcceptance (sigma ^ 2) c)) Set.univ)
-      (Arlib.condOn
+      (ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight (sigma ^ 2))) K)
       (64 * mixError + 32 * ENNReal.ofReal coreError) := by
@@ -1633,16 +1635,16 @@ theorem TVLe.speedyToGaussian_of_paperStep_of_body_cv18
         ((n : ℝ) * Real.log ((n : ℝ) / coreError))))
     {mu : Measure (EuclideanSpace ℝ (Fin n))} [IsProbabilityMeasure mu]
     {mixError : ENNReal}
-    (hmix : Arlib.TVLe mu (ellGaussianProb K delta (sigma ^ 2)) mixError)
+    (hmix : ArlibCommunity.Foundations.Convex.TVLe mu (ellGaussianProb K delta (sigma ^ 2)) mixError)
     (hmixTop : mixError ≠ ⊤)
     (hcombined : 8 * mixError + 4 * ENNReal.ofReal coreError ≤
       ENNReal.ofReal (1 / 4 : ℝ)) :
     let c : ℝ := 1 - 1 / (2 * (n : ℝ))
-    Arlib.TVLe
-      (Arlib.condOn
-        (((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
+    ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn
+        (((ArlibCommunity.Foundations.Convex.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
           (gaussianScaleAcceptance (sigma ^ 2) c)) Set.univ)
-      (Arlib.condOn
+      (ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight (sigma ^ 2))) K)
       (64 * mixError + 32 * ENNReal.ofReal coreError) := by
@@ -1667,11 +1669,11 @@ theorem TVLe.speedyToGaussian_of_paperStep_of_body_cv18
     exact hKc.smul_mem_of_zero_mem
       (hball (Metric.mem_closedBall_self zero_le_one)) hx ⟨hc0.le, hc1.le⟩
   have hcoreVol0 : volume (c • K) ≠ 0 := by
-    rw [Arlib.volume_smul_euclidean hc0.le]
+    rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
     exact mul_ne_zero
       (ENNReal.ofReal_ne_zero_iff.mpr (pow_pos hc0 n)) hK0
   have hcoreVoltop : volume (c • K) ≠ ⊤ := by
-    rw [Arlib.volume_smul_euclidean hc0.le]
+    rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
     exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top hKfin
   have hgaussCore0 :
       (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
@@ -1705,4 +1707,4 @@ theorem TVLe.speedyToGaussian_of_paperStep_of_body_cv18
       (by simpa [c] using hproposaltop)
       hmix hmixTop hcombined
 
-end Arlib.MarkovChains
+end ArlibCommunity.Algorithms.CV18

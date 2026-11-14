@@ -5,7 +5,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Metric Set
 open scoped ENNReal Pointwise
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 private theorem ofReal_one_half_scheduled :
     ENNReal.ofReal (1 / 2 : ℝ) = (2 : ENNReal)⁻¹ := by
@@ -32,8 +32,8 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge
   let core := c • K
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
   let g : AmbientSpace q.n → ENNReal := gaussianScaleAcceptance sigma2 c
-  let source := (Arlib.condOn pi core).map scale
-  let proposal := Arlib.condOn
+  let source := (ArlibCommunity.Foundations.Convex.condOn pi core).map scale
+  let proposal := ArlibCommunity.Foundations.Convex.condOn
     ((volume : Measure (AmbientSpace q.n)).withDensity
       (gaussianWeight (sigma2 / c ^ 2))) K
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
@@ -57,8 +57,8 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge
   have hcore0 : pi core ≠ 0 :=
     ne_of_gt ((by norm_num : 0 < ENNReal.ofReal (7 / 16 : ℝ)).trans_le hcoreMass)
   have hcoretop : pi core ≠ ⊤ := measure_ne_top pi core
-  let _ : IsProbabilityMeasure (Arlib.condOn pi core) :=
-    Arlib.isProbabilityMeasure_condOn pi hcore0 hcoretop
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn pi core) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn pi hcore0 hcoretop
   let _ : IsProbabilityMeasure source :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
   have hscaled : 0 < sigma2 / c ^ 2 := by positivity
@@ -71,8 +71,8 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge
         (gaussianWeight (sigma2 / c ^ 2))) K ≠ ⊤ :=
     withDensity_gaussianWeight_ne_top hscaled hKmeas hKtop
   let _ : IsProbabilityMeasure proposal :=
-    Arlib.isProbabilityMeasure_condOn _ hprop0 hproptop
-  have hsourceTv : Arlib.TVLe source proposal
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn _ hprop0 hproptop
+  have hsourceTv : ArlibCommunity.Foundations.Convex.TVLe source proposal
       (4 * ENNReal.ofReal (coreMixingError q)) := by
     simpa [source, proposal, pi, core, scale, K, delta, c] using
       figureOneScheduled_stationaryCoreMap_tv_proposal q I hsigma2
@@ -103,8 +103,8 @@ theorem scheduledAccuracyPhase_stationary_acceptance_ge
   have hsourceAccept : ENNReal.ofReal (1 / 4 : ℝ) ≤
       (source.withDensity g) Set.univ :=
     TVLe.withDensity_mass_ge_quarter_cv18 hsourceTv herr hg hg1 hhalf
-  have hrestrict : pi.restrict core = pi core • Arlib.condOn pi core := by
-    rw [Arlib.condOn_def, smul_smul,
+  have hrestrict : pi.restrict core = pi core • ArlibCommunity.Foundations.Convex.condOn pi core := by
+    rw [ArlibCommunity.Foundations.Convex.condOn_def, smul_smul,
       ENNReal.mul_inv_cancel hcore0 hcoretop, one_smul]
   have hsourceScale :
       ((pi.restrict core).map scale).withDensity g =
@@ -323,7 +323,7 @@ theorem scheduledBalancedAcceptedTargetSubmeasure_eq_mass_smul
   have hnormalize := measure_eq_mass_smul_condOn_univ acceptedTarget
     htarget0 htargetTop
   change acceptedTarget = accepted Set.univ •
-    Arlib.condOn acceptedTarget Set.univ
+    ArlibCommunity.Foundations.Convex.condOn acceptedTarget Set.univ
   rw [← htargetMass]
   exact hnormalize
 

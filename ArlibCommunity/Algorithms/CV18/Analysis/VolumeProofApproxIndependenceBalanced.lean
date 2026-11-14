@@ -55,8 +55,8 @@ theorem balancedAccuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_of_lower
   have htargetTop : acceptedTarget Set.univ ≠ ⊤ := by
     rw [htargetMass]
     exact hacceptedTop
-  change IsProbabilityMeasure (Arlib.condOn acceptedTarget Set.univ)
-  exact Arlib.isProbabilityMeasure_condOn acceptedTarget htarget0 htargetTop
+  change IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn acceptedTarget Set.univ)
+  exact ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn acceptedTarget htarget0 htargetTop
 
 /-- Total-variation form of the complete finite balanced transition.  The
 error is exactly the first-block approximation plus the rejected-branch retry
@@ -80,13 +80,13 @@ theorem bind_balancedTransition_tvLe_acceptedTarget
       (pi.map some) firstError)
     (hretryBlock :
       let rejected := balancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
             properStride)).map optionSnd)
         (pi.map some) retryError) :
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       (rho.bind
         (balancedAccuracyTransitionLawAux q I sigma2 proposalCap
           properStride (attempts + 1)))
@@ -110,7 +110,7 @@ theorem bind_balancedTransition_tvLe_acceptedTarget
   have hdom := bind_balancedTransition_leUpTo_acceptedTarget
     q I hsigma2 proposalCap properStride attempts rho pi
       hacceptedLower hrejectedLower hfirstBlock hretryBlock
-  change Arlib.TVLe (rho.bind K) (target.map some) _
+  change ArlibCommunity.Foundations.Convex.TVLe (rho.bind K) (target.map some) _
   exact hdom.to_tvLe
 
 /-- A finite per-block error remains finite through any finite balanced retry
@@ -134,46 +134,46 @@ theorem bind_balancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationary_of_isWa
     (proposalCap properStride : ℕ) (hproposalCap : 0 < proposalCap)
     (mu : Measure (AmbientSpace q.n)) [IsProbabilityMeasure mu]
     {M capError mixError : ENNReal}
-    (hwarm : Arlib.IsWarm M mu
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (hbudget : ((properStride : ℕ) : ENNReal) * M ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) * capError)
-    (hmix : Arlib.TVLe
-      (Arlib.MarkovChains.iterate
-        (Arlib.MarkovChains.lazy
-          (Arlib.MarkovChains.speedyMetropolisGaussian
+    (hmix : ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.MarkovChainTheory.iterate
+        (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+          (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
             (accuracyPhaseTruncatedBody q I sigma2)
             (figureOneProposalRadius q sigma2) sigma2))
         mu properStride)
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2) mixError) :
     MeasureLeUpTo
       ((mu.bind
         (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
           properStride)).map optionSnd)
-      ((Arlib.MarkovChains.ellGaussianProb
+      ((ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2).map some)
       (capError + mixError) := by
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   have hdelta : 0 < figureOneProposalRadius q sigma2 :=
     figureOneProposalRadius_pos q hsigma2
-  have hmass0 := Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+  have hmass0 := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
     (accuracyPhaseTruncatedBody_measurable q I sigma2)
     (accuracyPhaseTruncatedBody_convex q I sigma2)
     (accuracyPhaseTruncatedBody_isCompact q I sigma2).isBounded
     (accuracyPhaseTruncatedBody_volume_ne_zero q I hsigma2)
     hdelta sigma2
-  have hmasstop := Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+  have hmasstop := ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
     (accuracyPhaseTruncatedBody_volume_ne_top q I sigma2)
     (figureOneProposalRadius q sigma2) hsigma2
   let _ : IsProbabilityMeasure pi :=
-    Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
+    ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   have hfail := bind_balancedAccuracyRetryBlockKernel_none_le_of_isWarm
     q I hsigma2 hwarm proposalCap properStride hproposalCap hbudget
   exact bind_balancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationary
@@ -195,35 +195,35 @@ theorem balancedRejectedRetryBlock_leUpTo_stationary
         (properStride : ℝ))
     (hbudget : ((properStride : ℕ) : ENNReal) * 2 ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) * capError) :
-    let pi := Arlib.MarkovChains.ellGaussianProb
+    let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
       (accuracyPhaseTruncatedBody q I sigma2)
       (figureOneProposalRadius q sigma2) sigma2
     let rejected := balancedRejectedStateMeasure q I sigma2 pi
-    let rejectedProb := Arlib.condOn rejected Set.univ
+    let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
     MeasureLeUpTo
       ((rejectedProb.bind
         (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
           properStride)).map optionSnd)
       (pi.map some) (capError + ENNReal.ofReal mixError) := by
   dsimp only
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   let rejected := balancedRejectedStateMeasure q I sigma2 pi
-  let rejectedProb := Arlib.condOn rejected Set.univ
+  let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
   have hdelta : 0 < figureOneProposalRadius q sigma2 :=
     figureOneProposalRadius_pos q hsigma2
-  have hmass0 := Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+  have hmass0 := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
     (accuracyPhaseTruncatedBody_measurable q I sigma2)
     (accuracyPhaseTruncatedBody_convex q I sigma2)
     (accuracyPhaseTruncatedBody_isCompact q I sigma2).isBounded
     (accuracyPhaseTruncatedBody_volume_ne_zero q I hsigma2)
     hdelta sigma2
-  have hmasstop := Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+  have hmasstop := ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
     (accuracyPhaseTruncatedBody_volume_ne_top q I sigma2)
     (figureOneProposalRadius q sigma2) hsigma2
   let _ : IsProbabilityMeasure pi :=
-    Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
+    ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   have hrejectedLower : (2 : ENNReal)⁻¹ ≤ rejected Set.univ := by
     simpa [rejected, pi] using
       balancedRejectedStateMeasure_mass_ge_half q I hsigma2 pi
@@ -236,21 +236,21 @@ theorem balancedRejectedRetryBlock_leUpTo_stationary
     exact ne_top_of_le_ne_top (measure_ne_top pi Set.univ) <|
       Measure.le_iff'.mp hle Set.univ
   let _ : IsProbabilityMeasure rejectedProb :=
-    Arlib.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
-  have hwarm : Arlib.IsWarm 2 rejectedProb pi := by
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
+  have hwarm : ArlibCommunity.Foundations.Convex.IsWarm 2 rejectedProb pi := by
     simpa [rejectedProb, rejected, pi] using
       balancedRejectedStationary_isWarm q I hsigma2
   have hmixWithin := mixesWithin_balancedRejectedStationary_cv18
     q I hsigma2 hmixError0 hmixError1 hwalk
-  have hmix : Arlib.TVLe
-      (Arlib.MarkovChains.iterate
-        (Arlib.MarkovChains.lazy
-          (Arlib.MarkovChains.speedyMetropolisGaussian
+  have hmix : ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.MarkovChainTheory.iterate
+        (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+          (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
             (accuracyPhaseTruncatedBody q I sigma2)
             (figureOneProposalRadius q sigma2) sigma2))
         rejectedProb properStride)
       pi (ENNReal.ofReal mixError) := by
-    simpa [Arlib.MarkovChains.MixesWithin, rejectedProb, rejected, pi]
+    simpa [ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin, rejectedProb, rejected, pi]
       using hmixWithin
   exact
     bind_balancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationary_of_isWarm
@@ -270,7 +270,7 @@ private theorem approxIndepFun_balancedTransition_of_warm_blocks_aux
     (hrejectedLower : (2 : ENNReal)⁻¹ ≤
       balancedRejectedStateMeasure q I sigma2 pi Set.univ)
     (hfirstBlock : forall mu : Measure (AmbientSpace q.n),
-      IsProbabilityMeasure mu -> Arlib.IsWarm 2 mu rho ->
+      IsProbabilityMeasure mu -> ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho ->
       MeasureLeUpTo
         ((mu.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -278,7 +278,7 @@ private theorem approxIndepFun_balancedTransition_of_warm_blocks_aux
         (pi.map some) firstError)
     (hretryBlock :
       let rejected := balancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -342,26 +342,26 @@ theorem approxIndepFun_balancedTransition_of_baseWarm_and_mixing
     (hproposalCap : 0 < proposalCap)
     (hcapFirst : capFirst ≠ ⊤) (hmixFirstFinite : mixFirst ≠ ⊤)
     (hcapRetry : capRetry ≠ ⊤)
-    (hbaseWarm : Arlib.IsWarm M rho
-      (Arlib.MarkovChains.ellGaussianProb
+    (hbaseWarm : ArlibCommunity.Foundations.Convex.IsWarm M rho
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (hfirstBudget : ((properStride : ℕ) : ENNReal) * (2 * M) ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) * capFirst)
     (hmixFirst : forall mu : Measure (AmbientSpace q.n),
       IsProbabilityMeasure mu ->
-      Arlib.IsWarm (2 * M) mu
-        (Arlib.MarkovChains.ellGaussianProb
+      ArlibCommunity.Foundations.Convex.IsWarm (2 * M) mu
+        (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
           (accuracyPhaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2) ->
-      Arlib.TVLe
-        (Arlib.MarkovChains.iterate
-          (Arlib.MarkovChains.lazy
-            (Arlib.MarkovChains.speedyMetropolisGaussian
+      ArlibCommunity.Foundations.Convex.TVLe
+        (ArlibCommunity.Foundations.MarkovChainTheory.iterate
+          (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+            (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
               (accuracyPhaseTruncatedBody q I sigma2)
               (figureOneProposalRadius q sigma2) sigma2))
           mu properStride)
-        (Arlib.MarkovChains.ellGaussianProb
+        (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
           (accuracyPhaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2) mixFirst)
     (hmixRetry0 : 0 < mixRetry) (hmixRetry1 : mixRetry ≤ 1)
@@ -371,7 +371,7 @@ theorem approxIndepFun_balancedTransition_of_baseWarm_and_mixing
         (properStride : ℝ))
     (hretryBudget : ((properStride : ℕ) : ENNReal) * 2 ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) * capRetry) :
-    let pi := Arlib.MarkovChains.ellGaussianProb
+    let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
       (accuracyPhaseTruncatedBody q I sigma2)
       (figureOneProposalRadius q sigma2) sigma2
     let rejectMass := balancedRejectedStateMeasure q I sigma2 pi Set.univ
@@ -384,22 +384,22 @@ theorem approxIndepFun_balancedTransition_of_baseWarm_and_mixing
         (balancedAccuracyTransitionLawAux q I sigma2 proposalCap
           properStride (attempts + 1))) := by
   dsimp only
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   have hdelta : 0 < figureOneProposalRadius q sigma2 :=
     figureOneProposalRadius_pos q hsigma2
-  have hmass0 := Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+  have hmass0 := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
     (accuracyPhaseTruncatedBody_measurable q I sigma2)
     (accuracyPhaseTruncatedBody_convex q I sigma2)
     (accuracyPhaseTruncatedBody_isCompact q I sigma2).isBounded
     (accuracyPhaseTruncatedBody_volume_ne_zero q I hsigma2)
     hdelta sigma2
-  have hmasstop := Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+  have hmasstop := ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
     (accuracyPhaseTruncatedBody_volume_ne_top q I sigma2)
     (figureOneProposalRadius q sigma2) hsigma2
   let _ : IsProbabilityMeasure pi :=
-    Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
+    ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   have hfirstError : capFirst + mixFirst ≠ ⊤ :=
     ENNReal.add_ne_top.mpr ⟨hcapFirst, hmixFirstFinite⟩
   have hretryError : capRetry + ENNReal.ofReal mixRetry ≠ ⊤ :=
@@ -411,7 +411,7 @@ theorem approxIndepFun_balancedTransition_of_baseWarm_and_mixing
       balancedRejectedStateMeasure q I sigma2 pi Set.univ :=
     balancedRejectedStateMeasure_mass_ge_half q I hsigma2 pi
   have hfirstBlock : forall mu : Measure (AmbientSpace q.n),
-      IsProbabilityMeasure mu -> Arlib.IsWarm 2 mu rho ->
+      IsProbabilityMeasure mu -> ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho ->
       MeasureLeUpTo
         ((mu.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -419,7 +419,7 @@ theorem approxIndepFun_balancedTransition_of_baseWarm_and_mixing
         (pi.map some) (capFirst + mixFirst) := by
     intro mu hmu hwarm
     let _ : IsProbabilityMeasure mu := hmu
-    have hwarmPi : Arlib.IsWarm (2 * M) mu pi :=
+    have hwarmPi : ArlibCommunity.Foundations.Convex.IsWarm (2 * M) mu pi :=
       hwarm.trans hbaseWarm
     exact
       bind_balancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationary_of_isWarm
@@ -452,7 +452,7 @@ theorem approxIndepFun_balancedTransition_of_warm_blocks
     (hrejectedLower : (2 : ENNReal)⁻¹ ≤
       balancedRejectedStateMeasure q I sigma2 pi Set.univ)
     (hfirstBlock : forall mu : Measure (AmbientSpace q.n),
-      IsProbabilityMeasure mu -> Arlib.IsWarm 2 mu rho ->
+      IsProbabilityMeasure mu -> ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho ->
       MeasureLeUpTo
         ((mu.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -460,7 +460,7 @@ theorem approxIndepFun_balancedTransition_of_warm_blocks
         (pi.map some) firstError)
     (hretryBlock :
       let rejected := balancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -532,7 +532,7 @@ theorem approxIndepFun_balancedTransition_history_of_warm_blocks
       balancedRejectedStateMeasure q I sigma2 pi Set.univ)
     (hfirstBlock : forall mu : Measure (AmbientSpace q.n),
       IsProbabilityMeasure mu ->
-      Arlib.IsWarm 2 mu (history.map state) ->
+      ArlibCommunity.Foundations.Convex.IsWarm 2 mu (history.map state) ->
       MeasureLeUpTo
         ((mu.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -540,7 +540,7 @@ theorem approxIndepFun_balancedTransition_history_of_warm_blocks
         (pi.map some) firstError)
     (hretryBlock :
       let rejected := balancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap

@@ -3,8 +3,8 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.Background.Ttc.Volume.LVNormTailHazard
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Convexity.LocalizationNeedleInBody
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Convexity.LocalizationLSC
+import ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationNeedleInBody
+import ArlibCommunity.Foundations.Convex.Localization.Analysis.LocalizationLSC
 
 /-!
 # Localization bridge for the direct LV norm-tail route
@@ -19,7 +19,7 @@ exponential-extremizer conclusion is requested.
 namespace Ttc.CVAdaptive
 
 open MeasureTheory Set
-open Arlib
+open ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex
 
 variable {n : ℕ}
 

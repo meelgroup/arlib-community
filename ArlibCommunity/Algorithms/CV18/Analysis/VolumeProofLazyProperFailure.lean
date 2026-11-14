@@ -3,7 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofLazyProperProgram
-import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.MarkovChains.Continuous.SpeedyGaussianConductance
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.SpeedyGaussianConductance
 
 /-!
 # Failure bounds for the executable CV18 proper-step counter
@@ -12,6 +12,9 @@ This module proves a direct Markov cutoff inequality for the actual finite
 membership-oracle recursion. A Bellman potential avoids identifying every
 stopped-path cylinder with the independently restarted trajectory model.
 -/
+
+open Arlib
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
 
 namespace ArlibCommunity.Algorithms.CV18
 
@@ -153,8 +156,7 @@ theorem natCast_mul_cappedProperMarkedLaw_none_le
 
 end ArlibCommunity.Algorithms.CV18
 
-namespace Arlib.MarkovChains
-
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 
@@ -418,11 +420,10 @@ theorem mul_natCast_mul_bind_cappedLazyProperMarkedLaw_none_le
     _ ≤ (properSteps : ℝ≥0∞) * M * 1 := by gcongr
     _ = (properSteps : ℝ≥0∞) * M := mul_one _
 
-end Arlib.MarkovChains
-
+end ArlibCommunity.Algorithms.CV18
 namespace ArlibCommunity.Algorithms.CV18
 
-open MeasureTheory ProbabilityTheory Metric Arlib Arlib.MarkovChains
+open MeasureTheory ProbabilityTheory Metric Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 open scoped ENNReal
 
 /-- The paper's advertised `1/2` average-conductance cutoff bound, now stated

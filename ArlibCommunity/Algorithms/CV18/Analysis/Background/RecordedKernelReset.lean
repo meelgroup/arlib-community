@@ -110,7 +110,7 @@ theorem exists_historyRecordedOutputReset_of_tvLe
     (hprojectRecord : ∀ history result,
       projectOld (record history (observe result)) = projectOld history)
     {epsilon : ENNReal}
-    (hnext : Arlib.TVLe
+    (hnext : ArlibCommunity.Foundations.Convex.TVLe
       ((historyRawOutputLaw sourceLaw K).map Prod.snd) target epsilon) :
     ∃ reference : Measure (H × X),
       IsProbabilityMeasure reference ∧

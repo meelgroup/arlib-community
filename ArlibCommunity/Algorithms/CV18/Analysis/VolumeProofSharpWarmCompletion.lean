@@ -14,7 +14,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Set
 open scoped ENNReal
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- A probability law dominated by an `M`-warm good measure plus a small bad
 measure can be repaired, at the bad-mass cost, to an exactly `M`-warm
@@ -25,10 +25,10 @@ theorem exists_warm_probability_measureLeUpTo_of_le_good_add_bad_sharp
     (mu good bad pi : Measure Omega)
     [IsProbabilityMeasure mu] [IsProbabilityMeasure pi] [IsFiniteMeasure bad]
     {M eta : ENNReal} (hM : 1 ≤ M) (hMtop : M ≠ ⊤)
-    (hle : mu ≤ good + bad) (hgood : Arlib.IsWarm M good pi)
+    (hle : mu ≤ good + bad) (hgood : ArlibCommunity.Foundations.Convex.IsWarm M good pi)
     (hbad : bad Set.univ ≤ eta) :
     ∃ nu : Measure Omega, IsProbabilityMeasure nu ∧
-      Arlib.IsWarm M nu pi ∧ MeasureLeUpTo mu nu eta := by
+      ArlibCommunity.Foundations.Convex.IsWarm M nu pi ∧ MeasureLeUpTo mu nu eta := by
   let residual := mu - bad
   have hresidualLeGood : residual ≤ good :=
     Measure.sub_le_of_le_add hle

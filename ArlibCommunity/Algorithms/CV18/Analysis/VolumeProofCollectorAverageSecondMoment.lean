@@ -11,8 +11,9 @@ restore its mean and divide by the sample count, producing exactly the raw
 second moment of the empirical average.
 -/
 
-namespace Arlib.MarkovChains
+open ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory ProbabilityTheory
 
 variable {S : Type*} [MeasurableSpace S]
@@ -136,4 +137,4 @@ theorem integral_markovSumLaw_centered_average_sq_le
 #print axioms integral_markovSumLaw_centered_add_mean_sq_le
 #print axioms integral_markovSumLaw_centered_average_sq_le
 
-end Arlib.MarkovChains
+end ArlibCommunity.Algorithms.CV18

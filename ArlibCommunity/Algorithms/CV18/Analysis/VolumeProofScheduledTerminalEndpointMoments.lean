@@ -17,14 +17,14 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open _root_.Arlib
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- Total variation transfers a squared observable when its common bound is
 known almost everywhere under both probability measures. -/
-theorem Arlib.TVLe.integral_sq_le_of_ae_nonnegative_le
+theorem ArlibCommunity.Foundations.Convex.TVLe.integral_sq_le_of_ae_nonnegative_le
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
-    {epsilon : ENNReal} (h : Arlib.TVLe mu nu epsilon)
+    {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
     (hepsilon : epsilon ≠ ⊤)
     {f : S → ℝ} (hf : Measurable f) {B : ℝ} (hB : 0 < B)
     (hf0mu : ∀ᵐ x ∂mu, 0 ≤ f x)
@@ -51,7 +51,7 @@ theorem Arlib.TVLe.integral_sq_le_of_ae_nonnegative_le
     filter_upwards [hgeqnu] with x hx
     rw [hx]
   rw [← integral_congr_ae hsqmu, ← integral_congr_ae hsqnu]
-  exact Arlib.TVLe.integral_sq_le_of_nonnegative_le
+  exact ArlibCommunity.Foundations.Convex.TVLe.integral_sq_le_of_nonnegative_le
     h hepsilon hg hB hg0 hgB
 
 /-- The zero-filled terminal weight lies in `[0, exp (1/2)]` under every
@@ -144,7 +144,7 @@ theorem integral_iterated_retainedOption_uniform_terminal_abs_sub_ideal_le
   let _ : IsProbabilityMeasure actual :=
     iteratedKernelLaw_isProbabilityMeasure (fun _ => K) exactSome inferInstance
       (fun _ => hK.1) (fun _ => hK.2) samples
-  have htv : Arlib.TVLe actual exactSome epsilon := by
+  have htv : ArlibCommunity.Foundations.Convex.TVLe actual exactSome epsilon := by
     simpa [actual, exactSome, exact, K, epsilon, s] using
       (iterated_figureOneFinalScheduledRetainedOptionKernel_from_truncated_exact_leUpTo
         q I (terminalPhaseSteps q) samples).to_tvLe
@@ -175,7 +175,7 @@ theorem integral_iterated_retainedOption_uniform_terminal_abs_sub_ideal_le
   have hexactB : ∀ᵐ result ∂exactSome, f result ≤ Real.exp (1 / 2) := by
     simpa [exactSome, exact, s, f, scheduleValue_terminalPhaseSteps] using
       hexactBounds.mono fun _ hx => hx.2
-  have htransfer := Arlib.TVLe.integral_le_of_ae_nonnegative_le htv
+  have htransfer := ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_ae_nonnegative_le htv
     hepsilonTop (measurable_retainedOptionWeight
       (measurable_uniformRatioWeight (terminalVariance q)))
     (Real.exp_pos _) hactual0 hactualB hexact0 hexactB
@@ -226,7 +226,7 @@ theorem integral_iterated_retainedOption_uniform_terminal_sq_le
   let _ : IsProbabilityMeasure actual :=
     iteratedKernelLaw_isProbabilityMeasure (fun _ => K) exactSome inferInstance
       (fun _ => hK.1) (fun _ => hK.2) samples
-  have htv : Arlib.TVLe actual exactSome epsilon := by
+  have htv : ArlibCommunity.Foundations.Convex.TVLe actual exactSome epsilon := by
     simpa [actual, exactSome, exact, K, epsilon, s] using
       (iterated_figureOneFinalScheduledRetainedOptionKernel_from_truncated_exact_leUpTo
         q I (terminalPhaseSteps q) samples).to_tvLe
@@ -257,7 +257,7 @@ theorem integral_iterated_retainedOption_uniform_terminal_sq_le
   have hexactB : ∀ᵐ result ∂exactSome, f result ≤ Real.exp (1 / 2) := by
     simpa [exactSome, exact, s, f, scheduleValue_terminalPhaseSteps] using
       hexactBounds.mono fun _ hx => hx.2
-  have htransfer := Arlib.TVLe.integral_sq_le_of_ae_nonnegative_le htv
+  have htransfer := ArlibCommunity.Foundations.Convex.TVLe.integral_sq_le_of_ae_nonnegative_le htv
     hepsilonTop (measurable_retainedOptionWeight
       (measurable_uniformRatioWeight (terminalVariance q)))
     (Real.exp_pos _) hactual0 hactualB hexact0 hexactB
@@ -300,7 +300,7 @@ theorem integral_iterated_retainedOption_uniform_terminal_sq_le
   simpa [actual, exactSome, exact, K, epsilon, f, s,
     scheduleValue_terminalPhaseSteps] using hfinal
 
-#print axioms Arlib.TVLe.integral_sq_le_of_ae_nonnegative_le
+#print axioms ArlibCommunity.Foundations.Convex.TVLe.integral_sq_le_of_ae_nonnegative_le
 #print axioms integral_iterated_retainedOption_uniform_terminal_abs_sub_ideal_le
 #print axioms integral_iterated_retainedOption_uniform_terminal_sq_le
 

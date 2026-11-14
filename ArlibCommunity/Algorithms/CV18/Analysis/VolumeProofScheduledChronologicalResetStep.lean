@@ -16,7 +16,7 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open _root_.Arlib
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 noncomputable section
 
@@ -167,7 +167,7 @@ theorem exists_scheduledTraceRecordedReset_with_approxIndep
     [IsProbabilityMeasure target]
     (htargetGood : ∀ᵐ result ∂target, ScheduledResetPairGood result)
     {delta : ENNReal} (hdelta : delta ≠ ⊤)
-    (hnext : Arlib.TVLe
+    (hnext : ArlibCommunity.Foundations.Convex.TVLe
       ((sequentialPairLaw source
         (scheduledResetPairKernel q I phase)).map Prod.snd) target delta)
     (oldStatistic : ScheduledBalancedCoolingTrace q.n → ℝ)

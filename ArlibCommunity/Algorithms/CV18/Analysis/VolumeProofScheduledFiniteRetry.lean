@@ -15,7 +15,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Metric Set
 open scoped ENNReal Pointwise
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- The scheduled balanced accept/reject decision, retaining the unscaled
 speedy state on either branch. -/
@@ -545,7 +545,7 @@ theorem bind_scheduledBalancedRejectedTransition_leUpTo_acceptedTarget
       scheduledBalancedRejectedStateMeasure q I sigma2 pi Set.univ)
     (hblock :
       let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -553,7 +553,7 @@ theorem bind_scheduledBalancedRejectedTransition_leUpTo_acceptedTarget
         (pi.map some) delta) :
     let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
     let rejectMass := rejected Set.univ
-    let rejectedProb := Arlib.condOn rejected Set.univ
+    let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
     ∀ attempts,
       MeasureLeUpTo
         (rejectedProb.bind
@@ -567,7 +567,7 @@ theorem bind_scheduledBalancedRejectedTransition_leUpTo_acceptedTarget
   let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
   let acceptMass := accepted Set.univ
   let rejectMass := rejected Set.univ
-  let rejectedProb := Arlib.condOn rejected Set.univ
+  let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
   let target := scheduledBalancedAccuracyGaussianAcceptedTargetLaw
     q I sigma2 pi
   let targetSome := target.map some
@@ -583,7 +583,7 @@ theorem bind_scheduledBalancedRejectedTransition_leUpTo_acceptedTarget
     exact ne_top_of_le_ne_top (measure_ne_top pi Set.univ) <|
       Measure.le_iff'.mp hle Set.univ
   let _ : IsProbabilityMeasure rejectedProb :=
-    Arlib.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
   have hmass : acceptMass + rejectMass = 1 := by
     simpa [acceptMass, rejectMass, accepted, rejected] using
       scheduledBalancedAcceptedRejected_mass_add_eq_one q I hsigma2 pi
@@ -649,7 +649,7 @@ theorem bind_scheduledBalancedTransition_leUpTo_acceptedTarget
       (pi.map some) firstError)
     (hretryBlock :
       let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -670,7 +670,7 @@ theorem bind_scheduledBalancedTransition_leUpTo_acceptedTarget
   let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
   let acceptMass := accepted Set.univ
   let rejectMass := rejected Set.univ
-  let rejectedProb := Arlib.condOn rejected Set.univ
+  let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
   let target := scheduledBalancedAccuracyGaussianAcceptedTargetLaw
     q I sigma2 pi
   let targetSome := target.map some
@@ -686,7 +686,7 @@ theorem bind_scheduledBalancedTransition_leUpTo_acceptedTarget
     exact ne_top_of_le_ne_top (measure_ne_top pi Set.univ) <|
       Measure.le_iff'.mp hle Set.univ
   let _ : IsProbabilityMeasure rejectedProb :=
-    Arlib.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
   have hmass : acceptMass + rejectMass = 1 := by
     simpa [acceptMass, rejectMass, accepted, rejected] using
       scheduledBalancedAcceptedRejected_mass_add_eq_one q I hsigma2 pi
@@ -754,8 +754,8 @@ theorem scheduledBalancedAccuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_
   have htargetTop : acceptedTarget Set.univ ≠ ⊤ := by
     rw [htargetMass]
     exact hacceptedTop
-  change IsProbabilityMeasure (Arlib.condOn acceptedTarget Set.univ)
-  exact Arlib.isProbabilityMeasure_condOn acceptedTarget htarget0 htargetTop
+  change IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn acceptedTarget Set.univ)
+  exact ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn acceptedTarget htarget0 htargetTop
 
 /-- Total-variation form of the scheduled finite-retry domination. -/
 theorem bind_scheduledBalancedTransition_tvLe_acceptedTarget
@@ -776,13 +776,13 @@ theorem bind_scheduledBalancedTransition_tvLe_acceptedTarget
       (pi.map some) firstError)
     (hretryBlock :
       let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
             properStride)).map optionSnd)
         (pi.map some) retryError) :
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       (rho.bind
         (scheduledBalancedAccuracyTransitionLawAux q I sigma2 proposalCap
           properStride (attempts + 1)))
@@ -809,7 +809,7 @@ theorem bind_scheduledBalancedTransition_tvLe_acceptedTarget
   have hdom := bind_scheduledBalancedTransition_leUpTo_acceptedTarget
     q I hsigma2 proposalCap properStride attempts rho pi
       hacceptedLower hrejectedLower hfirstBlock hretryBlock
-  change Arlib.TVLe (rho.bind K) (target.map some) _
+  change ArlibCommunity.Foundations.Convex.TVLe (rho.bind K) (target.map some) _
   exact hdom.to_tvLe
 
 /-- Cap-aware corrected allocation: one cap budget and one mixing budget are
@@ -834,7 +834,7 @@ theorem bind_scheduledBalancedTransition_tvLe_truncatedGaussian_corrected
       let delta := proposalRadius q sigma2
       let pi := ellGaussianProb K delta sigma2
       let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -846,7 +846,7 @@ theorem bind_scheduledBalancedTransition_tvLe_truncatedGaussian_corrected
       let pi := ellGaussianProb K delta sigma2
       (scheduledBalancedRejectedStateMeasure q I sigma2 pi Set.univ) ^
           (attempts + 1) ≤ figureOneCorrectedRetryTailBudget q) :
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       (rho.bind
         (scheduledBalancedAccuracyTransitionLawAux q I sigma2 proposalCap
           properStride (attempts + 1)))

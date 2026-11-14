@@ -11,7 +11,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
-open Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 open scoped ENNReal
 
 /-- The successful `Option` outcomes whose payload lies in `A`. -/
@@ -588,10 +588,10 @@ theorem successfulEndpointLaw_bind_cappedProperCollectLaw_isWarm
     (delta s : ℝ) {f : EuclideanSpace ℝ (Fin n) → ℝ}
     (hf : Measurable f) (rawCap properStride samples : ℕ)
     {mu pi : Measure (EuclideanSpace ℝ (Fin n))} {M : ℝ≥0∞}
-    (hwarm : Arlib.IsWarm M mu pi)
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu pi)
     (hinv : Kernel.Invariant
       ((lazy (speedyMetropolisGaussian K delta s)) ^ properStride) pi) :
-    Arlib.IsWarm M
+    ArlibCommunity.Foundations.Convex.IsWarm M
       (successfulEndpointLaw
         (mu.bind fun current => cappedProperCollectLaw
           (lazyProperProposalGaussianAux K hK delta s) f
@@ -599,7 +599,7 @@ theorem successfulEndpointLaw_bind_cappedProperCollectLaw_isWarm
   let P := (lazy (speedyMetropolisGaussian K delta s)) ^ properStride
   have hle := successfulEndpointLaw_bind_cappedProperCollectLaw_le_iterate
     K hK delta s hf rawCap properStride samples mu
-  have hwarmIter : Arlib.IsWarm M (iterate P mu samples) pi :=
+  have hwarmIter : ArlibCommunity.Foundations.Convex.IsWarm M (iterate P mu samples) pi :=
     isWarm_iterate_of_invariant hwarm hinv samples
   intro B hB
   exact (Measure.le_iff.mp hle B hB).trans (hwarmIter B hB)
@@ -626,7 +626,7 @@ theorem bind_cappedProperCollectLaw_success_deviation_le_of_isWarm
     {B : ℝ} (hB : 0 ≤ B) (hbound : ∀ x, |f x - m| ≤ B)
     (hgap : 0 < spectralGap
       ((lazy (speedyMetropolisGaussian K delta s)) ^ properStride) pi)
-    {M : ℝ≥0∞} (hwarm : Arlib.IsWarm M mu pi)
+    {M : ℝ≥0∞} (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu pi)
     {c : ℝ} (hc : 0 < c) :
     (mu.bind fun current => cappedProperCollectLaw
         (lazyProperProposalGaussianAux K hK delta s) f

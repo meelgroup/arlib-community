@@ -29,11 +29,11 @@ theorem exists_coordinateMarginalReset_of_tvLe
     (mu : Measure (ι → X)) (coordinate : ι) (target : Measure X)
     [IsProbabilityMeasure mu] [IsProbabilityMeasure target]
     {epsilon : ENNReal}
-    (hcoordinate : Arlib.TVLe
+    (hcoordinate : ArlibCommunity.Foundations.Convex.TVLe
       (mu.map fun value => value coordinate) target epsilon) :
     ∃ reference : Measure (ι → X),
       IsProbabilityMeasure reference ∧
-      Arlib.TVLe mu reference epsilon ∧
+      ArlibCommunity.Foundations.Convex.TVLe mu reference epsilon ∧
       reference.map (fun value => value coordinate) = target ∧
       ∀ other, other ≠ coordinate →
         reference.map (fun value => value other) =
@@ -115,11 +115,11 @@ theorem exists_finiteCoordinateMarginalReset
     (htargetProb : ∀ i, IsProbabilityMeasure (target i))
     (error : ℕ → ENNReal)
     (hcoordinate : ∀ i,
-      Arlib.TVLe (mu.map fun value => value i) (target i) (error i))
+      ArlibCommunity.Foundations.Convex.TVLe (mu.map fun value => value i) (target i) (error i))
     (count : ℕ) :
     ∃ reference : Measure (ℕ → X),
       IsProbabilityMeasure reference ∧
-      Arlib.TVLe mu reference (∑ i ∈ Finset.range count, error i) ∧
+      ArlibCommunity.Foundations.Convex.TVLe mu reference (∑ i ∈ Finset.range count, error i) ∧
       (∀ i, i < count →
         reference.map (fun value => value i) = target i) ∧
       (∀ i, count ≤ i →
@@ -128,7 +128,7 @@ theorem exists_finiteCoordinateMarginalReset
   induction count with
   | zero =>
       refine ⟨mu, inferInstance, ?_, ?_, ?_⟩
-      · simpa using Arlib.TVLe.refl mu
+      · simpa using ArlibCommunity.Foundations.Convex.TVLe.refl mu
       · intro i hi
         omega
       · intro i _
@@ -139,7 +139,7 @@ theorem exists_finiteCoordinateMarginalReset
       let _ : IsProbabilityMeasure (target count) := htargetProb count
       have holdCoordinate : oldReference.map (fun value => value count) =
           mu.map fun value => value count := holdFuture count le_rfl
-      have hresetCoordinate : Arlib.TVLe
+      have hresetCoordinate : ArlibCommunity.Foundations.Convex.TVLe
           (oldReference.map fun value => value count)
           (target count) (error count) := by
         rw [holdCoordinate]

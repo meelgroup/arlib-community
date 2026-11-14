@@ -9,7 +9,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.Background.Ttc.Volume.LVNormTailS
 namespace Ttc.CVAdaptive
 
 open MeasureTheory Set
-open Arlib
+open ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex
 
 variable {n : ℕ}
 
@@ -126,12 +126,12 @@ theorem localized_normTail_cutoff_integral_nonpos
     have h := hqle (needleMap p e t)
     rw [indicator_of_notMem hnot] at h
     linarith
-  have hLI := Arlib.intervalIntegrable_of_subinterval hDint le_rfl hal (hlr.trans hrb)
-  have hMI := Arlib.intervalIntegrable_of_subinterval hDint hal hlr hrb
-  have hRI := Arlib.intervalIntegrable_of_subinterval hDint (hal.trans hlr) hrb le_rfl
-  have hqLI := Arlib.intervalIntegrable_of_subinterval hqint le_rfl hal (hlr.trans hrb)
-  have hqMI := Arlib.intervalIntegrable_of_subinterval hqint hal hlr hrb
-  have hqRI := Arlib.intervalIntegrable_of_subinterval hqint (hal.trans hlr) hrb le_rfl
+  have hLI := ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint le_rfl hal (hlr.trans hrb)
+  have hMI := ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint hal hlr hrb
+  have hRI := ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hDint (hal.trans hlr) hrb le_rfl
+  have hqLI := ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hqint le_rfl hal (hlr.trans hrb)
+  have hqMI := ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hqint hal hlr hrb
+  have hqRI := ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hqint (hal.trans hlr) hrb le_rfl
   have hleftQ : (∫ t in a..l, q (needleMap p e t) * D t) ≤
       (1 - 1 / (2 : ℝ) ^ N) * L := by
     rw [← intervalIntegral.integral_const_mul]

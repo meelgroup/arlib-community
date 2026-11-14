@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Uddalok Sarkar
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofProperStep
-import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.MarkovChains.Continuous.MarkedTimeChange
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.MarkedTimeChange
 
 /-!
 # Proper proposals for the Gaussian Metropolis ball walk
@@ -22,8 +22,9 @@ In particular, counting changes of state would condition on both events (landing
 passing the Metropolis filter) and therefore would not give the speedy Metropolis chain.
 -/
 
-namespace Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory ProbabilityTheory Metric
 open scoped ENNReal
 
@@ -98,6 +99,5 @@ theorem map_snd_properProposalGaussianAux_apply
     Measure.dirac_apply' _ ht]
   rfl
 
-end Arlib.MarkovChains
-
-#print axioms Arlib.MarkovChains.map_snd_properProposalGaussianAux_apply
+end ArlibCommunity.Algorithms.CV18
+#print axioms ArlibCommunity.Algorithms.CV18.map_snd_properProposalGaussianAux_apply

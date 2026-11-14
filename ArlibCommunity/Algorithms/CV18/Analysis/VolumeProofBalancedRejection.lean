@@ -20,7 +20,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 private theorem ofReal_one_half_balanced :
     ENNReal.ofReal (1 / 2 : ℝ) = (2 : ENNReal)⁻¹ := by
@@ -83,7 +83,7 @@ noncomputable def balancedAccuracyGaussianRejectionAttempt (q : VolumeParams)
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-            Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target then
+            ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target then
         .pure (true, target)
       else
         .pure (false, target)
@@ -111,7 +111,7 @@ theorem balancedAccuracyGaussianRejectionAttempt_stronglyMeasurable
         ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
         ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
         ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-          Arlib.MarkovChains.gaussianScaleAcceptance sigma2
+          ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2
             (scaleFactor q) target then
       (true, target)
     else (false, target)
@@ -128,7 +128,7 @@ theorem balancedAccuracyGaussianRejectionAttempt_stronglyMeasurable
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-            Arlib.MarkovChains.gaussianScaleAcceptance sigma2
+            ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2
               (scaleFactor q) target) := by
         intro coin h
         exact heligible ⟨h.1, h.2.1, h.2.2.1⟩
@@ -140,7 +140,7 @@ theorem balancedAccuracyGaussianRejectionAttempt_stronglyMeasurable
             ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
             ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
             ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-              Arlib.MarkovChains.gaussianScaleAcceptance sigma2
+              ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2
                 (scaleFactor q) target then
           .pure (true, target) else .pure (false, target))) =
         fun coin => Measure.dirac (output coin) by
@@ -149,7 +149,7 @@ theorem balancedAccuracyGaussianRejectionAttempt_stronglyMeasurable
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-            Arlib.MarkovChains.gaussianScaleAcceptance sigma2
+            ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2
               (scaleFactor q) target
       · simp [h, output, MembershipOracleProgram.runEstimate]
       · simp [h, output, MembershipOracleProgram.runEstimate]]
@@ -213,12 +213,12 @@ theorem runEstimate_balancedAccuracyGaussianRejectionAttempt
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-            Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target) =
+            ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target) =
         (coin ≤ accept.toReal) := by
       intro coin
       have hacceptEq : balancedAccuracyGaussianAcceptance q I sigma2 current =
           (2 : ENNReal)⁻¹ *
-            Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target := by
+            ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target := by
         unfold balancedAccuracyGaussianAcceptance
           accuracyGaussianRejectionAcceptance
         rw [Set.indicator_of_mem ht]
@@ -274,7 +274,7 @@ theorem runEstimate_balancedAccuracyGaussianRejectionAttempt
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-            Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target) := by
+            ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target) := by
       intro coin h
       exact hineligible ⟨h.1, h.2.1, h.2.2.1⟩
     dsimp only [c, target] at hfalse
@@ -347,7 +347,7 @@ theorem balancedAccuracyGaussianRejectionKernel_true_prod
 noncomputable def balancedAccuracyGaussianAcceptedTargetLaw
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (mu : Measure (AmbientSpace q.n)) : Measure (AmbientSpace q.n) :=
-  Arlib.condOn
+  ArlibCommunity.Foundations.Convex.condOn
     ((mu.withDensity (balancedAccuracyGaussianAcceptance q I sigma2)).map
       (fun x => (scaleFactor q)⁻¹ • x)) Set.univ
 
@@ -367,17 +367,17 @@ theorem balancedAccuracyGaussianAcceptedTargetLaw_eq
   unfold balancedAccuracyGaussianAcceptedTargetLaw
     accuracyGaussianAcceptedTargetLaw
   unfold balancedAccuracyGaussianAcceptance
-  change Arlib.condOn
+  change ArlibCommunity.Foundations.Convex.condOn
       ((mu.withDensity ((2 : ENNReal)⁻¹ •
         accuracyGaussianRejectionAcceptance q I sigma2)).map scale)
         Set.univ = _
   rw [withDensity_smul (2 : ENNReal)⁻¹
     (measurable_accuracyGaussianRejectionAcceptance q I sigma2)]
-  change Arlib.condOn (((2 : ENNReal)⁻¹ •
+  change ArlibCommunity.Foundations.Convex.condOn (((2 : ENNReal)⁻¹ •
       mu.withDensity (accuracyGaussianRejectionAcceptance q I sigma2)).map
         scale) Set.univ = _
   rw [Measure.map_smul (hf := by fun_prop)]
-  exact Arlib.MarkovChains.condOn_smul_cv18 _ MeasurableSet.univ
+  exact ArlibCommunity.Algorithms.CV18.condOn_smul_cv18 _ MeasurableSet.univ
     (by norm_num) (by norm_num)
 
 theorem balancedAccuracyGaussianAcceptedTargetLaw_tv_cv18
@@ -385,8 +385,8 @@ theorem balancedAccuracyGaussianAcceptedTargetLaw_tv_cv18
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {mu0 : Measure (AmbientSpace q.n)} [IsProbabilityMeasure mu0]
     {M mixError : ℝ} (hM : 1 ≤ M)
-    (hwarm : Arlib.IsWarm (ENNReal.ofReal M) mu0
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (hmixError0 : 0 < mixError) (hmixError64 : mixError ≤ 1 / 64)
@@ -395,10 +395,10 @@ theorem balancedAccuracyGaussianAcceptedTargetLaw_tv_cv18
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤ (t : ℝ)) :
     let K := accuracyPhaseTruncatedBody q I sigma2
     let delta := figureOneProposalRadius q sigma2
-    let P := Arlib.MarkovChains.lazy
-      (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2)
-    let mixed := Arlib.MarkovChains.iterate P mu0 t
-    Arlib.TVLe
+    let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+      (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K delta sigma2)
+    let mixed := ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu0 t
+    ArlibCommunity.Foundations.Convex.TVLe
       (balancedAccuracyGaussianAcceptedTargetLaw q I sigma2 mixed)
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n))
@@ -516,8 +516,8 @@ theorem balancedAcceptedStationary_isWarm
     let K := accuracyPhaseTruncatedBody q I sigma2
     let delta := figureOneProposalRadius q sigma2
     let pi := ellGaussianProb K delta sigma2
-    _root_.Arlib.IsWarm 16
-      (Arlib.condOn
+    _root_.ArlibCommunity.Foundations.Convex.IsWarm 16
+      (ArlibCommunity.Foundations.Convex.condOn
         (balancedAcceptedStateMeasure q I sigma2 pi) Set.univ) pi := by
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
@@ -540,7 +540,7 @@ theorem balancedAcceptedStationary_isWarm
     simpa [branch] using balancedAcceptedStateMeasure_le_half_smul
       q I hsigma2 pi
   intro A hA
-  rw [Arlib.condOn_def, Measure.restrict_univ,
+  rw [ArlibCommunity.Foundations.Convex.condOn_def, Measure.restrict_univ,
     Measure.smul_apply, smul_eq_mul]
   have hbranch : branch A ≤ (2 : ENNReal)⁻¹ * pi A := by
     simpa [Measure.smul_apply, smul_eq_mul] using Measure.le_iff.mp hle A hA
@@ -567,8 +567,8 @@ theorem balancedRejectedStationary_isWarm
     let K := accuracyPhaseTruncatedBody q I sigma2
     let delta := figureOneProposalRadius q sigma2
     let pi := ellGaussianProb K delta sigma2
-    _root_.Arlib.IsWarm 2
-      (Arlib.condOn
+    _root_.ArlibCommunity.Foundations.Convex.IsWarm 2
+      (ArlibCommunity.Foundations.Convex.condOn
         (balancedRejectedStateMeasure q I sigma2 pi) Set.univ) pi := by
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
@@ -593,7 +593,7 @@ theorem balancedRejectedStationary_isWarm
   have hle : branch ≤ pi := by
     simpa [branch] using balancedRejectedStateMeasure_le q I sigma2 pi
   intro A hA
-  rw [Arlib.condOn_def, Measure.restrict_univ,
+  rw [ArlibCommunity.Foundations.Convex.condOn_def, Measure.restrict_univ,
     Measure.smul_apply, smul_eq_mul]
   have hbranch : branch A ≤ pi A := Measure.le_iff.mp hle A hA
   calc
@@ -614,31 +614,31 @@ theorem mixesWithin_balancedRejectedStationary_cv18
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤ (t : ℝ)) :
     let K := accuracyPhaseTruncatedBody q I sigma2
     let delta := figureOneProposalRadius q sigma2
-    let pi := Arlib.MarkovChains.ellGaussianProb K delta sigma2
+    let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta sigma2
     let rejected := balancedRejectedStateMeasure q I sigma2 pi
-    Arlib.MarkovChains.MixesWithin
-      (Arlib.MarkovChains.lazy
-        (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2))
-      pi (Arlib.condOn rejected Set.univ) t (ENNReal.ofReal mixError) := by
+    ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin
+      (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+        (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K delta sigma2))
+      pi (ArlibCommunity.Foundations.Convex.condOn rejected Set.univ) t (ENNReal.ofReal mixError) := by
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
-  let pi := Arlib.MarkovChains.ellGaussianProb K delta sigma2
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta sigma2
   let rejected := balancedRejectedStateMeasure q I sigma2 pi
   have hdelta : 0 < delta := figureOneProposalRadius_pos q hsigma2
-  have hmass0 : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2
+  have hmass0 : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2
       Set.univ ≠ 0 :=
-    Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+    ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
       (accuracyPhaseTruncatedBody_measurable q I sigma2)
       (accuracyPhaseTruncatedBody_convex q I sigma2)
       (accuracyPhaseTruncatedBody_isCompact q I sigma2).isBounded
       (accuracyPhaseTruncatedBody_volume_ne_zero q I hsigma2) hdelta sigma2
-  have hmasstop : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2
+  have hmasstop : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2
       Set.univ ≠ ⊤ :=
-    Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+    ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
       (accuracyPhaseTruncatedBody_volume_ne_top q I sigma2) delta hsigma2
   let _ : IsProbabilityMeasure pi :=
-    Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
+    ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   have hrejectedLower : (2 : ENNReal)⁻¹ ≤ rejected Set.univ := by
     simpa [rejected] using
       balancedRejectedStateMeasure_mass_ge_half q I hsigma2 pi
@@ -650,8 +650,8 @@ theorem mixesWithin_balancedRejectedStationary_cv18
         balancedRejectedStateMeasure_le q I sigma2 pi
     exact ne_top_of_le_ne_top (measure_ne_top pi Set.univ) <|
       Measure.le_iff'.mp hle Set.univ
-  let _ : IsProbabilityMeasure (Arlib.condOn rejected Set.univ) :=
-    Arlib.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn rejected Set.univ) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
   exact mixesWithin_accuracyPhaseTruncatedBody_figureOne_cv18
     q I hsigma2 (M := 2) (eps := mixError) (by norm_num)
     (by simpa [K, delta, pi, rejected] using
@@ -670,31 +670,31 @@ theorem mixesWithin_balancedAcceptedStationary_cv18
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤ (t : ℝ)) :
     let K := accuracyPhaseTruncatedBody q I sigma2
     let delta := figureOneProposalRadius q sigma2
-    let pi := Arlib.MarkovChains.ellGaussianProb K delta sigma2
+    let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta sigma2
     let accepted := balancedAcceptedStateMeasure q I sigma2 pi
-    Arlib.MarkovChains.MixesWithin
-      (Arlib.MarkovChains.lazy
-        (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2))
-      pi (Arlib.condOn accepted Set.univ) t (ENNReal.ofReal mixError) := by
+    ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin
+      (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+        (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K delta sigma2))
+      pi (ArlibCommunity.Foundations.Convex.condOn accepted Set.univ) t (ENNReal.ofReal mixError) := by
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
-  let pi := Arlib.MarkovChains.ellGaussianProb K delta sigma2
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta sigma2
   let accepted := balancedAcceptedStateMeasure q I sigma2 pi
   have hdelta : 0 < delta := figureOneProposalRadius_pos q hsigma2
-  have hmass0 : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2
+  have hmass0 : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2
       Set.univ ≠ 0 :=
-    Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+    ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
       (accuracyPhaseTruncatedBody_measurable q I sigma2)
       (accuracyPhaseTruncatedBody_convex q I sigma2)
       (accuracyPhaseTruncatedBody_isCompact q I sigma2).isBounded
       (accuracyPhaseTruncatedBody_volume_ne_zero q I hsigma2) hdelta sigma2
-  have hmasstop : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2
+  have hmasstop : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2
       Set.univ ≠ ⊤ :=
-    Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+    ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
       (accuracyPhaseTruncatedBody_volume_ne_top q I sigma2) delta hsigma2
   let _ : IsProbabilityMeasure pi :=
-    Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
+    ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   have hacceptedLower : ENNReal.ofReal (7 / 128 : ℝ) ≤
       accepted Set.univ := by
     simpa [accepted] using balancedAcceptedStateMeasure_mass_ge q I hsigma2
@@ -707,8 +707,8 @@ theorem mixesWithin_balancedAcceptedStationary_cv18
         balancedAcceptedStateMeasure_le_half_smul q I hsigma2 pi
     exact ne_top_of_le_ne_top (by simp) <|
       Measure.le_iff'.mp hle Set.univ
-  let _ : IsProbabilityMeasure (Arlib.condOn accepted Set.univ) :=
-    Arlib.isProbabilityMeasure_condOn accepted haccepted0 hacceptedTop
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn accepted Set.univ) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn accepted haccepted0 hacceptedTop
   exact mixesWithin_accuracyPhaseTruncatedBody_figureOne_cv18
     q I hsigma2 (M := 16) (eps := mixError) (by norm_num)
     (by simpa [K, delta, pi, accepted] using

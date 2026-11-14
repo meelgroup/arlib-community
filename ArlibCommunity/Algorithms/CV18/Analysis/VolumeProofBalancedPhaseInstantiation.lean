@@ -78,8 +78,8 @@ theorem balancedAccuracyFirstBlock_leUpTo_figureOnePerSample
     (proposalCap properStride : ℕ) (hproposalCap : 0 < proposalCap)
     (rho : Measure (AmbientSpace q.n)) [IsProbabilityMeasure rho]
     {M : ℝ} (hM : 1 ≤ M)
-    (hbaseWarm : Arlib.IsWarm (ENNReal.ofReal M) rho
-      (Arlib.MarkovChains.ellGaussianProb
+    (hbaseWarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) rho
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (hwalk : 4 * ((Real.log (2 * M) +
@@ -92,21 +92,21 @@ theorem balancedAccuracyFirstBlock_leUpTo_figureOnePerSample
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) *
         ENNReal.ofReal (sampleMixingError q / 2)) :
     ∀ mu : Measure (AmbientSpace q.n),
-      IsProbabilityMeasure mu → Arlib.IsWarm 2 mu rho →
+      IsProbabilityMeasure mu → ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho →
       MeasureLeUpTo
         ((mu.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
             properStride)).map optionSnd)
-        ((Arlib.MarkovChains.ellGaussianProb
+        ((ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
           (accuracyPhaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2).map some)
         (ENNReal.ofReal (sampleMixingError q)) := by
   intro mu hmu hwarm
   let _ : IsProbabilityMeasure mu := hmu
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
-  have hwarmPi : Arlib.IsWarm (ENNReal.ofReal (2 * M)) mu pi := by
+  have hwarmPi : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal (2 * M)) mu pi := by
     have htrans := hwarm.trans hbaseWarm
     rw [ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 2)]
     norm_num
@@ -116,15 +116,15 @@ theorem balancedAccuracyFirstBlock_leUpTo_figureOnePerSample
       (by nlinarith) hwarmPi
       (figureOneHalfPerSampleMixingError_pos q)
       (figureOneHalfPerSampleMixingError_le_one q) hwalk
-  have hmix : Arlib.TVLe
-      (Arlib.MarkovChains.iterate
-        (Arlib.MarkovChains.lazy
-          (Arlib.MarkovChains.speedyMetropolisGaussian
+  have hmix : ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.MarkovChainTheory.iterate
+        (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+          (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
             (accuracyPhaseTruncatedBody q I sigma2)
             (figureOneProposalRadius q sigma2) sigma2))
         mu properStride) pi
       (ENNReal.ofReal (sampleMixingError q / 2)) := by
-    simpa [Arlib.MarkovChains.MixesWithin, pi] using hmixWithin
+    simpa [ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin, pi] using hmixWithin
   have hblock :=
     bind_balancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationary_of_isWarm
       q I hsigma2 proposalCap properStride hproposalCap mu hwarmPi
@@ -150,11 +150,11 @@ theorem balancedAccuracyRetryBlock_leUpTo_figureOnePerSample
     (hcapBudget : ((properStride : ℕ) : ENNReal) * 2 ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) *
         ENNReal.ofReal (sampleMixingError q / 2)) :
-    let pi := Arlib.MarkovChains.ellGaussianProb
+    let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
       (accuracyPhaseTruncatedBody q I sigma2)
       (figureOneProposalRadius q sigma2) sigma2
     let rejected := balancedRejectedStateMeasure q I sigma2 pi
-    let rejectedProb := Arlib.condOn rejected Set.univ
+    let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
     MeasureLeUpTo
       ((rejectedProb.bind
         (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -185,8 +185,8 @@ theorem approxIndepFun_balancedTransition_history_figureOnePerSample
     (history : Measure H) [IsProbabilityMeasure history]
     (state : H → AmbientSpace q.n) (hstate : Measurable state)
     {M : ℝ} (hM : 1 ≤ M)
-    (hbaseWarm : Arlib.IsWarm (ENNReal.ofReal M) (history.map state)
-      (Arlib.MarkovChains.ellGaussianProb
+    (hbaseWarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) (history.map state)
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (hproposalCap : 0 < proposalCap)
@@ -212,7 +212,7 @@ theorem approxIndepFun_balancedTransition_history_figureOnePerSample
     (hpastProduct : Measurable pastProduct)
     (hnextEstimator : Measurable nextEstimator)
     (hretryAccuracy :
-      let pi := Arlib.MarkovChains.ellGaussianProb
+      let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2
       let rejectMass := balancedRejectedStateMeasure q I sigma2 pi Set.univ
@@ -225,22 +225,22 @@ theorem approxIndepFun_balancedTransition_history_figureOnePerSample
       (sequentialPairLaw history
         (balancedAccuracyTransitionLawAux q I sigma2 proposalCap
           properStride (attempts + 1) ∘ state)) := by
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   have hdelta : 0 < figureOneProposalRadius q sigma2 :=
     figureOneProposalRadius_pos q hsigma2
-  have hmass0 := Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+  have hmass0 := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
     (accuracyPhaseTruncatedBody_measurable q I sigma2)
     (accuracyPhaseTruncatedBody_convex q I sigma2)
     (accuracyPhaseTruncatedBody_isCompact q I sigma2).isBounded
     (accuracyPhaseTruncatedBody_volume_ne_zero q I hsigma2)
     hdelta sigma2
-  have hmasstop := Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+  have hmasstop := ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
     (accuracyPhaseTruncatedBody_volume_ne_top q I sigma2)
     (figureOneProposalRadius q sigma2) hsigma2
   let _ : IsProbabilityMeasure pi :=
-    Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
+    ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   have hacceptedLower : ENNReal.ofReal (7 / 128 : ℝ) ≤
       balancedAcceptedStateMeasure q I sigma2 pi Set.univ := by
     simpa [pi] using balancedAcceptedStateMeasure_mass_ge q I hsigma2
@@ -293,7 +293,7 @@ theorem approxIndepFun_balancedTransition_history_adjacent_figureOnePerSample
     (history : Measure H) [IsProbabilityMeasure history]
     (state : H → AmbientSpace q.n) (hstate : Measurable state)
     (hstateLaw : history.map state =
-      Arlib.MarkovChains.ellGaussianProb
+      ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I (scheduleValue q phase))
         (figureOneProposalRadius q (scheduleValue q phase))
         (scheduleValue q phase))
@@ -327,7 +327,7 @@ theorem approxIndepFun_balancedTransition_history_adjacent_figureOnePerSample
     (hnextEstimator : Measurable nextEstimator)
     (hretryAccuracy :
       let sigma2 := scheduleValue q (phase + 1)
-      let pi := Arlib.MarkovChains.ellGaussianProb
+      let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2
       let rejectMass := balancedRejectedStateMeasure q I sigma2 pi Set.univ
@@ -345,8 +345,8 @@ theorem approxIndepFun_balancedTransition_history_adjacent_figureOnePerSample
   let M := warmConstant q
   let sigma2 := scheduleValue q (phase + 1)
   have hsigma2 : 0 < sigma2 := scheduleValue_pos q (phase + 1)
-  have hbaseWarm : Arlib.IsWarm (ENNReal.ofReal M) (history.map state)
-      (Arlib.MarkovChains.ellGaussianProb
+  have hbaseWarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) (history.map state)
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2) := by
     rw [hstateLaw]

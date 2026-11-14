@@ -12,7 +12,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Metric Set
 open scoped ENNReal Pointwise
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 theorem two_speedyAdjacentWarmConstant_add_one_le_eight
     (q : VolumeParams) :
@@ -36,7 +36,7 @@ theorem bind_figureOneFinalScheduledAdjacentTransition_leUpTo_of_good_bad
     (rho mu bad : Measure (AmbientSpace q.n))
     [IsProbabilityMeasure rho] [IsProbabilityMeasure mu] [IsFiniteMeasure bad]
     {eta : ENNReal}
-    (hmuWarm : Arlib.IsWarm 2 mu rho)
+    (hmuWarm : ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho)
     (hrho : rho ≤
       ellGaussianProb
           (figureOneScheduledPhaseBody q I (scheduleValue q phase))

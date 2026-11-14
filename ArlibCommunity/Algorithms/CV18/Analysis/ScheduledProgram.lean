@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Arlib.Computation.Std
 import ArlibCommunity.Algorithms.CV18.Model.Pseudocode
+import ArlibCommunity.Foundations.Convex.Basic.GaussianWeight
 
 /-!
 # The certified program in its analysis form
@@ -19,6 +20,16 @@ figureOneFinalScheduledCappedValueProgram` defined here.
 open MeasureTheory
 
 namespace ArlibCommunity.Algorithms.CV18
+
+/-- `gaussianScaleAcceptance`, which the model states as an explicit ratio of exponentials, is
+the ratio of the Gaussian weights `ArlibCommunity.Foundations.Convex.gaussianWeight` at the two
+variances — the form the Markov-chain analysis uses. -/
+theorem gaussianScaleAcceptance_eq {n : ℕ} (variance c : ℝ) (x : EuclideanSpace ℝ (Fin n)) :
+    gaussianScaleAcceptance variance c x =
+      ArlibCommunity.Foundations.Convex.gaussianWeight variance x /
+        ArlibCommunity.Foundations.Convex.gaussianWeight (variance / c ^ 2) x :=
+  rfl
+
 
 open scoped ENNReal
 
@@ -181,7 +192,7 @@ noncomputable def scheduledBalancedAccuracyGaussianRejectionAttempt
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ phaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤ (2 : ENNReal)⁻¹ *
-            Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target then
+            ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target then
         .pure (true, target)
       else .pure (false, target)
 

@@ -284,7 +284,7 @@ theorem exists_recordedResetReference_of_nextMarginal_tvLe_preserving
     (hprojectRecord : ∀ history x,
       projectOld (record history (observe x)) = projectOld history)
     {epsilon : ENNReal}
-    (hnext : Arlib.TVLe
+    (hnext : ArlibCommunity.Foundations.Convex.TVLe
       ((prefixLaw.bind (historyRawNextKernel K)).map Prod.snd)
       target epsilon) :
     ∃ reference : Measure (H × X),
@@ -610,7 +610,7 @@ theorem exists_shadowRecordedReference_of_nextMarginal_tvLe
     (hreadRecord : ∀ history x,
       readNew (record history (observe x)) = observe x)
     {epsilon : ENNReal}
-    (hnext : Arlib.TVLe
+    (hnext : ArlibCommunity.Foundations.Convex.TVLe
       ((prefixLaw.bind (historyRawNextWithCopyKernel K)).map Prod.snd)
       target epsilon) :
     ∃ reference : Measure (H × X),
@@ -674,7 +674,7 @@ theorem exists_shadowRecordedReference_of_nextMarginal_tvLe_preserving
     (hprojectRecord : ∀ history x,
       projectOld (record history (observe x)) = projectOld history)
     {epsilon : ENNReal}
-    (hnext : Arlib.TVLe
+    (hnext : ArlibCommunity.Foundations.Convex.TVLe
       ((prefixLaw.bind (historyRawNextWithCopyKernel K)).map Prod.snd)
       target epsilon) :
     ∃ reference : Measure (H × X),

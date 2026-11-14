@@ -7,7 +7,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory Metric Set
 open scoped ENNReal
-open Arlib MarkovChains
+open Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- The reversible, nonnegative-spectrum and nondegeneracy facts needed by
 the dependent Markov-sum estimate, specialized to an accuracy phase. -/

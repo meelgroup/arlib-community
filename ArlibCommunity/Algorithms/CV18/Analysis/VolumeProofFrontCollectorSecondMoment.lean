@@ -12,7 +12,7 @@ the centered `markovSumLaw` controlled by the spectral covariance theorem.
 namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
-open Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- The raw average returned by a stationary front-recursive Markov collector
 has the usual mean-square plus spectral-variance bound. -/

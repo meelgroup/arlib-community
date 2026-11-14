@@ -15,7 +15,7 @@ has to be charged in the warmness invariant used for expected-cost analysis.
 namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
-open Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- Successful scheduled block endpoints are dominated by one stride of the
 uncapped lazy speedy walk, independently of the local proposal cap. -/
@@ -51,16 +51,16 @@ theorem successfulEndpointLaw_bind_scheduledBalancedAccuracyRetryBlockKernel_isW
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (proposalCap properStride : ℕ)
     {mu pi : Measure (AmbientSpace q.n)} {M : ENNReal}
-    (hwarm : Arlib.IsWarm M mu pi)
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu pi)
     (hinv : Kernel.Invariant
       ((lazy (speedyMetropolisGaussian
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2)) ^ properStride) pi) :
-    Arlib.IsWarm M
+    ArlibCommunity.Foundations.Convex.IsWarm M
       (successfulEndpointLaw
         (mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
           proposalCap properStride))) pi := by
-  change Arlib.IsWarm M
+  change ArlibCommunity.Foundations.Convex.IsWarm M
       (successfulEndpointLaw
         (mu.bind fun current => cappedProperCollectLaw
           (lazyProperProposalGaussianAux

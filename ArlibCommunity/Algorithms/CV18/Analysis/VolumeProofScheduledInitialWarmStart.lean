@@ -15,7 +15,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory Metric Set
 open scoped ENNReal Pointwise
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 theorem sampleMixingError_le_eps
     (q : VolumeParams) : sampleMixingError q ≤ q.eps := by

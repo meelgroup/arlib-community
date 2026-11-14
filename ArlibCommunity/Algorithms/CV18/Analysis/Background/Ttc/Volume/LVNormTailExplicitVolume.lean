@@ -9,7 +9,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.Background.Ttc.Volume.LVNormTailE
 namespace Ttc.CVAdaptive
 
 open MeasureTheory Metric Set
-open Arlib Arlib.MarkovChains
+open ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex
 open scoped ENNReal
 
 variable {n : ℕ}

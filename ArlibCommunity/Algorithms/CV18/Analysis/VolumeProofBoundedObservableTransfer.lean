@@ -4,11 +4,11 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open Arlib
+open Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex
 
 /-- Total variation transfers an observable bounded in `[0, B]`, with the
 expected factor `B` in the additive error. -/
-theorem Arlib.TVLe.integral_le_of_nonnegative_le
+theorem ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_nonnegative_le
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal} (h : TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
@@ -35,7 +35,7 @@ theorem Arlib.TVLe.integral_le_of_nonnegative_le
   simpa [mul_comm] using (div_le_iff₀ hB).mp hscaled
 
 /-- The corresponding second-moment transfer for an observable in `[0, B]`. -/
-theorem Arlib.TVLe.integral_sq_le_of_nonnegative_le
+theorem ArlibCommunity.Foundations.Convex.TVLe.integral_sq_le_of_nonnegative_le
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal} (h : TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
@@ -43,7 +43,7 @@ theorem Arlib.TVLe.integral_sq_le_of_nonnegative_le
     (hf0 : ∀ x, 0 ≤ f x) (hfB : ∀ x, f x ≤ B) :
     |∫ x, f x ^ 2 ∂mu - ∫ x, f x ^ 2 ∂nu| ≤
       B ^ 2 * epsilon.toReal := by
-  apply Arlib.TVLe.integral_le_of_nonnegative_le h hepsilon
+  apply ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_nonnegative_le h hepsilon
     (hf.pow_const 2) (sq_pos_of_pos hB)
   · intro x
     exact sq_nonneg (f x)
@@ -59,7 +59,7 @@ theorem MeasureLeUpTo.integral_le_of_nonnegative_le
     {f : S → ℝ} (hf : Measurable f) {B : ℝ} (hB : 0 < B)
     (hf0 : ∀ x, 0 ≤ f x) (hfB : ∀ x, f x ≤ B) :
     |∫ x, f x ∂mu - ∫ x, f x ∂nu| ≤ B * epsilon.toReal :=
-  Arlib.TVLe.integral_le_of_nonnegative_le h.to_tvLe hepsilon hf hB hf0 hfB
+  ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_nonnegative_le h.to_tvLe hepsilon hf hB hf0 hfB
 
 /-- `MeasureLeUpTo` form of the bounded second-moment transfer. -/
 theorem MeasureLeUpTo.integral_sq_le_of_nonnegative_le
@@ -71,15 +71,15 @@ theorem MeasureLeUpTo.integral_sq_le_of_nonnegative_le
     (hf0 : ∀ x, 0 ≤ f x) (hfB : ∀ x, f x ≤ B) :
     |∫ x, f x ^ 2 ∂mu - ∫ x, f x ^ 2 ∂nu| ≤
       B ^ 2 * epsilon.toReal :=
-  Arlib.TVLe.integral_sq_le_of_nonnegative_le h.to_tvLe hepsilon hf hB hf0 hfB
+  ArlibCommunity.Foundations.Convex.TVLe.integral_sq_le_of_nonnegative_le h.to_tvLe hepsilon hf hB hf0 hfB
 
 /-- A small TV perturbation of a phase law preserves a positive first moment
 and a constant relative second-moment bound.  The deliberately slack factor
 `4` is the input expected by `actualMeanTruncation_moment_package`. -/
-theorem Arlib.TVLe.positive_mean_and_second_le_four
+theorem ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
-    {epsilon : ENNReal} (h : Arlib.TVLe mu nu epsilon)
+    {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
     (hepsilon : epsilon ≠ ⊤)
     {f : S → ℝ} (hf : Measurable f) {B : ℝ} (hB : 0 < B)
     (hf0 : ∀ x, 0 ≤ f x) (hfB : ∀ x, f x ≤ B)
@@ -90,7 +90,7 @@ theorem Arlib.TVLe.positive_mean_and_second_le_four
     (hsecondError : B ^ 2 * epsilon.toReal ≤ idealMean ^ 2 / 8) :
     0 < ∫ x, f x ∂mu ∧
       (∫ x, f x ^ 2 ∂mu) ≤ 4 * (∫ x, f x ∂mu) ^ 2 := by
-  have hmeanAbs := Arlib.TVLe.integral_le_of_nonnegative_le
+  have hmeanAbs := ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_nonnegative_le
     h hepsilon hf hB hf0 hfB
   rw [← hidealMean] at hmeanAbs
   have hmeanBounds := abs_le.mp hmeanAbs
@@ -98,7 +98,7 @@ theorem Arlib.TVLe.positive_mean_and_second_le_four
     nlinarith
   have hrawPos : 0 < ∫ x, f x ∂mu := by
     nlinarith
-  have hsecondAbs := Arlib.TVLe.integral_sq_le_of_nonnegative_le
+  have hsecondAbs := ArlibCommunity.Foundations.Convex.TVLe.integral_sq_le_of_nonnegative_le
     h hepsilon hf hB hf0 hfB
   have hsecondBounds := abs_le.mp hsecondAbs
   have hactualSecond : (∫ x, f x ^ 2 ∂mu) ≤
@@ -109,10 +109,10 @@ theorem Arlib.TVLe.positive_mean_and_second_le_four
   · nlinarith [sq_nonneg
       ((∫ x, f x ∂mu) - (7 / 8 : ℝ) * idealMean)]
 
-#print axioms Arlib.TVLe.integral_le_of_nonnegative_le
-#print axioms Arlib.TVLe.integral_sq_le_of_nonnegative_le
+#print axioms ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_nonnegative_le
+#print axioms ArlibCommunity.Foundations.Convex.TVLe.integral_sq_le_of_nonnegative_le
 #print axioms MeasureLeUpTo.integral_le_of_nonnegative_le
 #print axioms MeasureLeUpTo.integral_sq_le_of_nonnegative_le
-#print axioms Arlib.TVLe.positive_mean_and_second_le_four
+#print axioms ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four
 
 end ArlibCommunity.Algorithms.CV18

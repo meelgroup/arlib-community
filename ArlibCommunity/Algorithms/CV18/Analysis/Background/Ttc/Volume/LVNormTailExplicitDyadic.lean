@@ -10,7 +10,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Base
 namespace Ttc.CVAdaptive
 
 open MeasureTheory Metric Set
-open Arlib
+open ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex
 open scoped ENNReal
 
 variable {n : ℕ}

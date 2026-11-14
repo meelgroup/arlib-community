@@ -34,7 +34,7 @@ seed, through both types and values.
 
 Membership is decided by the *defining module*, not by the name: vendored
 background files declare constants in foreign namespaces such as
-`Arlib.MarkovChains`, and a name-prefix test would silently miss them. -/
+`ArlibCommunity.Foundations`, and a name-prefix test would silently miss them. -/
 private partial def closureAux (env : Environment) :
     NameSet → List Name → NameSet → NameSet
   | _, [], acc => acc

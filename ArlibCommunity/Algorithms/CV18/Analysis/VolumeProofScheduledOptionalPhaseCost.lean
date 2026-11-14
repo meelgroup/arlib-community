@@ -8,7 +8,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
-open _root_.Arlib.MarkovChains
+open _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- A `MeasureLeUpTo` approximation of an optional phase-start law is enough
 for the sharp warm-start cost bound.  The live target is scaled exactly as in
@@ -23,7 +23,7 @@ theorem lintegral_optional_scheduledCollector_cost_le_finalEnvelope_of_leUpTo
     (target : Measure (AmbientSpace q.n))
     [IsProbabilityMeasure target]
     (happrox : MeasureLeUpTo mu (target.map some) error)
-    (hwarm : _root_.Arlib.IsWarm M
+    (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M
       (target.map fun point => scaleFactor q • point)
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))

@@ -17,7 +17,7 @@ shells and the two affine-coordinate tail grids.
 namespace Ttc.CVAdaptive
 
 open MeasureTheory Set
-open Arlib
+open ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex
 
 variable {n : ℕ}
 

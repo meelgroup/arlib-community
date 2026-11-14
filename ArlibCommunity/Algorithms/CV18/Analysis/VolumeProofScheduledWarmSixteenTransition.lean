@@ -8,7 +8,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Metric Set
 open scoped ENNReal Pointwise
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- The final transition theorem with the intermediate retained law removed:
 the input itself may use the exact `16 *` first-block warmness for which the
@@ -17,12 +17,12 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe_of_warmSixteen
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (mu : Measure (AmbientSpace q.n)) [IsProbabilityMeasure mu]
-    (hwarm : Arlib.IsWarm
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (16 * warmConstant q)) mu
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2)) :
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       (mu.bind
         (scheduledBalancedAccuracyTransitionLawAux q I sigma2
           (figureOneFinalScheduledBalancedParameters.proposalCap q sigma2)
@@ -61,7 +61,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe_of_warmSixteen
               (properStride : ℝ)
           at hwalk
         simpa only [walkRequirement] using hwalk)
-  have hmix : Arlib.TVLe
+  have hmix : ArlibCommunity.Foundations.Convex.TVLe
       (iterate (lazy (speedyMetropolisGaussian K delta sigma2))
         mu properStride)
       pi (ENNReal.ofReal (blockMixingError q attempts)) := by
@@ -85,7 +85,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe_of_warmSixteen
     simpa [hmixEq, two_mul, K, delta, pi] using hblock
   have hretry :
       let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -146,9 +146,9 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_of_good_bad_sharp
     (rho mu good bad : Measure (AmbientSpace q.n))
     [IsProbabilityMeasure rho] [IsProbabilityMeasure mu] [IsFiniteMeasure bad]
     {eta : ENNReal}
-    (hmuWarm : Arlib.IsWarm 2 mu rho)
+    (hmuWarm : ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho)
     (hrho : rho ≤ good + bad)
-    (hgood : Arlib.IsWarm
+    (hgood : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q)) good
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
@@ -202,7 +202,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_of_good_bad_sharp
         gcongr
         exact Measure.le_iff'.mp hrho S
       _ = 2 * good S + 2 * bad S := mul_add _ _ _
-  have hgood2 : Arlib.IsWarm
+  have hgood2 : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (16 * warmConstant q)) good2 pi := by
     intro S hS
     rw [show good2 = (2 : ENNReal) • good by rfl,

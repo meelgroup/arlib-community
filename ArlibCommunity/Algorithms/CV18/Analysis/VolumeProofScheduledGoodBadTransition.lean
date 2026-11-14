@@ -13,7 +13,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Metric Set
 open scoped ENNReal Pointwise
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- Fill the portion of a probability law not covered by its good part with
 stationary mass.  The result is a probability law, stays warm, and dominates
@@ -23,10 +23,10 @@ theorem exists_warm_probability_measureLeUpTo_of_le_good_add_bad
     (mu good bad pi : Measure Omega)
     [IsProbabilityMeasure mu] [IsProbabilityMeasure pi] [IsFiniteMeasure bad]
     {M N eta : ENNReal}
-    (hle : mu ≤ good + bad) (hgood : Arlib.IsWarm M good pi)
+    (hle : mu ≤ good + bad) (hgood : ArlibCommunity.Foundations.Convex.IsWarm M good pi)
     (hbad : bad Set.univ ≤ eta) (hMN : M + 1 ≤ N) :
     ∃ nu : Measure Omega, IsProbabilityMeasure nu ∧
-      Arlib.IsWarm N nu pi ∧ MeasureLeUpTo mu nu eta := by
+      ArlibCommunity.Foundations.Convex.IsWarm N nu pi ∧ MeasureLeUpTo mu nu eta := by
   let residual := mu - bad
   let missing := 1 - residual Set.univ
   let nu := residual + missing • pi
@@ -46,7 +46,7 @@ theorem exists_warm_probability_measureLeUpTo_of_le_good_add_bad
       show pi Set.univ = 1 by exact measure_univ, mul_one]
     exact add_tsub_cancel_of_le hresidualMass
   let hnuProb : IsProbabilityMeasure nu := ⟨hnuUniv⟩
-  have hnuWarm : Arlib.IsWarm N nu pi := by
+  have hnuWarm : ArlibCommunity.Foundations.Convex.IsWarm N nu pi := by
     intro S hS
     rw [show nu = residual + missing • pi by rfl,
       Measure.add_apply, Measure.smul_apply, smul_eq_mul]
@@ -76,9 +76,9 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_of_good_bad
     (rho mu good bad : Measure (AmbientSpace q.n))
     [IsProbabilityMeasure rho] [IsProbabilityMeasure mu] [IsFiniteMeasure bad]
     {M eta : ENNReal}
-    (hmuWarm : Arlib.IsWarm 2 mu rho)
+    (hmuWarm : ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho)
     (hrho : rho ≤ good + bad)
-    (hgood : Arlib.IsWarm M good
+    (hgood : ArlibCommunity.Foundations.Convex.IsWarm M good
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
@@ -133,7 +133,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_of_good_bad
         gcongr
         exact Measure.le_iff'.mp hrho S
       _ = 2 * good S + 2 * bad S := mul_add _ _ _
-  have hgood2 : Arlib.IsWarm (2 * M) good2 pi := by
+  have hgood2 : ArlibCommunity.Foundations.Convex.IsWarm (2 * M) good2 pi := by
     intro S hS
     rw [show good2 = (2 : ENNReal) • good by rfl,
       Measure.smul_apply, smul_eq_mul]
@@ -165,7 +165,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_leUpTo_of_good_bad
       (ae_of_all _ fun x => by simpa [K] using hK.2 x)
   have hnuTV := bind_figureOneFinalScheduledBalancedTransition_tvLe
     q I hsigma2 nu hnuWarm nu hnuProb
-      ((Arlib.IsWarm.refl nu).mono (by norm_num))
+      ((ArlibCommunity.Foundations.Convex.IsWarm.refl nu).mono (by norm_num))
   have hsecond : MeasureLeUpTo
       (nu.bind K)
       ((truncatedGaussianProbability q I sigma2 hsigma2 :
@@ -182,16 +182,16 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe_of_good_bad
     (rho mu good bad : Measure (AmbientSpace q.n))
     [IsProbabilityMeasure rho] [IsProbabilityMeasure mu] [IsFiniteMeasure bad]
     {M eta : ENNReal}
-    (hmuWarm : Arlib.IsWarm 2 mu rho)
+    (hmuWarm : ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho)
     (hrho : rho ≤ good + bad)
-    (hgood : Arlib.IsWarm M good
+    (hgood : ArlibCommunity.Foundations.Convex.IsWarm M good
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (hbad : bad Set.univ ≤ eta)
     (hM : 2 * M + 1 ≤
       ENNReal.ofReal (8 * warmConstant q)) :
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       (mu.bind
         (scheduledBalancedAccuracyTransitionLawAux q I sigma2
           (figureOneFinalScheduledBalancedParameters.proposalCap q sigma2)

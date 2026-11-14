@@ -9,23 +9,9 @@ behind it:
 - `TheoremProof.lean` assembles the unconditional total-variation theorem.
 - `AuditCheck.lean` checks the model closure and prints the axioms of every
   public capstone.
-- `Background/` is the transitive proof background needed because these
-  continuous-MCMC modules are not yet present on MEELGroup Arlib `main`.
-
-## Scope of the background
-
-The 81 Lean modules under `Background/Arlib/` are the exact transitive source
-closure of the unconditional mixing capstone and finite-facet execution
-capstone, ported from commit
-`d34b0f452e04d91a74212dd9852e58550cef29c0`.  Imports were mechanically moved
-under the `ArlibCommunity.Algorithms.HitAndRun.Analysis.Background` module
-prefix so they can coexist with the current Arlib dependency.  No unrelated
-arlib-community theories are retained.
-
-The chain covers the measurable kernel, reversibility and invariance, warm
-starts, total variation, local overlap, localization, one-dimensional and
-convex-body isoperimetry, conductance, lazy-chain mixing, and the final
-unconditional theorem.
+- The general theory it rests on — the hit-and-run kernel, its conductance and mixing,
+  localization, isoperimetry, and conductance-to-mixing — lives in
+  `ArlibCommunity/Foundations/` (see `Foundations/MarkovChainTheory/HitAndRunMixing/`).
 
 ## The paper's printed constant
 

@@ -16,11 +16,11 @@ namespace ArlibCommunity.Algorithms.CV18
 
 /-- A TV comparison gives a one-sided mean lower bound using only the
 reference law's second moment. -/
-theorem Arlib.TVLe.integral_sub_le_of_nonnegative_secondMoment
+theorem ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_secondMoment
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal}
-    (htv : Arlib.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
+    (htv : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
     {f : S → ℝ} (hf : Measurable f) (hf0 : ∀ x, 0 ≤ f x)
     (hfmemMu : MemLp f 2 mu) (hfmemNu : MemLp f 2 nu)
     {T : ℝ} (hT : 0 < T) :
@@ -100,18 +100,18 @@ theorem Arlib.TVLe.integral_sub_le_of_nonnegative_secondMoment
   linarith
 
 /-- Square-root optimization of the one-sided transfer bound. -/
-theorem Arlib.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
+theorem ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal}
-    (htv : Arlib.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
+    (htv : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
     {f : S → ℝ} (hf : Measurable f) (hf0 : ∀ x, 0 ≤ f x)
     (hfmemMu : MemLp f 2 mu) (hfmemNu : MemLp f 2 nu)
     {eta R : ℝ} (heta : 0 < eta) (hR : 0 < R)
     (hepsEta : epsilon.toReal ≤ eta ^ 2)
     (hsecond : (∫ x, f x ^ 2 ∂nu) ≤ R ^ 2) :
     (∫ x, f x ∂nu) - 2 * eta * R ≤ ∫ x, f x ∂mu := by
-  have hbase := Arlib.TVLe.integral_sub_le_of_nonnegative_secondMoment
+  have hbase := ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_secondMoment
     htv hepsilon hf hf0 hfmemMu hfmemNu (T := R / eta) (div_pos hR heta)
   have hsq0 : 0 ≤ ∫ x, f x ^ 2 ∂nu :=
     integral_nonneg fun x => sq_nonneg (f x)
@@ -128,7 +128,7 @@ theorem Arlib.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
       _ = eta * R := by field_simp [heta.ne', hR.ne']
   linarith
 
-#print axioms Arlib.TVLe.integral_sub_le_of_nonnegative_secondMoment
-#print axioms Arlib.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
+#print axioms ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_secondMoment
+#print axioms ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
 
 end ArlibCommunity.Algorithms.CV18

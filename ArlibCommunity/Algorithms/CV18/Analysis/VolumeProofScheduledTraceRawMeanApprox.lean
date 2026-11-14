@@ -285,7 +285,7 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_leUpTo_target
   let _ : IsProbabilityMeasure rho :=
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I phase
-  have hgood : Arlib.IsWarm
+  have hgood : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I phase) := by
     simpa [good, scale, previous, hpreviousSucc,
@@ -314,10 +314,10 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_leUpTo_target
 
 /-- Total variation transfers the first moment when the scalar observable is
 bounded only almost everywhere under the two probability measures. -/
-theorem Arlib.TVLe.integral_le_of_ae_nonnegative_le
+theorem ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_ae_nonnegative_le
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
-    {epsilon : ENNReal} (h : Arlib.TVLe mu nu epsilon)
+    {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
     (hepsilon : epsilon ≠ ⊤)
     {f : S → ℝ} (hf : Measurable f) {B : ℝ} (hB : 0 < B)
     (hf0mu : ∀ᵐ x ∂mu, 0 ≤ f x)
@@ -338,7 +338,7 @@ theorem Arlib.TVLe.integral_le_of_ae_nonnegative_le
     filter_upwards [hf0nu, hfBnu] with x hx0 hxB
     simp only [g, max_eq_right hx0, min_eq_left hxB]
   rw [← integral_congr_ae hgeqmu, ← integral_congr_ae hgeqnu]
-  exact Arlib.TVLe.integral_le_of_nonnegative_le
+  exact ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_nonnegative_le
     h hepsilon hg hB hg0 hgB
 
 /-- A mapped scalar-law comparison gives the explicit additive error between
@@ -347,7 +347,7 @@ theorem scheduledFigureOneTraceRawMean_abs_sub_ideal_le_of_mapped_tv
     (q : VolumeParams) (I : VolumeInput q.n) (j : Nat)
     {epsilon : ENNReal} (hepsilonTop : epsilon ≠ ⊤)
     {B : ℝ} (hB : 0 < B)
-    (hscalar : Arlib.TVLe
+    (hscalar : ArlibCommunity.Foundations.Convex.TVLe
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
         (numPhases q)).map
@@ -404,8 +404,8 @@ theorem scheduledFigureOneTraceRawMean_abs_sub_ideal_le_of_mapped_tv
     exact (ae_map_iff
       (figureOneIdealPhaseEstimator_measurable q phase).aemeasurable
       measurableSet_Iic).2 hidealB
-  have htransfer := Arlib.TVLe.integral_le_of_ae_nonnegative_le
-    (show Arlib.TVLe actualScalar idealScalar epsilon from hscalar)
+  have htransfer := ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_ae_nonnegative_le
+    (show ArlibCommunity.Foundations.Convex.TVLe actualScalar idealScalar epsilon from hscalar)
     hepsilonTop measurable_id hB hactual0 hactualB hideal0 hidealScalarB
   have hactual : (∫ y, y ∂actualScalar) =
       scheduledFigureOneTraceRawMean q I j := by
@@ -547,7 +547,7 @@ theorem scheduledFigureOneTraceRawMeanProduct_relativeApprox_ideal_of_phasewise
   · exact hupperProduct.trans
       (mul_le_mul_of_nonneg_right hpowUpper hideal0)
 
-#print axioms Arlib.TVLe.integral_le_of_ae_nonnegative_le
+#print axioms ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_ae_nonnegative_le
 #print axioms scheduledFigureOneTraceRawMean_abs_sub_ideal_le_of_mapped_tv
 #print axioms scheduledFigureOneTraceRawMeanProduct_relativeApprox_ideal_of_phasewise
 

@@ -6,8 +6,10 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofMarkovEmpirical
 
 /-! # Stationary variance of finite Markov averages -/
 
-namespace Arlib.MarkovChains
+open Arlib
+open ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory ProbabilityTheory
 
 variable {S : Type*} [MeasurableSpace S]
@@ -606,7 +608,7 @@ theorem markovSumLaw_meas_abs_snd_ge_le_of_isWarm
     (hmean : ∫ x, f x ∂pi = 0)
     {B : ℝ} (hB : 0 ≤ B) (hfbound : ∀ x, |f x| ≤ B)
     (hgap : 0 < spectralGap P pi) {M : ENNReal}
-    (hwarm : Arlib.IsWarm M mu pi) (samples : ℕ)
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu pi) (samples : ℕ)
     {c : ℝ} (hc : 0 < c) :
     markovSumLaw P f samples mu {stateSum | c ≤ |stateSum.2|} ≤
       M * ENNReal.ofReal (((samples : ℝ) *
@@ -626,9 +628,8 @@ theorem markovSumLaw_meas_abs_snd_ge_le_of_isWarm
       exact markovSumLaw_meas_abs_snd_ge_le P hrev hpsd hne hf hmem
         hmean hB hfbound hgap samples hc
 
-end Arlib.MarkovChains
-
-#print axioms Arlib.MarkovChains.integral_markovSumLaw_mul_eq_sum_correlations
-#print axioms Arlib.MarkovChains.integral_markovSumLaw_sq_le
-#print axioms Arlib.MarkovChains.markovSumLaw_meas_abs_snd_ge_le
-#print axioms Arlib.MarkovChains.markovSumLaw_meas_abs_snd_ge_le_of_isWarm
+end ArlibCommunity.Algorithms.CV18
+#print axioms ArlibCommunity.Algorithms.CV18.integral_markovSumLaw_mul_eq_sum_correlations
+#print axioms ArlibCommunity.Algorithms.CV18.integral_markovSumLaw_sq_le
+#print axioms ArlibCommunity.Algorithms.CV18.markovSumLaw_meas_abs_snd_ge_le
+#print axioms ArlibCommunity.Algorithms.CV18.markovSumLaw_meas_abs_snd_ge_le_of_isWarm

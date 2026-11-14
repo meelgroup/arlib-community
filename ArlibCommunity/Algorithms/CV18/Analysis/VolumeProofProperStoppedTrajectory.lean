@@ -14,8 +14,9 @@ then enter a measurable set.  Applied to the lifted proper-proposal kernel, it i
 law of every possible first-proper-proposal cylinder.
 -/
 
-namespace Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 
@@ -343,12 +344,11 @@ theorem iterate_properProposalStoppedKernelTotal_eq_speedy
       iterate (speedyMetropolisGaussian K δ s) μ t := by
   rw [properProposalStoppedKernelTotal_eq_speedy hK δ s]
 
-end Arlib.MarkovChains
-
-#print axioms Arlib.MarkovChains.pathMeasure_dirac_holdsUntil_then_mem
-#print axioms Arlib.MarkovChains.pathMeasure_firstProperCylinder
-#print axioms Arlib.MarkovChains.pathMeasure_iUnion_firstProperCylinder
-#print axioms Arlib.MarkovChains.map_first_markedChain_pathMeasure_properProposalGaussianLift
-#print axioms Arlib.MarkovChains.properProposalStoppedKernel_apply_eq_speedy
-#print axioms Arlib.MarkovChains.properProposalStoppedKernelTotal_eq_speedy
-#print axioms Arlib.MarkovChains.iterate_properProposalStoppedKernelTotal_eq_speedy
+end ArlibCommunity.Algorithms.CV18
+#print axioms ArlibCommunity.Algorithms.CV18.pathMeasure_dirac_holdsUntil_then_mem
+#print axioms ArlibCommunity.Algorithms.CV18.pathMeasure_firstProperCylinder
+#print axioms ArlibCommunity.Algorithms.CV18.pathMeasure_iUnion_firstProperCylinder
+#print axioms ArlibCommunity.Algorithms.CV18.map_first_markedChain_pathMeasure_properProposalGaussianLift
+#print axioms ArlibCommunity.Algorithms.CV18.properProposalStoppedKernel_apply_eq_speedy
+#print axioms ArlibCommunity.Algorithms.CV18.properProposalStoppedKernelTotal_eq_speedy
+#print axioms ArlibCommunity.Algorithms.CV18.iterate_properProposalStoppedKernelTotal_eq_speedy

@@ -14,7 +14,7 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open _root_.Arlib
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 noncomputable section
 
@@ -95,7 +95,7 @@ theorem scheduledResetPairKernel_gaussian_leUpTo_acceptedTarget
     (accepted : Measure (AmbientSpace q.n)) [IsProbabilityMeasure accepted]
     (hretained : source.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
-    (hgood : Arlib.IsWarm
+    (hgood : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q))
       (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase))
@@ -159,7 +159,7 @@ theorem exists_scheduledGaussianTraceRecordedReset
     (accepted : Measure (AmbientSpace q.n)) [IsProbabilityMeasure accepted]
     (hretained : source.map scheduledBalancedTraceRetainedOption =
       accepted.map some)
-    (hgood : Arlib.IsWarm
+    (hgood : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q))
       (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase))

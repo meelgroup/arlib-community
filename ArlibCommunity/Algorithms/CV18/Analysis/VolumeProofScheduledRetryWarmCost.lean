@@ -11,7 +11,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
-open _root_.Arlib.MarkovChains
+open _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- One live retry trial: run one proper block and, on success, its balanced
 rejection test.  The retained point is the pre-scaling mixed point used by
@@ -253,7 +253,7 @@ theorem lintegral_scheduledBalancedAccuracyLiveTrial_countedQueryCost_le_of_isWa
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : _root_.Arlib.IsWarm M mu
+    (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (proposalCap properStride : ℕ) :
@@ -293,7 +293,7 @@ theorem lintegral_scheduledBalancedAccuracyLiveTrial_countedQueryCost_le_of_le_w
     {M error : ENNReal}
     {mu good bad : Measure (AmbientSpace q.n)}
     (hle : mu ≤ good + bad)
-    (hwarm : _root_.Arlib.IsWarm M good
+    (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M good
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (hbad : bad Set.univ ≤ error)
@@ -360,8 +360,8 @@ theorem scheduledBalancedAcceptedStateMeasure_le
 theorem isWarm_of_le_of_isWarm
     {S : Type*} [MeasurableSpace S]
     {M : ENNReal} {mu nu pi : Measure S}
-    (hle : nu ≤ mu) (hwarm : _root_.Arlib.IsWarm M mu pi) :
-    _root_.Arlib.IsWarm M nu pi := by
+    (hle : nu ≤ mu) (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M mu pi) :
+    _root_.ArlibCommunity.Foundations.Convex.IsWarm M nu pi := by
   intro A hA
   exact (Measure.le_iff.mp hle A hA).trans (hwarm A hA)
 
@@ -404,17 +404,17 @@ theorem scheduledBalancedRetryBranches_isWarm
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (proposalCap properStride : ℕ)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : _root_.Arlib.IsWarm M mu
+    (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2)) :
     let endpoint := successfulEndpointLaw
       (mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
         proposalCap properStride))
-    _root_.Arlib.IsWarm M
+    _root_.ArlibCommunity.Foundations.Convex.IsWarm M
         (scheduledBalancedAcceptedStateMeasure q I sigma2 endpoint)
         (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
           (proposalRadius q sigma2) sigma2) ∧
-      _root_.Arlib.IsWarm M
+      _root_.ArlibCommunity.Foundations.Convex.IsWarm M
         (scheduledBalancedRejectedStateMeasure q I sigma2 endpoint)
         (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
           (proposalRadius q sigma2) sigma2) := by
@@ -426,7 +426,7 @@ theorem scheduledBalancedRetryBranches_isWarm
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2)) ^ properStride) pi :=
     scheduledPhaseLazySpeedyPow_invariant q I sigma2 properStride
-  have hend : _root_.Arlib.IsWarm M
+  have hend : _root_.ArlibCommunity.Foundations.Convex.IsWarm M
       (successfulEndpointLaw
         (mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
           proposalCap properStride))) pi :=

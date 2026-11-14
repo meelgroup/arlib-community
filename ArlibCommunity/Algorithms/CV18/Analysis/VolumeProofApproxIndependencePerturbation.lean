@@ -45,7 +45,7 @@ theorem ApproxIndepFun.of_tvLe
     {delta : ENNReal} (hdelta : delta ≠ ⊤)
     {epsilon : ℝ} (X : Omega → S) (Y : Omega → T)
     (hX : Measurable X) (hY : Measurable Y)
-    (htv : Arlib.TVLe mu nu delta)
+    (htv : ArlibCommunity.Foundations.Convex.TVLe mu nu delta)
     (hind : ApproxIndepFun epsilon X Y nu) :
     ApproxIndepFun (epsilon + 3 * delta.toReal) X Y mu := by
   intro A hA B hB

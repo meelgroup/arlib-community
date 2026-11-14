@@ -2,8 +2,8 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.MarkovChains.Continuous.HoldingTime
-import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.MarkovChains.Continuous.SpeedyGaussian
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.HoldingTime
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.SpeedyGaussian
 import Mathlib.Probability.Kernel.Composition.CompProd
 import Mathlib.Probability.Kernel.Composition.CompMap
 import Mathlib.Probability.Kernel.Composition.MapComap
@@ -33,8 +33,9 @@ the concrete raw proposal loop and prove the accumulated-cost bound.
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 
-namespace Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
+namespace ArlibCommunity.Algorithms.CV18
 variable {Omega : Type*} [MeasurableSpace Omega]
 
 /-- The `failures`-th slice of a costed proper step.  Its output cost is
@@ -630,4 +631,4 @@ theorem metropolisGaussian_apply_eq_properProposalMixture
 
 end BallWalk
 
-end Arlib.MarkovChains
+end ArlibCommunity.Algorithms.CV18

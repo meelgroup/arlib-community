@@ -33,8 +33,13 @@ and their names (`tpaTail`, and whatever follows) would otherwise collide.
 * `ArlibCommunity.Algorithms.CV18` — Cousins--Vempala accelerated Gaussian
   cooling: the executable oracle program and discharged analysis, with the two
   remaining quantitative inputs exposed as hypotheses.
+* `ArlibCommunity.Algorithms.KV97` — Kannan–Vempala lattice-point sampling:
+  inflate the polytope, sample it continuously, round each coordinate at random;
+  every lattice point of the polytope is returned with probability within a
+  factor of uniform.
 -/
 
 import ArlibCommunity.Algorithms.TPA
 import ArlibCommunity.Algorithms.HitAndRun
 import ArlibCommunity.Algorithms.CV18
+import ArlibCommunity.Algorithms.KV97

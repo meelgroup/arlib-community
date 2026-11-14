@@ -13,7 +13,7 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open Arlib.MarkovChains
+open ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- A finite power of a Markov kernel is again Markov. -/
 instance kernelPow_isMarkovKernel {S : Type*} [MeasurableSpace S]
@@ -434,7 +434,7 @@ theorem bind_runEstimate_collectWalkWeights_meas_abs_fst_ge_le_of_isWarm
     {B : ℝ} (hB : 0 ≤ B) (hweightBound : ∀ x, |weight x| ≤ B)
     (hgap : 0 < spectralGap
       (truncatedMetropolisKernel q I oracle sigma2 ^ walkSteps) pi)
-    {M : ENNReal} (hwarm : Arlib.IsWarm M mu pi) (samples : ℕ)
+    {M : ENNReal} (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu pi) (samples : ℕ)
     {c : ℝ} (hc : 0 < c) :
     (mu.bind fun current =>
       (collectWalkWeights q sigma2 walkSteps weight samples current).runEstimate

@@ -10,7 +10,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofSpeedySpectral
 namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory
-open Arlib MarkovChains
+open Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- The min/max cancellation behind the uniform inverse-gap estimate. -/
 theorem figureOneProposalRadius_sq_mul_max_eq

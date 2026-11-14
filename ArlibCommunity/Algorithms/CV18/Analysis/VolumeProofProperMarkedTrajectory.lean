@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Uddalok Sarkar
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofProperTrajectory
-import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.MarkovChains.Continuous.MarkedTimeChange
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.MarkedTimeChange
 
 /-!
 # The proper-proposal clock on an actual Gaussian Metropolis trajectory
@@ -20,8 +20,9 @@ move clock in `WastedStepsGaussian`: a proper proposal can be rejected by the Ga
 Metropolis filter.
 -/
 
-namespace Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 
@@ -182,13 +183,12 @@ theorem lintegral_firstProperTime_pathMeasure_properProposalGaussianLift
   simp_rw [h]
   exact tsum_pathMeasure_properProposalGaussianLift_dirac_holdsUntil hK δ s x
 
-end Arlib.MarkovChains
-
-#print axioms Arlib.MarkovChains.map_snd_properProposalGaussianLift_apply
-#print axioms Arlib.MarkovChains.map_snd_properProposalGaussianLift
-#print axioms Arlib.MarkovChains.map_state_eval_pathMeasure_properProposalGaussianLift
-#print axioms Arlib.MarkovChains.properProposalGaussianLift_apply_false_singleton
-#print axioms Arlib.MarkovChains.properProposalGaussianLift_apply_true_prod
-#print axioms Arlib.MarkovChains.pathMeasure_properProposalGaussianLift_dirac_holdsUntil
-#print axioms Arlib.MarkovChains.tsum_pathMeasure_properProposalGaussianLift_dirac_holdsUntil
-#print axioms Arlib.MarkovChains.lintegral_firstProperTime_pathMeasure_properProposalGaussianLift
+end ArlibCommunity.Algorithms.CV18
+#print axioms ArlibCommunity.Algorithms.CV18.map_snd_properProposalGaussianLift_apply
+#print axioms ArlibCommunity.Algorithms.CV18.map_snd_properProposalGaussianLift
+#print axioms ArlibCommunity.Algorithms.CV18.map_state_eval_pathMeasure_properProposalGaussianLift
+#print axioms ArlibCommunity.Algorithms.CV18.properProposalGaussianLift_apply_false_singleton
+#print axioms ArlibCommunity.Algorithms.CV18.properProposalGaussianLift_apply_true_prod
+#print axioms ArlibCommunity.Algorithms.CV18.pathMeasure_properProposalGaussianLift_dirac_holdsUntil
+#print axioms ArlibCommunity.Algorithms.CV18.tsum_pathMeasure_properProposalGaussianLift_dirac_holdsUntil
+#print axioms ArlibCommunity.Algorithms.CV18.lintegral_firstProperTime_pathMeasure_properProposalGaussianLift

@@ -15,7 +15,7 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open _root_.Arlib.MarkovChains
+open _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- The squared part discarded by truncation at `a` is bounded by the fourth
 power divided by `a²`. -/

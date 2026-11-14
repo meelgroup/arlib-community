@@ -18,7 +18,7 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- Every successful output of the retained scheduled kernel lies in the
 truncated body. -/
@@ -311,7 +311,7 @@ theorem integral_iterated_retainedOption_gaussianRatio_lower
     simpa [f, weight, exactSome, exact, s, Function.comp_def,
       retainedOptionWeight] using hsecond
   have htransfer :=
-    ArlibCommunity.Algorithms.CV18.Arlib.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
+    ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
     htv (by simpa [epsilon] using hepsilonTop) hf hf0 hfActual hfExact
       heta hR (by simpa [epsilon] using hepsEta) hsecondSome
   rw [integral_map measurable_some.aemeasurable hf.aestronglyMeasurable]

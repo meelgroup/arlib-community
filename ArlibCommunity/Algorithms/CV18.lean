@@ -51,7 +51,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofCollectSemantics
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofProperCollect
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyProperProgram
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofKLSCore
-import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.Convexity.SpeedyGaussianMixing
+import ArlibCommunity.Algorithms.CV18.Analysis.SpeedyGaussianMixing
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceMomentAssembly
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceLemma717Capstone
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledTraceSlackMoments

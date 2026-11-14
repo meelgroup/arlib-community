@@ -9,7 +9,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledRetryKernel
 namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
-open Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 theorem scheduledAccuracyMetropolisMarkedProposalProgram_stronglyMeasurable
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)

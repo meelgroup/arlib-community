@@ -2,7 +2,7 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license.
 -/
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Convexity.ConcaveProfileIso
+import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.ConcaveProfileIso
 
 /-!
 # A direct log-concave hazard step for moment-radius tails
@@ -26,7 +26,7 @@ continuous approximation thereof); no affine/exponential extremizer is used in t
 namespace Ttc.CVAdaptive
 
 open MeasureTheory Set
-open Arlib
+open ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex
 
 /-- **Direct hazard tail-halving step.**  Under a second moment bound at scale `s`, if the
 mass to the left of `u` is at least half the total mass, moving the threshold from `u` to
@@ -58,15 +58,15 @@ theorem oneDim_logConcave_rightTail_halves
   have hsum : L + M + R = Z := by
     have h1 : L + M = ∫ t in a..v, w t :=
       intervalIntegral.integral_add_adjacent_intervals
-        (Arlib.intervalIntegrable_of_subinterval hint le_rfl hau (huv.trans hvb))
-        (Arlib.intervalIntegrable_of_subinterval hint hau huv hvb)
+        (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hint le_rfl hau (huv.trans hvb))
+        (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hint hau huv hvb)
     have h2 : (∫ t in a..v, w t) + R = Z :=
       intervalIntegral.integral_add_adjacent_intervals
-        (Arlib.intervalIntegrable_of_subinterval hint le_rfl (hau.trans huv) hvb)
-        (Arlib.intervalIntegrable_of_subinterval hint (hau.trans huv) hvb le_rfl)
+        (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hint le_rfl (hau.trans huv) hvb)
+        (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hint (hau.trans huv) hvb le_rfl)
     rw [h1]
     exact h2
-  have hiso := Arlib.oneDim_isoperimetry_variance hs hw hw0 hint hc hvar hau huv hvb
+  have hiso := ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_variance hs hw hw0 hint hc hvar hau huv hvb
   have hcoef :
       1 / (2 * Real.sqrt 3 * s) * ((v - u) * (L * R)) = 2 * L * R := by
     rw [hstep]
@@ -90,8 +90,8 @@ theorem oneDim_logConcave_rightTail_halves
       nlinarith
   have htail : (∫ t in u..b, w t) = M + R :=
     (intervalIntegral.integral_add_adjacent_intervals
-      (Arlib.intervalIntegrable_of_subinterval hint hau huv hvb)
-      (Arlib.intervalIntegrable_of_subinterval hint (hau.trans huv) hvb le_rfl)).symm
+      (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hint hau huv hvb)
+      (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hint (hau.trans huv) hvb le_rfl)).symm
   rw [htail]
   linarith
 
@@ -123,15 +123,15 @@ theorem oneDim_logConcave_leftTail_halves
   have hsum : L + M + R = Z := by
     have h1 : L + M = ∫ t in a..v, w t :=
       intervalIntegral.integral_add_adjacent_intervals
-        (Arlib.intervalIntegrable_of_subinterval hint le_rfl hau (huv.trans hvb))
-        (Arlib.intervalIntegrable_of_subinterval hint hau huv hvb)
+        (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hint le_rfl hau (huv.trans hvb))
+        (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hint hau huv hvb)
     have h2 : (∫ t in a..v, w t) + R = Z :=
       intervalIntegral.integral_add_adjacent_intervals
-        (Arlib.intervalIntegrable_of_subinterval hint le_rfl (hau.trans huv) hvb)
-        (Arlib.intervalIntegrable_of_subinterval hint (hau.trans huv) hvb le_rfl)
+        (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hint le_rfl (hau.trans huv) hvb)
+        (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hint (hau.trans huv) hvb le_rfl)
     rw [h1]
     exact h2
-  have hiso := Arlib.oneDim_isoperimetry_variance hs hw hw0 hint hc hvar hau huv hvb
+  have hiso := ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_variance hs hw hw0 hint hc hvar hau huv hvb
   have hcoef :
       1 / (2 * Real.sqrt 3 * s) * ((v - u) * (L * R)) = 2 * L * R := by
     rw [hstep]
@@ -155,8 +155,8 @@ theorem oneDim_logConcave_leftTail_halves
       nlinarith
   have htail : (∫ t in a..v, w t) = L + M :=
     (intervalIntegral.integral_add_adjacent_intervals
-      (Arlib.intervalIntegrable_of_subinterval hint le_rfl hau (huv.trans hvb))
-      (Arlib.intervalIntegrable_of_subinterval hint hau huv hvb)).symm
+      (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hint le_rfl hau (huv.trans hvb))
+      (ArlibCommunity.Foundations.Convex.intervalIntegrable_of_subinterval hint hau huv hvb)).symm
   rw [htail]
   linarith
 

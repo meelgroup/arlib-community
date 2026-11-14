@@ -25,8 +25,8 @@ theorem TVLe.integral_nonnegative_le_of_isWarm_secondMoment
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon M : ENNReal}
-    (htv : Arlib.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
-    (hM : M ≠ ⊤) (hwarm : Arlib.IsWarm M mu nu)
+    (htv : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
+    (hM : M ≠ ⊤) (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu nu)
     {f : S → ℝ} (hf : Measurable f) (hf0 : ∀ x, 0 ≤ f x)
     (hfmem : MemLp f 2 nu) {T : Real} (hT : 0 < T) :
     |(∫ x, f x ∂mu) - (∫ x, f x ∂nu)| ≤
@@ -35,7 +35,7 @@ theorem TVLe.integral_nonnegative_le_of_isWarm_secondMoment
   let cut : S → ℝ := fun x => min (f x) T
   let g : S → ℝ := fun x => cut x / T
   have hle : mu ≤ M • nu :=
-    (Arlib.MarkovChains.isWarm_iff_le_smul _ _).1 hwarm
+    (ArlibCommunity.Foundations.MarkovChainTheory.isWarm_iff_le_smul _ _).1 hwarm
   have hfmemLarge : MemLp f 2 (M • nu) := hfmem.smul_measure hM
   have hfmemMu : MemLp f 2 mu := hfmemLarge.mono_measure hle
   have hfintNu : Integrable f nu := hfmem.integrable (by norm_num)
@@ -154,8 +154,8 @@ theorem TVLe.integral_nonnegative_le_of_isWarm_secondMoment_sqrt
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon M : ENNReal}
-    (htv : Arlib.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
-    (hM : M ≠ ⊤) (hwarm : Arlib.IsWarm M mu nu)
+    (htv : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
+    (hM : M ≠ ⊤) (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu nu)
     {f : S → ℝ} (hf : Measurable f) (hf0 : ∀ x, 0 ≤ f x)
     (hfmem : MemLp f 2 nu) {eta : ℝ} (heta : 0 < eta)
     (hepsEta : epsilon.toReal ≤ eta ^ 2) :
@@ -189,8 +189,8 @@ theorem TVLe.integral_le_of_isWarm_secondMoment
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon M : ENNReal}
-    (htv : Arlib.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
-    (hM : M ≠ ⊤) (hwarm : Arlib.IsWarm M mu nu)
+    (htv : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
+    (hM : M ≠ ⊤) (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu nu)
     {f : S → ℝ} (hf : Measurable f) (hfmem : MemLp f 2 nu)
     {T : ℝ} (hT : 0 < T) :
     |(∫ x, f x ∂mu) - (∫ x, f x ∂nu)| ≤
@@ -205,7 +205,7 @@ theorem TVLe.integral_le_of_isWarm_secondMoment
   have hfpMem : MemLp fp 2 nu := by simpa [fp] using hfmem.pos_part
   have hfnMem : MemLp fn 2 nu := by simpa [fn] using hfmem.neg_part
   have hle : mu ≤ M • nu :=
-    (Arlib.MarkovChains.isWarm_iff_le_smul _ _).1 hwarm
+    (ArlibCommunity.Foundations.MarkovChainTheory.isWarm_iff_le_smul _ _).1 hwarm
   have hfmemMu : MemLp f 2 mu :=
     (hfmem.smul_measure hM).mono_measure hle
   have hfpMemMu : MemLp fp 2 mu := by simpa [fp] using hfmemMu.pos_part
@@ -269,8 +269,8 @@ theorem TVLe.integral_le_of_isWarm_secondMoment_sqrt
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon M : ENNReal}
-    (htv : Arlib.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
-    (hM : M ≠ ⊤) (hwarm : Arlib.IsWarm M mu nu)
+    (htv : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
+    (hM : M ≠ ⊤) (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu nu)
     {f : S → ℝ} (hf : Measurable f) (hfmem : MemLp f 2 nu)
     {eta R : ℝ} (heta : 0 < eta) (hR : 0 < R)
     (hepsEta : epsilon.toReal ≤ eta ^ 2)
@@ -352,32 +352,32 @@ theorem accuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_stationary
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     IsProbabilityMeasure
       (accuracyGaussianAcceptedTargetLaw q I sigma2
-        (Arlib.MarkovChains.ellGaussianProb
+        (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
           (accuracyPhaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2)) := by
   let K := accuracyPhaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
-  let pi := Arlib.MarkovChains.ellGaussianProb K delta sigma2
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta sigma2
   let accepted :=
     (pi.withDensity (accuracyGaussianRejectionAcceptance q I sigma2)).map
       (fun x => (scaleFactor q)⁻¹ • x)
   have hdelta : 0 < delta := figureOneProposalRadius_pos q hsigma2
-  have hmass0 : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2
+  have hmass0 : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2
       Set.univ ≠ 0 := by
     dsimp [K]
-    exact Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+    exact ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
       (accuracyPhaseTruncatedBody_measurable q I sigma2)
       (accuracyPhaseTruncatedBody_convex q I sigma2)
       (accuracyPhaseTruncatedBody_isCompact q I sigma2).isBounded
       (accuracyPhaseTruncatedBody_volume_ne_zero q I hsigma2)
       hdelta sigma2
-  have hmassTop : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2
+  have hmassTop : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2
       Set.univ ≠ ⊤ := by
     dsimp [K]
-    exact Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+    exact ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
       (accuracyPhaseTruncatedBody_volume_ne_top q I sigma2) delta hsigma2
   let _ : IsProbabilityMeasure pi :=
-    Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb hmass0 hmassTop
+    ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb hmass0 hmassTop
   have hlower : ENNReal.ofReal (7 / 64 : ℝ) ≤ accepted Set.univ := by
     have h := accuracyPhase_stationary_acceptance_ge q I hsigma2
     dsimp [accepted]
@@ -398,8 +398,8 @@ theorem accuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_stationary
         exact lintegral_mono <|
           accuracyGaussianRejectionAcceptance_le_one q I hsigma2
       _ = pi Set.univ := lintegral_one
-  change IsProbabilityMeasure (Arlib.condOn accepted Set.univ)
-  exact Arlib.isProbabilityMeasure_condOn accepted hzero htop
+  change IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn accepted Set.univ)
+  exact ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn accepted hzero htop
 
 /-- Concrete stationary bias bound for every nonnegative target `L²`
 observable.  The constant `65` is the cost of the proved `64`-warm accepted
@@ -413,7 +413,7 @@ theorem stationary_accuracyAcceptedTarget_integral_bias_le
     (hfmem : MemLp f 2
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n))) :
-    let pi := Arlib.MarkovChains.ellGaussianProb
+    let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
       (accuracyPhaseTruncatedBody q I sigma2)
       (figureOneProposalRadius q sigma2) sigma2
     |(∫ x, f x ∂accuracyGaussianAcceptedTargetLaw q I sigma2 pi) -
@@ -424,7 +424,7 @@ theorem stationary_accuracyAcceptedTarget_integral_bias_le
           ∂(truncatedGaussianProbability q I sigma2 hsigma2 :
             Measure (AmbientSpace q.n))) := by
   dsimp only
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   let mu := accuracyGaussianAcceptedTargetLaw q I sigma2 pi
@@ -433,12 +433,12 @@ theorem stationary_accuracyAcceptedTarget_integral_bias_le
   let _ : IsProbabilityMeasure mu :=
     accuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_stationary q I hsigma2
   let _ : IsProbabilityMeasure nu := by dsimp [nu]; infer_instance
-  have htv : Arlib.TVLe mu nu
+  have htv : ArlibCommunity.Foundations.Convex.TVLe mu nu
       (96 * ENNReal.ofReal (accuracyCoreError q) +
         ENNReal.ofReal ((q.eps / (q.n : ℝ)) ^ 16)) := by
     simpa [mu, nu, pi] using
       accuracyPhase_stationaryAcceptedTargetLaw_tv q I hsigma2
-  have hwarm : Arlib.IsWarm 64 mu nu := by
+  have hwarm : ArlibCommunity.Foundations.Convex.IsWarm 64 mu nu := by
     simpa [mu, nu, pi] using
       stationary_accuracyAcceptedTarget_isWarm q I hsigma2
   have h := TVLe.integral_nonnegative_le_of_isWarm_secondMoment_sqrt
@@ -465,7 +465,7 @@ theorem stationary_accuracyAcceptedTarget_integral_bias_le_sqrt_secondMoment
     (hsecond : (∫ x, f x ^ 2
         ∂(truncatedGaussianProbability q I sigma2 hsigma2 :
           Measure (AmbientSpace q.n))) ≤ R ^ 2) :
-    let pi := Arlib.MarkovChains.ellGaussianProb
+    let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
       (accuracyPhaseTruncatedBody q I sigma2)
       (figureOneProposalRadius q sigma2) sigma2
     |(∫ x, f x ∂accuracyGaussianAcceptedTargetLaw q I sigma2 pi) -
@@ -473,7 +473,7 @@ theorem stationary_accuracyAcceptedTarget_integral_bias_le_sqrt_secondMoment
         Measure (AmbientSpace q.n))| ≤
       67 * accuracyAcceptedBiasScale q * R := by
   dsimp only
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   let mu := accuracyGaussianAcceptedTargetLaw q I sigma2 pi
@@ -482,12 +482,12 @@ theorem stationary_accuracyAcceptedTarget_integral_bias_le_sqrt_secondMoment
   let _ : IsProbabilityMeasure mu :=
     accuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_stationary q I hsigma2
   let _ : IsProbabilityMeasure nu := by dsimp [nu]; infer_instance
-  have htv : Arlib.TVLe mu nu
+  have htv : ArlibCommunity.Foundations.Convex.TVLe mu nu
       (96 * ENNReal.ofReal (accuracyCoreError q) +
         ENNReal.ofReal ((q.eps / (q.n : ℝ)) ^ 16)) := by
     simpa [mu, nu, pi] using
       accuracyPhase_stationaryAcceptedTargetLaw_tv q I hsigma2
-  have hwarm : Arlib.IsWarm 64 mu nu := by
+  have hwarm : ArlibCommunity.Foundations.Convex.IsWarm 64 mu nu := by
     simpa [mu, nu, pi] using
       stationary_accuracyAcceptedTarget_isWarm q I hsigma2
   have h := TVLe.integral_le_of_isWarm_secondMoment_sqrt

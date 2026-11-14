@@ -39,6 +39,7 @@ definitions to type-check (each random draw is a probability measure).
 
 open MeasureTheory
 
+open Arlib
 namespace ArlibCommunity.Algorithms.CV18
 
 /-! ## 1. Problem -/
@@ -342,36 +343,17 @@ instance initialGaussianLaw_isProbabilityMeasure (q : VolumeParams) :
   · exact Filter.Eventually.of_forall fun x =>
       div_nonneg (Real.exp_pos _).le hZ.le
 
-/-! ## 5. Acceptance probabilities and estimator weights
+/-! ## 5. Acceptance probabilities and estimator weights -/
 
-The Gaussian weights are declared in `Arlib.MarkovChains`, where the Markov-chain
-library used by the proof also refers to them. -/
+/-- Acceptance probability used after scaling the core back to `K`: the ratio
+`e^{-‖x‖²/(2·variance)} / e^{-‖x‖²/(2·variance/c²)}` of the unnormalised Gaussian weights at
+the two variances, in `ℝ≥0∞`. -/
+noncomputable def gaussianScaleAcceptance {n : ℕ} (variance c : ℝ)
+    (x : EuclideanSpace ℝ (Fin n)) : ENNReal :=
+  ENNReal.ofReal (Real.exp (-‖x‖ ^ 2 / (2 * variance))) /
+    ENNReal.ofReal (Real.exp (-‖x‖ ^ 2 / (2 * (variance / c ^ 2))))
 
 end ArlibCommunity.Algorithms.CV18
-
-namespace Arlib.MarkovChains
-
-open MeasureTheory
-open scoped ENNReal
-
-variable {n : ℕ}
-
-/-- The **unnormalised Gaussian weight** `e^{-‖x‖²/(2s)}`, as a real number. -/
-noncomputable def gaussianWeightReal (s : ℝ) (x : EuclideanSpace ℝ (Fin n)) : ℝ :=
-  Real.exp (-‖x‖ ^ 2 / (2 * s))
-
-/-- The **Gaussian weight** `e^{-‖x‖²/(2s)}` as an element of `ℝ≥0∞`.  It is the density,
-with respect to Lebesgue measure, of the unnormalised measure whose restriction to a body
-`K` is the Cousins-Vempala target `∝ 1_K(x)·e^{-‖x‖²/(2s)}`. -/
-noncomputable def gaussianWeight (s : ℝ) (x : EuclideanSpace ℝ (Fin n)) : ℝ≥0∞ :=
-  ENNReal.ofReal (gaussianWeightReal s x)
-
-/-- Acceptance probability used after scaling the core back to `K`. -/
-noncomputable def gaussianScaleAcceptance (variance c : ℝ)
-    (x : EuclideanSpace ℝ (Fin n)) : ENNReal :=
-  gaussianWeight variance x / gaussianWeight (variance / c ^ 2) x
-
-end Arlib.MarkovChains
 
 namespace ArlibCommunity.Algorithms.CV18
 

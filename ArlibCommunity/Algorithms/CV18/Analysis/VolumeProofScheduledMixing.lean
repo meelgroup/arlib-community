@@ -43,20 +43,20 @@ theorem mixesWithin_scheduledPhaseBody_figureOne_cv18
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {mu0 : Measure (AmbientSpace q.n)} [IsProbabilityMeasure mu0]
     {M eps : ℝ} (hM : 1 ≤ M)
-    (hwarm : Arlib.IsWarm (ENNReal.ofReal M) mu0
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     {t : ℕ} (ht : 4 * ((Real.log M + 2 * Real.log (1 / eps)) /
       (proposalRadius q sigma2 * Real.log 2 /
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤ (t : ℝ)) :
-    Arlib.MarkovChains.MixesWithin
-      (Arlib.MarkovChains.lazy
-        (Arlib.MarkovChains.speedyMetropolisGaussian
+    ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin
+      (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+        (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
           (figureOneScheduledPhaseBody q I sigma2)
           (proposalRadius q sigma2) sigma2))
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2)
       mu0 t (ENNReal.ofReal eps) := by
@@ -66,14 +66,14 @@ theorem mixesWithin_scheduledPhaseBody_figureOne_cv18
     proposalRadius_pos q hsigma2
   have hR : 0 ≤ phaseRadius q sigma2 :=
     (phaseRadius_pos q hsigma2).le
-  have hwarm' : Arlib.IsWarm (ENNReal.ofReal M) mu0
-      (Arlib.MarkovChains.ellGaussianProb
+  have hwarm' : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2)
         (Real.sqrt sigma2 ^ 2)) := by
     simpa [Real.sq_sqrt hsigma2.le] using hwarm
   have hmix :=
-    Arlib.MarkovChains.mixesWithin_lazy_speedyMetropolisGaussian_radiusStepProduct_cv18
+    ArlibCommunity.Algorithms.CV18.mixesWithin_lazy_speedyMetropolisGaussian_radiusStepProduct_cv18
       hn2 hsigma hdelta
       (proposalRadius_le_sigma_div_eight_sqrt q hsigma2)
       (figureOneScheduledPhaseBody_measurable q I sigma2)

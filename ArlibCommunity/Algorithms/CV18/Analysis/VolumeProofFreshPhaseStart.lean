@@ -10,13 +10,13 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory Metric Set
 open scoped ENNReal
-open Arlib Arlib.MarkovChains
+open Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- The known Gaussian law conditioned on the centered inball of an accuracy
 phase.  It depends only on public parameters, never on the unknown body. -/
 noncomputable def freshPhaseStartMeasure (q : VolumeParams) (sigma2 : ℝ) :
     Measure (AmbientSpace q.n) :=
-  Arlib.uniformOn
+  ArlibCommunity.Foundations.Convex.uniformOn
     ((volume : Measure (AmbientSpace q.n)).withDensity (gaussianWeight sigma2))
     (Metric.closedBall 0 (accuracyPhaseInradius q sigma2))
 
@@ -54,7 +54,7 @@ theorem freshPhaseStartMeasure_isProbabilityMeasure
     (q : VolumeParams) {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     IsProbabilityMeasure (freshPhaseStartMeasure q sigma2) := by
   unfold freshPhaseStartMeasure
-  exact Arlib.isProbabilityMeasure_uniformOn _
+  exact ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn _
     (freshPhaseGaussianBall_mass_ne_zero q hsigma2)
     (freshPhaseGaussianBall_mass_ne_top q hsigma2)
 
@@ -202,7 +202,7 @@ theorem freshPhaseStartMeasure_isWarm
     simp [mu]
   rw [hmuMass] at hw
   simpa only [freshPhaseStartMeasure, freshPhaseWarmCoefficient,
-    Arlib.uniformOn_def, ellGaussianProb,
+    ArlibCommunity.Foundations.Convex.uniformOn_def, ellGaussianProb,
     G, B, K, delta, mu, nu, C, D] using hw
 
 end ArlibCommunity.Algorithms.CV18

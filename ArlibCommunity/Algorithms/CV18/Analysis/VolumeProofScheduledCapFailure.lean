@@ -13,14 +13,14 @@ theorem half_mul_natCast_mul_bind_scheduledCappedProperCollectLaw_none_le
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {weight : AmbientSpace q.n → ℝ} (hweight : Measurable weight)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : Arlib.IsWarm M mu
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (rawCap properStride samples : ℕ) :
     ENNReal.ofReal (1 / 2) * (rawCap : ENNReal) *
         (mu.bind fun current => cappedProperCollectLaw
-          (Arlib.MarkovChains.lazyProperProposalGaussianAux
+          (ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux
             (figureOneScheduledPhaseBody q I sigma2)
             (figureOneScheduledPhaseBody_measurable q I sigma2)
             (proposalRadius q sigma2) sigma2)
@@ -28,7 +28,7 @@ theorem half_mul_natCast_mul_bind_scheduledCappedProperCollectLaw_none_le
       ((properStride * samples : ℕ) : ENNReal) * M := by
   let K := figureOneScheduledPhaseBody q I sigma2
   let delta := proposalRadius q sigma2
-  let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux K
+  let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux K
     (figureOneScheduledPhaseBody_measurable q I sigma2) delta sigma2
   have hK : MeasurableSet K :=
     figureOneScheduledPhaseBody_measurable q I sigma2
@@ -39,15 +39,15 @@ theorem half_mul_natCast_mul_bind_scheduledCappedProperCollectLaw_none_le
   have hK0 : volume K ≠ 0 :=
     figureOneScheduledPhaseBody_volume_ne_zero q I hsigma2
   have hdelta : 0 < delta := proposalRadius_pos q hsigma2
-  have hZ0 : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 :=
-    Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+  have hZ0 : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 :=
+    ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
       hK hKc hKb hK0 hdelta sigma2
-  have hZtop : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2 Set.univ ≠ ⊤ :=
-    Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+  have hZtop : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2 Set.univ ≠ ⊤ :=
+    ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
       (figureOneScheduledPhaseBody_volume_ne_top q I sigma2) delta hsigma2
   have hlambda : ENNReal.ofReal (1 / 2) *
-      (∫⁻ x in K, Arlib.MarkovChains.gaussianWeight sigma2 x) ≤
-        Arlib.MarkovChains.ellGaussianMeasure K delta sigma2 Set.univ := by
+      (∫⁻ x in K, ArlibCommunity.Foundations.Convex.gaussianWeight sigma2 x) ≤
+        ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2 Set.univ := by
     simpa [K, delta] using
       half_mul_gaussianWeight_le_scheduledPhaseEllGaussian q I hsigma2
   have hcollect : Measurable fun current =>
@@ -73,7 +73,7 @@ theorem half_mul_natCast_mul_bind_scheduledCappedProperCollectLaw_none_le
       (mu.bind fun current => cappedProperCollectLaw Q weight rawCap
         properStride samples current) {none} ≤ _
   rw [hfailure]
-  exact Arlib.MarkovChains.mul_natCast_mul_bind_cappedLazyProperMarkedLaw_none_le
+  exact ArlibCommunity.Algorithms.CV18.mul_natCast_mul_bind_cappedLazyProperMarkedLaw_none_le
     K hK hKc hKb hK0 hdelta sigma2 hZ0 hZtop hlambda hwarm rawCap
       (properStride * samples)
 
@@ -84,8 +84,8 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_none_le_of_isWarm
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : Arlib.IsWarm M mu
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (proposalCap properStride : ℕ) (hproposalCap : 0 < proposalCap)

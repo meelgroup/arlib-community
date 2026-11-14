@@ -54,13 +54,13 @@ theorem map_withDensity_accuracyRejectionAcceptance
     (mu.withDensity (accuracyGaussianRejectionAcceptance q I sigma2)).map
         (fun x => c⁻¹ • x) =
       ((mu.restrict (c • K)).map (fun x => c⁻¹ • x)).withDensity
-        (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c) := by
+        (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c) := by
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
   let c := scaleFactor q
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
   let g : AmbientSpace q.n → ENNReal :=
-    Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c
+    ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c
   have hc0 : 0 < c := by simpa [c] using scaleFactor_pos q
   have hK : MeasurableSet K := accuracyPhaseTruncatedBody_measurable q I sigma2
   have hcore : MeasurableSet (c • K) :=
@@ -72,7 +72,7 @@ theorem map_withDensity_accuracyRejectionAcceptance
       measurable_id
   have hg : Measurable g := by
     dsimp [g]
-    exact Arlib.MarkovChains.measurable_gaussianScaleAcceptance sigma2 c
+    exact ArlibCommunity.Algorithms.CV18.measurable_gaussianScaleAcceptance sigma2 c
   have haccept : accuracyGaussianRejectionAcceptance q I sigma2 =
       (c • K).indicator (fun x => g (scale x)) := by
     funext x
@@ -109,7 +109,7 @@ KLS rejection attempt. -/
 noncomputable def accuracyGaussianAcceptedTargetLaw
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ)
     (mu : Measure (AmbientSpace q.n)) : Measure (AmbientSpace q.n) :=
-  Arlib.condOn
+  ArlibCommunity.Foundations.Convex.condOn
     ((mu.withDensity (accuracyGaussianRejectionAcceptance q I sigma2)).map
       (fun x => (scaleFactor q)⁻¹ • x)) Set.univ
 
@@ -125,32 +125,32 @@ theorem accuracyGaussianAcceptedTargetLaw_eq_kls
     accuracyGaussianAcceptedTargetLaw q I sigma2 mu =
       let K := accuracyPhaseTruncatedBody q I sigma2
       let c := scaleFactor q
-      Arlib.condOn
-        (((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
-          (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c)) Set.univ := by
+      ArlibCommunity.Foundations.Convex.condOn
+        (((ArlibCommunity.Foundations.Convex.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
+          (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c)) Set.univ := by
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
   let c := scaleFactor q
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
   let g : AmbientSpace q.n → ENNReal :=
-    Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c
+    ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c
   have hscale : Measurable scale := by
     dsimp [scale]
     exact (measurable_const : Measurable fun _ : AmbientSpace q.n => c⁻¹).smul
       measurable_id
   have hproposal :
-      ((Arlib.condOn mu (c • K)).map scale).withDensity g =
+      ((ArlibCommunity.Foundations.Convex.condOn mu (c • K)).map scale).withDensity g =
         (mu (c • K))⁻¹ •
           (((mu.restrict (c • K)).map scale).withDensity g) := by
-    rw [Arlib.condOn_def, Measure.map_smul (hf := by fun_prop), withDensity_smul_measure]
+    rw [ArlibCommunity.Foundations.Convex.condOn_def, Measure.map_smul (hf := by fun_prop), withDensity_smul_measure]
   rw [hproposal]
   have hunscaled := map_withDensity_accuracyRejectionAcceptance q I sigma2 mu
-  change Arlib.condOn
+  change ArlibCommunity.Foundations.Convex.condOn
       ((mu.withDensity (accuracyGaussianRejectionAcceptance q I sigma2)).map
         scale) Set.univ = _
   rw [← hunscaled]
   symm
-  exact Arlib.MarkovChains.condOn_smul_cv18 _ MeasurableSet.univ
+  exact ArlibCommunity.Algorithms.CV18.condOn_smul_cv18 _ MeasurableSet.univ
     (ENNReal.inv_ne_zero.mpr hcoretop) (ENNReal.inv_ne_top.mpr hcore0)
 
 set_option maxHeartbeats 800000 in
@@ -161,8 +161,8 @@ theorem accuracyGaussianAcceptedTargetLaw_tv_cv18
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {mu0 : Measure (AmbientSpace q.n)} [IsProbabilityMeasure mu0]
     {M mixError : ℝ} (hM : 1 ≤ M)
-    (hwarm : Arlib.IsWarm (ENNReal.ofReal M) mu0
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (hmixError0 : 0 < mixError) (hmixError64 : mixError ≤ 1 / 64)
@@ -171,10 +171,10 @@ theorem accuracyGaussianAcceptedTargetLaw_tv_cv18
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤ (t : ℝ)) :
     let K := accuracyPhaseTruncatedBody q I sigma2
     let delta := figureOneProposalRadius q sigma2
-    let P := Arlib.MarkovChains.lazy
-      (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2)
-    let mu := Arlib.MarkovChains.iterate P mu0 t
-    Arlib.TVLe
+    let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+      (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K delta sigma2)
+    let mu := ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu0 t
+    ArlibCommunity.Foundations.Convex.TVLe
       (accuracyGaussianAcceptedTargetLaw q I sigma2 mu)
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n))
@@ -184,9 +184,9 @@ theorem accuracyGaussianAcceptedTargetLaw_tv_cv18
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
-  let P := Arlib.MarkovChains.lazy
-    (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2)
-  let mu := Arlib.MarkovChains.iterate P mu0 t
+  let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+    (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K delta sigma2)
+  let mu := ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu0 t
   have hcore0 : mu (scaleFactor q • K) ≠ 0 := by
     simpa [mu, P, K, delta] using
       accuracyPhase_iterate_core_ne_zero q I hsigma2 hM hwarm

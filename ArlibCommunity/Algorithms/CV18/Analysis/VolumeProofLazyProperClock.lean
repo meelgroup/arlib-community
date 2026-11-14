@@ -14,8 +14,10 @@ preserving the fact that a proper proposal is a proposal which lands in the
 body, whether or not its Metropolis test changes the state.
 -/
 
-namespace Arlib.MarkovChains
+open Arlib
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory ProbabilityTheory Metric
 open scoped ENNReal
 
@@ -664,11 +666,10 @@ theorem half_mul_mul_measure_lazyProperProposalTotalCost_ge_le_LVStep
       hn hKc hKcl hKfin hball hsigma hdelta hstep)
     hwarm t cutoff
 
-end Arlib.MarkovChains
-
+end ArlibCommunity.Algorithms.CV18
 namespace ArlibCommunity.Algorithms.CV18
 
-open MeasureTheory ProbabilityTheory Arlib.MarkovChains
+open MeasureTheory ProbabilityTheory ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- At one step, forgetting the proper-proposal mark recovers exactly the
 kernel executed by Figure 1. -/

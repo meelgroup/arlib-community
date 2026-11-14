@@ -3,8 +3,8 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofStationary
-import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.MarkovChains.Continuous.MetropolisGaussian
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.MarkovChains.Continuous.BallWalkConductance
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.MetropolisGaussian
+import ArlibCommunity.Foundations.MarkovChainTheory.BallWalkMixing.Analysis.BallWalkConductance
 import Mathlib.MeasureTheory.Integral.Lebesgue.Sub
 
 /-!
@@ -16,9 +16,9 @@ differences needed before the abstract mixing theorem can be applied:
 
 * normalizing Lebesgue measure on a closed proposal ball gives the same
   probability measure as normalizing it on the open ball used by
-  `Arlib.MarkovChains.metropolisGaussian`; the boundary sphere is null;
+  `ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian`; the boundary sphere is null;
 * the executable acceptance probability is exactly one half of
-  `Arlib.MarkovChains.metropolisAccept`, including the indicator of the fixed
+  `ArlibCommunity.Foundations.MarkovChainTheory.metropolisAccept`, including the indicator of the fixed
   truncated body.
 
 The remaining bridge is trajectory-level: relate a fixed number of these raw
@@ -30,7 +30,7 @@ open MeasureTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 open scoped ENNReal
 
 /-- Normalizing the implementation's closed proposal ball is identical to

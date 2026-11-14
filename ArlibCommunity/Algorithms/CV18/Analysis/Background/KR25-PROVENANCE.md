@@ -7,7 +7,7 @@ Lean 4.33. They are needed by the CV18 sharp accelerated-moment proof
 (`VolumeProofSharpMoments.lean`) and the radial truncation proof
 (`VolumeProofRadialTruncation.lean`):
 
-- `Arlib/Convexity/ProductLocalization.lean`
+- `ArlibCommunity/Foundations/Convex/Localization/Analysis/ProductLocalization.lean`
 - `Arlib/Convexity/GaussianCooling/{Variance,ZLogconcave,IndicatorVariance,LogConcaveProfileVariance}.lean`
 - `Ttc/Volume/LVNormTail*.lean` (nine modules)
 

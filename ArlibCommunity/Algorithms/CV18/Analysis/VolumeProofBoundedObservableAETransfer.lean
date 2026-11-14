@@ -29,10 +29,10 @@ theorem memLp_two_of_ae_nonnegative_le
 
 /-- The small-TV moment lemma remains valid when boundedness is known only
 almost everywhere under each of the two probability laws. -/
-theorem Arlib.TVLe.positive_mean_and_second_le_four_of_ae
+theorem ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four_of_ae
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
-    {epsilon : ENNReal} (h : Arlib.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
+    {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
     {f : S → ℝ} (hf : Measurable f) {B : ℝ} (hB : 0 < B)
     (hf0mu : ∀ᵐ x ∂mu, 0 ≤ f x) (hfBmu : ∀ᵐ x ∂mu, f x ≤ B)
     (hf0nu : ∀ᵐ x ∂nu, 0 ≤ f x) (hfBnu : ∀ᵐ x ∂nu, f x ≤ B)
@@ -67,7 +67,7 @@ theorem Arlib.TVLe.positive_mean_and_second_le_four_of_ae
     integral_congr_ae (by
       filter_upwards [hgeqnu] with x hx
       rw [hx])
-  have hresult := Arlib.TVLe.positive_mean_and_second_le_four h hepsilon
+  have hresult := ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four h hepsilon
     hg hB hg0 hgB (idealMean := idealMean)
     (hidealMean.trans hmeanNu.symm) hidealMeanPos
     (hsecondNu.trans_le hidealSecond) hmeanError hsecondError
@@ -77,10 +77,10 @@ theorem Arlib.TVLe.positive_mean_and_second_le_four_of_ae
 /-- At the exact-chance budget used by Figure One, support in
 `[0, exp (1/2)]`, ideal mean at least one, and ideal relative second moment at
 most two suffice for the executable raw moment bound. -/
-theorem Arlib.TVLe.positive_mean_and_second_le_four_of_ae_expHalf
+theorem ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four_of_ae_expHalf
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
-    {epsilon : ENNReal} (h : Arlib.TVLe mu nu epsilon)
+    {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
     (hepsilon : epsilon ≤ ENNReal.ofReal (1 / 64 : ℝ))
     {f : S → ℝ} (hf : Measurable f)
     (hf0mu : ∀ᵐ x ∂mu, 0 ≤ f x)
@@ -111,12 +111,12 @@ theorem Arlib.TVLe.positive_mean_and_second_le_four_of_ae_expHalf
     have hexp0 := (Real.exp_pos (1 / 2)).le
     have hmeanSq : 1 ≤ idealMean ^ 2 := by nlinarith
     nlinarith [mul_self_le_mul_self hexp0 hexp]
-  exact Arlib.TVLe.positive_mean_and_second_le_four_of_ae h hepsilonTop hf
+  exact ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four_of_ae h hepsilonTop hf
     (Real.exp_pos _) hf0mu hfBmu hf0nu hfBnu hidealMean hidealMeanPos
     hidealSecond hmeanError hsecondError
 
 #print axioms memLp_two_of_ae_nonnegative_le
-#print axioms Arlib.TVLe.positive_mean_and_second_le_four_of_ae
-#print axioms Arlib.TVLe.positive_mean_and_second_le_four_of_ae_expHalf
+#print axioms ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four_of_ae
+#print axioms ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four_of_ae_expHalf
 
 end ArlibCommunity.Algorithms.CV18

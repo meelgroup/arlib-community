@@ -11,14 +11,14 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Metric Set
 open scoped ENNReal Pointwise
-open Arlib MarkovChains
+open Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- A TV perturbation of a proposal whose rejection acceptance is at least
 one half still accepts with probability at least one quarter. -/
 theorem TVLe.withDensity_mass_ge_quarter_cv18
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
-    {epsilon : ENNReal} (h : Arlib.TVLe mu nu epsilon)
+    {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
     (hepsilon : epsilon ≤ ENNReal.ofReal (1 / 4 : ℝ))
     {accept : S → ENNReal} (haccept : Measurable accept)
     (haccept_one : ∀ x, accept x ≤ 1)
@@ -52,18 +52,18 @@ theorem accuracyPhase_stationaryCoreMap_tv_proposal
     let delta := figureOneProposalRadius q sigma2
     let c := scaleFactor q
     let pi := ellGaussianProb K delta sigma2
-    let proposal := Arlib.condOn
+    let proposal := ArlibCommunity.Foundations.Convex.condOn
       ((volume : Measure (AmbientSpace q.n)).withDensity
         (gaussianWeight (sigma2 / c ^ 2))) K
-    Arlib.TVLe
-      ((Arlib.condOn pi (c • K)).map (fun x => c⁻¹ • x))
+    ArlibCommunity.Foundations.Convex.TVLe
+      ((ArlibCommunity.Foundations.Convex.condOn pi (c • K)).map (fun x => c⁻¹ • x))
       proposal (4 * ENNReal.ofReal (accuracyCoreError q)) := by
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
   let c := scaleFactor q
   let pi := ellGaussianProb K delta sigma2
-  let proposal := Arlib.condOn
+  let proposal := ArlibCommunity.Foundations.Convex.condOn
     ((volume : Measure (AmbientSpace q.n)).withDensity
       (gaussianWeight (sigma2 / c ^ 2))) K
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
@@ -98,10 +98,10 @@ theorem accuracyPhase_stationaryCoreMap_tv_proposal
     have hmap := congrArg
       (fun mu : Measure (AmbientSpace q.n) => mu.map (fun x => c⁻¹ • x)) hcoreEq
     rw [map_condOn_gaussian_smul_cv18 hKmeas hc0] at hmap
-    have heq : (Arlib.condOn pi (c • K)).map (fun x => c⁻¹ • x) =
+    have heq : (ArlibCommunity.Foundations.Convex.condOn pi (c • K)).map (fun x => c⁻¹ • x) =
         proposal := by simpa [pi, proposal] using hmap
     rw [heq]
-    exact (Arlib.TVLe.refl proposal).mono bot_le
+    exact (ArlibCommunity.Foundations.Convex.TVLe.refl proposal).mono bot_le
   · have hlarge : 1 ≤ accuracyPhaseRadius q sigma2 := le_of_not_ge hsmall
     have hunit : Metric.closedBall (0 : AmbientSpace q.n) 1 ⊆ K := by
       intro x hx
@@ -116,10 +116,10 @@ theorem accuracyPhase_stationaryCoreMap_tv_proposal
       exact hKconv.smul_mem_of_zero_mem
         (hunit (Metric.mem_closedBall_self zero_le_one)) hx ⟨hc0.le, hc1.le⟩
     have hcoreVol0 : volume (c • K) ≠ 0 := by
-      rw [Arlib.volume_smul_euclidean hc0.le]
+      rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
       exact mul_ne_zero (ENNReal.ofReal_ne_zero_iff.mpr (pow_pos hc0 q.n)) hK0
     have hcoreVoltop : volume (c • K) ≠ ⊤ := by
-      rw [Arlib.volume_smul_euclidean hc0.le]
+      rw [ArlibCommunity.Foundations.Convex.volume_smul_euclidean hc0.le]
       exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top hKtop
     have hgaussCore0 :
         (((volume : Measure (AmbientSpace q.n)).withDensity
@@ -153,10 +153,10 @@ theorem accuracyPhase_stationaryCoreMap_tv_proposal
         ((accuracyCoreError_le_one_div_sixteen q).trans (by norm_num)))
       (by simpa [c, scaleFactor, Real.sq_sqrt hsigma2.le] using hpaper.1)
     have hgaussRestrict :
-        Arlib.condOn
+        ArlibCommunity.Foundations.Convex.condOn
             (((volume : Measure (AmbientSpace q.n)).withDensity
               (gaussianWeight sigma2)).restrict K) (c • K) =
-          Arlib.condOn
+          ArlibCommunity.Foundations.Convex.condOn
             ((volume : Measure (AmbientSpace q.n)).withDensity
               (gaussianWeight sigma2)) (c • K) :=
       condOn_restrict_eq_condOn_of_subset_cv18 _ hcoreM hsub
@@ -186,8 +186,8 @@ theorem accuracyPhase_stationary_acceptance_ge
   let core := c • K
   let scale : AmbientSpace q.n → AmbientSpace q.n := fun x => c⁻¹ • x
   let g : AmbientSpace q.n → ENNReal := gaussianScaleAcceptance sigma2 c
-  let source := (Arlib.condOn pi core).map scale
-  let proposal := Arlib.condOn
+  let source := (ArlibCommunity.Foundations.Convex.condOn pi core).map scale
+  let proposal := ArlibCommunity.Foundations.Convex.condOn
     ((volume : Measure (AmbientSpace q.n)).withDensity
       (gaussianWeight (sigma2 / c ^ 2))) K
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
@@ -211,8 +211,8 @@ theorem accuracyPhase_stationary_acceptance_ge
   have hcore0 : pi core ≠ 0 :=
     ne_of_gt ((by norm_num : 0 < ENNReal.ofReal (7 / 16 : ℝ)).trans_le hcoreMass)
   have hcoretop : pi core ≠ ⊤ := measure_ne_top pi core
-  let _ : IsProbabilityMeasure (Arlib.condOn pi core) :=
-    Arlib.isProbabilityMeasure_condOn pi hcore0 hcoretop
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn pi core) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn pi hcore0 hcoretop
   let _ : IsProbabilityMeasure source :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable (by fun_prop)
   have hscaled : 0 < sigma2 / c ^ 2 := by positivity
@@ -225,8 +225,8 @@ theorem accuracyPhase_stationary_acceptance_ge
         (gaussianWeight (sigma2 / c ^ 2))) K ≠ ⊤ :=
     withDensity_gaussianWeight_ne_top hscaled hKmeas hKtop
   let _ : IsProbabilityMeasure proposal :=
-    Arlib.isProbabilityMeasure_condOn _ hprop0 hproptop
-  have hsourceTv : Arlib.TVLe source proposal
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn _ hprop0 hproptop
+  have hsourceTv : ArlibCommunity.Foundations.Convex.TVLe source proposal
       (4 * ENNReal.ofReal (accuracyCoreError q)) := by
     simpa [source, proposal, pi, core, scale, K, delta, c] using
       accuracyPhase_stationaryCoreMap_tv_proposal q I hsigma2
@@ -259,8 +259,8 @@ theorem accuracyPhase_stationary_acceptance_ge
   have hsourceAccept : ENNReal.ofReal (1 / 4 : ℝ) ≤
       (source.withDensity g) Set.univ :=
     TVLe.withDensity_mass_ge_quarter_cv18 hsourceTv herr hg hg1 hhalf
-  have hrestrict : pi.restrict core = pi core • Arlib.condOn pi core := by
-    rw [Arlib.condOn_def, smul_smul,
+  have hrestrict : pi.restrict core = pi core • ArlibCommunity.Foundations.Convex.condOn pi core := by
+    rw [ArlibCommunity.Foundations.Convex.condOn_def, smul_smul,
       ENNReal.mul_inv_cancel hcore0 hcoretop, one_smul]
   have hsourceScale :
       ((pi.restrict core).map scale).withDensity g =
@@ -288,7 +288,7 @@ theorem accuracyPhase_mixed_acceptance_ge
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {mu0 : Measure (AmbientSpace q.n)} [IsProbabilityMeasure mu0]
     {M mixError : ℝ} (hM : 1 ≤ M)
-    (hwarm : Arlib.IsWarm (ENNReal.ofReal M) mu0
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
       (ellGaussianProb (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (hmixError0 : 0 < mixError) (hmixError64 : mixError ≤ 1 / 64)
@@ -310,7 +310,7 @@ theorem accuracyPhase_mixed_acceptance_ge
   let mu := iterate P mu0 t
   have hmixPhase := mixesWithin_accuracyPhaseTruncatedBody_figureOne_cv18
     q I hsigma2 hM hwarm hmixError0 (hmixError64.trans (by norm_num)) ht
-  have hmix : Arlib.TVLe mu pi (ENNReal.ofReal mixError) := by
+  have hmix : ArlibCommunity.Foundations.Convex.TVLe mu pi (ENNReal.ofReal mixError) := by
     simpa [MixesWithin, mu, pi, P, K, delta] using hmixPhase
   have hstationary : ENNReal.ofReal (7 / 64 : ℝ) ≤
       (pi.withDensity

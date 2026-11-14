@@ -14,7 +14,7 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open _root_.Arlib
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 noncomputable section
 
@@ -73,7 +73,7 @@ theorem exists_scheduledGlobalGaussianPrefixInvariant_succ
     simp only [Function.comp_apply]
     rw [scheduledResetPrefixCoordinates_resetAppend_eq q phase
       hphaseDependent trace hvalid result]
-  have hwarm : Arlib.IsWarm
+  have hwarm : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q))
       (accepted.map fun point => scaleFactor q • point)
       (figureOneScheduledSpeedyPiAt q I phase) := by

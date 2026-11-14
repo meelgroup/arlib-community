@@ -4,7 +4,7 @@ Released under Apache 2.0 license, as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependence
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofMeasureApproximation
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Probability.Rejection
+import ArlibCommunity.Foundations.Convex.Basic.Rejection
 import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
 /-!
@@ -24,9 +24,9 @@ variable {H T : Type*} [MeasurableSpace H] [MeasurableSpace T]
 
 /-- Measurable postprocessing preserves warmness with the same coefficient. -/
 theorem isWarm_map {S : Type*} [MeasurableSpace S]
-    {M : ENNReal} {mu nu : Measure H} (h : Arlib.IsWarm M mu nu)
+    {M : ENNReal} {mu nu : Measure H} (h : ArlibCommunity.Foundations.Convex.IsWarm M mu nu)
     {f : H -> S} (hf : Measurable f) :
-    Arlib.IsWarm M (mu.map f) (nu.map f) := by
+    ArlibCommunity.Foundations.Convex.IsWarm M (mu.map f) (nu.map f) := by
   intro A hA
   rw [Measure.map_apply hf hA, Measure.map_apply hf hA]
   exact h (f ⁻¹' A) (hf hA)
@@ -126,12 +126,12 @@ theorem real_restrict_bind_eq_mul_condOn_bind
     (hK : Measurable K) {A : Set H} (hA : MeasurableSet A)
     (hA0 : rho A ≠ 0) {B : Set T} (hB : MeasurableSet B) :
     ((rho.restrict A).bind K).real B =
-      rho.real A * ((Arlib.condOn rho A).bind K).real B := by
+      rho.real A * ((ArlibCommunity.Foundations.Convex.condOn rho A).bind K).real B := by
   have hAtop : rho A ≠ ⊤ := measure_ne_top rho A
-  have hbind : (Arlib.condOn rho A).bind K =
+  have hbind : (ArlibCommunity.Foundations.Convex.condOn rho A).bind K =
       (rho A)⁻¹ • ((rho.restrict A).bind K) := by
-    rw [Arlib.condOn_def, Measure.bind_smul (hf := by fun_prop)]
-  have hENN : rho A * ((Arlib.condOn rho A).bind K B) =
+    rw [ArlibCommunity.Foundations.Convex.condOn_def, Measure.bind_smul (hf := by fun_prop)]
+  have hENN : rho A * ((ArlibCommunity.Foundations.Convex.condOn rho A).bind K B) =
       (rho.restrict A).bind K B := by
     rw [hbind, Measure.smul_apply, smul_eq_mul, ← mul_assoc,
       ENNReal.mul_inv_cancel hA0 hAtop, one_mul]
@@ -145,7 +145,7 @@ theorem isWarm_condOn_two_of_half
     (rho : Measure H) [IsProbabilityMeasure rho]
     {A : Set H} (hA : MeasurableSet A)
     (hhalf : 1 / 2 <= rho.real A) :
-    Arlib.IsWarm 2 (Arlib.condOn rho A) rho := by
+    ArlibCommunity.Foundations.Convex.IsWarm 2 (ArlibCommunity.Foundations.Convex.condOn rho A) rho := by
   have hhalfENN : (2 : ENNReal)⁻¹ <= rho A := by
     apply (ENNReal.toReal_le_toReal (by norm_num)
       (measure_ne_top rho A)).mp
@@ -153,7 +153,7 @@ theorem isWarm_condOn_two_of_half
   have hinv : (rho A)⁻¹ <= (2 : ENNReal) := by
     exact ENNReal.inv_le_iff_inv_le.mpr (by simpa using hhalfENN)
   intro S hS
-  rw [Arlib.condOn_def, Measure.smul_apply, smul_eq_mul,
+  rw [ArlibCommunity.Foundations.Convex.condOn_def, Measure.smul_apply, smul_eq_mul,
     Measure.restrict_apply hS]
   calc
     (rho A)⁻¹ * rho (S ∩ A) <= (rho A)⁻¹ * rho S := by
@@ -171,7 +171,7 @@ theorem approxIndepFun_fst_snd_sequentialPairLaw_of_condOn_bind_tv
     {epsilon : ENNReal} (hepsilon : epsilon ≠ ⊤)
     (hcond : forall A : Set H, MeasurableSet A ->
       1 / 2 <= rho.real A ->
-      Arlib.TVLe ((Arlib.condOn rho A).bind K) (rho.bind K) epsilon) :
+      ArlibCommunity.Foundations.Convex.TVLe ((ArlibCommunity.Foundations.Convex.condOn rho A).bind K) (rho.bind K) epsilon) :
     ApproxIndepFun epsilon.toReal Prod.fst Prod.snd
       (sequentialPairLaw rho K) := by
   let pairLaw := sequentialPairLaw rho K
@@ -197,9 +197,9 @@ theorem approxIndepFun_fst_snd_sequentialPairLaw_of_condOn_bind_tv
     intro hzero
     rw [measureReal_def, hzero] at hAposReal
     simp at hAposReal
-  let _ : IsProbabilityMeasure (Arlib.condOn rho A) :=
-    Arlib.isProbabilityMeasure_condOn rho hA0 (measure_ne_top rho A)
-  let _ : IsProbabilityMeasure ((Arlib.condOn rho A).bind K) :=
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn rho A) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn rho hA0 (measure_ne_top rho A)
+  let _ : IsProbabilityMeasure ((ArlibCommunity.Foundations.Convex.condOn rho A).bind K) :=
     isProbabilityMeasure_bind hK.aemeasurable (ae_of_all _ hKprob)
   let _ : IsProbabilityMeasure (rho.bind K) :=
     isProbabilityMeasure_bind hK.aemeasurable (ae_of_all _ hKprob)
@@ -211,9 +211,9 @@ theorem approxIndepFun_fst_snd_sequentialPairLaw_of_condOn_bind_tv
     simpa only [probReal_univ] using
       measureReal_mono (subset_univ A) (measure_ne_top rho Set.univ)
   calc
-    |rho.real A * ((Arlib.condOn rho A).bind K).real B -
+    |rho.real A * ((ArlibCommunity.Foundations.Convex.condOn rho A).bind K).real B -
         rho.real A * (rho.bind K).real B| =
-        rho.real A * |((Arlib.condOn rho A).bind K).real B -
+        rho.real A * |((ArlibCommunity.Foundations.Convex.condOn rho A).bind K).real B -
           (rho.bind K).real B| := by
       rw [← mul_sub, abs_mul, abs_of_nonneg hp0]
     _ <= rho.real A * epsilon.toReal :=
@@ -233,7 +233,7 @@ theorem approxIndepFun_fst_snd_sequentialPairLaw_of_warm_leUpTo
     (target : Measure T) [IsProbabilityMeasure target]
     {delta : ENNReal} (hdelta : delta ≠ ⊤)
     (happrox : forall mu : Measure H, IsProbabilityMeasure mu ->
-      Arlib.IsWarm 2 mu rho ->
+      ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho ->
       MeasureLeUpTo (mu.bind K) target delta) :
     ApproxIndepFun (delta + delta).toReal Prod.fst Prod.snd
       (sequentialPairLaw rho K) := by
@@ -246,17 +246,17 @@ theorem approxIndepFun_fst_snd_sequentialPairLaw_of_warm_leUpTo
     intro hzero
     rw [measureReal_def, hzero] at hAposReal
     simp at hAposReal
-  let hcondProb : IsProbabilityMeasure (Arlib.condOn rho A) :=
-    Arlib.isProbabilityMeasure_condOn rho hA0 (measure_ne_top rho A)
-  let _ : IsProbabilityMeasure (Arlib.condOn rho A) := hcondProb
-  let _ : IsProbabilityMeasure ((Arlib.condOn rho A).bind K) :=
+  let hcondProb : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn rho A) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn rho hA0 (measure_ne_top rho A)
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn rho A) := hcondProb
+  let _ : IsProbabilityMeasure ((ArlibCommunity.Foundations.Convex.condOn rho A).bind K) :=
     isProbabilityMeasure_bind hK.aemeasurable (ae_of_all _ hKprob)
   let _ : IsProbabilityMeasure (rho.bind K) :=
     isProbabilityMeasure_bind hK.aemeasurable (ae_of_all _ hKprob)
-  have hconditioned := happrox (Arlib.condOn rho A) hcondProb
+  have hconditioned := happrox (ArlibCommunity.Foundations.Convex.condOn rho A) hcondProb
     (isWarm_condOn_two_of_half rho hA hhalf)
   have hunconditioned := happrox rho (inferInstance : IsProbabilityMeasure rho)
-    ((Arlib.IsWarm.refl rho).mono (by norm_num))
+    ((ArlibCommunity.Foundations.Convex.IsWarm.refl rho).mono (by norm_num))
   exact hconditioned.to_tvLe.trans hunconditioned.to_tvLe.symm
 
 /-- CV18 Lemma 7.17(c), in its model-independent form.  Once the complete
@@ -270,7 +270,7 @@ theorem approxIndepFun_accumulatedProduct_nextEstimator_of_warm_leUpTo
     (target : Measure T) [IsProbabilityMeasure target]
     {delta : ENNReal} (hdelta : delta ≠ ⊤)
     (happrox : forall mu : Measure H, IsProbabilityMeasure mu ->
-      Arlib.IsWarm 2 mu rho ->
+      ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho ->
       MeasureLeUpTo (mu.bind K) target delta)
     (pastProduct : H -> ℝ) (nextEstimator : T -> ℝ)
     (hpastProduct : Measurable pastProduct)
@@ -298,7 +298,7 @@ theorem approxIndepFun_history_next_of_state_warm_leUpTo
     (target : Measure T) [IsProbabilityMeasure target]
     {delta : ENNReal} (hdelta : delta ≠ ⊤)
     (happrox : forall mu : Measure S, IsProbabilityMeasure mu ->
-      Arlib.IsWarm 2 mu (rho.map state) ->
+      ArlibCommunity.Foundations.Convex.IsWarm 2 mu (rho.map state) ->
       MeasureLeUpTo (mu.bind K) target delta) :
     ApproxIndepFun (delta + delta).toReal Prod.fst Prod.snd
       (sequentialPairLaw rho (K ∘ state)) := by
@@ -325,7 +325,7 @@ theorem approxIndepFun_accumulatedProduct_nextEstimator_of_state_warm_leUpTo
     (target : Measure T) [IsProbabilityMeasure target]
     {delta : ENNReal} (hdelta : delta ≠ ⊤)
     (happrox : forall mu : Measure S, IsProbabilityMeasure mu ->
-      Arlib.IsWarm 2 mu (rho.map state) ->
+      ArlibCommunity.Foundations.Convex.IsWarm 2 mu (rho.map state) ->
       MeasureLeUpTo (mu.bind K) target delta)
     (pastProduct : H -> ℝ) (nextEstimator : T -> ℝ)
     (hpastProduct : Measurable pastProduct)

@@ -2,10 +2,11 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.MetropolisIsoperimetry
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofKernelBridge
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofStrongStepMixing
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofApproxIndependenceMarkov
-import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.Convexity.OneDimSharp
+import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.OneDimSharp
 
 /-!
 # Conditional sharp mixing bridge for the executable CV18 walk
@@ -22,7 +23,7 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open Arlib Arlib.MarkovChains Metric Set
+open Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory Metric Set
 open scoped ENNReal
 
 /-- The stationary probability measure used by the abstract Metropolis kernel is exactly
@@ -32,12 +33,12 @@ theorem truncatedGaussianProbability_eq_uniformOn_gaussianWeight
     (hsigma2 : 0 < sigma2) :
     (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n)) =
-      Arlib.uniformOn
+      ArlibCommunity.Foundations.Convex.uniformOn
         ((volume : Measure (AmbientSpace q.n)).withDensity
           (gaussianWeight sigma2))
         (truncatedBody q I) := by
   rw [truncatedGaussianProbability_toMeasure q I hsigma2,
-    Arlib.uniformOn_def, restrict_withDensity (truncatedBody_measurable q I)]
+    ArlibCommunity.Foundations.Convex.uniformOn_def, restrict_withDensity (truncatedBody_measurable q I)]
   have hdensity :
       (gaussianWeight sigma2 : AmbientSpace q.n → ENNReal) =
         fun x => ENNReal.ofReal (gaussianDensity sigma2 x) := by
@@ -104,7 +105,7 @@ theorem mixesWithin_truncatedMetropolisKernel_figureOne_direct_cv18
       (measure_mono fun x hx =>
         unitBall_subset_truncatedBody q I (Metric.ball_subset_closedBall hx))
   let pi : Measure (AmbientSpace q.n) :=
-    Arlib.uniformOn
+    ArlibCommunity.Foundations.Convex.uniformOn
       ((volume : Measure (AmbientSpace q.n)).withDensity
         (gaussianWeight sigma2))
       (truncatedBody q I)
@@ -126,7 +127,7 @@ theorem mixesWithin_truncatedMetropolisKernel_figureOne_direct_cv18
           (figureOneProposalRadius q sigma2) sigma2) pi := by
     dsimp [pi]
     simpa [Real.sq_sqrt hsigma2.le] using
-      (Arlib.conductance_metropolisGaussian_sharp_sqrt_ge_of_convex
+      (ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge_of_convex
         hn2 hsigma hdelta hdeltaSigma hR
         (truncatedBody_measurable q I)
         (truncatedVolumeInput q I).body.convex hKR hKtop hK0 hell

@@ -15,7 +15,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
-open _root_.Arlib.MarkovChains
+open _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- Abstract subprobability form of the proper-clock expected-cost estimate.
 It applies to any executable block whose pointwise counted cost is bounded by
@@ -27,7 +27,7 @@ theorem lintegral_blockCost_le_of_isWarm
     (hpiK : pi Kᶜ = 0)
     (hinv : Kernel.Invariant (lazy (speedyMetropolisGaussian K delta s)) pi)
     {M : ENNReal} {mu : Measure (EuclideanSpace ℝ (Fin n))}
-    (hwarm : Arlib.IsWarm M mu pi)
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu pi)
     (properStride : ℕ) (endpointCost stationaryLocalMean : ENNReal)
     (hstationary :
       (∫⁻ current, (ell K delta current)⁻¹ ∂pi) ≤ stationaryLocalMean)
@@ -65,7 +65,7 @@ theorem lintegral_cappedAccuracyProperCollectOne_countedQueryCost_le_of_isWarm_s
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (weight : AmbientSpace q.n → ℝ) (hweight : Measurable weight)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : Arlib.IsWarm M mu
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu
       (ellGaussianProb (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (rawCap properStride : ℕ) :

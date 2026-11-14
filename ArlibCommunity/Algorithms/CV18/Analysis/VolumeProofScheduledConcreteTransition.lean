@@ -14,7 +14,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Metric Set
 open scoped ENNReal Pointwise
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 theorem blockMixingError_le_one
     (q : VolumeParams) (attempts : ℕ) :
@@ -104,8 +104,8 @@ theorem scheduledBalancedRejectedStationary_isWarm
     let K := figureOneScheduledPhaseBody q I sigma2
     let delta := proposalRadius q sigma2
     let pi := ellGaussianProb K delta sigma2
-    Arlib.IsWarm 2
-      (Arlib.condOn
+    ArlibCommunity.Foundations.Convex.IsWarm 2
+      (ArlibCommunity.Foundations.Convex.condOn
         (scheduledBalancedRejectedStateMeasure q I sigma2 pi) Set.univ) pi := by
   dsimp only
   let K := figureOneScheduledPhaseBody q I sigma2
@@ -131,7 +131,7 @@ theorem scheduledBalancedRejectedStationary_isWarm
     simpa [branch] using
       scheduledBalancedRejectedStateMeasure_le q I sigma2 pi
   intro A hA
-  rw [Arlib.condOn_def, Measure.restrict_univ,
+  rw [ArlibCommunity.Foundations.Convex.condOn_def, Measure.restrict_univ,
     Measure.smul_apply, smul_eq_mul]
   have hbranch : branch A ≤ pi A := Measure.le_iff.mp hle A hA
   calc
@@ -155,7 +155,7 @@ theorem scheduledBalancedRejectedRetryBlock_leUpTo_stationary
     let delta := proposalRadius q sigma2
     let pi := ellGaussianProb K delta sigma2
     let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
-    let rejectedProb := Arlib.condOn rejected Set.univ
+    let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
     MeasureLeUpTo
       ((rejectedProb.bind
         (scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -166,7 +166,7 @@ theorem scheduledBalancedRejectedRetryBlock_leUpTo_stationary
   let delta := proposalRadius q sigma2
   let pi := ellGaussianProb K delta sigma2
   let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
-  let rejectedProb := Arlib.condOn rejected Set.univ
+  let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
   have hdelta : 0 < delta := proposalRadius_pos q hsigma2
   have hmass0 : ellGaussianMeasure K delta sigma2 Set.univ ≠ 0 :=
     ellGaussianMeasure_univ_ne_zero
@@ -191,8 +191,8 @@ theorem scheduledBalancedRejectedRetryBlock_leUpTo_stationary
     exact ne_top_of_le_ne_top (measure_ne_top pi Set.univ) <|
       Measure.le_iff'.mp hle Set.univ
   let _ : IsProbabilityMeasure rejectedProb :=
-    Arlib.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
-  have hwarm : Arlib.IsWarm 2 rejectedProb pi := by
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn rejected hrejected0 hrejectedTop
+  have hwarm : ArlibCommunity.Foundations.Convex.IsWarm 2 rejectedProb pi := by
     simpa [K, delta, pi, rejected, rejectedProb] using
       scheduledBalancedRejectedStationary_isWarm q I hsigma2
   have hmixWithin := mixesWithin_scheduledPhaseBody_figureOne_cv18
@@ -201,7 +201,7 @@ theorem scheduledBalancedRejectedRetryBlock_leUpTo_stationary
       (by norm_num) (by simpa using hwarm)
       (blockMixingError_pos q attempts)
       (blockMixingError_le_one q attempts) hwalk
-  have hmix : Arlib.TVLe
+  have hmix : ArlibCommunity.Foundations.Convex.TVLe
       (iterate
         (lazy (speedyMetropolisGaussian K delta sigma2))
         rejectedProb properStride)
@@ -225,7 +225,7 @@ theorem scheduledBalancedFirstBlock_leUpTo_stationary
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (proposalCap properStride attempts : ℕ) (hproposalCap : 0 < proposalCap)
     (rho : Measure (AmbientSpace q.n)) [IsProbabilityMeasure rho]
-    (hbaseWarm : Arlib.IsWarm
+    (hbaseWarm : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q)) rho
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
@@ -237,7 +237,7 @@ theorem scheduledBalancedFirstBlock_leUpTo_stationary
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) *
         figureOneCorrectedBlockBudget q attempts) :
     ∀ mu : Measure (AmbientSpace q.n),
-      IsProbabilityMeasure mu → Arlib.IsWarm 2 mu rho →
+      IsProbabilityMeasure mu → ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho →
       MeasureLeUpTo
         ((mu.bind
           (scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap
@@ -253,7 +253,7 @@ theorem scheduledBalancedFirstBlock_leUpTo_stationary
     (proposalRadius q sigma2) sigma2
   have hMpos : 0 < warmConstant q :=
     warmConstant_pos q
-  have hwarmPi : Arlib.IsWarm
+  have hwarmPi : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (16 * warmConstant q)) mu pi := by
     have htrans := hwarm.trans hbaseWarm
     convert htrans using 1
@@ -275,7 +275,7 @@ theorem scheduledBalancedFirstBlock_leUpTo_stationary
             (blockMixingError q attempts) ≤
               (properStride : ℝ) at hwalk
         simpa only [walkRequirement] using hwalk)
-  have hmix : Arlib.TVLe
+  have hmix : ArlibCommunity.Foundations.Convex.TVLe
       (iterate
         (lazy (speedyMetropolisGaussian
           (figureOneScheduledPhaseBody q I sigma2)
@@ -302,14 +302,14 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     (rho : Measure (AmbientSpace q.n)) [IsProbabilityMeasure rho]
-    (hbaseWarm : Arlib.IsWarm
+    (hbaseWarm : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q)) rho
       (ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2)) :
     ∀ mu : Measure (AmbientSpace q.n),
-      IsProbabilityMeasure mu → Arlib.IsWarm 2 mu rho →
-      Arlib.TVLe
+      IsProbabilityMeasure mu → ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho →
+      ArlibCommunity.Foundations.Convex.TVLe
         (mu.bind
           (scheduledBalancedAccuracyTransitionLawAux q I sigma2
             (figureOneFinalScheduledBalancedParameters.proposalCap q sigma2)
@@ -350,7 +350,7 @@ theorem bind_figureOneFinalScheduledBalancedTransition_tvLe
         mu hmu hwarm
   have hretry :
       let rejected := scheduledBalancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap

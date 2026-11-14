@@ -9,8 +9,10 @@ ratio when `delta ≤ sigma/(8 sqrt n)`.  Figure 1 actually uses the much smalle
 every positive dimension, removing the low-dimensional gap in Theorem 1.1.
 -/
 
-namespace Arlib
+open Arlib
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory Set
 open scoped ENNReal
 
@@ -19,7 +21,7 @@ variable {n : ℕ}
 /-- The Metropolis acceptance floor depends only on the product `R * delta`,
 not on a separate paper-radius bound.  This form permits accuracy-dependent
 radial truncations while retaining a constant acceptance probability. -/
-theorem MarkovChains.acceptance_floor_of_radiusStepProduct_cv18
+theorem acceptance_floor_of_radiusStepProduct_cv18
     (hn : 1 ≤ n) {σ δ R : ℝ} (hσ : 0 < σ) (hδ : 0 < δ)
     (hδσ : δ ≤ σ / 8) (hRδ : R * δ ≤ σ ^ 2 / 9) :
     1 ≤ 20 * Real.exp (-(2 * R * δ + δ ^ 2) / (2 * σ ^ 2)) *
@@ -37,7 +39,7 @@ theorem MarkovChains.acceptance_floor_of_radiusStepProduct_cv18
     linarith
   have hexp : (3 / 5 : ℝ) ≤
       Real.exp (-(2 * R * δ + δ ^ 2) / (2 * σ ^ 2)) := by
-    refine MarkovChains.three_fifths_le_exp_neg_sixtyfive_div_onetwentyeight_cv18.trans ?_
+    refine ArlibCommunity.Algorithms.CV18.three_fifths_le_exp_neg_sixtyfive_div_onetwentyeight_cv18.trans ?_
     apply Real.exp_le_exp.mpr
     have hneg := neg_le_neg hquot'
     simpa only [neg_div] using hneg
@@ -50,8 +52,8 @@ theorem gaussianWeightReal_le_of_radiusStepProduct_cv18
     (hRδ : R * δ ≤ σ ^ 2 / 9)
     {u v : EuclideanSpace ℝ (Fin n)} (hu : ‖u‖ ≤ R) (hv : ‖v‖ ≤ R)
     (huv : ‖u - v‖ ≤ δ / Real.sqrt n) :
-    MarkovChains.gaussianWeightReal (σ ^ 2) u ≤
-      9 / 8 * MarkovChains.gaussianWeightReal (σ ^ 2) v := by
+    ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) u ≤
+      9 / 8 * ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) v := by
   have hnR : (1 : ℝ) ≤ n := by exact_mod_cast hn
   have hsqrt1 : (1 : ℝ) ≤ Real.sqrt n := by
     simpa using Real.sqrt_le_sqrt hnR
@@ -80,45 +82,45 @@ theorem gaussianWeightReal_le_of_radiusStepProduct_cv18
     nlinarith [Real.exp_pos (1 / 9 : ℝ)]
   have hbase := gaussianWeightReal_le_mul_exp hσ hu hv
   calc
-    MarkovChains.gaussianWeightReal (σ ^ 2) u ≤
-        MarkovChains.gaussianWeightReal (σ ^ 2) v *
+    ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) u ≤
+        ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) v *
           Real.exp (R / σ ^ 2 * ‖u - v‖) := hbase
-    _ ≤ MarkovChains.gaussianWeightReal (σ ^ 2) v * Real.exp (1 / 9) := by
+    _ ≤ ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) v * Real.exp (1 / 9) := by
       exact mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr hexponent)
-        (MarkovChains.gaussianWeightReal_pos (σ ^ 2) v).le
-    _ ≤ MarkovChains.gaussianWeightReal (σ ^ 2) v * (9 / 8) := by
+        (ArlibCommunity.Foundations.Convex.gaussianWeightReal_pos (σ ^ 2) v).le
+    _ ≤ ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) v * (9 / 8) := by
       exact mul_le_mul_of_nonneg_left hexp19
-        (MarkovChains.gaussianWeightReal_pos (σ ^ 2) v).le
-    _ = 9 / 8 * MarkovChains.gaussianWeightReal (σ ^ 2) v := by ring
+        (ArlibCommunity.Foundations.Convex.gaussianWeightReal_pos (σ ^ 2) v).le
+    _ = 9 / 8 * ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) v := by ring
 
 theorem ell_comparable_of_densDist_radiusStepProduct_cv18
     (hn : 1 ≤ n) {σ δ R : ℝ} (hσ : 0 < σ)
     (hRδ : R * δ ≤ σ ^ 2 / 9)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hKR : ∀ x ∈ K, ‖x‖ ≤ R)
     {u v : EuclideanSpace ℝ (Fin n)} (huK : u ∈ K) (hvK : v ∈ K)
-    (hu : MarkovChains.ell K δ u ≠ 0) (hv : MarkovChains.ell K δ v ≠ 0)
+    (hu : ArlibCommunity.Foundations.MarkovChainTheory.ell K δ u ≠ 0) (hv : ArlibCommunity.Foundations.MarkovChainTheory.ell K δ v ≠ 0)
     (hsep : ‖u - v‖ ≤ δ / Real.sqrt n)
-    (hd : densDist (fun x => (MarkovChains.ell K δ x).toReal *
-      MarkovChains.gaussianWeightReal (σ ^ 2) x) u v < 1 / 4) :
-    MarkovChains.ell K δ u ≤ ENNReal.ofReal (3 / 2) * MarkovChains.ell K δ v ∧
-      MarkovChains.ell K δ v ≤ ENNReal.ofReal (3 / 2) * MarkovChains.ell K δ u := by
-  have hutop : MarkovChains.ell K δ u ≠ ⊤ := ne_top_of_le_ne_top
-    ENNReal.one_ne_top (MarkovChains.ell_le_one K δ u)
-  have hvtop : MarkovChains.ell K δ v ≠ ⊤ := ne_top_of_le_ne_top
-    ENNReal.one_ne_top (MarkovChains.ell_le_one K δ v)
-  have hA : 0 < (MarkovChains.ell K δ u).toReal := ENNReal.toReal_pos hu hutop
-  have hB : 0 < (MarkovChains.ell K δ v).toReal := ENNReal.toReal_pos hv hvtop
+    (hd : densDist (fun x => (ArlibCommunity.Foundations.MarkovChainTheory.ell K δ x).toReal *
+      ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) x) u v < 1 / 4) :
+    ArlibCommunity.Foundations.MarkovChainTheory.ell K δ u ≤ ENNReal.ofReal (3 / 2) * ArlibCommunity.Foundations.MarkovChainTheory.ell K δ v ∧
+      ArlibCommunity.Foundations.MarkovChainTheory.ell K δ v ≤ ENNReal.ofReal (3 / 2) * ArlibCommunity.Foundations.MarkovChainTheory.ell K δ u := by
+  have hutop : ArlibCommunity.Foundations.MarkovChainTheory.ell K δ u ≠ ⊤ := ne_top_of_le_ne_top
+    ENNReal.one_ne_top (ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one K δ u)
+  have hvtop : ArlibCommunity.Foundations.MarkovChainTheory.ell K δ v ≠ ⊤ := ne_top_of_le_ne_top
+    ENNReal.one_ne_top (ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one K δ v)
+  have hA : 0 < (ArlibCommunity.Foundations.MarkovChainTheory.ell K δ u).toReal := ENNReal.toReal_pos hu hutop
+  have hB : 0 < (ArlibCommunity.Foundations.MarkovChainTheory.ell K δ v).toReal := ENNReal.toReal_pos hv hvtop
   have hsep' : ‖v - u‖ ≤ δ / Real.sqrt n := by rwa [norm_sub_rev]
-  obtain ⟨h1, h2⟩ := MarkovChains.le_three_halves_of_densDist_mul_lt hA hB
-    (MarkovChains.gaussianWeightReal_pos (σ ^ 2) u)
-    (MarkovChains.gaussianWeightReal_pos (σ ^ 2) v)
+  obtain ⟨h1, h2⟩ := ArlibCommunity.Foundations.MarkovChainTheory.le_three_halves_of_densDist_mul_lt hA hB
+    (ArlibCommunity.Foundations.Convex.gaussianWeightReal_pos (σ ^ 2) u)
+    (ArlibCommunity.Foundations.Convex.gaussianWeightReal_pos (σ ^ 2) v)
     (gaussianWeightReal_le_of_radiusStepProduct_cv18 hn hσ hRδ
       (hKR u huK) (hKR v hvK) hsep)
     (gaussianWeightReal_le_of_radiusStepProduct_cv18 hn hσ hRδ
       (hKR v hvK) (hKR u huK) hsep')
     (by simpa only [densDist] using hd)
-  exact ⟨MarkovChains.ell_le_of_toReal_le h1,
-    MarkovChains.ell_le_of_toReal_le h2⟩
+  exact ⟨ArlibCommunity.Foundations.MarkovChainTheory.ell_le_of_toReal_le h1,
+    ArlibCommunity.Foundations.MarkovChainTheory.ell_le_of_toReal_le h2⟩
 
 theorem hoverlap_speedyMetropolisGaussian_radiusStepProduct_cv18
     (hn : 2 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
@@ -131,10 +133,10 @@ theorem hoverlap_speedyMetropolisGaussian_radiusStepProduct_cv18
       ∀ u v : EuclideanSpace ℝ (Fin n), u ∈ T → u ∈ K → v ∈ K → v ∉ T →
       ‖u - v‖ < δ / Real.sqrt n →
       densDist (Set.indicator K (fun x =>
-        (MarkovChains.ell K δ x).toReal *
-          MarkovChains.gaussianWeightReal (σ ^ 2) x)) u v < 1 / 4 →
-      1 ≤ 20 * (MarkovChains.speedyMetropolisGaussian K δ (σ ^ 2) u Tᶜ +
-        MarkovChains.speedyMetropolisGaussian K δ (σ ^ 2) v T) := by
+        (ArlibCommunity.Foundations.MarkovChainTheory.ell K δ x).toReal *
+          ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) x)) u v < 1 / 4 →
+      1 ≤ 20 * (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K δ (σ ^ 2) u Tᶜ +
+        ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K δ (σ ^ 2) v T) := by
   have hsqrt1 : (1 : ℝ) ≤ Real.sqrt n := by
     have hn1 : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast Nat.one_le_of_lt hn
     simpa using Real.sqrt_le_sqrt hn1
@@ -146,20 +148,20 @@ theorem hoverlap_speedyMetropolisGaussian_radiusStepProduct_cv18
         · norm_num
         · nlinarith
   intro T hT u v _ huK hvK _ hsep hd
-  rw [MarkovChains.densDist_indicator_of_mem huK hvK] at hd
+  rw [ArlibCommunity.Foundations.MarkovChainTheory.densDist_indicator_of_mem huK hvK] at hd
   obtain ⟨h1, h2⟩ := ell_comparable_of_densDist_radiusStepProduct_cv18
     (Nat.one_le_of_lt hn) hσ hRδ hKR huK hvK
-    (MarkovChains.ell_ne_zero_of_volume_ball_inter_ne_zero hδ
-      (MarkovChains.volume_ball_inter_ne_zero_of_convex hKc hKb hK0 huK hδ))
-    (MarkovChains.ell_ne_zero_of_volume_ball_inter_ne_zero hδ
-      (MarkovChains.volume_ball_inter_ne_zero_of_convex hKc hKb hK0 hvK hδ))
+    (ArlibCommunity.Foundations.MarkovChainTheory.ell_ne_zero_of_volume_ball_inter_ne_zero hδ
+      (ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_ne_zero_of_convex hKc hKb hK0 huK hδ))
+    (ArlibCommunity.Foundations.MarkovChainTheory.ell_ne_zero_of_volume_ball_inter_ne_zero hδ
+      (ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_ne_zero_of_convex hKc hKb hK0 hvK hδ))
     hsep.le hd
-  exact MarkovChains.one_le_twenty_mul_speedyMetropolisGaussian_add_of_comparable
+  exact ArlibCommunity.Foundations.MarkovChainTheory.one_le_twenty_mul_speedyMetropolisGaussian_add_of_comparable
     hn hK hKc hδ (by positivity : (0 : ℝ) < σ ^ 2) hR huK hvK
     (hKR u huK) (hKR v hvK) hsep.le
-    (MarkovChains.volume_ball_inter_ne_zero_of_convex hKc hKb hK0 huK hδ)
-    (MarkovChains.max_volume_ball_inter_le_of_ell_comparable hδ h1 h2)
-    (MarkovChains.acceptance_floor_of_radiusStepProduct_cv18
+    (ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_ne_zero_of_convex hKc hKb hK0 huK hδ)
+    (ArlibCommunity.Foundations.MarkovChainTheory.max_volume_ball_inter_le_of_ell_comparable hδ h1 h2)
+    (ArlibCommunity.Algorithms.CV18.acceptance_floor_of_radiusStepProduct_cv18
       (Nat.one_le_of_lt hn) hσ hδ hδσ8 hRδ) hT
 
 theorem gaussianWeightReal_le_of_strongStep_cv18
@@ -168,8 +170,8 @@ theorem gaussianWeightReal_le_of_strongStep_cv18
     (hRσ : R ≤ 4 * σ * Real.sqrt n)
     {u v : EuclideanSpace ℝ (Fin n)} (hu : ‖u‖ ≤ R) (hv : ‖v‖ ≤ R)
     (huv : ‖u - v‖ ≤ δ / Real.sqrt n) :
-    MarkovChains.gaussianWeightReal (σ ^ 2) u ≤
-      9 / 8 * MarkovChains.gaussianWeightReal (σ ^ 2) v := by
+    ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) u ≤
+      9 / 8 * ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) v := by
   have hnR : (1 : ℝ) ≤ n := by exact_mod_cast hn
   have hsqrt1 : (1 : ℝ) ≤ Real.sqrt n := by
     simpa using Real.sqrt_le_sqrt hnR
@@ -203,16 +205,16 @@ theorem gaussianWeightReal_le_of_strongStep_cv18
     nlinarith [Real.exp_pos (1 / 9 : ℝ)]
   have hbase := gaussianWeightReal_le_mul_exp hσ hu hv
   calc
-    MarkovChains.gaussianWeightReal (σ ^ 2) u ≤
-        MarkovChains.gaussianWeightReal (σ ^ 2) v *
+    ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) u ≤
+        ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) v *
           Real.exp (R / σ ^ 2 * ‖u - v‖) := hbase
-    _ ≤ MarkovChains.gaussianWeightReal (σ ^ 2) v * Real.exp (1 / 9) := by
+    _ ≤ ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) v * Real.exp (1 / 9) := by
       exact mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr hexponent)
-        (MarkovChains.gaussianWeightReal_pos (σ ^ 2) v).le
-    _ ≤ MarkovChains.gaussianWeightReal (σ ^ 2) v * (9 / 8) := by
+        (ArlibCommunity.Foundations.Convex.gaussianWeightReal_pos (σ ^ 2) v).le
+    _ ≤ ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) v * (9 / 8) := by
       exact mul_le_mul_of_nonneg_left hexp19
-        (MarkovChains.gaussianWeightReal_pos (σ ^ 2) v).le
-    _ = 9 / 8 * MarkovChains.gaussianWeightReal (σ ^ 2) v := by ring
+        (ArlibCommunity.Foundations.Convex.gaussianWeightReal_pos (σ ^ 2) v).le
+    _ = 9 / 8 * ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) v := by ring
 
 theorem ell_comparable_of_densDist_strongStep_cv18
     (hn : 1 ≤ n) {σ δ R : ℝ} (hσ : 0 < σ) (hδ : 0 < δ)
@@ -220,29 +222,29 @@ theorem ell_comparable_of_densDist_strongStep_cv18
     (hRσ : R ≤ 4 * σ * Real.sqrt n)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hKR : ∀ x ∈ K, ‖x‖ ≤ R)
     {u v : EuclideanSpace ℝ (Fin n)} (huK : u ∈ K) (hvK : v ∈ K)
-    (hu : MarkovChains.ell K δ u ≠ 0) (hv : MarkovChains.ell K δ v ≠ 0)
+    (hu : ArlibCommunity.Foundations.MarkovChainTheory.ell K δ u ≠ 0) (hv : ArlibCommunity.Foundations.MarkovChainTheory.ell K δ v ≠ 0)
     (hsep : ‖u - v‖ ≤ δ / Real.sqrt n)
-    (hd : densDist (fun x => (MarkovChains.ell K δ x).toReal *
-      MarkovChains.gaussianWeightReal (σ ^ 2) x) u v < 1 / 4) :
-    MarkovChains.ell K δ u ≤ ENNReal.ofReal (3 / 2) * MarkovChains.ell K δ v ∧
-      MarkovChains.ell K δ v ≤ ENNReal.ofReal (3 / 2) * MarkovChains.ell K δ u := by
-  have hutop : MarkovChains.ell K δ u ≠ ⊤ := ne_top_of_le_ne_top
-    ENNReal.one_ne_top (MarkovChains.ell_le_one K δ u)
-  have hvtop : MarkovChains.ell K δ v ≠ ⊤ := ne_top_of_le_ne_top
-    ENNReal.one_ne_top (MarkovChains.ell_le_one K δ v)
-  have hA : 0 < (MarkovChains.ell K δ u).toReal := ENNReal.toReal_pos hu hutop
-  have hB : 0 < (MarkovChains.ell K δ v).toReal := ENNReal.toReal_pos hv hvtop
+    (hd : densDist (fun x => (ArlibCommunity.Foundations.MarkovChainTheory.ell K δ x).toReal *
+      ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) x) u v < 1 / 4) :
+    ArlibCommunity.Foundations.MarkovChainTheory.ell K δ u ≤ ENNReal.ofReal (3 / 2) * ArlibCommunity.Foundations.MarkovChainTheory.ell K δ v ∧
+      ArlibCommunity.Foundations.MarkovChainTheory.ell K δ v ≤ ENNReal.ofReal (3 / 2) * ArlibCommunity.Foundations.MarkovChainTheory.ell K δ u := by
+  have hutop : ArlibCommunity.Foundations.MarkovChainTheory.ell K δ u ≠ ⊤ := ne_top_of_le_ne_top
+    ENNReal.one_ne_top (ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one K δ u)
+  have hvtop : ArlibCommunity.Foundations.MarkovChainTheory.ell K δ v ≠ ⊤ := ne_top_of_le_ne_top
+    ENNReal.one_ne_top (ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one K δ v)
+  have hA : 0 < (ArlibCommunity.Foundations.MarkovChainTheory.ell K δ u).toReal := ENNReal.toReal_pos hu hutop
+  have hB : 0 < (ArlibCommunity.Foundations.MarkovChainTheory.ell K δ v).toReal := ENNReal.toReal_pos hv hvtop
   have hsep' : ‖v - u‖ ≤ δ / Real.sqrt n := by rwa [norm_sub_rev]
-  obtain ⟨h1, h2⟩ := MarkovChains.le_three_halves_of_densDist_mul_lt hA hB
-    (MarkovChains.gaussianWeightReal_pos (σ ^ 2) u)
-    (MarkovChains.gaussianWeightReal_pos (σ ^ 2) v)
+  obtain ⟨h1, h2⟩ := ArlibCommunity.Foundations.MarkovChainTheory.le_three_halves_of_densDist_mul_lt hA hB
+    (ArlibCommunity.Foundations.Convex.gaussianWeightReal_pos (σ ^ 2) u)
+    (ArlibCommunity.Foundations.Convex.gaussianWeightReal_pos (σ ^ 2) v)
     (gaussianWeightReal_le_of_strongStep_cv18 hn hσ hδ hδσ hRσ
       (hKR u huK) (hKR v hvK) hsep)
     (gaussianWeightReal_le_of_strongStep_cv18 hn hσ hδ hδσ hRσ
       (hKR v hvK) (hKR u huK) hsep')
     (by simpa only [densDist] using hd)
-  exact ⟨MarkovChains.ell_le_of_toReal_le h1,
-    MarkovChains.ell_le_of_toReal_le h2⟩
+  exact ⟨ArlibCommunity.Foundations.MarkovChainTheory.ell_le_of_toReal_le h1,
+    ArlibCommunity.Foundations.MarkovChainTheory.ell_le_of_toReal_le h2⟩
 
 theorem hoverlap_speedyMetropolisGaussian_strongStep_cv18
     (hn : 2 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
@@ -257,29 +259,27 @@ theorem hoverlap_speedyMetropolisGaussian_strongStep_cv18
       ∀ u v : EuclideanSpace ℝ (Fin n), u ∈ T → u ∈ K → v ∈ K → v ∉ T →
       ‖u - v‖ < δ / Real.sqrt n →
       densDist (Set.indicator K (fun x =>
-        (MarkovChains.ell K δ x).toReal *
-          MarkovChains.gaussianWeightReal (σ ^ 2) x)) u v < 1 / 4 →
-      1 ≤ 20 * (MarkovChains.speedyMetropolisGaussian K δ (σ ^ 2) u Tᶜ +
-        MarkovChains.speedyMetropolisGaussian K δ (σ ^ 2) v T) := by
+        (ArlibCommunity.Foundations.MarkovChainTheory.ell K δ x).toReal *
+          ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2) x)) u v < 1 / 4 →
+      1 ≤ 20 * (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K δ (σ ^ 2) u Tᶜ +
+        ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K δ (σ ^ 2) v T) := by
   intro T hT u v _ huK hvK _ hsep hd
-  rw [MarkovChains.densDist_indicator_of_mem huK hvK] at hd
+  rw [ArlibCommunity.Foundations.MarkovChainTheory.densDist_indicator_of_mem huK hvK] at hd
   obtain ⟨h1, h2⟩ := ell_comparable_of_densDist_strongStep_cv18
     (Nat.one_le_iff_ne_zero.mpr (by omega)) hσ hδ hδσ hRσ hKR huK hvK
-    (MarkovChains.ell_ne_zero_of_volume_ball_inter_ne_zero hδ
-      (MarkovChains.volume_ball_inter_ne_zero_of_convex hKc hKb hK0 huK hδ))
-    (MarkovChains.ell_ne_zero_of_volume_ball_inter_ne_zero hδ
-      (MarkovChains.volume_ball_inter_ne_zero_of_convex hKc hKb hK0 hvK hδ))
+    (ArlibCommunity.Foundations.MarkovChainTheory.ell_ne_zero_of_volume_ball_inter_ne_zero hδ
+      (ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_ne_zero_of_convex hKc hKb hK0 huK hδ))
+    (ArlibCommunity.Foundations.MarkovChainTheory.ell_ne_zero_of_volume_ball_inter_ne_zero hδ
+      (ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_ne_zero_of_convex hKc hKb hK0 hvK hδ))
     hsep.le hd
-  exact MarkovChains.one_le_twenty_mul_speedyMetropolisGaussian_add_of_comparable
+  exact ArlibCommunity.Foundations.MarkovChainTheory.one_le_twenty_mul_speedyMetropolisGaussian_add_of_comparable
     hn hK hKc hδ (by positivity : (0 : ℝ) < σ ^ 2) hR huK hvK
     (hKR u huK) (hKR v hvK) hsep.le
-    (MarkovChains.volume_ball_inter_ne_zero_of_convex hKc hKb hK0 huK hδ)
-    (MarkovChains.max_volume_ball_inter_le_of_ell_comparable hδ h1 h2) hfloor hT
+    (ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_ne_zero_of_convex hKc hKb hK0 huK hδ)
+    (ArlibCommunity.Foundations.MarkovChainTheory.max_volume_ball_inter_le_of_ell_comparable hδ h1 h2) hfloor hT
 
-end Arlib
-
-namespace Arlib.MarkovChains
-
+end ArlibCommunity.Algorithms.CV18
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory Metric Set
 open scoped ENNReal
 
@@ -313,9 +313,9 @@ theorem conductance_speedyMetropolisGaussian_ge_radiusStepProduct_cv18
     (hpi_ellGaussian hs hK hKtop δ)
     (isReversible_speedyMetropolisGaussian_prob hK δ (σ ^ 2))
     (ellGaussianProb_compl_eq_zero hK δ (σ ^ 2))
-    (Arlib.hoverlap_speedyMetropolisGaussian_radiusStepProduct_cv18
+    (ArlibCommunity.Algorithms.CV18.hoverlap_speedyMetropolisGaussian_radiusStepProduct_cv18
       hn hK hKc hKb hK0 hσ hδ hδσ hR hKR hRδ)
-    (Arlib.hiso_speedyMetropolisGaussian_uncond hn hσ hδ hK hKc hKb hK0)
+    (ArlibCommunity.Foundations.MarkovChainTheory.hiso_speedyMetropolisGaussian_uncond hn hσ hδ hK hKc hKb hK0)
 
 theorem conductance_speedyMetropolisGaussian_ge_strongStep_cv18
     (hn : 2 ≤ n) {σ δ R : ℝ} (hσ : 0 < σ) (hδ : 0 < δ)
@@ -351,10 +351,10 @@ theorem conductance_speedyMetropolisGaussian_ge_strongStep_cv18
     (hpi_ellGaussian hs hK hKtop δ)
     (isReversible_speedyMetropolisGaussian_prob hK δ (σ ^ 2))
     (ellGaussianProb_compl_eq_zero hK δ (σ ^ 2))
-    (Arlib.hoverlap_speedyMetropolisGaussian_strongStep_cv18
+    (ArlibCommunity.Algorithms.CV18.hoverlap_speedyMetropolisGaussian_strongStep_cv18
       hn hK hKc hKb hK0 hσ hδ hδσ hR hKR hRσ
       (acceptance_floor_of_cv_four_cv18 hn hσ hδ hweak hRσ))
-    (Arlib.hiso_speedyMetropolisGaussian_uncond hn hσ hδ hK hKc hKb hK0)
+    (ArlibCommunity.Foundations.MarkovChainTheory.hiso_speedyMetropolisGaussian_uncond hn hσ hδ hK hKc hKb hK0)
 
 theorem mixesWithin_lazy_speedyMetropolisGaussian_radiusStepProduct_cv18
     (hn : 2 ≤ n) {σ δ R : ℝ}
@@ -366,7 +366,7 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_radiusStepProduct_cv18
     (hRδ : R * δ ≤ σ ^ 2 / 9)
     {mu0 : Measure (EuclideanSpace ℝ (Fin n))} [IsProbabilityMeasure mu0]
     {M eps : ℝ} (hM : 1 ≤ M)
-    (hwarm : Arlib.IsWarm (ENNReal.ofReal M) mu0
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
       (ellGaussianProb K δ (σ ^ 2)))
     (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     {t : ℕ} (ht : 4 * ((Real.log M + 2 * Real.log (1 / eps)) /
@@ -406,7 +406,7 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_strongStep_cv18
     (hRσ : R ≤ 4 * σ * Real.sqrt n)
     {mu0 : Measure (EuclideanSpace ℝ (Fin n))} [IsProbabilityMeasure mu0]
     {M eps : ℝ} (hM : 1 ≤ M)
-    (hwarm : Arlib.IsWarm (ENNReal.ofReal M) mu0
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
       (ellGaussianProb K δ (σ ^ 2)))
     (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     {t : ℕ} (ht : 4 * ((Real.log M + 2 * Real.log (1 / eps)) /
@@ -441,8 +441,7 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_strongStep_cv18
     (conductance_speedyMetropolisGaussian_ge_strongStep_cv18
       hn hσ hδ hδσ hK hKc hK0 hR hKR hRσ) ht
 
-end Arlib.MarkovChains
-
+end ArlibCommunity.Algorithms.CV18
 namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory Metric Set
@@ -486,20 +485,20 @@ theorem mixesWithin_phaseTruncatedBody_figureOne_cv18
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {mu0 : Measure (AmbientSpace q.n)} [IsProbabilityMeasure mu0]
     {M eps : ℝ} (hM : 1 ≤ M)
-    (hwarm : Arlib.IsWarm (ENNReal.ofReal M) mu0
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (phaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     {t : ℕ} (ht : 4 * ((Real.log M + 2 * Real.log (1 / eps)) /
       (figureOneProposalRadius q sigma2 * Real.log 2 /
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ^ 2) + 1 ≤ (t : ℝ)) :
-    Arlib.MarkovChains.MixesWithin
-      (Arlib.MarkovChains.lazy
-        (Arlib.MarkovChains.speedyMetropolisGaussian
+    ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin
+      (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+        (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
           (phaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2))
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (phaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2)
       mu0 t (ENNReal.ofReal eps) := by
@@ -508,13 +507,13 @@ theorem mixesWithin_phaseTruncatedBody_figureOne_cv18
   have hdelta0 : 0 < figureOneProposalRadius q sigma2 :=
     figureOneProposalRadius_pos q hsigma2
   have hR : 0 ≤ 4 * Real.sqrt sigma2 * Real.sqrt q.n := by positivity
-  have hwarm' : Arlib.IsWarm (ENNReal.ofReal M) mu0
-      (Arlib.MarkovChains.ellGaussianProb
+  have hwarm' : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (phaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) (Real.sqrt sigma2 ^ 2)) := by
     simpa [Real.sq_sqrt hsigma2.le] using hwarm
   have hmix :=
-    Arlib.MarkovChains.mixesWithin_lazy_speedyMetropolisGaussian_strongStep_cv18
+    ArlibCommunity.Algorithms.CV18.mixesWithin_lazy_speedyMetropolisGaussian_strongStep_cv18
       hn2 hsigma hdelta0
       (figureOneProposalRadius_le_strongMixingStep q hsigma2)
       (phaseTruncatedBody_measurable q I sigma2)
@@ -537,8 +536,8 @@ theorem phaseSampleToGaussian_figureOne_cv18
         ((q.n : ℝ) * Real.log ((q.n : ℝ) / coreError))))
     {mu0 : Measure (AmbientSpace q.n)} [IsProbabilityMeasure mu0]
     {M : ℝ} (hM : 1 ≤ M)
-    (hwarm : Arlib.IsWarm (ENNReal.ofReal M) mu0
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal M) mu0
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (phaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (hmixError0 : 0 < mixError) (hmixError1 : mixError ≤ 1)
@@ -549,38 +548,38 @@ theorem phaseSampleToGaussian_figureOne_cv18
         4 * ENNReal.ofReal coreError ≤ ENNReal.ofReal (1 / 4 : ℝ)) :
     let K := phaseTruncatedBody q I sigma2
     let delta := figureOneProposalRadius q sigma2
-    let P := Arlib.MarkovChains.lazy
-      (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2)
-    let mu := Arlib.MarkovChains.iterate P mu0 t
+    let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+      (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K delta sigma2)
+    let mu := ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu0 t
     let c : ℝ := 1 - 1 / (2 * (q.n : ℝ))
-    Arlib.TVLe
-      (Arlib.condOn
-        (((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
-          (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c)) Set.univ)
-      (Arlib.condOn
+    ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn
+        (((ArlibCommunity.Foundations.Convex.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
+          (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c)) Set.univ)
+      (ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (AmbientSpace q.n)).withDensity
-          (Arlib.MarkovChains.gaussianWeight sigma2)) K)
+          (ArlibCommunity.Foundations.Convex.gaussianWeight sigma2)) K)
       (64 * ENNReal.ofReal mixError + 32 * ENNReal.ofReal coreError) := by
   dsimp only
   let K := phaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
-  let P := Arlib.MarkovChains.lazy
-    (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2)
-  let mu := Arlib.MarkovChains.iterate P mu0 t
+  let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+    (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K delta sigma2)
+  let mu := ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu0 t
   have hdelta0 : 0 < delta := figureOneProposalRadius_pos q hsigma2
   have hmixPhase := mixesWithin_phaseTruncatedBody_figureOne_cv18 q I hsigma2
     hM hwarm hmixError0 hmixError1 ht
-  have hmix : Arlib.TVLe mu
-      (Arlib.MarkovChains.ellGaussianProb K delta sigma2)
+  have hmix : ArlibCommunity.Foundations.Convex.TVLe mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta sigma2)
       (ENNReal.ofReal mixError) := by
-    simpa [Arlib.MarkovChains.MixesWithin, mu, P, K, delta] using hmixPhase
+    simpa [ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin, mu, P, K, delta] using hmixPhase
   have hsigma : 0 < Real.sqrt sigma2 := Real.sqrt_pos.2 hsigma2
-  have hmix' : Arlib.TVLe mu
-      (Arlib.MarkovChains.ellGaussianProb K delta (Real.sqrt sigma2 ^ 2))
+  have hmix' : ArlibCommunity.Foundations.Convex.TVLe mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta (Real.sqrt sigma2 ^ 2))
       (ENNReal.ofReal mixError) := by
     simpa [Real.sq_sqrt hsigma2.le] using hmix
   have htransfer :=
-    Arlib.MarkovChains.TVLe.speedyToGaussian_of_paperStep_of_body_cv18
+    ArlibCommunity.Algorithms.CV18.TVLe.speedyToGaussian_of_paperStep_of_body_cv18
       (n := q.n) (K := K) (le_trans (by norm_num) q.dim_ok)
       (phaseTruncatedBody_convex q I sigma2)
       (phaseTruncatedBody_isClosed q I sigma2)

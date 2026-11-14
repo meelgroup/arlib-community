@@ -18,7 +18,7 @@ open MeasureTheory ProbabilityTheory
 namespace ArlibCommunity.Algorithms.CV18
 
 open scoped ENNReal
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- At horizon zero every scheduled trace is live, so its scaled live-state
 marginal is exactly the scaled initial truncated Gaussian. -/
@@ -140,7 +140,7 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_zero_leUpTo_target
         scheduledBalancedStationaryTargetError q := by
     rw [hdead, add_zero]
     exact hbadMass
-  have hgood : Arlib.IsWarm (8 : ENNReal) good
+  have hgood : ArlibCommunity.Foundations.Convex.IsWarm (8 : ENNReal) good
       (figureOneScheduledSpeedyPiAt q I 0) := by
     simpa [good, pi, scale, figureOneScheduledSpeedyPiAt, scheduleValue] using
       hgoodWarm
@@ -211,7 +211,7 @@ theorem scheduledBalancedFinalTraceRawTerminalPhase_leUpTo_target
   let _ : IsProbabilityMeasure rho :=
     scheduledBalancedForwardTraceLaw_isProbabilityMeasure
       figureOneFinalScheduledBalancedParameters q I phase
-  have hgood : Arlib.IsWarm
+  have hgood : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I phase) := by
     simpa [good, scale, phase, figureOneScheduledAcceptedTargetAt,
@@ -241,7 +241,7 @@ theorem scheduledBalancedFinalTraceRawTerminalPhase_leUpTo_target
 first- or second-moment transfer. -/
 theorem scheduledBalancedFinalTraceRawGaussianPhase_zero_tv_target
     (q : VolumeParams) (I : VolumeInput q.n) :
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
         (numPhases q)).map
@@ -277,7 +277,7 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_zero_tv_target
 first- or second-moment transfer. -/
 theorem scheduledBalancedFinalTraceRawTerminalPhase_tv_target
     (q : VolumeParams) (I : VolumeInput q.n) :
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
         (numPhases q)).map

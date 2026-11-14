@@ -1,6 +1,6 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofSpeedyWarmStart
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofInitialCoupling
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.MarkovChains.Continuous.HitAndRunMixing
+import ArlibCommunity.Foundations.MarkovChainTheory.HitAndRunMixing.Analysis.HitAndRunMixing
 
 /-!
 # The first CV18 speedy warm start
@@ -17,7 +17,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory Metric Set
 open scoped ENNReal Pointwise
-open Arlib MarkovChains
+open Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- Every point of a closed ball has local conductance at least `2^{-n}` for
 proposal radius at most the body radius.  The body may be any superset of that

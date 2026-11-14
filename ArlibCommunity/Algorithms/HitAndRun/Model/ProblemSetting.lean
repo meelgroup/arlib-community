@@ -3,7 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.HitAndRun.Model.Prelude
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Probability.UniformOn
+import ArlibCommunity.Foundations.Convex.Basic.UniformOn
 import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-!
@@ -38,6 +38,6 @@ def WarmStart {n : ℕ} (K : Body n) (sigma : Measure (State n))
   MeasurableSet S ∧
     sigma S ≤ ENNReal.ofReal (eps / 2) ∧
     ∀ A : Set (State n), MeasurableSet A →
-      sigma (A \ S) ≤ ENNReal.ofReal M * Arlib.uniformOn volume K A
+      sigma (A \ S) ≤ ENNReal.ofReal M * ArlibCommunity.Foundations.Convex.uniformOn volume K A
 
 end ArlibCommunity.Algorithms.HitAndRun

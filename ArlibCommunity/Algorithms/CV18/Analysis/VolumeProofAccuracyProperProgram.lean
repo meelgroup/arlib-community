@@ -10,7 +10,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAccuracyPhaseMixing
 namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
-open Arlib.MarkovChains
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 open scoped ENNReal
 
 /-- Body-filtered acceptance coefficient for a generic lazy Metropolis
@@ -327,14 +327,14 @@ theorem uniformBall_accuracyPhaseTruncatedBody
     (current : AmbientSpace q.n) {radius : ℝ} (hradius : 0 < radius) :
     uniformBall q.n current radius
         (accuracyPhaseTruncatedBody q I sigma2) =
-      Arlib.MarkovChains.ell (accuracyPhaseTruncatedBody q I sigma2)
+      ArlibCommunity.Foundations.MarkovChainTheory.ell (accuracyPhaseTruncatedBody q I sigma2)
         radius current := by
   let _ : NeZero q.n :=
     ⟨Nat.ne_of_gt (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)⟩
   rw [uniformBall_eq_openBall current hradius,
     Measure.smul_apply, smul_eq_mul, Measure.restrict_apply
       (accuracyPhaseTruncatedBody_measurable q I sigma2),
-    Arlib.MarkovChains.ell_apply, ENNReal.div_eq_inv_mul]
+    ArlibCommunity.Foundations.MarkovChainTheory.ell_apply, ENNReal.div_eq_inv_mul]
   congr 1
   rw [Set.inter_comm]
 
@@ -343,7 +343,7 @@ theorem uniformBall_accuracyPhaseTruncatedBody_compl
     (current : AmbientSpace q.n) {radius : ℝ} (hradius : 0 < radius) :
     uniformBall q.n current radius
         (accuracyPhaseTruncatedBody q I sigma2)ᶜ =
-      1 - Arlib.MarkovChains.ell (accuracyPhaseTruncatedBody q I sigma2)
+      1 - ArlibCommunity.Foundations.MarkovChainTheory.ell (accuracyPhaseTruncatedBody q I sigma2)
         radius current := by
   rw [measure_compl (accuracyPhaseTruncatedBody_measurable q I sigma2)
       (measure_ne_top _ _), measure_univ,
@@ -526,8 +526,8 @@ theorem map_snd_runEstimate_accuracyMetropolisMarkedBallStep
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) (current : AmbientSpace q.n) :
     ((accuracyMetropolisMarkedBallStep q sigma2 current).runEstimate
       oracle.query).map Prod.snd =
-      Arlib.MarkovChains.lazy
-        (Arlib.MarkovChains.metropolisGaussian
+      ArlibCommunity.Foundations.MarkovChainTheory.lazy
+        (ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian
           (accuracyPhaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2) current := by
   let _ : NeZero q.n :=
@@ -545,7 +545,7 @@ theorem runEstimate_accuracyMetropolisMarkedBallStep_apply_false_prod
     {t : Set (AmbientSpace q.n)} (ht : MeasurableSet t) :
     (accuracyMetropolisMarkedBallStep q sigma2 current).runEstimate oracle.query
         ({false} ×ˢ t) =
-      (1 - Arlib.MarkovChains.ell (accuracyPhaseTruncatedBody q I sigma2)
+      (1 - ArlibCommunity.Foundations.MarkovChainTheory.ell (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) current) * t.indicator 1 current := by
   let U := uniformBall q.n current
     (figureOneProposalRadius q sigma2)
@@ -606,14 +606,14 @@ theorem runEstimate_accuracyMetropolisMarkedBallStep_eq_lazyProperAux
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) (current : AmbientSpace q.n) :
     (accuracyMetropolisMarkedBallStep q sigma2 current).runEstimate oracle.query =
-      Arlib.MarkovChains.lazyProperProposalGaussianAux
+      ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux
         (accuracyPhaseTruncatedBody q I sigma2)
         (accuracyPhaseTruncatedBody_measurable q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2 current := by
   let mu : Measure (Bool × AmbientSpace q.n) :=
     (accuracyMetropolisMarkedBallStep q sigma2 current).runEstimate oracle.query
   let nu : Measure (Bool × AmbientSpace q.n) :=
-    Arlib.MarkovChains.lazyProperProposalGaussianAux
+    ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux
       (accuracyPhaseTruncatedBody q I sigma2)
       (accuracyPhaseTruncatedBody_measurable q I sigma2)
       (figureOneProposalRadius q sigma2) sigma2 current
@@ -626,14 +626,14 @@ theorem runEstimate_accuracyMetropolisMarkedBallStep_eq_lazyProperAux
     infer_instance
   have hstate : mu.map Prod.snd = nu.map Prod.snd := by
     calc
-      mu.map Prod.snd = Arlib.MarkovChains.lazy
-          (Arlib.MarkovChains.metropolisGaussian
+      mu.map Prod.snd = ArlibCommunity.Foundations.MarkovChainTheory.lazy
+          (ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian
             (accuracyPhaseTruncatedBody q I sigma2)
             (figureOneProposalRadius q sigma2) sigma2) current :=
         map_snd_runEstimate_accuracyMetropolisMarkedBallStep
           q I oracle hsigma2 current
       _ = nu.map Prod.snd :=
-        (Arlib.MarkovChains.map_snd_lazyProperProposalGaussianAux_apply
+        (ArlibCommunity.Algorithms.CV18.map_snd_lazyProperProposalGaussianAux_apply
           (accuracyPhaseTruncatedBody_measurable q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2 current).symm
   have hfalse : ∀ (t : Set (AmbientSpace q.n)), MeasurableSet t →
@@ -642,7 +642,7 @@ theorem runEstimate_accuracyMetropolisMarkedBallStep_eq_lazyProperAux
     rw [runEstimate_accuracyMetropolisMarkedBallStep_apply_false_prod
       q I oracle hsigma2 current ht]
     dsimp [nu]
-    rw [Arlib.MarkovChains.lazyProperProposalGaussianAux_apply_set
+    rw [ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux_apply_set
       (accuracyPhaseTruncatedBody_measurable q I sigma2)
       (figureOneProposalRadius q sigma2) sigma2 current
       ((measurableSet_singleton false).prod ht)]
@@ -703,7 +703,7 @@ noncomputable def accuracyGaussianRejectionAttempt (q : VolumeParams)
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤
-            Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target then
+            ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target then
         .pure (true, target)
       else
         .pure (false, target)
@@ -730,7 +730,7 @@ theorem accuracyGaussianRejectionAttempt_stronglyMeasurable
     if oracle.query target = true ∧
         ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
         ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
-        ENNReal.ofReal coin ≤ Arlib.MarkovChains.gaussianScaleAcceptance
+        ENNReal.ofReal coin ≤ ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance
           sigma2 (scaleFactor q) target then
       (true, target)
     else (false, target)
@@ -746,7 +746,7 @@ theorem accuracyGaussianRejectionAttempt_stronglyMeasurable
     · have hfalse : ∀ coin : ℝ, ¬ (oracle.query target = true ∧
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
-          ENNReal.ofReal coin ≤ Arlib.MarkovChains.gaussianScaleAcceptance
+          ENNReal.ofReal coin ≤ ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance
             sigma2 (scaleFactor q) target) := by
         intro coin h
         exact heligible ⟨h.1, h.2.1, h.2.2.1⟩
@@ -757,7 +757,7 @@ theorem accuracyGaussianRejectionAttempt_stronglyMeasurable
         (if oracle.query target = true ∧
             ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
             ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
-            ENNReal.ofReal coin ≤ Arlib.MarkovChains.gaussianScaleAcceptance
+            ENNReal.ofReal coin ≤ ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance
               sigma2 (scaleFactor q) target then
           .pure (true, target) else .pure (false, target))) =
         fun coin => Measure.dirac (output coin) by
@@ -765,7 +765,7 @@ theorem accuracyGaussianRejectionAttempt_stronglyMeasurable
       by_cases h : oracle.query target = true ∧
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
-          ENNReal.ofReal coin ≤ Arlib.MarkovChains.gaussianScaleAcceptance
+          ENNReal.ofReal coin ≤ ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance
             sigma2 (scaleFactor q) target
       · simp [h, output, MembershipOracleProgram.runEstimate]
       · simp [h, output, MembershipOracleProgram.runEstimate]]
@@ -779,7 +779,7 @@ noncomputable def accuracyGaussianRejectionAcceptance
   let c := scaleFactor q
   let target := c⁻¹ • current
   (accuracyPhaseTruncatedBody q I sigma2).indicator
-    (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c) target
+    (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c) target
 
 theorem accuracyGaussianRejectionAcceptance_le_one
     (q : VolumeParams) (I : VolumeInput q.n) {sigma2 : ℝ}
@@ -789,7 +789,7 @@ theorem accuracyGaussianRejectionAcceptance_le_one
   by_cases ht : (scaleFactor q)⁻¹ • current ∈
       accuracyPhaseTruncatedBody q I sigma2
   · rw [Set.indicator_of_mem ht]
-    exact Arlib.MarkovChains.gaussianScaleAcceptance_le_one hsigma2
+    exact ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance_le_one hsigma2
       (scaleFactor_pos q) (scaleFactor_le_one q) _
   · rw [Set.indicator_of_notMem ht]
     exact bot_le
@@ -798,7 +798,7 @@ theorem measurable_accuracyGaussianRejectionAcceptance
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ) :
     Measurable (accuracyGaussianRejectionAcceptance q I sigma2) := by
   unfold accuracyGaussianRejectionAcceptance
-  exact ((Arlib.MarkovChains.measurable_gaussianScaleAcceptance sigma2
+  exact ((ArlibCommunity.Algorithms.CV18.measurable_gaussianScaleAcceptance sigma2
       (scaleFactor q)).indicator
         (accuracyPhaseTruncatedBody_measurable q I sigma2)).comp
           ((measurable_const : Measurable fun _ : AmbientSpace q.n =>
@@ -857,11 +857,11 @@ theorem runEstimate_accuracyGaussianRejectionAttempt
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤
-            Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target) =
+            ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target) =
         (coin ≤ accept.toReal) := by
       intro coin
       have hacceptEq : accuracyGaussianRejectionAcceptance q I sigma2 current =
-          Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target := by
+          ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target := by
         unfold accuracyGaussianRejectionAcceptance
         rw [Set.indicator_of_mem ht]
       rw [← hacceptEq]
@@ -916,7 +916,7 @@ theorem runEstimate_accuracyGaussianRejectionAttempt
           ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
           ‖target‖ ≤ accuracyPhaseRadius q sigma2 ∧
           ENNReal.ofReal coin ≤
-            Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target) := by
+            ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target) := by
       intro coin h
       exact hineligible ⟨h.1, h.2.1, h.2.2.1⟩
     dsimp only [c, target] at hfalse
@@ -1164,14 +1164,14 @@ theorem cappedAccuracyGaussianCollectWeightsAux_semantics
       (cappedAccuracyGaussianCollectWeightsAux q sigma2 weight properStride
         rawCap remainingProper samples total current).runEstimate oracle.query =
       cappedAccuracyGaussianCollectLawAux
-        (Arlib.MarkovChains.lazyProperProposalGaussianAux
+        (ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux
           (accuracyPhaseTruncatedBody q I sigma2)
           (accuracyPhaseTruncatedBody_measurable q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2)
         (accuracyGaussianRejectionKernel q I sigma2) weight properStride
         rawCap remainingProper samples total current) := by
   let _ : Fact (0 < sigma2) := ⟨hsigma2⟩
-  let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux
+  let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux
     (accuracyPhaseTruncatedBody q I sigma2)
     (accuracyPhaseTruncatedBody_measurable q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
@@ -1432,7 +1432,7 @@ theorem cappedAccuracyGaussianCollectWeights_semantics
       (cappedAccuracyGaussianCollectWeights q sigma2 weight rawCap
         properStride samples current).runEstimate oracle.query =
       cappedAccuracyGaussianCollectLaw
-        (Arlib.MarkovChains.lazyProperProposalGaussianAux
+        (ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux
           (accuracyPhaseTruncatedBody q I sigma2)
           (accuracyPhaseTruncatedBody_measurable q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2)

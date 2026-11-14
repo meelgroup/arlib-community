@@ -15,7 +15,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory Metric Set
 open scoped ENNReal Pointwise
-open Arlib MarkovChains
+open Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- If the body and proposal radius both grow, the old local conductance is at
 most the ratio of proposal-ball volumes times the new local conductance. -/

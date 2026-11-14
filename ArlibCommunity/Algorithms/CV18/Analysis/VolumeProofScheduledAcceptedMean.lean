@@ -15,7 +15,7 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open _root_.Arlib
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- A bounded nonnegative observable has almost the same mean under the
 scheduled accepted target and the exact truncated Gaussian target. -/
@@ -57,7 +57,7 @@ theorem integral_figureOneScheduledAcceptedTargetAt_sub_truncatedGaussian_abs_le
           (scheduleValue q phase) (scheduleValue_pos q phase) :
             Measure (AmbientSpace q.n))| ≤
         B * (scheduledBalancedStationaryTargetError q).toReal :=
-      Arlib.TVLe.integral_le_of_nonnegative_le
+      ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_nonnegative_le
         htv hstationaryTop hf hB hf0 hfB
     _ ≤ B * (figureOneCorrectedTargetBudget q).toReal := by
       exact mul_le_mul_of_nonneg_left

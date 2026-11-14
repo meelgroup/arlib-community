@@ -1,11 +1,13 @@
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofAverageConductance
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofTruncation
-import ArlibCommunity.Algorithms.CV18.Analysis.Background.Arlib.MarkovChains.Continuous.MetropolisConductance
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Probability.Rejection
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.MetropolisConductance
+import ArlibCommunity.Foundations.Convex.Basic.Rejection
 import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 
-namespace Arlib.MarkovChains
+open Arlib
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex.GaussianCooling
 
+namespace ArlibCommunity.Algorithms.CV18
 open MeasureTheory Metric
 open scoped ENNReal Pointwise
 
@@ -17,10 +19,10 @@ resulting measures need not yet be normalized; this is the exact statement
 needed before conditioning on a rejection sampler's success event. -/
 theorem TVLe.withDensity_le_one_cv18
     {Omega : Type*} [MeasurableSpace Omega]
-    {mu nu : Measure Omega} {epsilon : ENNReal} (h : Arlib.TVLe mu nu epsilon)
+    {mu nu : Measure Omega} {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
     {accept : Omega → ENNReal} (haccept : Measurable accept)
     (haccept_one : ∀ x, accept x ≤ 1) :
-    Arlib.TVLe (mu.withDensity accept) (nu.withDensity accept) epsilon := by
+    ArlibCommunity.Foundations.Convex.TVLe (mu.withDensity accept) (nu.withDensity accept) epsilon := by
   intro S hS
   rw [withDensity_apply _ hS, withDensity_apply _ hS,
     ← lintegral_indicator hS, ← lintegral_indicator hS]
@@ -42,7 +44,7 @@ theorem TVLe.withDensity_of_one_sub_lintegral_le_cv18
     {weight : Omega → ENNReal} (hweight : Measurable weight)
     (hweight_one : ∀ x, weight x ≤ 1) {epsilon : ENNReal}
     (hdefect : ∫⁻ x, (1 - weight x) ∂mu ≤ epsilon) :
-    Arlib.TVLe (mu.withDensity weight) mu epsilon := by
+    ArlibCommunity.Foundations.Convex.TVLe (mu.withDensity weight) mu epsilon := by
   intro S hS
   rw [withDensity_apply _ hS]
   have hweighted : (∫⁻ x in S, weight x ∂mu) ≤ mu S := by
@@ -66,9 +68,9 @@ theorem TVLe.withDensity_of_one_sub_lintegral_le_cv18
 /-- Conditioning a probability measure on the whole space is the identity. -/
 theorem condOn_univ_eq_cv18 {Omega : Type*} [MeasurableSpace Omega]
     (mu : Measure Omega) [IsProbabilityMeasure mu] :
-    Arlib.condOn mu Set.univ = mu := by
+    ArlibCommunity.Foundations.Convex.condOn mu Set.univ = mu := by
   ext S hS
-  rw [Arlib.condOn_apply _ MeasurableSet.univ hS]
+  rw [ArlibCommunity.Foundations.Convex.condOn_apply _ MeasurableSet.univ hS]
   simp
 
 /-- Conditioning two probability laws on the same event amplifies a TV error
@@ -79,10 +81,10 @@ lemmas provide `p = 1/2`, so a rejection stage costs at most `4 * epsilon`.
 theorem TVLe.condOn_cv18
     {Omega : Type*} [MeasurableSpace Omega]
     {mu nu : Measure Omega} [IsFiniteMeasure mu] [IsFiniteMeasure nu]
-    {epsilon p : ENNReal} (h : Arlib.TVLe mu nu epsilon)
+    {epsilon p : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
     (hepsilon : epsilon ≠ ⊤) {S : Set Omega} (hS : MeasurableSet S)
     (hp0 : p ≠ 0) (hpmu : p ≤ mu S) (hpnu : p ≤ nu S) :
-    Arlib.TVLe (Arlib.condOn mu S) (Arlib.condOn nu S)
+    ArlibCommunity.Foundations.Convex.TVLe (ArlibCommunity.Foundations.Convex.condOn mu S) (ArlibCommunity.Foundations.Convex.condOn nu S)
       (2 * epsilon / p) := by
   have hmutop : mu S ≠ ⊤ := measure_ne_top mu S
   have hnutop : nu S ≠ ⊤ := measure_ne_top nu S
@@ -90,12 +92,12 @@ theorem TVLe.condOn_cv18
   have hp_pos : 0 < p := bot_lt_iff_ne_bot.2 hp0
   have hmu0 : mu S ≠ 0 := ne_of_gt (hp_pos.trans_le hpmu)
   have hnu0 : nu S ≠ 0 := ne_of_gt (hp_pos.trans_le hpnu)
-  let _ : IsProbabilityMeasure (Arlib.condOn mu S) :=
-    Arlib.isProbabilityMeasure_condOn mu hmu0 hmutop
-  let _ : IsProbabilityMeasure (Arlib.condOn nu S) :=
-    Arlib.isProbabilityMeasure_condOn nu hnu0 hnutop
-  refine Arlib.tvLe_of_forall_le fun T hT => ?_
-  rw [Arlib.condOn_apply mu hS hT, Arlib.condOn_apply nu hS hT]
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn mu S) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn mu hmu0 hmutop
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn nu S) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn nu hnu0 hnutop
+  refine ArlibCommunity.Foundations.Convex.tvLe_of_forall_le fun T hT => ?_
+  rw [ArlibCommunity.Foundations.Convex.condOn_apply mu hS hT, ArlibCommunity.Foundations.Convex.condOn_apply nu hS hT]
   have herrorTop : 2 * epsilon / p ≠ ⊤ :=
     ENNReal.div_ne_top (ENNReal.mul_ne_top (by norm_num) hepsilon) hp0
   have hleftTop : mu (T ∩ S) / mu S ≠ ⊤ :=
@@ -179,7 +181,7 @@ theorem TVLe.normalize_withDensity_of_defect_cv18
     (hepsilon : epsilon ≠ ⊤)
     (hepsilon_half : epsilon ≤ ENNReal.ofReal (1 / 2 : ℝ))
     (hdefect : ∫⁻ x, (1 - weight x) ∂mu ≤ epsilon) :
-    Arlib.TVLe (Arlib.condOn (mu.withDensity weight) Set.univ) mu
+    ArlibCommunity.Foundations.Convex.TVLe (ArlibCommunity.Foundations.Convex.condOn (mu.withDensity weight) Set.univ) mu
       (4 * epsilon) := by
   have hbase := TVLe.withDensity_of_one_sub_lintegral_le_cv18
     mu hweight hweight_one hdefect
@@ -205,7 +207,7 @@ theorem TVLe.normalize_withDensity_of_defect_cv18
   have hmu_half : ENNReal.ofReal (1 / 2 : ℝ) ≤ mu Set.univ := by simp
   have hcond := TVLe.condOn_cv18 hbase hepsilon MeasurableSet.univ
     (p := ENNReal.ofReal (1 / 2 : ℝ)) (by norm_num) hweight_half hmu_half
-  have hmucond : Arlib.condOn mu Set.univ = mu := condOn_univ_eq_cv18 mu
+  have hmucond : ArlibCommunity.Foundations.Convex.condOn mu Set.univ = mu := condOn_univ_eq_cv18 mu
   rw [hmucond] at hcond
   convert hcond using 1
   simp [ENNReal.div_eq_inv_mul]
@@ -217,15 +219,15 @@ common acceptance-mass floor `p` is the only source of amplification. -/
 theorem TVLe.normalize_withDensity_cv18
     {Omega : Type*} [MeasurableSpace Omega]
     {mu nu : Measure Omega} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
-    {epsilon p : ENNReal} (h : Arlib.TVLe mu nu epsilon)
+    {epsilon p : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
     (hepsilon : epsilon ≠ ⊤) {accept : Omega → ENNReal}
     (haccept : Measurable accept) (haccept_one : ∀ x, accept x ≤ 1)
     (hp0 : p ≠ 0)
     (hpmu : p ≤ (mu.withDensity accept) Set.univ)
     (hpnu : p ≤ (nu.withDensity accept) Set.univ) :
-    Arlib.TVLe
-      (Arlib.condOn (mu.withDensity accept) Set.univ)
-      (Arlib.condOn (nu.withDensity accept) Set.univ)
+    ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn (mu.withDensity accept) Set.univ)
+      (ArlibCommunity.Foundations.Convex.condOn (nu.withDensity accept) Set.univ)
       (2 * epsilon / p) := by
   have hmuInt : ∫⁻ x, accept x ∂mu ≠ ⊤ := by
     apply ne_top_of_le_ne_top ENNReal.one_ne_top
@@ -247,16 +249,16 @@ factor four in TV. -/
 theorem TVLe.normalize_withDensity_half_cv18
     {Omega : Type*} [MeasurableSpace Omega]
     {mu nu : Measure Omega} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
-    {epsilon : ENNReal} (h : Arlib.TVLe mu nu epsilon)
+    {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
     (hepsilon : epsilon ≠ ⊤) {accept : Omega → ENNReal}
     (haccept : Measurable accept) (haccept_one : ∀ x, accept x ≤ 1)
     (hmu : ENNReal.ofReal (1 / 2 : ℝ) ≤
       (mu.withDensity accept) Set.univ)
     (hnu : ENNReal.ofReal (1 / 2 : ℝ) ≤
       (nu.withDensity accept) Set.univ) :
-    Arlib.TVLe
-      (Arlib.condOn (mu.withDensity accept) Set.univ)
-      (Arlib.condOn (nu.withDensity accept) Set.univ)
+    ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn (mu.withDensity accept) Set.univ)
+      (ArlibCommunity.Foundations.Convex.condOn (nu.withDensity accept) Set.univ)
       (4 * epsilon) := by
   have hbase := TVLe.normalize_withDensity_cv18 h hepsilon haccept haccept_one
     (p := ENNReal.ofReal (1 / 2 : ℝ)) (by norm_num) hmu hnu
@@ -271,11 +273,11 @@ and the normalized laws are within `8 * epsilon`. -/
 theorem TVLe.condOn_target_half_cv18
     {Omega : Type*} [MeasurableSpace Omega]
     {mu nu : Measure Omega} [IsFiniteMeasure mu] [IsFiniteMeasure nu]
-    {epsilon : ENNReal} (h : Arlib.TVLe mu nu epsilon)
+    {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
     (hepsilon : epsilon ≠ ⊤) (hepsilon_quarter : epsilon ≤ ENNReal.ofReal (1 / 4 : ℝ))
     {S : Set Omega} (hS : MeasurableSet S)
     (hnu : ENNReal.ofReal (1 / 2 : ℝ) ≤ nu S) :
-    Arlib.TVLe (Arlib.condOn mu S) (Arlib.condOn nu S) (8 * epsilon) := by
+    ArlibCommunity.Foundations.Convex.TVLe (ArlibCommunity.Foundations.Convex.condOn mu S) (ArlibCommunity.Foundations.Convex.condOn nu S) (8 * epsilon) := by
   have hquarter_add : ENNReal.ofReal (1 / 4 : ℝ) + epsilon ≤
       ENNReal.ofReal (1 / 2 : ℝ) := by
     calc
@@ -304,15 +306,15 @@ controls normalization. -/
 theorem TVLe.normalize_withDensity_target_half_cv18
     {Omega : Type*} [MeasurableSpace Omega]
     {mu nu : Measure Omega} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
-    {epsilon : ENNReal} (h : Arlib.TVLe mu nu epsilon)
+    {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
     (hepsilon : epsilon ≠ ⊤) (hepsilon_quarter : epsilon ≤ ENNReal.ofReal (1 / 4 : ℝ))
     {accept : Omega → ENNReal} (haccept : Measurable accept)
     (haccept_one : ∀ x, accept x ≤ 1)
     (hnu : ENNReal.ofReal (1 / 2 : ℝ) ≤
       (nu.withDensity accept) Set.univ) :
-    Arlib.TVLe
-      (Arlib.condOn (mu.withDensity accept) Set.univ)
-      (Arlib.condOn (nu.withDensity accept) Set.univ)
+    ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn (mu.withDensity accept) Set.univ)
+      (ArlibCommunity.Foundations.Convex.condOn (nu.withDensity accept) Set.univ)
       (8 * epsilon) := by
   have hmuInt : ∫⁻ x, accept x ∂mu ≠ ⊤ := by
     apply ne_top_of_le_ne_top ENNReal.one_ne_top
@@ -332,9 +334,9 @@ theorem TVLe.normalize_withDensity_target_half_cv18
 theorem condOn_smul_cv18 {Omega : Type*} [MeasurableSpace Omega]
     (mu : Measure Omega) {S : Set Omega} (hS : MeasurableSet S)
     {a : ENNReal} (ha0 : a ≠ 0) (hatop : a ≠ ⊤) :
-    Arlib.condOn (a • mu) S = Arlib.condOn mu S := by
+    ArlibCommunity.Foundations.Convex.condOn (a • mu) S = ArlibCommunity.Foundations.Convex.condOn mu S := by
   ext T hT
-  rw [Arlib.condOn_apply _ hS hT, Arlib.condOn_apply _ hS hT,
+  rw [ArlibCommunity.Foundations.Convex.condOn_apply _ hS hT, ArlibCommunity.Foundations.Convex.condOn_apply _ hS hT,
     Measure.smul_apply, Measure.smul_apply]
   change a * mu (T ∩ S) / (a * mu S) = mu (T ∩ S) / mu S
   exact ENNReal.mul_div_mul_left _ _ ha0 hatop
@@ -343,10 +345,10 @@ theorem condOn_smul_cv18 {Omega : Type*} [MeasurableSpace Omega]
 conditioning the original measure on the restricting set. -/
 theorem condOn_restrict_univ_cv18 {Omega : Type*} [MeasurableSpace Omega]
     (mu : Measure Omega) {S : Set Omega} (hS : MeasurableSet S) :
-    Arlib.condOn (mu.restrict S) Set.univ = Arlib.condOn mu S := by
+    ArlibCommunity.Foundations.Convex.condOn (mu.restrict S) Set.univ = ArlibCommunity.Foundations.Convex.condOn mu S := by
   ext T hT
-  rw [Arlib.condOn_apply _ MeasurableSet.univ hT,
-    Arlib.condOn_apply _ hS hT, Set.inter_univ,
+  rw [ArlibCommunity.Foundations.Convex.condOn_apply _ MeasurableSet.univ hT,
+    ArlibCommunity.Foundations.Convex.condOn_apply _ hS hT, Set.inter_univ,
     Measure.restrict_apply hT, Measure.restrict_apply_univ]
 
 /-- If the conditioning event lies inside a previous restriction, that
@@ -355,9 +357,9 @@ theorem condOn_restrict_eq_condOn_of_subset_cv18
     {Omega : Type*} [MeasurableSpace Omega] (mu : Measure Omega)
     {K S : Set Omega} (hS : MeasurableSet S)
     (hsub : S ⊆ K) :
-    Arlib.condOn (mu.restrict K) S = Arlib.condOn mu S := by
+    ArlibCommunity.Foundations.Convex.condOn (mu.restrict K) S = ArlibCommunity.Foundations.Convex.condOn mu S := by
   ext T hT
-  rw [Arlib.condOn_apply _ hS hT, Arlib.condOn_apply _ hS hT,
+  rw [ArlibCommunity.Foundations.Convex.condOn_apply _ hS hT, ArlibCommunity.Foundations.Convex.condOn_apply _ hS hT,
     Measure.restrict_apply (hT.inter hS), Measure.restrict_apply hS]
   rw [Set.inter_eq_left.2 hsub]
   have hinter : T ∩ S ∩ K = T ∩ S :=
@@ -370,11 +372,11 @@ theorem condOn_withDensity_eq_normalize_condOn_cv18
     {Omega : Type*} [MeasurableSpace Omega] (mu : Measure Omega)
     {S : Set Omega} (hS : MeasurableSet S) {weight : Omega → ENNReal}
     (hmu0 : mu S ≠ 0) (hmutop : mu S ≠ ⊤) :
-    Arlib.condOn ((Arlib.condOn mu S).withDensity weight) Set.univ =
-      Arlib.condOn (mu.withDensity weight) S := by
-  have hmeasure : (Arlib.condOn mu S).withDensity weight =
+    ArlibCommunity.Foundations.Convex.condOn ((ArlibCommunity.Foundations.Convex.condOn mu S).withDensity weight) Set.univ =
+      ArlibCommunity.Foundations.Convex.condOn (mu.withDensity weight) S := by
+  have hmeasure : (ArlibCommunity.Foundations.Convex.condOn mu S).withDensity weight =
       (mu S)⁻¹ • (mu.withDensity weight).restrict S := by
-    rw [Arlib.condOn_def, withDensity_smul_measure, restrict_withDensity hS]
+    rw [ArlibCommunity.Foundations.Convex.condOn_def, withDensity_smul_measure, restrict_withDensity hS]
   rw [hmeasure, condOn_smul_cv18 _ MeasurableSet.univ
     (ENNReal.inv_ne_zero.mpr hmutop) (ENNReal.inv_ne_top.mpr hmu0)]
   exact condOn_restrict_univ_cv18 _ hS
@@ -457,12 +459,12 @@ theorem TVLe.condOn_ellGaussianMeasure_gaussian_of_coreDefect_cv18
     (heta_half : eta ≤ ENNReal.ofReal (1 / 2 : ℝ))
     (hdefect :
       ∫⁻ x, (1 - ell K delta x)
-        ∂Arlib.condOn
+        ∂ArlibCommunity.Foundations.Convex.condOn
           (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
             (gaussianWeight variance)).restrict K) S ≤ eta) :
-    Arlib.TVLe
-      (Arlib.condOn (ellGaussianMeasure K delta variance) S)
-      (Arlib.condOn
+    ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn (ellGaussianMeasure K delta variance) S)
+      (ArlibCommunity.Foundations.Convex.condOn
         (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight variance)).restrict K) S)
       (4 * eta) := by
@@ -470,14 +472,14 @@ theorem TVLe.condOn_ellGaussianMeasure_gaussian_of_coreDefect_cv18
     ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
       (gaussianWeight variance)).restrict K
   let gamma : Measure (EuclideanSpace ℝ (Fin n)) :=
-    Arlib.condOn gaussianK S
+    ArlibCommunity.Foundations.Convex.condOn gaussianK S
   let _ : IsProbabilityMeasure gamma :=
-    Arlib.isProbabilityMeasure_condOn gaussianK hgauss0 hgausstop
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn gaussianK hgauss0 hgausstop
   have hstable := TVLe.normalize_withDensity_of_defect_cv18 gamma
     (measurable_ell hK delta) (ell_le_one K delta) heta heta_half hdefect
   have hnormalize :
-      Arlib.condOn (gamma.withDensity (ell K delta)) Set.univ =
-        Arlib.condOn (gaussianK.withDensity (ell K delta)) S := by
+      ArlibCommunity.Foundations.Convex.condOn (gamma.withDensity (ell K delta)) Set.univ =
+        ArlibCommunity.Foundations.Convex.condOn (gaussianK.withDensity (ell K delta)) S := by
     exact condOn_withDensity_eq_normalize_condOn_cv18
       gaussianK hS hgauss0 hgausstop
   rw [hnormalize] at hstable
@@ -502,12 +504,12 @@ theorem TVLe.condOn_ellGaussianProb_gaussian_of_coreDefect_cv18
     (heta_half : eta ≤ ENNReal.ofReal (1 / 2 : ℝ))
     (hdefect :
       ∫⁻ x, (1 - ell K delta x)
-        ∂Arlib.condOn
+        ∂ArlibCommunity.Foundations.Convex.condOn
           (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
             (gaussianWeight variance)).restrict K) S ≤ eta) :
-    Arlib.TVLe
-      (Arlib.condOn (ellGaussianProb K delta variance) S)
-      (Arlib.condOn
+    ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn (ellGaussianProb K delta variance) S)
+      (ArlibCommunity.Foundations.Convex.condOn
         (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight variance)).restrict K) S)
       (4 * eta) := by
@@ -744,8 +746,8 @@ theorem condOn_ellGaussianMeasure_smul_eq_gaussian_cv18
     (hball : ball (0 : EuclideanSpace ℝ (Fin n)) 1 ⊆ K)
     {c delta variance : ℝ} (hc0 : 0 < c) (hc1 : c < 1)
     (hdelta : 0 < delta) (hdelta_c : delta ≤ 1 - c) :
-    Arlib.condOn (ellGaussianMeasure K delta variance) (c • K) =
-      Arlib.condOn
+    ArlibCommunity.Foundations.Convex.condOn (ellGaussianMeasure K delta variance) (c • K) =
+      ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight variance)) (c • K) := by
   have hrest := ellGaussianMeasure_restrict_smul_eq_gaussian_cv18
@@ -753,7 +755,7 @@ theorem condOn_ellGaussianMeasure_smul_eq_gaussian_cv18
   have hmass := congrArg
     (fun mu : Measure (EuclideanSpace ℝ (Fin n)) => mu Set.univ) hrest
   simp only [Measure.restrict_apply_univ] at hmass
-  rw [Arlib.condOn_def, Arlib.condOn_def, hmass, hrest]
+  rw [ArlibCommunity.Foundations.Convex.condOn_def, ArlibCommunity.Foundations.Convex.condOn_def, hmass, hrest]
 
 /-- The same exact rejection identity for the normalized speedy stationary
 law used by the mixing theorem. -/
@@ -765,8 +767,8 @@ theorem condOn_ellGaussianProb_smul_eq_gaussian_cv18
     (hdelta : 0 < delta) (hdelta_c : delta ≤ 1 - c)
     (hmass0 : ellGaussianMeasure K delta variance Set.univ ≠ 0)
     (hmasstop : ellGaussianMeasure K delta variance Set.univ ≠ ⊤) :
-    Arlib.condOn (ellGaussianProb K delta variance) (c • K) =
-      Arlib.condOn
+    ArlibCommunity.Foundations.Convex.condOn (ellGaussianProb K delta variance) (c • K) =
+      ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight variance)) (c • K) := by
   rw [ellGaussianProb, condOn_smul_cv18 _
@@ -785,8 +787,8 @@ theorem condOn_ellGaussianProb_smul_eq_gaussian_radius_cv18
     (hdelta : 0 < delta) (hdelta_c : delta ≤ (1 - c) * rho)
     (hmass0 : ellGaussianMeasure K delta variance Set.univ ≠ 0)
     (hmasstop : ellGaussianMeasure K delta variance Set.univ ≠ ⊤) :
-    Arlib.condOn (ellGaussianProb K delta variance) (c • K) =
-      Arlib.condOn
+    ArlibCommunity.Foundations.Convex.condOn (ellGaussianProb K delta variance) (c • K) =
+      ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight variance)) (c • K) := by
   have hrest := ellGaussianMeasure_restrict_smul_eq_gaussian_radius_cv18
@@ -797,18 +799,18 @@ theorem condOn_ellGaussianProb_smul_eq_gaussian_radius_cv18
   rw [ellGaussianProb, condOn_smul_cv18 _
     (measurableSet_smul_set_cv18 hK hc0.ne')
       (ENNReal.inv_ne_zero.mpr hmasstop) (ENNReal.inv_ne_top.mpr hmass0),
-    Arlib.condOn_def, Arlib.condOn_def, hmass, hrest]
+    ArlibCommunity.Foundations.Convex.condOn_def, ArlibCommunity.Foundations.Convex.condOn_def, hmass, hrest]
 
 /-- Scaling a Gaussian conditioned on `c • K` back to `K` divides its
 variance by `c^2`.  The Jacobian cancels in the two conditional masses. -/
 theorem map_condOn_gaussian_smul_cv18
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
     {c variance : ℝ} (hc0 : 0 < c) :
-    (Arlib.condOn
+    (ArlibCommunity.Foundations.Convex.condOn
       ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
         (gaussianWeight variance)) (c • K)).map
         (fun x => c⁻¹ • x) =
-      Arlib.condOn
+      ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight (variance / c ^ 2))) K := by
   have hc : c ≠ 0 := hc0.ne'
@@ -817,8 +819,8 @@ theorem map_condOn_gaussian_smul_cv18
     (continuous_const_smul _).measurable
   ext T hT
   rw [Measure.map_apply hmap hT,
-    Arlib.condOn_apply _ hcore (hT.preimage hmap),
-    Arlib.condOn_apply _ hK hT]
+    ArlibCommunity.Foundations.Convex.condOn_apply _ hcore (hT.preimage hmap),
+    ArlibCommunity.Foundations.Convex.condOn_apply _ hK hT]
   have hpre :
       (fun x : EuclideanSpace ℝ (Fin n) => c⁻¹ • x) ⁻¹' T ∩ c • K =
         c • (T ∩ K) := by
@@ -849,7 +851,7 @@ theorem gaussianWeight_mul_gaussianScaleAcceptance (variance c : ℝ)
     (x : EuclideanSpace ℝ (Fin n)) :
     gaussianWeight (variance / c ^ 2) x *
         gaussianScaleAcceptance variance c x = gaussianWeight variance x := by
-  unfold gaussianScaleAcceptance
+  rw [gaussianScaleAcceptance_eq]
   rw [mul_comm, ENNReal.div_mul_cancel
     (gaussianWeight_ne_zero (variance / c ^ 2) x)
     (gaussianWeight_ne_top (variance / c ^ 2) x)]
@@ -863,7 +865,7 @@ theorem gaussianScaleAcceptance_le_one {variance c : ℝ}
   have hvar : variance ≤ variance / c ^ 2 := by
     rw [le_div_iff₀ hc2pos]
     nlinarith [hvariance.le]
-  unfold gaussianScaleAcceptance
+  rw [gaussianScaleAcceptance_eq]
   rw [ENNReal.div_le_iff
     (gaussianWeight_ne_zero (variance / c ^ 2) x)
     (gaussianWeight_ne_top (variance / c ^ 2) x)]
@@ -900,7 +902,8 @@ theorem exp_neg_eight_le_gaussianScaleAcceptance_standardCore_cv18
     have h1 := mul_le_mul_of_nonneg_right hcLoss hx0
     have h2 := hx
     nlinarith [mul_nonneg hcLoss0 hx0]
-  unfold gaussianScaleAcceptance gaussianWeight gaussianWeightReal
+  rw [gaussianScaleAcceptance_eq]
+  unfold gaussianWeight gaussianWeightReal
   rw [ENNReal.le_div_iff_mul_le
     (Or.inl (ENNReal.ofReal_ne_zero_iff.mpr (Real.exp_pos _)))
     (Or.inl ENNReal.ofReal_ne_top)]
@@ -997,7 +1000,7 @@ probability gives the target restriction, divided by the proposal mass. -/
 theorem condOn_gaussian_withDensity_scaleAcceptance_cv18
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
     (variance c : ℝ) :
-    (Arlib.condOn
+    (ArlibCommunity.Foundations.Convex.condOn
       ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
         (gaussianWeight (variance / c ^ 2))) K).withDensity
           (gaussianScaleAcceptance variance c) =
@@ -1005,7 +1008,7 @@ theorem condOn_gaussian_withDensity_scaleAcceptance_cv18
         (gaussianWeight (variance / c ^ 2))) K)⁻¹) •
         (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight variance)).restrict K) := by
-  rw [Arlib.condOn_def, withDensity_smul_measure,
+  rw [ArlibCommunity.Foundations.Convex.condOn_def, withDensity_smul_measure,
     gaussianScaleAcceptance_withDensity_cv18 hK variance c]
 
 /-- After normalizing the second rejection, its exact target is the Gaussian
@@ -1019,12 +1022,12 @@ theorem condOn_gaussian_scaleAcceptance_eq_target_cv18
     (hproptop :
       ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
         (gaussianWeight (variance / c ^ 2))) K ≠ ⊤) :
-    Arlib.condOn
-        ((Arlib.condOn
+    ArlibCommunity.Foundations.Convex.condOn
+        ((ArlibCommunity.Foundations.Convex.condOn
           ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
             (gaussianWeight (variance / c ^ 2))) K).withDensity
           (gaussianScaleAcceptance variance c)) Set.univ =
-      Arlib.condOn
+      ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight variance)) K := by
   rw [condOn_gaussian_withDensity_scaleAcceptance_cv18 hK]
@@ -1047,7 +1050,7 @@ theorem half_le_condOn_gaussian_scaleAcceptance_mass_standardCore_cv18
         (gaussianWeight
           (variance / (1 - 1 / (2 * (n : ℝ))) ^ 2))) K ≠ ⊤) :
     ENNReal.ofReal (1 / 2) ≤
-      (Arlib.condOn
+      (ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight
             (variance / (1 - 1 / (2 * (n : ℝ))) ^ 2))) K).withDensity
@@ -1083,15 +1086,15 @@ theorem TVLe.speedyToGaussian_twoStage_cv18
           (variance / (1 - 1 / (2 * (n : ℝ))) ^ 2))) K ≠ ⊤)
     {mu : Measure (EuclideanSpace ℝ (Fin n))} [IsProbabilityMeasure mu]
     {epsilon : ENNReal}
-    (hmix : Arlib.TVLe mu (ellGaussianProb K delta variance) epsilon)
+    (hmix : ArlibCommunity.Foundations.Convex.TVLe mu (ellGaussianProb K delta variance) epsilon)
     (hepsilon : epsilon ≠ ⊤)
     (hepsilon_small : epsilon ≤ ENNReal.ofReal (1 / 32 : ℝ)) :
     let c : ℝ := 1 - 1 / (2 * (n : ℝ))
-    Arlib.TVLe
-      (Arlib.condOn
-        (((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
+    ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn
+        (((ArlibCommunity.Foundations.Convex.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
           (gaussianScaleAcceptance variance c)) Set.univ)
-      (Arlib.condOn
+      (ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight variance)) K)
       (64 * epsilon) := by
@@ -1139,30 +1142,30 @@ theorem TVLe.speedyToGaussian_twoStage_cv18
     ENNReal.le_of_add_le_add_right hepsilon hmuCoreAdd
   have hmuCore0 : mu (c • K) ≠ 0 :=
     ne_of_gt ((by norm_num : 0 < ENNReal.ofReal (1 / 4 : ℝ)).trans_le hmuCore)
-  let _ : IsProbabilityMeasure (Arlib.condOn mu (c • K)) :=
-    Arlib.isProbabilityMeasure_condOn mu hmuCore0 (measure_ne_top mu _)
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn mu (c • K)) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn mu hmuCore0 (measure_ne_top mu _)
   have hnuCore0 : nu (c • K) ≠ 0 :=
     ne_of_gt ((by norm_num : 0 < ENNReal.ofReal (1 / 2 : ℝ)).trans_le hhalfCore)
-  let _ : IsProbabilityMeasure (Arlib.condOn nu (c • K)) :=
-    Arlib.isProbabilityMeasure_condOn nu hnuCore0 (measure_ne_top nu _)
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn nu (c • K)) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn nu hnuCore0 (measure_ne_top nu _)
   have hmap := hfirst.map
     ((continuous_const_smul c⁻¹).measurable)
   let _ : IsProbabilityMeasure
-      ((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)) :=
+      ((ArlibCommunity.Foundations.Convex.condOn mu (c • K)).map (fun x => c⁻¹ • x)) :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       ((continuous_const_smul c⁻¹).measurable.aemeasurable)
   let proposal : Measure (EuclideanSpace ℝ (Fin n)) :=
-    Arlib.condOn
+    ArlibCommunity.Foundations.Convex.condOn
       ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
         (gaussianWeight (variance / c ^ 2))) K
   let _ : IsProbabilityMeasure proposal :=
-    Arlib.isProbabilityMeasure_condOn _ hprop0 hproptop
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn _ hprop0 hproptop
   have hdeltaCore : delta ≤ (1 - c) * rho := by
     calc
       delta ≤ rho / (2 * (n : ℝ)) := hdelta_n
       _ = (1 - c) * rho := by dsimp [c]; ring
   have htargetMap :
-      (Arlib.condOn nu (c • K)).map (fun x => c⁻¹ • x) = proposal := by
+      (ArlibCommunity.Foundations.Convex.condOn nu (c • K)).map (fun x => c⁻¹ • x) = proposal := by
     dsimp [nu, proposal]
     rw [condOn_ellGaussianProb_smul_eq_gaussian_radius_cv18 hK hKc
       hrho hball hc0 hc1 hdelta hdeltaCore
@@ -1189,9 +1192,9 @@ theorem TVLe.speedyToGaussian_twoStage_cv18
     hmap heightTop heightSmall (measurable_gaussianScaleAcceptance variance c)
     (gaussianScaleAcceptance_le_one hvariance hc0 hc1.le) hhalfAccept
   have htarget :
-      Arlib.condOn
+      ArlibCommunity.Foundations.Convex.condOn
           (proposal.withDensity (gaussianScaleAcceptance variance c)) Set.univ =
-        Arlib.condOn
+        ArlibCommunity.Foundations.Convex.condOn
           ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
             (gaussianWeight variance)) K := by
     dsimp [proposal, c]
@@ -1235,22 +1238,22 @@ theorem TVLe.speedyToGaussian_twoStage_of_coreDefect_cv18
     (heta_half : eta ≤ ENNReal.ofReal (1 / 2 : ℝ))
     (hcoreDefect :
       ∫⁻ x, (1 - ell K delta x)
-        ∂Arlib.condOn
+        ∂ArlibCommunity.Foundations.Convex.condOn
           (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
             (gaussianWeight variance)).restrict K)
           ((1 - 1 / (2 * (n : ℝ))) • K) ≤ eta)
     {mu : Measure (EuclideanSpace ℝ (Fin n))} [IsProbabilityMeasure mu]
     {epsilon : ENNReal}
-    (hmix : Arlib.TVLe mu (ellGaussianProb K delta variance) epsilon)
+    (hmix : ArlibCommunity.Foundations.Convex.TVLe mu (ellGaussianProb K delta variance) epsilon)
     (hepsilon : epsilon ≠ ⊤)
     (hcombined_quarter : 8 * epsilon + 4 * eta ≤
       ENNReal.ofReal (1 / 4 : ℝ)) :
     let c : ℝ := 1 - 1 / (2 * (n : ℝ))
-    Arlib.TVLe
-      (Arlib.condOn
-        (((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
+    ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.Convex.condOn
+        (((ArlibCommunity.Foundations.Convex.condOn mu (c • K)).map (fun x => c⁻¹ • x)).withDensity
           (gaussianScaleAcceptance variance c)) Set.univ)
-      (Arlib.condOn
+      (ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight variance)) K)
       (64 * epsilon + 32 * eta) := by
@@ -1310,8 +1313,8 @@ theorem TVLe.speedyToGaussian_twoStage_of_coreDefect_cv18
       norm_num).trans hsevenCore
   have hfirstBase := TVLe.condOn_cv18 hmix hepsilon hcore
     (p := ENNReal.ofReal (1 / 4 : ℝ)) (by norm_num) hmuCore hnuCore
-  have hfirst : Arlib.TVLe (Arlib.condOn mu (c • K))
-      (Arlib.condOn nu (c • K)) (8 * epsilon) := by
+  have hfirst : ArlibCommunity.Foundations.Convex.TVLe (ArlibCommunity.Foundations.Convex.condOn mu (c • K))
+      (ArlibCommunity.Foundations.Convex.condOn nu (c • K)) (8 * epsilon) := by
     convert hfirstBase using 1
     simp [ENNReal.div_eq_inv_mul]
     ring
@@ -1320,10 +1323,10 @@ theorem TVLe.speedyToGaussian_twoStage_of_coreDefect_cv18
       hK hcore delta variance hmass0 hmasstop hgaussCore0 hgaussCoretop
       heta heta_half hcoreDefect
   have hgaussRestrict :
-      Arlib.condOn
+      ArlibCommunity.Foundations.Convex.condOn
           (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
             (gaussianWeight variance)).restrict K) (c • K) =
-        Arlib.condOn
+        ArlibCommunity.Foundations.Convex.condOn
           ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
             (gaussianWeight variance)) (c • K) :=
     condOn_restrict_eq_condOn_of_subset_cv18 _ hcore hsub
@@ -1331,21 +1334,21 @@ theorem TVLe.speedyToGaussian_twoStage_of_coreDefect_cv18
   have hcoreMix := hfirst.trans hdefectCompare
   have hmuCore0 : mu (c • K) ≠ 0 :=
     ne_of_gt ((by norm_num : 0 < ENNReal.ofReal (1 / 4 : ℝ)).trans_le hmuCore)
-  let _ : IsProbabilityMeasure (Arlib.condOn mu (c • K)) :=
-    Arlib.isProbabilityMeasure_condOn mu hmuCore0 (measure_ne_top mu _)
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn mu (c • K)) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn mu hmuCore0 (measure_ne_top mu _)
   have hmap := hcoreMix.map ((continuous_const_smul c⁻¹).measurable)
   let _ : IsProbabilityMeasure
-      ((Arlib.condOn mu (c • K)).map (fun x => c⁻¹ • x)) :=
+      ((ArlibCommunity.Foundations.Convex.condOn mu (c • K)).map (fun x => c⁻¹ • x)) :=
     ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable
       ((continuous_const_smul c⁻¹).measurable.aemeasurable)
   let proposal : Measure (EuclideanSpace ℝ (Fin n)) :=
-    Arlib.condOn
+    ArlibCommunity.Foundations.Convex.condOn
       ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
         (gaussianWeight (variance / c ^ 2))) K
   let _ : IsProbabilityMeasure proposal :=
-    Arlib.isProbabilityMeasure_condOn _ hprop0 hproptop
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn _ hprop0 hproptop
   have htargetMap :
-      (Arlib.condOn
+      (ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight variance)) (c • K)).map (fun x => c⁻¹ • x) =
         proposal := by
@@ -1365,9 +1368,9 @@ theorem TVLe.speedyToGaussian_twoStage_of_coreDefect_cv18
     (measurable_gaussianScaleAcceptance variance c)
     (gaussianScaleAcceptance_le_one hvariance hc0 hc1.le) hhalfAccept
   have htarget :
-      Arlib.condOn
+      ArlibCommunity.Foundations.Convex.condOn
           (proposal.withDensity (gaussianScaleAcceptance variance c)) Set.univ =
-        Arlib.condOn
+        ArlibCommunity.Foundations.Convex.condOn
           ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
             (gaussianWeight variance)) K := by
     dsimp [proposal, c]
@@ -1377,8 +1380,7 @@ theorem TVLe.speedyToGaussian_twoStage_of_coreDefect_cv18
   convert hsecond using 1
   ring
 
-end Arlib.MarkovChains
-
+end ArlibCommunity.Algorithms.CV18
 namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory
@@ -1390,12 +1392,12 @@ theorem half_le_truncatedBody_gaussianScaleAcceptance_mass
     (q : VolumeParams) (I : VolumeInput q.n) {variance : ℝ}
     (hvariance : 0 < variance) :
     ENNReal.ofReal (1 / 2) ≤
-      (Arlib.condOn
+      (ArlibCommunity.Foundations.Convex.condOn
         ((volume : Measure (AmbientSpace q.n)).withDensity
-          (Arlib.MarkovChains.gaussianWeight
+          (ArlibCommunity.Foundations.Convex.gaussianWeight
             (variance / (1 - 1 / (2 * (q.n : ℝ))) ^ 2)))
         (truncatedBody q I)).withDensity
-          (Arlib.MarkovChains.gaussianScaleAcceptance variance
+          (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance variance
             (1 - 1 / (2 * (q.n : ℝ)))) Set.univ := by
   have hn : 1 ≤ q.n := le_trans (by norm_num) q.dim_ok
   have hnR : (0 : ℝ) < q.n := by exact_mod_cast (lt_of_lt_of_le Nat.zero_lt_one hn)
@@ -1412,11 +1414,11 @@ theorem half_le_truncatedBody_gaussianScaleAcceptance_mass
         unitBall_subset_truncatedBody q I (Metric.ball_subset_closedBall hx))
   have hKtop : volume (truncatedBody q I) ≠ ⊤ :=
     (truncatedVolumeInput q I).body.isCompact.measure_lt_top.ne
-  exact Arlib.MarkovChains.half_le_condOn_gaussian_scaleAcceptance_mass_standardCore_cv18
+  exact ArlibCommunity.Algorithms.CV18.half_le_condOn_gaussian_scaleAcceptance_mass_standardCore_cv18
     hn (truncatedBody_measurable q I) (truncatedVolumeInput q I).body.convex
     (unitBall_subset_truncatedBody q I (by simp [unitBall]))
-    (Arlib.MarkovChains.withDensity_gaussianWeight_ne_zero _ hK0)
-    (Arlib.MarkovChains.withDensity_gaussianWeight_ne_top
+    (ArlibCommunity.Foundations.MarkovChainTheory.withDensity_gaussianWeight_ne_zero _ hK0)
+    (ArlibCommunity.Foundations.MarkovChainTheory.withDensity_gaussianWeight_ne_top
       hscaled (truncatedBody_measurable q I) hKtop)
 
 end ArlibCommunity.Algorithms.CV18

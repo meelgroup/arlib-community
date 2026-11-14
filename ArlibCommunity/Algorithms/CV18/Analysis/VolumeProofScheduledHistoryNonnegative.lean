@@ -346,10 +346,10 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_warm
     (samples : ℕ)
     (history : Measure H) [IsProbabilityMeasure history]
     (state : H → AmbientSpace q.n) (hstate : Measurable state)
-    (hbaseWarm : Arlib.IsWarm
+    (hbaseWarm : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q))
       (history.map state)
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (pastProduct : H → ℝ)
@@ -376,7 +376,7 @@ theorem approxIndepFun_figureOneFinalScheduledCompletePhase_of_warm
   have hdelta : delta ≠ ⊤ := by
     simp [delta, figureOneCorrectedTransitionBudget]
   have hfirst : ∀ mu : Measure (AmbientSpace q.n),
-      IsProbabilityMeasure mu → Arlib.IsWarm 2 mu (history.map state) →
+      IsProbabilityMeasure mu → ArlibCommunity.Foundations.Convex.IsWarm 2 mu (history.map state) →
       MeasureLeUpTo
         (mu.bind (scheduledBalancedAccuracyTransitionLawAux q I sigma2
           (figureOneFinalScheduledBalancedParameters.proposalCap q sigma2)

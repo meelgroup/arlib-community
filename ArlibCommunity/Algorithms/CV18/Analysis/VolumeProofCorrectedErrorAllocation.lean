@@ -256,13 +256,13 @@ theorem bind_balancedTransition_tvLe_truncatedGaussian_of_allocation
     (proposalCap properStride attempts : ℕ)
     (rho : Measure (AmbientSpace q.n)) [IsProbabilityMeasure rho]
     (allocation :
-      let pi := Arlib.MarkovChains.ellGaussianProb
+      let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2
       BalancedTransitionErrorAllocation (q := q)
         (balancedRejectedStateMeasure q I sigma2 pi Set.univ) attempts)
     (hfirstBlock :
-      let pi := Arlib.MarkovChains.ellGaussianProb
+      let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2
       MeasureLeUpTo
@@ -271,24 +271,24 @@ theorem bind_balancedTransition_tvLe_truncatedGaussian_of_allocation
             properStride)).map optionSnd)
         (pi.map some) allocation.blockBudget)
     (hretryBlock :
-      let pi := Arlib.MarkovChains.ellGaussianProb
+      let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2
       let rejected := balancedRejectedStateMeasure q I sigma2 pi
-      let rejectedProb := Arlib.condOn rejected Set.univ
+      let rejectedProb := ArlibCommunity.Foundations.Convex.condOn rejected Set.univ
       MeasureLeUpTo
         ((rejectedProb.bind
           (balancedAccuracyRetryBlockKernel q I sigma2 proposalCap
             properStride)).map optionSnd)
         (pi.map some) allocation.blockBudget) :
-    Arlib.TVLe
+    ArlibCommunity.Foundations.Convex.TVLe
       (rho.bind
         (balancedAccuracyTransitionLawAux q I sigma2 proposalCap
           properStride (attempts + 1)))
       ((truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n)).map some)
       allocation.totalBudget := by
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   let rejectMass := balancedRejectedStateMeasure q I sigma2 pi Set.univ

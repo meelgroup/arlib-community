@@ -8,7 +8,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
-open _root_.Arlib.MarkovChains
+open _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-- Number of live trials still possible in the lexicographic retry state. -/
 def balancedRemainingTrials (retryLimit attempts samples : ℕ) : ℕ :=
@@ -483,7 +483,7 @@ theorem lintegral_scheduledBalancedAccuracyRetryCollect_countedQueryCost_le_of_i
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {weight : AmbientSpace q.n → ℝ} (hweight : Measurable weight)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : _root_.Arlib.IsWarm M mu
+    (hwarm : _root_.ArlibCommunity.Foundations.Convex.IsWarm M mu
       (ellGaussianProb (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (proposalCap properStride retryLimit samples : ℕ) :

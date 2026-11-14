@@ -9,7 +9,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.MathlibCompat
 namespace ArlibCommunity.Algorithms.CV18
 
 open MeasureTheory ProbabilityTheory Set
-open _root_.Arlib _root_.Arlib.MarkovChains
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 
 /-! ## The asymmetric form of Lemma 7.17(b) -/
 
@@ -27,7 +27,7 @@ theorem approxIndepFun_sequentialPairLaw_of_asymmetric_leUpTo
     (hconditionedTop : conditionedError ≠ ⊤)
     (hbaseTop : baseError ≠ ⊤)
     (hconditioned : ∀ mu : Measure H, IsProbabilityMeasure mu →
-      Arlib.IsWarm 2 mu rho →
+      ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho →
       MeasureLeUpTo (mu.bind K) target conditionedError)
     (hbase : MeasureLeUpTo (rho.bind K) target baseError) :
     ApproxIndepFun (conditionedError + baseError).toReal
@@ -42,14 +42,14 @@ theorem approxIndepFun_sequentialPairLaw_of_asymmetric_leUpTo
     intro hzero
     rw [measureReal_def, hzero] at hAposReal
     simp at hAposReal
-  let hcondProb : IsProbabilityMeasure (Arlib.condOn rho A) :=
-    Arlib.isProbabilityMeasure_condOn rho hA0 (measure_ne_top rho A)
-  let _ : IsProbabilityMeasure (Arlib.condOn rho A) := hcondProb
-  let _ : IsProbabilityMeasure ((Arlib.condOn rho A).bind K) :=
+  let hcondProb : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn rho A) :=
+    ArlibCommunity.Foundations.Convex.isProbabilityMeasure_condOn rho hA0 (measure_ne_top rho A)
+  let _ : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.condOn rho A) := hcondProb
+  let _ : IsProbabilityMeasure ((ArlibCommunity.Foundations.Convex.condOn rho A).bind K) :=
     isProbabilityMeasure_bind hK.aemeasurable (ae_of_all _ hKprob)
   let _ : IsProbabilityMeasure (rho.bind K) :=
     isProbabilityMeasure_bind hK.aemeasurable (ae_of_all _ hKprob)
-  have hleft := hconditioned (Arlib.condOn rho A) hcondProb
+  have hleft := hconditioned (ArlibCommunity.Foundations.Convex.condOn rho A) hcondProb
     (isWarm_condOn_two_of_half rho hA hhalf)
   exact hleft.to_tvLe.trans hbase.to_tvLe.symm
 
@@ -191,9 +191,9 @@ theorem exists_warm_probability_of_submeasure_le_good_add_bad
     [IsFiniteMeasure sub] [IsFiniteMeasure bad] [IsProbabilityMeasure pi]
     {M : ENNReal} (hM : 1 ≤ M) (hMtop : M ≠ ⊤)
     (hsubMass : sub Set.univ ≤ 1)
-    (hsub : sub ≤ good + bad) (hgood : Arlib.IsWarm M good pi) :
+    (hsub : sub ≤ good + bad) (hgood : ArlibCommunity.Foundations.Convex.IsWarm M good pi) :
     ∃ nu : Measure Omega, IsProbabilityMeasure nu ∧
-      Arlib.IsWarm M nu pi ∧ sub ≤ nu + bad := by
+      ArlibCommunity.Foundations.Convex.IsWarm M nu pi ∧ sub ≤ nu + bad := by
   let residual := sub - bad
   have hresidualLeGood : residual ≤ good :=
     Measure.sub_le_of_le_add hsub
@@ -278,14 +278,14 @@ theorem measureLeUpTo_live_dead_bind_of_good_bad
     [IsProbabilityMeasure pi]
     {M eta budget : ENNReal} (hM : 1 ≤ M) (hMtop : M ≠ ⊤)
     (hmass : live Set.univ + dead Set.univ = 1)
-    (hlive : live ≤ good + bad) (hgood : Arlib.IsWarm M good pi)
+    (hlive : live ≤ good + bad) (hgood : ArlibCommunity.Foundations.Convex.IsWarm M good pi)
     (herror : bad Set.univ + dead Set.univ ≤ eta)
     (K : S → Measure T) (hK : Measurable K)
     (hKprob : ∀ x, IsProbabilityMeasure (K x))
     (deadOutput target : Measure T) [IsProbabilityMeasure deadOutput]
     [IsProbabilityMeasure target]
     (hmix : ∀ nu : Measure S, IsProbabilityMeasure nu →
-      Arlib.IsWarm M nu pi →
+      ArlibCommunity.Foundations.Convex.IsWarm M nu pi →
       MeasureLeUpTo (nu.bind K) target budget) :
     MeasureLeUpTo
       (live.bind K + dead Set.univ • deadOutput) target (budget + eta) := by
@@ -485,7 +485,7 @@ complete phase; the collector tail and average are common postprocessing. -/
 theorem bind_figureOneScheduledScaledGaussianPhaseLaw_leUpTo_target_of_warmSixteen
     (q : VolumeParams) (I : VolumeInput q.n) (phase : ℕ)
     (mu : Measure (AmbientSpace q.n)) [IsProbabilityMeasure mu]
-    (hwarm : Arlib.IsWarm
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (16 * warmConstant q)) mu
       (figureOneScheduledSpeedyPiAt q I phase)) :
     MeasureLeUpTo
@@ -677,7 +677,7 @@ theorem bind_scheduledBalancedTracePhaseObservationLaw_leUpTo_of_live_good_bad
     (hM16 : M ≤ ENNReal.ofReal (16 * warmConstant q))
     (hlive : scheduledBalancedTraceLiveStateLaw law
       (fun x => scaleFactor q • x) ≤ good + bad)
-    (hgood : Arlib.IsWarm M good (figureOneScheduledSpeedyPiAt q I phase))
+    (hgood : ArlibCommunity.Foundations.Convex.IsWarm M good (figureOneScheduledSpeedyPiAt q I phase))
     (herror : bad Set.univ +
         scheduledBalancedTraceDeadStateLaw law
           (fun x => scaleFactor q • x) Set.univ ≤ eta) :
@@ -904,7 +904,7 @@ theorem bind_scheduledBalancedTracePhaseOutputLaw_leUpTo_of_live_good_bad
     (hM16 : M ≤ ENNReal.ofReal (16 * warmConstant q))
     (hlive : scheduledBalancedTraceLiveStateLaw law
       (fun x => scaleFactor q • x) ≤ good + bad)
-    (hgood : Arlib.IsWarm M good (figureOneScheduledSpeedyPiAt q I phase))
+    (hgood : ArlibCommunity.Foundations.Convex.IsWarm M good (figureOneScheduledSpeedyPiAt q I phase))
     (herror : bad Set.univ +
         scheduledBalancedTraceDeadStateLaw law
           (fun x => scaleFactor q • x) Set.univ ≤ eta)
@@ -1524,7 +1524,7 @@ theorem approxIndepFun_figureOneScheduledTrace_gaussianPhaseOutput
   let _ : IsProbabilityMeasure target := by
     let _ := figureOneScheduledGaussianPhaseTarget_isProbabilityMeasure q I i
     exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hliveOutput.aemeasurable
-  have hgood : Arlib.IsWarm
+  have hgood : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I i) := by
     simpa [good, scale, i, figureOneScheduledAcceptedTargetAt,
@@ -1551,7 +1551,7 @@ theorem approxIndepFun_figureOneScheduledTrace_gaussianPhaseOutput
     · simpa [rho, scale, eta, i] using herror
     · exact hliveOutput
   have hconditioned : ∀ mu : Measure (ScheduledBalancedCoolingTrace q.n),
-      IsProbabilityMeasure mu → Arlib.IsWarm 2 mu rho →
+      IsProbabilityMeasure mu → ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho →
       MeasureLeUpTo (mu.bind outK) target
         (figureOneCorrectedTransitionBudget q + 2 * eta) := by
     intro mu hmu hwarm
@@ -1580,7 +1580,7 @@ theorem approxIndepFun_figureOneScheduledTrace_gaussianPhaseOutput
           gcongr
         _ = good2 + bad2 := by
           simp only [good2, bad2, smul_add]
-    have hgood2 : Arlib.IsWarm
+    have hgood2 : ArlibCommunity.Foundations.Convex.IsWarm
         (ENNReal.ofReal (16 * warmConstant q)) good2
         (figureOneScheduledSpeedyPiAt q I i) := by
       intro S hS
@@ -1917,7 +1917,7 @@ theorem figureOneScheduledTerminalPhaseTarget_isProbabilityMeasure
 theorem bind_figureOneScheduledScaledTerminalPhaseLaw_leUpTo_target_of_warmSixteen
     (q : VolumeParams) (I : VolumeInput q.n)
     (mu : Measure (AmbientSpace q.n)) [IsProbabilityMeasure mu]
-    (hwarm : Arlib.IsWarm
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (16 * warmConstant q)) mu
       (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q))) :
     MeasureLeUpTo
@@ -2110,7 +2110,7 @@ theorem bind_scheduledBalancedTerminalTracePhaseOutputLaw_leUpTo_of_live_good_ba
     (hM16 : M ≤ ENNReal.ofReal (16 * warmConstant q))
     (hlive : scheduledBalancedTraceLiveStateLaw law
       (fun x => scaleFactor q • x) ≤ good + bad)
-    (hgood : Arlib.IsWarm M good
+    (hgood : ArlibCommunity.Foundations.Convex.IsWarm M good
       (figureOneScheduledSpeedyPiAt q I (terminalPhaseSteps q)))
     (herror : bad Set.univ +
         scheduledBalancedTraceDeadStateLaw law
@@ -2253,7 +2253,7 @@ theorem approxIndepFun_figureOneScheduledTrace_terminalPhaseOutput
   let _ : IsProbabilityMeasure target := by
     let _ := figureOneScheduledTerminalPhaseTarget_isProbabilityMeasure q I
     exact ArlibCommunity.Algorithms.CV18.isProbabilityMeasure_map_of_aemeasurable hliveOutput.aemeasurable
-  have hgood : Arlib.IsWarm
+  have hgood : ArlibCommunity.Foundations.Convex.IsWarm
       (ENNReal.ofReal (8 * warmConstant q)) good
       (figureOneScheduledSpeedyPiAt q I i) := by
     simpa [good, scale, i, figureOneScheduledAcceptedTargetAt,
@@ -2279,7 +2279,7 @@ theorem approxIndepFun_figureOneScheduledTrace_terminalPhaseOutput
         hliveRho (by simpa [i] using hgood) herrorEta
         liveOutput deadOutput hliveOutput)
   have hconditioned : ∀ mu : Measure (ScheduledBalancedCoolingTrace q.n),
-      IsProbabilityMeasure mu → Arlib.IsWarm 2 mu rho →
+      IsProbabilityMeasure mu → ArlibCommunity.Foundations.Convex.IsWarm 2 mu rho →
       MeasureLeUpTo (mu.bind outK) target
         (figureOneCorrectedTransitionBudget q + 2 * eta) := by
     intro mu hmu hwarm
@@ -2307,7 +2307,7 @@ theorem approxIndepFun_figureOneScheduledTrace_terminalPhaseOutput
             smul_eq_mul]
           gcongr
         _ = good2 + bad2 := by simp only [good2, bad2, smul_add]
-    have hgood2 : Arlib.IsWarm
+    have hgood2 : ArlibCommunity.Foundations.Convex.IsWarm
         (ENNReal.ofReal (16 * warmConstant q)) good2
         (figureOneScheduledSpeedyPiAt q I i) := by
       intro S hS

@@ -70,7 +70,7 @@ theorem scheduledPhase_raw_moments_of_mapped_tv
     (W : S → ℝ) (hW : Measurable W)
     {epsilon : ENNReal} (hepsilonTop : epsilon ≠ ⊤)
     {B : ℝ} (hB : 0 < B)
-    (hscalar : Arlib.TVLe
+    (hscalar : ArlibCommunity.Foundations.Convex.TVLe
       (mu.map W)
       ((figureOneIdealPhaseLaw q I phase).map
         (figureOneIdealPhaseEstimator q phase)) epsilon)
@@ -145,8 +145,8 @@ theorem scheduledPhase_raw_moments_of_mapped_tv
       mul_le_mul_of_nonneg_right
         (figureOneIdealPhaseFactor_le_two q phase)
         (sq_nonneg (figureOneIdealPhaseMean q I phase))
-  have hresult := Arlib.TVLe.positive_mean_and_second_le_four_of_ae
-    (show Arlib.TVLe actualScalar idealScalar epsilon from hscalar)
+  have hresult := ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four_of_ae
+    (show ArlibCommunity.Foundations.Convex.TVLe actualScalar idealScalar epsilon from hscalar)
     hepsilonTop measurable_id hB hscalar0Actual hscalarBActual
     hscalar0Ideal hscalarBIdeal hidealMean
     (figureOneIdealPhaseMean_pos q I phase) hidealSecond
@@ -175,7 +175,7 @@ theorem scheduledFigureOneTrace_raw_moments_of_mapped_tv
     (q : VolumeParams) (I : VolumeInput q.n) (j : ℕ)
     {epsilon : ENNReal} (hepsilonTop : epsilon ≠ ⊤)
     {B : ℝ} (hB : 0 < B)
-    (hscalar : Arlib.TVLe
+    (hscalar : ArlibCommunity.Foundations.Convex.TVLe
       ((scheduledBalancedForwardTraceLaw
         figureOneFinalScheduledBalancedParameters q I
         (numPhases q)).map

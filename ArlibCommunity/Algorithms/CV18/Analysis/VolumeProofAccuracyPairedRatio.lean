@@ -22,7 +22,7 @@ open scoped ENNReal
 noncomputable def accuracyStationaryAcceptanceMean
     (q : VolumeParams) (I : VolumeInput q.n) (sigma2 : ℝ) : ℝ :=
   ∫ x, accuracyAcceptanceWeight q I sigma2 x
-    ∂Arlib.MarkovChains.ellGaussianProb
+    ∂ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
       (accuracyPhaseTruncatedBody q I sigma2)
       (figureOneProposalRadius q sigma2) sigma2
 
@@ -33,7 +33,7 @@ noncomputable def accuracyStationaryAcceptedMean
     (weight : AmbientSpace q.n → ℝ) : ℝ :=
   ∫ y, weight y
     ∂accuracyGaussianAcceptedTargetLaw q I sigma2
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2)
 
@@ -43,17 +43,17 @@ theorem accuracyPhase_ellGaussianProb_isProbabilityMeasure
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     IsProbabilityMeasure
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2) := by
-  apply Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb
-  · exact Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+  apply ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb
+  · exact ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
       (accuracyPhaseTruncatedBody_measurable q I sigma2)
       (accuracyPhaseTruncatedBody_convex q I sigma2)
       (accuracyPhaseTruncatedBody_isCompact q I sigma2).isBounded
       (accuracyPhaseTruncatedBody_volume_ne_zero q I hsigma2)
       (figureOneProposalRadius_pos q hsigma2) sigma2
-  · exact Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+  · exact ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
       (accuracyPhaseTruncatedBody_volume_ne_top q I sigma2)
       (figureOneProposalRadius q sigma2) hsigma2
 
@@ -64,26 +64,26 @@ theorem accuracyStationaryAcceptanceMean_ge
     7 / 64 ≤ accuracyStationaryAcceptanceMean q I sigma2 := by
   let K := accuracyPhaseTruncatedBody q I sigma2
   let delta := figureOneProposalRadius q sigma2
-  let pi := Arlib.MarkovChains.ellGaussianProb K delta sigma2
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K delta sigma2
   let p := (pi.withDensity
     (accuracyGaussianRejectionAcceptance q I sigma2)) Set.univ
   have hdelta : 0 < delta := figureOneProposalRadius_pos q hsigma2
-  have hmass0 : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2
+  have hmass0 : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2
       Set.univ ≠ 0 := by
     dsimp [K]
-    exact Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+    exact ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
       (accuracyPhaseTruncatedBody_measurable q I sigma2)
       (accuracyPhaseTruncatedBody_convex q I sigma2)
       (accuracyPhaseTruncatedBody_isCompact q I sigma2).isBounded
       (accuracyPhaseTruncatedBody_volume_ne_zero q I hsigma2)
       hdelta sigma2
-  have hmassTop : Arlib.MarkovChains.ellGaussianMeasure K delta sigma2
+  have hmassTop : ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure K delta sigma2
       Set.univ ≠ ⊤ := by
     dsimp [K]
-    exact Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+    exact ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
       (accuracyPhaseTruncatedBody_volume_ne_top q I sigma2) delta hsigma2
   let _ : IsProbabilityMeasure pi :=
-    Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb hmass0 hmassTop
+    ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb hmass0 hmassTop
   have hpTop : p ≠ ⊤ := by
     exact ne_top_of_le_ne_top (measure_ne_top pi Set.univ) <| by
       dsimp [p]
@@ -121,14 +121,14 @@ theorem accuracyStationaryAcceptanceMean_le_one
     (q : VolumeParams) (I : VolumeInput q.n)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     accuracyStationaryAcceptanceMean q I sigma2 ≤ 1 := by
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   let _ : IsProbabilityMeasure pi :=
     accuracyPhase_ellGaussianProb_isProbabilityMeasure q I hsigma2
   change (∫ x, accuracyAcceptanceWeight q I sigma2 x ∂pi) ≤ 1
   have haint : Integrable (accuracyAcceptanceWeight q I sigma2) pi :=
-    Arlib.integrable_of_forall_mem_Icc
+    ArlibCommunity.Foundations.Convex.integrable_of_forall_mem_Icc
       (measurable_accuracyAcceptanceWeight q I sigma2)
       (accuracyAcceptanceWeight_nonneg q I sigma2)
       (accuracyAcceptanceWeight_le_one q I hsigma2)
@@ -157,10 +157,10 @@ theorem integral_accuracyAcceptanceWeight_sub_stationaryMean_eq_zero
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     ∫ x, accuracyAcceptanceWeight q I sigma2 x -
         accuracyStationaryAcceptanceMean q I sigma2
-      ∂Arlib.MarkovChains.ellGaussianProb
+      ∂ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2 = 0 := by
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   let p := accuracyStationaryAcceptanceMean q I sigma2
@@ -176,7 +176,7 @@ theorem integral_accuracyAcceptanceWeight_sub_stationaryMean_eq_zero
       accuracyAcceptanceWeight_sub_stationaryMean_abs_le_one
         q I hsigma2 x
   have haint : Integrable (accuracyAcceptanceWeight q I sigma2) pi :=
-    Arlib.integrable_of_forall_mem_Icc
+    ArlibCommunity.Foundations.Convex.integrable_of_forall_mem_Icc
       (measurable_accuracyAcceptanceWeight q I sigma2)
       (accuracyAcceptanceWeight_nonneg q I sigma2)
       (accuracyAcceptanceWeight_le_one q I hsigma2)
@@ -190,11 +190,11 @@ theorem accuracyAcceptanceWeight_sub_stationaryMean_memLp
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) :
     MemLp (fun x => accuracyAcceptanceWeight q I sigma2 x -
       accuracyStationaryAcceptanceMean q I sigma2) 2
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2) := by
   let _ : IsProbabilityMeasure
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2) :=
     accuracyPhase_ellGaussianProb_isProbabilityMeasure q I hsigma2
@@ -261,10 +261,10 @@ theorem integral_accuracyImportanceWeight_sub_acceptedMean_eq_zero
     ∫ x, accuracyImportanceWeight q I sigma2
         (fun y => weight y -
           accuracyStationaryAcceptedMean q I sigma2 weight) x
-      ∂Arlib.MarkovChains.ellGaussianProb
+      ∂ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2 = 0 := by
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   let accepted := accuracyGaussianAcceptedTargetLaw q I sigma2 pi
@@ -277,11 +277,11 @@ theorem integral_accuracyImportanceWeight_sub_acceptedMean_eq_zero
     accuracyPhase_ellGaussianProb_isProbabilityMeasure q I hsigma2
   let _ : IsProbabilityMeasure accepted :=
     accuracyGaussianAcceptedTargetLaw_isProbabilityMeasure_stationary q I hsigma2
-  have hwarm : Arlib.IsWarm 64 accepted nu := by
+  have hwarm : ArlibCommunity.Foundations.Convex.IsWarm 64 accepted nu := by
     simpa [accepted, nu, pi] using
       stationary_accuracyAcceptedTarget_isWarm q I hsigma2
   have hle : accepted ≤ (64 : ENNReal) • nu :=
-    (Arlib.MarkovChains.isWarm_iff_le_smul _ _).1 hwarm
+    (ArlibCommunity.Foundations.MarkovChainTheory.isWarm_iff_le_smul _ _).1 hwarm
   have hmemAccepted : MemLp weight 2 accepted :=
     (hmem.smul_measure (by norm_num : (64 : ENNReal) ≠ ⊤)).mono_measure hle
   have hint : Integrable weight accepted := hmemAccepted.integrable (by norm_num)
@@ -313,12 +313,12 @@ theorem accuracyImportanceWeight_sub_acceptedMean_memLp
     MemLp (fun x => accuracyImportanceWeight q I sigma2
       (fun y => weight y -
         accuracyStationaryAcceptedMean q I sigma2 weight) x) 2
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2) := by
   let r := accuracyStationaryAcceptedMean q I sigma2 weight
   let _ : IsProbabilityMeasure
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2) :=
     accuracyPhase_ellGaussianProb_isProbabilityMeasure q I hsigma2
@@ -341,8 +341,8 @@ theorem varianceReal_accuracyImportanceWeight_sub_acceptedMean_le
     (hmem : MemLp weight 2
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n))) :
-    Arlib.MarkovChains.varianceReal
-      (Arlib.MarkovChains.ellGaussianProb
+    ArlibCommunity.Foundations.MarkovChainTheory.varianceReal
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2)
       (fun x => accuracyImportanceWeight q I sigma2
@@ -352,7 +352,7 @@ theorem varianceReal_accuracyImportanceWeight_sub_acceptedMean_le
           accuracyStationaryAcceptedMean q I sigma2 weight) ^ 2
         ∂(truncatedGaussianProbability q I sigma2 hsigma2 :
           Measure (AmbientSpace q.n)) := by
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   let r := accuracyStationaryAcceptedMean q I sigma2 weight
@@ -367,14 +367,14 @@ theorem varianceReal_accuracyImportanceWeight_sub_acceptedMean_le
       (truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n)) :=
     hmem.sub (memLp_const r)
-  have hvar := Arlib.MarkovChains.varianceReal_le_integral_sub_sq
+  have hvar := ArlibCommunity.Foundations.MarkovChainTheory.varianceReal_le_integral_sub_sq
     hsource.aestronglyMeasurable 0
   have hmom :=
     integral_stationary_accuracyImportance_centered_sq_le_four_target
       q I hsigma2 hweight.measurable r hsource htarget
-  change Arlib.MarkovChains.varianceReal pi observable ≤ _
+  change ArlibCommunity.Foundations.MarkovChainTheory.varianceReal pi observable ≤ _
   calc
-    Arlib.MarkovChains.varianceReal pi observable ≤
+    ArlibCommunity.Foundations.MarkovChainTheory.varianceReal pi observable ≤
         ∫ x, (observable x - 0) ^ 2 ∂pi := hvar
     _ = ∫ x, observable x ^ 2 ∂pi := by simp
     _ ≤ 4 * ∫ y, (weight y - r) ^ 2
@@ -396,13 +396,13 @@ theorem integral_sub_sq_eq_integral_sub_mean_sq_add
   have hfc : MemLp (fun x => f x - c) 2 mu := hf.sub (memLp_const c)
   have hcenter :
       (∫ x, (f x - ∫ y, f y ∂mu) ^ 2 ∂mu) =
-        Arlib.MarkovChains.varianceReal mu f := by
+        ArlibCommunity.Foundations.MarkovChainTheory.varianceReal mu f := by
     symm
     exact ProbabilityTheory.variance_eq_integral hf.aemeasurable
-  have hshift : Arlib.MarkovChains.varianceReal mu (fun x => f x - c) =
-      Arlib.MarkovChains.varianceReal mu f := by
+  have hshift : ArlibCommunity.Foundations.MarkovChainTheory.varianceReal mu (fun x => f x - c) =
+      ArlibCommunity.Foundations.MarkovChainTheory.varianceReal mu f := by
     exact ProbabilityTheory.variance_sub_const hf.aestronglyMeasurable c
-  have hsub := Arlib.MarkovChains.varianceReal_eq_sub hfc
+  have hsub := ArlibCommunity.Foundations.MarkovChainTheory.varianceReal_eq_sub hfc
   have hint : (∫ x, f x - c ∂mu) = (∫ x, f x ∂mu) - c := by
     rw [integral_sub hfint (integrable_const c)]
     simp
@@ -431,14 +431,14 @@ theorem integral_sub_mean_sq_le_of_relativeSecondMoment
   have hcenter : (∫ x, (f x - mean) ^ 2 ∂mu) = second - mean ^ 2 := by
     calc
       (∫ x, (f x - mean) ^ 2 ∂mu) =
-          Arlib.MarkovChains.varianceReal mu f := by
+          ArlibCommunity.Foundations.MarkovChainTheory.varianceReal mu f := by
         symm
         change ProbabilityTheory.variance f mu = _
         simpa [mean] using
           (ProbabilityTheory.variance_eq_integral hf.aemeasurable)
       _ = second - mean ^ 2 := by
         simpa [mean, second] using
-          (Arlib.MarkovChains.varianceReal_eq_sub hf)
+          (ArlibCommunity.Foundations.MarkovChainTheory.varianceReal_eq_sub hf)
   rw [hcenter]
   nlinarith
 
@@ -465,14 +465,14 @@ theorem integral_sub_acceptedMean_sq_le_of_relativeSecondMoment
   have hcenter : (∫ x, (f x - mean) ^ 2 ∂mu) = second - mean ^ 2 := by
     calc
       (∫ x, (f x - mean) ^ 2 ∂mu) =
-          Arlib.MarkovChains.varianceReal mu f := by
+          ArlibCommunity.Foundations.MarkovChainTheory.varianceReal mu f := by
         symm
         change ProbabilityTheory.variance f mu = _
         simpa [mean] using
           (ProbabilityTheory.variance_eq_integral hf.aemeasurable)
       _ = second - mean ^ 2 := by
         simpa [mean, second] using
-          (Arlib.MarkovChains.varianceReal_eq_sub hf)
+          (ArlibCommunity.Foundations.MarkovChainTheory.varianceReal_eq_sub hf)
   have hcenterLe : (∫ x, (f x - mean) ^ 2 ∂mu) ≤
       (factor - 1) * mean ^ 2 := by
     rw [hcenter]
@@ -535,7 +535,7 @@ theorem accuracyStationaryAcceptedMean_bias_le_centered_secondMoment
       67 * accuracyAcceptedBiasScale q * R := by
   let nu : Measure (AmbientSpace q.n) :=
     truncatedGaussianProbability q I sigma2 hsigma2
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (accuracyPhaseTruncatedBody q I sigma2)
     (figureOneProposalRadius q sigma2) sigma2
   let accepted := accuracyGaussianAcceptedTargetLaw q I sigma2 pi
@@ -547,11 +547,11 @@ theorem accuracyStationaryAcceptedMean_bias_le_centered_secondMoment
   have hcenterMeas : Measurable centered := hweight.sub measurable_const
   have hcenterMem : MemLp centered 2 nu := by
     exact hmem.sub (memLp_const mean)
-  have hwarm : Arlib.IsWarm 64 accepted nu := by
+  have hwarm : ArlibCommunity.Foundations.Convex.IsWarm 64 accepted nu := by
     simpa [accepted, nu, pi] using
       stationary_accuracyAcceptedTarget_isWarm q I hsigma2
   have hle : accepted ≤ (64 : ENNReal) • nu :=
-    (Arlib.MarkovChains.isWarm_iff_le_smul _ _).1 hwarm
+    (ArlibCommunity.Foundations.MarkovChainTheory.isWarm_iff_le_smul _ _).1 hwarm
   have hweightAccepted : MemLp weight 2 accepted :=
     (hmem.smul_measure (by norm_num : (64 : ENNReal) ≠ ⊤)).mono_measure hle
   have htransfer :=
@@ -590,8 +590,8 @@ theorem varianceReal_accuracyImportanceWeight_sub_acceptedMean_le_of_centeredSec
             Measure (AmbientSpace q.n))) ^ 2
         ∂(truncatedGaussianProbability q I sigma2 hsigma2 :
           Measure (AmbientSpace q.n))) ≤ R ^ 2) :
-    Arlib.MarkovChains.varianceReal
-      (Arlib.MarkovChains.ellGaussianProb
+    ArlibCommunity.Foundations.MarkovChainTheory.varianceReal
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2)
       (fun x => accuracyImportanceWeight q I sigma2
@@ -658,8 +658,8 @@ theorem varianceReal_accuracyImportanceWeight_sub_acceptedMean_le_of_relativeSec
       ∂(truncatedGaussianProbability q I sigma2 hsigma2 :
         Measure (AmbientSpace q.n))
     let R := Real.sqrt (factor - 1) * mean
-    Arlib.MarkovChains.varianceReal
-      (Arlib.MarkovChains.ellGaussianProb
+    ArlibCommunity.Foundations.MarkovChainTheory.varianceReal
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2)
       (fun x => accuracyImportanceWeight q I sigma2
@@ -754,8 +754,8 @@ theorem varianceReal_accuracyImportanceWeight_sub_acceptedMean_le_of_relativeSec
         (∫ x, weight x
           ∂(truncatedGaussianProbability q I sigma2 hsigma2 :
             Measure (AmbientSpace q.n))) ^ 2 ≤ factor) :
-    Arlib.MarkovChains.varianceReal
-      (Arlib.MarkovChains.ellGaussianProb
+    ArlibCommunity.Foundations.MarkovChainTheory.varianceReal
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2)
       (fun x => accuracyImportanceWeight q I sigma2
@@ -834,16 +834,16 @@ noncomputable def accuracyPairLinearSpectralCost
     (weight : AmbientSpace q.n → ℝ) (samples : ℕ)
     (a b m threshold : ℝ) : ℝ :=
   (samples : ℝ) *
-    (3 * ((Arlib.MarkovChains.spectralGap
-      (Arlib.MarkovChains.lazy
-        (Arlib.MarkovChains.speedyMetropolisGaussian
+    (3 * ((ArlibCommunity.Foundations.MarkovChainTheory.spectralGap
+      (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+        (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
           (accuracyPhaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2))
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))⁻¹ *
-      Arlib.MarkovChains.varianceReal
-        (Arlib.MarkovChains.ellGaussianProb
+      ArlibCommunity.Foundations.MarkovChainTheory.varianceReal
+        (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
           (accuracyPhaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2)
         (fun x => accuracyImportanceWeight q I sigma2
@@ -861,8 +861,8 @@ theorem bind_accuracyImportancePairProgram_success_ratio_deviation_le_of_isWarm
         Measure (AmbientSpace q.n)))
     (proposalCap samples : ℕ) (hsamples : 0 < samples)
     {mu : Measure (AmbientSpace q.n)} {M : ENNReal}
-    (hwarm : Arlib.IsWarm M mu
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     {eta : ℝ} (heta : 0 < eta) :
@@ -921,7 +921,7 @@ theorem bind_accuracyImportancePairProgram_success_ratio_deviation_le_of_isWarm
   have hnumMean :
       ∫ x, (accuracyImportanceWeight q I sigma2
           (fun y => (1 : ℝ) * weight y + -r) x - 0)
-        ∂Arlib.MarkovChains.ellGaussianProb
+        ∂ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
           (accuracyPhaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2 = 0 := by
     rw [hcenterWeight]
@@ -931,7 +931,7 @@ theorem bind_accuracyImportancePairProgram_success_ratio_deviation_le_of_isWarm
   have hnumMem : MemLp (fun x =>
       accuracyImportanceWeight q I sigma2
         (fun y => (1 : ℝ) * weight y + -r) x - 0) 2
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2) := by
     rw [hcenterWeight]
@@ -955,7 +955,7 @@ theorem bind_accuracyImportancePairProgram_success_ratio_deviation_le_of_isWarm
   have hdenMean :
       ∫ x, (accuracyImportanceWeight q I sigma2
           (fun y => (0 : ℝ) * weight y + 1) x - p)
-        ∂Arlib.MarkovChains.ellGaussianProb
+        ∂ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
           (accuracyPhaseTruncatedBody q I sigma2)
           (figureOneProposalRadius q sigma2) sigma2 = 0 := by
     simpa [accuracyImportanceWeight, p] using
@@ -964,7 +964,7 @@ theorem bind_accuracyImportancePairProgram_success_ratio_deviation_le_of_isWarm
   have hdenMem : MemLp (fun x =>
       accuracyImportanceWeight q I sigma2
         (fun y => (0 : ℝ) * weight y + 1) x - p) 2
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2) := by
     simpa [accuracyImportanceWeight, p] using
@@ -1010,8 +1010,8 @@ theorem half_mul_natCast_mul_bind_accuracyImportancePairProgram_none_le
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2)
     {weight : AmbientSpace q.n → ℝ} (hweight : Measurable weight)
     {M : ENNReal} {mu : Measure (AmbientSpace q.n)}
-    (hwarm : Arlib.IsWarm M mu
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (accuracyPhaseTruncatedBody q I sigma2)
         (figureOneProposalRadius q sigma2) sigma2))
     (proposalCap samples : ℕ) :

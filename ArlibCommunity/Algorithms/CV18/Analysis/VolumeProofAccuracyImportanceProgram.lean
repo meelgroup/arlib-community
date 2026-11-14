@@ -28,7 +28,7 @@ noncomputable def accuracyImportanceObservation (q : VolumeParams)
     .pure <| if inside = true ∧
         ‖target‖ ≤ Real.sqrt (terminalVariance q) ∧
         ‖target‖ ≤ accuracyPhaseRadius q sigma2 then
-      (Arlib.MarkovChains.gaussianScaleAcceptance sigma2 c target).toReal *
+      (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2 c target).toReal *
         weight target
     else 0
 

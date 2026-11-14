@@ -23,7 +23,7 @@ open MeasureTheory ProbabilityTheory
 
 namespace ArlibCommunity.Algorithms.CV18
 
-open _root_.Arlib
+open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Foundations.Convex _root_.ArlibCommunity.Foundations.MarkovChainTheory
 open scoped ENNReal
 
 noncomputable section
@@ -320,7 +320,7 @@ theorem exists_scheduledTraceRecordedReset
     (htargetRetained : target.map Prod.snd = targetRetained.map some)
     (htargetNonnegative : ∀ᵐ result ∂target, 0 ≤ result.1)
     {delta : ENNReal} (_hdelta : delta ≠ ⊤)
-    (hnext : Arlib.TVLe
+    (hnext : ArlibCommunity.Foundations.Convex.TVLe
       (((sequentialPairLaw source
         (scheduledBalancedTracePhaseObservationLaw
           figureOneFinalScheduledBalancedParameters q I phase)).map

@@ -102,12 +102,12 @@ theorem uniformBall_truncatedBody
     (q : VolumeParams) (I : VolumeInput q.n) (current : AmbientSpace q.n)
     {radius : ℝ} (hradius : 0 < radius) :
     uniformBall q.n current radius (truncatedBody q I) =
-      Arlib.MarkovChains.ell (truncatedBody q I) radius current := by
+      ArlibCommunity.Foundations.MarkovChainTheory.ell (truncatedBody q I) radius current := by
   let _ : NeZero q.n :=
     ⟨Nat.ne_of_gt (lt_of_lt_of_le (by norm_num : 0 < 3) q.dim_ok)⟩
   rw [uniformBall_eq_openBall current hradius,
     Measure.smul_apply, smul_eq_mul, Measure.restrict_apply
-      (truncatedBody_measurable q I), Arlib.MarkovChains.ell_apply,
+      (truncatedBody_measurable q I), ArlibCommunity.Foundations.MarkovChainTheory.ell_apply,
     ENNReal.div_eq_inv_mul]
   congr 1
   rw [Set.inter_comm]
@@ -116,7 +116,7 @@ theorem uniformBall_truncatedBody_compl
     (q : VolumeParams) (I : VolumeInput q.n) (current : AmbientSpace q.n)
     {radius : ℝ} (hradius : 0 < radius) :
     uniformBall q.n current radius (truncatedBody q I)ᶜ =
-      1 - Arlib.MarkovChains.ell (truncatedBody q I) radius current := by
+      1 - ArlibCommunity.Foundations.MarkovChainTheory.ell (truncatedBody q I) radius current := by
   rw [measure_compl (truncatedBody_measurable q I) (measure_ne_top _ _),
     measure_univ, uniformBall_truncatedBody q I current hradius]
 
@@ -232,7 +232,7 @@ theorem runEstimate_truncatedMetropolisMarkedBallStep_apply_false_prod
     {t : Set (AmbientSpace q.n)} (ht : MeasurableSet t) :
     (truncatedMetropolisMarkedBallStep q sigma2 current).runEstimate oracle.query
         ({false} ×ˢ t) =
-      (1 - Arlib.MarkovChains.ell (truncatedBody q I)
+      (1 - ArlibCommunity.Foundations.MarkovChainTheory.ell (truncatedBody q I)
         (figureOneProposalRadius q sigma2) current) * t.indicator 1 current := by
   let U := uniformBall q.n current
     (figureOneProposalRadius q sigma2)
@@ -315,13 +315,13 @@ theorem runEstimate_truncatedMetropolisMarkedBallStep_eq_lazyProperAux
     (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
     {sigma2 : ℝ} (hsigma2 : 0 < sigma2) (current : AmbientSpace q.n) :
     (truncatedMetropolisMarkedBallStep q sigma2 current).runEstimate oracle.query =
-      Arlib.MarkovChains.lazyProperProposalGaussianAux (truncatedBody q I)
+      ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux (truncatedBody q I)
         (truncatedBody_measurable q I) (figureOneProposalRadius q sigma2)
         sigma2 current := by
   let μ : Measure (Bool × AmbientSpace q.n) :=
     (truncatedMetropolisMarkedBallStep q sigma2 current).runEstimate oracle.query
   let ν : Measure (Bool × AmbientSpace q.n) :=
-    Arlib.MarkovChains.lazyProperProposalGaussianAux (truncatedBody q I)
+    ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux (truncatedBody q I)
       (truncatedBody_measurable q I) (figureOneProposalRadius q sigma2)
       sigma2 current
   let _ : IsProbabilityMeasure μ :=
@@ -345,7 +345,7 @@ theorem runEstimate_truncatedMetropolisMarkedBallStep_eq_lazyProperAux
     rw [runEstimate_truncatedMetropolisMarkedBallStep_apply_false_prod
       q I oracle hsigma2 current ht]
     dsimp [ν]
-    rw [Arlib.MarkovChains.lazyProperProposalGaussianAux_apply_set
+    rw [ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux_apply_set
       (truncatedBody_measurable q I) (figureOneProposalRadius q sigma2)
       sigma2 current ((measurableSet_singleton false).prod ht)]
     by_cases hc : current ∈ t <;> simp [hc]
@@ -478,7 +478,7 @@ theorem cappedProperMetropolisBallWalk_semantics
       (cappedProperMetropolisBallWalk q sigma2 rawCap properSteps current).runEstimate
           oracle.query =
         cappedProperMarkedLaw
-          (Arlib.MarkovChains.lazyProperProposalGaussianAux (truncatedBody q I)
+          (ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux (truncatedBody q I)
             (truncatedBody_measurable q I) (figureOneProposalRadius q sigma2)
             sigma2) rawCap properSteps current) := by
   intro rawCap
@@ -522,7 +522,7 @@ theorem cappedProperMetropolisBallWalk_semantics
           · intro current
             rfl
       | succ properSteps =>
-          let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux
+          let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux
             (truncatedBody q I) (truncatedBody_measurable q I)
             (figureOneProposalRadius q sigma2) sigma2
           let next : Bool × AmbientSpace q.n →

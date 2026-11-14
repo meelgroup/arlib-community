@@ -231,7 +231,7 @@ theorem cappedAccuracyProperCollectWeightsAux_withQueryCap_eq_of_lt
                       Real.sqrt (terminalVariance q) ∧
                     ‖(scaleFactor q)⁻¹ • current‖ ≤
                       accuracyPhaseRadius q sigma2 then
-                    (Arlib.MarkovChains.gaussianScaleAcceptance sigma2
+                    (ArlibCommunity.Algorithms.CV18.gaussianScaleAcceptance sigma2
                       (scaleFactor q)
                       ((scaleFactor q)⁻¹ • current)).toReal *
                         weight ((scaleFactor q)⁻¹ • current)

@@ -3,7 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.CV18.Analysis.ContinuousProgramSemantics
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.Background.Arlib.Probability.TV
+import ArlibCommunity.Foundations.Convex.Basic.TV
 import Mathlib.MeasureTheory.Measure.SubFinite
 import Mathlib.MeasureTheory.VectorMeasure.Decomposition.JordanSub
 
@@ -35,7 +35,7 @@ discrepancy controlled by TV. -/
 theorem MeasureLeUpTo.of_tvLe
     {α : Type*} [MeasurableSpace α]
     {μ ν : Measure α} [IsFiniteMeasure μ] [IsFiniteMeasure ν]
-    {ε : ENNReal} (h : Arlib.TVLe μ ν ε) :
+    {ε : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe μ ν ε) :
     MeasureLeUpTo μ ν ε := by
   let error : Measure α := μ - ν
   refine ⟨error, ?_, ?_⟩
@@ -87,8 +87,8 @@ theorem MeasureLeUpTo.to_tvLe
     {α : Type*} [MeasurableSpace α]
     {μ ν : Measure α} [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
     {δ : ENNReal} (h : MeasureLeUpTo μ ν δ) :
-    Arlib.TVLe μ ν δ := by
-  apply Arlib.tvLe_of_forall_le
+    ArlibCommunity.Foundations.Convex.TVLe μ ν δ := by
+  apply ArlibCommunity.Foundations.Convex.tvLe_of_forall_le
   intro S _hS
   exact h.event_le S
 

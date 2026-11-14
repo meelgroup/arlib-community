@@ -15,8 +15,8 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_leUpTo_uncapped
     (hfail :
       (mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
         proposalCap properStride)) {none} ≤ capError) :
-    let P := Arlib.MarkovChains.lazy
-      (Arlib.MarkovChains.speedyMetropolisGaussian
+    let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+      (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2)
     MeasureLeUpTo
@@ -28,10 +28,10 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_leUpTo_uncapped
   letI : Fact (0 < sigma2) := ⟨hsigma2⟩
   let K := figureOneScheduledPhaseBody q I sigma2
   let delta := proposalRadius q sigma2
-  let Q := Arlib.MarkovChains.lazyProperProposalGaussianAux K
+  let Q := ArlibCommunity.Algorithms.CV18.lazyProperProposalGaussianAux K
     (figureOneScheduledPhaseBody_measurable q I sigma2) delta sigma2
-  let P := Arlib.MarkovChains.lazy
-    (Arlib.MarkovChains.speedyMetropolisGaussian K delta sigma2)
+  let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+    (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian K delta sigma2)
   let f : AmbientSpace q.n → ℝ := fun _ => 0
   let L := mu.bind
     (scheduledBalancedAccuracyRetryBlockKernel q I sigma2 proposalCap properStride)
@@ -54,19 +54,19 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_uncapped
     (hfail :
       (mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
         proposalCap properStride)) {none} ≤ capError) :
-    let P := Arlib.MarkovChains.lazy
-      (Arlib.MarkovChains.speedyMetropolisGaussian
+    let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+      (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2)
     MeasureLeUpTo
       ((mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
         proposalCap properStride)).map optionSnd)
-      ((Arlib.MarkovChains.iterate (P ^ properStride) mu 1).map some)
+      ((ArlibCommunity.Foundations.MarkovChainTheory.iterate (P ^ properStride) mu 1).map some)
       capError := by
   dsimp only
   letI : Fact (0 < sigma2) := ⟨hsigma2⟩
-  let P := Arlib.MarkovChains.lazy
-    (Arlib.MarkovChains.speedyMetropolisGaussian
+  let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+    (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
       (figureOneScheduledPhaseBody q I sigma2)
       (proposalRadius q sigma2) sigma2)
   let f : AmbientSpace q.n → ℝ := fun _ => 0
@@ -75,13 +75,13 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_uncapped
   have hmap := h.map (measurable_optionSnd (S := AmbientSpace q.n))
   have hendpoint :
       (mu.bind (frontMarkovCollectLaw (P ^ properStride) f 1)).map Prod.snd =
-        Arlib.MarkovChains.iterate (P ^ properStride) mu 1 :=
+        ArlibCommunity.Foundations.MarkovChainTheory.iterate (P ^ properStride) mu 1 :=
     bind_frontMarkovCollectLaw_map_snd (P ^ properStride)
       (measurable_const : Measurable f) 1 mu
   have hnu :
       ((mu.bind (frontMarkovCollectLaw (P ^ properStride) f 1)).map some).map
           optionSnd =
-        (Arlib.MarkovChains.iterate (P ^ properStride) mu 1).map some := by
+        (ArlibCommunity.Foundations.MarkovChainTheory.iterate (P ^ properStride) mu 1).map some := by
     rw [Measure.map_map measurable_optionSnd measurable_some]
     rw [show (optionSnd ∘ some : ℝ × AmbientSpace q.n →
           Option (AmbientSpace q.n)) = some ∘ Prod.snd by
@@ -103,10 +103,10 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationar
     (hfail :
       (mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
         proposalCap properStride)) {none} ≤ capError)
-    (hmix : Arlib.TVLe
-      (Arlib.MarkovChains.iterate
-        (Arlib.MarkovChains.lazy
-          (Arlib.MarkovChains.speedyMetropolisGaussian
+    (hmix : ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.MarkovChainTheory.iterate
+        (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+          (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
             (figureOneScheduledPhaseBody q I sigma2)
             (proposalRadius q sigma2) sigma2))
         mu properStride) pi mixError) :
@@ -114,8 +114,8 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationar
       ((mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
         proposalCap properStride)).map optionSnd)
       (pi.map some) (capError + mixError) := by
-  let P := Arlib.MarkovChains.lazy
-    (Arlib.MarkovChains.speedyMetropolisGaussian
+  let P := ArlibCommunity.Foundations.MarkovChainTheory.lazy
+    (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
       (figureOneScheduledPhaseBody q I sigma2)
       (proposalRadius q sigma2) sigma2)
   have hcap :=
@@ -123,8 +123,8 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationar
       q I hsigma2 proposalCap properStride mu hfail
   dsimp only at hcap
   rw [iterate_pow_one P mu properStride] at hcap
-  have hmixSome : Arlib.TVLe
-      ((Arlib.MarkovChains.iterate P mu properStride).map some)
+  have hmixSome : ArlibCommunity.Foundations.Convex.TVLe
+      ((ArlibCommunity.Foundations.MarkovChainTheory.iterate P mu properStride).map some)
       (pi.map some) mixError := hmix.map measurable_some
   exact hcap.trans (MeasureLeUpTo.of_tvLe hmixSome)
 
@@ -136,45 +136,45 @@ theorem bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationar
     (proposalCap properStride : ℕ) (hproposalCap : 0 < proposalCap)
     (mu : Measure (AmbientSpace q.n)) [IsProbabilityMeasure mu]
     {M capError mixError : ENNReal}
-    (hwarm : Arlib.IsWarm M mu
-      (Arlib.MarkovChains.ellGaussianProb
+    (hwarm : ArlibCommunity.Foundations.Convex.IsWarm M mu
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2))
     (hbudget : (properStride : ENNReal) * M ≤
       (ENNReal.ofReal (1 / 2) * (proposalCap : ENNReal)) * capError)
-    (hmix : Arlib.TVLe
-      (Arlib.MarkovChains.iterate
-        (Arlib.MarkovChains.lazy
-          (Arlib.MarkovChains.speedyMetropolisGaussian
+    (hmix : ArlibCommunity.Foundations.Convex.TVLe
+      (ArlibCommunity.Foundations.MarkovChainTheory.iterate
+        (ArlibCommunity.Foundations.MarkovChainTheory.lazy
+          (ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian
             (figureOneScheduledPhaseBody q I sigma2)
             (proposalRadius q sigma2) sigma2))
         mu properStride)
-      (Arlib.MarkovChains.ellGaussianProb
+      (ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2) mixError) :
     MeasureLeUpTo
       ((mu.bind (scheduledBalancedAccuracyRetryBlockKernel q I sigma2
         proposalCap properStride)).map optionSnd)
-      ((Arlib.MarkovChains.ellGaussianProb
+      ((ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
         (figureOneScheduledPhaseBody q I sigma2)
         (proposalRadius q sigma2) sigma2).map some)
       (capError + mixError) := by
-  let pi := Arlib.MarkovChains.ellGaussianProb
+  let pi := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb
     (figureOneScheduledPhaseBody q I sigma2)
     (proposalRadius q sigma2) sigma2
   have hdelta : 0 < proposalRadius q sigma2 :=
     proposalRadius_pos q hsigma2
-  have hmass0 := Arlib.MarkovChains.ellGaussianMeasure_univ_ne_zero
+  have hmass0 := ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
     (figureOneScheduledPhaseBody_measurable q I sigma2)
     (figureOneScheduledPhaseBody_convex q I sigma2)
     (figureOneScheduledPhaseBody_isCompact q I sigma2).isBounded
     (figureOneScheduledPhaseBody_volume_ne_zero q I hsigma2)
     hdelta sigma2
-  have hmasstop := Arlib.MarkovChains.ellGaussianMeasure_ne_top_cv18
+  have hmasstop := ArlibCommunity.Algorithms.CV18.ellGaussianMeasure_ne_top_cv18
     (figureOneScheduledPhaseBody_volume_ne_top q I sigma2)
     (proposalRadius q sigma2) hsigma2
   let _ : IsProbabilityMeasure pi :=
-    Arlib.MarkovChains.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
+    ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
   have hfail := bind_scheduledBalancedAccuracyRetryBlockKernel_none_le_of_isWarm
     q I hsigma2 hwarm proposalCap properStride hproposalCap hbudget
   exact bind_scheduledBalancedAccuracyRetryBlockKernel_endpoint_leUpTo_stationary
