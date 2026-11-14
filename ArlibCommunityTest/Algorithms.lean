@@ -62,13 +62,31 @@ example {n : ℕ} (hn : 21 ≤ n) (p : Problem n)
 
 end ArlibCommunityTest.HitAndRun
 
+namespace ArlibCommunityTest.KV97
+
+open MeasureTheory
+open ArlibCommunity.Algorithms.KV97
+
+/-- Kannan–Vempala, Theorem 2: given a sampler whose density is within `1 ± ε` of
+uniform at every point of the inflated polytope, every lattice point of the
+polytope is returned with probability within a stated factor of `1 / V`. -/
+example {n : ℕ} {ι : Type*} [Fintype ι] (p : Problem n ι)
+    {sampler : Measure (State n)} {V ε : ℝ} (hV : 0 < V) (hε0 : 0 ≤ ε) (hε1 : ε ≤ 1)
+    (hs : AlmostUniformSampler sampler p.inflatedBody V ε)
+    {x : LatticePoint n} (hx : toState x ∈ p.body) :
+    (1 - ε) * (1 - Real.exp (-p.c ^ 2 / 2)) / V ≤ (output sampler {x}).toReal ∧
+      (output sampler {x}).toReal ≤ (1 + ε) / V :=
+  latticePoint_probability p hV hε0 hε1 hs hx
+
+end ArlibCommunityTest.KV97
+
 namespace ArlibCommunityTest.CV18
 
 open ArlibCommunity.Algorithms.CV18
 
-/-- The public CV18 frontier: the concrete base run is accurate once the two
-remaining quantitative analytic inputs are supplied. The accelerated moment
-bound is internal and unconditional. -/
+/-- The older compact interface: one base run is accurate given a radial
+truncation bound and a mixing bound as hypotheses. Theorem 1.1 below discharges
+both. -/
 example (q : VolumeParams) (I : VolumeInput q.n)
     (oracle : MembershipOracle I)
     (htrunc : FigureOneRadialTruncationBound q I)
