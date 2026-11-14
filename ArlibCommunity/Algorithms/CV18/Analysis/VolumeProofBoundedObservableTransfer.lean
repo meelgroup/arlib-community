@@ -8,7 +8,7 @@ open Arlib ArlibCommunity.Foundations ArlibCommunity.Foundations.Convex
 
 /-- Total variation transfers an observable bounded in `[0, B]`, with the
 expected factor `B` in the additive error. -/
-theorem ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_nonnegative_le
+theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_nonnegative_le
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal} (h : TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
@@ -35,7 +35,7 @@ theorem ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_nonnegative_le
   simpa [mul_comm] using (div_le_iff₀ hB).mp hscaled
 
 /-- The corresponding second-moment transfer for an observable in `[0, B]`. -/
-theorem ArlibCommunity.Foundations.Convex.TVLe.integral_sq_le_of_nonnegative_le
+theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.integral_sq_le_of_nonnegative_le
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal} (h : TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
@@ -76,7 +76,7 @@ theorem MeasureLeUpTo.integral_sq_le_of_nonnegative_le
 /-- A small TV perturbation of a phase law preserves a positive first moment
 and a constant relative second-moment bound.  The deliberately slack factor
 `4` is the input expected by `actualMeanTruncation_moment_package`. -/
-theorem ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four
+theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)

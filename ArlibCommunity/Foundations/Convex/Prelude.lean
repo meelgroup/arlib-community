@@ -19,7 +19,7 @@ import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Data.ENNReal.Basic
+import Mathlib.Basic.ENNReal.Basic
 import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 import Mathlib.Analysis.Convex.Segment
 import Mathlib.Analysis.Convex.Topology

@@ -37,7 +37,7 @@ theorem iterate_smul_measure
 
 /-- Total variation scales linearly when both finite measures are multiplied
 by the same coefficient. -/
-theorem ArlibCommunity.Foundations.Convex.TVLe.smul_measure
+theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.smul_measure
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} {epsilon c : ENNReal}
     (h : TVLe mu nu epsilon) : TVLe (c • mu) (c • nu) (c * epsilon) := by

@@ -21,7 +21,7 @@ open _root_.Arlib _root_.ArlibCommunity.Foundations _root_.ArlibCommunity.Founda
 
 /-- Total variation transfers a squared observable when its common bound is
 known almost everywhere under both probability measures. -/
-theorem ArlibCommunity.Foundations.Convex.TVLe.integral_sq_le_of_ae_nonnegative_le
+theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.integral_sq_le_of_ae_nonnegative_le
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)

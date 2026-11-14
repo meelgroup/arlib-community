@@ -8,7 +8,7 @@ import Mathlib.MeasureTheory.Integral.Pi
 import ArlibCommunity.Foundations.Convex.Prelude
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Data.ENNReal.Basic
+import Mathlib.Basic.ENNReal.Basic
 import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
 

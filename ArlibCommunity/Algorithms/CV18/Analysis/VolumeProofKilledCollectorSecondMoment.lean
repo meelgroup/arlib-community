@@ -95,7 +95,7 @@ theorem integral_optionZeroLift_sq_le_of_success_dom
 Unlike the older coarse factor-four adapter, this theorem retains an
 arbitrary ideal factor and makes the exact finite-walk slack arithmetic
 explicit. -/
-theorem ArlibCommunity.Foundations.Convex.TVLe.second_le_factor_mul_mean_sq_of_ae
+theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.second_le_factor_mul_mean_sq_of_ae
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal} (htv : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)

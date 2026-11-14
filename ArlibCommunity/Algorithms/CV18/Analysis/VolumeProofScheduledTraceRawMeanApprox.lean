@@ -314,7 +314,7 @@ theorem scheduledBalancedFinalTraceRawGaussianPhase_leUpTo_target
 
 /-- Total variation transfers the first moment when the scalar observable is
 bounded only almost everywhere under the two probability measures. -/
-theorem ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_ae_nonnegative_le
+theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.integral_le_of_ae_nonnegative_le
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)

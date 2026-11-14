@@ -23,7 +23,7 @@ noncomputable section
 
 /-- Symmetric square-root first-moment transfer when both probability laws
 have the same second-moment bound. -/
-theorem ArlibCommunity.Foundations.Convex.TVLe.abs_integral_sub_le_of_nonnegative_secondMoment_sqrt
+theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.abs_integral_sub_le_of_nonnegative_secondMoment_sqrt
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal}

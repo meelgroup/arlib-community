@@ -33,7 +33,7 @@ theorem measurable_round : Measurable (round (n := n)) := by
   have h : ∀ p : State n, round p s = ∑' z : LatticePoint n, s.indicator (fun z => round p {z}) z :=
     fun p => (Measure.tsum_indicator_apply_singleton (round p) s hs).symm
   simp_rw [h]
-  refine Measurable.ennreal_tsum fun z => ?_
+  refine Measurable.tsum fun z => ?_
   by_cases hz : z ∈ s
   · simp only [Set.indicator_of_mem hz, round_singleton]
     exact ENNReal.measurable_ofReal.comp (measurable_prodTent _)

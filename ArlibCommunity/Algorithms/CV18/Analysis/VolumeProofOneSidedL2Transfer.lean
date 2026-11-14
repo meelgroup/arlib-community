@@ -16,7 +16,7 @@ namespace ArlibCommunity.Algorithms.CV18
 
 /-- A TV comparison gives a one-sided mean lower bound using only the
 reference law's second moment. -/
-theorem ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_secondMoment
+theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_secondMoment
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal}
@@ -100,7 +100,7 @@ theorem ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_se
   linarith
 
 /-- Square-root optimization of the one-sided transfer bound. -/
-theorem ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
+theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.integral_sub_le_of_nonnegative_secondMoment_sqrt
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal}

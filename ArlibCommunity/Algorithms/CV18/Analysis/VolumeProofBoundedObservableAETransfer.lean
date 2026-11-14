@@ -29,7 +29,7 @@ theorem memLp_two_of_ae_nonnegative_le
 
 /-- The small-TV moment lemma remains valid when boundedness is known only
 almost everywhere under each of the two probability laws. -/
-theorem ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four_of_ae
+theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four_of_ae
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon) (hepsilon : epsilon ≠ ⊤)
@@ -77,7 +77,7 @@ theorem ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four_
 /-- At the exact-chance budget used by Figure One, support in
 `[0, exp (1/2)]`, ideal mean at least one, and ideal relative second moment at
 most two suffice for the executable raw moment bound. -/
-theorem ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four_of_ae_expHalf
+theorem _root_.ArlibCommunity.Foundations.Convex.TVLe.positive_mean_and_second_le_four_of_ae_expHalf
     {S : Type*} [MeasurableSpace S]
     {mu nu : Measure S} [IsProbabilityMeasure mu] [IsProbabilityMeasure nu]
     {epsilon : ENNReal} (h : ArlibCommunity.Foundations.Convex.TVLe mu nu epsilon)
