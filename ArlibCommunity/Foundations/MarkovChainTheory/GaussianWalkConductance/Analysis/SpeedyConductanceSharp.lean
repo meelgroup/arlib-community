@@ -17,7 +17,7 @@ Theorem `thm:speedyconductance` ([CV18], proof at `:628`):
 > applied to `K` with Gaussian density `N(0,σ²I)` and `δ ≤ σ/(8√n)` steps is `Ω(δ/(σ√n))`.
 
 This file carries out that proof.  The result it lands,
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`, is **conditional**: its two inputs with
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`, is **conditional**: its two inputs with
 content — the one-step overlap estimate `cor:overlap` ([CV18]) and the sharp
 isoperimetric inequality `thm:iso` (`:467`) — are both hypotheses, written out inline.  What
 is *proved* here is everything between them and the conductance: the three-way partition, the
@@ -41,7 +41,7 @@ statement in this file asserts, or may be quoted as asserting, a polynomial mixi
 
 ## What is assumed, and what is proved
 
-`conductance_speedyGaussian_ge` has exactly two hypotheses that are not bookkeeping.
+`globalConductance_speedyGaussian_ge` has exactly two hypotheses that are not bookkeeping.
 
 * **`hoverlap` — `cor:overlap`** ([CV18]).  For `u ∈ S ∩ K` and `v ∈ K \ S`
   with `‖u − v‖ < δ/√n` and `d_h(u,v) < 1/4`, one step satisfies
@@ -63,7 +63,7 @@ and the conductance assembly itself is proved.
 
 * `ArlibCommunity.Foundations.MarkovChainTheory.two_mul_log_two_le_sqrt_natCast`,
   `ArlibCommunity.Foundations.MarkovChainTheory.four_mul_isoStep_div_sigma_le_quarter`,
-  `ArlibCommunity.Foundations.MarkovChainTheory.isoStep_conductance_le_inv_160` — the arithmetic of the step
+  `ArlibCommunity.Foundations.MarkovChainTheory.isoStep_globalConductance_le_inv_160` — the arithmetic of the step
   `d = δ·ln 2/√n`: its density branch is capped below `1/4`, and the resulting conductance
   never exceeds the degenerate branch's `1/160`.
 * `ArlibCommunity.Foundations.MarkovChainTheory.ofReal_div_mul_div_le` — the `ℝ≥0∞` bridge from `thm:iso`'s real-integral
@@ -72,10 +72,10 @@ and the conductance assembly itself is proved.
   three-way partition, from `mul_measure_add_measure_le_mul_flow`.
 * `ArlibCommunity.Foundations.MarkovChainTheory.measure_le_flow_of_le_two_mul` — **the degenerate branch**,
   `φ(S) ≥ 1/160`, independent of `hiso`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` — **the theorem**:
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` — **the theorem**:
   `Φ ≥ δ·ln 2/(640·σ·√n)`.
 * `ArlibCommunity.Foundations.MarkovChainTheory.speedyGaussian_params_satisfiable`,
-  `ArlibCommunity.Foundations.MarkovChainTheory.exists_conductance_speedyGaussian_pos` — the non-vacuity witnesses.
+  `ArlibCommunity.Foundations.MarkovChainTheory.exists_globalConductance_speedyGaussian_pos` — the non-vacuity witnesses.
 
 ## Three discrepancies with the printed proof
 
@@ -117,7 +117,7 @@ content — this is exactly why the paper caps `d`.  The `1/4` is moreover the t
 `speedyGaussian_params_satisfiable` checks that `Bₙ ⊆ K ⊆ 4σ√n Bₙ` (i.e. `1 ≤ 4σ√n`),
 `δ ≤ σ/(8√n)`, `d = min{δ ln 2/√n, σ/(16√n)} = δ ln 2/√n`, `4(d/σ)√n ≤ 1/4 ≤ 1` and a
 strictly positive conductance bound hold **simultaneously** at `n = 4`, `σ = 1`, `δ = 1/16`.
-`exists_conductance_speedyGaussian_pos` goes further and *applies* the theorem to a concrete
+`exists_globalConductance_speedyGaussian_pos` goes further and *applies* the theorem to a concrete
 kernel and measure, discharging **every** hypothesis including `hoverlap` and `hiso`, and
 obtains a strictly positive lower bound on a genuine conductance.  So the theorem is not
 vacuous.
@@ -183,7 +183,7 @@ theorem four_mul_isoStep_div_sigma_le_quarter {n : ℕ} (hn : 2 ≤ n) {σ δ : 
 /-- **The conductance the theorem certifies never exceeds the degenerate branch's `1/160`.**
 Since `δ ≤ σ/(8√n)` and `√n ≥ 1`, `δ·ln 2/(640σ√n) ≤ 1/5120 ≤ 1/160`.  This is what lets the
 two branches of the proof be combined into a *single* constant instead of a `min`. -/
-theorem isoStep_conductance_le_inv_160 {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ)
+theorem isoStep_globalConductance_le_inv_160 {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ)
     (hδ : 0 < δ) (hδσ : δ ≤ σ / (8 * Real.sqrt n)) :
     δ * Real.log 2 / (640 * σ * Real.sqrt n) ≤ 1 / 160 := by
   have hnpos : (0 : ℝ) < (n : ℝ) := by
@@ -263,15 +263,15 @@ least `1/40`, then
 
 Division-free: the thresholds are written `1 ≤ 40·P_x(·)`.  This is
 [CV18], where `A = S₁ ∪ Kᶜ` and `B = S₂ ∪ Kᶜ`. -/
-theorem measure_sdiff_add_measure_sdiff_le_flow (P : Kernel Ω Ω) [IsMarkovKernel P]
-    (pi : Measure Ω) (hrev : IsReversible P pi) {S A B : Set Ω} (hS : MeasurableSet S)
+theorem measure_sdiff_add_measure_sdiff_le_flow (pi : Measure Ω) (P : Kernel Ω Ω) [IsMarkovKernel P]
+     (hrev : Kernel.IsReversible P pi) {S A B : Set Ω} (hS : MeasurableSet S)
     (hA : MeasurableSet A) (hB : MeasurableSet B)
     (hA' : ∀ x ∈ S \ A, 1 ≤ 40 * P x Sᶜ) (hB' : ∀ x ∈ Sᶜ \ B, 1 ≤ 40 * P x S) :
-    pi (S \ A) + pi (Sᶜ \ B) ≤ 80 * flow P pi S Sᶜ := by
-  have h := mul_measure_add_measure_le_mul_flow P pi hrev hS hA hB hA' hB'
+    pi (S \ A) + pi (Sᶜ \ B) ≤ 80 * flow pi P S Sᶜ := by
+  have h := mul_measure_add_measure_le_mul_flow pi P hrev hS hA hB hA' hB'
   rw [one_mul] at h
-  calc pi (S \ A) + pi (Sᶜ \ B) ≤ 2 * (40 * flow P pi S Sᶜ) := h
-    _ = 80 * flow P pi S Sᶜ := by ring
+  calc pi (S \ A) + pi (Sᶜ \ B) ≤ 2 * (40 * flow pi P S Sᶜ) := h
+    _ = 80 * flow pi P S Sᶜ := by ring
 
 /-- **The degenerate branch of `thm:speedyconductance`** ([CV18]): if `S` is
 not mostly covered by `S₁` — precisely, if `π(S) ≤ 2·(π(S \ A) + π(Sᶜ \ B))` — then the escape
@@ -281,16 +281,16 @@ flow alone already bounds the conductance from below, with **no isoperimetric in
 
 The paper's constant is `1/80`, from thresholds `1/20`; at the corrected thresholds `1/40`
 (module docstring, discrepancy (i)) it is `1/160`. -/
-theorem measure_le_flow_of_le_two_mul (P : Kernel Ω Ω) [IsMarkovKernel P] (pi : Measure Ω)
-    (hrev : IsReversible P pi) {S A B : Set Ω} (hS : MeasurableSet S) (hA : MeasurableSet A)
+theorem measure_le_flow_of_le_two_mul (pi : Measure Ω) (P : Kernel Ω Ω) [IsMarkovKernel P] 
+    (hrev : Kernel.IsReversible P pi) {S A B : Set Ω} (hS : MeasurableSet S) (hA : MeasurableSet A)
     (hB : MeasurableSet B) (hA' : ∀ x ∈ S \ A, 1 ≤ 40 * P x Sᶜ)
     (hB' : ∀ x ∈ Sᶜ \ B, 1 ≤ 40 * P x S)
     (hsmall : pi S ≤ 2 * (pi (S \ A) + pi (Sᶜ \ B))) :
-    pi S ≤ 160 * flow P pi S Sᶜ := by
-  have h := measure_sdiff_add_measure_sdiff_le_flow P pi hrev hS hA hB hA' hB'
+    pi S ≤ 160 * flow pi P S Sᶜ := by
+  have h := measure_sdiff_add_measure_sdiff_le_flow pi P hrev hS hA hB hA' hB'
   calc pi S ≤ 2 * (pi (S \ A) + pi (Sᶜ \ B)) := hsmall
-    _ ≤ 2 * (80 * flow P pi S Sᶜ) := by gcongr
-    _ = 160 * flow P pi S Sᶜ := by ring
+    _ ≤ 2 * (80 * flow pi P S Sᶜ) := by gcongr
+    _ = 160 * flow pi P S Sᶜ := by ring
 
 /-! ## 4. The theorem -/
 
@@ -321,7 +321,7 @@ positive total mass), `hpi` (`π` really is the normalised `h`-measure — this 
 factor-`4` difference is two separate slips in its proof, both corrected here and both
 recorded in the module docstring.  This is a bound of the shape `Ω(δ/(σ√n))` **conditional on
 `hoverlap` and `hiso`**; it is not, and may not be quoted as, a polynomial-time statement. -/
-theorem conductance_speedyGaussian_ge {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ) (hδ : 0 < δ)
+theorem globalConductance_speedyGaussian_ge {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ) (hδ : 0 < δ)
     (hδσ : δ ≤ σ / (8 * Real.sqrt n))
     {h : EuclideanSpace ℝ (Fin n) → ℝ} (hh0 : ∀ x, 0 ≤ h x) (hmass : 0 < ∫ x, h x)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
@@ -329,7 +329,7 @@ theorem conductance_speedyGaussian_ge {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (h�
     (pi : Measure (EuclideanSpace ℝ (Fin n)))
     (hpi : ∀ A : Set (EuclideanSpace ℝ (Fin n)), MeasurableSet A →
       pi A = ENNReal.ofReal (∫ x in A, h x) / ENNReal.ofReal (∫ x, h x))
-    (hrev : IsReversible P pi) (hpiK : pi Kᶜ = 0)
+    (hrev : Kernel.IsReversible P pi) (hpiK : pi Kᶜ = 0)
     (hoverlap : ∀ T : Set (EuclideanSpace ℝ (Fin n)), MeasurableSet T →
       ∀ u v : EuclideanSpace ℝ (Fin n), u ∈ T → u ∈ K → v ∈ K → v ∉ T →
       ‖u - v‖ < δ / Real.sqrt n → densDist h u v < 1 / 4 →
@@ -342,7 +342,7 @@ theorem conductance_speedyGaussian_ge {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (h�
           4 * (δ * Real.log 2 / Real.sqrt n / σ) * Real.sqrt n ≤ densDist h u v) →
       δ * Real.log 2 / Real.sqrt n / σ * ((∫ x in S₁, h x) * ∫ x in S₂, h x)
         ≤ (∫ x, h x) * ∫ x in S₃, h x) :
-    ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n)) ≤ conductance P pi := by
+    ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n)) ≤ globalConductance pi P := by
   have hnpos : (0 : ℝ) < (n : ℝ) := by
     have : (2 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
     linarith
@@ -368,11 +368,11 @@ theorem conductance_speedyGaussian_ge {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (h�
       ENNReal.ofReal_ofNat]
   have hcle : c / 640 ≤ (1 : ℝ≥0∞) / 160 := by
     rw [← hconst, ← h160]
-    exact ENNReal.ofReal_le_ofReal (isoStep_conductance_le_inv_160 hn hσ hδ hδσ)
+    exact ENNReal.ofReal_le_ofReal (isoStep_globalConductance_le_inv_160 hn hσ hδ hδσ)
   have hswap : ∀ a b e : ℝ≥0∞, a / e * b = a * b / e := by
     intro a b e
     rw [div_eq_mul_inv, div_eq_mul_inv, mul_right_comm]
-  refine le_conductance P pi fun S hSm hSpos hShalf => ?_
+  refine le_globalConductance pi P fun S hSm hSpos hShalf => ?_
   have hpitop : pi S ≠ ⊤ := measure_ne_top _ _
   have hSc : (1 : ℝ≥0∞) / 2 ≤ pi Sᶜ := by
     have hcompl : pi S + pi Sᶜ = 1 := by rw [measure_add_measure_compl hSm, measure_univ]
@@ -420,7 +420,7 @@ theorem conductance_speedyGaussian_ge {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (h�
     by_contra hcon
     rw [not_le] at hcon
     exact hxS2 ((hmem2 x).2 ⟨⟨hxK, hxS⟩, hcon⟩)
-  have hflow := measure_sdiff_add_measure_sdiff_le_flow P pi hrev hSm hAm hBm hA' hB'
+  have hflow := measure_sdiff_add_measure_sdiff_le_flow pi P hrev hSm hAm hBm hA' hB'
   -- coverings, using `π(Kᶜ) = 0`
   have hcov1 : pi S ≤ pi (S \ A) + pi S1 := by
     have hsub : S ⊆ ((S \ A) ∪ S1) ∪ Kᶜ := by
@@ -519,12 +519,12 @@ theorem conductance_speedyGaussian_ge {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (h�
     rw [hpi S1 hS1m, hpi S2 hS2m, hpi _ (hS1m.union hS2m).compl, hcdef]
     exact ofReal_div_mul_div_le hmass (integral_nonneg hh0) hcnn hisoS
   -- the two branches
-  have hkey : pi S ≤ 160 * flow P pi S Sᶜ ∨ c * pi S ≤ 640 * flow P pi S Sᶜ := by
+  have hkey : pi S ≤ 160 * flow pi P S Sᶜ ∨ c * pi S ≤ 640 * flow pi P S Sᶜ := by
     by_cases hc1 : pi S ≤ 2 * pi (S \ A)
-    · exact Or.inl (measure_le_flow_of_le_two_mul P pi hrev hSm hAm hBm hA' hB'
+    · exact Or.inl (measure_le_flow_of_le_two_mul pi P hrev hSm hAm hBm hA' hB'
         (hc1.trans (by gcongr; exact le_self_add)))
     by_cases hc2 : pi Sᶜ ≤ 2 * pi (Sᶜ \ B)
-    · refine Or.inl (measure_le_flow_of_le_two_mul P pi hrev hSm hAm hBm hA' hB' ?_)
+    · refine Or.inl (measure_le_flow_of_le_two_mul pi P hrev hSm hAm hBm hA' hB' ?_)
       calc pi S ≤ pi Sᶜ := hShalf.trans hSc
         _ ≤ 2 * pi (Sᶜ \ B) := hc2
         _ ≤ 2 * (pi (S \ A) + pi (Sᶜ \ B)) := by gcongr; exact le_add_self
@@ -563,19 +563,19 @@ theorem conductance_speedyGaussian_ge {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (h�
       _ = 8 * (c * pi S1 * pi S2) := by ring
       _ ≤ 8 * pi ((S1 ∪ S2)ᶜ) := by gcongr
       _ ≤ 8 * (pi (S \ A) + pi (Sᶜ \ B)) := by gcongr
-      _ ≤ 8 * (80 * flow P pi S Sᶜ) := by gcongr
-      _ = 640 * flow P pi S Sᶜ := by ring
-  rw [conductanceOn_apply, hconst,
+      _ ≤ 8 * (80 * flow pi P S Sᶜ) := by gcongr
+      _ = 640 * flow pi P S Sᶜ := by ring
+  rw [conductance_apply, hconst,
     ENNReal.le_div_iff_mul_le (Or.inl hSpos.ne') (Or.inl hpitop)]
   rcases hkey with hcase | hcase
   · calc c / 640 * pi S ≤ (1 : ℝ≥0∞) / 160 * pi S := by gcongr
       _ = 1 * pi S / 160 := hswap _ _ _
       _ = pi S / 160 := by rw [one_mul]
-      _ ≤ flow P pi S Sᶜ := by
+      _ ≤ flow pi P S Sᶜ := by
           rw [ENNReal.div_le_iff_le_mul (Or.inl (by norm_num)) (Or.inl (by norm_num))]
           exact hcase.trans_eq (mul_comm _ _)
   · calc c / 640 * pi S = c * pi S / 640 := hswap _ _ _
-      _ ≤ flow P pi S Sᶜ := by
+      _ ≤ flow pi P S Sᶜ := by
           rw [ENNReal.div_le_iff_le_mul (Or.inl (by norm_num)) (Or.inl (by norm_num))]
           exact hcase.trans_eq (mul_comm _ _)
 
@@ -627,7 +627,7 @@ theorem speedyGaussian_params_satisfiable :
   · rw [hs, show (1 : ℝ) / 16 * Real.log 2 / (640 * 1 * 2) = Real.log 2 / 20480 by ring]
     linarith
 
-/-- **Non-vacuity witness for `conductance_speedyGaussian_ge`.**
+/-- **Non-vacuity witness for `globalConductance_speedyGaussian_ge`.**
 
 Every hypothesis of the theorem — including the two with content, `hoverlap` and `hiso` — is
 satisfiable *simultaneously*, at parameters where the conclusion is a **strictly positive**
@@ -648,12 +648,12 @@ mixing kernel `P_x = π`.
 The point of the second bullet is exactly the vacuity risk: `hiso` is an unproved universally
 quantified statement, and a witness that merely asserted it would certify nothing.  Here it is
 *proved* at the instance. -/
-theorem exists_conductance_speedyGaussian_pos :
+theorem exists_globalConductance_speedyGaussian_pos :
     ∃ (P : Kernel (EuclideanSpace ℝ (Fin 4)) (EuclideanSpace ℝ (Fin 4)))
       (pi : Measure (EuclideanSpace ℝ (Fin 4))),
       IsProbabilityMeasure pi ∧ IsMarkovKernel P ∧
       0 < ENNReal.ofReal (Real.log 2 / 20480) ∧
-      ENNReal.ofReal (Real.log 2 / 20480) ≤ conductance P pi := by
+      ENNReal.ofReal (Real.log 2 / 20480) ≤ globalConductance pi P := by
   classical
   have hlog0 : 0 < Real.log 2 := Real.log_pos (by norm_num)
   have hs : Real.sqrt ((4 : ℕ) : ℝ) = 2 := by
@@ -750,7 +750,7 @@ theorem exists_conductance_speedyGaussian_pos :
     linarith
   · rw [show Real.log 2 / 20480
         = (1 / 16 : ℝ) * Real.log 2 / (640 * 1 * Real.sqrt ((4 : ℕ) : ℝ)) by rw [hs]; ring]
-    exact conductance_speedyGaussian_ge (n := 4) (σ := 1) (δ := 1 / 16) (by norm_num)
+    exact globalConductance_speedyGaussian_ge (n := 4) (σ := 1) (δ := 1 / 16) (by norm_num)
       (by norm_num) (by norm_num) (by rw [hs]; norm_num) hh0 hmass
       (K := Set.univ) MeasurableSet.univ _ pi hpiA (isReversible_const pi) (by simp)
       hoverlap hisoW
@@ -761,12 +761,12 @@ end ArlibCommunity.Foundations.MarkovChainTheory
 
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.two_mul_log_two_le_sqrt_natCast
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.four_mul_isoStep_div_sigma_le_quarter
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.isoStep_conductance_le_inv_160
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.isoStep_globalConductance_le_inv_160
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.ofReal_div_mul_div_le
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.measure_sdiff_add_measure_sdiff_le_flow
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.measure_le_flow_of_le_two_mul
 
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge
 
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.speedyGaussian_params_satisfiable
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.exists_conductance_speedyGaussian_pos
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.exists_globalConductance_speedyGaussian_pos

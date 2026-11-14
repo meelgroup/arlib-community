@@ -12,7 +12,7 @@ import ArlibCommunity.Foundations.Convex.Basic.GaussianWeight
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean`)
 proves Cousins–Vempala's `thm:iso` with **no** localization binder, but only for `S₁, S₂` **open**,
 `S₃` **closed**, and `h` **continuous**.  The Metropolis-ball-walk consumer
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_sqrt_ge`
 (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisOverlapSqrt.lean`) needs it at
 
     h = Set.indicator K (gaussianWeightReal (σ ^ 2)),   K a convex body,
@@ -794,7 +794,7 @@ variable {n : ℕ}
 
 /-- **The mismatch against the consumer's binder, machine-checked.**
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge` states the *metric* branch of
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_sqrt_ge` states the *metric* branch of
 its `hiso` binder at threshold `d / log 2`; everything provable in this repository states it at
 `2√3·d`, and `d/log 2 < 2√3·d` for `d > 0`.  So the consumer's separation hypothesis is
 **strictly weaker** than the one discharged here and cannot be `exact`-ed into it.
@@ -818,7 +818,7 @@ theorem metric_threshold_lt_openClosed_threshold {d : ℝ} (hd : 0 < d) :
 
 /-- **`hiso` for the Metropolis-filtered Gaussian ball walk, in the consumer's own notation.**
 
-This is the binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge`
+This is the binder of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_sqrt_ge`
 (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisOverlapSqrt.lean`) at `d = δ·log 2/√n`, verbatim,
 with exactly **one** subterm changed: the metric branch reads `2√3·(δ·log 2/√n)` where the
 consumer writes `δ·log 2/√n / log 2`.  Everything else — the partition, the measurability

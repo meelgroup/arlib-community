@@ -49,7 +49,7 @@ measure on a convex body, where previously this development had none at any cons
   convex `K`.  No positivity hypotheses at all: every step is `ℝ≥0∞`-monotone, and at `m = 0`
   the statement is trivially true.
 * `ArlibCommunity.Foundations.Convex.uniformOn_withDensity_iso_of_convex` — the same, normalized, in the
-  `hiso` shape that `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge` consumes.
+  `hiso` shape that `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_ge` consumes.
 * `ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_of_convex`,
   `ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_kappa` — the instance the volume algorithm needs:
   the Gaussian-restricted measure on a convex `K ⊆ R·Bₙ`, at `κ = e^{-R²/s}·2⁻ⁿ/(2R)`.
@@ -74,7 +74,7 @@ proved about it.
 
 ## What this does *not* unblock
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge` and everything downstream of it are hard-wired
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_ge` and everything downstream of it are hard-wired
 to `ArlibCommunity.Foundations.Convex.uniformOn volume K` — the *uniform* ball walk, whose stationary law is the uniform
 measure on `K`.  A walk whose stationary law is `ArlibCommunity.Foundations.Convex.uniformOn (volume.withDensity g) K`
 is a Metropolis-filtered (or ball-walk-with-rejection) chain, and no such kernel is built in
@@ -174,7 +174,7 @@ theorem withDensity_mul_le_of_separated
 /-! ### The same, normalized, in `hiso` shape -/
 
 /-- **The isoperimetric inequality for a sandwiched density, normalized**, in the shape of
-the `hiso` argument of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge`, with
+the `hiso` argument of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_ge`, with
 `π = uniformOn (volume.withDensity g) K`:
 
     m²·(d/D)·π A·π B  ≤  M²·2ⁿ·π (K \ A \ B).
@@ -355,7 +355,7 @@ with `π = uniformOn (volume.withDensity e^{-‖·‖²/(2s)}) K`.
 
 **Assumed: nothing.**  A restatement of `ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_of_convex`
 with the `2ⁿ` moved to the left as `(1/2)ⁿ`, so the shape matches the `hiso` argument of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge` verbatim — modulo that theorem's `π` being the
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_ge` verbatim — modulo that theorem's `π` being the
 *uniform* measure, which is exactly the gap recorded under "what this does not unblock" in
 the module docstring.
 

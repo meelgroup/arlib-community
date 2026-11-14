@@ -10,7 +10,7 @@ section
 /-!
 # The Localization Lemma with the needle inside the body
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer_of_localization`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_transfer_of_localization`
 (`ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/IsoConcaveWeight.lean`) carries a binder `hloc` — the Localization Lemma of
 Kannan–Lovász–Simonovits in the one-equality-one-inequality form (KLS Corollary 2.4), with the
 extra requirement that the needle it produces lies **inside** the body `K`.  This file discharges
@@ -78,9 +78,9 @@ docstring of `ArlibCommunity.Foundations.Convex.Localization.Analysis.Localizati
 ## Main results
 
 * `ArlibCommunity.Foundations.Convex.hloc_needle_in_body` — the `hloc` binder of
-  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer_of_localization`, proved, for a compact convex body
+  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_transfer_of_localization`, proved, for a compact convex body
   in dimension `n ≥ 2`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer` — that theorem with `hloc` discharged, leaving
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_transfer` — that theorem with `hloc` discharged, leaving
   `hLem41` and `htrans`.
 
 ## The dimension restriction
@@ -88,7 +88,7 @@ docstring of `ArlibCommunity.Foundations.Convex.Localization.Analysis.Localizati
 `n ≥ 2` is inherited from `ArlibCommunity.Foundations.Convex.exists_flat_cut_chain_collinear_compact_ge`, whose bisection
 scheme cuts with a pencil of hyperplanes through a codimension-two flat.  Nothing below is stated
 for `n = 1`; the consumer's `1 ≤ n` becomes `2 ≤ n` in
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer`, and that is the only change to its statement.
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_transfer`, and that is the only change to its statement.
 -/
 
 open MeasureTheory Set Filter
@@ -555,7 +555,7 @@ variable {n : ℕ}
 /-- **The Localization Lemma of Kannan–Lovász–Simonovits, one equality and one inequality, with
 the needle inside the body.**
 
-This is the `hloc` binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer_of_localization`, copied
+This is the `hloc` binder of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_transfer_of_localization`, copied
 clause for clause, for a compact convex body of dimension `n ≥ 2`: for continuous `g₁, g₂` with
 `∫_K g₁ = 0` and `0 < ∫_K g₂` there are a point `p`, a direction `e`, an interval `[α, β]` whose
 needle `needleMap p e '' [α,β]` lies **in `K`**, and a nonnegative log-concave profile `D` on

@@ -59,7 +59,7 @@ theorem acceptance_floor_of_cv_four_cv18 (hn : 2 ≤ n) {σ δ R : ℝ}
 This strengthens the previously available radius hypothesis from
 `R ≤ 2 * sigma * sqrt n` to the paper's `R ≤ 4 * sigma * sqrt n`, with
 the same conductance constant. -/
-theorem conductance_speedyMetropolisGaussian_ge_phaseRadius_cv18
+theorem globalConductance_speedyMetropolisGaussian_ge_phaseRadius_cv18
     (hn : 21 ≤ n) {σ δ R : ℝ}
     (hσ : 0 < σ) (hδ : 0 < δ)
     (hδσ : δ ≤ σ / (8 * Real.sqrt n))
@@ -68,8 +68,8 @@ theorem conductance_speedyMetropolisGaussian_ge_phaseRadius_cv18
     (hR : 0 ≤ R) (hKR : ∀ x ∈ K, ‖x‖ ≤ R)
     (hRσ : R ≤ 4 * σ * Real.sqrt n) :
     ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n)) ≤
-      conductance (speedyMetropolisGaussian K δ (σ ^ 2))
-        (ellGaussianProb K δ (σ ^ 2)) := by
+      globalConductance (ellGaussianProb K δ (σ ^ 2))
+        (speedyMetropolisGaussian K δ (σ ^ 2)) := by
   have hn2 : 2 ≤ n := by omega
   have hs : (0 : ℝ) < σ ^ 2 := by positivity
   have hKcb : K ⊆ Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) R := by
@@ -78,7 +78,7 @@ theorem conductance_speedyMetropolisGaussian_ge_phaseRadius_cv18
   have hKb : Bornology.IsBounded K := Metric.isBounded_closedBall.subset hKcb
   have hKtop : volume K ≠ ⊤ :=
     ne_of_lt (lt_of_le_of_lt (measure_mono hKcb) measure_closedBall_lt_top)
-  exact conductance_speedyGaussian_ge hn2 hσ hδ hδσ
+  exact globalConductance_speedyGaussian_ge hn2 hσ hδ hδσ
     (fun x => Set.indicator_nonneg
       (fun y _ => mul_nonneg ENNReal.toReal_nonneg
         (gaussianWeightReal_pos _ y).le) x)
@@ -127,10 +127,10 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_phaseRadius_cv18
     exists_smallSet_of_absolutelyContinuous (n := n) (by omega)
       (ellGaussianProb K δ (σ ^ 2))
       (ellGaussianProb_absolutelyContinuous K δ (σ ^ 2))
-  exact mixesWithin_lazy_of_conductance_sqrt (by omega) hσ hδ hδσ
+  exact mixesWithin_lazy_of_globalConductance_sqrt (by omega) hσ hδ hδσ
     (isReversible_speedyMetropolisGaussian_prob hK δ (σ ^ 2))
     ⟨S0, hS0m, hS0pos, hS0half⟩ hM hwarm heps0 heps1
-    (conductance_speedyMetropolisGaussian_ge_phaseRadius_cv18
+    (globalConductance_speedyMetropolisGaussian_ge_phaseRadius_cv18
       hn hσ hδ hδσ hK hKc hK0 hR hKR hRσ) ht
 
 end ArlibCommunity.Algorithms.CV18

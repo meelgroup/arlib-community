@@ -511,7 +511,7 @@ end Chord
 
 /-! ### The `htrans` binder, discharged
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer_of_localization`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_transfer_of_localization`
 (`ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/IsoConcaveWeight.lean`) carries three binders.  The statement below is the
 second of them, `htrans`, **copied verbatim** from that declaration and proved. -/
 

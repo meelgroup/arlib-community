@@ -118,13 +118,13 @@ date** (corrected 2026-08-11); it misled at least one reader into believing the 
 no conductance bound at all.  Two now exist, and the split mirrors
 `BallWalkConductance` (exponential) versus `SpeedyConductanceSharp` (sharp):
 
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_ge`
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_ge`
   (`MetropolisConductance.lean`) — unconditional on convex bodies, but its acceptance floor
   is the density *sandwich* `α = e^{-R²/(2s)}`, which at Cousins–Vempala parameters is
   `e^{-n/2}`: **exponentially small**.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge`
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_ge`
   (`MetropolisConductanceSharp.lean`) — routed through
-  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`, with acceptance floor
+  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`, with acceptance floor
   `a = e^{-(2Rδ+δ²)/(2s)}`, a **constant** in that regime.  It carries `thm:iso` as a
   binder, needs a radius bound `∀ x ∈ K, ‖x‖ ≤ R` that the ball-walk theorems do not, and
   lands at `Ω(δ·log 2/(σ·n))` rather than `Ω(δ·log 2/(σ·√n))`.
@@ -412,9 +412,9 @@ is symmetric. -/
 theorem flow_metropolisGaussian {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
     (δ s : ℝ) {S T : Set (EuclideanSpace ℝ (Fin n))} (hS : MeasurableSet S)
     (hT : MeasurableSet T) :
-    flow (metropolisGaussian K δ s)
-        (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
-          (gaussianWeight s)).restrict K) S T
+    flow (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
+          (gaussianWeight s)).restrict K)
+        (metropolisGaussian K δ s) S T
       = (volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) δ))⁻¹ *
             (∫⁻ x in S ∩ K, ∫⁻ y in T ∩ K,
               gaussianWeight s x * metropolisDensity s δ x y)
@@ -464,10 +464,11 @@ The proof is the symmetry of the two terms of `flow_metropolisGaussian`.  No con
 `K`, no positivity of `δ` or of `s`, and no bound relating `δ` to `K` is required. -/
 theorem isReversible_metropolisGaussian_restrict {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) (δ s : ℝ) :
-    IsReversible (metropolisGaussian K δ s)
+    Kernel.IsReversible (metropolisGaussian K δ s)
       (((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
         (gaussianWeight s)).restrict K) := by
   intro S T hS hT
+  show flow _ _ S T = flow _ _ T S
   have h2 : T ∩ (S ∩ K) = S ∩ (T ∩ K) := by
     ext y
     simp only [Set.mem_inter_iff]
@@ -477,7 +478,7 @@ theorem isReversible_metropolisGaussian_restrict {K : Set (EuclideanSpace ℝ (F
 
 /-- **The Metropolis walk is reversible for the Gaussian-restricted probability measure on
 `K`** — the target `∝ 1_K(x)·e^{-‖x‖²/(2s)}` of the Cousins-Vempala algorithm.  Immediate
-from `isReversible_metropolisGaussian_restrict` and `IsReversible.smul`, since
+from `isReversible_metropolisGaussian_restrict` and `isReversible_smul`, since
 `ArlibCommunity.Foundations.Convex.uniformOn μ K = (μ K)⁻¹ • μ.restrict K`.
 
 Note the statement is *true but empty* when `(volume.withDensity g) K` is `0` or `⊤`,
@@ -486,14 +487,14 @@ where `uniformOn` is the zero measure;
 witness. -/
 theorem isReversible_metropolisGaussian {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) (δ s : ℝ) :
-    IsReversible (metropolisGaussian K δ s)
+    Kernel.IsReversible (metropolisGaussian K δ s)
       (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
         (gaussianWeight s)) K) :=
-  (isReversible_metropolisGaussian_restrict hK δ s).smul _
+  isReversible_smul (isReversible_metropolisGaussian_restrict hK δ s) _
 
 /-- **The Gaussian-restricted measure on `K` is invariant for the Metropolis walk.**
 Detailed balance (`isReversible_metropolisGaussian`) plus the landed
-`IsReversible.invariant`.  This is the stationarity claim that every mixing statement
+`Kernel.IsReversible.invariant`.  This is the stationarity claim that every mixing statement
 about the Gaussian-cooling chain presupposes, and it is the object
 `ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean` records as missing. -/
 theorem invariant_metropolisGaussian {K : Set (EuclideanSpace ℝ (Fin n))}
@@ -647,7 +648,7 @@ theorem exists_metropolisGaussian_witness [NeZero n] {δ s : ℝ} (hδ : 0 < δ)
         IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn
           ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity (gaussianWeight s)) K) ∧
         IsMarkovKernel (metropolisGaussian K δ s) ∧
-        IsReversible (metropolisGaussian K δ s) (ArlibCommunity.Foundations.Convex.uniformOn
+        Kernel.IsReversible (metropolisGaussian K δ s) (ArlibCommunity.Foundations.Convex.uniformOn
           ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity (gaussianWeight s)) K) ∧
         Kernel.Invariant (metropolisGaussian K δ s) (ArlibCommunity.Foundations.Convex.uniformOn
           ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity (gaussianWeight s)) K) ∧

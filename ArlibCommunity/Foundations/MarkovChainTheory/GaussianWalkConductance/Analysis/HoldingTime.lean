@@ -43,17 +43,17 @@ second as `ellMeasure_withDensity_inv_ell`.
 * `ArlibCommunity.Foundations.MarkovChainTheory.flow_ballWalk_eq_flow_speedyWalk` — for **disjoint** `S` and `T` the
   two chains have the *same* ergodic flow, each against its own unnormalised stationary
   measure:
-  `flow (ballWalk K δ) (volume.restrict K) S T = flow (speedyWalk K δ) (ellMeasure K δ) S T`.
+  `flow (volume.restrict K) (ballWalk K δ) S T = flow (ellMeasure K δ) (speedyWalk K δ) S T`.
   Unconditional (no positivity, no finiteness, no convexity).  This is the Dirichlet-form
   comparison in both directions with constant exactly `1`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductanceOn_ballWalk_mul_volume_inter` and its normalised twin
-  `ArlibCommunity.Foundations.MarkovChainTheory.conductanceOn_ballWalk_uniformOn_mul_volume_inter` — **the exact
+* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_mul_volume_inter` and its normalised twin
+  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_uniformOn_mul_volume_inter` — **the exact
   conductance relation**
   `Φ_ball(A) · vol(A ∩ K) = Φ_speedy(A) · ellMeasure(A)`,
   stated multiplicatively so that no `ℝ≥0∞` division appears.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductanceOn_ballWalk_le_conductanceOn_speedyWalk` — the inequality
+* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_le_conductance_speedyWalk` — the inequality
   that follows, `Φ_ball(A) ≤ Φ_speedy(A)`, because `ellMeasure(A) ≤ vol(A ∩ K)`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.le_conductanceOn_ballWalk_of_mul_le` — the converse *with its
+* `ArlibCommunity.Foundations.MarkovChainTheory.le_conductance_ballWalk_of_mul_le` — the converse *with its
   hypothesis made explicit*: `c · vol(A ∩ K) ≤ ellMeasure(A)` gives
   `c · Φ_speedy(A) ≤ Φ_ball(A)`.  See "What is not proved" below for why that hypothesis is
   not available for the sets that matter.
@@ -85,13 +85,13 @@ second as `ellMeasure_withDensity_inv_ell`.
 This is the honest scope statement; nothing below claims more.
 
 1. **No lower bound on the ball walk's conductance is proved, and none follows from the
-   speedy walk's.**  `conductanceOn_ballWalk_mul_volume_inter` is an *equality*, and it makes
+   speedy walk's.**  `conductance_ballWalk_mul_volume_inter` is an *equality*, and it makes
    the obstruction exact: `Φ_ball(A) = Φ_speedy(A) · ellMeasure(A)/vol(A ∩ K)`, so a lower
    bound on `Φ_ball` needs a lower bound on the *average of `ell` over `A`*, for every
    admissible `A`.  `IsSmooth K δ s` bounds that average over `A = K` only, and a set `A`
    hugging the boundary of `K` has a much smaller average.  The uniform-in-`x` route is
    worse: the only proved pointwise bound for a convex body is `ell ≥ 2⁻ⁿ`
-   (`ArlibCommunity.Foundations.MarkovChainTheory.ofReal_le_ell_unitBall` and `conductance_ballWalk_ge` in
+   (`ArlibCommunity.Foundations.MarkovChainTheory.ofReal_le_ell_unitBall` and `globalConductance_ballWalk_ge` in
    `BallWalkConductance.lean`), which certifies an exponential step count.  This is not a gap
    in the proof: the ball walk's conductance really is smaller than the speedy walk's, by the
    exact factor computed here.
@@ -132,7 +132,7 @@ This is the honest scope statement; nothing below claims more.
 Everything is stated for the *unnormalised* pairs `(ballWalk, volume.restrict K)` and
 `(speedyWalk, ellMeasure K δ)` first, because in that form the flow identity is
 unconditional and division-free; the normalised pairs `(ballWalk, uniformOn volume K)` and
-`(speedyWalk, ellProb K δ)` are recovered through `conductanceOn_smul`, which costs the
+`(speedyWalk, ellProb K δ)` are recovered through `conductance_smul`, which costs the
 guards `0 < vol(K) < ⊤` and `0 < ∫_K ell`.
 
 No `def`, `structure` or named `Prop` is introduced by this file.  Every hypothesis is an
@@ -152,7 +152,7 @@ variable {n : ℕ}
 
 /-! ## 0. A conductance identity valid at zero measure
 
-`Conductance.flow_eq_conductanceOn_mul` needs `0 < pi S`.  The product form survives the
+`Conductance.flow_eq_conductance_mul` needs `0 < pi S`.  The product form survives the
 degenerate case, because `ℝ≥0∞` multiplication kills the zero factor and
 `Conductance.flow_le` kills the flow; that is what lets the comparison below be stated
 without a positivity guard on `A`. -/
@@ -174,14 +174,14 @@ variable {Om : Type*} [MeasurableSpace Om]
 
 Assumes only that `P` is a Markov kernel and that `pi S` is finite.  At `pi S = 0` both
 sides are `0`: the left because `a * 0 = 0` in `ℝ≥0∞`, the right because the flow out of `S`
-is at most `pi S` (`flow_le`).  This is `flow_eq_conductanceOn_mul` with its positivity
+is at most `pi S` (`flow_le`).  This is `flow_eq_conductance_mul` with its positivity
 hypothesis removed. -/
-theorem conductanceOn_mul_measure (P : Kernel Om Om) [IsMarkovKernel P] (pi : Measure Om)
-    {S : Set Om} (hfin : pi S ≠ ⊤) : conductanceOn P pi S * pi S = flow P pi S Sᶜ := by
+theorem conductance_mul_measure (pi : Measure Om) (P : Kernel Om Om) [IsMarkovKernel P] 
+    {S : Set Om} (hfin : pi S ≠ ⊤) : conductance pi P S * pi S = flow pi P S Sᶜ := by
   rcases eq_or_ne (pi S) 0 with h0 | h0
   · rw [h0, mul_zero]
-    exact (le_antisymm ((flow_le P pi S Sᶜ).trans h0.le) (zero_le)).symm
-  · exact flow_eq_conductanceOn_mul P pi (pos_iff_ne_zero.2 h0) hfin
+    exact (le_antisymm ((flow_le pi P S Sᶜ).trans h0.le) (zero_le)).symm
+  · exact flow_eq_conductance_mul pi P (pos_iff_ne_zero.2 h0) hfin
 
 end General
 
@@ -277,8 +277,8 @@ constant is `1`. -/
 theorem flow_ballWalk_eq_flow_speedyWalk {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) (δ : ℝ) {S T : Set (EuclideanSpace ℝ (Fin n))}
     (hS : MeasurableSet S) (hT : MeasurableSet T) (hd : Disjoint S T) :
-    flow (ballWalk K δ) (volume.restrict K) S T
-      = flow (speedyWalk K δ) (ellMeasure K δ) S T := by
+    flow (volume.restrict K) (ballWalk K δ) S T
+      = flow (ellMeasure K δ) (speedyWalk K δ) S T := by
   have hempty : T ∩ (S ∩ K) = ∅ := by
     refine Set.eq_empty_iff_forall_notMem.2 fun y hy => ?_
     exact Set.disjoint_left.1 hd hy.2.1 hy.1
@@ -294,28 +294,28 @@ Assumes `MeasurableSet K` and `MeasurableSet S`.  Specialisation of
 theorem flow_ballWalk_compl_eq_flow_speedyWalk {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) (δ : ℝ) {S : Set (EuclideanSpace ℝ (Fin n))}
     (hS : MeasurableSet S) :
-    flow (ballWalk K δ) (volume.restrict K) S Sᶜ
-      = flow (speedyWalk K δ) (ellMeasure K δ) S Sᶜ :=
+    flow (volume.restrict K) (ballWalk K δ) S Sᶜ
+      = flow (ellMeasure K δ) (speedyWalk K δ) S Sᶜ :=
   flow_ballWalk_eq_flow_speedyWalk hK δ hS hS.compl disjoint_compl_right
 
 /-- **The exact conductance relation**, unnormalised form:
 
     Φ_ball(A) · vol(A ∩ K)  =  Φ_speedy(A) · ellMeasure(A),
 
-where `Φ_ball` is `conductanceOn (ballWalk K δ) (volume.restrict K)` and `Φ_speedy` is
-`conductanceOn (speedyWalk K δ) (ellMeasure K δ)`.
+where `Φ_ball` is `conductance (volume.restrict K) (ballWalk K δ)` and `Φ_speedy` is
+`conductance (ellMeasure K δ) (speedyWalk K δ)`.
 
 Assumes `MeasurableSet K`, `MeasurableSet A` and `vol K ≠ ⊤`; in particular **no positivity
 hypothesis on `A`** — at `vol(A ∩ K) = 0` both sides are `0`
-(`conductanceOn_mul_measure`).
+(`conductance_mul_measure`).
 
 The product form is deliberate: it carries the same information as the quotient
 `Φ_ball(A) = Φ_speedy(A) · ellMeasure(A)/vol(A ∩ K)` without any `ℝ≥0∞` division. -/
-theorem conductanceOn_ballWalk_mul_volume_inter {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem conductance_ballWalk_mul_volume_inter {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) (δ : ℝ) {A : Set (EuclideanSpace ℝ (Fin n))} (hA : MeasurableSet A)
     (hKtop : volume K ≠ ⊤) :
-    conductanceOn (ballWalk K δ) (volume.restrict K) A * volume (A ∩ K)
-      = conductanceOn (speedyWalk K δ) (ellMeasure K δ) A * ellMeasure K δ A := by
+    conductance (volume.restrict K) (ballWalk K δ) A * volume (A ∩ K)
+      = conductance (ellMeasure K δ) (speedyWalk K δ) A * ellMeasure K δ A := by
   have hb : (volume.restrict K) A = volume (A ∩ K) := Measure.restrict_apply hA
   have hbtop : (volume.restrict K) A ≠ ⊤ := by
     rw [hb]
@@ -324,31 +324,31 @@ theorem conductanceOn_ballWalk_mul_volume_inter {K : Set (EuclideanSpace ℝ (Fi
     refine ne_top_of_le_ne_top hbtop ?_
     rw [hb]
     exact ellMeasure_le_volume_inter K δ hA
-  rw [← hb, conductanceOn_mul_measure _ _ hbtop, conductanceOn_mul_measure _ _ hstop,
+  rw [← hb, conductance_mul_measure _ _ hbtop, conductance_mul_measure _ _ hstop,
     flow_ballWalk_compl_eq_flow_speedyWalk hK δ hA]
 
 /-- **The exact conductance relation**, for the two *probability* measures:
 
     Φ_ball(A) · vol(A ∩ K)  =  Φ_speedy(A) · ellMeasure(A),
 
-with `Φ_ball = conductanceOn (ballWalk K δ) (ArlibCommunity.Foundations.Convex.uniformOn volume K)` and
-`Φ_speedy = conductanceOn (speedyWalk K δ) (ellProb K δ)`.
+with `Φ_ball = conductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (ballWalk K δ)` and
+`Φ_speedy = conductance (ellProb K δ) (speedyWalk K δ)`.
 
 Assumes `MeasurableSet K`, `MeasurableSet A`, `0 < vol K < ⊤` and `∫_K ell ≠ 0`.  The four
 guards are exactly what makes the two normalising constants positive and finite, so that
-`conductanceOn_smul` transports `conductanceOn_ballWalk_mul_volume_inter` unchanged; they are
+`conductance_smul` transports `conductance_ballWalk_mul_volume_inter` unchanged; they are
 discharged for the unit ball in `exists_holdingTime_witness`. -/
-theorem conductanceOn_ballWalk_uniformOn_mul_volume_inter {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem conductance_ballWalk_uniformOn_mul_volume_inter {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) (δ : ℝ) {A : Set (EuclideanSpace ℝ (Fin n))} (hA : MeasurableSet A)
     (hK0 : volume K ≠ 0) (hKtop : volume K ≠ ⊤) (hL0 : ellMeasure K δ Set.univ ≠ 0) :
-    conductanceOn (ballWalk K δ) (ArlibCommunity.Foundations.Convex.uniformOn volume K) A * volume (A ∩ K)
-      = conductanceOn (speedyWalk K δ) (ellProb K δ) A * ellMeasure K δ A := by
+    conductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (ballWalk K δ) A * volume (A ∩ K)
+      = conductance (ellProb K δ) (speedyWalk K δ) A * ellMeasure K δ A := by
   have hLtop : ellMeasure K δ Set.univ ≠ ⊤ :=
     ne_top_of_le_ne_top hKtop (ellMeasure_univ_le K δ)
   rw [ArlibCommunity.Foundations.Convex.uniformOn_def,
-    conductanceOn_smul _ _ (ENNReal.inv_ne_zero.2 hKtop) (ENNReal.inv_ne_top.2 hK0),
-    ellProb, conductanceOn_smul _ _ (ENNReal.inv_ne_zero.2 hLtop) (ENNReal.inv_ne_top.2 hL0)]
-  exact conductanceOn_ballWalk_mul_volume_inter hK δ hA hKtop
+    conductance_smul _ _ (ENNReal.inv_ne_zero.2 hKtop) (ENNReal.inv_ne_top.2 hK0),
+    ellProb, conductance_smul _ _ (ENNReal.inv_ne_zero.2 hLtop) (ENNReal.inv_ne_top.2 hL0)]
+  exact conductance_ballWalk_mul_volume_inter hK δ hA hKtop
 
 /-- **The ball walk's conductance is at most the speedy walk's, set by set**:
 
@@ -360,19 +360,19 @@ Immediate from the exact relation and `ellMeasure(A) ≤ vol(A ∩ K)` (`ell ≤
 direction: **this inequality is useless for transferring a conductance lower bound from the
 speedy walk to the ball walk**, and it is not an artefact of the proof — by the exact
 relation the loss is precisely the average of `ell` over `A`, and that average genuinely
-tends to `0` for sets hugging the boundary of `K`.  `le_conductanceOn_ballWalk_of_mul_le` is
+tends to `0` for sets hugging the boundary of `K`.  `le_conductance_ballWalk_of_mul_le` is
 the converse and states the hypothesis one would have to supply. -/
-theorem conductanceOn_ballWalk_le_conductanceOn_speedyWalk
+theorem conductance_ballWalk_le_conductance_speedyWalk
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (δ : ℝ)
     {A : Set (EuclideanSpace ℝ (Fin n))} (hA : MeasurableSet A) (h0 : volume (A ∩ K) ≠ 0)
     (hKtop : volume K ≠ ⊤) :
-    conductanceOn (ballWalk K δ) (volume.restrict K) A
-      ≤ conductanceOn (speedyWalk K δ) (ellMeasure K δ) A := by
+    conductance (volume.restrict K) (ballWalk K δ) A
+      ≤ conductance (ellMeasure K δ) (speedyWalk K δ) A := by
   have htop : volume (A ∩ K) ≠ ⊤ :=
     ne_top_of_le_ne_top hKtop (measure_mono Set.inter_subset_right)
-  have hkey := conductanceOn_ballWalk_mul_volume_inter hK δ hA hKtop
-  have hle : conductanceOn (speedyWalk K δ) (ellMeasure K δ) A * ellMeasure K δ A
-      ≤ conductanceOn (speedyWalk K δ) (ellMeasure K δ) A * volume (A ∩ K) :=
+  have hkey := conductance_ballWalk_mul_volume_inter hK δ hA hKtop
+  have hle : conductance (ellMeasure K δ) (speedyWalk K δ) A * ellMeasure K δ A
+      ≤ conductance (ellMeasure K δ) (speedyWalk K δ) A * volume (A ∩ K) :=
     mul_le_mul_right (ellMeasure_le_volume_inter K δ hA) _
   exact le_of_mul_le_mul_right_of_ne (hkey.trans_le hle) h0 htop
 
@@ -386,25 +386,25 @@ Assumes `MeasurableSet K`, `MeasurableSet A`, `vol K ≠ ⊤`, `vol(A ∩ K) ≠
 bound `c * vol(A ∩ K) ≤ ellMeasure K δ A`.
 
 This lemma is stated to make the obstruction precise, not because the hypothesis is
-available: to bound `conductance (ballWalk K δ) (uniformOn volume K)` one needs it for
+available: to bound `globalConductance (uniformOn volume K) (ballWalk K δ)` one needs it for
 *every* admissible `A`, and `IsSmooth K δ s` supplies it only for `A = K`.  Nothing in this
 library proves it for all `A` with a `c` better than the exponentially small `2⁻ⁿ` of
 `BallWalkConductance.lean`. -/
-theorem le_conductanceOn_ballWalk_of_mul_le {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem le_conductance_ballWalk_of_mul_le {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) (δ : ℝ) {A : Set (EuclideanSpace ℝ (Fin n))} (hA : MeasurableSet A)
     {c : ℝ≥0∞} (hc : c * volume (A ∩ K) ≤ ellMeasure K δ A) (hKtop : volume K ≠ ⊤)
     (h0 : volume (A ∩ K) ≠ 0) :
-    c * conductanceOn (speedyWalk K δ) (ellMeasure K δ) A
-      ≤ conductanceOn (ballWalk K δ) (volume.restrict K) A := by
+    c * conductance (ellMeasure K δ) (speedyWalk K δ) A
+      ≤ conductance (volume.restrict K) (ballWalk K δ) A := by
   have htop : volume (A ∩ K) ≠ ⊤ :=
     ne_top_of_le_ne_top hKtop (measure_mono Set.inter_subset_right)
-  have hkey := conductanceOn_ballWalk_mul_volume_inter hK δ hA hKtop
+  have hkey := conductance_ballWalk_mul_volume_inter hK δ hA hKtop
   refine le_of_mul_le_mul_right_of_ne ?_ h0 htop
-  calc c * conductanceOn (speedyWalk K δ) (ellMeasure K δ) A * volume (A ∩ K)
-      = conductanceOn (speedyWalk K δ) (ellMeasure K δ) A * (c * volume (A ∩ K)) := by ring
-    _ ≤ conductanceOn (speedyWalk K δ) (ellMeasure K δ) A * ellMeasure K δ A :=
+  calc c * conductance (ellMeasure K δ) (speedyWalk K δ) A * volume (A ∩ K)
+      = conductance (ellMeasure K δ) (speedyWalk K δ) A * (c * volume (A ∩ K)) := by ring
+    _ ≤ conductance (ellMeasure K δ) (speedyWalk K δ) A * ellMeasure K δ A :=
         mul_le_mul_right hc _
-    _ = conductanceOn (ballWalk K δ) (volume.restrict K) A * volume (A ∩ K) := hkey.symm
+    _ = conductance (volume.restrict K) (ballWalk K δ) A * volume (A ∩ K) := hkey.symm
 
 /-! ## 3. The holding-time identity
 
@@ -582,7 +582,7 @@ half-ball — such that
 * `ArlibCommunity.Foundations.Convex.uniformOn volume K` and `ellProb K δ` are genuine probability measures, not the zero
   measure;
 * the total `ell`-weight `ellMeasure K δ univ` is non-zero, which is the guard
-  `conductanceOn_ballWalk_uniformOn_mul_volume_inter` needs;
+  `conductance_ballWalk_uniformOn_mul_volume_inter` needs;
 * both `vol(A ∩ K)` and `ellMeasure K δ A` are **strictly positive and finite**, so the exact
   conductance relation is not the identity `0 = 0`;
 * the holding-time identity `(ellMeasure K δ).withDensity (ell K δ)⁻¹ = volume.restrict K`
@@ -590,7 +590,7 @@ half-ball — such that
 * the exact conductance relation holds for this `K` and this `A`.
 
 What this witness does **not** claim: that either conductance is positive.  A positive lower
-bound on `conductanceOn (speedyWalk K δ) (ellProb K δ) A` is `conductance_speedyWalk_ge`
+bound on `conductance (ellProb K δ) (speedyWalk K δ) A` is `globalConductance_speedyWalk_ge`
 territory and needs an isoperimetric input; nothing in this file provides one. -/
 theorem exists_holdingTime_witness {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1 / 2) :
     ∃ K A : Set (EuclideanSpace ℝ (Fin n)),
@@ -602,15 +602,15 @@ theorem exists_holdingTime_witness {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1 / 
         0 < volume (A ∩ K) ∧ volume (A ∩ K) ≠ ⊤ ∧
         0 < ellMeasure K δ A ∧ ellMeasure K δ A ≠ ⊤ ∧
         (ellMeasure K δ).withDensity (fun x => (ell K δ x)⁻¹) = volume.restrict K ∧
-        conductanceOn (ballWalk K δ) (ArlibCommunity.Foundations.Convex.uniformOn volume K) A * volume (A ∩ K)
-          = conductanceOn (speedyWalk K δ) (ellProb K δ) A * ellMeasure K δ A := by
+        conductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (ballWalk K δ) A * volume (A ∩ K)
+          = conductance (ellProb K δ) (speedyWalk K δ) A * ellMeasure K δ A := by
   refine ⟨Metric.ball 0 1, Metric.ball 0 (1 / 2), measurableSet_ball, measurableSet_ball,
     volume_unitBall_ne_zero, volume_unitBall_ne_top, isProbabilityMeasure_uniformOn_unitBall,
     isProbabilityMeasure_ellProb_of_volume measurableSet_ball volume_unitBall_ne_zero
       volume_unitBall_ne_top hδ,
     ellMeasure_univ_ne_zero measurableSet_ball volume_unitBall_ne_zero hδ, ?_, ?_, ?_, ?_,
     ellMeasure_withDensity_inv_ell measurableSet_ball hδ,
-    conductanceOn_ballWalk_uniformOn_mul_volume_inter measurableSet_ball δ measurableSet_ball
+    conductance_ballWalk_uniformOn_mul_volume_inter measurableSet_ball δ measurableSet_ball
       volume_unitBall_ne_zero volume_unitBall_ne_top
       (ellMeasure_univ_ne_zero measurableSet_ball volume_unitBall_ne_zero hδ)⟩
   · rw [Set.inter_eq_self_of_subset_left (Metric.ball_subset_ball (by norm_num : (1:ℝ)/2 ≤ 1))]
@@ -629,17 +629,17 @@ Every theorem of this file, re-checked at elaboration time.  Each must print exa
 file is not finished. -/
 
 #print axioms le_of_mul_le_mul_right_of_ne
-#print axioms conductanceOn_mul_measure
+#print axioms conductance_mul_measure
 #print axioms ballWalk_apply_eq_ell_mul_speedyWalk_add
 #print axioms ballWalk_eq_ell_smul_speedyWalk_add
 #print axioms ballWalk_apply_eq_ell_mul_speedyWalk
 #print axioms ballWalk_apply_compl_eq_ell_mul_speedyWalk
 #print axioms flow_ballWalk_eq_flow_speedyWalk
 #print axioms flow_ballWalk_compl_eq_flow_speedyWalk
-#print axioms conductanceOn_ballWalk_mul_volume_inter
-#print axioms conductanceOn_ballWalk_uniformOn_mul_volume_inter
-#print axioms conductanceOn_ballWalk_le_conductanceOn_speedyWalk
-#print axioms le_conductanceOn_ballWalk_of_mul_le
+#print axioms conductance_ballWalk_mul_volume_inter
+#print axioms conductance_ballWalk_uniformOn_mul_volume_inter
+#print axioms conductance_ballWalk_le_conductance_speedyWalk
+#print axioms le_conductance_ballWalk_of_mul_le
 #print axioms volume_inter_stuckPoints_eq_zero
 #print axioms ae_restrict_ell_ne_zero
 #print axioms ellMeasure_withDensity_inv_ell

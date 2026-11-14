@@ -15,7 +15,7 @@ three bricks of Lee's mollified route (*Optimization book*, §10.6, `thm:har_wei
 
 ## The refutation
 
-`ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` and `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso`
+`ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` and `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_crossRatioIso`
 (`ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/CrossRatioIsoBridge.lean`) carry a binder `hthm21` quantifying over
 **arbitrary** measurable `U₁, U₂` — with no clause placing them inside `K`.
 
@@ -32,7 +32,7 @@ at all (`ArlibCommunity.Foundations.Convex.chord_bound_of_notMem`).  The witness
 `A = 1/2` — and the conclusion would assert `vol K / 6 ≤ vol K / 10`.
 
 `K` here is convex, closed, bounded, measurable and contains a unit ball, so it meets every
-structural hypothesis of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso`: the refutation lands at a
+structural hypothesis of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_crossRatioIso`: the refutation lands at a
 **legitimate call site**, not on a degenerate body.
 
 `ArlibCommunity.Foundations.Convex.false_of_crossRatioIso_binder` certifies that the refuted proposition really is that
@@ -50,13 +50,13 @@ binder.
 
 * `ArlibCommunity.Foundations.Convex.hIso_measurable_of_crossRatioIso_sub` — `ArlibCommunity.Foundations.Convex.hIso_measurable_of_crossRatioIso` rerun on `hthm21sub`.
 * `ArlibCommunity.Foundations.Convex.hIso_book` — **deliverable 2**: the `hIso` binder of
-  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`, verbatim, from `hthm21sub`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_book` — **deliverable 3**: Theorem 4.2 with `hIso` discharged,
+  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`, verbatim, from `hthm21sub`.
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_book` — **deliverable 3**: Theorem 4.2 with `hIso` discharged,
   leaving `hLem41` and `hthm21sub`.
 
 The proofs are the originals with the two subset arguments passed through; the copying is forced
 by the one-agent-per-file discipline.  **`ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` and
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso` should be treated as dead**: their binder is refuted, so
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_crossRatioIso` should be treated as dead**: their binder is refuted, so
 nothing can ever be composed through them.
 
 ## The route's bricks
@@ -208,11 +208,11 @@ end Outside
 
 /-! ### The refutation of the ambient statement `hthm21`
 
-`ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` and `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso`
+`ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` and `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_crossRatioIso`
 (`ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/CrossRatioIsoBridge.lean`) carry a binder `hthm21` that quantifies over
 **arbitrary** measurable `U₁, U₂`, with no clause placing them inside `K`.  The theorem below
 refutes that binder at `n = 1`, `K = closedBall 0 1` — a body meeting every structural
-hypothesis of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso` (convex, closed, bounded, measurable,
+hypothesis of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_crossRatioIso` (convex, closed, bounded, measurable,
 containing a unit ball), so the refutation lands at a *legitimate call site* and is not an
 artefact of a degenerate `K`.
 
@@ -241,7 +241,7 @@ private theorem norm_farPoint : ‖farPoint‖ = 10 := by
   rw [farPoint, PiLp.norm_single, Real.norm_eq_abs]
   norm_num
 
-/-- **The ambient statement `hthm21` of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso` is false.**
+/-- **The ambient statement `hthm21` of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_crossRatioIso` is false.**
 
 Stated verbatim — the binder's own hypothesis order and shape — at `n = 1` and
 `K = Metric.closedBall 0 1`.  See the section docstring for what is and is not refuted; the
@@ -337,7 +337,7 @@ order, implicit/explicit status, the shape of any clause — the first line woul
 and had it drifted from `ArlibCommunity.Foundations.Convex.not_crossRatioIso_printed` the second would not.
 
 Conclusion: the binder is **unprovable**, so `ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` and
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso`, which carries the same binder, can never be run to
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_crossRatioIso`, which carries the same binder, can never be run to
 completion.  (`hK0` and `hKtop` need not be true for this; they are binders of
 `ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` and only their presence matters.) -/
 theorem false_of_crossRatioIso_binder
@@ -367,7 +367,7 @@ end Refutation
 /-! ### The corrected binder, and the bridge rebuilt on it
 
 `ArlibCommunity.Foundations.Convex.not_crossRatioIso_printed` leaves `ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` and
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso` with a hypothesis nobody can supply.  This section
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_crossRatioIso` with a hypothesis nobody can supply.  This section
 repairs the chain by rerunning it against `hthm21sub` — the same statement with `U₁ ⊆ K` and
 `U₂ ⊆ K` inserted after the measurability clauses.
 
@@ -491,7 +491,7 @@ theorem hIso_measurable_of_crossRatioIso_sub {K : Set (EuclideanSpace ℝ (Fin n
     _ = volume ((K \ T₁) \ T₂) * (volume K)⁻¹ := by
         rw [ENNReal.mul_inv_cancel hK0 hKtop, mul_one]
 
-/-- **The `hIso` binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`, from the corrected
+/-- **The `hIso` binder of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`, from the corrected
 Theorem 2.1 binder.**
 
 `ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` with `hthm21` replaced by `hthm21sub`.  The proof is the original: the

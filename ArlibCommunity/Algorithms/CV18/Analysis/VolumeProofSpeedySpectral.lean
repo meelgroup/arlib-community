@@ -18,7 +18,7 @@ theorem accuracyPhase_speedy_spectralFacts
     let delta := figureOneProposalRadius q sigma2
     let P := lazy (speedyMetropolisGaussian K delta sigma2)
     let pi := ellGaussianProb K delta sigma2
-    IsReversible P pi ∧ HasNonnegSpectrum P pi ∧
+    ProbabilityTheory.Kernel.IsReversible P pi ∧ HasNonnegSpectrum P pi ∧
       (rayleighSet P pi).Nonempty := by
   dsimp only
   let K := accuracyPhaseTruncatedBody q I sigma2
@@ -39,11 +39,11 @@ theorem accuracyPhase_speedy_spectralFacts
       (accuracyPhaseTruncatedBody_volume_ne_top q I sigma2) delta hsigma2
   let _ : IsProbabilityMeasure pi :=
     isProbabilityMeasure_ellGaussianProb hmass0 hmasstop
-  have hbase : IsReversible (speedyMetropolisGaussian K delta sigma2) pi := by
+  have hbase : ProbabilityTheory.Kernel.IsReversible (speedyMetropolisGaussian K delta sigma2) pi := by
     dsimp [pi, K, delta]
     exact isReversible_speedyMetropolisGaussian_prob
       (accuracyPhaseTruncatedBody_measurable q I sigma2) _ _
-  have hrev : IsReversible (lazy (speedyMetropolisGaussian K delta sigma2)) pi :=
+  have hrev : ProbabilityTheory.Kernel.IsReversible (lazy (speedyMetropolisGaussian K delta sigma2)) pi :=
     isReversible_lazy hbase
   have hpsd : HasNonnegSpectrum
       (lazy (speedyMetropolisGaussian K delta sigma2)) pi :=
@@ -96,8 +96,8 @@ theorem accuracyPhase_speedy_spectralGap_ge
     accuracyPhase_speedy_spectralFacts q I hsigma2
   have hplain : ENNReal.ofReal
         (delta * Real.log 2 / (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ≤
-      conductance (speedyMetropolisGaussian K delta sigma2) pi := by
-    have h := conductance_speedyMetropolisGaussian_ge_radiusStepProduct_cv18
+      globalConductance pi (speedyMetropolisGaussian K delta sigma2) := by
+    have h := globalConductance_speedyMetropolisGaussian_ge_radiusStepProduct_cv18
       (le_trans (by norm_num : 2 ≤ 3) q.dim_ok) hsigma hdelta
       (figureOneProposalRadius_le_sigma_div_eight_sqrt q hsigma2)
       (accuracyPhaseTruncatedBody_measurable q I sigma2)
@@ -110,15 +110,15 @@ theorem accuracyPhase_speedy_spectralGap_ge
     simpa [K, delta, pi, Real.sq_sqrt hsigma2.le] using h
   have hlazy : ENNReal.ofReal
         (delta * Real.log 2 /
-          (1280 * Real.sqrt sigma2 * Real.sqrt q.n)) ≤ conductance P pi := by
-    have hhalf := ofReal_half_le_conductance_lazy hplain
+          (1280 * Real.sqrt sigma2 * Real.sqrt q.n)) ≤ globalConductance pi P := by
+    have hhalf := ofReal_half_le_globalConductance_lazy hplain
     simpa only [P, show
       delta * Real.log 2 / (640 * Real.sqrt sigma2 * Real.sqrt q.n) / 2 =
         delta * Real.log 2 / (1280 * Real.sqrt sigma2 * Real.sqrt q.n) by ring]
       using hhalf
-  have hctop : conductance P pi ≠ ⊤ :=
+  have hctop : globalConductance pi P ≠ ⊤ :=
     ne_top_of_le_ne_top ENNReal.one_ne_top
-      (conductance_le_one P pi (by
+      (globalConductance_le_one pi P (by
         obtain ⟨S, hS, hSpos, hShalf⟩ :=
           exists_smallSet_of_absolutelyContinuous (n := q.n)
             (le_trans (by norm_num : 1 ≤ 3) q.dim_ok) pi
@@ -130,12 +130,12 @@ theorem accuracyPhase_speedy_spectralGap_ge
       (1280 * Real.sqrt sigma2 * Real.sqrt q.n) := by positivity
   have hreal : delta * Real.log 2 /
         (1280 * Real.sqrt sigma2 * Real.sqrt q.n) ≤
-      (conductance P pi).toReal := by
+      (globalConductance pi P).toReal := by
     have := ENNReal.toReal_mono hctop hlazy
     rwa [ENNReal.toReal_ofReal hphi0] at this
   exact (div_le_div_of_nonneg_right
       (sq_le_sq₀ hphi0 ENNReal.toReal_nonneg |>.2 hreal)
       (by norm_num : (0 : ℝ) ≤ 2)).trans
-    (sq_conductance_div_two_le_spectralGap hrev hne)
+    (sq_globalConductance_div_two_le_spectralGap hrev hne)
 
 end ArlibCommunity.Algorithms.CV18

@@ -49,7 +49,7 @@ exhibits a body on which they hold with `Lf = 0`, so the statement is not vacuou
 
 **Scope.**  This is an isoperimetric inequality and nothing else.  It is not a conductance
 bound, not a mixing bound, and not a runtime claim.  It is also **not** by itself the `hiso`
-binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex`: that binder is for the
+binder of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyWalk_ge_of_convex`: that binder is for the
 density of a measure the *speedy walk* is reversible for, and the only such measures in this
 repository are the scalar multiples of `ArlibCommunity.Foundations.MarkovChainTheory.ellMeasure K δ`, whose density is
 `1_K·ℓ` with **no** Gaussian factor.  See the module docstring for what a kernel reversible for
@@ -264,7 +264,7 @@ theorem ellGaussian_isoperimetry_measurable_logTwo_strict_witness (hn : 2 ≤ n)
     exact mul_pos h1 (mul_pos hp1 hp2)
 
 /-- **Cousins–Vempala's `thm:iso` for measurable `S₁, S₂, S₃`, at the indicator density
-`h = 1_K·ℓ·γ`** — the density `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` consumes.
+`h = 1_K·ℓ·γ`** — the density `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` consumes.
 
 Compare `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_measurable_logTwo`
 (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`), which reaches the measurable case by converting the
@@ -428,7 +428,7 @@ which, by an informal argument, admit no witness with non-constant `ℓ` at the 
 for, because the route never converts the density branch into the metric branch.
 
 ⚠ **This is still not the consumer's density.**  `hiso` in
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` is pinned by
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` is pinned by
 `ArlibCommunity.Foundations.MarkovChainTheory.hpi_ellGaussian` to the **indicator** density `1_K·ℓ·γ`, which is
 discontinuous across `∂K` and so fails `hhc`.  Bridging to it needs the mollification
 argument that `ArlibCommunity.Foundations.Convex.gaussianIndicator_isoperimetry_measurable`
@@ -456,7 +456,7 @@ theorem ellGaussian_isoperimetry_measurable_logTwo_uncond (hn : 2 ≤ n) {σ d �
     (ellGaussian_integral_pos (by omega) hδ hσ hKc hKb hK0 hh)
     hsep
 
-/-- **`ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge` with `hiso` discharged.**
+/-- **`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_sqrt_ge` with `hiso` discharged.**
 
 The only hypothesis of that theorem that this repository could not previously supply was `hiso`
 — Cousins–Vempala's `thm:iso` at `d = δ·log 2/√n`, whose metric branch is stated at the
@@ -464,10 +464,10 @@ threshold `d / log 2`.  `ArlibCommunity.Foundations.Convex.hiso_metropolisGaussi
 that binder, so the conductance bound holds outright, with `hRσ : √3·R ≤ 2σ√n` (a bounding
 radius compatible with the Gaussian scale) as the only added hypothesis.
 
-The docstring of `conductance_metropolisGaussian_sharp_sqrt_ge` says of `hiso`: "It is **not
+The docstring of `globalConductance_metropolisGaussian_sharp_sqrt_ge` says of `hiso`: "It is **not
 proved in this repository**.  Therefore **this theorem is not a mixing-time bound...**".  With
 this corollary that caveat no longer applies to the conductance statement itself. -/
-theorem conductance_metropolisGaussian_sharp_sqrt_ge_of_convex (hn : 2 ≤ n)
+theorem globalConductance_metropolisGaussian_sharp_sqrt_ge_of_convex (hn : 2 ≤ n)
     {σ δ R θ : ℝ} (hσ : 0 < σ) (hδ : 0 < δ) (hδσ : δ ≤ σ / (8 * Real.sqrt n)) (hR : 0 ≤ R)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (hKc : Convex ℝ K)
     (hKR : ∀ x ∈ K, ‖x‖ ≤ R) (hKtop : volume K ≠ ⊤) (hK0 : volume K ≠ 0)
@@ -475,10 +475,10 @@ theorem conductance_metropolisGaussian_sharp_sqrt_ge_of_convex (hn : 2 ≤ n)
     (hfloor : 1 ≤ 20 * Real.exp (-(2 * R * δ + δ ^ 2) / (2 * σ ^ 2)) * (1 / 4) * θ)
     (hRσ : Real.sqrt 3 * R ≤ 2 * σ * Real.sqrt n) :
     ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n))
-      ≤ ArlibCommunity.Foundations.MarkovChainTheory.conductance (ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian K δ (σ ^ 2))
-          (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
-            (gaussianWeight (σ ^ 2))) K) :=
-  ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge hn hσ hδ hδσ hR hK hKc hKR
+      ≤ ArlibCommunity.Foundations.MarkovChainTheory.globalConductance (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
+            (gaussianWeight (σ ^ 2))) K)
+          (ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian K δ (σ ^ 2)) :=
+  ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_sqrt_ge hn hσ hδ hδσ hR hK hKc hKR
     hKtop hK0 hell hfloor
     (hiso_metropolisGaussian_sharp_sqrt_logTwo hn hσ hK hKc hKR hKtop hK0 hRσ)
 

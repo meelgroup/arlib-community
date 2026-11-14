@@ -24,8 +24,8 @@ paper's own hypotheses.  Nothing is `sorry`ed; see the axiom audit at the bottom
 
 This is the last step between `ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim`
 (`LensMin.lean`) and a conductance bound `Ω(δ/(σ√n))`: `12 ≤ 20`, so the bound composes with
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`'s `hoverlap`, which is done in
-`conductance_speedyGaussian_ge_of_ell_comparable`.
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`'s `hoverlap`, which is done in
+`globalConductance_speedyGaussian_ge_of_ell_comparable`.
 
 ## The proof — Cousins–Vempala's, with `1/8` for their `1/(e+1)`
 
@@ -47,7 +47,7 @@ The paper reaches `1/6` because it quotes `1/(e+1) ≈ 0.269` for the lens const
 
 Feeding `ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_sqrt_dim`'s constant `1/40` through the chain
 above gives `1/60`, i.e. `1 ≤ 60·(…)`, which does **not** compose with the `20` that
-`conductance_speedyGaussian_ge` demands.  The `1/40` is not, however, geometric: `LensMin.lean`
+`globalConductance_speedyGaussian_ge` demands.  The `1/40` is not, however, geometric: `LensMin.lean`
 bounds its contraction factor `(1 − 1/n)ⁿ` below by `1/20`
 (`ArlibCommunity.Foundations.MarkovChainTheory.inv_twenty_le_one_sub_inv_pow`), whereas `(1 − 1/n)ⁿ` *increases* in `n`
 from `1/4` at `n = 2` to `e⁻¹`.  `quarter_le_one_sub_inv_pow` gives the sharp uniform bound
@@ -125,7 +125,7 @@ bridge — `d_ℓ < 1/3 ⟹ comparability` — already.
 
 ## No rate claim
 
-`thm:iso` is a hypothesis of `conductance_speedyGaussian_ge`, and `hcomp` is a hypothesis
+`thm:iso` is a hypothesis of `globalConductance_speedyGaussian_ge`, and `hcomp` is a hypothesis
 here.  Nothing below asserts, or may be quoted as asserting, a polynomial mixing time.
 
 ## Main results
@@ -137,7 +137,7 @@ here.  Nothing below asserts, or may be quoted as asserting, a polynomial mixing
 * `overlap_speedyWalk_sqrt_of_ell_comparable` — `cor:overlap` at `δ/√n`, per-pair hypothesis.
 * `overlap_speedyWalk_sqrt_of_ell_comparable_global`,
   `overlap_speedyWalk_sqrt_of_densDist_ell` — the same in `hoverlap`'s exact binder shape.
-* `conductance_speedyGaussian_ge_of_ell_comparable` — `thm:speedyconductance` at `δ/√n`.
+* `globalConductance_speedyGaussian_ge_of_ell_comparable` — `thm:speedyconductance` at `δ/√n`.
 * `exists_overlap_speedyWalk_sqrt_comparable_witness` — non-vacuity, on a bounded convex body.
 * `exists_ell_not_comparable_at_sqrt_dim_counterexample` — the `δ/√n` counterexample is out of
   scope.
@@ -174,7 +174,7 @@ cannot be improved uniformly in `n`.
 `ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/LensMin.lean` consumes and hence the source of that file's
 `1/40`.  The factor `5` recovered here is exactly what carries the overlap constant of this
 file from `60` down to `12`, i.e. past the `20` that
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` demands.
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` demands.
 
 The proof avoids proving monotonicity: at `n = 2` it is the equality `(1/2)² = 1/4`, and for
 `n ≥ 3` it is `ArlibCommunity.Foundations.MarkovChainTheory.inv_exp_add_one_le_one_sub_inv_pow` together with
@@ -515,7 +515,7 @@ theorem one_le_twelve_mul_speedyWalk_add_of_comparable (hn : 2 ≤ n)
 ([CV18]), with the local-conductance comparability hypothesis
 `d_ℓ(u,v) < 1/3` that the paper carries and
 `ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_convex` deletes, restored — in the binder shape of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`'s `hoverlap`, extended by the two
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`'s `hoverlap`, extended by the two
 comparability premises.
 
     1  ≤  12 · (P_u(Tᶜ) + P_v(T)).
@@ -544,7 +544,7 @@ theorem overlap_speedyWalk_sqrt_of_ell_comparable (hn : 2 ≤ n)
     (hpos u huK) (max_volume_ball_inter_le_of_ell_comparable hδ huv hvu) hT
 
 /-- **`cor:overlap` at separation `δ/√n`, in exactly the shape
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`'s `hoverlap` binder demands**, so that
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`'s `hoverlap` binder demands**, so that
 
     exact overlap_speedyWalk_sqrt_of_ell_comparable_global hn hK hKc hδ hpos hcomp h
 
@@ -627,7 +627,7 @@ theorem ell_le_of_densDist_ell_lt {K : Set (EuclideanSpace ℝ (Fin n))} {δ : �
 
 /-- **`cor:overlap` at separation `δ/√n`, with the hypothesis in the paper's own spelling**
 `d_ℓ(u,v) < 1/3` ([CV18]), and in the binder shape
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`'s `hoverlap` demands.
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`'s `hoverlap` demands.
 
 Read against the paper: `lem:overlap` assumes `d_ℓ(u,v) < 1/3` for the pair at hand, and
 `cor:overlap` *derives* that assumption from its own `d_h(u,v) < 1/4` by `lem:f-dist`
@@ -653,7 +653,7 @@ theorem overlap_speedyWalk_sqrt_of_densDist_ell (hn : 2 ≤ n)
 /-! ## 6. `thm:speedyconductance` at `δ/√n`, with `hoverlap` discharged -/
 
 /-- **`hoverlap` discharged at separation `δ/√n`, on a convex body with comparable local
-conductance.**  This is `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` with its overlap
+conductance.**  This is `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` with its overlap
 hypothesis supplied by `overlap_speedyWalk_sqrt_of_ell_comparable_global` — literally
 
     exact overlap_speedyWalk_sqrt_of_ell_comparable_global hn hK hKc hδ hpos hcomp h
@@ -661,7 +661,7 @@ hypothesis supplied by `overlap_speedyWalk_sqrt_of_ell_comparable_global` — li
 for the speedy walk `P = speedyWalk K δ`.  Only `hiso` (`thm:iso`, unproved in this
 repository) and `hcomp` remain.
 
-Contrast `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell`, which discharges the same
+Contrast `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge_of_ell`, which discharges the same
 hypothesis from the local-conductance **floor** `11 ≤ 20·ℓ(x)`: that floor fails at every
 boundary point of every bounded convex body (`ℓ → 1/2` there), so that theorem is empty for
 convex bodies, whereas `hcomp` holds outright whenever `ℓ` is constant on `K`
@@ -670,7 +670,7 @@ hypothesis.
 
 **This is not a polynomial-time statement and may not be quoted as one**: `hiso` and `hcomp`
 are hypotheses. -/
-theorem conductance_speedyGaussian_ge_of_ell_comparable (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ)
+theorem globalConductance_speedyGaussian_ge_of_ell_comparable (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ)
     (hδ : 0 < δ) (hδσ : δ ≤ σ / (8 * Real.sqrt n))
     {h : EuclideanSpace ℝ (Fin n) → ℝ} (hh0 : ∀ x, 0 ≤ h x) (hmass : 0 < ∫ x, h x)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (hKc : Convex ℝ K)
@@ -680,7 +680,7 @@ theorem conductance_speedyGaussian_ge_of_ell_comparable (hn : 2 ≤ n) {σ δ : 
     (pi : Measure (EuclideanSpace ℝ (Fin n)))
     (hpi : ∀ A : Set (EuclideanSpace ℝ (Fin n)), MeasurableSet A →
       pi A = ENNReal.ofReal (∫ x in A, h x) / ENNReal.ofReal (∫ x, h x))
-    (hrev : IsReversible (speedyWalk K δ) pi) (hpiK : pi Kᶜ = 0)
+    (hrev : ProbabilityTheory.Kernel.IsReversible (speedyWalk K δ) pi) (hpiK : pi Kᶜ = 0)
     (hiso : ∀ S₁ S₂ S₃ : Set (EuclideanSpace ℝ (Fin n)),
       IsPartition3 Set.univ S₁ S₂ S₃ →
       MeasurableSet S₁ → MeasurableSet S₂ → MeasurableSet S₃ →
@@ -690,8 +690,8 @@ theorem conductance_speedyGaussian_ge_of_ell_comparable (hn : 2 ≤ n) {σ δ : 
       δ * Real.log 2 / Real.sqrt n / σ * ((∫ x in S₁, h x) * ∫ x in S₂, h x)
         ≤ (∫ x, h x) * ∫ x in S₃, h x) :
     ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n))
-      ≤ conductance (speedyWalk K δ) pi :=
-  conductance_speedyGaussian_ge hn hσ hδ hδσ hh0 hmass hK (speedyWalk K δ) pi hpi hrev hpiK
+      ≤ globalConductance pi (speedyWalk K δ) :=
+  globalConductance_speedyGaussian_ge hn hσ hδ hδσ hh0 hmass hK (speedyWalk K δ) pi hpi hrev hpiK
     (overlap_speedyWalk_sqrt_of_ell_comparable_global hn hK hKc hδ hpos hcomp h) hiso
 
 /-! ## 7. Non-vacuity, on a bounded convex body -/
@@ -898,7 +898,7 @@ end ArlibCommunity.Foundations.MarkovChainTheory
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.ell_ne_zero_of_volume_ball_inter_ne_zero
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.ell_le_of_densDist_ell_lt
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_sqrt_of_densDist_ell
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell_comparable
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge_of_ell_comparable
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.exists_overlap_speedyWalk_sqrt_comparable_witness
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.not_ell_le_of_volume_ball_inter_gap
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.exists_ell_not_comparable_at_sqrt_dim_counterexample

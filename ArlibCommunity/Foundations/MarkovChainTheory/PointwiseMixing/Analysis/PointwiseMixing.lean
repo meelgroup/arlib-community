@@ -22,7 +22,7 @@ over the `N` lattice points contributes `N·ε`, which does not cancel.  So
 `ArlibCommunity.Algorithms.KV97.hitProbability_bounds` takes a **pointwise** hypothesis, `(1−ε)/V ≤ f p ≤ (1+ε)/V`.
 
 The consequence for the sampler is what this file is about.  A mixing-time bound
-(`ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin`, `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_decay`)
+(`ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin`, `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance_decay`)
 delivers **total variation** and nothing else.  Getting from there to a pointwise bound is a
 further argument that neither paper gives.  This file settles what that argument must
 contain.

@@ -97,7 +97,7 @@ theorem integral_markovSumLaw_succ_eq_integral_compProd
 sum and an observable of the current state. -/
 theorem integral_markovSumLaw_succ_mul_eq
     (P : Kernel S S) [IsMarkovKernel P] {pi : Measure S}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     {f g : S → ℝ} (hf : Measurable f) (hg : Measurable g)
     {B C : ℝ} (hB : 0 ≤ B) (hC : 0 ≤ C)
     (hfbound : ∀ x, |f x| ≤ B) (hgbound : ∀ x, |g x| ≤ C)
@@ -178,7 +178,7 @@ It replaces the invalid shortcut of treating successive CV18 samples as
 independent. -/
 theorem integral_markovSumLaw_mul_eq_sum_correlations
     (P : Kernel S S) [IsMarkovKernel P] {pi : Measure S}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     {f g : S → ℝ} (hf : Measurable f) (hg : Measurable g)
     {B C : ℝ} (hB : 0 ≤ B) (hC : 0 ≤ C)
     (hfbound : ∀ x, |f x| ≤ B) (hgbound : ∀ x, |g x| ≤ C) :
@@ -297,7 +297,7 @@ theorem integral_markovSumLaw_succ_sq_eq
 /-- Stationary recurrence for the accumulator's second moment. -/
 theorem integral_markovSumLaw_succ_sq_recurrence
     (P : Kernel S S) [IsMarkovKernel P] {pi : Measure S}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     {f : S → ℝ} (hf : Measurable f) {B : ℝ} (hB : 0 ≤ B)
     (hfbound : ∀ x, |f x| ≤ B) (samples : ℕ) :
     (∫ stateSum, stateSum.2 ^ 2
@@ -418,7 +418,7 @@ theorem sum_range_pow_le_inv_one_sub {r : ℝ} (hr : 0 ≤ r) (hr1 : r < 1)
 spectral gap. -/
 theorem integral_markovSumLaw_mul_markovOp_le_inv_gap
     (P : Kernel S S) [IsMarkovKernel P] {pi : Measure S}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     (hpsd : HasNonnegSpectrum P pi)
     (hne : (rayleighSet P pi).Nonempty)
     {f : S → ℝ} (hf : Measurable f) (hmem : MemLp f 2 pi)
@@ -471,7 +471,7 @@ growth in `samples`, rather than quadratic growth, is the quantitative
 dependent-sampling estimate needed by CV18. -/
 theorem integral_markovSumLaw_sq_le
     (P : Kernel S S) [IsMarkovKernel P] {pi : Measure S}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     (hpsd : HasNonnegSpectrum P pi)
     (hne : (rayleighSet P pi).Nonempty)
     {f : S → ℝ} (hf : Measurable f) (hmem : MemLp f 2 pi)
@@ -542,7 +542,7 @@ theorem markovIter_one (P : Kernel S S) [IsMarkovKernel P]
 /-- A centered stationary observable has a centered finite accumulated sum. -/
 theorem integral_snd_markovSumLaw_eq_zero
     (P : Kernel S S) [IsMarkovKernel P] {pi : Measure S}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     {f : S → ℝ} (hf : Measurable f) (hmean : ∫ x, f x ∂pi = 0)
     {B : ℝ} (hB : 0 ≤ B) (hfbound : ∀ x, |f x| ≤ B)
     (samples : ℕ) :
@@ -559,7 +559,7 @@ theorem integral_snd_markovSumLaw_eq_zero
 started at stationarity. -/
 theorem markovSumLaw_meas_abs_snd_ge_le
     (P : Kernel S S) [IsMarkovKernel P] {pi : Measure S}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     (hpsd : HasNonnegSpectrum P pi)
     (hne : (rayleighSet P pi).Nonempty)
     {f : S → ℝ} (hf : Measurable f) (hmem : MemLp f 2 pi)
@@ -602,7 +602,7 @@ paid once for the whole finite experiment, rather than once per sample. -/
 theorem markovSumLaw_meas_abs_snd_ge_le_of_isWarm
     (P : Kernel S S) [IsMarkovKernel P] {mu pi : Measure S}
     [IsProbabilityMeasure pi]
-    (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
+    (hrev : Kernel.IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
     (hne : (rayleighSet P pi).Nonempty)
     {f : S → ℝ} (hf : Measurable f) (hmem : MemLp f 2 pi)
     (hmean : ∫ x, f x ∂pi = 0)

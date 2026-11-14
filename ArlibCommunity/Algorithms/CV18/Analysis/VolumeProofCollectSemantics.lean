@@ -424,7 +424,7 @@ theorem bind_runEstimate_collectWalkWeights_meas_abs_fst_ge_le_of_isWarm
     (hweight : Measurable weight) (walkSteps : ℕ)
     {mu pi : Measure (AmbientSpace q.n)}
     [IsProbabilityMeasure mu] [IsProbabilityMeasure pi]
-    (hrev : IsReversible
+    (hrev : Kernel.IsReversible
       (truncatedMetropolisKernel q I oracle sigma2 ^ walkSteps) pi)
     (hpsd : HasNonnegSpectrum
       (truncatedMetropolisKernel q I oracle sigma2 ^ walkSteps) pi)

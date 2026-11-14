@@ -74,7 +74,7 @@ and `hmass` binders at `f := ell K δ`.  Nothing here is a conductance bound, a 
 a runtime statement, and none of it may be quoted as one.
 
 **What it does not unlock.**  The `hiso` binder of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyWalk_ge_of_convex`
 (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/StarPolar.lean`) is an isoperimetric inequality for the
 density `h` of the walk's stationary measure `pi`, and `hrev` forces `pi` to be a scalar
 multiple of `ArlibCommunity.Foundations.MarkovChainTheory.ellMeasure K δ`
@@ -470,7 +470,7 @@ Every binder except `hpos` and `hh` is *verbatim* that of
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed_logTwo`, including the conclusion.
 
 **Scope.**  This is an isoperimetric inequality and nothing more.  It is **not** the `hiso`
-binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex`, for two reasons recorded in
+binder of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyWalk_ge_of_convex`, for two reasons recorded in
 the module docstring: that binder is stated for **measurable** `S₁, S₂, S₃`, whereas this one
 needs `S₁, S₂` open and `S₃` closed; and its density is `1_K · ℓ`, with **no** Gaussian factor,
 whereas this one carries `e^{−‖x‖²/(2σ²)}`. -/

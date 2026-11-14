@@ -19,8 +19,8 @@ and assembles them with Cheeger into the Lovász–Simonovits decay bound
 `d_TV(mu_s, pi) ≤ √M (1 − phi²/2)^s`,
 
 which is exactly the `hdecay` hypothesis that
-`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_decay` leaves to its caller.
-`mixesWithin_of_conductance` discharges it.
+`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance_decay` leaves to its caller.
+`mixesWithin_of_globalConductance` discharges it.
 
 ## The three steps
 
@@ -31,12 +31,12 @@ which is exactly the `hdecay` hypothesis that
    contract at all — which is what `HasNonnegSpectrum` is there to rule out.
 2. **`χ²`/`L²` → TV** — `tvLe_withDensity`: a law with density `h` against `pi` is within
    total variation `√(Var_pi h)` of `pi`.  Cauchy–Schwarz, no Markov chain involved.
-3. **Assembly** — `tvLe_iterate_of_isWarm`, then `tvLe_iterate_of_conductance` and
-   `mixesWithin_of_conductance`.
+3. **Assembly** — `tvLe_iterate_of_isWarm`, then `tvLe_iterate_of_globalConductance` and
+   `mixesWithin_of_globalConductance`.
 
 ## The linchpin: swap-invariance of `pi ⊗ₘ P`
 
-`IsReversible` is a statement about measurable *rectangles*.  `ext_of_generate_finite` on
+`Kernel.IsReversible` is a statement about measurable *rectangles*.  `ext_of_generate_finite` on
 the π-system of rectangles upgrades it to `map_swap_compProd_of_isReversible`:
 `(pi ⊗ₘ P).map Prod.swap = pi ⊗ₘ P`.  Everything else — self-adjointness of `T`
 (`pairing_comm`), the identity `E(f,f) = ‖f‖² − ⟪f,f⟫` (`dirichletFormReal_eq_sub_pairing`),
@@ -45,19 +45,19 @@ corollary of that one lemma.
 
 ## The hypotheses, and why none of them assumes the conclusion
 
-* `IsReversible P pi` — detailed balance.
+* `Kernel.IsReversible P pi` — detailed balance.
 * `HasNonnegSpectrum P pi` — `∫ f · (T f) dpi ≥ 0` for `f ∈ L²(pi)`.  A property of the
   *kernel*: it is what laziness buys, and it mentions neither the conductance, nor the
   spectral gap, nor any mixing rate.  Without it the `L²` contraction is false, not merely
   unproven.  `hasNonnegSpectrum_const` is a witness.
 * `(rayleighSet P pi).Nonempty` — the hypothesis of Cheeger's hard direction, forced by
   `sInf ∅ = 0` over `ℝ`.
-* `IsWarm (ENNReal.ofReal M) mu0 pi` and `phi ≤ (conductance P pi).toReal` — the warm start
+* `IsWarm (ENNReal.ofReal M) mu0 pi` and `phi ≤ (globalConductance pi P).toReal` — the warm start
   and the conductance bound.
 
 There is no `def`, `structure` field or predicate in this file that names the mixing bound,
 the Cheeger inequality or an isoperimetric constant and stands in for its proof.
-`exists_hasNonnegSpectrum_and_conductance` exhibits one chain satisfying every hypothesis
+`exists_hasNonnegSpectrum_and_globalConductance` exhibits one chain satisfying every hypothesis
 simultaneously, so none of the statements below is vacuous.
 
 ## References
@@ -87,18 +87,18 @@ to an equality of *measures*: `pi ⊗ₘ P` is invariant under swapping the two 
 Every self-adjointness statement below is a consequence of this one lemma. -/
 
 /-- The `pi ⊗ₘ P`-measure of a measurable rectangle is the ergodic flow across it. -/
-theorem compProd_apply_prod_eq_flow (P : Kernel Ω Ω) [IsMarkovKernel P] (pi : Measure Ω)
+theorem compProd_apply_prod_eq_flow (pi : Measure Ω) (P : Kernel Ω Ω) [IsMarkovKernel P] 
     [IsProbabilityMeasure pi] {S T : Set Ω} (hS : MeasurableSet S) (hT : MeasurableSet T) :
-    (pi ⊗ₘ P) (S ×ˢ T) = flow P pi S T :=
+    (pi ⊗ₘ P) (S ×ˢ T) = flow pi P S T :=
   Measure.compProd_apply_prod hS hT
 
 /-- **Detailed balance is symmetry of `pi ⊗ₘ P`.**  The measure of the one-step pair
 `(X₀, X₁)` started from stationarity is unchanged by exchanging the two coordinates.
 
-This is `IsReversible` — a statement about rectangles — promoted to a statement about all
+This is `Kernel.IsReversible` — a statement about rectangles — promoted to a statement about all
 measurable sets, by `ext_of_generate_finite` on the π-system of rectangles. -/
 theorem map_swap_compProd_of_isReversible {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) :
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) :
     (pi ⊗ₘ P).map Prod.swap = pi ⊗ₘ P := by
   have hswap : Measurable (Prod.swap : Ω × Ω → Ω × Ω) := measurable_swap
   refine ext_of_generate_finite _ generateFrom_prod.symm isPiSystem_prod ?_ ?_
@@ -107,14 +107,14 @@ theorem map_swap_compProd_of_isReversible {P : Kernel Ω Ω} [IsMarkovKernel P] 
     rw [Measure.map_apply hswap (hS.prod hT)]
     have hpre : Prod.swap ⁻¹' (S ×ˢ T) = T ×ˢ S := by
       ext p; simp [Set.mem_prod, and_comm]
-    rw [hpre, compProd_apply_prod_eq_flow P pi hT hS,
-      compProd_apply_prod_eq_flow P pi hS hT, hrev T S hT hS]
+    rw [hpre, compProd_apply_prod_eq_flow pi P hT hS,
+      compProd_apply_prod_eq_flow pi P hS hT, flow_comm_of_isReversible hrev hT hS]
   · rw [Measure.map_apply hswap MeasurableSet.univ]
     simp
 
 /-- **The swap-invariance, in `ℝ≥0∞` integral form.** -/
 theorem lintegral_compProd_swap {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {F : Ω × Ω → ℝ≥0∞}
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {F : Ω × Ω → ℝ≥0∞}
     (hF : Measurable F) :
     ∫⁻ p, F (p.2, p.1) ∂(pi ⊗ₘ P) = ∫⁻ p, F p ∂(pi ⊗ₘ P) := by
   have hswap : Measurable (Prod.swap : Ω × Ω → Ω × Ω) := measurable_swap
@@ -124,7 +124,7 @@ theorem lintegral_compProd_swap {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Meas
 
 /-- **The swap-invariance, in Bochner integral form.** -/
 theorem integral_compProd_swap {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {F : Ω × Ω → ℝ}
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {F : Ω × Ω → ℝ}
     (hF : AEStronglyMeasurable F (pi ⊗ₘ P)) :
     ∫ p, F (p.2, p.1) ∂(pi ⊗ₘ P) = ∫ p, F p ∂(pi ⊗ₘ P) := by
   have hswap : Measurable (Prod.swap : Ω × Ω → Ω × Ω) := measurable_swap
@@ -144,7 +144,7 @@ theorem map_fst_compProd (P : Kernel Ω Ω) [IsMarkovKernel P] (pi : Measure Ω)
 
 /-- The second marginal of `pi ⊗ₘ P` is `pi`, for a reversible chain. -/
 theorem map_snd_compProd_of_isReversible {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) :
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) :
     (pi ⊗ₘ P).map Prod.snd = pi := by
   have hswap : Measurable (Prod.swap : Ω × Ω → Ω × Ω) := measurable_swap
   calc (pi ⊗ₘ P).map Prod.snd
@@ -162,7 +162,7 @@ theorem integrable_comp_fst {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure 
 /-- Integrability of a function of the *second* coordinate is integrability against `pi`,
 for a reversible (hence stationary) chain. -/
 theorem integrable_comp_snd {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {F : Ω → ℝ} (hF : Measurable F)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {F : Ω → ℝ} (hF : Measurable F)
     (h : Integrable F pi) : Integrable (fun p : Ω × Ω => F p.2) (pi ⊗ₘ P) := by
   rw [← map_snd_compProd_of_isReversible hrev] at h
   exact (integrable_map_measure hF.aestronglyMeasurable measurable_snd.aemeasurable).1 h
@@ -176,7 +176,7 @@ theorem integral_comp_fst {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω
 
 /-- Integrating a function of the second coordinate is integrating against `pi`. -/
 theorem integral_comp_snd {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {F : Ω → ℝ} (hF : Measurable F) :
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {F : Ω → ℝ} (hF : Measurable F) :
     ∫ p, F p.2 ∂(pi ⊗ₘ P) = ∫ x, F x ∂pi := by
   conv_rhs => rw [← map_snd_compProd_of_isReversible hrev]
   exact (integral_map measurable_snd.aemeasurable hF.aestronglyMeasurable).symm
@@ -209,7 +209,7 @@ theorem markovOp_nonneg (P : Kernel Ω Ω) {f : Ω → ℝ} (hf : ∀ x, 0 ≤ f
 
 /-- **`T` preserves the mean**: `∫ T f dpi = ∫ f dpi`, because `pi` is stationary. -/
 theorem integral_markovOp {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {f : Ω → ℝ} (hf : Measurable f)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {f : Ω → ℝ} (hf : Measurable f)
     (hint : Integrable f pi) : ∫ x, markovOp P f x ∂pi = ∫ x, f x ∂pi := by
   calc ∫ x, markovOp P f x ∂pi = ∫ p, f p.2 ∂(pi ⊗ₘ P) :=
         (Measure.integral_compProd (integrable_comp_snd hrev hf hint)).symm
@@ -228,7 +228,7 @@ theorem pairing_apply (P : Kernel Ω Ω) (pi : Measure Ω) (f g : Ω → ℝ) :
 /-- **The product `f(x) g(y)` is `pi ⊗ₘ P`-integrable** for measurable `f, g ∈ L²(pi)`: it
 is dominated by `(f(x)² + g(y)²)/2` and both marginals of `pi ⊗ₘ P` are `pi`. -/
 theorem integrable_mul_compProd {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {f g : Ω → ℝ} (hf : Measurable f)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {f g : Ω → ℝ} (hf : Measurable f)
     (hg : Measurable g) (hfm : MemLp f 2 pi) (hgm : MemLp g 2 pi) :
     Integrable (fun p : Ω × Ω => f p.1 * g p.2) (pi ⊗ₘ P) := by
   have h1 : Integrable (fun p : Ω × Ω => f p.1 ^ 2) (pi ⊗ₘ P) :=
@@ -247,7 +247,7 @@ theorem integrable_mul_compProd {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Meas
 The proof is the swap-invariance of `pi ⊗ₘ P`; no integrability hypothesis is needed
 because `integral_map` holds unconditionally. -/
 theorem pairing_comm {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {f g : Ω → ℝ} (hf : Measurable f)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {f g : Ω → ℝ} (hf : Measurable f)
     (hg : Measurable g) : pairing P pi f g = pairing P pi g f := by
   have hswap := integral_compProd_swap hrev (F := fun p : Ω × Ω => f p.1 * g p.2)
     ((hf.comp measurable_fst).mul (hg.comp measurable_snd)).aestronglyMeasurable
@@ -278,7 +278,7 @@ theorem two_mul_dirichletFormReal_eq (P : Kernel Ω Ω) [IsMarkovKernel P] (pi :
 marginals of `pi ⊗ₘ P` are `pi`.  This is the identity that turns the spectral gap — a
 statement about `E` — into a bound on the pairing, i.e. on `T`. -/
 theorem dirichletFormReal_eq_sub_pairing {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {f : Ω → ℝ} (hf : Measurable f)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {f : Ω → ℝ} (hf : Measurable f)
     (hmem : MemLp f 2 pi) :
     dirichletFormReal P pi f = (∫ x, f x ^ 2 ∂pi) - pairing P pi f f := by
   have hinv := hrev.invariant
@@ -373,7 +373,7 @@ functions be applied to a density. -/
 
 /-- **A `pi`-integrable `f` is `P x`-integrable for `pi`-almost every `x`.** -/
 theorem ae_integrable_kernel {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {f : Ω → ℝ} (hf : Measurable f)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {f : Ω → ℝ} (hf : Measurable f)
     (hint : Integrable f pi) : ∀ᵐ x ∂pi, Integrable f (P x) := by
   have h := integrable_comp_snd hrev hf hint
   exact ((Measure.integrable_compProd_iff
@@ -381,7 +381,7 @@ theorem ae_integrable_kernel {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure
 
 /-- **`T` commutes with subtracting a constant**, `pi`-almost everywhere. -/
 theorem markovOp_sub_const {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {f : Ω → ℝ} (hf : Measurable f)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {f : Ω → ℝ} (hf : Measurable f)
     (hint : Integrable f pi) (c : ℝ) :
     markovOp P (fun y => f y - c) =ᵐ[pi] fun x => markovOp P f x - c := by
   filter_upwards [ae_integrable_kernel hrev hf hint] with x hx
@@ -398,7 +398,7 @@ This is `dirichletFormReal_eq_sub_pairing` combined with `spectralGap ≤ E / Va
 `Var f = ∫ f²` for centred `f`.  The degenerate case `∫ f² = 0` is handled separately: there
 `f` is not admissible, but `E(f,f) ≥ 0` already gives `⟪f,f⟫ ≤ 0`. -/
 theorem pairing_self_le_of_integral_eq_zero {P : Kernel Ω Ω} [IsMarkovKernel P]
-    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {f : Ω → ℝ}
+    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {f : Ω → ℝ}
     (hf : Measurable f) (hmem : MemLp f 2 pi) (hmean : ∫ x, f x ∂pi = 0) :
     pairing P pi f f ≤ (1 - spectralGap P pi) * ∫ x, f x ^ 2 ∂pi := by
   have hE : dirichletFormReal P pi f = (∫ x, f x ^ 2 ∂pi) - pairing P pi f f :=
@@ -431,7 +431,7 @@ nonnegative.
 
 /-- **Expanding the quadratic form.** -/
 theorem pairing_add_const_mul {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {f g : Ω → ℝ} (hf : Measurable f)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {f g : Ω → ℝ} (hf : Measurable f)
     (hg : Measurable g) (hfm : MemLp f 2 pi) (hgm : MemLp g 2 pi) (t : ℝ) :
     pairing P pi (fun x => f x + t * g x) (fun x => f x + t * g x)
       = pairing P pi f f + 2 * t * pairing P pi f g + t ^ 2 * pairing P pi g g := by
@@ -462,7 +462,7 @@ theorem pairing_add_const_mul {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measur
 bilinear form satisfies `⟪f, g⟫² ≤ ⟪f, f⟫ ⟪g, g⟫`; the proof is the discriminant of the
 nonnegative quadratic `t ↦ ⟪f + t g, f + t g⟫`. -/
 theorem pairing_sq_le {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
     {f g : Ω → ℝ} (hf : Measurable f) (hg : Measurable g) (hfm : MemLp f 2 pi)
     (hgm : MemLp g 2 pi) :
     (pairing P pi f g) ^ 2 ≤ pairing P pi f f * pairing P pi g g := by
@@ -486,7 +486,7 @@ theorem pairing_sq_le {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
 `√(⟪f,f⟫ ⟪Tf,Tf⟫)`, and the spectral gap bounds each of `⟪f,f⟫, ⟪Tf,Tf⟫` by `(1 − gap)`
 times the corresponding norm.  Solving gives `‖Tf‖² ≤ (1 − gap)² ‖f‖²`. -/
 theorem integral_sq_markovOp_le {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
     {f : Ω → ℝ} (hf : Measurable f) (hmem : MemLp f 2 pi) (hmean : ∫ x, f x ∂pi = 0) :
     ∫ x, markovOp P f x ^ 2 ∂pi ≤ (1 - spectralGap P pi) ^ 2 * ∫ x, f x ^ 2 ∂pi := by
   have hu : Measurable (markovOp P f) := measurable_markovOp P hf
@@ -524,7 +524,7 @@ theorem integral_sq_markovOp_le {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Meas
 /-- **The variance form of the one-step contraction.**  Centring `f` at its mean and using
 that `T` commutes with the shift (`markovOp_sub_const`). -/
 theorem varianceReal_markovOp_le {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
     {f : Ω → ℝ} (hf : Measurable f) (hmem : MemLp f 2 pi) :
     varianceReal pi (markovOp P f)
       ≤ (1 - spectralGap P pi) ^ 2 * varianceReal pi f := by
@@ -593,7 +593,7 @@ theorem memLp_markovIter {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
   | succ t ih => exact memLp_markovOp hinv (measurable_markovIter P hf t) ih
 
 theorem integral_markovIter {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {f : Ω → ℝ} (hf : Measurable f)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {f : Ω → ℝ} (hf : Measurable f)
     (hmem : MemLp f 2 pi) (t : ℕ) :
     ∫ x, markovIter P f t x ∂pi = ∫ x, f x ∂pi := by
   induction t with
@@ -608,7 +608,7 @@ Note the exponent: it is `2t`, not `t`.  A `(1 − gap)^t` bound is *false* in g
 deterministic two-cycle on `{0,1}` is reversible with `gap = 2` and does not contract at
 all — which is what the `HasNonnegSpectrum` hypothesis is there to control. -/
 theorem varianceReal_markovIter_le {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
     {f : Ω → ℝ} (hf : Measurable f) (hmem : MemLp f 2 pi) (t : ℕ) :
     varianceReal pi (markovIter P f t)
       ≤ ((1 - spectralGap P pi) ^ 2) ^ t * varianceReal pi f := by
@@ -631,7 +631,7 @@ If `mu = h · pi` then `step P mu = (T h) · pi`.  This is again just the swap-i
 
 /-- **One step of the chain on densities.** -/
 theorem step_withDensity_ofReal {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {g : Ω → ℝ} (hg : Measurable g)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {g : Ω → ℝ} (hg : Measurable g)
     (hg0 : ∀ x, 0 ≤ g x) (hgint : Integrable g pi) :
     step P (pi.withDensity fun x => ENNReal.ofReal (g x))
       = pi.withDensity fun x => ENNReal.ofReal (markovOp P g x) := by
@@ -682,7 +682,7 @@ theorem step_withDensity_ofReal {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Meas
 
 /-- **`t` steps of the chain on densities.** -/
 theorem iterate_withDensity_ofReal {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {g : Ω → ℝ} (hg : Measurable g)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {g : Ω → ℝ} (hg : Measurable g)
     (hg0 : ∀ x, 0 ≤ g x) (hgmem : MemLp g 2 pi) (t : ℕ) :
     iterate P (pi.withDensity fun x => ENNReal.ofReal (g x)) t
       = pi.withDensity fun x => ENNReal.ofReal (markovIter P g t x) := by
@@ -783,7 +783,7 @@ Needed so that `1 − gap ≥ 0` and `|1 − gap| = 1 − gap`.  It is a genuine
 
 /-- Every Rayleigh quotient of a chain with nonnegative spectrum is at most `1`. -/
 theorem rayleighQuotient_le_one {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
     {f : Ω → ℝ} (hf : Measurable f) (hmem : MemLp f 2 pi) (hv : varianceReal pi f ≠ 0) :
     rayleighQuotient P pi f ≤ 1 := by
   set m : ℝ := ∫ x, f x ∂pi with hm
@@ -810,7 +810,7 @@ theorem rayleighQuotient_le_one {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Meas
 
 /-- **`gap ≤ 1` for a chain with nonnegative spectrum.** -/
 theorem spectralGap_le_one {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
     (hne : (rayleighSet P pi).Nonempty) : spectralGap P pi ≤ 1 := by
   obtain ⟨r, f, ⟨hmem, hv⟩, rfl⟩ := hne
   set f' : Ω → ℝ := hmem.aestronglyMeasurable.mk f with hf'def
@@ -828,7 +828,7 @@ theorem spectralGap_le_one {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure �
 /-- **The mixing bound from a density.**  Started from `h · pi`, the chain is within total
 variation `√(Var h) · |1 − gap|^t` of `pi` at time `t`. -/
 theorem tvLe_iterate_withDensity {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
     {h : Ω → ℝ} (hmeas : Measurable h) (hnn : ∀ x, 0 ≤ h x) (hmem : MemLp h 2 pi)
     (hmean : ∫ x, h x ∂pi = 1) (t : ℕ) :
     TVLe (iterate P (pi.withDensity fun x => ENNReal.ofReal (h x)) t) pi
@@ -855,7 +855,7 @@ The density of `mu0` against `pi` is its Radon–Nikodym derivative, which exist
 warmness gives `mu0 ≪ pi`; its second moment is at most `M` because
 `∫ h² dpi = ∫ h dmu0 ≤ M ∫ h dpi = M`. -/
 theorem tvLe_iterate_of_isWarm {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
     {mu0 : Measure Ω} [IsProbabilityMeasure mu0] {M : ℝ} (hM : 1 ≤ M)
     (hwarm : IsWarm (ENNReal.ofReal M) mu0 pi) (t : ℕ) :
     TVLe (iterate P mu0 t) pi
@@ -924,21 +924,21 @@ and conductance at least `phi`, started from an `M`-warm law,
 `d_TV(mu_s, pi) ≤ √M (1 − phi²/2)^s`.
 
 This is exactly the `hdecay` hypothesis of
-`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_decay`, discharged.  Its ingredients are
-Cheeger's inequality (`sq_conductance_div_two_le_spectralGap`, from
+`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance_decay`, discharged.  Its ingredients are
+Cheeger's inequality (`sq_globalConductance_div_two_le_spectralGap`, from
 `ArlibCommunity.Foundations.MarkovChainTheory.Cheeger.Analysis.Cheeger`), the `L²` contraction
 `varianceReal_markovIter_le`, and the `χ²` → TV comparison `tvLe_withDensity`. -/
-theorem tvLe_iterate_of_conductance {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
+theorem tvLe_iterate_of_globalConductance {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
     (hne : (rayleighSet P pi).Nonempty) {mu0 : Measure Ω} [IsProbabilityMeasure mu0]
     {M phi : ℝ} (hM : 1 ≤ M) (hwarm : IsWarm (ENNReal.ofReal M) mu0 pi) (hphi0 : 0 < phi)
-    (hphi : phi ≤ (conductance P pi).toReal) (s : ℕ) :
+    (hphi : phi ≤ (globalConductance pi P).toReal) (s : ℕ) :
     TVLe (iterate P mu0 s) pi (ENNReal.ofReal (Real.sqrt M * (1 - phi ^ 2 / 2) ^ s)) := by
   refine ArlibCommunity.Foundations.Convex.TVLe.mono (tvLe_iterate_of_isWarm hrev hpsd hM hwarm s)
     (ENNReal.ofReal_le_ofReal ?_)
   have hgap1 : spectralGap P pi ≤ 1 := spectralGap_le_one hrev hpsd hne
-  have hcheeger : (conductance P pi).toReal ^ 2 / 2 ≤ spectralGap P pi :=
-    sq_conductance_div_two_le_spectralGap hrev hne
+  have hcheeger : (globalConductance pi P).toReal ^ 2 / 2 ≤ spectralGap P pi :=
+    sq_globalConductance_div_two_le_spectralGap hrev hne
   have hphigap : phi ^ 2 / 2 ≤ spectralGap P pi := by nlinarith
   have h2 : (0 : ℝ) ≤ 1 - spectralGap P pi := by linarith
   have h1 : 1 - spectralGap P pi ≤ 1 - phi ^ 2 / 2 := by linarith
@@ -946,31 +946,31 @@ theorem tvLe_iterate_of_conductance {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : 
   refine mul_le_mul_of_nonneg_left ?_ (Real.sqrt_nonneg M)
   gcongr
 
-/-- **The acceptance test.**  `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_decay` with its
+/-- **The acceptance test.**  `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance_decay` with its
 `hdecay` obligation discharged: `O(phi⁻² log(M/eps))` steps of a reversible chain with
 nonnegative spectrum, conductance at least `phi` and an `M`-warm start bring the law within
 total variation `eps` of `pi`. -/
-theorem mixesWithin_of_conductance {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
+theorem mixesWithin_of_globalConductance {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
     (hne : (rayleighSet P pi).Nonempty) {mu0 : Measure Ω} [IsProbabilityMeasure mu0]
     {M phi eps : ℝ} (hM : 1 ≤ M) (hwarm : IsWarm (ENNReal.ofReal M) mu0 pi) (hphi0 : 0 < phi)
-    (hphi1 : phi ≤ 1) (heps : 0 < eps) (hphi : phi ≤ (conductance P pi).toReal) {t : ℕ}
+    (hphi1 : phi ≤ 1) (heps : 0 < eps) (hphi : phi ≤ (globalConductance pi P).toReal) {t : ℕ}
     (ht : conductanceMixingTime M phi eps ≤ t) :
     MixesWithin P pi mu0 t (ENNReal.ofReal eps) :=
-  mixesWithin_of_conductance_decay hM hphi0 hphi1 heps
-    (fun s => tvLe_iterate_of_conductance hrev hpsd hne hM hwarm hphi0 hphi s) ht
+  mixesWithin_of_globalConductance_decay hM hphi0 hphi1 heps
+    (fun s => tvLe_iterate_of_globalConductance hrev hpsd hne hM hwarm hphi0 hphi s) ht
 
 /-- The same decay bound with the conductance hypothesis in its `ℝ≥0∞` form, which is how a
-conductance theorem states it.  `hc` is not restrictive: `conductance = ⊤` only on a space
+conductance theorem states it.  `hc` is not restrictive: `globalConductance = ⊤` only on a space
 with no measurable set of measure in `(0, 1/2]`. -/
-theorem tvLe_iterate_of_ofReal_le_conductance {P : Kernel Ω Ω} [IsMarkovKernel P]
-    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+theorem tvLe_iterate_of_ofReal_le_globalConductance {P : Kernel Ω Ω} [IsMarkovKernel P]
+    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     (hpsd : HasNonnegSpectrum P pi) (hne : (rayleighSet P pi).Nonempty) {mu0 : Measure Ω}
     [IsProbabilityMeasure mu0] {M phi : ℝ} (hM : 1 ≤ M)
     (hwarm : IsWarm (ENNReal.ofReal M) mu0 pi) (hphi0 : 0 < phi)
-    (hc : conductance P pi ≠ ⊤) (hphi : ENNReal.ofReal phi ≤ conductance P pi) (s : ℕ) :
+    (hc : globalConductance pi P ≠ ⊤) (hphi : ENNReal.ofReal phi ≤ globalConductance pi P) (s : ℕ) :
     TVLe (iterate P mu0 s) pi (ENNReal.ofReal (Real.sqrt M * (1 - phi ^ 2 / 2) ^ s)) := by
-  refine tvLe_iterate_of_conductance hrev hpsd hne hM hwarm hphi0 ?_ s
+  refine tvLe_iterate_of_globalConductance hrev hpsd hne hM hwarm hphi0 ?_ s
   have h := ENNReal.toReal_mono hc hphi
   rwa [ENNReal.toReal_ofReal hphi0.le] at h
 
@@ -993,14 +993,14 @@ theorem hasNonnegSpectrum_const (pi : Measure Ω) [IsProbabilityMeasure pi] :
 
 /-- **Non-vacuity witness.**  The uniform resampler on `Bool` is reversible, has nonnegative
 spectrum, a non-empty admissible family and conductance `1/2`; so every hypothesis of
-`mixesWithin_of_conductance` is simultaneously satisfiable. -/
-theorem exists_hasNonnegSpectrum_and_conductance :
+`mixesWithin_of_globalConductance` is simultaneously satisfiable. -/
+theorem exists_hasNonnegSpectrum_and_globalConductance :
     ∃ (Om : Type) (_ : MeasurableSpace Om) (P : Kernel Om Om) (pi : Measure Om),
-      IsMarkovKernel P ∧ IsProbabilityMeasure pi ∧ IsReversible P pi ∧
+      IsMarkovKernel P ∧ IsProbabilityMeasure pi ∧ Kernel.IsReversible P pi ∧
         HasNonnegSpectrum P pi ∧ (rayleighSet P pi).Nonempty ∧
-        conductance P pi = 1 / 2 ∧ spectralGap P pi = 1 :=
+        globalConductance pi P = 1 / 2 ∧ spectralGap P pi = 1 :=
   ⟨Bool, inferInstance, Kernel.const Bool piHalf, piHalf, inferInstance, inferInstance,
     isReversible_const piHalf, hasNonnegSpectrum_const piHalf,
-    rayleighSet_const_piHalf_nonempty, conductance_const_piHalf, spectralGap_const_piHalf⟩
+    rayleighSet_const_piHalf_nonempty, globalConductance_const_piHalf, spectralGap_const_piHalf⟩
 
 end ArlibCommunity.Foundations.MarkovChainTheory

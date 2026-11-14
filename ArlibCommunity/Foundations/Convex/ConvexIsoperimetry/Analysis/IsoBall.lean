@@ -11,7 +11,7 @@ import Mathlib.MeasureTheory.Measure.Prod
 # An unconditional isoperimetric inequality for a convex body, with an explicit constant
 
 This file proves — outright, with no hypothesis carried — the three-set isoperimetric
-inequality in the exact shape consumed by `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge`'s `hiso`
+inequality in the exact shape consumed by `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_ge`'s `hiso`
 argument, for **every** bounded convex body, and in particular for the Euclidean unit
 ball.
 
@@ -346,7 +346,7 @@ theorem volume_mul_volume_le_of_separated
 /-! ### The isoperimetric inequality, in `hiso` shape -/
 
 /-- **The isoperimetric inequality in exactly the shape of the `hiso` hypothesis** of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge` and `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_lazy_ballWalk`, for any bounded
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_ge` and `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_lazy_ballWalk`, for any bounded
 convex body `K` of positive finite volume, with `κ = (1/2)ⁿ/D`:
 
     κ · d · π A · π B  ≤  π (K \ A \ B),    π = uniformOn volume K.
@@ -435,7 +435,7 @@ theorem uniformOn_iso_of_convex
 
 This statement has *no* hypotheses beyond the ones written in it: it is a closed theorem
 about a concrete body, and it discharges the `hiso` argument of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge` and `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_lazy_ballWalk` at
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_ge` and `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_lazy_ballWalk` at
 `K = Metric.ball 0 1`, `kappa = (1/2)ⁿ⁺¹`.
 
 **The constant is exponentially small in the dimension, and this caveat belongs with the

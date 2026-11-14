@@ -287,7 +287,7 @@ variable {n : ℕ}
 
 /-- CV18 speedy-Gaussian conductance under the product condition controlling
 both density variation and Metropolis rejection on a bounded radial core. -/
-theorem conductance_speedyMetropolisGaussian_ge_radiusStepProduct_cv18
+theorem globalConductance_speedyMetropolisGaussian_ge_radiusStepProduct_cv18
     (hn : 2 ≤ n) {σ δ R : ℝ} (hσ : 0 < σ) (hδ : 0 < δ)
     (hδσ : δ ≤ σ / (8 * Real.sqrt n))
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
@@ -295,8 +295,8 @@ theorem conductance_speedyMetropolisGaussian_ge_radiusStepProduct_cv18
     (hR : 0 ≤ R) (hKR : ∀ x ∈ K, ‖x‖ ≤ R)
     (hRδ : R * δ ≤ σ ^ 2 / 9) :
     ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n)) ≤
-      conductance (speedyMetropolisGaussian K δ (σ ^ 2))
-        (ellGaussianProb K δ (σ ^ 2)) := by
+      globalConductance (ellGaussianProb K δ (σ ^ 2))
+        (speedyMetropolisGaussian K δ (σ ^ 2)) := by
   have hs : (0 : ℝ) < σ ^ 2 := by positivity
   have hKcb : K ⊆ closedBall (0 : EuclideanSpace ℝ (Fin n)) R := by
     intro x hx
@@ -304,7 +304,7 @@ theorem conductance_speedyMetropolisGaussian_ge_radiusStepProduct_cv18
   have hKb : Bornology.IsBounded K := Metric.isBounded_closedBall.subset hKcb
   have hKtop : volume K ≠ ⊤ :=
     ne_of_lt (lt_of_le_of_lt (measure_mono hKcb) measure_closedBall_lt_top)
-  exact conductance_speedyGaussian_ge hn hσ hδ hδσ
+  exact globalConductance_speedyGaussian_ge hn hσ hδ hδσ
     (fun x => Set.indicator_nonneg (fun y _ =>
       mul_nonneg ENNReal.toReal_nonneg (gaussianWeightReal_pos _ y).le) x)
     (integral_ellGaussianIndicator_pos hs hK hKc hKb hK0 hKtop hδ)
@@ -317,7 +317,7 @@ theorem conductance_speedyMetropolisGaussian_ge_radiusStepProduct_cv18
       hn hK hKc hKb hK0 hσ hδ hδσ hR hKR hRδ)
     (ArlibCommunity.Foundations.MarkovChainTheory.hiso_speedyMetropolisGaussian_uncond hn hσ hδ hK hKc hKb hK0)
 
-theorem conductance_speedyMetropolisGaussian_ge_strongStep_cv18
+theorem globalConductance_speedyMetropolisGaussian_ge_strongStep_cv18
     (hn : 2 ≤ n) {σ δ R : ℝ} (hσ : 0 < σ) (hδ : 0 < δ)
     (hδσ : δ ≤ σ / (4096 * Real.sqrt n))
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
@@ -325,8 +325,8 @@ theorem conductance_speedyMetropolisGaussian_ge_strongStep_cv18
     (hR : 0 ≤ R) (hKR : ∀ x ∈ K, ‖x‖ ≤ R)
     (hRσ : R ≤ 4 * σ * Real.sqrt n) :
     ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n)) ≤
-      conductance (speedyMetropolisGaussian K δ (σ ^ 2))
-        (ellGaussianProb K δ (σ ^ 2)) := by
+      globalConductance (ellGaussianProb K δ (σ ^ 2))
+        (speedyMetropolisGaussian K δ (σ ^ 2)) := by
   have hs : (0 : ℝ) < σ ^ 2 := by positivity
   have hsqrt : 0 < Real.sqrt n := Real.sqrt_pos.2 (by positivity)
   have hweak : δ ≤ σ / (8 * Real.sqrt n) := by
@@ -342,7 +342,7 @@ theorem conductance_speedyMetropolisGaussian_ge_strongStep_cv18
   have hKb : Bornology.IsBounded K := Metric.isBounded_closedBall.subset hKcb
   have hKtop : volume K ≠ ⊤ :=
     ne_of_lt (lt_of_le_of_lt (measure_mono hKcb) measure_closedBall_lt_top)
-  exact conductance_speedyGaussian_ge hn hσ hδ hweak
+  exact globalConductance_speedyGaussian_ge hn hσ hδ hweak
     (fun x => Set.indicator_nonneg (fun y _ =>
       mul_nonneg ENNReal.toReal_nonneg (gaussianWeightReal_pos _ y).le) x)
     (integral_ellGaussianIndicator_pos hs hK hKc hKb hK0 hKtop hδ)
@@ -388,10 +388,10 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_radiusStepProduct_cv18
     exists_smallSet_of_absolutelyContinuous (n := n) (by omega)
       (ellGaussianProb K δ (σ ^ 2))
       (ellGaussianProb_absolutelyContinuous K δ (σ ^ 2))
-  exact mixesWithin_lazy_of_conductance_sqrt (by omega) hσ hδ hδσ
+  exact mixesWithin_lazy_of_globalConductance_sqrt (by omega) hσ hδ hδσ
     (isReversible_speedyMetropolisGaussian_prob hK δ (σ ^ 2))
     ⟨S0, hS0m, hS0pos, hS0half⟩ hM hwarm heps0 heps1
-    (conductance_speedyMetropolisGaussian_ge_radiusStepProduct_cv18
+    (globalConductance_speedyMetropolisGaussian_ge_radiusStepProduct_cv18
       hn hσ hδ hδσ hK hKc hK0 hR hKR hRδ) ht
 
 /-- Warm-start TV mixing at Figure 1's stronger proposal-step cap.  Unlike
@@ -435,10 +435,10 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_strongStep_cv18
     exists_smallSet_of_absolutelyContinuous (n := n) (by omega)
       (ellGaussianProb K δ (σ ^ 2))
       (ellGaussianProb_absolutelyContinuous K δ (σ ^ 2))
-  exact mixesWithin_lazy_of_conductance_sqrt (by omega) hσ hδ hweak
+  exact mixesWithin_lazy_of_globalConductance_sqrt (by omega) hσ hδ hweak
     (isReversible_speedyMetropolisGaussian_prob hK δ (σ ^ 2))
     ⟨S0, hS0m, hS0pos, hS0half⟩ hM hwarm heps0 heps1
-    (conductance_speedyMetropolisGaussian_ge_strongStep_cv18
+    (globalConductance_speedyMetropolisGaussian_ge_strongStep_cv18
       hn hσ hδ hδσ hK hKc hK0 hR hKR hRσ) ht
 
 end ArlibCommunity.Algorithms.CV18

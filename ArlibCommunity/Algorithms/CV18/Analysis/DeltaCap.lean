@@ -14,8 +14,8 @@ like they disagree about a factor `√n`:
 
 | theorem | cap | bound |
 |---|---|---|
-| `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex` (`StarPolar.lean`) | `δ ≤ σ/8` | `δ·ln 2/(640·σ·n)` |
-| `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell_comparable` (`OverlapSqrt.lean`) | `δ ≤ σ/(8√n)` | `δ·ln 2/(640·σ·√n)` |
+| `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyWalk_ge_of_convex` (`StarPolar.lean`) | `δ ≤ σ/8` | `δ·ln 2/(640·σ·n)` |
+| `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge_of_ell_comparable` (`OverlapSqrt.lean`) | `δ ≤ σ/(8√n)` | `δ·ln 2/(640·σ·√n)` |
 
 Taking each at *its own* maximal `δ` gives the same number, `ln 2/(5120·n)`
 (`sup_bounds_agree_at_own_caps`), which makes the `√n` look illusory.  This file establishes
@@ -23,7 +23,7 @@ that the appearance is an artifact of that comparison, and that the `√n` is re
 
 ## 1. They are one theorem at two parameterizations
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` (`SpeedyConductanceSharp.lean`) takes the
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` (`SpeedyConductanceSharp.lean`) takes the
 kernel `P` as a **parameter independent of its own `δ`**.  So that `δ` is an *isoperimetric
 scale*, not a step size.
 
@@ -44,7 +44,7 @@ For one and the same kernel `speedyWalk K δ`, the second bound is exactly `√n
 (`speedy_sqrt_gain`).  The operative question is therefore *which `δ` the algorithm runs at*,
 and that is set by the Metropolis acceptance floor, not by these caps.
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_ge`
 (`MetropolisConductanceSharp.lean`) carries
 
     hfloor : 1 ≤ 20·exp(−(2Rδ + δ²)/(2σ²))·(1 − 1/n)ⁿ·θ.
@@ -67,16 +67,16 @@ is not the obstruction.**
 
 ## 3. A separate finding: `hδσ`'s `√n` is itself removable
 
-`hδσ` is consumed at exactly two places in `conductance_speedyGaussian_ge`
+`hδσ` is consumed at exactly two places in `globalConductance_speedyGaussian_ge`
 (`SpeedyConductanceSharp.lean` and `:489`), both purely arithmetic, and in both the `√n`
 cancels: the quantity bounded is `4(d/σ)√n = 4δ·ln 2/σ` at `d = δ·ln 2/√n`.  Its real content
 is the dimension-free `16·(ln 2)·δ ≤ σ` (`isoStep_quarter_iff`), and both side conditions
 follow from `δ ≤ σ/12` (`four_mul_isoStep_div_sigma_le_quarter_of_dimension_free`,
-`isoStep_conductance_le_inv_160_of_dimension_free`).  The constant is *not* free, though:
+`isoStep_globalConductance_le_inv_160_of_dimension_free`).  The constant is *not* free, though:
 `δ ≤ σ/8` genuinely fails (`not_isoStep_quarter_at_sigma_div_eight`), the honest cap being
 `σ/(16 ln 2) ≈ σ/11.09`.
 
-This file does **not** re-prove `conductance_speedyGaussian_ge` with the weaker binder —
+This file does **not** re-prove `globalConductance_speedyGaussian_ge` with the weaker binder —
 that means editing `SpeedyConductanceSharp.lean`, which this file does not own — and no
 declaration here claims the relaxed theorem.  It is also not needed for §2: the operative step
 `Θ(σ/√n)` is well inside the existing cap.
@@ -114,7 +114,7 @@ open scoped ENNReal
 
 /-- **The Metropolis acceptance floor forces `δ = O(σ/√n)` in the Cousins–Vempala regime.**
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge` carries the hypothesis
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_ge` carries the hypothesis
 
     hfloor : 1 ≤ 20·exp(−(2Rδ + δ²)/(2σ²))·(1 − 1/n)ⁿ·θ
 
@@ -202,7 +202,7 @@ theorem acceptance_floor_exp_small_of_large_step {n : ℕ} {σ δ R : ℝ} (hσ 
 
 /-- **At the step `δ = σ/8` the acceptance factor is `e^{−√n/8}`.**  The instance of
 `acceptance_floor_exp_small_of_large_step` at the step size
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge`'s own cap `δ ≤ σ/8` permits: in
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_ge`'s own cap `δ ≤ σ/8` permits: in
 the Cousins–Vempala regime the acceptance factor there is exponentially small in `n`.
 
 The claim is asymptotic, not universal: `metropolis_hfloor_forces_step_cap` rules `δ = σ/8`
@@ -255,14 +255,14 @@ theorem acceptance_factor_ge_of_step_le {n : ℕ} (hn : 2 ≤ n) {σ δ R : ℝ}
 
 /-! ## 2. The two conductance theorems are one theorem at two parameterizations -/
 
-/-- **`conductance_speedyWalk_ge_of_convex`'s conclusion is the abstract one at `δ/√n`.**
+/-- **`globalConductance_speedyWalk_ge_of_convex`'s conclusion is the abstract one at `δ/√n`.**
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` takes the kernel `P` as a *parameter*
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` takes the kernel `P` as a *parameter*
 independent of its own `δ`, so `δ` there is an isoperimetric scale, not a step size.
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex` (`StarPolar.lean`) instantiates it
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyWalk_ge_of_convex` (`StarPolar.lean`) instantiates it
 at `δ_abs := δ/√n` while keeping the kernel `speedyWalk K δ`
 (`StarPolar.lean`), and this identity is why its printed conclusion reads
-`δ·ln 2/(640σn)`.  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell_comparable`
+`δ·ln 2/(640σn)`.  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge_of_ell_comparable`
 (`OverlapSqrt.lean`) instantiates the *same* abstract theorem at `δ_abs := δ`
 (`OverlapSqrt.lean`). -/
 theorem speedyGaussian_reparam_conclusion {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ) :
@@ -279,7 +279,7 @@ theorem speedyGaussian_reparam_conclusion {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ}
 
 /-- **The two caps are the same cap at the two parameterizations.**  `δ ≤ σ/8` for the kernel
 step is *exactly* `δ_abs ≤ σ/(8√n)` for the abstract parameter `δ_abs = δ/√n`.  So
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell_comparable` did not shrink any cap:
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge_of_ell_comparable` did not shrink any cap:
 it inherited the abstract theorem's cap and reads it at a different parameter. -/
 theorem speedyGaussian_reparam_cap {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} :
     δ / Real.sqrt n ≤ σ / (8 * Real.sqrt n) ↔ δ ≤ σ / 8 := by
@@ -314,7 +314,7 @@ theorem speedy_sqrt_gain {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ) :
 /-! ## 3. The two bounds at the operative step `δ = σ/(8√n)` -/
 
 /-- **The old bound at the operative step.**  The certified constant of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex`, evaluated at `δ = σ/(8√n)`, equals
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyWalk_ge_of_convex`, evaluated at `δ = σ/(8√n)`, equals
 `ln 2/(5120·n^{3/2})`.  (An identity between reals; the conductance inequality is that
 theorem's, not this one's.) -/
 theorem speedy_old_bound_at_operative_step {n : ℕ} (hn : 2 ≤ n) {σ : ℝ} (hσ : 0 < σ) :
@@ -327,7 +327,7 @@ theorem speedy_old_bound_at_operative_step {n : ℕ} (hn : 2 ≤ n) {σ : ℝ} (
   ring
 
 /-- **The new bound at the operative step.**  The certified constant of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell_comparable`, evaluated at
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge_of_ell_comparable`, evaluated at
 `δ = σ/(8√n)`, equals `ln 2/(5120·n)` — a factor `√n` better than
 `speedy_old_bound_at_operative_step`.  (An identity between reals; the conductance inequality
 is that theorem's, not this one's.)
@@ -370,9 +370,9 @@ theorem sup_bounds_agree_at_own_caps {n : ℕ} (hn : 2 ≤ n) {σ : ℝ} (hσ : 
 /-! ## 4. Where `hδσ` is consumed, the cap is dimension-free
 
 `hδσ : δ ≤ σ/(8√n)` is consumed at exactly **two** places inside
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`:
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`:
 
-* `SpeedyConductanceSharp.lean` — via `isoStep_conductance_le_inv_160`, to know the
+* `SpeedyConductanceSharp.lean` — via `isoStep_globalConductance_le_inv_160`, to know the
   certified constant never exceeds the degenerate branch's `1/160`;
 * `SpeedyConductanceSharp.lean` — via `four_mul_isoStep_div_sigma_le_quarter`, to know
   `thm:iso`'s density branch sits under `cor:overlap`'s threshold `1/4`.
@@ -414,9 +414,9 @@ theorem four_mul_isoStep_div_sigma_le_quarter_of_dimension_free {n : ℕ} (hn : 
   nlinarith
 
 /-- **`SpeedyConductanceSharp.lean`'s side condition, from a dimension-free cap.**
-Identical statement to `ArlibCommunity.Foundations.MarkovChainTheory.isoStep_conductance_le_inv_160`, with
+Identical statement to `ArlibCommunity.Foundations.MarkovChainTheory.isoStep_globalConductance_le_inv_160`, with
 `δ ≤ σ/(8√n)` weakened to `δ ≤ σ/12`. -/
-theorem isoStep_conductance_le_inv_160_of_dimension_free {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ}
+theorem isoStep_globalConductance_le_inv_160_of_dimension_free {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ}
     (hσ : 0 < σ) (hδ : 0 < δ) (hcap : δ ≤ σ / 12) :
     δ * Real.log 2 / (640 * σ * Real.sqrt n) ≤ 1 / 160 := by
   have hn2 : (2 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
@@ -456,5 +456,5 @@ end ArlibCommunity.Algorithms.CV18
 #print axioms ArlibCommunity.Algorithms.CV18.sup_bounds_agree_at_own_caps
 #print axioms ArlibCommunity.Algorithms.CV18.isoStep_quarter_iff
 #print axioms ArlibCommunity.Algorithms.CV18.four_mul_isoStep_div_sigma_le_quarter_of_dimension_free
-#print axioms ArlibCommunity.Algorithms.CV18.isoStep_conductance_le_inv_160_of_dimension_free
+#print axioms ArlibCommunity.Algorithms.CV18.isoStep_globalConductance_le_inv_160_of_dimension_free
 #print axioms ArlibCommunity.Algorithms.CV18.not_isoStep_quarter_at_sigma_div_eight

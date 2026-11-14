@@ -111,7 +111,7 @@ finite-horizon substitute.
 3. **No mixing-time statement for the ball walk.**  `map_eval_pathMeasure_ballWalk_uniformOn`
    is stated at stationarity; the obstruction to a conductance lower bound for the ball walk
    is unchanged and is stated exactly in `HoldingTime.lean`
-   (`conductanceOn_ballWalk_mul_volume_inter`).
+   (`conductance_ballWalk_mul_volume_inter`).
 4. **`pathMeasure_ballWalk_dirac_holdsUntil` is about a sojourn started at a deterministic
    point.**  It does not average `x` over any distribution; the averaged form is
    `ellMeasure_withDensity_inv_ell` in `HoldingTime.lean`, and the two are related by

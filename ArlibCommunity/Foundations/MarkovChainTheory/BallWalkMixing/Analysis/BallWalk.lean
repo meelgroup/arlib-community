@@ -347,10 +347,13 @@ theorem ballWalk_apply_compl_singleton [NeZero n] {K : Set (EuclideanSpace ℝ (
 the same constant (`flow_smul_measure`), so the symmetry survives.  This is what lets
 reversibility be proved for the unnormalised `volume.restrict K` and then transported to
 the probability measure `ArlibCommunity.Foundations.Convex.uniformOn volume K`. -/
-theorem IsReversible.smul {Om : Type*} [MeasurableSpace Om] {P : Kernel Om Om}
-    {pi : Measure Om} (h : IsReversible P pi) (c : ℝ≥0∞) : IsReversible P (c • pi) := by
+theorem isReversible_smul {Om : Type*} [MeasurableSpace Om] {P : Kernel Om Om}
+    {pi : Measure Om} (h : Kernel.IsReversible P pi) (c : ℝ≥0∞) :
+    Kernel.IsReversible P (c • pi) := by
   intro S T hS hT
-  rw [flow_smul_measure, flow_smul_measure, h S T hS hT]
+  have := flow_comm_of_isReversible h hS hT
+  simp only [flow] at this
+  simp only [Measure.restrict_smul, lintegral_smul_measure, this]
 
 /-- **The flow of the ball walk, split into its two parts.**  For `pi = volume.restrict K`,
 
@@ -364,7 +367,7 @@ terms are visibly symmetric under exchanging `S` and `T` — the first by
 symmetric — which is `isReversible_ballWalk_restrict`. -/
 theorem flow_ballWalk {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (δ : ℝ)
     {S T : Set (EuclideanSpace ℝ (Fin n))} (hS : MeasurableSet S) (hT : MeasurableSet T) :
-    flow (ballWalk K δ) (volume.restrict K) S T
+    flow (volume.restrict K) (ballWalk K δ) S T
       = (volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) δ))⁻¹ *
             (∫⁻ x in S ∩ K, volume ((T ∩ K) ∩ Metric.ball x δ))
         + ∫⁻ x in T ∩ (S ∩ K), (1 - ell K δ x) := by
@@ -391,8 +394,9 @@ theorem flow_ballWalk {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet
 The proof is the symmetry of the two terms of `flow_ballWalk`.  No convexity of `K`, no
 positivity of `δ`, and no bound relating `δ` to `K` is required. -/
 theorem isReversible_ballWalk_restrict {K : Set (EuclideanSpace ℝ (Fin n))}
-    (hK : MeasurableSet K) (δ : ℝ) : IsReversible (ballWalk K δ) (volume.restrict K) := by
+    (hK : MeasurableSet K) (δ : ℝ) : Kernel.IsReversible (ballWalk K δ) (volume.restrict K) := by
   intro S T hS hT
+  show flow _ _ S T = flow _ _ T S
   have h1 : (∫⁻ x in S ∩ K, volume ((T ∩ K) ∩ Metric.ball x δ))
       = ∫⁻ x in T ∩ K, volume ((S ∩ K) ∩ Metric.ball x δ) :=
     lintegral_volume_inter_ball_comm (hS.inter hK) (hT.inter hK) δ
@@ -403,18 +407,18 @@ theorem isReversible_ballWalk_restrict {K : Set (EuclideanSpace ℝ (Fin n))}
   rw [flow_ballWalk hK δ hS hT, flow_ballWalk hK δ hT hS, h1, h2]
 
 /-- **The ball walk is reversible for the uniform measure on `K`.**  Immediate from
-`isReversible_ballWalk_restrict` and `IsReversible.smul`, since
+`isReversible_ballWalk_restrict` and `isReversible_smul`, since
 `ArlibCommunity.Foundations.Convex.uniformOn volume K = (volume K)⁻¹ • volume.restrict K`.
 
 Note the statement is *true but empty* when `volume K` is `0` or `⊤`, where `uniformOn`
 is the zero measure; `isProbabilityMeasure_uniformOn_unitBall` discharges that guard on
 the witness. -/
 theorem isReversible_ballWalk {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
-    (δ : ℝ) : IsReversible (ballWalk K δ) (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
-  (isReversible_ballWalk_restrict hK δ).smul _
+    (δ : ℝ) : Kernel.IsReversible (ballWalk K δ) (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
+  isReversible_smul (isReversible_ballWalk_restrict hK δ) _
 
 /-- **The uniform measure on `K` is invariant for the ball walk.**  Detailed balance
-(`isReversible_ballWalk`) plus the landed `IsReversible.invariant`.  This is the
+(`isReversible_ballWalk`) plus the landed `Kernel.IsReversible.invariant`.  This is the
 stationarity claim that every mixing statement about the ball walk presupposes. -/
 theorem invariant_ballWalk {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
     (δ : ℝ) : Kernel.Invariant (ballWalk K δ) (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
@@ -595,7 +599,7 @@ theorem exists_ballWalk_witness [NeZero n] {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ 
     ∃ K : Set (EuclideanSpace ℝ (Fin n)),
       MeasurableSet K ∧ IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) ∧
         IsMarkovKernel (ballWalk K δ) ∧
-        IsReversible (ballWalk K δ) (ArlibCommunity.Foundations.Convex.uniformOn volume K) ∧
+        Kernel.IsReversible (ballWalk K δ) (ArlibCommunity.Foundations.Convex.uniformOn volume K) ∧
         Kernel.Invariant (ballWalk K δ) (ArlibCommunity.Foundations.Convex.uniformOn volume K) ∧
         0 < ell K δ 0 ∧ ballWalk K δ 0 {(0 : EuclideanSpace ℝ (Fin n))}ᶜ = 1 :=
   ⟨Metric.ball 0 1, measurableSet_ball, isProbabilityMeasure_uniformOn_unitBall,

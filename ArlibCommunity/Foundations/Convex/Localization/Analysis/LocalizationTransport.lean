@@ -39,7 +39,7 @@ Each transport is proved:
 * `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact_chain_euclidean` — the payload:
   `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact_chain` restated verbatim over
   `EuclideanSpace ℝ (Fin (m+1))`, which is where `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` and
-  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` live.  No hypothesis and no conclusion changes
+  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge` live.  No hypothesis and no conclusion changes
   shape.
 
 **2. Nondegeneracy (F, first half) — closed modulo one explicit data hypothesis, and that

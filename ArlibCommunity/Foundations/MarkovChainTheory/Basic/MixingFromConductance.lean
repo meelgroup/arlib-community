@@ -37,13 +37,13 @@ actually turns a conductance into a number a sampler can use.
   hypothesis `∀ t, tv t ≤ M (1 − c)^t`; the second is the bare existence of a mixing time.
 * `mixingTime_le` — `mixingTime M c eps ≤ log (M / eps) / c + 1`.
 * `conductanceMixingTime M phi eps = mixingTime (√M) (phi²/2) eps`, with
-  `tv_le_of_conductance_decay` and `conductanceMixingTime_le`, the latter reading
+  `tv_le_of_globalConductance_decay` and `conductanceMixingTime_le`, the latter reading
   `conductanceMixingTime M phi eps ≤ (log M + 2 log (1/eps)) / phi² + 1`.  That is exactly
   the `O(phi⁻² log (M / eps))` of the informal statement, with the constants visible.
 
 *The bridge to the chain layer.*
 
-* `mixesWithin_of_conductance_decay` — from the Lovász–Simonovits decay bound *as a
+* `mixesWithin_of_globalConductance_decay` — from the Lovász–Simonovits decay bound *as a
   hypothesis*, `ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin` (of `Warmness`) holds to within `eps` at
   every `t ≥ conductanceMixingTime`.
 * `mixesWithin_of_invariant` — started at stationarity the chain is already mixed, at every
@@ -51,10 +51,10 @@ actually turns a conductance into a number a sampler can use.
 
 *Non-vacuity.*
 
-* `exists_conductance_pos_and_mixesWithin` — `Kernel.const Bool piHalf` has conductance
-  exactly `1/2` (`conductance_const_piHalf`) and, by `mixesWithin_const` of `Warmness`,
+* `exists_globalConductance_pos_and_mixesWithin` — `Kernel.const Bool piHalf` has conductance
+  exactly `1/2` (`globalConductance_const_piHalf`) and, by `mixesWithin_const` of `Warmness`,
   satisfies `MixesWithin _ _ mu0 1 0` *from every start*.  So the class of chains a
-  hypothesis `phi ≤ conductance P pi` ranges over is inhabited by a chain that really does
+  hypothesis `phi ≤ globalConductance pi` P ranges over is inhabited by a chain that really does
   mix, and `MixesWithin` is not a predicate nothing satisfies.
 
 *A first step of the Cheeger dictionary.*
@@ -62,8 +62,8 @@ actually turns a conductance into a number a sampler can use.
 * `dirichletForm P pi f = (∫∫ (f x − f y)² dP_x dpi) / 2`, valued in `ℝ≥0∞` so that no
   integrability hypothesis is ever needed.
 * `dirichletForm_indicator` — at an indicator the Dirichlet form is the symmetrised flow
-  `(flow S Sᶜ + flow Sᶜ S)/2`; `dirichletForm_indicator_of_isReversible` — under detailed
-  balance it is the escape flow `flow S Sᶜ` itself; `conductanceOn_eq_dirichletForm_div` —
+  `(flow Sᶜ S + flow S Sᶜ)/2`; `dirichletForm_indicator_of_isReversible` — under detailed
+  balance it is the escape flow `flow Sᶜ` S itself; `conductance_eq_dirichletForm_div` —
   hence `Φ(S)` is the Rayleigh quotient `E(1_S, 1_S) / pi(S)`.
 
 ## What is taken from `Warmness` rather than reproved here
@@ -84,13 +84,13 @@ and stands in for its proof, which is the failure mode the non-vacuity rule and
 the discussion in `Algorithms/KV97/Analysis/HitProbability.lean` §0 warn about, and which
 `../gaussian-cooling-vempala/lean/GaussianCooling/Conductance.lean`
 (`MixingFromConductance`) exhibits.  The decay bound enters the one theorem that needs it,
-`mixesWithin_of_conductance_decay`, as an explicit hypothesis on the caller, so that
+`mixesWithin_of_globalConductance_decay`, as an explicit hypothesis on the caller, so that
 substituting a real proof later is a matter of supplying that argument.
 
-Concretely, what is missing between `conductanceOn_eq_dirichletForm_div` and the decay
+Concretely, what is missing between `conductance_eq_dirichletForm_div` and the decay
 bound is: a variance functional on `ℝ≥0∞`-valued or `L²(pi)` functions, a definition of the
 spectral gap as the infimum of `dirichletForm / variance`, the easy direction
-`gap ≤ 2 · conductance` (which the indicator computation above already almost gives), the
+`gap ≤ 2 · globalConductance` (which the indicator computation above already almost gives), the
 hard direction `gap ≥ phi²/2`, and the passage from a spectral gap to `L²` — and then `TV`
 — contraction of the iterate.  None of that is attempted here.
 
@@ -165,7 +165,7 @@ theorem mixingTime_le {M c eps : ℝ} (hc0 : 0 < c) (heps : 0 < eps) (hle : eps 
 /-! ## The Lovász–Simonovits shape -/
 
 /-- **`√M (1 - phi²/2)^t ≤ eps` once `t ≥ conductanceMixingTime M phi eps`.** -/
-theorem tv_le_of_conductance_decay {M phi eps : ℝ} {tv : ℕ → ℝ} (hM : 1 ≤ M) (hphi0 : 0 < phi)
+theorem tv_le_of_globalConductance_decay {M phi eps : ℝ} {tv : ℕ → ℝ} (hM : 1 ≤ M) (hphi0 : 0 < phi)
     (hphi1 : phi ≤ 1) (heps : 0 < eps)
     (hdecay : ∀ t, tv t ≤ Real.sqrt M * (1 - phi ^ 2 / 2) ^ t) {t : ℕ}
     (ht : conductanceMixingTime M phi eps ≤ t) : tv t ≤ eps := by
@@ -202,14 +202,14 @@ variable {Ω : Type*} [MeasurableSpace Ω]
 The decay bound is a *hypothesis*, not something this file proves or assumes on the side:
 see the module docstring.  Supplying it is the caller's obligation, and is exactly what a
 proof of the Cheeger inequality would discharge. -/
-theorem mixesWithin_of_conductance_decay {P : Kernel Ω Ω} {pi mu0 : Measure Ω} {M phi eps : ℝ}
+theorem mixesWithin_of_globalConductance_decay {P : Kernel Ω Ω} {pi mu0 : Measure Ω} {M phi eps : ℝ}
     (hM : 1 ≤ M) (hphi0 : 0 < phi) (hphi1 : phi ≤ 1) (heps : 0 < eps)
     (hdecay : ∀ s : ℕ, TVLe (iterate P mu0 s) pi
       (ENNReal.ofReal (Real.sqrt M * (1 - phi ^ 2 / 2) ^ s)))
     {t : ℕ} (ht : conductanceMixingTime M phi eps ≤ t) :
     MixesWithin P pi mu0 t (ENNReal.ofReal eps) :=
   (hdecay t).mono (ENNReal.ofReal_le_ofReal
-    (tv_le_of_conductance_decay (tv := fun s => Real.sqrt M * (1 - phi ^ 2 / 2) ^ s) hM hphi0
+    (tv_le_of_globalConductance_decay (tv := fun s => Real.sqrt M * (1 - phi ^ 2 / 2) ^ s) hM hphi0
       hphi1 heps (fun _ => le_rfl) ht))
 
 /-- Started at stationarity the chain is already mixed, at every `t` and with `eps = 0`. -/
@@ -220,27 +220,27 @@ theorem mixesWithin_of_invariant {P : Kernel Ω Ω} {pi : Measure Ω} (h : Kerne
 
 /-! ## A non-vacuity witness
 
-`ArlibCommunity.Foundations.MarkovChainTheory.exists_mixesWithin_and_conductance_eq` (in `Warmness`) already exhibits
+`ArlibCommunity.Foundations.MarkovChainTheory.exists_mixesWithin_and_globalConductance_eq` (in `Warmness`) already exhibits
 one chain that is simultaneously a `MixesWithin _ _ _ 1 0` instance and a kernel of
 conductance `1/2`.  The statement below strengthens it to *every* starting probability
 measure, and additionally records invariance of the target, which is what the mixing
 theorems above quantify over. -/
 
 /-- **Non-vacuity witness.** -/
-theorem exists_conductance_pos_and_mixesWithin :
+theorem exists_globalConductance_pos_and_mixesWithin :
     ∃ (Om : Type) (_ : MeasurableSpace Om) (P : Kernel Om Om) (pi : Measure Om),
       IsMarkovKernel P ∧ IsProbabilityMeasure pi ∧ Kernel.Invariant P pi ∧
-        conductance P pi = 1 / 2 ∧
+        globalConductance pi P = 1 / 2 ∧
         ∀ mu0 : Measure Om, IsProbabilityMeasure mu0 → MixesWithin P pi mu0 1 0 := by
   refine ⟨Bool, inferInstance, Kernel.const Bool piHalf, piHalf, inferInstance, inferInstance,
-    (isReversible_const piHalf).invariant, conductance_const_piHalf, ?_⟩
+    (isReversible_const piHalf).invariant, globalConductance_const_piHalf, ?_⟩
   intro mu0 _
   exact mixesWithin_const piHalf mu0
 
 /-! ## The Dirichlet form
 
 The classical route from a conductance bound to the geometric decay hypothesis of
-`mixesWithin_of_conductance_decay` runs through the Cheeger inequality, which compares the
+`mixesWithin_of_globalConductance_decay` runs through the Cheeger inequality, which compares the
 conductance with the spectral gap of the chain.  **The Cheeger inequality is not proved in
 this file, and nothing here assumes it**: what follows is only the first, elementary half
 of the dictionary — the identification of the *Dirichlet form at an indicator* with the
@@ -282,7 +282,7 @@ theorem lintegral_kernel_sub_indicator_sq (P : Kernel Ω Ω) {S : Set Ω} (hS : 
 theorem dirichletForm_indicator (P : Kernel Ω Ω) (pi : Measure Ω) {S : Set Ω}
     (hS : MeasurableSet S) :
     dirichletForm P pi (Set.indicator S (fun _ => (1 : ℝ)))
-      = (flow P pi S Sᶜ + flow P pi Sᶜ S) / 2 := by
+      = (flow pi P S Sᶜ + flow pi P Sᶜ S) / 2 := by
   rw [dirichletForm]
   congr 1
   calc ∫⁻ x, ∫⁻ y, ENNReal.ofReal ((Set.indicator S (fun _ => (1 : ℝ)) x
@@ -293,21 +293,21 @@ theorem dirichletForm_indicator (P : Kernel Ω Ω) (pi : Measure Ω) {S : Set Ω
     _ = (∫⁻ x, Set.indicator S (fun x => P x Sᶜ) x ∂pi)
           + ∫⁻ x, Set.indicator Sᶜ (fun x => P x S) x ∂pi :=
         lintegral_add_right _ ((Kernel.measurable_coe P hS).indicator hS.compl)
-    _ = flow P pi S Sᶜ + flow P pi Sᶜ S := by
+    _ = flow pi P S Sᶜ + flow pi P Sᶜ S := by
         rw [lintegral_indicator hS, lintegral_indicator hS.compl]
         rfl
 
 /-- **For a reversible chain the Dirichlet form at an indicator is the escape flow.** -/
 theorem dirichletForm_indicator_of_isReversible {P : Kernel Ω Ω} {pi : Measure Ω}
-    (hrev : IsReversible P pi) {S : Set Ω} (hS : MeasurableSet S) :
-    dirichletForm P pi (Set.indicator S (fun _ => (1 : ℝ))) = flow P pi S Sᶜ := by
-  rw [dirichletForm_indicator P pi hS, ← hrev S Sᶜ hS hS.compl, ← two_mul, mul_div_assoc,
+    (hrev : Kernel.IsReversible P pi) {S : Set Ω} (hS : MeasurableSet S) :
+    dirichletForm P pi (Set.indicator S (fun _ => (1 : ℝ))) = flow pi P S Sᶜ := by
+  rw [dirichletForm_indicator P pi hS, ← flow_comm_of_isReversible hrev hS hS.compl, ← two_mul, mul_div_assoc,
     ENNReal.mul_div_cancel (by simp) (by simp)]
 
 /-- **The conductance of a set is a Rayleigh quotient of the Dirichlet form.** -/
-theorem conductanceOn_eq_dirichletForm_div {P : Kernel Ω Ω} {pi : Measure Ω}
-    (hrev : IsReversible P pi) {S : Set Ω} (hS : MeasurableSet S) :
-    conductanceOn P pi S = dirichletForm P pi (Set.indicator S (fun _ => (1 : ℝ))) / pi S := by
-  rw [conductanceOn, dirichletForm_indicator_of_isReversible hrev hS]
+theorem conductance_eq_dirichletForm_div {P : Kernel Ω Ω} {pi : Measure Ω}
+    (hrev : Kernel.IsReversible P pi) {S : Set Ω} (hS : MeasurableSet S) :
+    conductance pi P S = dirichletForm P pi (Set.indicator S (fun _ => (1 : ℝ))) / pi S := by
+  rw [conductance, dirichletForm_indicator_of_isReversible hrev hS]
 
 end ArlibCommunity.Foundations.MarkovChainTheory

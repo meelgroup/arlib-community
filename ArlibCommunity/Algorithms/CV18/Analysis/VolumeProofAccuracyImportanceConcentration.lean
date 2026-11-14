@@ -94,7 +94,7 @@ theorem bind_accuracyImportanceProgram_success_deviation_le_of_isWarm
       accuracyPhase_speedy_spectralGap_ge q I hsigma2
   have hgap : 0 < spectralGap P pi :=
     (div_pos (sq_pos_of_pos hphi) (by norm_num : (0 : ℝ) < 2)).trans_le hgapLower
-  have hrev1 : IsReversible (P ^ 1) pi := by simpa using hrev
+  have hrev1 : Kernel.IsReversible (P ^ 1) pi := by simpa using hrev
   have hpsd1 : HasNonnegSpectrum (P ^ 1) pi := by simpa using hpsd
   have hne1 : (rayleighSet (P ^ 1) pi).Nonempty := by simpa using hne
   have hgap1 : 0 < spectralGap (P ^ 1) pi := by simpa using hgap

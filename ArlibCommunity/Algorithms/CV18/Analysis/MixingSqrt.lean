@@ -24,9 +24,9 @@ it a theorem.
 ## The conductance bound is a hypothesis here
 
 Nothing in this file proves a conductance bound, and no file that proves one is imported.
-Every theorem below takes `ENNReal.ofReal (…) ≤ conductance P pi` as a binder, in exactly
-the shape `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge` and
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell_comparable` state it.  That is the
+Every theorem below takes `ENNReal.ofReal (…) ≤ globalConductance pi` P as a binder, in exactly
+the shape `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_sqrt_ge` and
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge_of_ell_comparable` state it.  That is the
 The generic-versus-specific split: the consequence is proved over *any* kernel with the stated
 conductance, and the composition with a particular kernel is a separate step.
 
@@ -37,11 +37,11 @@ operative step, the crux identity; `stepCount_new_eq`, `stepCount_old_eq` — th
 `5120²·n²·C/(ln 2)²` and `5120²·n³·C/(ln 2)²`; `stepCount_old_eq_dim_mul_new` — the ratio,
 `C/Φ_old² = n·(C/Φ_new²)`, for every numerator `C`.
 
-*The mixing theorems (§2–§4).*  `mixesWithin_of_conductance_of_stepCount` is the workhorse:
-`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_of_smallSets` (`ConductanceToTV.lean`)
+*The mixing theorems (§2–§4).*  `mixesWithin_of_globalConductance_of_stepCount` is the workhorse:
+`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance_of_smallSets` (`ConductanceToTV.lean`)
 with its abstract `conductanceMixingTime` deadline replaced by the explicit real bound
 `(log M + 2·log(1/ε))/Φ² + 1` of `ArlibCommunity.Foundations.MarkovChainTheory.conductanceMixingTime_le`.
-`mixesWithin_of_conductance_sqrt` reads it at `Φ = δ·ln 2/(640·σ·√n)`, and
+`mixesWithin_of_globalConductance_sqrt` reads it at `Φ = δ·ln 2/(640·σ·√n)`, and
 **`mixesWithin_at_operative_step`** — the headline — at `δ = σ/(8√n)`, where `σ` cancels:
 
     5120²·n²·(log M + 2·log(1/ε))/(ln 2)² + 1     steps suffice          (new route)
@@ -65,7 +65,7 @@ of the headline theorem at once, on `Bool`, and derives its conclusion *through*
 
 ## Plain chain versus lazy chain, and the one hypothesis that is not discharged
 
-The `-of-stepCount` route consumes `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_of_smallSets`,
+The `-of-stepCount` route consumes `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance_of_smallSets`,
 whose ingredients are the hard direction of Cheeger (`Cheeger.lean`) and the `L²`
 contraction (`L2Mixing.lean`).  Those need `HasNonnegSpectrum P pi`, and it is **not**
 removable: `ConductanceToTV.lean` records the swap kernel on `Bool`, reversible with
@@ -78,7 +78,7 @@ removable: `ConductanceToTV.lean` records the swap kernel on `Bool`, reversible 
 * the **lazy-chain** theorems (`mixesWithin_lazy_at_operative_step` and friends) assume no
   spectral property at all — `ArlibCommunity.Foundations.MarkovChainTheory.hasNonnegSpectrum_lazy` supplies it from
   reversibility of `P` — at exactly four times the deadline, the factor `4` being
-  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_lazy`'s exact halving of the conductance.  Their
+  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_lazy`'s exact halving of the conductance.  Their
   conductance hypothesis is still about the **plain** kernel `P`.
 
 The remaining binders are the same in both: `hrev` (reversibility), `hsmall` (some
@@ -208,51 +208,51 @@ variable {Ω : Type*} [MeasurableSpace Ω]
 /-- **The workhorse: a conductance bound, an explicit step count.**
 
 Every theorem below is this one at a particular `phi`.  It is
-`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_of_smallSets` (`ConductanceToTV.lean`)
+`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance_of_smallSets` (`ConductanceToTV.lean`)
 with its `conductanceMixingTime` deadline replaced by the explicit real bound of
 `ArlibCommunity.Foundations.MarkovChainTheory.conductanceMixingTime_le`, and with the conductance hypothesis in the
 `ℝ≥0∞` form a conductance theorem states it in. -/
-theorem mixesWithin_of_conductance_of_stepCount {P : Kernel Ω Ω} [IsMarkovKernel P]
-    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
-    (hpsd : HasNonnegSpectrum P pi) (hsmall : (SmallSets pi (1 / 2)).Nonempty)
+theorem mixesWithin_of_globalConductance_of_stepCount {P : Kernel Ω Ω} [IsMarkovKernel P]
+    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
+    (hpsd : HasNonnegSpectrum P pi) (hsmall : (smallSets pi (1 / 2)).Nonempty)
     {mu0 : Measure Ω} [IsProbabilityMeasure mu0] {M phi eps : ℝ} (hM : 1 ≤ M)
     (hwarm : IsWarm (ENNReal.ofReal M) mu0 pi) (hphi0 : 0 < phi) (hphi1 : phi ≤ 1)
-    (heps0 : 0 < eps) (heps1 : eps ≤ 1) (hcond : ENNReal.ofReal phi ≤ conductance P pi)
+    (heps0 : 0 < eps) (heps1 : eps ≤ 1) (hcond : ENNReal.ofReal phi ≤ globalConductance pi P)
     {t : ℕ} (ht : (Real.log M + 2 * Real.log (1 / eps)) / phi ^ 2 + 1 ≤ (t : ℝ)) :
     MixesWithin P pi mu0 t (ENNReal.ofReal eps) := by
   have hsqrtM : (1 : ℝ) ≤ Real.sqrt M := by
     have h := Real.sqrt_le_sqrt hM
     rwa [Real.sqrt_one] at h
   have hle : eps ≤ Real.sqrt M := le_trans heps1 hsqrtM
-  have hctop : conductance P pi ≠ ⊤ :=
-    ne_top_of_le_ne_top ENNReal.one_ne_top (conductance_le_one P pi hsmall)
-  have hphi : phi ≤ (conductance P pi).toReal := by
+  have hctop : globalConductance pi P ≠ ⊤ :=
+    ne_top_of_le_ne_top ENNReal.one_ne_top (globalConductance_le_one pi P hsmall)
+  have hphi : phi ≤ (globalConductance pi P).toReal := by
     have h := ENNReal.toReal_mono hctop hcond
     rwa [ENNReal.toReal_ofReal hphi0.le] at h
   have hT : conductanceMixingTime M phi eps ≤ t := by
     have hcast : ((conductanceMixingTime M phi eps : ℕ) : ℝ) ≤ (t : ℝ) :=
       le_trans (conductanceMixingTime_le hM hphi0 heps0 hle) ht
     exact_mod_cast hcast
-  exact mixesWithin_of_conductance_of_smallSets hrev hpsd hsmall hM hwarm hphi0 hphi1 heps0
+  exact mixesWithin_of_globalConductance_of_smallSets hrev hpsd hsmall hM hwarm hphi0 hphi1 heps0
     hphi hT
 
 /-- **The same for the lazy chain, at four times the deadline and no spectral hypothesis.**
 
 `ArlibCommunity.Foundations.MarkovChainTheory.hasNonnegSpectrum_lazy` supplies `hpsd` from reversibility of `P` alone,
-and `ArlibCommunity.Foundations.MarkovChainTheory.conductance_lazy` charges exactly a factor `2` in the conductance —
+and `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_lazy` charges exactly a factor `2` in the conductance —
 hence the `4` in front of the step count, which is `(phi/2)⁻² = 4·phi⁻²`.  The conductance
 hypothesis is still about the **plain** kernel `P`. -/
-theorem mixesWithin_lazy_of_conductance_of_stepCount {P : Kernel Ω Ω} [IsMarkovKernel P]
-    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
-    (hsmall : (SmallSets pi (1 / 2)).Nonempty)
+theorem mixesWithin_lazy_of_globalConductance_of_stepCount {P : Kernel Ω Ω} [IsMarkovKernel P]
+    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
+    (hsmall : (smallSets pi (1 / 2)).Nonempty)
     {mu0 : Measure Ω} [IsProbabilityMeasure mu0] {M phi eps : ℝ} (hM : 1 ≤ M)
     (hwarm : IsWarm (ENNReal.ofReal M) mu0 pi) (hphi0 : 0 < phi) (hphi1 : phi ≤ 1)
-    (heps0 : 0 < eps) (heps1 : eps ≤ 1) (hcond : ENNReal.ofReal phi ≤ conductance P pi)
+    (heps0 : 0 < eps) (heps1 : eps ≤ 1) (hcond : ENNReal.ofReal phi ≤ globalConductance pi P)
     {t : ℕ} (ht : 4 * ((Real.log M + 2 * Real.log (1 / eps)) / phi ^ 2) + 1 ≤ (t : ℝ)) :
     MixesWithin (lazy P) pi mu0 t (ENNReal.ofReal eps) := by
-  refine mixesWithin_of_conductance_of_stepCount (isReversible_lazy hrev)
+  refine mixesWithin_of_globalConductance_of_stepCount (isReversible_lazy hrev)
     (hasNonnegSpectrum_lazy hrev) hsmall hM hwarm (by linarith) (by linarith) heps0 heps1
-    (ofReal_half_le_conductance_lazy hcond) ?_
+    (ofReal_half_le_globalConductance_lazy hcond) ?_
   have hrw : (Real.log M + 2 * Real.log (1 / eps)) / (phi / 2) ^ 2
       = 4 * ((Real.log M + 2 * Real.log (1 / eps)) / phi ^ 2) := by
     rw [div_pow]
@@ -264,23 +264,23 @@ theorem mixesWithin_lazy_of_conductance_of_stepCount {P : Kernel Ω Ω} [IsMarko
 /-! ## 3. The `√n` conductance bound, at a general step `δ`
 
 The conductance bound is a **hypothesis** here, in exactly the shape
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge` and
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell_comparable` produce it.  Nothing in
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_sqrt_ge` and
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge_of_ell_comparable` produce it.  Nothing in
 this file proves a conductance bound, and nothing here imports a file that does: composing
 the two is the caller's job. -/
 
 /-- **`Φ ≥ δ·ln 2/(640·σ·√n)` gives an explicit mixing time.**
 
 `hδσ` is the step cap that the conductance theorems already carry (`hδσ` there too), and it
-is what makes `phi ≤ 1` (`ArlibCommunity.Foundations.MarkovChainTheory.isoStep_conductance_le_inv_160`, which gives the
+is what makes `phi ≤ 1` (`ArlibCommunity.Foundations.MarkovChainTheory.isoStep_globalConductance_le_inv_160`, which gives the
 much better `phi ≤ 1/160`). -/
-theorem mixesWithin_of_conductance_sqrt {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ)
+theorem mixesWithin_of_globalConductance_sqrt {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ)
     (hδ : 0 < δ) (hδσ : δ ≤ σ / (8 * Real.sqrt n)) {P : Kernel Ω Ω} [IsMarkovKernel P]
-    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
-    (hpsd : HasNonnegSpectrum P pi) (hsmall : (SmallSets pi (1 / 2)).Nonempty)
+    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
+    (hpsd : HasNonnegSpectrum P pi) (hsmall : (smallSets pi (1 / 2)).Nonempty)
     {mu0 : Measure Ω} [IsProbabilityMeasure mu0] {M eps : ℝ} (hM : 1 ≤ M)
     (hwarm : IsWarm (ENNReal.ofReal M) mu0 pi) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
-    (hΦ : ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n)) ≤ conductance P pi)
+    (hΦ : ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n)) ≤ globalConductance pi P)
     {t : ℕ} (ht : (Real.log M + 2 * Real.log (1 / eps))
       / (δ * Real.log 2 / (640 * σ * Real.sqrt n)) ^ 2 + 1 ≤ (t : ℝ)) :
     MixesWithin P pi mu0 t (ENNReal.ofReal eps) := by
@@ -289,19 +289,19 @@ theorem mixesWithin_of_conductance_sqrt {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (
   have hlog : 0 < Real.log 2 := Real.log_pos (by norm_num)
   have hphi0 : 0 < δ * Real.log 2 / (640 * σ * Real.sqrt n) := by positivity
   have hphi1 : δ * Real.log 2 / (640 * σ * Real.sqrt n) ≤ 1 :=
-    le_trans (isoStep_conductance_le_inv_160 hn hσ hδ hδσ) (by norm_num)
-  exact mixesWithin_of_conductance_of_stepCount hrev hpsd hsmall hM hwarm hphi0 hphi1 heps0
+    le_trans (isoStep_globalConductance_le_inv_160 hn hσ hδ hδσ) (by norm_num)
+  exact mixesWithin_of_globalConductance_of_stepCount hrev hpsd hsmall hM hwarm hphi0 hphi1 heps0
     heps1 hΦ ht
 
-/-- **The lazy counterpart of `mixesWithin_of_conductance_sqrt`**, with no spectral
+/-- **The lazy counterpart of `mixesWithin_of_globalConductance_sqrt`**, with no spectral
 hypothesis and four times the deadline. -/
-theorem mixesWithin_lazy_of_conductance_sqrt {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ)
+theorem mixesWithin_lazy_of_globalConductance_sqrt {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ)
     (hδ : 0 < δ) (hδσ : δ ≤ σ / (8 * Real.sqrt n)) {P : Kernel Ω Ω} [IsMarkovKernel P]
-    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
-    (hsmall : (SmallSets pi (1 / 2)).Nonempty)
+    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
+    (hsmall : (smallSets pi (1 / 2)).Nonempty)
     {mu0 : Measure Ω} [IsProbabilityMeasure mu0] {M eps : ℝ} (hM : 1 ≤ M)
     (hwarm : IsWarm (ENNReal.ofReal M) mu0 pi) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
-    (hΦ : ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n)) ≤ conductance P pi)
+    (hΦ : ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n)) ≤ globalConductance pi P)
     {t : ℕ} (ht : 4 * ((Real.log M + 2 * Real.log (1 / eps))
       / (δ * Real.log 2 / (640 * σ * Real.sqrt n)) ^ 2) + 1 ≤ (t : ℝ)) :
     MixesWithin (lazy P) pi mu0 t (ENNReal.ofReal eps) := by
@@ -310,8 +310,8 @@ theorem mixesWithin_lazy_of_conductance_sqrt {n : ℕ} (hn : 2 ≤ n) {σ δ : �
   have hlog : 0 < Real.log 2 := Real.log_pos (by norm_num)
   have hphi0 : 0 < δ * Real.log 2 / (640 * σ * Real.sqrt n) := by positivity
   have hphi1 : δ * Real.log 2 / (640 * σ * Real.sqrt n) ≤ 1 :=
-    le_trans (isoStep_conductance_le_inv_160 hn hσ hδ hδσ) (by norm_num)
-  exact mixesWithin_lazy_of_conductance_of_stepCount hrev hsmall hM hwarm hphi0 hphi1 heps0
+    le_trans (isoStep_globalConductance_le_inv_160 hn hσ hδ hδσ) (by norm_num)
+  exact mixesWithin_lazy_of_globalConductance_of_stepCount hrev hsmall hM hwarm hphi0 hphi1 heps0
     heps1 hΦ ht
 
 /-! ## 4. At the operative step `δ = σ/(8√n)`
@@ -364,17 +364,17 @@ at the operative step *before* the cancellation, so it is literally what a condu
 theorem of the form `Φ ≥ δ·ln 2/(640·σ·√n)` delivers when handed `δ = σ/(8√n)`. -/
 theorem mixesWithin_at_operative_step {n : ℕ} (hn : 2 ≤ n) {σ : ℝ} (hσ : 0 < σ)
     {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω} [IsProbabilityMeasure pi]
-    (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
-    (hsmall : (SmallSets pi (1 / 2)).Nonempty)
+    (hrev : Kernel.IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
+    (hsmall : (smallSets pi (1 / 2)).Nonempty)
     {mu0 : Measure Ω} [IsProbabilityMeasure mu0] {M eps : ℝ} (hM : 1 ≤ M)
     (hwarm : IsWarm (ENNReal.ofReal M) mu0 pi) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     (hΦ : ENNReal.ofReal (σ / (8 * Real.sqrt n) * Real.log 2 / (640 * σ * Real.sqrt n))
-      ≤ conductance P pi)
+      ≤ globalConductance pi P)
     {t : ℕ} (ht : 5120 ^ 2 * (n : ℝ) ^ 2 * (Real.log M + 2 * Real.log (1 / eps))
       / Real.log 2 ^ 2 + 1 ≤ (t : ℝ)) :
     MixesWithin P pi mu0 t (ENNReal.ofReal eps) := by
   rw [speedy_new_bound_at_operative_step hn hσ] at hΦ
-  refine mixesWithin_of_conductance_of_stepCount hrev hpsd hsmall hM hwarm
+  refine mixesWithin_of_globalConductance_of_stepCount hrev hpsd hsmall hM hwarm
     (log_two_div_dim_pos hn) (log_two_div_dim_le_one hn) heps0 heps1 hΦ ?_
   rwa [stepCount_new_eq hn]
 
@@ -385,17 +385,17 @@ Same machinery, same step, same `σ`; the only change is the conductance bound
 `5120²·n³·(log M + 2·log(1/ε))/(ln 2)² + 1`. -/
 theorem mixesWithin_at_operative_step_old_route {n : ℕ} (hn : 2 ≤ n) {σ : ℝ} (hσ : 0 < σ)
     {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω} [IsProbabilityMeasure pi]
-    (hrev : IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
-    (hsmall : (SmallSets pi (1 / 2)).Nonempty)
+    (hrev : Kernel.IsReversible P pi) (hpsd : HasNonnegSpectrum P pi)
+    (hsmall : (smallSets pi (1 / 2)).Nonempty)
     {mu0 : Measure Ω} [IsProbabilityMeasure mu0] {M eps : ℝ} (hM : 1 ≤ M)
     (hwarm : IsWarm (ENNReal.ofReal M) mu0 pi) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     (hΦ : ENNReal.ofReal (σ / (8 * Real.sqrt n) * Real.log 2 / (640 * σ * (n : ℝ)))
-      ≤ conductance P pi)
+      ≤ globalConductance pi P)
     {t : ℕ} (ht : 5120 ^ 2 * (n : ℝ) ^ 3 * (Real.log M + 2 * Real.log (1 / eps))
       / Real.log 2 ^ 2 + 1 ≤ (t : ℝ)) :
     MixesWithin P pi mu0 t (ENNReal.ofReal eps) := by
   rw [speedy_old_bound_at_operative_step hn hσ] at hΦ
-  refine mixesWithin_of_conductance_of_stepCount hrev hpsd hsmall hM hwarm
+  refine mixesWithin_of_globalConductance_of_stepCount hrev hpsd hsmall hM hwarm
     (log_two_div_dim_sqrt_pos hn) (log_two_div_dim_sqrt_le_one hn) heps0 heps1 hΦ ?_
   rwa [stepCount_old_eq hn]
 
@@ -403,32 +403,32 @@ theorem mixesWithin_at_operative_step_old_route {n : ℕ} (hn : 2 ≤ n) {σ : �
 2·log(1/ε))/(ln 2)² + 1` steps.  The factor `4` is `ArlibCommunity.Foundations.MarkovChainTheory.conductance_lazy`. -/
 theorem mixesWithin_lazy_at_operative_step {n : ℕ} (hn : 2 ≤ n) {σ : ℝ} (hσ : 0 < σ)
     {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω} [IsProbabilityMeasure pi]
-    (hrev : IsReversible P pi) (hsmall : (SmallSets pi (1 / 2)).Nonempty)
+    (hrev : Kernel.IsReversible P pi) (hsmall : (smallSets pi (1 / 2)).Nonempty)
     {mu0 : Measure Ω} [IsProbabilityMeasure mu0] {M eps : ℝ} (hM : 1 ≤ M)
     (hwarm : IsWarm (ENNReal.ofReal M) mu0 pi) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     (hΦ : ENNReal.ofReal (σ / (8 * Real.sqrt n) * Real.log 2 / (640 * σ * Real.sqrt n))
-      ≤ conductance P pi)
+      ≤ globalConductance pi P)
     {t : ℕ} (ht : 4 * (5120 ^ 2 * (n : ℝ) ^ 2 * (Real.log M + 2 * Real.log (1 / eps))
       / Real.log 2 ^ 2) + 1 ≤ (t : ℝ)) :
     MixesWithin (lazy P) pi mu0 t (ENNReal.ofReal eps) := by
   rw [speedy_new_bound_at_operative_step hn hσ] at hΦ
-  refine mixesWithin_lazy_of_conductance_of_stepCount hrev hsmall hM hwarm
+  refine mixesWithin_lazy_of_globalConductance_of_stepCount hrev hsmall hM hwarm
     (log_two_div_dim_pos hn) (log_two_div_dim_le_one hn) heps0 heps1 hΦ ?_
   rwa [stepCount_new_eq hn]
 
 /-- **The old route for the lazy chain**: `4·5120²·n³·(log M + 2·log(1/ε))/(ln 2)² + 1`. -/
 theorem mixesWithin_lazy_at_operative_step_old_route {n : ℕ} (hn : 2 ≤ n) {σ : ℝ} (hσ : 0 < σ)
     {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω} [IsProbabilityMeasure pi]
-    (hrev : IsReversible P pi) (hsmall : (SmallSets pi (1 / 2)).Nonempty)
+    (hrev : Kernel.IsReversible P pi) (hsmall : (smallSets pi (1 / 2)).Nonempty)
     {mu0 : Measure Ω} [IsProbabilityMeasure mu0] {M eps : ℝ} (hM : 1 ≤ M)
     (hwarm : IsWarm (ENNReal.ofReal M) mu0 pi) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     (hΦ : ENNReal.ofReal (σ / (8 * Real.sqrt n) * Real.log 2 / (640 * σ * (n : ℝ)))
-      ≤ conductance P pi)
+      ≤ globalConductance pi P)
     {t : ℕ} (ht : 4 * (5120 ^ 2 * (n : ℝ) ^ 3 * (Real.log M + 2 * Real.log (1 / eps))
       / Real.log 2 ^ 2) + 1 ≤ (t : ℝ)) :
     MixesWithin (lazy P) pi mu0 t (ENNReal.ofReal eps) := by
   rw [speedy_old_bound_at_operative_step hn hσ] at hΦ
-  refine mixesWithin_lazy_of_conductance_of_stepCount hrev hsmall hM hwarm
+  refine mixesWithin_lazy_of_globalConductance_of_stepCount hrev hsmall hM hwarm
     (log_two_div_dim_sqrt_pos hn) (log_two_div_dim_sqrt_le_one hn) heps0 heps1 hΦ ?_
   rwa [stepCount_old_eq hn]
 
@@ -514,7 +514,7 @@ all of it at once, at `n = 2`, `σ = 1`, `M = 2`, `ε = 1/2`, with the conclusio
 
 The uniform resampler on `Bool` is `piHalf`-reversible (`isReversible_const`), has
 non-negative spectrum (`hasNonnegSpectrum_const`), lives on a space with a set of mass `1/2`
-(`singleton_mem_smallSets`), has conductance `1/2 ≥ ln 2/10240` (`conductance_const_piHalf`),
+(`singleton_mem_smallSets`), has conductance `1/2 ≥ ln 2/10240` (`globalConductance_const_piHalf`),
 and `dirac true` is `2`-warm for it.  Every hypothesis of the headline theorem is therefore
 simultaneously satisfiable, with a non-trivial conclusion (`ε = 1/2 < 1`). -/
 theorem mixesWithin_at_operative_step_const_piHalf (t : ℕ)
@@ -540,7 +540,7 @@ theorem mixesWithin_at_operative_step_const_piHalf (t : ℕ)
     · simp [Measure.dirac_apply' _ hA, h]
   · -- the conductance at the operative step: `ln 2/10240 ≤ 1/2 = Φ`.
     rw [speedy_new_bound_at_operative_step (n := 2) (by norm_num) one_pos,
-      conductance_const_piHalf, ← ofReal_one_half]
+      globalConductance_const_piHalf, ← ofReal_one_half]
     refine ENNReal.ofReal_le_ofReal ?_
     have hlog : Real.log 2 ≤ 1 := by
       have := Real.log_two_lt_d9
@@ -562,10 +562,10 @@ section AxiomCheck
 #print axioms stepCount_old_eq
 #print axioms stepCount_old_eq_dim_mul_new
 #print axioms two_mul_log_sqrt_div_eq
-#print axioms mixesWithin_of_conductance_of_stepCount
-#print axioms mixesWithin_lazy_of_conductance_of_stepCount
-#print axioms mixesWithin_of_conductance_sqrt
-#print axioms mixesWithin_lazy_of_conductance_sqrt
+#print axioms mixesWithin_of_globalConductance_of_stepCount
+#print axioms mixesWithin_lazy_of_globalConductance_of_stepCount
+#print axioms mixesWithin_of_globalConductance_sqrt
+#print axioms mixesWithin_lazy_of_globalConductance_sqrt
 #print axioms conductanceMixingTime_at_operative_step_le
 #print axioms conductanceMixingTime_at_operative_step_old_le
 #print axioms mixesWithin_at_operative_step

@@ -40,7 +40,7 @@ arbitrarily small; therefore the need for a warm start)".)
 
 For the record, and because it costs thirty lines, the `s`-conductance `Φ_s` is defined
 below and the comparison `Φ ≤ Φ_s` — the formal content of "no loss" — is proved
-(`conductance_le_conductanceS`).  Nothing else in this file uses it.
+(`globalConductance_le_conductanceS`).  Nothing else in this file uses it.
 
 ## What is proved here, unconditionally
 
@@ -73,12 +73,12 @@ is proved with no hypotheses beyond measurability:
 * `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_of_exceptional_of_ls` — Theorem 1.1 for an arbitrary
   Markov kernel, given the Lovász–Simonovits decay bound as an explicit binder.
 
-*The `s`-conductance route* (`§ The s-conductance route to the same deadline`).  A second,
+*The `s`-conductance route* (`§ The s-globalConductance to route the same deadline`).  A second,
 independent derivation of the logarithmic dependence, which is what a chain whose small sets
 misbehave (the ball walk) is forced to use:
 
 * `ArlibCommunity.Foundations.MarkovChainTheory.conductanceSOn`, `MidSets`, `conductanceS` — the definition of `Φ_s`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_le_conductanceS` — **`Φ ≤ Φ_s`**: a conductance bound valid
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_le_conductanceS` — **`Φ ≤ Φ_s`**: a conductance bound valid
   for *every* subset, which is what Theorem 4.2 supplies, is an `Φ_s` bound with no loss at
   any `s`.  `le_conductanceS` is the same fact in the form a caller uses.
 * `ArlibCommunity.Foundations.MarkovChainTheory.SmallSetDiscrepancy` and `smallSetDiscrepancy_of_isWarm` — the
@@ -97,8 +97,8 @@ misbehave (the ball walk) is forced to use:
   `lsThreshold` at `phi = r/(2²⁸ n R)` by `lsThreshold_eq_lvThreshold`.
 * `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_hitAndRun` — the statement of Theorem 1.1, at that
   threshold, for `ArlibCommunity.Foundations.MarkovChainTheory.hitAndRun K` and `ArlibCommunity.Foundations.Convex.uniformOn volume K`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.ofReal_inv_le_conductance_hitAndRun_of_unitBall` — the `r = 1` case of
-  the conductance hypothesis, discharged from `conductance_hitAndRun_ge` (Theorem 4.2) via
+* `ArlibCommunity.Foundations.MarkovChainTheory.ofReal_inv_le_globalConductance_hitAndRun_of_unitBall` — the `r = 1` case of
+  the conductance hypothesis, discharged from `globalConductance_hitAndRun_ge` (Theorem 4.2) via
   `D ≤ 2R`.
 * `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_hitAndRun_unitBall` — the two combined: Theorem 1.1 for a
   body with a unit inball, with `hphi` discharged, leaving only `hLem41`, `hIso` and `hLS`.
@@ -109,7 +109,7 @@ misbehave (the ball walk) is forced to use:
   `K = [0,4]²` — so before the clause was inserted both theorems here were **vacuous** at
   that instance.  The clause costs nothing: it is the paper's own "clearly `h(x) ≤ 1/3`",
   proved as `ArlibCommunity.Foundations.MarkovChainTheory.weight_le_third`, and it is discharged inside
-  `conductance_hitAndRun_ge_of_tv`, not by any caller.
+  `globalConductance_hitAndRun_ge_of_tv`, not by any caller.
 
 *Non-vacuity*.
 
@@ -133,8 +133,8 @@ statement it does not prove.  Each has a machine-checked satisfiability witness.
 ⚠ **This paragraph used to claim the implication is "not proved anywhere in this
 repository".  That was FALSE, and is corrected here (2026-08-11).**  The Cheeger inequality
 and the spectral-gap⟹TV passage are *both* proved, and had been since 2026-08-08/09:
-`ArlibCommunity.Foundations.MarkovChainTheory.sq_conductance_div_two_le_spectralGap` (`Cheeger.lean`, the hard
-direction) and `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_of_ofReal_le_conductance` (`L2Mixing.lean`,
+`ArlibCommunity.Foundations.MarkovChainTheory.sq_globalConductance_div_two_le_spectralGap` (`Cheeger.lean`, the hard
+direction) and `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_of_ofReal_le_globalConductance` (`L2Mixing.lean`,
 whose conclusion is literally the body of the `hLS` binder below), both axiom-clean.
 `MixingFromConductance.lean`'s corresponding passage is stale in the same way: it is true of
 *that file*, but `Cheeger.lean` and `L2Mixing.lean` import it and supply exactly the pieces
@@ -142,7 +142,7 @@ it lists as missing.
 
 `ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/ConductanceToTV.lean` therefore **discharges `hLS`**:
 `ArlibCommunity.Foundations.MarkovChainTheory.ls_of_hasNonnegSpectrum` proves this binder verbatim from
-`IsReversible`, `HasNonnegSpectrum` and a nonempty `SmallSets`, and `ls_lazy` proves it for
+`Kernel.IsReversible`, `HasNonnegSpectrum` and a nonempty `smallSets`, and `ls_lazy` proves it for
 `lazy P` from reversibility alone.  What is *not* reachable is `hLS` for the **plain**
 `hitAndRun K` kernel, which needs a hit-and-run-specific spectral fact — and that is exactly
 the paper's own gap recorded as error 2 below, not a formalisation shortfall.
@@ -169,9 +169,9 @@ application is atomless, so the caveat does not bite there.
 
     ofReal (r / (2^28 * n * R)) ≤ conductance (hitAndRun K) (uniformOn volume K)
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` (in `HitAndRunConductance.lean`, itself
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge` (in `HitAndRunConductance.lean`, itself
 conditional on the paper's Theorem 2.1) proves `Φ ≥ 1/(2²⁷·n·D)` for a body of diameter `D`
-containing a **unit** ball.  `ofReal_inv_le_conductance_hitAndRun_of_unitBall` below
+containing a **unit** ball.  `ofReal_inv_le_globalConductance_hitAndRun_of_unitBall` below
 discharges `hphi` from it in the case `r = 1`, using `D ≤ 2R`.  The general `r` is the
 paper's "hit-and-run is invariant under a scaling of space (i.e. there is a 1–1 mapping
 between the random walk in `K` and `cK`)"; ~~the equivariance
@@ -246,8 +246,8 @@ against the paper's `10¹⁰ · n² (R²/r²) ln(M/ε)`.  The gap is a factor of
   `lintegral_le_of_tvLe`.
 * `ArlibCommunity.Foundations.MarkovChainTheory.mixingTime`, `mul_pow_le_of_mixingTime_le`
   (`MixingFromConductance.lean`).
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance`, `conductanceOn`, `flow` (`Conductance.lean`).
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` (`HitAndRunConductance.lean`).
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance`, `conductance`, `flow` (`Conductance.lean`).
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge` (`HitAndRunConductance.lean`).
 -/
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
@@ -265,7 +265,7 @@ variable {Ω : Type*} [MeasurableSpace Ω]
 
 Recorded for completeness; **nothing else in this file uses it**, because §5 of
 *Hit-and-Run from a Corner* does not (see the module docstring).  The one substantive
-statement is `conductance_le_conductanceS`: a conductance bound valid for *every* set — which
+statement is `globalConductance_le_conductanceS`: a conductance bound valid for *every* set — which
 is what Theorem 4.2 provides — is a bound on `Φ_s` with no loss whatsoever. -/
 
 /-- The **`s`-conductance of a single set**, `flow(S, Sᶜ) / (π(S) − s)`.  This is the
@@ -275,7 +275,7 @@ nothing.  As always in `ℝ≥0∞`, division by `0` is `0`, so the definition h
 when `s < π(S)`. -/
 noncomputable def conductanceSOn (P : Kernel Ω Ω) (pi : Measure Ω) (s : ℝ≥0∞) (S : Set Ω) :
     ℝ≥0∞ :=
-  flow P pi S Sᶜ / (pi S - s)
+  flow pi P S Sᶜ / (pi S - s)
 
 /-- The sets the `s`-conductance infimum ranges over: measurable sets whose mass lies
 strictly above `s` and at most `1/2`. -/
@@ -285,10 +285,10 @@ def MidSets (pi : Measure Ω) (s : ℝ≥0∞) : Set (Set Ω) :=
 /-- The **`s`-conductance** `Φ_s = inf { flow(S,Sᶜ)/(π(S) − s) : s < π(S) ≤ 1/2 }`.
 
 Lovász–Simonovits write the infimum over `s < π(S) < 1 − s` with denominator
-`min(π(S), π(Sᶜ)) − s`.  For a **reversible** chain the two agree: `flow(S,Sᶜ) = flow(Sᶜ,S)`
+`min(π(S), π(Sᶜ)) − s`.  For a **reversible** chain the two agree: `flow(S,Sᶜ) = flow`(Sᶜ,S)
 (`ArlibCommunity.Foundations.MarkovChainTheory.IsReversible`), so the summand at a set of mass above `1/2` equals the
 summand at its complement, which is already in the family.  Cutting at `1/2` — as
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance` does — therefore loses nothing and keeps the definition
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance` does — therefore loses nothing and keeps the definition
 uniform with the rest of `Conductance.lean`. -/
 noncomputable def conductanceS (P : Kernel Ω Ω) (pi : Measure Ω) (s : ℝ≥0∞) : ℝ≥0∞ :=
   ⨅ S ∈ MidSets pi s, conductanceSOn P pi s S
@@ -299,9 +299,9 @@ theorem mem_midSets_iff {pi : Measure Ω} {s : ℝ≥0∞} {S : Set Ω} :
 
 /-- Discounting the denominator can only increase the quotient:
 `Φ(S) ≤ Φ_s(S)` for every set and every `s`. -/
-theorem conductanceOn_le_conductanceSOn (P : Kernel Ω Ω) (pi : Measure Ω) (s : ℝ≥0∞)
-    (S : Set Ω) : conductanceOn P pi S ≤ conductanceSOn P pi s S := by
-  rw [conductanceOn, conductanceSOn]
+theorem conductance_le_conductanceSOn (pi : Measure Ω) (P : Kernel Ω Ω) (s : ℝ≥0∞)
+    (S : Set Ω) : conductance pi P S ≤ conductanceSOn P pi s S := by
+  rw [conductance, conductanceSOn]
   gcongr
   exact tsub_le_self
 
@@ -312,20 +312,20 @@ This is the formal content of the sentence in §1 of *Hit-and-Run from a Corner*
 distinguishes hit-and-run from the ball walk: Theorem 4.2 bounds the conductance of *every*
 subset, so the `s`-discount buys nothing and is not needed.  (For the ball walk the
 inequality is still true but useless, because the left-hand side is `0`.) -/
-theorem conductance_le_conductanceS (P : Kernel Ω Ω) (pi : Measure Ω) (s : ℝ≥0∞) :
-    conductance P pi ≤ conductanceS P pi s := by
+theorem globalConductance_le_conductanceS (pi : Measure Ω) (P : Kernel Ω Ω) (s : ℝ≥0∞) :
+    globalConductance pi P ≤ conductanceS P pi s := by
   refine le_iInf₂ fun S hS => ?_
   have hpos : 0 < pi S :=
     lt_of_le_of_lt (show (0 : ℝ≥0∞) ≤ s from zero_le) hS.2.1
-  exact (conductance_le_conductanceOn P pi hS.1 hpos hS.2.2).trans
-    (conductanceOn_le_conductanceSOn P pi s S)
+  exact (globalConductance_le_conductance pi P hS.1 hpos hS.2.2).trans
+    (conductance_le_conductanceSOn pi P s S)
 
 /-- To bound `Φ_s` from below it suffices to bound the ordinary conductance of every
 measurable set of mass in `(0, 1/2]`. -/
 theorem le_conductanceS (P : Kernel Ω Ω) (pi : Measure Ω) (s : ℝ≥0∞) {c : ℝ≥0∞}
-    (h : ∀ S : Set Ω, MeasurableSet S → 0 < pi S → pi S ≤ 1 / 2 → c ≤ conductanceOn P pi S) :
+    (h : ∀ S : Set Ω, MeasurableSet S → 0 < pi S → pi S ≤ 1 / 2 → c ≤ conductance pi P S) :
     c ≤ conductanceS P pi s :=
-  (le_conductance P pi h).trans (conductance_le_conductanceS P pi s)
+  (le_globalConductance pi P h).trans (globalConductance_le_conductanceS pi P s)
 
 /-! ## Exceptional starts
 
@@ -513,8 +513,8 @@ theorem tvLe_iterate_of_exceptional_of_ls {P : Kernel Ω Ω} [IsMarkovKernel P]
     (hSm : MeasurableSet S)
     (hS : sigma S ≤ ENNReal.ofReal (eps / 2))
     (hdom : ∀ A : Set Ω, MeasurableSet A → sigma (A \ S) ≤ ENNReal.ofReal M * pi A)
-    (hcond : ENNReal.ofReal phi ≤ conductance P pi)
-    (hLS : ∀ ph W : ℝ, 0 < ph → ph ≤ 1 → 1 ≤ W → ENNReal.ofReal ph ≤ conductance P pi →
+    (hcond : ENNReal.ofReal phi ≤ globalConductance pi P)
+    (hLS : ∀ ph W : ℝ, 0 < ph → ph ≤ 1 → 1 ≤ W → ENNReal.ofReal ph ≤ globalConductance pi P →
       ∀ mu : Measure Ω, IsProbabilityMeasure mu → ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal W) mu pi →
         ∀ t : ℕ, ArlibCommunity.Foundations.Convex.TVLe (iterate P mu t) pi
           (ENNReal.ofReal (Real.sqrt W * (1 - ph ^ 2 / 2) ^ t)))
@@ -550,7 +550,7 @@ theorem tvLe_iterate_of_exceptional_of_ls {P : Kernel Ω Ω} [IsMarkovKernel P]
 but the `s`-conductance form of the Lovász–Simonovits theorem gives the *same* logarithmic
 dependence by a different route, and it is the form a chain whose small sets misbehave — the
 ball walk — is forced to use.  It is recorded here in full because it costs little once the
-warm-start bookkeeping is in place, and because `conductance_le_conductanceS` says a
+warm-start bookkeeping is in place, and because `globalConductance_le_conductanceS` says a
 hit-and-run conductance bound feeds it with no loss.
 
 The Lovász–Simonovits statement (RSA 1993, Corollary 1.5, `s`-conductance form) is
@@ -623,7 +623,7 @@ binder, not a theorem of this repository.  Everything else is proved: the passag
 warmness to `H_s ≤ M s`, the choice of `s`, and the step count.
 
 Note the shape of the answer: the deadline is `O(Φ_s⁻² log(M/ε))`, *logarithmic* in `M` and
-`1/ε`.  Together with `conductance_le_conductanceS` — which says that a conductance bound
+`1/ε`.  Together with `globalConductance_le_conductanceS` — which says that a conductance bound
 valid for **every** subset, as Theorem 4.2 supplies, is an `Φ_s` bound with no loss at any
 `s` — this is a second, independent route to Theorem 1.1's logarithmic dependence. -/
 theorem tvLe_iterate_of_sConductance {P : Kernel Ω Ω} [IsMarkovKernel P]
@@ -679,7 +679,7 @@ theorem tvLe_iterate_of_sConductance {P : Kernel Ω Ω} [IsMarkovKernel P]
 
 **The Lovász–Simonovits `s`-conductance bound as usually quoted is false on a space with
 atoms.**  Counterexample, on `Bool` with `pi = piHalf`: take `P = Kernel.const Bool piHalf`
-(whose conductance `conductance_const_piHalf` computes to `1/2`), `s = 1/4`, `H = 0`,
+(whose conductance `globalConductance_const_piHalf` computes to `1/2`), `s = 1/4`, `H = 0`,
 `ph = 1/2`, `mu = Measure.dirac true`.
 
 * the premise `ofReal (1/2) ≤ conductanceS P piHalf (1/4)` holds — the only admissible sets
@@ -727,7 +727,7 @@ theorem iterate_deterministic_id (mu : Measure Ω) (t : ℕ) :
 /-- **Nothing ever escapes a set under the identity kernel**: every ergodic flow out of a
 measurable set into its complement is `0`. -/
 theorem flow_deterministic_id_compl (pi : Measure Ω) {S : Set Ω} (hS : MeasurableSet S) :
-    flow (Kernel.deterministic (id : Ω → Ω) measurable_id) pi S Sᶜ = 0 := by
+    flow pi (Kernel.deterministic (id : Ω → Ω) measurable_id) S Sᶜ = 0 := by
   have hle : ∫⁻ x in S,
         (Kernel.deterministic (id : Ω → Ω) measurable_id : Kernel Ω Ω) x Sᶜ ∂pi
       ≤ ∫⁻ _x in S, (0 : ℝ≥0∞) ∂pi := by
@@ -789,7 +789,7 @@ theorem lsS_deterministic_id :
 A theorem whose hypothesis nothing satisfies proves nothing.  The instantly mixing kernel
 `Kernel.const Ω pi` — resample from `pi` at every step — satisfies the Lovász–Simonovits
 binder `hLS` exactly, at every `phi` and every warmness `W`, and
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_const_piHalf` computes its conductance on the two-point space
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_const_piHalf` computes its conductance on the two-point space
 to be `1/2`.  So `hLS` is inhabited, and the abstract Theorem 1.1 below is not vacuous.
 
 Contrast the swap kernel `P x = dirac (!x)` on `Bool`, recorded in the module docstring: it is
@@ -801,7 +801,7 @@ a binder and not a `def`. -/
 `ArlibCommunity.Foundations.Convex.tvLe_one` suffices; at `t ≥ 1` the law is exactly `pi`. -/
 theorem ls_const (pi : Measure Ω) [IsProbabilityMeasure pi] :
     ∀ ph W : ℝ, 0 < ph → ph ≤ 1 → 1 ≤ W →
-      ENNReal.ofReal ph ≤ conductance (Kernel.const Ω pi) pi →
+      ENNReal.ofReal ph ≤ globalConductance pi (Kernel.const Ω pi) →
       ∀ mu : Measure Ω, IsProbabilityMeasure mu → ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal W) mu pi →
         ∀ t : ℕ, ArlibCommunity.Foundations.Convex.TVLe (iterate (Kernel.const Ω pi) mu t) pi
           (ENNReal.ofReal (Real.sqrt W * (1 - ph ^ 2 / 2) ^ t)) := by
@@ -868,9 +868,9 @@ theorem tvLe_iterate_hitAndRun {n : ℕ} (hn : 1 ≤ n)
     (hdom : ∀ A : Set (EuclideanSpace ℝ (Fin n)), MeasurableSet A →
       sigma (A \ S) ≤ ENNReal.ofReal M * ArlibCommunity.Foundations.Convex.uniformOn volume K A)
     (hphi : ENNReal.ofReal (r / (2 ^ 28 * (n : ℝ) * R))
-      ≤ conductance (hitAndRun K) (ArlibCommunity.Foundations.Convex.uniformOn volume K))
+      ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (hitAndRun K))
     (hLS : ∀ ph W : ℝ, 0 < ph → ph ≤ 1 → 1 ≤ W →
-      ENNReal.ofReal ph ≤ conductance (hitAndRun K) (ArlibCommunity.Foundations.Convex.uniformOn volume K) →
+      ENNReal.ofReal ph ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (hitAndRun K) →
       ∀ mu : Measure (EuclideanSpace ℝ (Fin n)), IsProbabilityMeasure mu →
         ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal W) mu (ArlibCommunity.Foundations.Convex.uniformOn volume K) →
         ∀ t : ℕ, ArlibCommunity.Foundations.Convex.TVLe (iterate (hitAndRun K) mu t) (ArlibCommunity.Foundations.Convex.uniformOn volume K)
@@ -890,7 +890,7 @@ theorem tvLe_iterate_hitAndRun {n : ℕ} (hn : 1 ≤ n)
 
 /-! ## Discharging `hphi` from Theorem 4.2, in the unit-inball case
 
-`conductance_hitAndRun_ge` (`HitAndRunConductance.lean`) is Theorem 4.2 in the paper's own
+`globalConductance_hitAndRun_ge` (`HitAndRunConductance.lean`) is Theorem 4.2 in the paper's own
 normalisation: a body of diameter `D` containing a **unit** ball has conductance at least
 `1/(2²⁷·n·D)`.  A body inside a ball of radius `R` has `D ≤ 2R`, so the same bound reads
 `1/(2²⁸·n·R)` — which is exactly `hphi` at `r = 1`.
@@ -900,13 +900,13 @@ the equivariance of `hitAndRun` under `x ↦ c·x`.  That equivariance is **not*
 repository, so the general-`r` `hphi` remains a hypothesis; see the module docstring. -/
 
 /-- **`hphi` at `r = 1`, from Theorem 4.2.**  The two `∀`-hypotheses are those of
-`conductance_hitAndRun_ge` and are passed straight through: `hLem41` is the paper's Lemma 4.1
+`globalConductance_hitAndRun_ge` and are passed straight through: `hLem41` is the paper's Lemma 4.1
 (one-step overlap, being proved in `HitAndRunOverlap.lean`) and `hIso` is the paper's
 Theorem 2.1 (the weighted isoperimetric inequality) **in its corrected form**, carrying the
 clause `∀ x ∈ K, h x ≤ 1/3` without which Theorem 2.1 is false (`not_hIso_two`).
 Nothing is added to them here beyond that correction, which is inherited verbatim from
-`conductance_hitAndRun_ge`. -/
-theorem ofReal_inv_le_conductance_hitAndRun_of_unitBall {n : ℕ} (hn : 1 ≤ n)
+`globalConductance_hitAndRun_ge`. -/
+theorem ofReal_inv_le_globalConductance_hitAndRun_of_unitBall {n : ℕ} (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     {z zout : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -925,7 +925,7 @@ theorem ofReal_inv_le_conductance_hitAndRun_of_unitBall {n : ℕ} (hn : 1 ≤ n)
           min (ArlibCommunity.Foundations.Convex.uniformOn volume K T₁) (ArlibCommunity.Foundations.Convex.uniformOn volume K T₂)
         ≤ ArlibCommunity.Foundations.Convex.uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / (2 ^ 28 * (n : ℝ) * R))
-      ≤ conductance (hitAndRun K) (ArlibCommunity.Foundations.Convex.uniformOn volume K) := by
+      ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (hitAndRun K) := by
   have hKb : Bornology.IsBounded K := Metric.isBounded_closedBall.subset hout
   have hD : Metric.diam K ≤ 2 * R := by
     refine Metric.diam_le_of_forall_dist_le (by positivity) fun x hx y hy => ?_
@@ -935,7 +935,7 @@ theorem ofReal_inv_le_conductance_hitAndRun_of_unitBall {n : ℕ} (hn : 1 ≤ n)
       _ = dist x zout + dist y zout := by rw [dist_comm zout y]
       _ ≤ R + R := by gcongr
       _ = 2 * R := by ring
-  have h := conductance_hitAndRun_ge hn hKc hKcl hKm hKb hball hD hLem41 hIso
+  have h := globalConductance_hitAndRun_ge hn hKc hKcl hKm hKb hball hD hLem41 hIso
   rwa [show (2 : ℝ) ^ 27 * (n : ℝ) * (2 * R) = 2 ^ 28 * (n : ℝ) * R from by ring] at h
 
 /-- **Theorem 1.1 for a body with a unit inball**, with `hphi` discharged.
@@ -976,7 +976,7 @@ theorem tvLe_iterate_hitAndRun_unitBall {n : ℕ} (hn : 1 ≤ n)
           min (ArlibCommunity.Foundations.Convex.uniformOn volume K T₁) (ArlibCommunity.Foundations.Convex.uniformOn volume K T₂)
         ≤ ArlibCommunity.Foundations.Convex.uniformOn volume K ((K \ T₁) \ T₂))
     (hLS : ∀ ph W : ℝ, 0 < ph → ph ≤ 1 → 1 ≤ W →
-      ENNReal.ofReal ph ≤ conductance (hitAndRun K) (ArlibCommunity.Foundations.Convex.uniformOn volume K) →
+      ENNReal.ofReal ph ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (hitAndRun K) →
       ∀ mu : Measure (EuclideanSpace ℝ (Fin n)), IsProbabilityMeasure mu →
         ArlibCommunity.Foundations.Convex.IsWarm (ENNReal.ofReal W) mu (ArlibCommunity.Foundations.Convex.uniformOn volume K) →
         ∀ t : ℕ, ArlibCommunity.Foundations.Convex.TVLe (iterate (hitAndRun K) mu t) (ArlibCommunity.Foundations.Convex.uniformOn volume K)
@@ -985,7 +985,7 @@ theorem tvLe_iterate_hitAndRun_unitBall {n : ℕ} (hn : 1 ≤ n)
     ArlibCommunity.Foundations.Convex.TVLe (iterate (hitAndRun K) sigma m) (ArlibCommunity.Foundations.Convex.uniformOn volume K)
       (ENNReal.ofReal eps) := by
   have hR : (0 : ℝ) < R := lt_of_lt_of_le one_pos hR1
-  have hphi := ofReal_inv_le_conductance_hitAndRun_of_unitBall hn hKc hKcl hKm hball hR hout
+  have hphi := ofReal_inv_le_globalConductance_hitAndRun_of_unitBall hn hKc hKcl hKm hball hR hout
     hLem41 hIso
   refine tvLe_iterate_hitAndRun hn one_pos hR hR1 hM heps0 heps1 hSm hS hdom ?_ hLS hm
   simpa using hphi
@@ -1001,7 +1001,7 @@ asserted. -/
 
 section AxiomCheck
 
-#print axioms conductance_le_conductanceS
+#print axioms globalConductance_le_conductanceS
 #print axioms tvLe_restrictOff
 #print axioms isWarm_restrictOff
 #print axioms tvLe_iterate_of_exceptional
@@ -1013,7 +1013,7 @@ section AxiomCheck
 #print axioms ls_const
 #print axioms lsThreshold_eq_lvThreshold
 #print axioms tvLe_iterate_hitAndRun
-#print axioms ofReal_inv_le_conductance_hitAndRun_of_unitBall
+#print axioms ofReal_inv_le_globalConductance_hitAndRun_of_unitBall
 #print axioms tvLe_iterate_hitAndRun_unitBall
 
 /-! ### A non-vacuity witness for the abstract Theorem 1.1
@@ -1025,7 +1025,7 @@ conclusion *through that theorem* rather than directly.  So the abstract Theorem
 vacuously true over an unsatisfiable hypothesis set.
 
 The chain is the uniform resampler on `Bool`, whose conductance
-`conductance_const_piHalf` computes to exactly `1/2`; the start is `dirac true`, which is
+`globalConductance_const_piHalf` computes to exactly `1/2`; the start is `dirac true`, which is
 `2`-warm with respect to `piHalf`; the exceptional set is empty. -/
 
 /-- **Non-vacuity witness.**  Every hypothesis of `tvLe_iterate_of_exceptional_of_ls` is
@@ -1054,7 +1054,7 @@ theorem tvLe_iterate_const_piHalf :
         _ ≤ 2 * piHalf A := by gcongr
     · simp [Measure.dirac_apply' _ hA, h]
   · -- the conductance of the uniform resampler is `1/2`.
-    rw [conductance_const_piHalf, hhalf]
+    rw [globalConductance_const_piHalf, hhalf]
   · -- `252` is past the deadline: `lsThreshold 2 (1/2) (1/2) = 4·log 64 ≤ 4·63`.
     have hlog : Real.log 64 ≤ 63 := by
       have := Real.log_le_sub_one_of_pos (show (0 : ℝ) < 64 by norm_num)

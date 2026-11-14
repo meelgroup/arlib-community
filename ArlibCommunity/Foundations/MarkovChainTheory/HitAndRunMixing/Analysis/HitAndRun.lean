@@ -110,11 +110,11 @@ applying the Localization Lemma to *signed* integrands; that step is an open gap
 repository (see `TransverseCut.lean` (not in this repository; see `REFERENCES.md`), and note that Borsuk–Ulam is absent
 from Mathlib v4.32).  What this file supplies is the object such a bound would be
 *about*, together with the reversibility that any conductance argument presupposes.  The
-conductance machinery it feeds — `ArlibCommunity.Foundations.MarkovChainTheory.conductance`, `Cheeger.lean`,
-`L2Mixing.lean`'s `mixesWithin_of_conductance` — is already in place and needs only the
+conductance machinery it feeds — `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance`, `Cheeger.lean`,
+`L2Mixing.lean`'s `mixesWithin_of_globalConductance` — is already in place and needs only the
 missing isoperimetric input.
 
-`ArlibCommunity.Foundations.MarkovChainTheory.BallWalkMixing.Analysis.BallWalk` is imported for `IsReversible.smul` and for the
+`ArlibCommunity.Foundations.MarkovChainTheory.BallWalkMixing.Analysis.BallWalk` is imported for `isReversible_smul` and for the
 unit-ball guards `volume_unitBall_ne_zero` / `volume_unitBall_ne_top` /
 `isProbabilityMeasure_uniformOn_unitBall`, which are walk-independent.
 -/
@@ -708,7 +708,7 @@ theorem measurable_setLIntegral_density {K : Set (EuclideanSpace ℝ (Fin n))}
 /-- **The flow of the hit-and-run walk, split into its two parts.** -/
 theorem flow_hitAndRun {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
     {S T : Set (EuclideanSpace ℝ (Fin n))} (hS : MeasurableSet S) (hT : MeasurableSet T) :
-    flow (hitAndRun K) ((volume : Measure (EuclideanSpace ℝ (Fin n))).restrict K) S T
+    flow ((volume : Measure (EuclideanSpace ℝ (Fin n))).restrict K) (hitAndRun K) S T
       = 2 / sphereArea n * (∫⁻ u in S ∩ K, ∫⁻ x in T ∩ K, hitAndRunDensity K u x)
         + ∫⁻ u in T ∩ (S ∩ K), (1 - hitAndRunProposal K u Set.univ) := by
   have hpt : ∀ u : EuclideanSpace ℝ (Fin n), hitAndRun K u T
@@ -738,17 +738,18 @@ theorem lintegral_density_comm {K : Set (EuclideanSpace ℝ (Fin n))} (hK : Meas
 /-- **Detailed balance for Lebesgue measure restricted to `K`.** -/
 theorem isReversible_hitAndRun_restrict {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) :
-    IsReversible (hitAndRun K) ((volume : Measure (EuclideanSpace ℝ (Fin n))).restrict K) := by
+    Kernel.IsReversible (hitAndRun K) ((volume : Measure (EuclideanSpace ℝ (Fin n))).restrict K) := by
   intro S T hS hT
+  show flow _ _ S T = flow _ _ T S
   have h2 : T ∩ (S ∩ K) = S ∩ (T ∩ K) := by
     ext y; simp only [Set.mem_inter_iff]; tauto
   rw [flow_hitAndRun hK hS hT, flow_hitAndRun hK hT hS, lintegral_density_comm hK S T, h2]
 
 /-- **The hit-and-run walk is reversible for the uniform measure on `K`.** -/
 theorem isReversible_hitAndRun {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) :
-    IsReversible (hitAndRun K)
+    Kernel.IsReversible (hitAndRun K)
       (ArlibCommunity.Foundations.Convex.uniformOn (volume : Measure (EuclideanSpace ℝ (Fin n))) K) :=
-  (isReversible_hitAndRun_restrict hK).smul _
+  isReversible_smul (isReversible_hitAndRun_restrict hK) _
 
 /-- **The uniform measure on `K` is invariant for hit-and-run.** -/
 theorem invariant_hitAndRun {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) :
@@ -874,7 +875,7 @@ theorem exists_hitAndRun_witness :
       MeasurableSet K ∧
       IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn (volume : Measure (EuclideanSpace ℝ (Fin n))) K) ∧
       IsMarkovKernel (hitAndRun K) ∧
-      IsReversible (hitAndRun K)
+      Kernel.IsReversible (hitAndRun K)
         (ArlibCommunity.Foundations.Convex.uniformOn (volume : Measure (EuclideanSpace ℝ (Fin n))) K) ∧
       Kernel.Invariant (hitAndRun K)
         (ArlibCommunity.Foundations.Convex.uniformOn (volume : Measure (EuclideanSpace ℝ (Fin n))) K) ∧

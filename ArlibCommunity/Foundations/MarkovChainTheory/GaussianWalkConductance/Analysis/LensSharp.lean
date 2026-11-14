@@ -24,7 +24,7 @@ only through `n‖u−v‖² ≤ δ²`.  See the axiom audit at the bottom.
 
 ## Why `1/4`: what the constant buys the Metropolis route
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_ge`
 (`MetropolisConductanceSharp.lean`) is the conductance bound the TTC volume price
 consumes, not the speedy-walk one that `OverlapSqrt.lean` closes at `1/8`.  The threshold
 quoted for that route is a lens constant of `3e/40 ≈ 0.2039` — `3/40` from the overlap chain
@@ -111,7 +111,7 @@ theorem carries it; §7 is a one-sided kernel comparison.  **Nothing in this fil
 overlap bound, a conductance bound, or a mixing time.**  In particular the Metropolis overlap
 lemma at separation `δ/√n` is not proved here;
 `ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian_overlap_of_convex` remains at separation `δ/n`, and
-`conductance_metropolisGaussian_sharp_ge`'s own hypotheses (`hiso` above all, which is
+`globalConductance_metropolisGaussian_sharp_ge`'s own hypotheses (`hiso` above all, which is
 unproved in this repository) are untouched.  Nothing here may be quoted as an `O*(n³)` claim.
 
 ## Main results
@@ -375,7 +375,7 @@ theorem midpoint_mem_ball_inter_sharp {K : Set (EuclideanSpace ℝ (Fin n))} (hK
 /-! ## 4. The Metropolis threshold is cleared -/
 
 /-- **`3e/40 ≤ 1/4`.**  `3e/40 ≈ 0.2039` is the lens constant the Metropolis route of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge` needs; `1/4` is what this file
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_ge` needs; `1/4` is what this file
 proves.  Machine-checked so that the claim is not prose. -/
 theorem three_exp_div_forty_le_quarter : 3 * Real.exp 1 / 40 ≤ 1 / 4 := by
   have := Real.exp_one_lt_d9
@@ -598,7 +598,7 @@ theorem lens_volume_ge_at_sep_sqrt_dim_quarter (hn : 2 ≤ n)
 
 Pure arithmetic about inequalities of the shape `1 ≤ 20·a·κ·θ` — the shape of the `hfloor`
 hypothesis of `ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian_overlap_of_convex` and, through it, of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge`.  **Nothing here asserts that
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_ge`.  **Nothing here asserts that
 any theorem carries such a floor at any particular `κ`**; these lemmas say what a floor
 would cost, so that a lens constant can be compared against the alternatives without
 arithmetic done in prose. -/

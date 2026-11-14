@@ -9,8 +9,8 @@ import ArlibCommunity.Foundations.MarkovChainTheory.BallWalkMixing.Analysis.Ball
 # The first unconditional instance of the mixing chain
 
 Every quantitative theorem in this development's Markov-chain stack —
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge`, `ArlibCommunity.Foundations.MarkovChainTheory.cheeger`,
-`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance`,
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_ge`, `ArlibCommunity.Foundations.MarkovChainTheory.cheeger`,
+`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance`,
 `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_lazy_ballWalk` — carries an isoperimetric inequality
 `hiso` as an *inline hypothesis*.  None of them proves one.  For as long as that was true
 the whole chain was conditional: a stack of true implications with nothing established to
@@ -43,7 +43,7 @@ only in dimension one.
 
 ## Main results
 
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_unitBall` — an unconditional lower bound on the
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_unitBall` — an unconditional lower bound on the
   conductance of the ball walk on `Metric.ball 0 1`.
 * `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_lazy_ballWalk_unitBall_uncond` — unconditional
   total-variation mixing of the lazy ball walk to `ArlibCommunity.Foundations.Convex.uniformOn volume (Metric.ball 0 1)`,
@@ -95,7 +95,7 @@ theorem one_div_two_pow_eq (n : ℕ) : ((1:ℝ)/2) ^ n = (1:ℝ)/2 ^ n := by
   rw [div_pow]; norm_num
 
 /-- **The local-conductance hypothesis of the ball walk, discharged on the unit ball.**
-`ofReal_le_ell_unitBall` in the shape `conductance_ballWalk_ge` and
+`ofReal_le_ell_unitBall` in the shape `globalConductance_ballWalk_ge` and
 `mixesWithin_lazy_ballWalk` expect: `θ = 1/2ⁿ` works for every `δ ∈ (0, 1]`. -/
 theorem ofReal_le_ell_unitBall' {n : ℕ} {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1) :
     ∀ x ∈ Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1,
@@ -106,19 +106,19 @@ theorem ofReal_le_ell_unitBall' {n : ℕ} {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ �
 
 /-- **An unconditional conductance bound for the ball walk on the unit ball.**
 
-Both hypotheses that `conductance_ballWalk_ge` leaves open are discharged here: the
+Both hypotheses that `globalConductance_ballWalk_ge` leaves open are discharged here: the
 isoperimetric inequality by `ArlibCommunity.Foundations.Convex.uniformOn_iso_unitBall` (at `κ = (1/2)^(n+1)`) and the
 local-conductance floor by `ofReal_le_ell_unitBall'` (at `θ = 1/2ⁿ`).  Nothing is assumed
 about the body — it is a fixed, explicit set.
 
 The bound is exponentially small in `n`; see the module docstring. -/
-theorem conductance_ballWalk_unitBall (n : ℕ) (hn : 1 ≤ n) {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1) :
+theorem globalConductance_ballWalk_unitBall (n : ℕ) (hn : 1 ≤ n) {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1) :
     min (ENNReal.ofReal ((1:ℝ)/2 ^ n) / 16)
       (ENNReal.ofReal ((1/2:ℝ) ^ (n+1))
         * ENNReal.ofReal ((((1:ℝ)/2 ^ n)) ^ 2 * δ / (n : ℝ)) / 64)
-      ≤ conductance (ballWalk (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1) δ)
-          (ArlibCommunity.Foundations.Convex.uniformOn volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1)) :=
-  conductance_ballWalk_ge hn measurableSet_ball
+      ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1))
+          (ballWalk (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1) δ) :=
+  globalConductance_ballWalk_ge hn measurableSet_ball
     (ne_of_gt (Metric.measure_ball_pos volume _ one_pos)) (ne_of_lt measure_ball_lt_top) hδ
     (θ := (1:ℝ)/2 ^ n) (by positivity) (ofReal_le_ell_unitBall' hδ hδ1)
     (kappa := ENNReal.ofReal ((1/2:ℝ) ^ (n+1))) (ArlibCommunity.Foundations.Convex.uniformOn_iso_unitBall n)

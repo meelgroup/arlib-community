@@ -11,9 +11,9 @@ import ArlibCommunity.Foundations.Convex.CrossRatioIsoperimetry.Analysis.Weighte
 # The weighted cross-ratio isoperimetry for a **lower semicontinuous** weight
 
 `ArlibCommunity.Foundations.Convex.hIso_lowerSemicontinuous` is the `hIso` binder of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` (`HitAndRunConductance.lean`) with one
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge` (`HitAndRunConductance.lean`) with one
 clause added — `LowerSemicontinuous h` — and nothing else changed.
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer_of_localization` is Theorem 4.2 with that binder
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_transfer_of_localization` is Theorem 4.2 with that binder
 **discharged**: `hIso` — the paper's Theorem 2.1 — no longer appears, and the residual binders are
 
 * `hLem41` — Lemma 4.1, owned elsewhere in this repository;
@@ -75,7 +75,7 @@ concave function on a closed body may jump at the boundary.  `1_{interior K}·g`
 semicontinuous (`ArlibCommunity.Foundations.Convex.lowerSemicontinuous_indicator_of_continuousOn`), lies below `g`, and agrees
 with `g` almost everywhere because the frontier of a convex body is null; so it inherits the chord
 bound and the `1/3` bound and keeps Lemma 3.4's average.  That is the *entire* difference between
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_lsc` and the original.
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_tv_lsc` and the original.
 
 ## What the mollified route buys, and where it still stops
 
@@ -163,12 +163,12 @@ trimming, and the gap between `A'` and `A` — are budgeted against `e₀` as `�
 
 ## The binder checks
 
-Nothing here is eyeballed against the source.  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_hIso_copy`
+Nothing here is eyeballed against the source.  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_hIso_copy`
 feeds this file's copy of the `hIso` binder *verbatim* to
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`, so the copy is the real binder;
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`, so the copy is the real binder;
 `ArlibCommunity.Foundations.Convex.hIso_continuous_of_hIso` and `ArlibCommunity.Foundations.Convex.hIso_lowerSemicontinuous_of_hIso` feed that same copy
 to the two restricted statements, so each is that binder with exactly one clause inserted; and
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_hIso_copy_via_lsc` reproves the *original* theorem's statement
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_hIso_copy_via_lsc` reproves the *original* theorem's statement
 through the 375-line replay, so the replay neither weakened the conclusion nor strengthened any
 other hypothesis.
 
@@ -1002,7 +1002,7 @@ section HIso
 
 variable {n : ℕ}
 
-/-- **The `hIso` binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`, with the weight
+/-- **The `hIso` binder of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`, with the weight
 restricted to be continuous.**
 
 Every clause of that binder (`HitAndRunConductance.lean`) is here verbatim — the two
@@ -1192,13 +1192,13 @@ end HIso
 /-! ### The binder check
 
 Two theorems certify, mechanically, that the conclusion of `ArlibCommunity.Foundations.Convex.hIso_continuous` is the `hIso`
-binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` (`HitAndRunConductance.lean`)
+binder of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge` (`HitAndRunConductance.lean`)
 with the single clause `Continuous h` inserted, and nothing else changed — in particular with
 `T₁ ⊆ K` and `T₂ ⊆ K` still present, without which the statement is false
 (`ArlibCommunity.Foundations.Convex.not_crossRatioIso_printed`).
 
-The copy of the binder written out in `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_hIso_copy` is fed
-*verbatim* to `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`, so any drift between the copy and
+The copy of the binder written out in `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_hIso_copy` is fed
+*verbatim* to `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`, so any drift between the copy and
 the real binder would fail to typecheck; and `ArlibCommunity.Foundations.Convex.hIso_continuous_of_hIso` feeds the same copy
 to the restricted statement, so any drift between the copy and `ArlibCommunity.Foundations.Convex.hIso_continuous` would fail
 to typecheck as well.  This is the check that `ArlibCommunity.Foundations.Convex.false_of_crossRatioIso_binder` performs for

@@ -21,7 +21,7 @@ and it reuses that file wholesale wherever the argument is not about the density
 ball-intersection geometry (`volume_ball_le_volume_inter_ball_add`), the three-way flow
 partition (`mul_measure_add_measure_le_mul_flow`, which is stated for an arbitrary
 reversible Markov kernel on an arbitrary measurable space), the laziness bridge (`lazy`,
-`isReversible_lazy`, `hasNonnegSpectrum_lazy`, `conductance_lazy`), and the non-degeneracy
+`isReversible_lazy`, `hasNonnegSpectrum_lazy`, `globalConductance_lazy`), and the non-degeneracy
 lemmas.  What had to be redone is exactly the two steps that see the density.
 
 ## The two steps that are new
@@ -52,7 +52,7 @@ lemmas.  What had to be redone is exactly the two steps that see the density.
 (`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean`) prove the three-set isoperimetric
 inequality for `ArlibCommunity.Foundations.Convex.uniformOn (volume.withDensity g) K` — the *same* measure that is
 stationary for `metropolisGaussian K δ s` — in exactly the shape
-`conductance_metropolisGaussian_ge` consumes.  The density sandwich `m ≤ g ≤ M` those
+`globalConductance_metropolisGaussian_ge` consumes.  The density sandwich `m ≤ g ≤ M` those
 theorems use is available at precisely the parameters needed here: `M = 1` from
 `gaussianWeight_le_one` and `m = e^{-R²/(2s)}` from `exp_le_gaussianWeightReal`, with the
 radius `R` manufactured from convexity by
@@ -64,12 +64,12 @@ is the *same* `m/M`.  So the convex-body theorems below assume **nothing**.
 * `le_metropolisAccept`, `ofReal_exp_le_gaussianWeight` — the acceptance floor.
 * `mul_ell_le_metropolisGaussian_add_metropolisGaussian_compl` — the one-step overlap.
 * `lt_dist_of_metropolisGaussian_lt` — the separation it forces.
-* `conductance_metropolisGaussian_ge` — **the conductance bound**, with the isoperimetric
+* `globalConductance_metropolisGaussian_ge` — **the conductance bound**, with the isoperimetric
   inequality and the local-conductance floor written out inline as `∀`-hypotheses.
 * `exists_smallSet_uniformOn_gaussian` — non-degeneracy of the weighted target.
 * `mixesWithin_lazy_metropolisGaussian` — the mixing time.
-* `conductance_metropolisGaussian_convex`, `mixesWithin_lazy_metropolisGaussian_convex`,
-  `exists_conductance_metropolisGaussian_pos`,
+* `globalConductance_metropolisGaussian_convex`, `mixesWithin_lazy_metropolisGaussian_convex`,
+  `exists_globalConductance_metropolisGaussian_pos`,
   `exists_mixesWithin_lazy_metropolisGaussian_convex` — the unconditional convex-body
   instances, with every hypothesis discharged.
 
@@ -82,7 +82,7 @@ The conductance proved for a convex `K ⊆ R·Bₙ` with an inscribed ball `B(c,
 
 Every one of `α`, `θ`, `κ` is exponentially small in `n` for the Cousins-Vempala parameters
 (`R ≍ √n`, `s` as small as `Θ(1/n)` makes `α = e^{-Θ(n²)}`), and in
-`exists_conductance_metropolisGaussian_pos` the radius `R` itself is only bounded by
+`exists_globalConductance_metropolisGaussian_pos` the radius `R` itself is only bounded by
 `2·vol K/vol B(0,1/2)`, which is exponential in `n`.  **So the conductance here is
 exponentially small in `n` and the mixing time exponentially large; nothing below is a
 polynomial-time statement and none of it may be quoted as one.**  The obstruction is
@@ -96,9 +96,9 @@ this development does not have.
 
 Nothing that is not written inline.  There is **no** `def`, `structure`, `class` or named
 `Prop` in this file — every declaration is a `theorem`.  The two hypotheses with content in
-`conductance_metropolisGaussian_ge` (the isoperimetric inequality `hiso` and the
+`globalConductance_metropolisGaussian_ge` (the isoperimetric inequality `hiso` and the
 local-conductance floor `hell`) appear in full in its type, and both are *discharged* in
-`conductance_metropolisGaussian_convex`, which therefore assumes only geometry.
+`globalConductance_metropolisGaussian_convex`, which therefore assumes only geometry.
 -/
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
@@ -344,7 +344,7 @@ Three hypotheses carry content, all written out inline; none is a `def` or a nam
   enters the conductance to the **first** power (the isoperimetric constant `κ` already
   carries it squared).
 * `hell` — a **uniform lower bound `ℓ(x) ≥ θ` on the unweighted local conductance**, exactly
-  as in `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge`, and satisfiable by
+  as in `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_ge`, and satisfiable by
   `ArlibCommunity.Foundations.MarkovChainTheory.le_ell_of_convex_of_ball_subset` on any convex body with an inscribed
   ball.  Some such hypothesis is forced for the same reason as there: near a boundary point
   of a bounded body the walk really is slow.
@@ -357,7 +357,7 @@ The remaining hypotheses are non-degeneracy: `1 ≤ n`, `K` measurable, `0 < δ`
 
 **The constant is exponentially small in `n`** at the parameters that discharge these
 hypotheses; see the module docstring.  This is not a polynomial-time bound. -/
-theorem conductance_metropolisGaussian_ge (hn : 1 ≤ n)
+theorem globalConductance_metropolisGaussian_ge (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) {δ s : ℝ}
     (hδ : 0 < δ) (hs : 0 < s)
     (hν0 : ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
@@ -380,9 +380,9 @@ theorem conductance_metropolisGaussian_ge (hn : 1 ≤ n)
               (gaussianWeight s)) K ((K \ A) \ B)) :
     min (ENNReal.ofReal (α * θ) / 16)
         (kappa * ENNReal.ofReal ((α * θ) ^ 2 * δ / (n : ℝ)) / 64)
-      ≤ conductance (metropolisGaussian K δ s)
-          (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
-            (gaussianWeight s)) K) := by
+      ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
+            (gaussianWeight s)) K)
+          (metropolisGaussian K δ s) := by
   set ν : Measure (EuclideanSpace ℝ (Fin n)) :=
     (volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity (gaussianWeight s) with hνdef
   haveI : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn ν K) :=
@@ -402,13 +402,13 @@ theorem conductance_metropolisGaussian_ge (hn : 1 ≤ n)
     rw [hthdef, ENNReal.ofReal_mul hα0.le]
     gcongr
     exact hell x hx
-  have hrev : IsReversible (metropolisGaussian K δ s) (ArlibCommunity.Foundations.Convex.uniformOn ν K) :=
+  have hrev : Kernel.IsReversible (metropolisGaussian K δ s) (ArlibCommunity.Foundations.Convex.uniformOn ν K) :=
     isReversible_metropolisGaussian hK δ s
   have hKc : ArlibCommunity.Foundations.Convex.uniformOn ν K Kᶜ = 0 := ArlibCommunity.Foundations.Convex.uniformOn_compl_eq_zero ν hK
   set pi : Measure (EuclideanSpace ℝ (Fin n)) := ArlibCommunity.Foundations.Convex.uniformOn ν K with hpidef
   set P : Kernel (EuclideanSpace ℝ (Fin n)) (EuclideanSpace ℝ (Fin n)) :=
     metropolisGaussian K δ s with hPdef
-  refine le_conductance P pi fun S hSm hSpos hShalf => ?_
+  refine le_globalConductance pi P fun S hSm hSpos hShalf => ?_
   have hpitop : pi S ≠ ⊤ := measure_ne_top _ _
   have hcompl : pi S + pi Sᶜ = 1 := by
     rw [measure_add_measure_compl hSm, measure_univ]
@@ -459,8 +459,8 @@ theorem conductance_metropolisGaussian_ge (hn : 1 ≤ n)
     rw [not_le] at hc
     exact hxS2 ((hmem2 x).2 ⟨⟨hxK, hxS⟩, hc⟩)
   have hflow : ENNReal.ofReal th * (pi ((S ∩ K) \ S1) + pi ((K \ S) \ S2))
-      ≤ 2 * (4 * flow P pi S Sᶜ) := by
-    have h := mul_measure_add_measure_le_mul_flow P pi hrev hSm (hS1m.union hK.compl)
+      ≤ 2 * (4 * flow pi P S Sᶜ) := by
+    have h := mul_measure_add_measure_le_mul_flow pi P hrev hSm (hS1m.union hK.compl)
       (hS2m.union hK.compl) hA' hB'
     rwa [hSA, hSB] at h
   have hpart : pi ((K \ S1) \ S2) ≤ pi ((S ∩ K) \ S1) + pi ((K \ S) \ S2) := by
@@ -509,8 +509,8 @@ theorem conductance_metropolisGaussian_ge (hn : 1 ≤ n)
       rwa [compl_compl]
     exact (lt_dist_of_metropolisGaussian_lt hn hK hδ hs hα1' hαK hSm.compl
       (hellα u (hS1K hu)) hu8 hv8).le
-  have hkey : ENNReal.ofReal th * pi S ≤ 16 * flow P pi S Sᶜ
-      ∨ kappa * ENNReal.ofReal (th ^ 2 * δ / (n : ℝ)) * pi S ≤ 64 * flow P pi S Sᶜ := by
+  have hkey : ENNReal.ofReal th * pi S ≤ 16 * flow pi P S Sᶜ
+      ∨ kappa * ENNReal.ofReal (th ^ 2 * δ / (n : ℝ)) * pi S ≤ 64 * flow pi P S Sᶜ := by
     by_cases hc1 : pi S ≤ 2 * pi ((S ∩ K) \ S1)
     · left
       calc ENNReal.ofReal th * pi S
@@ -519,8 +519,8 @@ theorem conductance_metropolisGaussian_ge (hn : 1 ≤ n)
         _ ≤ 2 * (ENNReal.ofReal th * (pi ((S ∩ K) \ S1) + pi ((K \ S) \ S2))) := by
             gcongr
             exact le_self_add
-        _ ≤ 2 * (2 * (4 * flow P pi S Sᶜ)) := by gcongr
-        _ = 16 * flow P pi S Sᶜ := by ring
+        _ ≤ 2 * (2 * (4 * flow pi P S Sᶜ)) := by gcongr
+        _ = 16 * flow pi P S Sᶜ := by ring
     by_cases hc2 : pi Sᶜ ≤ 2 * pi ((K \ S) \ S2)
     · left
       calc ENNReal.ofReal th * pi S
@@ -531,8 +531,8 @@ theorem conductance_metropolisGaussian_ge (hn : 1 ≤ n)
         _ ≤ 2 * (ENNReal.ofReal th * (pi ((S ∩ K) \ S1) + pi ((K \ S) \ S2))) := by
             gcongr
             exact le_add_self
-        _ ≤ 2 * (2 * (4 * flow P pi S Sᶜ)) := by gcongr
-        _ = 16 * flow P pi S Sᶜ := by ring
+        _ ≤ 2 * (2 * (4 * flow pi P S Sᶜ)) := by gcongr
+        _ = 16 * flow pi P S Sᶜ := by ring
     right
     rw [not_le] at hc1 hc2
     have h1 : pi S < 2 * pi S1 := by
@@ -576,18 +576,18 @@ theorem conductance_metropolisGaussian_ge (hn : 1 ≤ n)
             (kappa * ENNReal.ofReal (th * δ / (n : ℝ)) * pi S1 * pi S2)) := by ring
       _ ≤ 8 * (ENNReal.ofReal th * pi ((K \ S1) \ S2)) := by gcongr
       _ ≤ 8 * (ENNReal.ofReal th * (pi ((S ∩ K) \ S1) + pi ((K \ S) \ S2))) := by gcongr
-      _ ≤ 8 * (2 * (4 * flow P pi S Sᶜ)) := by gcongr
-      _ = 64 * flow P pi S Sᶜ := by ring
+      _ ≤ 8 * (2 * (4 * flow pi P S Sᶜ)) := by gcongr
+      _ = 64 * flow pi P S Sᶜ := by ring
   have hswap : ∀ a b c : ℝ≥0∞, a / c * b = a * b / c := by
     intro a b c
     rw [div_eq_mul_inv, div_eq_mul_inv, mul_right_comm]
-  rw [conductanceOn_apply, ENNReal.le_div_iff_mul_le (Or.inl hSpos.ne') (Or.inl hpitop)]
+  rw [conductance_apply, ENNReal.le_div_iff_mul_le (Or.inl hSpos.ne') (Or.inl hpitop)]
   rcases hkey with h | h
   · calc min (ENNReal.ofReal th / 16)
             (kappa * ENNReal.ofReal (th ^ 2 * δ / (n : ℝ)) / 64) * pi S
         ≤ ENNReal.ofReal th / 16 * pi S := by gcongr; exact min_le_left _ _
       _ = ENNReal.ofReal th * pi S / 16 := hswap _ _ _
-      _ ≤ flow P pi S Sᶜ := by
+      _ ≤ flow pi P S Sᶜ := by
           rw [ENNReal.div_le_iff_le_mul (Or.inl (by norm_num)) (Or.inl (by norm_num))]
           exact h.trans_eq (mul_comm _ _)
   · calc min (ENNReal.ofReal th / 16)
@@ -595,13 +595,13 @@ theorem conductance_metropolisGaussian_ge (hn : 1 ≤ n)
         ≤ kappa * ENNReal.ofReal (th ^ 2 * δ / (n : ℝ)) / 64 * pi S := by
           gcongr; exact min_le_right _ _
       _ = kappa * ENNReal.ofReal (th ^ 2 * δ / (n : ℝ)) * pi S / 64 := hswap _ _ _
-      _ ≤ flow P pi S Sᶜ := by
+      _ ≤ flow pi P S Sᶜ := by
           rw [ENNReal.div_le_iff_le_mul (Or.inl (by norm_num)) (Or.inl (by norm_num))]
           exact h.trans_eq (mul_comm _ _)
 
 /-! ## 5. Non-degeneracy of the weighted target
 
-`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance` needs two facts about the target measure
+`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance` needs two facts about the target measure
 alone: that the conductance is not the empty infimum `⊤`, and that `L²(π)` contains a
 non-constant function.  Both follow from a measurable set of relative `π`-mass in `(0, 1/2]`.
 `ArlibCommunity.Foundations.MarkovChainTheory.exists_smallSet_uniformOn` supplies one for *Lebesgue* measure; the
@@ -637,7 +637,7 @@ theorem withDensity_gaussianWeight_ne_top {s : ℝ} (hs : 0 < s)
 
 /-- **A body of positive finite volume has a piece of relative Gaussian mass in `(0, 1/2]`.**
 
-This is the non-degeneracy input of `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance` for the
+This is the non-degeneracy input of `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance` for the
 weighted target.  The witness is the same ball that
 `ArlibCommunity.Foundations.MarkovChainTheory.exists_volume_inter_ball_pos_lt` produces for Lebesgue measure: the
 Gaussian weight is strictly positive, so it preserves both "positive mass" and "not all the
@@ -694,19 +694,19 @@ theorem exists_smallSet_uniformOn_gaussian (hn : 1 ≤ n)
 
 `ArlibCommunity.Foundations.MarkovChainTheory.lazy` and its two structural theorems `isReversible_lazy`,
 `hasNonnegSpectrum_lazy` are stated for an arbitrary kernel on an arbitrary measurable
-space in `BallWalkConductance.lean`, and `conductance_lazy` says laziness halves the
+space in `BallWalkConductance.lean`, and `globalConductance_lazy` says laziness halves the
 conductance exactly.  So the whole laziness bridge is reused without change. -/
 
 /-- **The lazy Metropolis-filtered Gaussian ball walk is reversible for the
 Gaussian-restricted measure and has nonnegative spectrum** — the two kernel-level
-hypotheses of `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance`. -/
+hypotheses of `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance`. -/
 theorem isReversible_and_hasNonnegSpectrum_lazy_metropolisGaussian
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (δ : ℝ) {s : ℝ}
     (hν0 : ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
       (gaussianWeight s)) K ≠ 0)
     (hνtop : ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
       (gaussianWeight s)) K ≠ ⊤) :
-    IsReversible (lazy (metropolisGaussian K δ s))
+    Kernel.IsReversible (lazy (metropolisGaussian K δ s))
         (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
           (gaussianWeight s)) K)
       ∧ HasNonnegSpectrum (lazy (metropolisGaussian K δ s))
@@ -731,7 +731,7 @@ which is *exactly* the chain's stationary law
 (`ArlibCommunity.Foundations.MarkovChainTheory.invariant_metropolisGaussian`), so there is no residual bias term in
 the conclusion.
 
-The hypotheses with content are the same three as in `conductance_metropolisGaussian_ge` —
+The hypotheses with content are the same three as in `globalConductance_metropolisGaussian_ge` —
 the acceptance floor `hαK`, the local-conductance floor `hell`, and the isoperimetric
 inequality `hiso` — all written out inline, plus the warm start.  All three are discharged
 for a convex body in `mixesWithin_lazy_metropolisGaussian_convex` below.
@@ -786,7 +786,7 @@ theorem mixesWithin_lazy_metropolisGaussian (hn : 1 ≤ n)
   have hphi1 : phi ≤ 1 := by
     refine le_trans (min_le_left _ _) ?_
     nlinarith
-  have hcond := conductance_metropolisGaussian_ge hn hK hδ hs hν0 hνtop hα0 hα1 hαK hθ hell
+  have hcond := globalConductance_metropolisGaussian_ge hn hK hδ hs hν0 hνtop hα0 hα1 hαK hθ hell
     (kappa := ENNReal.ofReal kappa) hiso
   have hbranch1 : ENNReal.ofReal phi * 2 ≤ ENNReal.ofReal (α * θ) / 16 := by
     have h16 : ENNReal.ofReal (α * θ) / 16 = ENNReal.ofReal (α * θ / 16) := by
@@ -820,27 +820,27 @@ theorem mixesWithin_lazy_metropolisGaussian (hn : 1 ≤ n)
       ring
     nlinarith [hmin]
   have hlazy : ENNReal.ofReal phi
-      ≤ conductance (lazy (metropolisGaussian K δ s))
-          (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
-            (gaussianWeight s)) K) := by
-    rw [conductance_lazy]
+      ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
+            (gaussianWeight s)) K)
+          (lazy (metropolisGaussian K δ s)) := by
+    rw [globalConductance_lazy]
     have hstep : ENNReal.ofReal phi
         ≤ min (ENNReal.ofReal (α * θ) / 16)
             (ENNReal.ofReal kappa * ENNReal.ofReal ((α * θ) ^ 2 * δ / (n : ℝ)) / 64) / 2 := by
       rw [ENNReal.le_div_iff_mul_le (Or.inl (by norm_num)) (Or.inl (by norm_num))]
       exact le_min hbranch1 hbranch2
     exact hstep.trans (by gcongr)
-  have hcondtop : conductance (lazy (metropolisGaussian K δ s))
-      (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
-        (gaussianWeight s)) K) ≠ ⊤ :=
+  have hcondtop : globalConductance (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
+        (gaussianWeight s)) K)
+      (lazy (metropolisGaussian K δ s)) ≠ ⊤ :=
     ne_top_of_le_ne_top (by norm_num)
-      (conductance_le_one _ _ ⟨S0, hS0m, hS0pos, hS0half⟩)
-  have hphireal : phi ≤ (conductance (lazy (metropolisGaussian K δ s))
-      (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
-        (gaussianWeight s)) K)).toReal := by
+      (globalConductance_le_one _ _ ⟨S0, hS0m, hS0pos, hS0half⟩)
+  have hphireal : phi ≤ (globalConductance (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
+        (gaussianWeight s)) K)
+      (lazy (metropolisGaussian K δ s))).toReal := by
     have h := ENNReal.toReal_mono hcondtop hlazy
     rwa [ENNReal.toReal_ofReal hphi0.le] at h
-  exact mixesWithin_of_conductance hrev hpsd hne hM hwarm hphi0 hphi1 heps hphireal ht
+  exact mixesWithin_of_globalConductance hrev hpsd hne hM hwarm hphi0 hphi1 heps hphireal ht
 
 /-! ## 7. The unconditional convex-body instances
 
@@ -875,7 +875,7 @@ measure `ArlibCommunity.Foundations.Convex.uniformOn (volume.withDensity e^{-‖
 
 **All three constants are exponentially small in `n`, so this bound is exponentially small
 and is not a polynomial-time statement.** -/
-theorem conductance_metropolisGaussian_convex (hn : 1 ≤ n)
+theorem globalConductance_metropolisGaussian_convex (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hKm : MeasurableSet K) (hconv : Convex ℝ K)
     (hKtop : volume K ≠ ⊤)
     {c : EuclideanSpace ℝ (Fin n)} {γ : ℝ} (hγ : 0 < γ) (hballγ : Metric.ball c γ ⊆ K)
@@ -885,9 +885,9 @@ theorem conductance_metropolisGaussian_convex (hn : 1 ≤ n)
         (ENNReal.ofReal (Real.exp (-(R ^ 2) / s) * (1 / 2 : ℝ) ^ n / (2 * R))
           * ENNReal.ofReal
               ((Real.exp (-R ^ 2 / (2 * s)) * (γ / (γ + 2 * R)) ^ n) ^ 2 * δ / (n : ℝ)) / 64)
-      ≤ conductance (metropolisGaussian K δ s)
-          (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
-            (gaussianWeight s)) K) := by
+      ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
+            (gaussianWeight s)) K)
+          (metropolisGaussian K δ s) := by
   have hK0 : volume K ≠ 0 := volume_ne_zero_of_ball_subset hγ hballγ
   have hnorm : ∀ x ∈ K, ‖x‖ ≤ R := by
     intro x hx
@@ -900,7 +900,7 @@ theorem conductance_metropolisGaussian_convex (hn : 1 ≤ n)
       _ ≤ 2 * R := by linarith [hnorm x hx, hnorm y hy]
   have hiso := ArlibCommunity.Foundations.Convex.uniformOn_gaussian_iso_kappa hs hconv hKm hK0 hKtop hR
   rw [← gaussianWeight_eq_ofReal_exp s] at hiso
-  refine conductance_metropolisGaussian_ge hn hKm hδ hs
+  refine globalConductance_metropolisGaussian_ge hn hKm hδ hs
     (withDensity_gaussianWeight_ne_zero s hK0)
     (withDensity_gaussianWeight_ne_top hs hKm hKtop)
     (α := Real.exp (-R ^ 2 / (2 * s))) (Real.exp_pos _) ?_ ?_
@@ -992,14 +992,14 @@ B(0,1/2))`, hence *doubly* exponentially small in `n` in the worst case.  The st
 existential precisely because no useful uniform constant is claimed: what is claimed is
 positivity, which is what makes the conductance non-trivial, and nothing more.  **This is
 not a polynomial-time result.** -/
-theorem exists_conductance_metropolisGaussian_pos (hn : 1 ≤ n)
+theorem exists_globalConductance_metropolisGaussian_pos (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hKm : MeasurableSet K) (hconv : Convex ℝ K)
     (hball : Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1 ⊆ K) (hKtop : volume K ≠ ⊤)
     {δ s : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1) (hs : 0 < s) :
     ∃ phi : ℝ, 0 < phi ∧
-      ENNReal.ofReal phi ≤ conductance (metropolisGaussian K δ s)
-        (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
-          (gaussianWeight s)) K) := by
+      ENNReal.ofReal phi ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
+          (gaussianWeight s)) K)
+        (metropolisGaussian K δ s) := by
   obtain ⟨R, hR0, hR⟩ := ArlibCommunity.Foundations.Convex.exists_closedBall_superset_of_convex hconv hball hKtop
   set α : ℝ := Real.exp (-R ^ 2 / (2 * s)) with hα
   set θ : ℝ := (1 / (1 + 2 * R)) ^ n with hθ
@@ -1011,7 +1011,7 @@ theorem exists_conductance_metropolisGaussian_pos (hn : 1 ≤ n)
   refine ⟨min (α * θ / 16) (kap * (α * θ) ^ 2 * δ / (64 * (n : ℝ))), ?_, ?_⟩
   · have hnR : (0:ℝ) < (n : ℝ) := by exact_mod_cast hn
     exact lt_min (by positivity) (by positivity)
-  · have hmain := conductance_metropolisGaussian_convex hn hKm hconv hKtop
+  · have hmain := globalConductance_metropolisGaussian_convex hn hKm hconv hKtop
       (c := 0) (γ := 1) one_pos hball hR0 hR hδ hδ1 hs
     refine le_trans ?_ hmain
     have hnR : (0:ℝ) < (n : ℝ) := by exact_mod_cast hn
@@ -1074,7 +1074,7 @@ theorem exists_mixesWithin_lazy_metropolisGaussian_convex (hn : 1 ≤ n)
 #print axioms ofReal_exp_le_gaussianWeight
 #print axioms mul_ell_le_metropolisGaussian_add_metropolisGaussian_compl
 #print axioms lt_dist_of_metropolisGaussian_lt
-#print axioms conductance_metropolisGaussian_ge
+#print axioms globalConductance_metropolisGaussian_ge
 #print axioms withDensity_gaussianWeight_eq_zero_iff
 #print axioms withDensity_gaussianWeight_ne_zero
 #print axioms withDensity_gaussianWeight_ne_top
@@ -1082,9 +1082,9 @@ theorem exists_mixesWithin_lazy_metropolisGaussian_convex (hn : 1 ≤ n)
 #print axioms isReversible_and_hasNonnegSpectrum_lazy_metropolisGaussian
 #print axioms mixesWithin_lazy_metropolisGaussian
 #print axioms gaussianWeight_eq_ofReal_exp
-#print axioms conductance_metropolisGaussian_convex
+#print axioms globalConductance_metropolisGaussian_convex
 #print axioms mixesWithin_lazy_metropolisGaussian_convex
-#print axioms exists_conductance_metropolisGaussian_pos
+#print axioms exists_globalConductance_metropolisGaussian_pos
 #print axioms exists_mixesWithin_lazy_metropolisGaussian_convex
 
 end ArlibCommunity.Foundations.MarkovChainTheory

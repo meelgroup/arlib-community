@@ -36,21 +36,8 @@ that a single step of the chain started from `pi` begins in `S` and ends in `T`.
 
 This is the continuous-state analogue of the finite-state
 `∑_{x ∈ S} ∑_{y ∈ T} pi x * P x y`. -/
-noncomputable def flow (P : Kernel Ω Ω) (pi : Measure Ω) (S T : Set Ω) : ℝ≥0∞ :=
+noncomputable def flow (pi : Measure Ω) (P : Kernel Ω Ω) (S T : Set Ω) : ℝ≥0∞ :=
   ∫⁻ x in S, P x T ∂pi
-
-end
-
-section
-open MeasureTheory ProbabilityTheory
-open scoped ENNReal
-variable {Ω : Type*} [MeasurableSpace Ω]
-
-/-- **Detailed balance.** `P` is reversible with respect to `pi` when the flow
-across every measurable rectangle is symmetric:
-`∫_S P_x(T) dpi(x) = ∫_T P_x(S) dpi(x)`. -/
-def IsReversible (P : Kernel Ω Ω) (pi : Measure Ω) : Prop :=
-  ∀ S T : Set Ω, MeasurableSet S → MeasurableSet T → flow P pi S T = flow P pi T S
 
 end
 
@@ -65,8 +52,8 @@ step of the chain started from `pi` conditioned on `S` escapes `S`,
 
 Because `ℝ≥0∞` divides by zero to zero, this is `0` whenever `pi S = 0`; the
 lemmas below therefore all assume `0 < pi S`. -/
-noncomputable def conductanceOn (P : Kernel Ω Ω) (pi : Measure Ω) (S : Set Ω) : ℝ≥0∞ :=
-  flow P pi S Sᶜ / pi S
+noncomputable def conductance (pi : Measure Ω) (P : Kernel Ω Ω) (S : Set Ω) : ℝ≥0∞ :=
+  flow pi P S Sᶜ / pi S
 
 end
 
@@ -77,8 +64,8 @@ variable {Ω : Type*} [MeasurableSpace Ω]
 
 /-- The sets the conductance infimum ranges over: measurable sets of positive
 measure that are no larger than the threshold `thr`.  The positivity is what
-keeps `conductanceOn` from being the junk value `0`; see the module docstring. -/
-def SmallSets (pi : Measure Ω) (thr : ℝ≥0∞) : Set (Set Ω) :=
+keeps `conductance` from being the junk value `0`; see the module docstring. -/
+def smallSets (pi : Measure Ω) (thr : ℝ≥0∞) : Set (Set Ω) :=
   {S : Set Ω | MeasurableSet S ∧ 0 < pi S ∧ pi S ≤ thr}
 
 end
@@ -89,9 +76,9 @@ open scoped ENNReal
 variable {Ω : Type*} [MeasurableSpace Ω]
 
 /-- The conductance **relative to a threshold** `thr`: the infimum of
-`conductanceOn` over the measurable sets of positive measure at most `thr`. -/
-noncomputable def conductanceWithin (P : Kernel Ω Ω) (pi : Measure Ω) (thr : ℝ≥0∞) : ℝ≥0∞ :=
-  ⨅ S ∈ SmallSets pi thr, conductanceOn P pi S
+`conductance` over the measurable sets of positive measure at most `thr`. -/
+noncomputable def globalConductanceWithin (pi : Measure Ω) (P : Kernel Ω Ω) (thr : ℝ≥0∞) : ℝ≥0∞ :=
+  ⨅ S ∈ smallSets pi thr, conductance pi P S
 
 end
 
@@ -106,9 +93,9 @@ probability measure `pi`:
 `Φ = inf { flow(S, Sᶜ) / pi(S) : S measurable, 0 < pi(S) ≤ 1/2 }`.
 
 The cut-off at `1/2` is the usual one for a probability measure; see
-`conductanceWithin` for the version with an explicit threshold. -/
-noncomputable def conductance (P : Kernel Ω Ω) (pi : Measure Ω) : ℝ≥0∞ :=
-  conductanceWithin P pi (1 / 2)
+`globalConductanceWithin` for the version with an explicit threshold. -/
+noncomputable def globalConductance (pi : Measure Ω) (P : Kernel Ω Ω) : ℝ≥0∞ :=
+  globalConductanceWithin pi P (1 / 2)
 
 end
 

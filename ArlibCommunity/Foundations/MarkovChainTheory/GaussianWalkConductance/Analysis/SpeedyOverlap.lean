@@ -51,10 +51,10 @@ is exactly the KLS-style statement at [CV18].
   floor): `ℓ(u) ≤ P_u(T) + P_v(Tᶜ) + (‖u-v‖/δ)·√((n+1)/(2π))`.  This is the file's real
   content and is a strict sharpening of `ell_le_ballWalk_add_ballWalk_compl`.
 * `overlap_speedyWalk` — `cor:overlap`'s conclusion `1 ≤ 20·(P_u(Tᶜ) + P_v(T))`, in exactly
-  the binder shape `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`'s `hoverlap` demands,
+  the binder shape `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`'s `hoverlap` demands,
   **plus one hypothesis the paper does not have**: the local-conductance floor
   `11 ≤ 20·ℓ(x)` for `x ∈ K`.
-* `conductance_speedyGaussian_ge_of_ell` — `thm:speedyconductance` with `hoverlap`
+* `globalConductance_speedyGaussian_ge_of_ell` — `thm:speedyconductance` with `hoverlap`
   discharged by `exact overlap_speedyWalk …`.
 
 **Why the floor.**  The paper's `lem:overlap` uses Lemma 3.5 of [KLS95],
@@ -81,7 +81,7 @@ quoted as asserting, a polynomial mixing time.
 * `volume_slab_le` — the equatorial slab, by Fubini on `EuclideanSpace`.
 * `volume_ball_le_volume_inter_ball_add_sqrt` — **the crux**, the sharp lens estimate.
 * `ell_le_speedyWalk_add_speedyWalk_compl_sqrt` — the sharp one-step overlap.
-* `lens_defect_le_half`, `overlap_speedyWalk`, `conductance_speedyGaussian_ge_of_ell`.
+* `lens_defect_le_half`, `overlap_speedyWalk`, `globalConductance_speedyGaussian_ge_of_ell`.
 * `exists_overlap_speedyWalk_witness` — the non-vacuity witness.
 
 ## References
@@ -619,7 +619,7 @@ theorem lens_defect_le_half {n : ℕ} (hn : 2 ≤ n) {δ t : ℝ} (hδ : 0 < δ)
 
 /-- **`cor:overlap` for the speedy walk, at separation `δ/√n`**
 ([CV18]), in exactly the shape
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`'s `hoverlap` binder demands, so that
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`'s `hoverlap` binder demands, so that
 
     exact overlap_speedyWalk hn hK hδ hell h
 
@@ -738,14 +738,14 @@ theorem exists_overlap_speedyWalk_witness :
     (Metric.mem_ball_self (by norm_num)) (Set.mem_univ _) (Set.mem_univ _) hvT hsep hdens
 
 /-- **`hoverlap` discharged, in `thm:speedyconductance`.**  This is
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` with its overlap hypothesis supplied by
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` with its overlap hypothesis supplied by
 `overlap_speedyWalk` — literally `exact overlap_speedyWalk hn hK hδ hell h` — for the
 speedy walk `P = speedyWalk K δ`.  Only `hiso` (`thm:iso`, unproved in this repository) and
 the local-conductance floor `hell` remain.
 
 **This is not a polynomial-time statement and may not be quoted as one**: `hiso` is a
 hypothesis, and `hell` restricts `K` (see `exists_overlap_speedyWalk_witness`). -/
-theorem conductance_speedyGaussian_ge_of_ell {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ)
+theorem globalConductance_speedyGaussian_ge_of_ell {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ)
     (hδ : 0 < δ) (hδσ : δ ≤ σ / (8 * Real.sqrt n))
     {h : EuclideanSpace ℝ (Fin n) → ℝ} (hh0 : ∀ x, 0 ≤ h x) (hmass : 0 < ∫ x, h x)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
@@ -753,7 +753,7 @@ theorem conductance_speedyGaussian_ge_of_ell {n : ℕ} (hn : 2 ≤ n) {σ δ : �
     (pi : Measure (EuclideanSpace ℝ (Fin n)))
     (hpi : ∀ A : Set (EuclideanSpace ℝ (Fin n)), MeasurableSet A →
       pi A = ENNReal.ofReal (∫ x in A, h x) / ENNReal.ofReal (∫ x, h x))
-    (hrev : IsReversible (speedyWalk K δ) pi) (hpiK : pi Kᶜ = 0)
+    (hrev : Kernel.IsReversible (speedyWalk K δ) pi) (hpiK : pi Kᶜ = 0)
     (hiso : ∀ S₁ S₂ S₃ : Set (EuclideanSpace ℝ (Fin n)),
       IsPartition3 Set.univ S₁ S₂ S₃ →
       MeasurableSet S₁ → MeasurableSet S₂ → MeasurableSet S₃ →
@@ -763,8 +763,8 @@ theorem conductance_speedyGaussian_ge_of_ell {n : ℕ} (hn : 2 ≤ n) {σ δ : �
       δ * Real.log 2 / Real.sqrt n / σ * ((∫ x in S₁, h x) * ∫ x in S₂, h x)
         ≤ (∫ x, h x) * ∫ x in S₃, h x) :
     ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n))
-      ≤ conductance (speedyWalk K δ) pi :=
-  conductance_speedyGaussian_ge hn hσ hδ hδσ hh0 hmass hK (speedyWalk K δ) pi hpi hrev hpiK
+      ≤ globalConductance pi (speedyWalk K δ) :=
+  globalConductance_speedyGaussian_ge hn hσ hδ hδσ hh0 hmass hK (speedyWalk K δ) pi hpi hrev hpiK
     (overlap_speedyWalk hn hK hδ hell h) hiso
 
 end ArlibCommunity.Foundations.MarkovChainTheory
@@ -781,4 +781,4 @@ end ArlibCommunity.Foundations.MarkovChainTheory
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.lens_defect_le_half
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.exists_overlap_speedyWalk_witness
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge_of_ell

@@ -17,7 +17,7 @@ import ArlibCommunity.Foundations.Convex.Basic.LogisticIso
 > `h(x) ≤ (1/3)·min{1, d_K(u,v)}`.  Then `∫_{S₃} f ≥ E_f(h)·min{∫_{S₁} f, ∫_{S₂} f}`.
 
 This is the statement that `ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/HitAndRunConductance.lean` carries as
-the inline hypothesis `hIso` of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`, and calls "the
+the inline hypothesis `hIso` of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`, and calls "the
 whole remaining mathematical distance between this file and an unconditional Theorem 4.2".
 
 ## 1. **Theorem 2.1 is false as stated, and so is `hIso`**
@@ -48,7 +48,7 @@ before the repair recorded below*, was this statement verbatim for the uniform d
 was **a false hypothesis**: dilating the
 counterexample by `4` gives `K = [0,4]²` (which contains a unit ball, at centre `(2,2)`),
 `D = 4√2`, `S₁ = [0,1/2]²`, `S₂ = [7/2,4]×[0,1/2]`, `N = K ∩ {x₁ > 4/3}` — every *other*
-hypothesis of `conductance_hitAndRun_ge` is then satisfiable at `n = 2`, while `hIso` is not.
+hypothesis of `globalConductance_hitAndRun_ge` is then satisfiable at `n = 2`, while `hIso` is not.
 So the theorem's guarantee is **empty at that instance**, and generically for `n ≥ 2` wherever
 the two-box configuration embeds after an affine map.  (It says nothing about `n = 1`, where
 every chord is all of `K` and the chord hypothesis does constrain `h` everywhere.)
@@ -153,7 +153,7 @@ Everything in §2 of the paper except the Localization Lemma itself.
 **The counterexample of §1 is machine-checked end to end** in
 `LovaszVempalaIsoFalse.lean` (not in this repository; see `REFERENCES.md`): `not_hIso_two` (not in this repository; see `REFERENCES.md`) is the *negation* of the `hIso`
 binder written out verbatim at `n = 2` and `K = [0,4]²`, and `cexK_hitAndRun_hypotheses` (not in this repository; see `REFERENCES.md`)
-discharges every other geometric hypothesis of `conductance_hitAndRun_ge` at that same body.
+discharges every other geometric hypothesis of `globalConductance_hitAndRun_ge` at that same body.
 Nothing in §1 rests on prose any more.
 
 ## 4. What is assumed

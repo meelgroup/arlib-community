@@ -130,7 +130,7 @@ to kill the holding term.  (iv) A `flow` lemma and Tonelli
 Order of 300–500 lines.  **This file does not build it** — it would need a `def`, which is out of
 scope here.
 
-*And it would not by itself close the speedy route.*  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex`
+*And it would not by itself close the speedy route.*  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyWalk_ge_of_convex`
 (`StarPolar.lean`) is stated for `speedyWalk`, not for a hybrid, so a new kernel needs its own
 conductance argument; the isoperimetric inequality proved here is one input to such an argument,
 not the argument.

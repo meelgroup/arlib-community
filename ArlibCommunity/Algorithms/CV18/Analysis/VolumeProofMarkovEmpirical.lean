@@ -323,7 +323,7 @@ This is the dependent-sample estimate used in the variance calculation for
 CV18's empirical ratio and covariance estimators. -/
 theorem integral_mul_markovIter_le
     {P : Kernel S S} [IsMarkovKernel P] {pi : Measure S}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     (hpsd : HasNonnegSpectrum P pi) {f : S → ℝ}
     (hf : Measurable f) (hmem : MemLp f 2 pi)
     (hmean : ∫ x, f x ∂pi = 0) (t : ℕ) :

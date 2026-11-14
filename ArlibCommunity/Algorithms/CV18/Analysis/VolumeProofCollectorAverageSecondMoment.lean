@@ -22,7 +22,7 @@ variable {S : Type*} [MeasurableSpace S]
 square of the deterministic total mean. -/
 theorem integral_markovSumLaw_centered_add_mean_sq_le
     (P : Kernel S S) [IsMarkovKernel P] {pi : Measure S}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     (hpsd : HasNonnegSpectrum P pi)
     (hne : (rayleighSet P pi).Nonempty)
     {f : S → ℝ} (hf : Measurable f) (hmem : MemLp f 2 pi)
@@ -97,7 +97,7 @@ This is the direct dependent-sample replacement for the IID calculation in
 CV18 Eq. (6). -/
 theorem integral_markovSumLaw_centered_average_sq_le
     (P : Kernel S S) [IsMarkovKernel P] {pi : Measure S}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     (hpsd : HasNonnegSpectrum P pi)
     (hne : (rayleighSet P pi).Nonempty)
     {f : S → ℝ} (hf : Measurable f) (hmem : MemLp f 2 pi)

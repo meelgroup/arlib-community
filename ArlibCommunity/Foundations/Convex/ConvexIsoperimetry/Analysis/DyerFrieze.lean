@@ -43,7 +43,7 @@ sees exactly what is assumed.
   `κ = 2/D`, cleared of the denominator.  `ArlibCommunity.Foundations.Convex.dyerFrieze_dim_one'` restates it in the
   undivided `κ · d · vol A · vol B ≤ vol (K \ A \ B) · vol K` shape with `κ = 2 / vol K`,
   and `ArlibCommunity.Foundations.Convex.uniformOn_dyerFrieze_dim_one` restates it once more in *exactly* the shape of the
-  `hiso` hypothesis of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge`, so that the match is machine-checked
+  `hiso` hypothesis of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_ge`, so that the match is machine-checked
   rather than asserted in prose.
 
 * `ArlibCommunity.Foundations.Convex.exists_freeSegment_of_separated` — the `n`-dimensional form of the gap lemma: in a
@@ -308,7 +308,7 @@ theorem dyerFrieze_dim_one' {K A B : Set ℝ} {d : ℝ} (hd : 0 < d) (hK : Conve
   exact ENNReal.div_le_div_right hmain _
 
 /-- **The one-dimensional case, in exactly the shape of the `hiso` hypothesis** of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge`.
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_ge`.
 
 With `κ = 2 / vol K` (i.e. `2/D`, since `D = diam K = vol K` in dimension one) and `π` the
 uniform measure on `K`:

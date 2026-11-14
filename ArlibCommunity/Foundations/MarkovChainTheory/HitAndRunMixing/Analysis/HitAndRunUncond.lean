@@ -15,7 +15,7 @@ section
 /-!
 # The hit-and-run conductance bound with the Lemma 4.1 overlap constant as a parameter
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`
 (`ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/HitAndRunConductance.lean`) states Theorem 4.2 of
 Lovász–Vempala with the paper's **Lemma 4.1 constant hardcoded**: its binder demands
 
@@ -38,10 +38,10 @@ so that whatever Lemma 4.1 eventually lands can be composed with Theorem 4.2 imm
 `1/500` enters the argument at exactly one place and propagates linearly.  Tracing it in
 `HitAndRunConductance.lean`:
 
-* `conductance_hitAndRun_ge` (line 999) is a wrapper: it calls
-  `conductance_hitAndRun_ge_of_tv` (line 618) at `lam = 1/500` and rounds
+* `globalConductance_hitAndRun_ge` (line 999) is a wrapper: it calls
+  `globalConductance_hitAndRun_ge_of_tv` (line 618) at `lam = 1/500` and rounds
   `500 · 245760 = 122880000` up to `2²⁷ = 134217728`.
-* `conductance_hitAndRun_ge_of_tv` is **already parametric**: it carries `{lam : ℝ}`
+* `globalConductance_hitAndRun_ge_of_tv` is **already parametric**: it carries `{lam : ℝ}`
   with `0 < lam`, `lam ≤ 1`, consumes the overlap hypothesis at `1 − lam`, and concludes
   `ofReal (lam / (245760 · n · D))`.
 * Inside that proof `lam` is used only through `eps = ofReal (lam / 2)`: the failure of
@@ -56,22 +56,22 @@ So the true dependence is **linear, with no other loss**:
 
 Nothing in this file re-derives the geometry; the whole content is the observation that the
 `1/500` was hardcoded only in the wrapper, plus the faithfulness check
-`conductance_hitAndRun_ge_of_param` and the instantiations at the constants the corrected
+`globalConductance_hitAndRun_ge_of_param` and the instantiations at the constants the corrected
 Lemma 4.1 route actually reaches.
 
 ## What is here
 
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_param` — the parametric statement, at a free
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_param` — the parametric statement, at a free
   overlap constant `c` with `0 < c ≤ 1`, concluding `ofReal (c / (245760 · n · D))`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_param` — **the faithfulness check**: the
-  original statement of `conductance_hitAndRun_ge`, verbatim, re-derived from the parametric
-  one at `c = 1/500`.  It does not call `conductance_hitAndRun_ge`; it repeats that theorem's
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_param` — **the faithfulness check**: the
+  original statement of `globalConductance_hitAndRun_ge`, verbatim, re-derived from the parametric
+  one at `c = 1/500`.  It does not call `globalConductance_hitAndRun_ge`; it repeats that theorem's
   own final comparison, so a successful build certifies that the parametrisation loses
   nothing.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_2048` and
-  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_34386` — the instantiations at `c = 1/2048`
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_2048` and
+  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_34386` — the instantiations at `c = 1/2048`
   and `c = 1/34386`, in exact form, with `..._pow` variants rounded to a power of two.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_param_of_le` — graceful degradation: an
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_param_of_le` — graceful degradation: an
   overlap hypothesis at a *better* constant `c'` feeds the bound at any `c ≤ c'`.
 
 ## The numbers, plainly
@@ -116,9 +116,9 @@ compose with whatever Lemma 4.1 actually delivers — `ArlibCommunity/Foundation
 paper's `c = 1/500` is not reached by the corrected proof, which gives `c = 1/1892.8…` in
 the limit and `c = 1/34386` at `n = 5`.
 
-`hIso` is the paper's Theorem 2.1 in the corrected form of `conductance_hitAndRun_ge`, and is
+`hIso` is the paper's Theorem 2.1 in the corrected form of `globalConductance_hitAndRun_ge`, and is
 carried verbatim; it remains the open gap. -/
-theorem conductance_hitAndRun_ge_param (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem globalConductance_hitAndRun_ge_param (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -138,25 +138,25 @@ theorem conductance_hitAndRun_ge_param (hn : 1 ≤ n) {K : Set (EuclideanSpace �
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (c / (245760 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) :=
-  conductance_hitAndRun_ge_of_tv hn hKc hKcl hKm hKb hball hD hc0 hc1 hLem41 hIso
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) :=
+  globalConductance_hitAndRun_ge_of_tv hn hKc hKcl hKm hKb hball hD hc0 hc1 hLem41 hIso
 
 /-! ## 2. The faithfulness check: the original statement, recovered at `c = 1/500` -/
 
-/-- **The original `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`, recovered from the
+/-- **The original `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`, recovered from the
 parametric form at `c = 1/500`.**
 
-The statement is that of `conductance_hitAndRun_ge`
+The statement is that of `globalConductance_hitAndRun_ge`
 (`HitAndRunConductance.lean`) verbatim, down to the binder names and the `2²⁷`.  The
-proof does **not** invoke `conductance_hitAndRun_ge`; it goes through
-`conductance_hitAndRun_ge_param` and repeats the original wrapper's own final comparison
+proof does **not** invoke `globalConductance_hitAndRun_ge`; it goes through
+`globalConductance_hitAndRun_ge_param` and repeats the original wrapper's own final comparison
 `500 · 245760 = 122880000 ≤ 2²⁷ = 134217728`.  A successful build is therefore evidence that
 the parametrisation is faithful — that nothing was lost or strengthened in freeing the
 constant.
 
 The hypothesis is still one no proof in this repository can supply (see the module
 docstring); this theorem exists to certify the generalisation, not to be used. -/
-theorem conductance_hitAndRun_ge_of_param (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem globalConductance_hitAndRun_ge_of_param (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -175,11 +175,11 @@ theorem conductance_hitAndRun_ge_of_param (hn : 1 ≤ n) {K : Set (EuclideanSpac
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / (2 ^ 27 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hnR : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
   have hD1 : (1 : ℝ) ≤ D := le_trans (one_le_diam_of_unitBall hn hKb hball) hD
   refine le_trans (ENNReal.ofReal_le_ofReal ?_)
-    (conductance_hitAndRun_ge_param hn hKc hKcl hKm hKb hball hD (c := 1 / 500)
+    (globalConductance_hitAndRun_ge_param hn hKc hKcl hKm hKb hball hD (c := 1 / 500)
       (by norm_num) (by norm_num) hLem41 hIso)
   rw [div_le_div_iff₀ (by positivity) (by positivity)]
   nlinarith
@@ -194,7 +194,7 @@ since `2048 · 245760 = 503316480`.  `2048` brackets from above the limiting `18
 `ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/HitAndRunOverlap.lean` reports for the corrected Lemma 4.1
 (`1 − 1/1892.8…` as `n → ∞`); it is a round value, not a proved one — the overlap hypothesis
 is still a binder here. -/
-theorem conductance_hitAndRun_ge_2048 (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem globalConductance_hitAndRun_ge_2048 (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -213,9 +213,9 @@ theorem conductance_hitAndRun_ge_2048 (hn : 1 ≤ n) {K : Set (EuclideanSpace �
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / (503316480 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   refine le_trans (ENNReal.ofReal_le_ofReal (le_of_eq ?_))
-    (conductance_hitAndRun_ge_param hn hKc hKcl hKm hKb hball hD (c := 1 / 2048)
+    (globalConductance_hitAndRun_ge_param hn hKc hKcl hKm hKb hball hD (c := 1 / 2048)
       (by norm_num) (by norm_num) hLem41 hIso)
   rw [div_div]
   congr 1
@@ -230,7 +230,7 @@ since `34386 · 245760 = 8450703360`.  `1 − 1/34386` is the constant that
 smallest dimension at which the corrected Lemma 4.1 says anything at all (for `2 ≤ n ≤ 4` its
 budget `q = 1/8 + q₂(n) + 1/2` exceeds `1`).  As everywhere in this file, the overlap
 hypothesis is a binder, not a discharged fact. -/
-theorem conductance_hitAndRun_ge_34386 (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem globalConductance_hitAndRun_ge_34386 (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -249,9 +249,9 @@ theorem conductance_hitAndRun_ge_34386 (hn : 1 ≤ n) {K : Set (EuclideanSpace �
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / (8450703360 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   refine le_trans (ENNReal.ofReal_le_ofReal (le_of_eq ?_))
-    (conductance_hitAndRun_ge_param hn hKc hKcl hKm hKb hball hD (c := 1 / 34386)
+    (globalConductance_hitAndRun_ge_param hn hKc hKcl hKm hKb hball hD (c := 1 / 34386)
       (by norm_num) (by norm_num) hLem41 hIso)
   rw [div_div]
   congr 1
@@ -259,13 +259,13 @@ theorem conductance_hitAndRun_ge_34386 (hn : 1 ≤ n) {K : Set (EuclideanSpace �
 
 /-! ## 4. The same two constants, rounded to a power of two
 
-Purely for legibility, in the style of `conductance_hitAndRun_ge`'s `2²⁷`.  Both are the
+Purely for legibility, in the style of `globalConductance_hitAndRun_ge`'s `2²⁷`.  Both are the
 least power of two that works: `2²⁸ = 268435456 < 503316480` and
 `2³² = 4294967296 < 8450703360`.  The exact forms of §3 are strictly stronger. -/
 
 /-- `Φ(hit-and-run on K) ≥ 1/(2²⁹ · n · D)` at overlap constant `c = 1/2048`.  The rounding
-of `conductance_hitAndRun_ge_2048`: `503316480 ≤ 2²⁹ = 536870912`. -/
-theorem conductance_hitAndRun_ge_2048_pow (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+of `globalConductance_hitAndRun_ge_2048`: `503316480 ≤ 2²⁹ = 536870912`. -/
+theorem globalConductance_hitAndRun_ge_2048_pow (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -284,17 +284,17 @@ theorem conductance_hitAndRun_ge_2048_pow (hn : 1 ≤ n) {K : Set (EuclideanSpac
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / (2 ^ 29 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hnR : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
   have hD1 : (1 : ℝ) ≤ D := le_trans (one_le_diam_of_unitBall hn hKb hball) hD
   refine le_trans (ENNReal.ofReal_le_ofReal ?_)
-    (conductance_hitAndRun_ge_2048 hn hKc hKcl hKm hKb hball hD hLem41 hIso)
+    (globalConductance_hitAndRun_ge_2048 hn hKc hKcl hKm hKb hball hD hLem41 hIso)
   rw [div_le_div_iff₀ (by positivity) (by positivity)]
   nlinarith
 
 /-- `Φ(hit-and-run on K) ≥ 1/(2³³ · n · D)` at overlap constant `c = 1/34386`.  The rounding
-of `conductance_hitAndRun_ge_34386`: `8450703360 ≤ 2³³ = 8589934592`. -/
-theorem conductance_hitAndRun_ge_34386_pow (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+of `globalConductance_hitAndRun_ge_34386`: `8450703360 ≤ 2³³ = 8589934592`. -/
+theorem globalConductance_hitAndRun_ge_34386_pow (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -313,11 +313,11 @@ theorem conductance_hitAndRun_ge_34386_pow (hn : 1 ≤ n) {K : Set (EuclideanSpa
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / (2 ^ 33 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hnR : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
   have hD1 : (1 : ℝ) ≤ D := le_trans (one_le_diam_of_unitBall hn hKb hball) hD
   refine le_trans (ENNReal.ofReal_le_ofReal ?_)
-    (conductance_hitAndRun_ge_34386 hn hKc hKcl hKm hKb hball hD hLem41 hIso)
+    (globalConductance_hitAndRun_ge_34386 hn hKc hKcl hKm hKb hball hD hLem41 hIso)
   rw [div_le_div_iff₀ (by positivity) (by positivity)]
   nlinarith
 
@@ -330,7 +330,7 @@ available at `c'` — total variation at most `1 − c'` — then for every `c �
 
 This is the composition-facing form: a caller who proves *some* overlap constant need not
 match the one a downstream lemma was stated at. -/
-theorem conductance_hitAndRun_ge_param_of_le (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem globalConductance_hitAndRun_ge_param_of_le (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -350,8 +350,8 @@ theorem conductance_hitAndRun_ge_param_of_le (hn : 1 ≤ n) {K : Set (EuclideanS
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (c / (245760 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) :=
-  conductance_hitAndRun_ge_param hn hKc hKcl hKm hKb hball hD hc0 hc1
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) :=
+  globalConductance_hitAndRun_ge_param hn hKc hKcl hKm hKb hball hD hc0 hc1
     (fun u hu v hv h8 hstep =>
       (hLem41 u hu v hv h8 hstep).mono (ENNReal.ofReal_le_ofReal (by linarith)))
     hIso
@@ -360,13 +360,13 @@ theorem conductance_hitAndRun_ge_param_of_le (hn : 1 ≤ n) {K : Set (EuclideanS
 
 section AxiomCheck
 
-#print axioms conductance_hitAndRun_ge_param
-#print axioms conductance_hitAndRun_ge_of_param
-#print axioms conductance_hitAndRun_ge_2048
-#print axioms conductance_hitAndRun_ge_34386
-#print axioms conductance_hitAndRun_ge_2048_pow
-#print axioms conductance_hitAndRun_ge_34386_pow
-#print axioms conductance_hitAndRun_ge_param_of_le
+#print axioms globalConductance_hitAndRun_ge_param
+#print axioms globalConductance_hitAndRun_ge_of_param
+#print axioms globalConductance_hitAndRun_ge_2048
+#print axioms globalConductance_hitAndRun_ge_34386
+#print axioms globalConductance_hitAndRun_ge_2048_pow
+#print axioms globalConductance_hitAndRun_ge_34386_pow
+#print axioms globalConductance_hitAndRun_ge_param_of_le
 
 end AxiomCheck
 
@@ -400,7 +400,7 @@ constant in the **conductance** theorem (Theorem 4.2).  This file does the same 
 | `tvLe_iterate_lazy_hitAndRun_param` | Theorem 1.1, lazy hit-and-run, at a **free** `phi`, deadline `4·lsThreshold M phi ε` |
 | `tvLe_iterate_lazy_hitAndRun_of_param` | the original recovered at `phi = r/(2²⁸·n·R)` |
 | `tvLe_iterate_lazy_hitAndRun_of_param_eq` | `rfl`-check: the recovered statement **is** the original |
-| `ofReal_le_conductance_hitAndRun_of_unitBall_param` | `Φ ≥ c/(491520·n·R)` from Lemma 4.1 at `1 − c` |
+| `ofReal_le_globalConductance_hitAndRun_of_unitBall_param` | `Φ ≥ c/(491520·n·R)` from Lemma 4.1 at `1 − c` |
 | `tvLe_iterate_lazy_hitAndRun_unitBall_param` | the unit-inball Theorem 1.1 at a free `c` |
 | `tvLe_iterate_lazy_hitAndRun_unitBall_of_param` | the original recovered at `c = 1/500` |
 | `tvLe_iterate_lazy_hitAndRun_unitBall_of_param_eq` | `rfl`-check for that one |
@@ -424,8 +424,8 @@ rounding `8000·491520 = 3932160000` up to `2³²`, it is `4·2⁶⁴·n²R²·l
 
 1. **`hIso`** — the paper's Theorem 2.1 (the weighted isoperimetric inequality) in its
    corrected form, carrying the clause `∀ x ∈ K, h x ≤ 1/3` without which it is false
-   (`not_hIso_two` (not in this repository; see `REFERENCES.md`)).  It is a binder in `conductance_hitAndRun_ge`, is carried
-   verbatim through `conductance_hitAndRun_ge_param`, and is carried verbatim through every
+   (`not_hIso_two` (not in this repository; see `REFERENCES.md`)).  It is a binder in `globalConductance_hitAndRun_ge`, is carried
+   verbatim through `globalConductance_hitAndRun_ge_param`, and is carried verbatim through every
    theorem here.  It is being attacked separately as `htrans` + `hloc`.
 2. **`n ≥ 1100`** — the threshold of `tvLe_hitAndRun_of_close_uncond`, an artifact of the
    union bound in the spherical-cap estimate (`SphereCap.lean`), not of the statement, which
@@ -459,12 +459,12 @@ rounding `8000·491520 = 3932160000` up to `2³²`, it is `4·2⁶⁴·n²R²·l
    only ever *uses* `hLem41` at interior points, where `hmove` is available from
    `ArlibCommunity.Foundations.MarkovChainTheory.hitAndRunProposal_univ_eq_one_of_mem_interior`.  The obstruction is that the binder
    is *stated* over all of `K`.  Weakening it to `interior K` is a one-line change inside
-   `conductance_hitAndRun_ge_of_tv`'s statement — in a file this module may not edit — and it
+   `globalConductance_hitAndRun_ge_of_tv`'s statement — in a file this module may not edit — and it
    is what would make `tvLe_iterate_lazy_hitAndRun_unitBall_8000` unconditional in `hLem41`.
 
 So `tvLe_iterate_lazy_hitAndRun_unitBall_8000` is stated with `hLem41` intact, at the
 constant `1 − 1/8000` the repository proves, in the style of
-`conductance_hitAndRun_ge_2048`/`_34386`: the overlap hypothesis is a binder, not a
+`globalConductance_hitAndRun_ge_2048`/`_34386`: the overlap hypothesis is a binder, not a
 discharged fact.
 -/
 
@@ -507,7 +507,7 @@ that particular number: the layer beneath (`tvLe_iterate_lazy_of_exceptional`,
 `ConductanceToTV.lean`) already carries a free `phi`.  Here it is exposed, with the
 deadline in its native form `4 · lsThreshold M phi eps = 4 · log(8M/ε²)/phi²`.
 
-The factor `4` is `conductance_lazy`: laziness halves the conductance exactly, and the
+The factor `4` is `globalConductance_lazy`: laziness halves the conductance exactly, and the
 deadline is quadratic in `1/phi`.
 
 Everything mathematical is inherited: reversibility from `isReversible_hitAndRun`, the
@@ -524,7 +524,7 @@ theorem tvLe_iterate_lazy_hitAndRun_param {n : ℕ} (hn : 1 ≤ n)
     (hS : sigma S ≤ ENNReal.ofReal (eps / 2))
     (hdom : ∀ A : Set (EuclideanSpace ℝ (Fin n)), MeasurableSet A →
       sigma (A \ S) ≤ ENNReal.ofReal M * uniformOn volume K A)
-    (hphi : ENNReal.ofReal phi ≤ conductance (hitAndRun K) (uniformOn volume K))
+    (hphi : ENNReal.ofReal phi ≤ globalConductance (uniformOn volume K) (hitAndRun K))
     {m : ℕ} (hm : 4 * lsThreshold M phi eps ≤ (m : ℝ)) :
     ArlibCommunity.Foundations.Convex.TVLe (iterate (lazy (hitAndRun K)) sigma m) (uniformOn volume K)
       (ENNReal.ofReal eps) := by
@@ -559,7 +559,7 @@ theorem tvLe_iterate_lazy_hitAndRun_of_param {n : ℕ} (hn : 1 ≤ n)
     (hdom : ∀ A : Set (EuclideanSpace ℝ (Fin n)), MeasurableSet A →
       sigma (A \ S) ≤ ENNReal.ofReal M * ArlibCommunity.Foundations.Convex.uniformOn volume K A)
     (hphi : ENNReal.ofReal (r / (2 ^ 28 * (n : ℝ) * R))
-      ≤ conductance (hitAndRun K) (ArlibCommunity.Foundations.Convex.uniformOn volume K))
+      ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (hitAndRun K))
     {m : ℕ} (hm : 4 * lvThreshold n r R M eps ≤ (m : ℝ)) :
     ArlibCommunity.Foundations.Convex.TVLe (iterate (lazy (hitAndRun K)) sigma m) (ArlibCommunity.Foundations.Convex.uniformOn volume K)
       (ENNReal.ofReal eps) := by
@@ -587,7 +587,7 @@ theorem tvLe_iterate_lazy_hitAndRun_of_param_eq :
 
 /-! ## 3. The unit-inball version, at a free overlap constant
 
-`conductance_hitAndRun_ge_param` (`HitAndRunConductanceParam.lean`) gives
+`globalConductance_hitAndRun_ge_param` (`HitAndRunConductanceParam.lean`) gives
 `Φ ≥ c/(245760·n·D)` from Lemma 4.1 at `1 − c`.  A body inside a ball of radius `R` has
 `D ≤ 2R`, so this reads
 
@@ -597,14 +597,14 @@ and the deadline of §1 at that `phi` is `4·491520²·n²R²/c² · log(8M/ε²
 `O(n²R²·log(M/ε))`, with a `1/c²`. -/
 
 /-- **The conductance bound in `R`-form, at a free overlap constant.**  This is
-`ArlibCommunity.Foundations.MarkovChainTheory.ofReal_inv_le_conductance_hitAndRun_of_unitBall`
+`ArlibCommunity.Foundations.MarkovChainTheory.ofReal_inv_le_globalConductance_hitAndRun_of_unitBall`
 (`HitAndRunMixing.lean`) with `1/500` freed to `c`, and with the exact denominator
 `491520 = 2·245760` in place of the original's rounding to `2²⁸`.
 
 At `c = 1/500` it says `Φ ≥ 1/(245760000·n·R)`, which is *stronger* than the original's
 `Φ ≥ 1/(2²⁸·n·R) = 1/(268435456·n·R)`; the original rounded the denominator up to a power of
 two. -/
-theorem ofReal_le_conductance_hitAndRun_of_unitBall_param {n : ℕ} (hn : 1 ≤ n)
+theorem ofReal_le_globalConductance_hitAndRun_of_unitBall_param {n : ℕ} (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     {z zout : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -624,7 +624,7 @@ theorem ofReal_le_conductance_hitAndRun_of_unitBall_param {n : ℕ} (hn : 1 ≤ 
           min (ArlibCommunity.Foundations.Convex.uniformOn volume K T₁) (ArlibCommunity.Foundations.Convex.uniformOn volume K T₂)
         ≤ ArlibCommunity.Foundations.Convex.uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (c / (491520 * (n : ℝ) * R))
-      ≤ conductance (hitAndRun K) (ArlibCommunity.Foundations.Convex.uniformOn volume K) := by
+      ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (hitAndRun K) := by
   have hKb : Bornology.IsBounded K := Metric.isBounded_closedBall.subset hout
   have hD : Metric.diam K ≤ 2 * R := by
     refine Metric.diam_le_of_forall_dist_le (by positivity) fun x hx y hy => ?_
@@ -634,7 +634,7 @@ theorem ofReal_le_conductance_hitAndRun_of_unitBall_param {n : ℕ} (hn : 1 ≤ 
       _ = dist x zout + dist y zout := by rw [dist_comm zout y]
       _ ≤ R + R := by gcongr
       _ = 2 * R := by ring
-  have h := conductance_hitAndRun_ge_param hn hKc hKcl hKm hKb hball hD hc0 hc1 hLem41 hIso
+  have h := globalConductance_hitAndRun_ge_param hn hKc hKcl hKm hKb hball hD hc0 hc1 hLem41 hIso
   rwa [show (245760 : ℝ) * (n : ℝ) * (2 * R) = 491520 * (n : ℝ) * R from by ring] at h
 
 /-- **`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_lazy_hitAndRun_unitBall` with the Lemma 4.1 overlap
@@ -693,7 +693,7 @@ theorem tvLe_iterate_lazy_hitAndRun_unitBall_param {n : ℕ} (hn : 1 ≤ n)
     rw [div_le_one (by positivity)]
     nlinarith
   exact tvLe_iterate_lazy_hitAndRun_param hn hKm hK0 hKtop hphi0 hphi1 hM heps0 heps1 hSm hS
-    hdom (ofReal_le_conductance_hitAndRun_of_unitBall_param hn hKc hKcl hKm hball hR hout hc0
+    hdom (ofReal_le_globalConductance_hitAndRun_of_unitBall_param hn hKc hKcl hKm hball hR hout hc0
       hc1 hLem41 hIso) hm
 
 /-- **The original `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_lazy_hitAndRun_unitBall`, recovered from
@@ -871,7 +871,7 @@ section AxiomCheck
 #print axioms tvLe_iterate_lazy_hitAndRun_param
 #print axioms tvLe_iterate_lazy_hitAndRun_of_param
 #print axioms tvLe_iterate_lazy_hitAndRun_of_param_eq
-#print axioms ofReal_le_conductance_hitAndRun_of_unitBall_param
+#print axioms ofReal_le_globalConductance_hitAndRun_of_unitBall_param
 #print axioms tvLe_iterate_lazy_hitAndRun_unitBall_param
 #print axioms tvLe_iterate_lazy_hitAndRun_unitBall_of_param
 #print axioms tvLe_iterate_lazy_hitAndRun_unitBall_of_param_eq
@@ -908,9 +908,9 @@ theorem asserting `∀ u ∈ K, ∀ v ∈ K, u ≠ v → chordLow K u v < 0` wou
 The resolution is that Theorem 4.2's proof never needed the binder over all of `K`: it cuts
 `S₁'` and `S₂'` down to `interior K` (`HitAndRunConductance.lean`, module docstring, § *Two
 places where the formalisation is more careful than the paper*, item 1) and applies `hLem41`
-only at interior points.  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_interior` is that
+only at interior points.  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_tv_interior` is that
 theorem with the binder weakened accordingly — a strictly weaker hypothesis, as the derivation
-of the unchanged `conductance_hitAndRun_ge_of_tv` from it witnesses.  On `interior K` all three
+of the unchanged `globalConductance_hitAndRun_ge_of_tv` from it witnesses.  On `interior K` all three
 side conditions are available:
 
 | side condition | source |
@@ -926,8 +926,8 @@ side conditions are available:
 | name | content |
 |---|---|
 | `tvLe_hitAndRun_of_close_interior` | **Lemma 4.1 as the interior binder, proved**: `∀ u ∈ interior K, ∀ v ∈ interior K, …` at `1 − 1/8000`, `n ≥ 1100`, no unproved hypothesis |
-| `conductance_hitAndRun_ge_uncond_overlap` | Theorem 4.2 with `hLem41` **gone**: `Φ ≥ (1/8000)/(245760·n·D)`, only the isoperimetry binder left |
-| `conductance_hitAndRun_ge_uncond_overlap_pow` | the same, rounded to `Φ ≥ 1/(2³¹·n·D)` |
+| `globalConductance_hitAndRun_ge_uncond_overlap` | Theorem 4.2 with `hLem41` **gone**: `Φ ≥ (1/8000)/(245760·n·D)`, only the isoperimetry binder left |
+| `globalConductance_hitAndRun_ge_uncond_overlap_pow` | the same, rounded to `Φ ≥ 1/(2³¹·n·D)` |
 | `chordLow_eq_zero_of_notMem_interior` | the boundary obstruction, proved: `chordLow K u v = 0` for `u ∈ K \ interior K`, `v ∈ interior K` |
 
 ## Constants
@@ -1000,15 +1000,15 @@ theorem tvLe_hitAndRun_of_close_interior (hn : 21 ≤ n) {K : Set (EuclideanSpac
 
     Φ(hit-and-run on K)  ≥  (1/8000) / (245760 · n · D).
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_interior` at `lam = 1/8000`, with its
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_tv_interior` at `lam = 1/8000`, with its
 `hLem41` supplied by `tvLe_hitAndRun_of_close_interior` rather than assumed.  The only mathematical
 hypothesis left is `hIso`, the corrected Theorem 2.1, carried through verbatim.
 
-Not routed through `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_param`: that theorem states
+Not routed through `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_param`: that theorem states
 its `hLem41` over all of `K`, which is the form the boundary refutes
 (`chordLow_eq_zero_of_notMem_interior` below).  The conclusion is the one `_param` would give
 at `c = 1/8000`. -/
-theorem conductance_hitAndRun_ge_uncond_overlap (hn : 21 ≤ n)
+theorem globalConductance_hitAndRun_ge_uncond_overlap (hn : 21 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -1025,16 +1025,16 @@ theorem conductance_hitAndRun_ge_uncond_overlap (hn : 21 ≤ n)
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / 8000 / (245760 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) :=
-  conductance_hitAndRun_ge_of_tv_interior (by omega) hKc hKcl hKm hKb hball hD
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) :=
+  globalConductance_hitAndRun_ge_of_tv_interior (by omega) hKc hKcl hKm hKb hball hD
     (by norm_num) (by norm_num) (tvLe_hitAndRun_of_close_interior hn hKc hKcl hKm hKb) hIso
 
 /-- **The same bound, rounded to a power of two**: `Φ ≥ 1/(2³¹·n·D)`.
 
 `8000 · 245760 = 1966080000 ≤ 2³¹ = 2147483648`.  Purely for legibility, in the style of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`'s `2²⁷`; the exact form
-`conductance_hitAndRun_ge_uncond_overlap` is strictly stronger. -/
-theorem conductance_hitAndRun_ge_uncond_overlap_pow (hn : 21 ≤ n)
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`'s `2²⁷`; the exact form
+`globalConductance_hitAndRun_ge_uncond_overlap` is strictly stronger. -/
+theorem globalConductance_hitAndRun_ge_uncond_overlap_pow (hn : 21 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -1051,12 +1051,12 @@ theorem conductance_hitAndRun_ge_uncond_overlap_pow (hn : 21 ≤ n)
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / (2 ^ 31 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hn1 : (1 : ℕ) ≤ n := by omega
   have hnR : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn1
   have hD1 : (1 : ℝ) ≤ D := le_trans (one_le_diam_of_unitBall hn1 hKb hball) hD
   refine le_trans (ENNReal.ofReal_le_ofReal ?_)
-    (conductance_hitAndRun_ge_uncond_overlap hn hKc hKcl hKm hKb hball hD hIso)
+    (globalConductance_hitAndRun_ge_uncond_overlap hn hKc hKcl hKm hKb hball hD hIso)
   rw [div_div, div_le_div_iff₀ (by positivity) (by positivity)]
   nlinarith
 
@@ -1109,8 +1109,8 @@ theorem chordLow_eq_zero_of_notMem_interior {K : Set (EuclideanSpace ℝ (Fin n)
 section AxiomCheck
 
 #print axioms tvLe_hitAndRun_of_close_interior
-#print axioms conductance_hitAndRun_ge_uncond_overlap
-#print axioms conductance_hitAndRun_ge_uncond_overlap_pow
+#print axioms globalConductance_hitAndRun_ge_uncond_overlap
+#print axioms globalConductance_hitAndRun_ge_uncond_overlap_pow
 #print axioms chordLow_eq_zero_of_notMem_interior
 
 end AxiomCheck
@@ -1128,7 +1128,7 @@ section
 for every convex, closed, measurable, bounded `K ⊆ ℝⁿ` containing a unit ball, with
 `diam K ≤ D` and `n ≥ 1100`.
 
-**Every binder is gone.**  The statement of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_uncond` below carries
+**Every binder is gone.**  The statement of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_uncond` below carries
 only hypotheses about `n` and about the geometry of `K` — no `hIso`, no `hLem41`, no `htrans`, no
 `hloc`.  Nothing here is assumed; this file is a composition of four theorems that are each
 already proved and axiom-clean elsewhere in this repository.
@@ -1143,7 +1143,7 @@ already proved and axiom-clean elsewhere in this repository.
 | `hloc` (Localization with the needle inside the body) | `ArlibCommunity.Foundations.Convex.hloc_needle_in_body` | `Convexity/LocalizationNeedleInBody.lean` |
 
 `hIso` is fed to the *lower semicontinuous* replay of Theorem 4.2,
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_lsc_interior`, because that is the only shape in which the
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_tv_lsc_interior`, because that is the only shape in which the
 weight `x ↦ s_{63/64}(x)/(48·D·√n)` — concave on `K`, hence continuous only on `interior K` — can
 be handed to an isoperimetric inequality proved for continuous integrands.
 
@@ -1156,8 +1156,8 @@ every dimension (`ArlibCommunity.Foundations.MarkovChainTheory.chordLow_eq_zero_
 
 The interior form is what Theorem 4.2's proof actually uses — it cuts `S₁`, `S₂` down to
 `interior K` — and it is a *weaker* hypothesis, as the one-line derivations of the unchanged
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_lsc`, `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_lsc` and
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer_of_localization` from their `_interior` forms
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_tv_lsc`, `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_lsc` and
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_transfer_of_localization` from their `_interior` forms
 witness.
 
 ## The side conditions on the volume
@@ -1177,8 +1177,8 @@ Lemma 3.3 and the rounding to a power of two.  The order `1/(n·D)` is the paper
 
 | name | content |
 |---|---|
-| `conductance_hitAndRun_ge_uncond` | **Theorem 4.2 with no mathematical hypothesis**: `Φ ≥ (1/8000)/(245760·n·D)` |
-| `conductance_hitAndRun_ge_uncond_pow` | the same, rounded: `Φ ≥ 1/(2³¹·n·D)` |
+| `globalConductance_hitAndRun_ge_uncond` | **Theorem 4.2 with no mathematical hypothesis**: `Φ ≥ (1/8000)/(245760·n·D)` |
+| `globalConductance_hitAndRun_ge_uncond_pow` | the same, rounded: `Φ ≥ 1/(2³¹·n·D)` |
 -/
 
 open ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
@@ -1213,14 +1213,14 @@ geometry of `K`; the four binders that Theorem 4.2 used to carry — `hIso` (the
 
 `volume K ≠ 0` and `volume K ≠ ⊤`, which `ArlibCommunity.Foundations.Convex.hIso_lowerSemicontinuous` asks for, are derived
 from `hball` and `hKb` rather than assumed. -/
-theorem conductance_hitAndRun_ge_uncond (hn : 21 ≤ n)
+theorem globalConductance_hitAndRun_ge_uncond (hn : 21 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
     {D : ℝ} (hD : Metric.diam K ≤ D) :
     ENNReal.ofReal (1 / 8000 / (245760 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hK0 : volume K ≠ 0 := by
     have hpos : 0 < volume (Metric.closedBall z 1) :=
       Metric.measure_closedBall_pos volume z one_pos
@@ -1228,7 +1228,7 @@ theorem conductance_hitAndRun_ge_uncond (hn : 21 ≤ n)
   obtain ⟨R, hR⟩ := hKb.subset_closedBall (0 : EuclideanSpace ℝ (Fin n))
   have hKtop : volume K ≠ ⊤ :=
     ne_top_of_le_ne_top measure_closedBall_lt_top.ne (measure_mono hR)
-  exact conductance_hitAndRun_ge_of_tv_lsc_interior (by omega) hKc hKcl hKm hKb hball hD
+  exact globalConductance_hitAndRun_ge_of_tv_lsc_interior (by omega) hKc hKcl hKm hKb hball hD
     (by norm_num) (by norm_num) (tvLe_hitAndRun_of_close_interior hn hKc hKcl hKm hKb)
     (hIso_lowerSemicontinuous hKc hKcl hKm hKb hK0 hKtop (htrans_of_compact hKc hKcl hKb)
       (hloc_needle_in_body (by omega) hKc hKcl hKb))
@@ -1236,21 +1236,21 @@ theorem conductance_hitAndRun_ge_uncond (hn : 21 ≤ n)
 /-- **The same bound, rounded to a power of two**: `Φ ≥ 1/(2³¹·n·D)`.
 
 `8000 · 245760 = 1966080000 ≤ 2³¹ = 2147483648`.  Purely for legibility; the exact form
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_uncond` is strictly stronger.  Like it, this statement has no
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_uncond` is strictly stronger.  Like it, this statement has no
 mathematical hypothesis. -/
-theorem conductance_hitAndRun_ge_uncond_pow (hn : 21 ≤ n)
+theorem globalConductance_hitAndRun_ge_uncond_pow (hn : 21 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
     {D : ℝ} (hD : Metric.diam K ≤ D) :
     ENNReal.ofReal (1 / (2 ^ 31 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hn1 : (1 : ℕ) ≤ n := by omega
   have hnR : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn1
   have hD1 : (1 : ℝ) ≤ D := le_trans (one_le_diam_of_unitBall hn1 hKb hball) hD
   refine le_trans (ENNReal.ofReal_le_ofReal ?_)
-    (conductance_hitAndRun_ge_uncond hn hKc hKcl hKm hKb hball hD)
+    (globalConductance_hitAndRun_ge_uncond hn hKc hKcl hKm hKb hball hD)
   rw [div_div, div_le_div_iff₀ (by positivity) (by positivity)]
   nlinarith
 
@@ -1260,8 +1260,8 @@ end ArlibCommunity.Foundations.MarkovChainTheory
 
 section AxiomCheck
 
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_uncond
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_uncond_pow
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_uncond
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_uncond_pow
 
 end AxiomCheck
 
@@ -1271,7 +1271,7 @@ section
 /-!
 # Theorem 1.1 of Lovász–Vempala for the lazy hit-and-run walk, with no mathematical hypothesis
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_uncond` (`Convexity/HitAndRunConductanceUncond.lean`) made
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_uncond` (`Convexity/HitAndRunConductanceUncond.lean`) made
 Theorem 4.2 unconditional:
 
     Φ(hit-and-run on K)  ≥  (1/8000)/(245760·n·D)  ≥  1/(2³¹·n·D)
@@ -1281,7 +1281,7 @@ for `n ≥ 1100` and a convex, closed, measurable, bounded `K ⊆ ℝⁿ` with a
 
 `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_lazy_hitAndRun_param` (`HitAndRunUncond.lean`) is Theorem
 1.1 with the conductance value a free parameter `phi` and deadline `4·lsThreshold M phi ε`.
-Instantiating it at `phi = 1/(2³¹·n·D)` and feeding `conductance_hitAndRun_ge_uncond_pow` for
+Instantiating it at `phi = 1/(2³¹·n·D)` and feeding `globalConductance_hitAndRun_ge_uncond_pow` for
 `hphi` gives
 
     `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_lazy_hitAndRun_uncond`,
@@ -1322,7 +1322,7 @@ below uses it.
 ## The exact form is stronger
 
 The composition is done at the power-of-two conductance bound `1/(2³¹·n·D)` because it makes the
-deadline a clean `2⁶⁴·n²D²·log(8M/ε²)`.  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_uncond`'s exact value
+deadline a clean `2⁶⁴·n²D²·log(8M/ε²)`.  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_uncond`'s exact value
 `(1/8000)/(245760·n·D) = 1/(1966080000·n·D)` is strictly larger, hence gives a strictly shorter
 deadline (by a factor `(2³¹/1966080000)² ≈ 1.19`); `lsThreshold_anti` would carry it across.  No
 second theorem is stated for it.
@@ -1369,14 +1369,14 @@ in total variation of the uniform measure on `K` after
 steps.
 
 Every binder that used to carry mathematics is discharged: `hphi` is
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_uncond_pow`, which in turn absorbed `hIso`, `hLem41`, `htrans`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_uncond_pow`, which in turn absorbed `hIso`, `hLem41`, `htrans`
 and `hloc`.  What is left is the geometry of `K`, `0 < ε ≤ 1`, and the warm-start data
 `M`, `S`, `hM`, `hS`, `hdom` — Theorem 1.1's own hypothesis on the starting distribution, which
 no mixing theorem can drop.  See the module docstring.
 
 `volume K ≠ 0` and `volume K ≠ ⊤`, which the parametric form asks for, are derived here from
 `hball` and `hKb` rather than assumed, exactly as in
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_uncond`. -/
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_uncond`. -/
 theorem tvLe_iterate_lazy_hitAndRun_uncond {n : ℕ} (hn : 21 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
@@ -1407,7 +1407,7 @@ theorem tvLe_iterate_lazy_hitAndRun_uncond {n : ℕ} (hn : 21 ≤ n)
     rw [div_le_one (by positivity)]
     nlinarith
   refine tvLe_iterate_lazy_hitAndRun_param hn1 hKm hK0 hKtop hphi0 hphi1 hM heps0 heps1 hSm hS
-    hdom (ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_uncond_pow hn hKc hKcl hKm hKb hball hD) ?_
+    hdom (ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_uncond_pow hn hKc hKcl hKm hKb hball hD) ?_
   rwa [hrDeadlineUncond_eq (by positivity) (by positivity)] at hm
 
 /-! ## 3. The circumradius form -/

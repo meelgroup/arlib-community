@@ -614,7 +614,7 @@ theorem bind_cappedProperCollectLaw_success_deviation_le_of_isWarm
     (hf : Measurable f) (rawCap properStride samples : ℕ)
     {mu pi : Measure (EuclideanSpace ℝ (Fin n))}
     [IsProbabilityMeasure pi]
-    (hrev : IsReversible
+    (hrev : Kernel.IsReversible
       ((lazy (speedyMetropolisGaussian K delta s)) ^ properStride) pi)
     (hpsd : HasNonnegSpectrum
       ((lazy (speedyMetropolisGaussian K delta s)) ^ properStride) pi)

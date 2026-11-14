@@ -11,7 +11,7 @@ import Mathlib.MeasureTheory.Integral.Layercake
 /-!
 # Running a Markov chain: warm starts, data processing, and the mixing interface
 
-This module is the layer between a *conductance* bound (`ArlibCommunity.Foundations.MarkovChainTheory.conductance`)
+This module is the layer between a *conductance* bound (`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance`)
 and a usable statement about a sampler.  A conductance bound is about a kernel; a sampler
 guarantee is about the *law of the chain after `t` steps* started from some initial
 distribution.  The three things one has to know to get from one to the other are proved
@@ -71,7 +71,7 @@ here.
 * `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_const` — the **non-vacuity witness**:
   the instantly mixing kernel `Kernel.const Ω pi` satisfies `MixesWithin _ pi μ 1 0`, i.e.
   it reaches `pi` exactly, in one step, from any start.  Since
-  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_const_piHalf` computes the conductance of that same
+  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_const_piHalf` computes the conductance of that same
   kernel to be `1/2`, the two layers are witnessed by one and the same chain and neither
   predicate is empty.
 
@@ -371,7 +371,7 @@ theorem isWarm_of_mixesWithin {M : ℝ≥0∞} {P : Kernel Ω Ω} {pi μ₀ : Me
 The non-vacuity rule: a predicate that nothing satisfies makes every theorem about it vacuous.
 The instantly mixing kernel `Kernel.const Ω pi` — resample from `pi` at every step —
 satisfies `MixesWithin` with `t = 1` and `ε = 0`, the strongest possible instance.  It is
-the *same* kernel whose conductance `ArlibCommunity.Foundations.MarkovChainTheory.conductance_const_piHalf` computes
+the *same* kernel whose conductance `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_const_piHalf` computes
 to be exactly `1/2`, so a single chain witnesses both layers and neither is empty. -/
 
 /-- **One step of the instantly mixing kernel** discards the starting law entirely and
@@ -400,15 +400,15 @@ theorem mixesWithin_const (pi μ₀ : Measure Ω) [IsProbabilityMeasure μ₀] :
 layer: one concrete chain — the uniform resampler on the two-point space — is simultaneously
 a `MixesWithin _ _ _ 1 0` instance and a kernel of conductance exactly `1/2`.
 
-So neither `ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin` nor `ArlibCommunity.Foundations.MarkovChainTheory.conductance` is a
+So neither `ArlibCommunity.Foundations.MarkovChainTheory.MixesWithin` nor `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance` is a
 predicate that nothing satisfies, and the two layers are consistent: the chain that mixes
 instantly is the one with the large conductance. -/
-theorem exists_mixesWithin_and_conductance_eq :
+theorem exists_mixesWithin_and_globalConductance_eq :
     ∃ (Ω : Type) (_ : MeasurableSpace Ω) (P : Kernel Ω Ω) (pi μ₀ : Measure Ω),
       IsMarkovKernel P ∧ IsProbabilityMeasure pi ∧ IsProbabilityMeasure μ₀ ∧
-        Kernel.Invariant P pi ∧ MixesWithin P pi μ₀ 1 0 ∧ conductance P pi = 1 / 2 :=
+        Kernel.Invariant P pi ∧ MixesWithin P pi μ₀ 1 0 ∧ globalConductance pi P = 1 / 2 :=
   ⟨Bool, inferInstance, Kernel.const Bool piHalf, piHalf, Measure.dirac true, inferInstance,
     inferInstance, inferInstance, invariant_const piHalf, mixesWithin_const _ _,
-    conductance_const_piHalf⟩
+    globalConductance_const_piHalf⟩
 
 end ArlibCommunity.Foundations.MarkovChainTheory

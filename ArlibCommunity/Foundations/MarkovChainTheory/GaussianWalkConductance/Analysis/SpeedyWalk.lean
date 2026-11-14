@@ -19,7 +19,7 @@ The point of the change is the **stationary measure**.  The ball walk is reversi
 *uniform* measure on `K`; the speedy walk is reversible for the measure with density
 proportional to the local conductance `ell`.  That reweighting is what removes the
 `hell : ∀ x ∈ K, theta ≤ ell K delta x` hypothesis of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge`, whose only proved witness `theta = 2⁻ⁿ`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_ge`, whose only proved witness `theta = 2⁻ⁿ`
 (`ofReal_le_ell_unitBall`) certifies an exponential step count.
 
 ## Main definitions
@@ -58,14 +58,14 @@ proportional to the local conductance `ell`.  That reweighting is what removes t
 * `ArlibCommunity.Foundations.MarkovChainTheory.ellMeasure_univ_ne_zero`,
   `ArlibCommunity.Foundations.MarkovChainTheory.exists_smallSet_of_absolutelyContinuous` — the non-degeneracy the
   mixing theorem needs, for a target measure that is *not* uniform.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge` — the conductance bound, with **no `hell`**:
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyWalk_ge` — the conductance bound, with **no `hell`**:
   `Φ ≥ min(1/16, kappa*delta/(128*n))` given an isoperimetric inequality for `ellProb K delta`.
 * `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_lazy_speedyWalk` and its unit-ball instance — the mixing
   consequence, in `conductanceMixingTime M (min (1/32) (kappa*delta/(256 n))) eps` steps.
 
 ## What the reweighting buys, precisely
 
-`conductance_ballWalk_ge` needs `ell(u) ≥ theta` at every `u ∈ K` because its overlap bound
+`globalConductance_ballWalk_ge` needs `ell(u) ≥ theta` at every `u ∈ K` because its overlap bound
 reads `ell(u) ≤ P_u(T) + P_v(Tᶜ) + n‖u-v‖/(2 delta)`: a body with a sharp corner has points
 of tiny `ell`, and there the *uniform* ball walk really does move rarely.  For the speedy
 walk the one-step distribution is normalised by `vol(B(u,delta) ∩ K) = ell(u)·vol(delta Bₙ)`,
@@ -76,7 +76,7 @@ and `delta` are.
 
 Two inputs make this work and both are recorded honestly:
 
-1. **Convexity of `K`** (`hconv : Convex ℝ K`) is now used, where `conductance_ballWalk_ge`
+1. **Convexity of `K`** (`hconv : Convex ℝ K`) is now used, where `globalConductance_ballWalk_ge`
    used none.  It is what turns the additive midpoint estimate
    `volume_ball_le_volume_inter_ball_add` (a loss of `n t/(2 delta)` *of the whole ball*)
    into the multiplicative `volume_inter_ball_le_of_convex` (a loss of `n t/delta` *of
@@ -367,7 +367,7 @@ theorem ell_mul_speedyWalk {K : Set (EuclideanSpace ℝ (Fin n))} (hK : Measurab
 Immediate from `ell_mul_speedyWalk`. -/
 theorem flow_speedyWalk {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (δ : ℝ)
     {S T : Set (EuclideanSpace ℝ (Fin n))} (hS : MeasurableSet S) (hT : MeasurableSet T) :
-    flow (speedyWalk K δ) (ellMeasure K δ) S T
+    flow (ellMeasure K δ) (speedyWalk K δ) S T
       = (volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) δ))⁻¹ *
           ∫⁻ x in S ∩ K, volume ((T ∩ K) ∩ Metric.ball x δ) := by
   rw [flow_apply, setLIntegral_ellMeasure hK δ hS (Kernel.measurable_coe _ hT)]
@@ -377,12 +377,13 @@ theorem flow_speedyWalk {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableS
 /-- **The speedy walk satisfies detailed balance for the `ell`-weighted measure.**
 
 This is the load-bearing structural fact: `Cheeger.lean` and `L2Mixing.lean` both consume
-`IsReversible`.  No convexity, no positivity of `δ`, and no bound on `vol(K)` is needed —
+`Kernel.IsReversible`.  No convexity, no positivity of `δ`, and no bound on `vol(K)` is needed —
 after `ell_mul_speedyWalk` the statement is exactly the symmetry of the ball relation
 (`lintegral_volume_inter_ball_comm`). -/
 theorem isReversible_speedyWalk {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
-    (δ : ℝ) : IsReversible (speedyWalk K δ) (ellMeasure K δ) := by
+    (δ : ℝ) : Kernel.IsReversible (speedyWalk K δ) (ellMeasure K δ) := by
   intro S T hS hT
+  show flow _ _ S T = flow _ _ T S
   rw [flow_speedyWalk hK δ hS hT, flow_speedyWalk hK δ hT hS,
     lintegral_volume_inter_ball_comm (hS.inter hK) (hT.inter hK) δ]
 
@@ -405,8 +406,8 @@ theorem isProbabilityMeasure_ellProb {K : Set (EuclideanSpace ℝ (Fin n))} {δ 
 
 /-- **The speedy walk is reversible for its stationary probability measure.** -/
 theorem isReversible_speedyWalk_prob {K : Set (EuclideanSpace ℝ (Fin n))}
-    (hK : MeasurableSet K) (δ : ℝ) : IsReversible (speedyWalk K δ) (ellProb K δ) :=
-  (isReversible_speedyWalk hK δ).smul _
+    (hK : MeasurableSet K) (δ : ℝ) : Kernel.IsReversible (speedyWalk K δ) (ellProb K δ) :=
+  isReversible_smul (isReversible_speedyWalk hK δ) _
 
 /-- **The `ell`-weighted probability measure is invariant for the speedy walk.** -/
 theorem invariant_speedyWalk {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
@@ -793,7 +794,7 @@ ball has mass more than `1/2`.  The decreasing sets `B(0, R + 1/(k+1)) \ B(0,R)`
 all have mass more than `1/2` and intersect in the sphere `‖x‖ = R`, which is Lebesgue-null
 and so `pi`-null.  Continuity from above gives `1/2 ≤ 0`.
 
-This is the non-degeneracy `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance` needs, in a form
+This is the non-degeneracy `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance` needs, in a form
 that applies to any target measure with a density — in particular to `ellProb`, which is
 not uniform. -/
 theorem exists_smallSet_of_absolutelyContinuous (hn : 1 ≤ n)
@@ -935,7 +936,7 @@ theorem isProbabilityMeasure_ellProb_of_volume {K : Set (EuclideanSpace ℝ (Fin
 
 /-! ## 9. The conductance bound, with no local-conductance hypothesis
 
-The proof is the three-way partition of `conductance_ballWalk_ge` ([CV18]),
+The proof is the three-way partition of `globalConductance_ballWalk_ge` ([CV18]),
 with two changes.  First, the separation input is `lt_dist_of_speedyWalk_lt`, whose threshold
 is the absolute constant `1/4` rather than `θ/4`, so **`hell` is gone**.  Second, the
 stationary measure is `ellProb K δ`, so the isoperimetric hypothesis is stated for *that*
@@ -951,7 +952,7 @@ inequality for its stationary measure:
 
     Φ(speedy walk on K with δ-steps)  ≥  min(1/16, κ·δ/(128·n)).
 
-The contrast with `conductance_ballWalk_ge` is the point of this file: **there is no
+The contrast with `globalConductance_ballWalk_ge` is the point of this file: **there is no
 hypothesis of the form `ell ≥ θ`**, and correspondingly no `θ` in the bound.  The first
 branch is an absolute constant instead of `θ/16`, and the second is `κδ/(128n)` instead of
 `κθ²δ/(64n)`.  With the only *proved* witness for the ball walk's `θ` being `2⁻ⁿ`
@@ -974,7 +975,7 @@ The remaining hypotheses are non-degeneracy guards: `1 ≤ n`, `K` measurable wi
 Against the paper ([CV18], `Φ ≥ δ/(250σ√n)`): the shape `min(const, κd/const)`
 is the same and the separation `d = δ/(2n)` replaces the paper's `δ/√n`, the one factor of
 `√n` that the elementary contraction estimate costs against [KLS95, Lemma 3.5]. -/
-theorem conductance_speedyWalk_ge (hn : 1 ≤ n)
+theorem globalConductance_speedyWalk_ge (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (hconv : Convex ℝ K)
     (hK0 : volume K ≠ 0) (hKtop : volume K ≠ ⊤) {δ : ℝ} (hδ : 0 < δ) {kappa : ℝ≥0∞}
     (hiso : ∀ d : ℝ, 0 < d → ∀ A B : Set (EuclideanSpace ℝ (Fin n)),
@@ -983,7 +984,7 @@ theorem conductance_speedyWalk_ge (hn : 1 ≤ n)
       kappa * ENNReal.ofReal d * ellProb K δ A * ellProb K δ B
         ≤ ellProb K δ ((K \ A) \ B)) :
     min (1 / 16) (kappa * ENNReal.ofReal (δ / (2 * (n : ℝ))) / 64)
-      ≤ conductance (speedyWalk K δ) (ellProb K δ) := by
+      ≤ globalConductance (ellProb K δ) (speedyWalk K δ) := by
   haveI : IsProbabilityMeasure (ellProb K δ) :=
     isProbabilityMeasure_ellProb_of_volume hK hK0 hKtop hδ
   have hnR : (0:ℝ) < (n : ℝ) := by exact_mod_cast hn
@@ -991,7 +992,7 @@ theorem conductance_speedyWalk_ge (hn : 1 ≤ n)
   set pi : Measure (EuclideanSpace ℝ (Fin n)) := ellProb K δ with hpidef
   set P : Kernel (EuclideanSpace ℝ (Fin n)) (EuclideanSpace ℝ (Fin n)) :=
     speedyWalk K δ with hPdef
-  have hrev : IsReversible P pi := isReversible_speedyWalk_prob hK δ
+  have hrev : Kernel.IsReversible P pi := isReversible_speedyWalk_prob hK δ
   -- the good part of `K`: in `K` and not stuck.  Its complement is `pi`-null.
   set K0 : Set (EuclideanSpace ℝ (Fin n)) := K ∩ (StuckPoints K δ)ᶜ with hK0def
   have hK0m : MeasurableSet K0 := hK.inter (measurableSet_stuckPoints hK δ).compl
@@ -1001,7 +1002,7 @@ theorem conductance_speedyWalk_ge (hn : 1 ≤ n)
       rw [hK0def, Set.compl_inter, compl_compl]
     rw [hset]
     exact measure_union_null (ellProb_compl_eq_zero hK δ) (ellProb_stuckPoints hK δ)
-  refine le_conductance P pi fun S hSm hSpos hShalf => ?_
+  refine le_globalConductance pi P fun S hSm hSpos hShalf => ?_
   have hpitop : pi S ≠ ⊤ := measure_ne_top _ _
   have hcompl : pi S + pi Sᶜ = 1 := by
     rw [measure_add_measure_compl hSm, measure_univ]
@@ -1046,12 +1047,12 @@ theorem conductance_speedyWalk_ge (hn : 1 ≤ n)
     by_contra hc
     rw [not_le] at hc
     exact hxS2 ((hmem2 x).2 ⟨⟨hxK, hxS⟩, hc⟩)
-  have hflow : pi ((S ∩ K0) \ S1) + pi ((K0 \ S) \ S2) ≤ 8 * flow P pi S Sᶜ := by
-    have h := mul_measure_add_measure_le_mul_flow P pi hrev hSm (hS1m.union hK0m.compl)
+  have hflow : pi ((S ∩ K0) \ S1) + pi ((K0 \ S) \ S2) ≤ 8 * flow pi P S Sᶜ := by
+    have h := mul_measure_add_measure_le_mul_flow pi P hrev hSm (hS1m.union hK0m.compl)
       (hS2m.union hK0m.compl) hA' hB'
     rw [hSA, hSB, one_mul] at h
-    calc pi ((S ∩ K0) \ S1) + pi ((K0 \ S) \ S2) ≤ 2 * (4 * flow P pi S Sᶜ) := h
-      _ = 8 * flow P pi S Sᶜ := by ring
+    calc pi ((S ∩ K0) \ S1) + pi ((K0 \ S) \ S2) ≤ 2 * (4 * flow pi P S Sᶜ) := h
+      _ = 8 * flow pi P S Sᶜ := by ring
   -- coverings
   have hpart : pi ((K \ S1) \ S2) ≤ pi ((S ∩ K0) \ S1) + pi ((K0 \ S) \ S2) := by
     have hsub : (K \ S1) \ S2 ⊆ (((S ∩ K0) \ S1) ∪ ((K0 \ S) \ S2)) ∪ K0ᶜ := by
@@ -1110,21 +1111,21 @@ theorem conductance_speedyWalk_ge (hn : 1 ≤ n)
       exact hv1.2
     exact (lt_dist_of_speedyWalk_lt hn hK hconv hδ huK hvK hu0 hSm.compl hu8 hv8).le
   -- the two branches
-  have hkey : pi S ≤ 16 * flow P pi S Sᶜ
-      ∨ kappa * ENNReal.ofReal (δ / (2 * (n : ℝ))) * pi S ≤ 64 * flow P pi S Sᶜ := by
+  have hkey : pi S ≤ 16 * flow pi P S Sᶜ
+      ∨ kappa * ENNReal.ofReal (δ / (2 * (n : ℝ))) * pi S ≤ 64 * flow pi P S Sᶜ := by
     by_cases hc1 : pi S ≤ 2 * pi ((S ∩ K0) \ S1)
     · left
       calc pi S ≤ 2 * pi ((S ∩ K0) \ S1) := hc1
         _ ≤ 2 * (pi ((S ∩ K0) \ S1) + pi ((K0 \ S) \ S2)) := by gcongr; exact le_self_add
-        _ ≤ 2 * (8 * flow P pi S Sᶜ) := by gcongr
-        _ = 16 * flow P pi S Sᶜ := by ring
+        _ ≤ 2 * (8 * flow pi P S Sᶜ) := by gcongr
+        _ = 16 * flow pi P S Sᶜ := by ring
     by_cases hc2 : pi Sᶜ ≤ 2 * pi ((K0 \ S) \ S2)
     · left
       calc pi S ≤ pi Sᶜ := hShalf.trans hSc
         _ ≤ 2 * pi ((K0 \ S) \ S2) := hc2
         _ ≤ 2 * (pi ((S ∩ K0) \ S1) + pi ((K0 \ S) \ S2)) := by gcongr; exact le_add_self
-        _ ≤ 2 * (8 * flow P pi S Sᶜ) := by gcongr
-        _ = 16 * flow P pi S Sᶜ := by ring
+        _ ≤ 2 * (8 * flow pi P S Sᶜ) := by gcongr
+        _ = 16 * flow pi P S Sᶜ := by ring
     right
     rw [not_le] at hc1 hc2
     have h1 : pi S < 2 * pi S1 := by
@@ -1164,25 +1165,25 @@ theorem conductance_speedyWalk_ge (hn : 1 ≤ n)
       _ = 8 * (kappa * ENNReal.ofReal (δ / (2 * (n : ℝ))) * pi S1 * pi S2) := by ring
       _ ≤ 8 * pi ((K \ S1) \ S2) := by gcongr
       _ ≤ 8 * (pi ((S ∩ K0) \ S1) + pi ((K0 \ S) \ S2)) := by gcongr
-      _ ≤ 8 * (8 * flow P pi S Sᶜ) := by gcongr
-      _ = 64 * flow P pi S Sᶜ := by ring
+      _ ≤ 8 * (8 * flow pi P S Sᶜ) := by gcongr
+      _ = 64 * flow pi P S Sᶜ := by ring
   have hswap : ∀ a b c : ℝ≥0∞, a / c * b = a * b / c := by
     intro a b c
     rw [div_eq_mul_inv, div_eq_mul_inv, mul_right_comm]
-  rw [conductanceOn_apply, ENNReal.le_div_iff_mul_le (Or.inl hSpos.ne') (Or.inl hpitop)]
+  rw [conductance_apply, ENNReal.le_div_iff_mul_le (Or.inl hSpos.ne') (Or.inl hpitop)]
   rcases hkey with h | h
   · calc min ((1:ℝ≥0∞) / 16) (kappa * ENNReal.ofReal (δ / (2 * (n : ℝ))) / 64) * pi S
         ≤ (1:ℝ≥0∞) / 16 * pi S := by gcongr; exact min_le_left _ _
       _ = 1 * pi S / 16 := hswap _ _ _
       _ = pi S / 16 := by rw [one_mul]
-      _ ≤ flow P pi S Sᶜ := by
+      _ ≤ flow pi P S Sᶜ := by
           rw [ENNReal.div_le_iff_le_mul (Or.inl (by norm_num)) (Or.inl (by norm_num))]
           exact h.trans_eq (mul_comm _ _)
   · calc min ((1:ℝ≥0∞) / 16) (kappa * ENNReal.ofReal (δ / (2 * (n : ℝ))) / 64) * pi S
         ≤ kappa * ENNReal.ofReal (δ / (2 * (n : ℝ))) / 64 * pi S := by
           gcongr; exact min_le_right _ _
       _ = kappa * ENNReal.ofReal (δ / (2 * (n : ℝ))) * pi S / 64 := hswap _ _ _
-      _ ≤ flow P pi S Sᶜ := by
+      _ ≤ flow pi P S Sᶜ := by
           rw [ENNReal.div_le_iff_le_mul (Or.inl (by norm_num)) (Or.inl (by norm_num))]
           exact h.trans_eq (mul_comm _ _)
 
@@ -1224,7 +1225,7 @@ theorem mixesWithin_lazy_speedyWalk (hn : 1 ≤ n)
   haveI : IsProbabilityMeasure (ellProb K δ) :=
     isProbabilityMeasure_ellProb_of_volume hK hK0 hKtop hδ
   have hnR : (0:ℝ) < (n : ℝ) := by exact_mod_cast hn
-  have hrev : IsReversible (lazy (speedyWalk K δ)) (ellProb K δ) :=
+  have hrev : Kernel.IsReversible (lazy (speedyWalk K δ)) (ellProb K δ) :=
     isReversible_lazy (isReversible_speedyWalk_prob hK δ)
   have hpsd : HasNonnegSpectrum (lazy (speedyWalk K δ)) (ellProb K δ) :=
     hasNonnegSpectrum_lazy (isReversible_speedyWalk_prob hK δ)
@@ -1234,7 +1235,7 @@ theorem mixesWithin_lazy_speedyWalk (hn : 1 ≤ n)
   set phi : ℝ := min (1 / 32) (kappa * δ / (256 * (n : ℝ))) with hphidef
   have hphi0 : 0 < phi := lt_min (by norm_num) (by positivity)
   have hphi1 : phi ≤ 1 := le_trans (min_le_left _ _) (by norm_num)
-  have hcond := conductance_speedyWalk_ge hn hK hconv hK0 hKtop hδ
+  have hcond := globalConductance_speedyWalk_ge hn hK hconv hK0 hKtop hδ
     (kappa := ENNReal.ofReal kappa) hiso
   have hmul : ENNReal.ofReal phi * 2 = ENNReal.ofReal (phi * 2) := by
     rw [ENNReal.ofReal_mul hphi0.le]
@@ -1264,21 +1265,21 @@ theorem mixesWithin_lazy_speedyWalk (hn : 1 ≤ n)
       ring
     nlinarith [hmin]
   have hlazy : ENNReal.ofReal phi
-      ≤ conductance (lazy (speedyWalk K δ)) (ellProb K δ) := by
-    rw [conductance_lazy]
+      ≤ globalConductance (ellProb K δ) (lazy (speedyWalk K δ)) := by
+    rw [globalConductance_lazy]
     have hstep : ENNReal.ofReal phi
         ≤ min ((1:ℝ≥0∞) / 16)
             (ENNReal.ofReal kappa * ENNReal.ofReal (δ / (2 * (n : ℝ))) / 64) / 2 := by
       rw [ENNReal.le_div_iff_mul_le (Or.inl (by norm_num)) (Or.inl (by norm_num))]
       exact le_min hbranch1 hbranch2
     exact hstep.trans (by gcongr)
-  have hcondtop : conductance (lazy (speedyWalk K δ)) (ellProb K δ) ≠ ⊤ :=
+  have hcondtop : globalConductance (ellProb K δ) (lazy (speedyWalk K δ)) ≠ ⊤ :=
     ne_top_of_le_ne_top (by norm_num)
-      (conductance_le_one _ _ ⟨S0, hS0m, hS0pos, hS0half⟩)
-  have hphireal : phi ≤ (conductance (lazy (speedyWalk K δ)) (ellProb K δ)).toReal := by
+      (globalConductance_le_one _ _ ⟨S0, hS0m, hS0pos, hS0half⟩)
+  have hphireal : phi ≤ (globalConductance (ellProb K δ) (lazy (speedyWalk K δ))).toReal := by
     have h := ENNReal.toReal_mono hcondtop hlazy
     rwa [ENNReal.toReal_ofReal hphi0.le] at h
-  exact mixesWithin_of_conductance hrev hpsd hne hM hwarm hphi0 hphi1 heps hphireal ht
+  exact mixesWithin_of_globalConductance hrev hpsd hne hM hwarm hphi0 hphi1 heps hphireal ht
 
 /-! ## 11. Non-vacuity and the speedy-point hypothesis
 
@@ -1294,7 +1295,7 @@ the hypothesis the ball-walk route needs and cannot get. -/
 positivity.  Contrast `ofReal_le_ell_unitBall`, which is the *proved* witness for the ball
 walk and gives only `θ = 2⁻ⁿ`.
 
-It is deliberately not used below: `conductance_speedyWalk_ge` needs no lower bound on `ell`
+It is deliberately not used below: `globalConductance_speedyWalk_ge` needs no lower bound on `ell`
 whatsoever, because the reweighting has already divided it out.  The reason a lower bound
 cannot simply be *assumed* at `θ = 3/4` is that `K ⊆ SpeedyPoints K δ` is vacuous for any
 bounded body, and restricting the walk to `K' = K ∩ SpeedyPoints K δ` only moves the problem:
@@ -1355,7 +1356,7 @@ theorem exists_speedyWalk_witness {δ : ℝ} (hδ : 0 < δ) :
     ∃ K : Set (EuclideanSpace ℝ (Fin n)),
       MeasurableSet K ∧ Convex ℝ K ∧ IsProbabilityMeasure (ellProb K δ) ∧
         IsMarkovKernel (speedyWalk K δ) ∧
-        IsReversible (speedyWalk K δ) (ellProb K δ) ∧
+        Kernel.IsReversible (speedyWalk K δ) (ellProb K δ) ∧
         Kernel.Invariant (speedyWalk K δ) (ellProb K δ) ∧
         ellProb K δ (StuckPoints K δ) = 0 :=
   ⟨Metric.ball 0 1, measurableSet_ball, convex_ball _ _,
@@ -1441,7 +1442,7 @@ theorem ellMeasure_add_volume_le (K : Set (EuclideanSpace ℝ (Fin n))) (δ : �
 #print axioms ellMeasure_univ_ne_zero
 #print axioms exists_smallSet_of_absolutelyContinuous
 #print axioms isProbabilityMeasure_ellProb_of_volume
-#print axioms conductance_speedyWalk_ge
+#print axioms globalConductance_speedyWalk_ge
 #print axioms mixesWithin_lazy_speedyWalk
 #print axioms three_quarters_le_ell_of_mem_speedyPoints
 #print axioms mixesWithin_lazy_speedyWalk_unitBall

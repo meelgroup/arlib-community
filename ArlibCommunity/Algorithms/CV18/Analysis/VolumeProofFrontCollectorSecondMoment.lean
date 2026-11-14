@@ -19,7 +19,7 @@ has the usual mean-square plus spectral-variance bound. -/
 theorem integral_bind_frontMarkovCollectLaw_average_sq_le
     {S : Type*} [MeasurableSpace S]
     (P : Kernel S S) [IsMarkovKernel P] {pi : Measure S}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     (hpsd : HasNonnegSpectrum P pi)
     (hne : (rayleighSet P pi).Nonempty)
     {f : S → ℝ} (hf : Measurable f) (mean : ℝ)

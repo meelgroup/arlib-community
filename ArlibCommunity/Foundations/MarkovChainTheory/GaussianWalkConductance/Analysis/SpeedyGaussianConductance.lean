@@ -17,12 +17,12 @@ import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IsoWeight
 with the Gaussian Metropolis filter `min(1, g(y)/g(x))` — and proves it reversible for
 `1_K·ℓ·e^{−‖x‖²/(2s)}`.  Its §7 states, in prose and without declarations, the three things that
 stand between that kernel and a conductance bound.  **This file discharges all three**, against
-the abstract theorem `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`
+the abstract theorem `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`
 (`SpeedyConductanceSharp.lean`), and composes them.
 
 ## Main results, in the order of `SpeedyGaussian.lean` §7
 
-* **Obligation 2, `ArlibCommunity.Foundations.MarkovChainTheory.hpi_ellGaussian`.**  `conductance_speedyGaussian_ge` takes
+* **Obligation 2, `ArlibCommunity.Foundations.MarkovChainTheory.hpi_ellGaussian`.**  `globalConductance_speedyGaussian_ge` takes
   its stationary law in the *real*-density form `π A = ofReal(∫_A h)/ofReal(∫ h)`;
   `ellGaussianProb` is built from an `ℝ≥0∞` density.  They agree at
   `h = 1_K·(ℓ.toReal)·gaussianWeightReal s`, both factors being bounded by `1` and hence
@@ -43,11 +43,11 @@ the abstract theorem `ArlibCommunity.Foundations.MarkovChainTheory.conductance_s
   `ArlibCommunity.Foundations.MarkovChainTheory.mul_volume_le_metropolisGaussian`, bounding it by a common `M` so the two
   endpoints of an overlap pair combine.  The acceptance floor itself
   (`ArlibCommunity.Foundations.MarkovChainTheory.metropolisAccept_ge`) is kernel-independent and is reused verbatim.
-* **The composition, `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge`.**
+* **The composition, `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyMetropolisGaussian_ge`.**
 
 ## The constants are re-derived, not copied
 
-The final bound `Φ ≥ δ·ln 2/(640·σ·√n)` is `conductance_speedyGaussian_ge`'s, whose module
+The final bound `Φ ≥ δ·ln 2/(640·σ·√n)` is `globalConductance_speedyGaussian_ge`'s, whose module
 docstring already records two corrections to the paper's `δ/(250σ√n)`.  The constants this file
 adds are these:
 
@@ -65,7 +65,7 @@ adds are these:
 
 ## Scope: what remains a hypothesis
 
-`conductance_speedyMetropolisGaussian_ge` is **conditional**, and this file contains no mixing
+`globalConductance_speedyMetropolisGaussian_ge` is **conditional**, and this file contains no mixing
 bound, no spectral-gap bound and no runtime statement in any form.  Two hypotheses carry real
 content and neither is proved here or anywhere in this repository:
 
@@ -79,7 +79,7 @@ content and neither is proved here or anywhere in this repository:
   `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_measurable_logTwo_strict_witness` obtains it only at `Lf = 0`,
   on a body small enough that `ℓ` is constant.
 
-Everything else `conductance_speedyGaussian_ge` asks for **is** discharged here: `hh0`, `hmass`
+Everything else `globalConductance_speedyGaussian_ge` asks for **is** discharged here: `hh0`, `hmass`
 (`integral_ellGaussianIndicator_pos`), `hpi`, `hrev`, `hpiK`, `hoverlap`, and `hiso`'s
 `hellKpos`.  The acceptance floor is discharged from `hδσ` and `hRσ` alone.
 
@@ -159,7 +159,7 @@ theorem ellGaussianMeasure_eq_ofReal_setIntegral {s : ℝ} (hs : 0 < s)
     (fun x _ => ell_mul_gaussianWeight_eq_ofReal K δ s x)
 
 /-- **`hpi` for the speedy Metropolis–Gaussian chain** — obligation 2 of `SpeedyGaussian.lean`
-§7, in exactly the form `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` consumes:
+§7, in exactly the form `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` consumes:
 
     ellGaussianProb K δ s A  =  ofReal (∫_A h) / ofReal (∫ h),
     h = 1_K · ℓ · e^{−‖x‖²/(2s)}.
@@ -197,7 +197,7 @@ theorem ell_toReal_pos_of_convex {K : Set (EuclideanSpace ℝ (Fin n))} (hKc : C
     (ne_top_of_le_ne_top ENNReal.one_ne_top (ell_le_one K δ x))
 
 /-- **`hiso` for the speedy Metropolis–Gaussian chain** — obligation 3 of `SpeedyGaussian.lean`
-§7, in exactly the binder shape of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`'s `hiso`,
+§7, in exactly the binder shape of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`'s `hiso`,
 at `s = σ²`.
 
 The mathematics is entirely `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_measurable_logTwo`
@@ -233,7 +233,7 @@ with no Lipschitz hypothesis, for `S₁, S₂` open and `S₃` closed:
 **UPDATE (same day): that upgrade is done, and this theorem is superseded.**
 `ArlibCommunity.Foundations.MarkovChainTheory.hiso_speedyMetropolisGaussian_uncond` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/OverlapPerPair.lean`)
 is this binder with `hellLip`, `hLσ`, `hKR` and the parameters `R`, `Lf` all removed, and
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond` is the conductance bound built on it,
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyMetropolisGaussian_ge_uncond` is the conductance bound built on it,
 with an unconditional witness.  Prefer those.  The theorems in *this* file remain correct but
 carry hypotheses with no known witness at non-constant `ℓ`. -/
 theorem hiso_speedyMetropolisGaussian (hn : 2 ≤ n) {σ δ R Lf : ℝ} (hσ : 0 < σ) (hδ : 0 < δ)
@@ -419,7 +419,7 @@ theorem acceptance_floor_of_le {R δ s : ℝ} (hs : 0 < s)
   linarith
 
 /-- **The acceptance floor in the Cousins–Vempala regime.**  At `s = σ²`, with the step size
-`δ ≤ σ/(8√n)` that `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` already assumes and a body
+`δ ≤ σ/(8√n)` that `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` already assumes and a body
 inside `‖x‖ ≤ 2σ√n`,
 
     2Rδ + δ²  ≤  σ²/2 + σ²/64  =  (33/64)·σ²  ≤  (4/5)·σ²,
@@ -446,7 +446,7 @@ theorem acceptance_floor_of_cv (hn : 2 ≤ n) {σ δ R : ℝ} (hσ : 0 < σ) (h�
 
 /-- **`hoverlap` for the speedy Metropolis–Gaussian chain** — obligation 1 of
 `SpeedyGaussian.lean` §7, in exactly the binder shape of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`'s `hoverlap`.
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`'s `hoverlap`.
 
 Comparability of the local conductances is a **global** hypothesis on `K`, as it must be:
 `hoverlap`'s binder admits no extra per-pair premise, and this is the same shape
@@ -522,7 +522,7 @@ theorem integral_ellGaussianIndicator_pos {s : ℝ} (hs : 0 < s)
   exact hne (ENNReal.ofReal_eq_zero.2 (not_lt.1 hcon))
 
 /-- **A conductance bound for `ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisGaussian`** —
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` with every hypothesis it takes supplied for
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` with every hypothesis it takes supplied for
 this kernel, at `s = σ²`:
 
     Φ(speedyMetropolisGaussian K δ σ²)  ≥  δ·ln 2 / (640·σ·√n)
@@ -549,7 +549,7 @@ bound, not a spectral-gap bound and not a runtime claim, and may not be quoted a
 Everything else is discharged: measurability, convexity, boundedness (`hKR`), positive volume,
 the acceptance floor (`acceptance_floor_of_cv`, from `hδσ` and `hRσ` alone), the local
 non-degeneracy `ℓ > 0` (`ell_toReal_pos_of_convex`), reversibility, `π(Kᶜ) = 0` and `hmass`. -/
-theorem conductance_speedyMetropolisGaussian_ge (hn : 2 ≤ n) {σ δ R Lf : ℝ} (hσ : 0 < σ)
+theorem globalConductance_speedyMetropolisGaussian_ge (hn : 2 ≤ n) {σ δ R Lf : ℝ} (hσ : 0 < σ)
     (hδ : 0 < δ) (hδσ : δ ≤ σ / (8 * Real.sqrt n)) (hLf : 0 ≤ Lf)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (hKc : Convex ℝ K)
     (hK0 : volume K ≠ 0) (hR : 0 ≤ R) (hKR : ∀ x ∈ K, ‖x‖ ≤ R)
@@ -560,7 +560,7 @@ theorem conductance_speedyMetropolisGaussian_ge (hn : 2 ≤ n) {σ δ R Lf : ℝ
       (ell K δ u).toReal ≤ (ell K δ v).toReal * Real.exp (Lf * ‖u - v‖))
     (hLσ : Real.sqrt 3 * (σ ^ 2 * Lf + R) ≤ 2 * σ * Real.sqrt n) :
     ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n))
-      ≤ conductance (speedyMetropolisGaussian K δ (σ ^ 2)) (ellGaussianProb K δ (σ ^ 2)) := by
+      ≤ globalConductance (ellGaussianProb K δ (σ ^ 2)) (speedyMetropolisGaussian K δ (σ ^ 2)) := by
   have hs : (0 : ℝ) < σ ^ 2 := by positivity
   have hKcb : K ⊆ Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) R := by
     intro x hx
@@ -568,7 +568,7 @@ theorem conductance_speedyMetropolisGaussian_ge (hn : 2 ≤ n) {σ δ R Lf : ℝ
   have hKb : Bornology.IsBounded K := Metric.isBounded_closedBall.subset hKcb
   have hKtop : volume K ≠ ⊤ :=
     ne_of_lt (lt_of_le_of_lt (measure_mono hKcb) measure_closedBall_lt_top)
-  exact conductance_speedyGaussian_ge hn hσ hδ hδσ
+  exact globalConductance_speedyGaussian_ge hn hσ hδ hδσ
     (fun x => Set.indicator_nonneg
       (fun y _ => mul_nonneg ENNReal.toReal_nonneg (gaussianWeightReal_pos _ y).le) x)
     (integral_ellGaussianIndicator_pos hs hK hKc hKb hK0 hKtop hδ)
@@ -597,4 +597,4 @@ end ArlibCommunity.Foundations.MarkovChainTheory
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.hoverlap_speedyMetropolisGaussian
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianMeasure_univ_ne_zero
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.integral_ellGaussianIndicator_pos
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyMetropolisGaussian_ge

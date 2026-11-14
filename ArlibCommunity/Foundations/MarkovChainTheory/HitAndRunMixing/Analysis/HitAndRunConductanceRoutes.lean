@@ -36,7 +36,7 @@ variable {n : ℕ}
 
 /-- **Theorem 4.2 of Lovász–Vempala with `hIso` restricted to lower semicontinuous weights.**
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv` replayed with its `hIso` binder replaced by
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_tv` replayed with its `hIso` binder replaced by
 `ArlibCommunity.Foundations.Convex.hIso_lowerSemicontinuous`'s conclusion — the same binder with `LowerSemicontinuous h`
 inserted after the two set arguments, every other clause verbatim.
 
@@ -61,9 +61,9 @@ That is the whole difference; every other line is the original.
 `chordLow K u v < 0` of the paper's Lemma 4.1 fails at every boundary pair and the `∀ u ∈ K`
 form cannot be discharged.  On the interior it is proved outright, at `1 − 1/8000` for
 `n ≥ 1100`, by `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_interior`.  The unchanged
-`conductance_hitAndRun_ge_of_tv_lsc` below is derived from this theorem by `interior_subset`,
+`globalConductance_hitAndRun_ge_of_tv_lsc` below is derived from this theorem by `interior_subset`,
 which is the machine-checked proof that the weakening loses no consumer. -/
-theorem conductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
+theorem globalConductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -83,7 +83,7 @@ theorem conductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (lam / (245760 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hn' : n ≠ 0 := Nat.one_le_iff_ne_zero.mp hn
   haveI : NeZero n := ⟨hn'⟩
   have hnR : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
@@ -103,7 +103,7 @@ theorem conductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
     isProbabilityMeasure_uniformOn volume hK0 hKtop
   set pi : Measure (EuclideanSpace ℝ (Fin n)) := uniformOn volume K with hpidef
   set P : Kernel (EuclideanSpace ℝ (Fin n)) (EuclideanSpace ℝ (Fin n)) := hitAndRun K with hPdef
-  have hrev : IsReversible P pi := isReversible_hitAndRun hKm
+  have hrev : Kernel.IsReversible P pi := isReversible_hitAndRun hKm
   have hIm : MeasurableSet (interior K) := isOpen_interior.measurableSet
   -- the frontier is null, so `interior K` carries all the mass
   have hintc : pi (interior K)ᶜ = 0 := by
@@ -169,7 +169,7 @@ theorem conductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
     rw [hpiint, ← hconst, ENNReal.ofReal_mul (by positivity)]
     gcongr
   -- now the conductance
-  refine le_conductance P pi fun S hSm hSpos hShalf => ?_
+  refine le_globalConductance pi P fun S hSm hSpos hShalf => ?_
   have hpitop : pi S ≠ ⊤ := measure_ne_top _ _
   have hcompl : pi S + pi Sᶜ = 1 := by rw [measure_add_measure_compl hSm, measure_univ]
   have hSc : (1 : ℝ≥0∞) / 2 ≤ pi Sᶜ := by
@@ -314,12 +314,12 @@ theorem conductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
     by_contra hc
     exact hxS2 ((hmem2 x).2 ⟨⟨hxK, hxS⟩, not_le.1 hc⟩)
   have hflow : eps * (pi ((S ∩ interior K) \ S1) + pi ((interior K \ S) \ S2))
-      ≤ 2 * (1 * flow P pi S Sᶜ) := by
-    have h := mul_measure_add_measure_le_mul_flow P pi hrev hSm (hS1m.union hIm.compl)
+      ≤ 2 * (1 * flow pi P S Sᶜ) := by
+    have h := mul_measure_add_measure_le_mul_flow pi P hrev hSm (hS1m.union hIm.compl)
       (hS2m.union hIm.compl) hA' hB'
     rwa [hSA, hSB] at h
   have hflow' : eps * (pi ((S ∩ interior K) \ S1) + pi ((interior K \ S) \ S2))
-      ≤ 2 * flow P pi S Sᶜ := by rwa [one_mul] at hflow
+      ≤ 2 * flow pi P S Sᶜ := by rwa [one_mul] at hflow
   have hpart : pi ((K \ S1) \ S2)
       ≤ pi ((S ∩ interior K) \ S1) + pi ((interior K \ S) \ S2) := by
     have hsub : (K \ S1) \ S2 ⊆ (((S ∩ interior K) \ S1) ∪ ((interior K \ S) \ S2))
@@ -386,7 +386,7 @@ theorem conductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
     ring
   -- the three branches
   have hmain : 4 * (ENNReal.ofReal (lam / (245760 * (n : ℝ) * D)) * pi S)
-      ≤ 4 * flow P pi S Sᶜ := by
+      ≤ 4 * flow pi P S Sᶜ := by
     by_cases hc1 : pi S ≤ 2 * pi ((S ∩ interior K) \ S1)
     · calc 4 * (ENNReal.ofReal (lam / (245760 * (n : ℝ) * D)) * pi S)
           = (4 * ENNReal.ofReal (lam / (245760 * (n : ℝ) * D))) * pi S := by ring
@@ -396,8 +396,8 @@ theorem conductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
         _ ≤ 2 * (eps * (pi ((S ∩ interior K) \ S1) + pi ((interior K \ S) \ S2))) := by
             gcongr
             exact le_self_add
-        _ ≤ 2 * (2 * flow P pi S Sᶜ) := by gcongr
-        _ = 4 * flow P pi S Sᶜ := by ring
+        _ ≤ 2 * (2 * flow pi P S Sᶜ) := by gcongr
+        _ = 4 * flow pi P S Sᶜ := by ring
     by_cases hc2 : pi Sᶜ ≤ 2 * pi ((interior K \ S) \ S2)
     · calc 4 * (ENNReal.ofReal (lam / (245760 * (n : ℝ) * D)) * pi S)
           = (4 * ENNReal.ofReal (lam / (245760 * (n : ℝ) * D))) * pi S := by ring
@@ -408,8 +408,8 @@ theorem conductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
         _ ≤ 2 * (eps * (pi ((S ∩ interior K) \ S1) + pi ((interior K \ S) \ S2))) := by
             gcongr
             exact le_add_self
-        _ ≤ 2 * (2 * flow P pi S Sᶜ) := by gcongr
-        _ = 4 * flow P pi S Sᶜ := by ring
+        _ ≤ 2 * (2 * flow pi P S Sᶜ) := by gcongr
+        _ = 4 * flow pi P S Sᶜ := by ring
     rw [not_le] at hc1 hc2
     have h1 : pi S < 2 * pi S1 := by
       have hstep : pi S + pi S < pi S + 2 * pi S1 := by
@@ -444,9 +444,9 @@ theorem conductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
           ring
       _ ≤ 2 * (eps * pi ((K \ S1) \ S2)) := by gcongr
       _ ≤ 2 * (eps * (pi ((S ∩ interior K) \ S1) + pi ((interior K \ S) \ S2))) := by gcongr
-      _ ≤ 2 * (2 * flow P pi S Sᶜ) := by gcongr
-      _ = 4 * flow P pi S Sᶜ := by ring
-  rw [conductanceOn_apply, ENNReal.le_div_iff_mul_le (Or.inl hSpos.ne') (Or.inl hpitop)]
+      _ ≤ 2 * (2 * flow pi P S Sᶜ) := by gcongr
+      _ = 4 * flow pi P S Sᶜ := by ring
+  rw [conductance_apply, ENNReal.le_div_iff_mul_le (Or.inl hSpos.ne') (Or.inl hpitop)]
   have h4ne : (4 : ℝ≥0∞) ≠ 0 := by norm_num
   have h4top : (4 : ℝ≥0∞) ≠ ⊤ := by norm_num
   exact (ENNReal.mul_le_mul_iff_right h4ne h4top).mp hmain
@@ -454,9 +454,9 @@ theorem conductance_hitAndRun_ge_of_tv_lsc_interior (hn : 1 ≤ n)
 /-- **Theorem 4.2 in the paper's constant, at the lower semicontinuous `hIso`, with `hLem41` on
 the interior.**
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_interior` replayed on
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_lsc_interior`; the arithmetic is the original's. -/
-theorem conductance_hitAndRun_ge_lsc_interior (hn : 1 ≤ n)
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_interior` replayed on
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_tv_lsc_interior`; the arithmetic is the original's. -/
+theorem globalConductance_hitAndRun_ge_lsc_interior (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -476,18 +476,18 @@ theorem conductance_hitAndRun_ge_lsc_interior (hn : 1 ≤ n)
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / (2 ^ 27 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hnR : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
   have hD1 : (1 : ℝ) ≤ D := le_trans (one_le_diam_of_unitBall hn hKb hball) hD
   refine le_trans (ENNReal.ofReal_le_ofReal ?_)
-    (conductance_hitAndRun_ge_of_tv_lsc_interior hn hKc hKcl hKm hKb hball hD (by norm_num)
+    (globalConductance_hitAndRun_ge_of_tv_lsc_interior hn hKc hKcl hKm hKb hball hD (by norm_num)
       (by norm_num) hLem41 hIso)
   rw [div_le_div_iff₀ (by positivity) (by positivity)]
   nlinarith
 
 /-- **The composition: Theorem 4.2 with `hIso` discharged, `hLem41` on the interior.**
 
-`ArlibCommunity.Foundations.Convex.hIso_lowerSemicontinuous` fed to `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_lsc_interior`.  The
+`ArlibCommunity.Foundations.Convex.hIso_lowerSemicontinuous` fed to `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_lsc_interior`.  The
 residual binders are exactly three, all named and all inline at the declaration: `hLem41`
 (Lemma 4.1, on `interior K` — the only satisfiable form, and the one
 `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_interior` proves outright), `htrans` (the chord transfer,
@@ -496,9 +496,9 @@ integrands with the needle inside the body, proved by `ArlibCommunity.Foundation
 the paper's Theorem 2.1, the binder three attempts have failed to discharge — is *gone*.
 
 That the two `hIso` shapes agree is not asserted here, it is checked: this composition would not
-typecheck if the binder replayed into `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_lsc_interior`
+typecheck if the binder replayed into `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_tv_lsc_interior`
 differed by a single clause from the conclusion of `ArlibCommunity.Foundations.Convex.hIso_lowerSemicontinuous`. -/
-theorem conductance_hitAndRun_ge_of_transfer_of_localization_interior (hn : 1 ≤ n)
+theorem globalConductance_hitAndRun_ge_of_transfer_of_localization_interior (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -530,7 +530,7 @@ theorem conductance_hitAndRun_ge_of_transfer_of_localization_interior (hn : 1 �
         (∫ t in Set.Icc α β, g₁ (needleMap p e t) * D t) = 0 ∧
         0 < ∫ t in Set.Icc α β, g₂ (needleMap p e t) * D t) :
     ENNReal.ofReal (1 / (2 ^ 27 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hK0 : volume K ≠ 0 := by
     have hpos : 0 < volume (Metric.closedBall z 1) :=
       Metric.measure_closedBall_pos volume z one_pos
@@ -538,14 +538,14 @@ theorem conductance_hitAndRun_ge_of_transfer_of_localization_interior (hn : 1 �
   obtain ⟨R, hR⟩ := hKb.subset_closedBall (0 : EuclideanSpace ℝ (Fin n))
   have hKtop : volume K ≠ ⊤ :=
     ne_top_of_le_ne_top measure_closedBall_lt_top.ne (measure_mono hR)
-  exact conductance_hitAndRun_ge_lsc_interior hn hKc hKcl hKm hKb hball hD hLem41
+  exact globalConductance_hitAndRun_ge_lsc_interior hn hKc hKcl hKm hKb hball hD hLem41
     (hIso_lowerSemicontinuous hKc hKcl hKm hKb hK0 hKtop htrans hloc)
 
 /-- **The composition with `hLem41` demanded on all of `K`** — the shape this theorem had before
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer_of_localization_interior` was split off, kept verbatim
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_transfer_of_localization_interior` was split off, kept verbatim
 so that every existing consumer continues to typecheck, and derived from the interior form by
 `interior_subset`. -/
-theorem conductance_hitAndRun_ge_of_transfer_of_localization (hn : 1 ≤ n)
+theorem globalConductance_hitAndRun_ge_of_transfer_of_localization (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -577,13 +577,13 @@ theorem conductance_hitAndRun_ge_of_transfer_of_localization (hn : 1 ≤ n)
         (∫ t in Set.Icc α β, g₁ (needleMap p e t) * D t) = 0 ∧
         0 < ∫ t in Set.Icc α β, g₂ (needleMap p e t) * D t) :
     ENNReal.ofReal (1 / (2 ^ 27 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) :=
-  conductance_hitAndRun_ge_of_transfer_of_localization_interior hn hKc hKcl hKm hKb hball hD
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) :=
+  globalConductance_hitAndRun_ge_of_transfer_of_localization_interior hn hKc hKcl hKm hKb hball hD
     (fun u hu v hv => hLem41 u (interior_subset hu) v (interior_subset hv)) htrans hloc
 
 /-- **Lovász–Vempala Theorem 4.2 with the Localization Lemma discharged.**
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer_of_localization` with its third binder `hloc` proved
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_transfer_of_localization` with its third binder `hloc` proved
 rather than assumed, leaving `hLem41` (Lemma 4.1, owned elsewhere) and `htrans` (the chord
 transfer).  The statement is that theorem's, clause for clause, with the single change that
 `1 ≤ n` becomes `2 ≤ n` — the dimension restriction of
@@ -593,7 +593,7 @@ That the discharged binder is *the* binder is not asserted, it is checked: the p
 `ArlibCommunity.Foundations.Convex.hloc_needle_in_body` to the `hloc` slot verbatim, and this would not typecheck if the two
 differed by a single clause.  The compactness `hloc_needle_in_body` needs is exactly the
 `IsClosed K` and `Bornology.IsBounded K` the consumer already carries; no hypothesis is added. -/
-theorem conductance_hitAndRun_ge_of_transfer (hn : 2 ≤ n)
+theorem globalConductance_hitAndRun_ge_of_transfer (hn : 2 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -617,20 +617,20 @@ theorem conductance_hitAndRun_ge_of_transfer (hn : 2 ≤ n)
             (∃ r : ℝ, x = (AffineMap.lineMap u v : ℝ → EuclideanSpace ℝ (Fin n)) r) →
             g x ≤ min 1 (crossRatioDist K u v) / 3 + ε) :
     ENNReal.ofReal (1 / (2 ^ 27 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) :=
-  conductance_hitAndRun_ge_of_transfer_of_localization (by omega) hKc hKcl hKm hKb hball hD
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) :=
+  globalConductance_hitAndRun_ge_of_transfer_of_localization (by omega) hKc hKcl hKm hKb hball hD
     hLem41 htrans (hloc_needle_in_body hn hKc hKcl hKb)
 
 /-- **The consumer, with `htrans` discharged.**
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer_of_localization` fed `ArlibCommunity.Foundations.Convex.htrans_of_compact`.
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_transfer_of_localization` fed `ArlibCommunity.Foundations.Convex.htrans_of_compact`.
 The residual binders are exactly two: `hLem41` (Lemma 4.1) and `hloc` (the Localization
 Lemma for continuous integrands with the needle inside the body).  `htrans` is gone.
 
 This composition is also the vacuity check on `ArlibCommunity.Foundations.Convex.htrans_of_compact`: the binder is not
 retyped here, it is *applied*, so a statement that drifted from the one
 `ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/IsoConcaveWeight.lean` asks for by a single clause would be a type error. -/
-theorem conductance_hitAndRun_ge_of_localization (hn : 1 ≤ n)
+theorem globalConductance_hitAndRun_ge_of_localization (hn : 1 ≤ n)
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -647,8 +647,8 @@ theorem conductance_hitAndRun_ge_of_localization (hn : 1 ≤ n)
         (∫ t in Set.Icc α β, g₁ (needleMap p e t) * D t) = 0 ∧
         0 < ∫ t in Set.Icc α β, g₂ (needleMap p e t) * D t) :
     ENNReal.ofReal (1 / (2 ^ 27 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) :=
-  conductance_hitAndRun_ge_of_transfer_of_localization hn hKc hKcl hKm hKb hball hD hLem41
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) :=
+  globalConductance_hitAndRun_ge_of_transfer_of_localization hn hKc hKcl hKm hKb hball hD hLem41
     (htrans_of_compact hKc hKcl hKb) hloc
 
 /-- **Theorem 4.2 of Lovász–Vempala, with `hIso` replaced by Theorem 2.1's conclusion.**
@@ -658,7 +658,7 @@ that `ArlibCommunity.Foundations.Convex.crossRatioIso_uniform_of_localization` p
 localization work lands this theorem is one `exact` away from carrying only `hLem41`.
 
 The trade is exactly `ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` and nothing else. -/
-theorem conductance_hitAndRun_ge_of_crossRatioIso (hn : 1 ≤ n)
+theorem globalConductance_hitAndRun_ge_of_crossRatioIso (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -677,7 +677,7 @@ theorem conductance_hitAndRun_ge_of_crossRatioIso (hn : 1 ≤ n)
       ∀ A : ℝ, 0 ≤ A → A ≤ 1 / 2 → (volume U₁).toReal = A * (volume K).toReal →
         A * (∫ x in K, g x) ≤ (volume ((K \ U₁) \ U₂)).toReal) :
     ENNReal.ofReal (1 / (2 ^ 27 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hK0 : volume K ≠ 0 := by
     have hpos : 0 < volume (Metric.closedBall z 1) :=
       Metric.measure_closedBall_pos volume z one_pos
@@ -685,17 +685,17 @@ theorem conductance_hitAndRun_ge_of_crossRatioIso (hn : 1 ≤ n)
   obtain ⟨R, hR⟩ := hKb.subset_closedBall (0 : EuclideanSpace ℝ (Fin n))
   have hKtop : volume K ≠ ⊤ :=
     ne_top_of_le_ne_top measure_closedBall_lt_top.ne (measure_mono hR)
-  exact conductance_hitAndRun_ge hn hKc hKcl hKm hKb hball hD hLem41
+  exact globalConductance_hitAndRun_ge hn hKc hKcl hKm hKb hball hD hLem41
     (hIso_of_crossRatioIso hKb hKm hK0 hKtop hthm21)
 
 /-- **Theorem 4.2 of Lovász–Vempala, with `hIso` replaced by the *corrected* Theorem 2.1
 binder.**
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso` rerun on `hthm21sub`.  Residual binders: `hLem41`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_crossRatioIso` rerun on `hthm21sub`.  Residual binders: `hLem41`
 (owned elsewhere) and `hthm21sub`.  Unlike the original, `hthm21sub` is not refuted by
 `ArlibCommunity.Foundations.Convex.not_crossRatioIso_printed`, so this composition is the one a future proof of Theorem 2.1 should be
 pointed at. -/
-theorem conductance_hitAndRun_ge_book (hn : 1 ≤ n)
+theorem globalConductance_hitAndRun_ge_book (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -714,7 +714,7 @@ theorem conductance_hitAndRun_ge_book (hn : 1 ≤ n)
       ∀ A : ℝ, 0 ≤ A → A ≤ 1 / 2 → (volume U₁).toReal = A * (volume K).toReal →
         A * (∫ x in K, g x) ≤ (volume ((K \ U₁) \ U₂)).toReal) :
     ENNReal.ofReal (1 / (2 ^ 27 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hK0 : volume K ≠ 0 := by
     have hpos : 0 < volume (Metric.closedBall z 1) :=
       Metric.measure_closedBall_pos volume z one_pos
@@ -722,12 +722,12 @@ theorem conductance_hitAndRun_ge_book (hn : 1 ≤ n)
   obtain ⟨R, hR⟩ := hKb.subset_closedBall (0 : EuclideanSpace ℝ (Fin n))
   have hKtop : volume K ≠ ⊤ :=
     ne_top_of_le_ne_top measure_closedBall_lt_top.ne (measure_mono hR)
-  exact conductance_hitAndRun_ge hn hKc hKcl hKm hKb hball hD hLem41
+  exact globalConductance_hitAndRun_ge hn hKc hKcl hKm hKb hball hD hLem41
     (hIso_book hKb hKm hK0 hKtop hthm21sub)
 
 /-- **The copy of the `hIso` binder used in the check really is that binder**: it is handed,
-unchanged, to `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`. -/
-theorem conductance_hitAndRun_ge_of_hIso_copy (hn : 1 ≤ n)
+unchanged, to `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`. -/
+theorem globalConductance_hitAndRun_ge_of_hIso_copy (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -747,18 +747,18 @@ theorem conductance_hitAndRun_ge_of_hIso_copy (hn : 1 ≤ n)
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / (2 ^ 27 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) :=
-  ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge hn hKc hKcl hKm hKb hball hD hLem41 hIso
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) :=
+  ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge hn hKc hKcl hKm hKb hball hD hLem41 hIso
 
 /-- **Theorem 4.2 at the lower semicontinuous `hIso`, with `hLem41` demanded on all of `K`** —
-the shape this theorem had before `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_lsc_interior` was split
+the shape this theorem had before `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_tv_lsc_interior` was split
 off, kept verbatim so that every existing consumer continues to typecheck.
 
 The proof *is* the claim that the split is a strengthening: a caller holding Lemma 4.1 on all of
 `K` gets it on `interior K` by `interior_subset`, so nothing provable from this statement is lost
 by the weaker binder.  The converse fails, and that is the point — see
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_lsc_interior`'s docstring. -/
-theorem conductance_hitAndRun_ge_of_tv_lsc (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_tv_lsc_interior`'s docstring. -/
+theorem globalConductance_hitAndRun_ge_of_tv_lsc (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -777,15 +777,15 @@ theorem conductance_hitAndRun_ge_of_tv_lsc (hn : 1 ≤ n) {K : Set (EuclideanSpa
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (lam / (245760 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) :=
-  conductance_hitAndRun_ge_of_tv_lsc_interior hn hKc hKcl hKm hKb hball hD hlam0 hlam1
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) :=
+  globalConductance_hitAndRun_ge_of_tv_lsc_interior hn hKc hKcl hKm hKb hball hD hlam0 hlam1
     (fun u hu v hv => hLem41 u (interior_subset hu) v (interior_subset hv)) hIso
 
 /-- **Theorem 4.2 in the paper's constant at the lower semicontinuous `hIso`, with `hLem41`
 demanded on all of `K`** — the shape this theorem had before
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_lsc_interior` was split off, kept verbatim so that every existing
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_lsc_interior` was split off, kept verbatim so that every existing
 consumer continues to typecheck, and derived from the interior form by `interior_subset`. -/
-theorem conductance_hitAndRun_ge_lsc (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem globalConductance_hitAndRun_ge_lsc (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -804,18 +804,18 @@ theorem conductance_hitAndRun_ge_lsc (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / (2 ^ 27 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) :=
-  conductance_hitAndRun_ge_lsc_interior hn hKc hKcl hKm hKb hball hD
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) :=
+  globalConductance_hitAndRun_ge_lsc_interior hn hKc hKcl hKm hKb hball hD
     (fun u hu v hv => hLem41 u (interior_subset hu) v (interior_subset hv)) hIso
 
 /-- **The replayed conductance theorem reproves the original.**
 
-Same statement as `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_hIso_copy` — hence, by that theorem, the
-statement of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` — but proved through
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_lsc`, feeding it the full binder with the
+Same statement as `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_hIso_copy` — hence, by that theorem, the
+statement of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge` — but proved through
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_lsc`, feeding it the full binder with the
 `LowerSemicontinuous` clause discarded.  So the 375-line replay neither weakened the conclusion
 nor strengthened any hypothesis other than the one clause it was meant to add. -/
-theorem conductance_hitAndRun_ge_of_hIso_copy_via_lsc (hn : 1 ≤ n)
+theorem globalConductance_hitAndRun_ge_of_hIso_copy_via_lsc (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -835,8 +835,8 @@ theorem conductance_hitAndRun_ge_of_hIso_copy_via_lsc (hn : 1 ≤ n)
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / (2 ^ 27 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) :=
-  conductance_hitAndRun_ge_lsc hn hKc hKcl hKm hKb hball hD hLem41
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) :=
+  globalConductance_hitAndRun_ge_lsc hn hKc hKcl hKm hKb hball hD hLem41
     (fun h T₁ T₂ _ => hIso h T₁ T₂)
 
 end ArlibCommunity.Foundations.MarkovChainTheory

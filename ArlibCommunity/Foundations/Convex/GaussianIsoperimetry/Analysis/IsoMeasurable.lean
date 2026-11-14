@@ -1398,7 +1398,7 @@ added (the `d ≤ 0` case is trivial but is not routed here).
 
 This is an isoperimetric inequality.  It is **not** a conductance bound, a mixing time or a
 running time, and may not be quoted as one.  What it does supply is the `hiso` binder shape of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`, once instantiated at a density; that
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`, once instantiated at a density; that
 instantiation is a separate step and is not performed here.
 
 Every declaration is a `theorem`; there is no `def`, `structure`, `class` or `axiom` here.

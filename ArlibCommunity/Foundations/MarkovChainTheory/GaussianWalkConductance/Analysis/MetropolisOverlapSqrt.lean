@@ -14,12 +14,12 @@ import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Anal
 (`MetropolisConductanceSharp.lean`) proves `cor:overlap` for `metropolisGaussian` only for
 pairs with `‖u − v‖ < δ/n`, because its geometric input
 `ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_inter_ge_max` (`StarPolar.lean`) holds at that separation.
-Its consumer `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge` (`:431`) therefore
-instantiates `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` — whose own overlap binder is
+Its consumer `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_ge` (`:431`) therefore
+instantiates `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` — whose own overlap binder is
 at `δ_abs/√n` — at the *isoperimetric scale* `δ_abs := δ/√n`, and lands on
 `Φ ≥ δ·log 2/(640·σ·n)`.  The speedy walk, by contrast, has overlap at separation `δ/√n`
 (`ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_sqrt_of_ell_comparable_global`, `OverlapSqrt.lean`),
-so `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell_comparable` (`:658`) instantiates
+so `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge_of_ell_comparable` (`:658`) instantiates
 the same theorem at `δ_abs := δ` and lands on `Φ ≥ δ·log 2/(640·σ·√n)` — a factor `√n` better
 at the same kernel step.
 
@@ -27,9 +27,9 @@ This file removes that gap for the Metropolis kernel:
 
 * `metropolisGaussian_overlap_sqrt_of_convex` — `cor:overlap` for `metropolisGaussian` at
   separation `δ/√n`;
-* `conductance_metropolisGaussian_sharp_sqrt_ge` — hence `Φ ≥ δ·log 2/(640·σ·√n)` for the
+* `globalConductance_metropolisGaussian_sharp_sqrt_ge` — hence `Φ ≥ δ·log 2/(640·σ·√n)` for the
   Metropolis kernel, with `hiso` left as a binder exactly as before;
-* `exists_conductance_metropolisGaussian_sharp_sqrt_witness` — non-vacuity: every hypothesis
+* `exists_globalConductance_metropolisGaussian_sharp_sqrt_witness` — non-vacuity: every hypothesis
   of the headline *except* `hiso` is jointly satisfiable at a bounded convex body, at the same
   `θ = 1/4` as the `δ/n` witness.
 
@@ -70,8 +70,8 @@ by at most `4/e ≈ 1.47`.  At `a ≈ 1` the old floor asks `θ ≳ 0.2` (`n = 2
 (`n` large); the new one asks `θ ≥ 0.2` for every `n`.  This is a hypothesis constant, not a
 conclusion: `1 ≤ 20·(P_u(Tᶜ) + P_v(T))` is unchanged, and it now holds on the `√n`-wider set
 of pairs.  Concretely, the `δ/n` witness of
-`ArlibCommunity.Foundations.MarkovChainTheory.exists_conductance_metropolisGaussian_sharp_witness` — `ℓ ≡ θ = 1/4` on a
-disc — carries over to this file unchanged (`exists_conductance_metropolisGaussian_sharp_sqrt_witness`).
+`ArlibCommunity.Foundations.MarkovChainTheory.exists_globalConductance_metropolisGaussian_sharp_witness` — `ℓ ≡ θ = 1/4` on a
+disc — carries over to this file unchanged (`exists_globalConductance_metropolisGaussian_sharp_sqrt_witness`).
 
 ## The lens constant: `1/40` is vacuous, `1/8` is tight, `1/4` is what is used
 
@@ -95,23 +95,23 @@ So the `√n` is not bought at a materially worse hypothesis: it is essentially 
 
 ## Non-vacuity
 
-`exists_conductance_metropolisGaussian_sharp_sqrt_witness` discharges every hypothesis of
-`conductance_metropolisGaussian_sharp_sqrt_ge` except `hiso`, simultaneously, at `n = 2`,
+`exists_globalConductance_metropolisGaussian_sharp_sqrt_witness` discharges every hypothesis of
+`globalConductance_metropolisGaussian_sharp_sqrt_ge` except `hiso`, simultaneously, at `n = 2`,
 `K = B(0,1/2) ⊆ ℝ²`, `δ = 1`, `R = 1/2`, `σ = 16`, `θ = 1/4`, and shows the conclusion there is
 not the trivial `0 ≤ _` and that `metropolisGaussian_overlap_sqrt_of_convex` genuinely fires at
 separation `δ/√2`.  `hiso` itself is **not** exhibited — see below.
 
 ## No rate claim
 
-`hiso` is a binder of `conductance_metropolisGaussian_sharp_sqrt_ge`, exactly as it is of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge`, and it is not proved anywhere in
+`hiso` is a binder of `globalConductance_metropolisGaussian_sharp_sqrt_ge`, exactly as it is of
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_ge`, and it is not proved anywhere in
 this repository.  Nothing here is a mixing-time statement or an `O*(n³)` claim.  There is no
 `def`, `structure` or named `Prop` in this file; all three declarations are `theorem`s.
 
 ## The step cap
 
-`conductance_metropolisGaussian_sharp_sqrt_ge` carries `hδσ : δ ≤ σ/(8√n)`, inherited
-unchanged from `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`, where the `δ/n` consumer
+`globalConductance_metropolisGaussian_sharp_sqrt_ge` carries `hδσ : δ ≤ σ/(8√n)`, inherited
+unchanged from `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`, where the `δ/n` consumer
 reads `δ ≤ σ/8` only because it instantiates at `δ_abs = δ/√n`.  What `DeltaCap.lean` shows is
 that `Θ(σ/√n)` is the operative scale from both sides:
 
@@ -164,7 +164,7 @@ at most `4/e ≈ 1.47` more demanding on `θ` at any `n`.  The conclusion is unc
 `hKR` (the body is bounded) and `hs` are inherited from the `δ/n` version and are forced by
 the kernel: without a radius there is no acceptance floor at all.  `u ∈ T`, `v ∉ T` and
 `d_h(u,v) < 1/4` are not used; they are carried so the statement matches the binder of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`. -/
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`. -/
 theorem metropolisGaussian_overlap_sqrt_of_convex (hn : 2 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (hKc : Convex ℝ K)
     {δ s R θ : ℝ} (hδ : 0 < δ) (hs : 0 < s) (hR : 0 ≤ R)
@@ -247,9 +247,9 @@ convex body, at separation `δ/√n`:**
 with respect to `π = ArlibCommunity.Foundations.Convex.uniformOn (volume.withDensity (gaussianWeight σ²)) K`, which by
 `ArlibCommunity.Foundations.MarkovChainTheory.isReversible_metropolisGaussian` is exactly the chain's stationary law.
 
-This is `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` instantiated at
+This is `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` instantiated at
 `P := metropolisGaussian K δ σ²` and at the isoperimetric scale `δ_abs := δ` — where
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge` must instantiate at
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_ge` must instantiate at
 `δ_abs := δ/√n` because its overlap input only reaches separation `δ/n`.  The overlap
 hypothesis is discharged by `metropolisGaussian_overlap_sqrt_of_convex`; every hypothesis of
 the abstract theorem except `hiso` is discharged here, exactly as in the `δ/n` version, and
@@ -263,10 +263,10 @@ the `π ↔ h` bridges (`ArlibCommunity.Foundations.MarkovChainTheory.uniformOn_
 * **Paid, in `hfloor`:** `1 ≤ 20·a·(1/4)·θ` in place of `1 ≤ 20·a·(1 − 1/n)ⁿ·θ` — the same
   inequality at `n = 2`, and at most `4/e ≈ 1.47` more demanding on the local-conductance
   floor `θ` at any `n`.  It is met by the very witness the `δ/n` version uses:
-  `exists_conductance_metropolisGaussian_sharp_sqrt_witness` runs at the same `K` and the same
+  `exists_globalConductance_metropolisGaussian_sharp_sqrt_witness` runs at the same `K` and the same
   `θ = 1/4`.
 * **Paid, in `hδσ`:** `δ ≤ σ/(8√n)`, inherited verbatim from
-  `conductance_speedyGaussian_ge`, where the `δ/n` version reads `δ ≤ σ/8` only because of its
+  `globalConductance_speedyGaussian_ge`, where the `δ/n` version reads `δ ≤ σ/8` only because of its
   reparameterization.  `DeltaCap.lean` bounds the operative scale on both sides — the
   acceptance floor with `σ√n ≤ R` forces `δ ≤ (ln 20)·σ/√n`
   (`ArlibCommunity.Algorithms.CV18.metropolis_hfloor_forces_step_cap`), and `δ ≤ σ/(8√n)` is feasible with
@@ -275,11 +275,11 @@ the `π ↔ h` bridges (`ArlibCommunity.Foundations.MarkovChainTheory.uniformOn_
   implied by the floor: `(ln 20)·σ/√n` is some `24×` larger than `σ/(8√n)`.
 
 **`hiso` is a hypothesis.**  It is Cousins–Vempala's `thm:iso` at `d = δ·log 2/√n`, in the
-exact shape `conductance_speedyGaussian_ge` consumes and `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry`
+exact shape `globalConductance_speedyGaussian_ge` consumes and `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry`
 concludes, at `h = 1_K · e^{−‖x‖²/(2σ²)}`.  It is **not proved in this repository**.
 Therefore **this theorem is not a mixing-time bound and not an `O*(n³)` claim, and may not be
 quoted as either.** -/
-theorem conductance_metropolisGaussian_sharp_sqrt_ge (hn : 2 ≤ n)
+theorem globalConductance_metropolisGaussian_sharp_sqrt_ge (hn : 2 ≤ n)
     {σ δ R θ : ℝ} (hσ : 0 < σ) (hδ : 0 < δ) (hδσ : δ ≤ σ / (8 * Real.sqrt n)) (hR : 0 ≤ R)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (hKc : Convex ℝ K)
     (hKR : ∀ x ∈ K, ‖x‖ ≤ R) (hKtop : volume K ≠ ⊤) (hK0 : volume K ≠ 0)
@@ -298,16 +298,16 @@ theorem conductance_metropolisGaussian_sharp_sqrt_ge (hn : 2 ≤ n)
         ≤ (∫ x, Set.indicator K (gaussianWeightReal (σ ^ 2)) x)
           * ∫ x in S₃, Set.indicator K (gaussianWeightReal (σ ^ 2)) x) :
     ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n))
-      ≤ conductance (metropolisGaussian K δ (σ ^ 2))
-          (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
-            (gaussianWeight (σ ^ 2))) K) := by
+      ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
+            (gaussianWeight (σ ^ 2))) K)
+          (metropolisGaussian K δ (σ ^ 2)) := by
   have hs : (0 : ℝ) < σ ^ 2 := by positivity
   set h : EuclideanSpace ℝ (Fin n) → ℝ :=
     Set.indicator K (gaussianWeightReal (σ ^ 2)) with hhdef
   have hh0 : ∀ x, 0 ≤ h x :=
     fun x => Set.indicator_nonneg (fun y _ => (gaussianWeightReal_pos _ y).le) x
   have hmass : 0 < ∫ x, h x := integral_gaussianIndicator_pos hs hK hKtop hK0 hKR
-  exact conductance_speedyGaussian_ge hn hσ hδ hδσ hh0 hmass hK
+  exact globalConductance_speedyGaussian_ge hn hσ hδ hδσ hh0 hmass hK
     (metropolisGaussian K δ (σ ^ 2)) _
     (fun A hA => uniformOn_gaussianWeight_eq_div hs hK hKtop A hA)
     (isReversible_metropolisGaussian hK δ (σ ^ 2)) (ArlibCommunity.Foundations.Convex.uniformOn_compl_eq_zero _ hK)
@@ -315,14 +315,14 @@ theorem conductance_metropolisGaussian_sharp_sqrt_ge (hn : 2 ≤ n)
 
 /-! ## 3. Non-vacuity -/
 
-/-- **Non-vacuity: every hypothesis of `conductance_metropolisGaussian_sharp_sqrt_ge` except
+/-- **Non-vacuity: every hypothesis of `globalConductance_metropolisGaussian_sharp_sqrt_ge` except
 `hiso` is jointly satisfiable at a bounded convex body, the conclusion there is not the
 trivial `0 ≤ _`, and `metropolisGaussian_overlap_sqrt_of_convex` really does fire at
 separation `δ/√n`.**
 
 The witness is `n = 2`, `K = B(0,1/2) ⊆ ℝ²`, `δ = 1`, `R = 1/2`, `σ = 16` (so `s = σ² = 256`),
 `θ = 1/4`, `T = B(0,1/8)`, `u = 0`, `v = (1/4,0)` — the body and pair of
-`ArlibCommunity.Foundations.MarkovChainTheory.exists_conductance_metropolisGaussian_sharp_witness`, so that the two
+`ArlibCommunity.Foundations.MarkovChainTheory.exists_globalConductance_metropolisGaussian_sharp_witness`, so that the two
 witnesses are directly comparable.  There `ℓ ≡ 1/4` on `K`, because `K ⊆ B(x,1)` for every
 `x ∈ K`.
 
@@ -341,11 +341,11 @@ The floor is met at exactly the same `θ = 1/4` as the `δ/n` witness:
 and this witness would fail.
 
 **What this does NOT certify.**  `hiso` is a binder of
-`conductance_metropolisGaussian_sharp_sqrt_ge` and is *not* exhibited here — it is not proved
+`globalConductance_metropolisGaussian_sharp_sqrt_ge` and is *not* exhibited here — it is not proved
 anywhere in this repository.  So this witness shows the theorem is not vacuous *for reasons of
 its discharged hypotheses*; it does **not** show the theorem has an unconditional instance, and
 it is **not** evidence for any mixing-time or `O*(n³)` claim. -/
-theorem exists_conductance_metropolisGaussian_sharp_sqrt_witness :
+theorem exists_globalConductance_metropolisGaussian_sharp_sqrt_witness :
     ∃ (K T : Set (EuclideanSpace ℝ (Fin 2))) (σ δ R θ : ℝ)
       (u v : EuclideanSpace ℝ (Fin 2)),
       0 < σ ∧ 0 < δ ∧ δ ≤ σ / (8 * Real.sqrt ((2 : ℕ) : ℝ)) ∧ 0 ≤ R ∧
@@ -436,5 +436,5 @@ end ArlibCommunity.Foundations.MarkovChainTheory
 /-! ### Axiom audit -/
 
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian_overlap_sqrt_of_convex
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.exists_conductance_metropolisGaussian_sharp_sqrt_witness
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_sqrt_ge
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.exists_globalConductance_metropolisGaussian_sharp_sqrt_witness

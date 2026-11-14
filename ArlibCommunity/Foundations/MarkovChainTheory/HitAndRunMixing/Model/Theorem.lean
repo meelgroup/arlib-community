@@ -29,17 +29,17 @@ theorem exists_kernel {n : ℕ} {K : Set (EuclideanSpace ℝ (Fin n))} (hKm : Me
   ⟨hitAndRun K, fun x => by rw [hitAndRun_eq hKm]; rfl⟩
 
 /-- **Lovász–Vempala Theorem 4.2**: the conductance of hit-and-run. -/
-theorem conductance_ge {n : ℕ} (hn : 21 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem globalConductance_ge {n : ℕ} (hn : 21 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
     {D : ℝ} (hD : Metric.diam K ≤ D)
     {P : Kernel (EuclideanSpace ℝ (Fin n)) (EuclideanSpace ℝ (Fin n))}
     (hP : ∀ x, P x = hitAndRunStep K x) :
-    ENNReal.ofReal (1 / 8000 / (245760 * (n : ℝ) * D)) ≤ conductance P (uniformOn volume K) := by
+    ENNReal.ofReal (1 / 8000 / (245760 * (n : ℝ) * D)) ≤ globalConductance (uniformOn volume K) P := by
   have hPeq : P = hitAndRun K := Kernel.ext fun x => by rw [hP x, hitAndRun_eq hKm]; rfl
   subst hPeq
-  exact conductance_hitAndRun_ge_uncond hn hKc hKcl hKm hKb hball hD
+  exact globalConductance_hitAndRun_ge_uncond hn hKc hKcl hKm hKb hball hD
 
 /-- **Lovász–Vempala Theorem 1.1**: the lazy hit-and-run walk, started from a law that is
 `M`-warm outside an exceptional set of mass at most `ε/2`, is within total variation `ε` of
@@ -65,8 +65,8 @@ theorem lazy_mixes {n : ℕ} (hn : 21 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n
 
 #foundationsModelClosure exists_kernel
 #print axioms exists_kernel
-#foundationsModelClosure conductance_ge
-#print axioms conductance_ge
+#foundationsModelClosure globalConductance_ge
+#print axioms globalConductance_ge
 #foundationsModelClosure lazy_mixes
 #print axioms lazy_mixes
 

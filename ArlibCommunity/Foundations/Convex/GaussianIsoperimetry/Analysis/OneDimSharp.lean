@@ -43,10 +43,10 @@ and runs the whole downstream stack at `ln 2`, closing the gap.
   `ArlibCommunity.Foundations.Convex.gaussianIndicator_isoperimetry_measurable_logTwo` — `thm:iso` with the metric branch at
   `d / log 2`.
 * `ArlibCommunity.Foundations.Convex.hiso_metropolisGaussian_sharp_sqrt_logTwo` — the `hiso` binder of
-  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge`
+  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_sqrt_ge`
   (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisOverlapSqrt.lean`) **character for
   character**, proved.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge_of_convex` — **the payoff.**  That
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_sqrt_ge_of_convex` — **the payoff.**  That
   conductance bound with `hiso` discharged; the only added hypothesis is
   `hRσ : √3·R ≤ 2σ√n`.
 * `ArlibCommunity.Foundations.Convex.uniform_saturates_hensley` — the diagnosis: where `1/(2√3)` was lost.
@@ -1025,7 +1025,7 @@ theorem gaussianIndicator_isoperimetry_measurable_logTwo (hn : 2 ≤ n) {σ d R 
 
 /-- **`hiso` for the Metropolis-filtered Gaussian ball walk, character for character.**
 
-This is the `hiso` binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge`
+This is the `hiso` binder of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_sqrt_ge`
 (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisOverlapSqrt.lean`) **verbatim**: the partition,
 the four measurability hypotheses, the metric branch
 `δ·log 2/√n / log 2 ≤ ‖u − v‖`, the density branch

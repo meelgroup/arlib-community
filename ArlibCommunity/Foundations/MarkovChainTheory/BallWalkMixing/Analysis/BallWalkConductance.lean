@@ -42,7 +42,7 @@ carries out all three over the uniform ball walk built in
   walk does *not* have nonnegative spectrum (its proposal operator is convolution with a
   ball indicator, whose Fourier transform changes sign); `lazy P x = (P x + delta_x)/2`
   does, because `⟪f,f⟫_{lazy P} = (‖f‖² + ⟪f,f⟫_P)/2` and `⟪f,f⟫_P ≥ -‖f‖²`.
-* `conductanceOn_lazy`, `conductance_lazy` — **laziness halves the conductance, exactly**:
+* `conductance_lazy`, `globalConductance_lazy` — **laziness halves the conductance, exactly**:
   `Φ(lazy P) = Φ(P)/2`.  The holding term contributes nothing to the escape flow and the
   admissible family `pi S ≤ 1/2` is a condition on `pi` alone, so the infimum goes through
   with no loss.  This is what lets the conductance bound and the mixing theorem compose.
@@ -64,7 +64,7 @@ carries out all three over the uniform ball walk built in
 ## Assumed, and where
 
 The **isoperimetric inequality is the only unproved input** anywhere in this file, and every
-theorem that consumes it (`conductance_ballWalk_ge`, `mixesWithin_lazy_ballWalk`,
+theorem that consumes it (`globalConductance_ballWalk_ge`, `mixesWithin_lazy_ballWalk`,
 `hitProbability_bounds_of_lazy_ballWalk`, `mixesWithin_lazy_ballWalk_unitBall`) takes it as an **inline
 `∀`-hypothesis** (`hiso`) — not as a `def`, a `structure` field, or a named `Prop`.  A
 reader of any of those theorems' types sees the inequality written out in full.  There is
@@ -393,11 +393,11 @@ There is no geometry here: this holds for every reversible Markov kernel on ever
 measurable space.  The escape probability is written `e ≤ c * P x Sᶜ` rather than
 `e/c ≤ P x Sᶜ` to keep the `ℝ≥0∞` arithmetic division-free. -/
 theorem mul_measure_add_measure_le_mul_flow {Om : Type*} [MeasurableSpace Om]
-    (P : Kernel Om Om) [IsMarkovKernel P] (pi : Measure Om) (hrev : IsReversible P pi)
+    (pi : Measure Om) (P : Kernel Om Om) [IsMarkovKernel P]  (hrev : Kernel.IsReversible P pi)
     {S A B : Set Om} (hS : MeasurableSet S) (hA : MeasurableSet A) (hB : MeasurableSet B)
     {e c : ℝ≥0∞} (hA' : ∀ x ∈ S \ A, e ≤ c * P x Sᶜ) (hB' : ∀ x ∈ Sᶜ \ B, e ≤ c * P x S) :
-    e * (pi (S \ A) + pi (Sᶜ \ B)) ≤ 2 * (c * flow P pi S Sᶜ) := by
-  have e1 : e * pi (S \ A) ≤ c * flow P pi S Sᶜ := by
+    e * (pi (S \ A) + pi (Sᶜ \ B)) ≤ 2 * (c * flow pi P S Sᶜ) := by
+  have e1 : e * pi (S \ A) ≤ c * flow pi P S Sᶜ := by
     calc e * pi (S \ A) = ∫⁻ _ in S \ A, e ∂pi := (setLIntegral_const _ _).symm
       _ ≤ ∫⁻ x in S \ A, c * P x Sᶜ ∂pi := by
           refine lintegral_mono_ae ?_
@@ -407,8 +407,8 @@ theorem mul_measure_add_measure_le_mul_flow {Om : Type*} [MeasurableSpace Om]
       _ ≤ c * ∫⁻ x in S, P x Sᶜ ∂pi := by
           gcongr
           exact Set.sdiff_subset
-      _ = c * flow P pi S Sᶜ := by rw [flow_apply]
-  have e2 : e * pi (Sᶜ \ B) ≤ c * flow P pi S Sᶜ := by
+      _ = c * flow pi P S Sᶜ := by rw [flow_apply]
+  have e2 : e * pi (Sᶜ \ B) ≤ c * flow pi P S Sᶜ := by
     calc e * pi (Sᶜ \ B) = ∫⁻ _ in Sᶜ \ B, e ∂pi := (setLIntegral_const _ _).symm
       _ ≤ ∫⁻ x in Sᶜ \ B, c * P x S ∂pi := by
           refine lintegral_mono_ae ?_
@@ -418,11 +418,11 @@ theorem mul_measure_add_measure_le_mul_flow {Om : Type*} [MeasurableSpace Om]
       _ ≤ c * ∫⁻ x in Sᶜ, P x S ∂pi := by
           gcongr
           exact Set.sdiff_subset
-      _ = c * flow P pi Sᶜ S := by rw [flow_apply]
-      _ = c * flow P pi S Sᶜ := by rw [hrev _ _ hS.compl hS]
+      _ = c * flow pi P Sᶜ S := by rw [flow_apply]
+      _ = c * flow pi P S Sᶜ := by rw [flow_comm_of_isReversible hrev hS.compl hS]
   calc e * (pi (S \ A) + pi (Sᶜ \ B)) = e * pi (S \ A) + e * pi (Sᶜ \ B) := mul_add _ _ _
-    _ ≤ c * flow P pi S Sᶜ + c * flow P pi S Sᶜ := add_le_add e1 e2
-    _ = 2 * (c * flow P pi S Sᶜ) := (two_mul _).symm
+    _ ≤ c * flow pi P S Sᶜ + c * flow pi P S Sᶜ := add_le_add e1 e2
+    _ = 2 * (c * flow pi P S Sᶜ) := (two_mul _).symm
 
 /-! ## 5. The conductance bound
 
@@ -465,7 +465,7 @@ Against the paper ([CV18], `Φ ≥ δ/(250·σ·√n)`): the shape
 `min(constant, κ·d/constant)` is the same, and `θ/16` plays the role of the paper's `1/80`.
 The one quantitative gap is `d = θδ/n` in place of `δ/√n`, and it comes entirely from the
 elementary ball-intersection estimate — see `ell_le_ballWalk_add_ballWalk_compl`. -/
-theorem conductance_ballWalk_ge (hn : 1 ≤ n)
+theorem globalConductance_ballWalk_ge (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K)
     (hK0 : volume K ≠ 0) (hKtop : volume K ≠ ⊤) {δ : ℝ} (hδ : 0 < δ)
     {θ : ℝ} (hθ : 0 < θ)
@@ -476,7 +476,7 @@ theorem conductance_ballWalk_ge (hn : 1 ≤ n)
       kappa * ENNReal.ofReal d * ArlibCommunity.Foundations.Convex.uniformOn volume K A * ArlibCommunity.Foundations.Convex.uniformOn volume K B
         ≤ ArlibCommunity.Foundations.Convex.uniformOn volume K ((K \ A) \ B)) :
     min (ENNReal.ofReal θ / 16) (kappa * ENNReal.ofReal (θ ^ 2 * δ / (n : ℝ)) / 64)
-      ≤ conductance (ballWalk K δ) (ArlibCommunity.Foundations.Convex.uniformOn volume K) := by
+      ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (ballWalk K δ) := by
   haveI : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume hK0 hKtop
   have hnR : (0:ℝ) < (n : ℝ) := by exact_mod_cast hn
@@ -486,13 +486,13 @@ theorem conductance_ballWalk_ge (hn : 1 ≤ n)
     rw [← ENNReal.ofReal_mul hθ.le]
     congr 1
     ring
-  have hrev : IsReversible (ballWalk K δ) (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
+  have hrev : Kernel.IsReversible (ballWalk K δ) (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
     isReversible_ballWalk hK δ
   have hKc : ArlibCommunity.Foundations.Convex.uniformOn volume K Kᶜ = 0 := ArlibCommunity.Foundations.Convex.uniformOn_compl_eq_zero volume hK
   set pi : Measure (EuclideanSpace ℝ (Fin n)) := ArlibCommunity.Foundations.Convex.uniformOn volume K with hpidef
   set P : Kernel (EuclideanSpace ℝ (Fin n)) (EuclideanSpace ℝ (Fin n)) :=
     ballWalk K δ with hPdef
-  refine le_conductance P pi fun S hSm hSpos hShalf => ?_
+  refine le_globalConductance pi P fun S hSm hSpos hShalf => ?_
   have hpitop : pi S ≠ ⊤ := measure_ne_top _ _
   have hcompl : pi S + pi Sᶜ = 1 := by
     rw [measure_add_measure_compl hSm, measure_univ]
@@ -545,8 +545,8 @@ theorem conductance_ballWalk_ge (hn : 1 ≤ n)
     rw [not_le] at hc
     exact hxS2 ((hmem2 x).2 ⟨⟨hxK, hxS⟩, hc⟩)
   have hflow : ENNReal.ofReal θ * (pi ((S ∩ K) \ S1) + pi ((K \ S) \ S2))
-      ≤ 2 * (4 * flow P pi S Sᶜ) := by
-    have h := mul_measure_add_measure_le_mul_flow P pi hrev hSm (hS1m.union hK.compl)
+      ≤ 2 * (4 * flow pi P S Sᶜ) := by
+    have h := mul_measure_add_measure_le_mul_flow pi P hrev hSm (hS1m.union hK.compl)
       (hS2m.union hK.compl) hA' hB'
     rwa [hSA, hSB] at h
   -- the leftover part of `K`
@@ -597,8 +597,8 @@ theorem conductance_ballWalk_ge (hn : 1 ≤ n)
       rwa [compl_compl]
     exact (lt_dist_of_ballWalk_lt hn hK hδ hSm.compl (hell u (hS1K hu)) hu8 hv8).le
   -- the two branches
-  have hkey : ENNReal.ofReal θ * pi S ≤ 16 * flow P pi S Sᶜ
-      ∨ kappa * ENNReal.ofReal (θ ^ 2 * δ / (n : ℝ)) * pi S ≤ 64 * flow P pi S Sᶜ := by
+  have hkey : ENNReal.ofReal θ * pi S ≤ 16 * flow pi P S Sᶜ
+      ∨ kappa * ENNReal.ofReal (θ ^ 2 * δ / (n : ℝ)) * pi S ≤ 64 * flow pi P S Sᶜ := by
     by_cases hc1 : pi S ≤ 2 * pi ((S ∩ K) \ S1)
     · left
       calc ENNReal.ofReal θ * pi S
@@ -607,8 +607,8 @@ theorem conductance_ballWalk_ge (hn : 1 ≤ n)
         _ ≤ 2 * (ENNReal.ofReal θ * (pi ((S ∩ K) \ S1) + pi ((K \ S) \ S2))) := by
             gcongr
             exact le_self_add
-        _ ≤ 2 * (2 * (4 * flow P pi S Sᶜ)) := by gcongr
-        _ = 16 * flow P pi S Sᶜ := by ring
+        _ ≤ 2 * (2 * (4 * flow pi P S Sᶜ)) := by gcongr
+        _ = 16 * flow pi P S Sᶜ := by ring
     by_cases hc2 : pi Sᶜ ≤ 2 * pi ((K \ S) \ S2)
     · left
       calc ENNReal.ofReal θ * pi S
@@ -618,8 +618,8 @@ theorem conductance_ballWalk_ge (hn : 1 ≤ n)
         _ ≤ 2 * (ENNReal.ofReal θ * (pi ((S ∩ K) \ S1) + pi ((K \ S) \ S2))) := by
             gcongr
             exact le_add_self
-        _ ≤ 2 * (2 * (4 * flow P pi S Sᶜ)) := by gcongr
-        _ = 16 * flow P pi S Sᶜ := by ring
+        _ ≤ 2 * (2 * (4 * flow pi P S Sᶜ)) := by gcongr
+        _ = 16 * flow pi P S Sᶜ := by ring
     right
     rw [not_le] at hc1 hc2
     have h1 : pi S < 2 * pi S1 := by
@@ -663,18 +663,18 @@ theorem conductance_ballWalk_ge (hn : 1 ≤ n)
             (kappa * ENNReal.ofReal (θ * δ / (n : ℝ)) * pi S1 * pi S2)) := by ring
       _ ≤ 8 * (ENNReal.ofReal θ * pi ((K \ S1) \ S2)) := by gcongr
       _ ≤ 8 * (ENNReal.ofReal θ * (pi ((S ∩ K) \ S1) + pi ((K \ S) \ S2))) := by gcongr
-      _ ≤ 8 * (2 * (4 * flow P pi S Sᶜ)) := by gcongr
-      _ = 64 * flow P pi S Sᶜ := by ring
+      _ ≤ 8 * (2 * (4 * flow pi P S Sᶜ)) := by gcongr
+      _ = 64 * flow pi P S Sᶜ := by ring
   have hswap : ∀ a b c : ℝ≥0∞, a / c * b = a * b / c := by
     intro a b c
     rw [div_eq_mul_inv, div_eq_mul_inv, mul_right_comm]
-  rw [conductanceOn_apply, ENNReal.le_div_iff_mul_le (Or.inl hSpos.ne') (Or.inl hpitop)]
+  rw [conductance_apply, ENNReal.le_div_iff_mul_le (Or.inl hSpos.ne') (Or.inl hpitop)]
   rcases hkey with h | h
   · calc min (ENNReal.ofReal θ / 16)
             (kappa * ENNReal.ofReal (θ ^ 2 * δ / (n : ℝ)) / 64) * pi S
         ≤ ENNReal.ofReal θ / 16 * pi S := by gcongr; exact min_le_left _ _
       _ = ENNReal.ofReal θ * pi S / 16 := hswap _ _ _
-      _ ≤ flow P pi S Sᶜ := by
+      _ ≤ flow pi P S Sᶜ := by
           rw [ENNReal.div_le_iff_le_mul (Or.inl (by norm_num)) (Or.inl (by norm_num))]
           exact h.trans_eq (mul_comm _ _)
   · calc min (ENNReal.ofReal θ / 16)
@@ -682,7 +682,7 @@ theorem conductance_ballWalk_ge (hn : 1 ≤ n)
         ≤ kappa * ENNReal.ofReal (θ ^ 2 * δ / (n : ℝ)) / 64 * pi S := by
           gcongr; exact min_le_right _ _
       _ = kappa * ENNReal.ofReal (θ ^ 2 * δ / (n : ℝ)) * pi S / 64 := hswap _ _ _
-      _ ≤ flow P pi S Sᶜ := by
+      _ ≤ flow pi P S Sᶜ := by
           rw [ENNReal.div_le_iff_le_mul (Or.inl (by norm_num)) (Or.inl (by norm_num))]
           exact h.trans_eq (mul_comm _ _)
 
@@ -696,7 +696,7 @@ The witness is a single ball.  For `x` in the unit ball put `w = (1 - δ/2)·x`.
 so `B(w, δ/2)` is inside the unit ball as well.  Haar scaling turns the radius ratio `1/2`
 into the volume ratio `(1/2)ⁿ`.
 
-This is what keeps the `hell` hypothesis of `conductance_ballWalk_ge` from being vacuous:
+This is what keeps the `hell` hypothesis of `globalConductance_ballWalk_ge` from being vacuous:
 it is satisfiable with `θ = (1/2)ⁿ` on a body of positive finite volume.  The constant is
 exponentially small and far from optimal — for the unit ball the truth is `ℓ ≥ 1/2 - o(1)`
 — but it is positive, which is what non-vacuity needs.  It also shows why the theorem is
@@ -765,7 +765,7 @@ theorem ofReal_le_ell_unitBall {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1)
 
 /-! ## 7. Laziness, and the nonnegative-spectrum hypothesis
 
-`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance` (`L2Mixing.lean`) turns a conductance lower
+`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance` (`L2Mixing.lean`) turns a conductance lower
 bound into a mixing time, but it needs `ArlibCommunity.Foundations.MarkovChainTheory.HasNonnegSpectrum`.  The ball
 walk does **not** have it: its proposal operator is convolution with the indicator of a
 ball, whose Fourier transform is a Bessel function and changes sign.  What repairs it is
@@ -784,7 +784,7 @@ Pointwise `f(x)·f(y) ≥ -(f(x)² + f(y)²)/2`, and both marginals of `pi ⊗�
 second one by reversibility — so the right-hand side integrates to exactly `-∫ f²`.  This
 is the whole analytic content of `hasNonnegSpectrum_lazy`. -/
 theorem neg_integral_sq_le_pairing_self {P : Kernel Om Om} [IsMarkovKernel P]
-    {pi : Measure Om} [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {f : Om → ℝ}
+    {pi : Measure Om} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {f : Om → ℝ}
     (hf : Measurable f) (hmem : MemLp f 2 pi) :
     -∫ x, f x ^ 2 ∂pi ≤ pairing P pi f f := by
   have I11 : Integrable (fun p : Om × Om => f p.1 * f p.2) (pi ⊗ₘ P) :=
@@ -845,9 +845,9 @@ instance isMarkovKernel_lazy (P : Kernel Om Om) [IsMarkovKernel P] :
 
 /-- **The flow of `lazy P`** splits into half the flow of `P` and half the mass that stays
 put. -/
-theorem flow_lazy (P : Kernel Om Om) (pi : Measure Om) (S : Set Om) {T : Set Om}
+theorem flow_lazy (pi : Measure Om) (P : Kernel Om Om) (S : Set Om) {T : Set Om}
     (hT : MeasurableSet T) :
-    flow (lazy P) pi S T = (2:ℝ≥0∞)⁻¹ * flow P pi S T + (2:ℝ≥0∞)⁻¹ * pi (T ∩ S) := by
+    flow pi (lazy P) S T = (2:ℝ≥0∞)⁻¹ * flow pi P S T + (2:ℝ≥0∞)⁻¹ * pi (T ∩ S) := by
   have hrw : ∀ x : Om, lazy P x T = (2:ℝ≥0∞)⁻¹ * P x T + (2:ℝ≥0∞)⁻¹ * T.indicator 1 x :=
     fun x => lazy_apply_set P x hT
   have hind : ∫⁻ x in S, T.indicator (1 : Om → ℝ≥0∞) x ∂pi = pi (T ∩ S) := by
@@ -861,10 +861,11 @@ theorem flow_lazy (P : Kernel Om Om) (pi : Measure Om) (S : Set Om) {T : Set Om}
 
 /-- **`lazy P` inherits detailed balance from `P`.**  Half the flow of `P` is symmetric
 because `P`'s is; the other half is `pi(T ∩ S)`, which is symmetric outright. -/
-theorem isReversible_lazy {P : Kernel Om Om} {pi : Measure Om} (h : IsReversible P pi) :
-    IsReversible (lazy P) pi := by
+theorem isReversible_lazy {P : Kernel Om Om} {pi : Measure Om} (h : Kernel.IsReversible P pi) :
+    Kernel.IsReversible (lazy P) pi := by
   intro S T hS hT
-  rw [flow_lazy P pi S hT, flow_lazy P pi T hS, h S T hS hT, Set.inter_comm]
+  show flow _ _ S T = flow _ _ T S
+  rw [flow_lazy pi P S hT, flow_lazy pi P T hS, flow_comm_of_isReversible h hS hT, Set.inter_comm]
 
 /-- **Laziness halves the conductance of every set, exactly.**
 
@@ -873,45 +874,45 @@ theorem isReversible_lazy {P : Kernel Om Om} {pi : Measure Om} (h : IsReversible
 The holding term contributes nothing to the escape flow — `flow_lazy` charges it
 `pi (Sᶜ ∩ S) = pi ∅ = 0` — so only the factor `1/2` in front of the `P`-flow survives, and
 the denominator `pi S` is untouched because `lazy P` has the same stationary measure. -/
-theorem conductanceOn_lazy (P : Kernel Om Om) (pi : Measure Om) {S : Set Om}
+theorem conductance_lazy (pi : Measure Om) (P : Kernel Om Om) {S : Set Om}
     (hS : MeasurableSet S) :
-    conductanceOn (lazy P) pi S = conductanceOn P pi S / 2 := by
-  rw [conductanceOn, conductanceOn, flow_lazy P pi S hS.compl, Set.compl_inter_self,
+    conductance pi (lazy P) S = conductance pi P S / 2 := by
+  rw [conductance, conductance, flow_lazy pi P S hS.compl, Set.compl_inter_self,
     measure_empty, mul_zero, add_zero, div_eq_mul_inv, div_eq_mul_inv, div_eq_mul_inv]
   ring
 
 /-- **Laziness halves the conductance, exactly**: `Φ(lazy P) = Φ(P)/2`.
 
-This is the step that makes `conductance_ballWalk_ge` and
-`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance` compose: the first bounds the conductance of
+This is the step that makes `globalConductance_ballWalk_ge` and
+`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance` compose: the first bounds the conductance of
 the *plain* ball walk, the second needs `HasNonnegSpectrum`, which only the *lazy* walk has
 (`hasNonnegSpectrum_lazy`).
 
-Nothing is lost to the infimum: the family `SmallSets pi (1/2)` the infimum ranges over
+Nothing is lost to the infimum: the family `smallSets pi (1/2)` the infimum ranges over
 depends only on `pi`, and `lazy P` has the same `pi`; and the side condition `pi S ≤ 1/2`
 is a condition on `pi` alone, so it survives verbatim.  The constant is therefore exactly
 `2` — not "at least `1/2`". -/
-theorem conductance_lazy (P : Kernel Om Om) (pi : Measure Om) :
-    conductance (lazy P) pi = conductance P pi / 2 := by
+theorem globalConductance_lazy (pi : Measure Om) (P : Kernel Om Om) :
+    globalConductance pi (lazy P) = globalConductance pi P / 2 := by
   refine le_antisymm ?_ ?_
   · rw [ENNReal.le_div_iff_mul_le (Or.inl (by norm_num)) (Or.inl (by norm_num))]
-    refine le_conductance P pi fun S hSm hSpos hShalf => ?_
-    calc conductance (lazy P) pi * 2
-        ≤ conductanceOn (lazy P) pi S * 2 := by
+    refine le_globalConductance pi P fun S hSm hSpos hShalf => ?_
+    calc globalConductance pi (lazy P) * 2
+        ≤ conductance pi (lazy P) S * 2 := by
           gcongr
-          exact conductance_le_conductanceOn _ _ hSm hSpos hShalf
-      _ = conductanceOn P pi S := by
-          rw [conductanceOn_lazy P pi hSm,
+          exact globalConductance_le_conductance _ _ hSm hSpos hShalf
+      _ = conductance pi P S := by
+          rw [conductance_lazy pi P hSm,
             ENNReal.div_mul_cancel (by norm_num) (by norm_num)]
-  · refine le_conductance (lazy P) pi fun S hSm hSpos hShalf => ?_
-    rw [conductanceOn_lazy P pi hSm]
+  · refine le_globalConductance pi (lazy P) fun S hSm hSpos hShalf => ?_
+    rw [conductance_lazy pi P hSm]
     gcongr
-    exact conductance_le_conductanceOn _ _ hSm hSpos hShalf
+    exact globalConductance_le_conductance _ _ hSm hSpos hShalf
 
 /-- **The lazy chain's conductance is at least half the plain chain's** — the form in which
-`conductance_lazy` is consumed downstream. -/
-theorem conductance_div_two_le_conductance_lazy (P : Kernel Om Om) (pi : Measure Om) :
-    conductance P pi / 2 ≤ conductance (lazy P) pi := (conductance_lazy P pi).ge
+`globalConductance_lazy` is consumed downstream. -/
+theorem globalConductance_div_two_le_globalConductance_lazy (pi : Measure Om) (P : Kernel Om Om) :
+    globalConductance pi P / 2 ≤ globalConductance pi (lazy P) := (globalConductance_lazy pi P).ge
 
 /-- **The joint law of one lazy step** is the corresponding average of the joint law of one
 `P`-step and the law of the *diagonal* — the pair `(x, x)` for `x` drawn from `pi`. -/
@@ -944,7 +945,7 @@ theorem compProd_lazy (P : Kernel Om Om) [IsMarkovKernel P] (pi : Measure Om) [S
 
 /-- **The quadratic form of a lazy chain**: `⟪f, f⟫_{lazy P} = (∫ f² + ⟪f, f⟫_P)/2`. -/
 theorem pairing_lazy {P : Kernel Om Om} [IsMarkovKernel P] {pi : Measure Om}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {f : Om → ℝ} (hf : Measurable f)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {f : Om → ℝ} (hf : Measurable f)
     (hmem : MemLp f 2 pi) :
     pairing (lazy P) pi f f
       = ((2:ℝ≥0∞).toReal)⁻¹ * ∫ x, f x ^ 2 ∂pi
@@ -972,10 +973,10 @@ theorem pairing_lazy {P : Kernel Om Om} [IsMarkovKernel P] {pi : Measure Om}
 /-- **A lazy reversible chain has nonnegative spectrum.**
 
 `⟪f, f⟫_{lazy P} = (‖f‖² + ⟪f, f⟫_P)/2 ≥ 0` by `neg_integral_sq_le_pairing_self`.  This is
-the hypothesis `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance` needs and that the plain ball
+the hypothesis `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance` needs and that the plain ball
 walk does not supply. -/
 theorem hasNonnegSpectrum_lazy {P : Kernel Om Om} [IsMarkovKernel P] {pi : Measure Om}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) :
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) :
     HasNonnegSpectrum (lazy P) pi := by
   intro f hf hmem
   rw [pairing_lazy hrev hf hmem]
@@ -987,11 +988,11 @@ end Lazy
 
 /-- **The lazy ball walk is reversible for the uniform measure and has nonnegative
 spectrum** — the two kernel-level hypotheses of
-`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance`. -/
+`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance`. -/
 theorem isReversible_and_hasNonnegSpectrum_lazy_ballWalk
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (δ : ℝ)
     (hK0 : volume K ≠ 0) (hKtop : volume K ≠ ⊤) :
-    IsReversible (lazy (ballWalk K δ)) (ArlibCommunity.Foundations.Convex.uniformOn volume K)
+    Kernel.IsReversible (lazy (ballWalk K δ)) (ArlibCommunity.Foundations.Convex.uniformOn volume K)
       ∧ HasNonnegSpectrum (lazy (ballWalk K δ)) (ArlibCommunity.Foundations.Convex.uniformOn volume K) := by
   haveI : IsProbabilityMeasure (ArlibCommunity.Foundations.Convex.uniformOn volume K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume hK0 hKtop
@@ -1000,7 +1001,7 @@ theorem isReversible_and_hasNonnegSpectrum_lazy_ballWalk
 
 /-! ## 8. Non-degeneracy: a body of positive finite volume can be cut in half
 
-`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance` needs two things that are *not* about the
+`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance` needs two things that are *not* about the
 ball walk at all, only about the target measure: that the conductance is not the empty
 infimum `⊤`, and that `L²(pi)` contains a function of nonzero variance
 (`(rayleighSet _ _).Nonempty`).  Both follow from a single geometric fact, proved here: a
@@ -1185,8 +1186,8 @@ theorem exists_volume_inter_ball_pos_lt (hn : 1 ≤ n)
 
 /-- **A body of positive finite volume has a piece of relative volume in `(0, 1/2]`.**
 
-This is the non-degeneracy fact `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance` needs, in the
-form `ArlibCommunity.Foundations.MarkovChainTheory.SmallSets` asks for it.  It is what stops the conductance infimum
+This is the non-degeneracy fact `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance` needs, in the
+form `ArlibCommunity.Foundations.MarkovChainTheory.smallSets` asks for it.  It is what stops the conductance infimum
 from being the empty infimum `⊤` and what supplies a non-constant `L²` function. -/
 theorem exists_smallSet_uniformOn (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) (hK0 : volume K ≠ 0) (hKtop : volume K ≠ ⊤) :
@@ -1233,11 +1234,11 @@ theorem rayleighSet_nonempty_of_smallSet {Om : Type*} [MeasurableSpace Om]
 
 /-! ## 9. End to end: the lazy ball walk mixes
 
-Everything above, plus `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance` (`L2Mixing.lean`,
+Everything above, plus `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance` (`L2Mixing.lean`,
 whose own ingredients are Cheeger's inequality and the `L²` contraction), composed into one
 statement.  The two hypotheses that carry content — the isoperimetric inequality and the
 uniform lower bound on the local conductance — are still written out **inline**, exactly as
-in `conductance_ballWalk_ge`; no `def`, no `structure` field, no named `Prop` stands between
+in `globalConductance_ballWalk_ge`; no `def`, no `structure` field, no named `Prop` stands between
 the reader and what is assumed. -/
 
 /-- **The lazy ball walk on `K` mixes to total variation `eps`, from an `M`-warm start, in
@@ -1247,10 +1248,10 @@ the reader and what is assumed. -/
 steps** — i.e. `O(φ⁻² log(M/eps))` steps with `φ = min(θ/32, κθ²δ/(128n))`, by
 `ArlibCommunity.Foundations.MarkovChainTheory.conductanceMixingTime_le`.
 
-This is the whole chain in one place: `conductance_ballWalk_ge` (geometry + isoperimetry →
-conductance), `conductance_lazy` (laziness costs exactly a factor `2` of conductance),
+This is the whole chain in one place: `globalConductance_ballWalk_ge` (geometry + isoperimetry →
+conductance), `globalConductance_lazy` (laziness costs exactly a factor `2` of conductance),
 `hasNonnegSpectrum_lazy` (laziness buys the spectral hypothesis the plain ball walk lacks),
-`sq_conductance_div_two_le_spectralGap` (Cheeger) and `mixesWithin_of_conductance` (`L²`
+`sq_globalConductance_div_two_le_spectralGap` (Cheeger) and `mixesWithin_of_globalConductance` (`L²`
 decay → a step count).
 
 The hypotheses that carry content, spelled out and not hidden behind a name:
@@ -1309,7 +1310,7 @@ theorem mixesWithin_lazy_ballWalk (hn : 1 ≤ n)
   have hphi0 : 0 < phi := lt_min (by positivity) (by positivity)
   have hphi1 : phi ≤ 1 := le_trans (min_le_left _ _) (by linarith)
   -- the conductance of the plain walk, then of the lazy one
-  have hcond := conductance_ballWalk_ge hn hK hK0 hKtop hδ hθ hell
+  have hcond := globalConductance_ballWalk_ge hn hK hK0 hKtop hδ hθ hell
     (kappa := ENNReal.ofReal kappa) hiso
   have hbranch1 : ENNReal.ofReal phi * 2 ≤ ENNReal.ofReal θ / 16 := by
     have h16 : ENNReal.ofReal θ / 16 = ENNReal.ofReal (θ / 16) := by
@@ -1342,21 +1343,21 @@ theorem mixesWithin_lazy_ballWalk (hn : 1 ≤ n)
       ring
     nlinarith [hmin]
   have hlazy : ENNReal.ofReal phi
-      ≤ conductance (lazy (ballWalk K δ)) (ArlibCommunity.Foundations.Convex.uniformOn volume K) := by
-    rw [conductance_lazy]
+      ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (lazy (ballWalk K δ)) := by
+    rw [globalConductance_lazy]
     have hstep : ENNReal.ofReal phi
         ≤ min (ENNReal.ofReal θ / 16)
             (ENNReal.ofReal kappa * ENNReal.ofReal (θ ^ 2 * δ / (n : ℝ)) / 64) / 2 := by
       rw [ENNReal.le_div_iff_mul_le (Or.inl (by norm_num)) (Or.inl (by norm_num))]
       exact le_min hbranch1 hbranch2
     exact hstep.trans (by gcongr)
-  have hcondtop : conductance (lazy (ballWalk K δ)) (ArlibCommunity.Foundations.Convex.uniformOn volume K) ≠ ⊤ :=
+  have hcondtop : globalConductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (lazy (ballWalk K δ)) ≠ ⊤ :=
     ne_top_of_le_ne_top (by norm_num)
-      (conductance_le_one _ _ ⟨S0, hS0m, hS0pos, hS0half⟩)
-  have hphireal : phi ≤ (conductance (lazy (ballWalk K δ)) (ArlibCommunity.Foundations.Convex.uniformOn volume K)).toReal := by
+      (globalConductance_le_one _ _ ⟨S0, hS0m, hS0pos, hS0half⟩)
+  have hphireal : phi ≤ (globalConductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (lazy (ballWalk K δ))).toReal := by
     have h := ENNReal.toReal_mono hcondtop hlazy
     rwa [ENNReal.toReal_ofReal hphi0.le] at h
-  exact mixesWithin_of_conductance hrev hpsd hne hM hwarm hphi0 hphi1 heps hphireal ht
+  exact mixesWithin_of_globalConductance hrev hpsd hne hM hwarm hphi0 hphi1 heps hphireal ht
 
 /-! ## 10. Joint satisfiability of the hypothesis bundle
 
@@ -1422,14 +1423,14 @@ theorem mixesWithin_lazy_ballWalk_unitBall (hn : 1 ≤ n) {δ : ℝ} (hδ : 0 < 
 #print axioms ell_le_ballWalk_add_ballWalk_compl
 #print axioms lt_dist_of_ballWalk_lt
 #print axioms mul_measure_add_measure_le_mul_flow
-#print axioms conductance_ballWalk_ge
+#print axioms globalConductance_ballWalk_ge
 #print axioms ofReal_le_ell_unitBall
 #print axioms neg_integral_sq_le_pairing_self
 #print axioms hasNonnegSpectrum_lazy
 #print axioms isReversible_and_hasNonnegSpectrum_lazy_ballWalk
-#print axioms conductanceOn_lazy
 #print axioms conductance_lazy
-#print axioms conductance_div_two_le_conductance_lazy
+#print axioms globalConductance_lazy
+#print axioms globalConductance_div_two_le_globalConductance_lazy
 #print axioms exists_volume_inter_ball_pos_lt
 #print axioms exists_smallSet_uniformOn
 #print axioms rayleighSet_nonempty_of_smallSet

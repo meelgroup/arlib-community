@@ -17,7 +17,7 @@ actually receives (a Kannan–Vempala inflated polytope, say), rather than a nor
 special case.
 
 Two hypotheses which every quantitative theorem in the stack
-(`ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_ge`,
+(`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_ge`,
 `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_lazy_ballWalk`) carries inline are discharged here:
 
 * the **isoperimetric inequality** `hiso`, by `ArlibCommunity.Foundations.Convex.uniformOn_iso_of_convex`, which proves
@@ -54,7 +54,7 @@ remaining obstruction is recorded as (P1) in `PositionalCut.lean` (not in this r
 ## Main results
 
 * `ArlibCommunity.Foundations.MarkovChainTheory.le_ell_of_convex_of_ball_subset` — the local-conductance floor.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_ballWalk_convex` — an unconditional conductance bound.
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_ballWalk_convex` — an unconditional conductance bound.
 * `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_lazy_ballWalk_convex` — the capstone: unconditional
   total-variation mixing of the lazy ball walk on `K` to `ArlibCommunity.Foundations.Convex.uniformOn volume K`, which
   by `ArlibCommunity.Foundations.MarkovChainTheory.isReversible_ballWalk` is *exactly* its stationary measure, so
@@ -87,7 +87,7 @@ measurability, no volume bound, and no isoperimetry.
 
 Proved: `ell K δ x ≥ (γ/(γ+D))ⁿ` at *every* `x ∈ K`, where
 `ell K δ x = vol(B(x,δ) ∩ K) / vol(B(x,δ))` is the probability that a ball-walk step from
-`x` is accepted.  This is the `hell` hypothesis of `conductance_ballWalk_ge` and
+`x` is accepted.  This is the `hell` hypothesis of `globalConductance_ballWalk_ge` and
 `mixesWithin_lazy_ballWalk` at `θ = (γ/(γ+D))ⁿ`.
 
 The witness is the ball `B(y, λγ)` with `λ = δ/(γ+D)` and `y = (1-λ)·x + λ·c`, which lies
@@ -197,7 +197,7 @@ at `κ = (1/2)ⁿ/D`, the latter by `le_ell_of_convex_of_ball_subset` at `θ = (
 Proved: the conductance of `ballWalk K δ` with respect to its own stationary measure
 `ArlibCommunity.Foundations.Convex.uniformOn volume K` is at least `min (θ/16) (κ·θ²·δ/n / 64)`.  Both constants are
 exponentially small in `n`; see the module docstring. -/
-theorem conductance_ballWalk_convex (hn : 1 ≤ n)
+theorem globalConductance_ballWalk_convex (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (hconv : Convex ℝ K)
     (hK0 : volume K ≠ 0) (hKtop : volume K ≠ ⊤)
     {D : ℝ} (hD : ∀ x ∈ K, ∀ y ∈ K, dist x y ≤ D)
@@ -206,10 +206,10 @@ theorem conductance_ballWalk_convex (hn : 1 ≤ n)
     min (ENNReal.ofReal ((γ / (γ + D)) ^ n) / 16)
         (ENNReal.ofReal ((1 / 2 : ℝ) ^ n / D)
           * ENNReal.ofReal (((γ / (γ + D)) ^ n) ^ 2 * δ / (n : ℝ)) / 64)
-      ≤ conductance (ballWalk K δ) (ArlibCommunity.Foundations.Convex.uniformOn volume K) := by
+      ≤ globalConductance (ArlibCommunity.Foundations.Convex.uniformOn volume K) (ballWalk K δ) := by
   have hcK : c ∈ K := hball (Metric.mem_ball_self hγ)
   have hDpos : 0 < D := pos_of_diam_bound hn hK0 hcK hD
-  refine conductance_ballWalk_ge hn hK hK0 hKtop hδ
+  refine globalConductance_ballWalk_ge hn hK hK0 hKtop hδ
     (θ := (γ / (γ + D)) ^ n) (by positivity)
     (le_ell_of_convex_of_ball_subset hconv hγ hball hD hδ hδγ)
     (kappa := ENNReal.ofReal ((1 / 2 : ℝ) ^ n / D)) ?_
@@ -484,7 +484,7 @@ Every declaration in this file must depend on exactly
 
 #print axioms le_ell_of_convex_of_ball_subset
 #print axioms pos_of_diam_bound
-#print axioms conductance_ballWalk_convex
+#print axioms globalConductance_ballWalk_convex
 #print axioms mixesWithin_lazy_ballWalk_convex
 #print axioms exists_unconditional_mixing_convex
 #print axioms mixesWithin_lazy_ballWalk_unitBall_convexRoute

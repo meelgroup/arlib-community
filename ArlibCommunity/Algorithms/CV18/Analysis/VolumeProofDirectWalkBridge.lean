@@ -122,12 +122,12 @@ theorem mixesWithin_truncatedMetropolisKernel_figureOne_direct_cv18
   have hcond : ENNReal.ofReal
       (figureOneProposalRadius q sigma2 * Real.log 2 /
         (640 * Real.sqrt sigma2 * Real.sqrt q.n)) ≤
-      conductance
-        (metropolisGaussian (truncatedBody q I)
-          (figureOneProposalRadius q sigma2) sigma2) pi := by
+      globalConductance
+        pi (metropolisGaussian (truncatedBody q I)
+          (figureOneProposalRadius q sigma2) sigma2) := by
     dsimp [pi]
     simpa [Real.sq_sqrt hsigma2.le] using
-      (ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge_of_convex
+      (ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_sqrt_ge_of_convex
         hn2 hsigma hdelta hdeltaSigma hR
         (truncatedBody_measurable q I)
         (truncatedVolumeInput q I).body.convex hKR hKtop hK0 hell
@@ -137,7 +137,7 @@ theorem mixesWithin_truncatedMetropolisKernel_figureOne_direct_cv18
       (lazy (metropolisGaussian (truncatedBody q I)
         (figureOneProposalRadius q sigma2) sigma2))
       pi mu0 t (ENNReal.ofReal eps) :=
-    mixesWithin_lazy_of_conductance_sqrt hn2 hsigma hdelta hdeltaSigma
+    mixesWithin_lazy_of_globalConductance_sqrt hn2 hsigma hdelta hdeltaSigma
       (isReversible_metropolisGaussian (truncatedBody_measurable q I)
         (figureOneProposalRadius q sigma2) sigma2)
       ⟨S0, hS0m, hS0pos, hS0half⟩ hM hwarm' heps0 heps1 hcond ht

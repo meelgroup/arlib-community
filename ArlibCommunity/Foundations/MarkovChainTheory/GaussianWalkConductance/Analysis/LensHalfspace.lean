@@ -35,8 +35,8 @@ statement.**  Three results, all `[propext, Classical.choice, Quot.sound]`:
   `ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_convex`, `1 ≤ 20·(P_u(Tᶜ) + P_v(T))`, is false at
   separation `δ/√n`, with every one of that theorem's other hypotheses satisfied.  So the gap
   is not closable by any lemma of that binder shape, and the `√n` in
-  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex` /
-  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge` cannot be recovered this way.
+  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyWalk_ge_of_convex` /
+  `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_metropolisGaussian_sharp_ge` cannot be recovered this way.
 
 ## The counterexample
 
@@ -76,7 +76,7 @@ the `max` needs the local conductances to be comparable — precisely the `d_ℓ
 hypothesis of Cousins–Vempala's `lem:overlap` that `overlap_speedyWalk_convex` deletes.
 `exists_overlap_speedyWalk_sqrt_dim_counterexample` is exactly a configuration where
 `ell K 1 v` is more than `20×` smaller than `ell K 1 u`.  Restoring the `√n` therefore requires
-changing the shape of `hoverlap` in `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`
+changing the shape of `hoverlap` in `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`
 (a file this one does not touch), not strengthening `volume_lens_inter_ge_max`.
 
 ## Scope
@@ -632,8 +632,8 @@ separation alone.
 
 Combined with `exists_halfspace_max_lt` this settles the `√n` question negatively at the level
 of the *conclusion*, not merely of the proof technique: no lemma of this binder shape can hold
-at separation `δ/√n`, so the `√n` in `conductance_speedyWalk_ge_of_convex` /
-`conductance_metropolisGaussian_sharp_ge` cannot be recovered by strengthening
+at separation `δ/√n`, so the `√n` in `globalConductance_speedyWalk_ge_of_convex` /
+`globalConductance_metropolisGaussian_sharp_ge` cannot be recovered by strengthening
 `volume_lens_inter_ge_max`.  The paper's route needs, in addition, the local-conductance
 comparability hypothesis (`d_ℓ(u,v) < 1/3` in `lem:overlap`) that `overlap_speedyWalk_convex`
 deletes: here `ell K 1 v` is `≈ 20×` smaller than `ell K 1 u`. -/

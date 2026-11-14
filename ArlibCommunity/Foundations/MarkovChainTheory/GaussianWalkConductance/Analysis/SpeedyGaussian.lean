@@ -50,7 +50,7 @@ visibly symmetric in `(x, y)`.  **The algebra is exactly as `IsoWeighted.lean` p
 
 ## Why the name is not `speedyGaussian`
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` (`SpeedyConductanceSharp.lean`) already
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` (`SpeedyConductanceSharp.lean`) already
 exists and is **not** a theorem about the kernel built here: it is abstract in its kernel `P`,
 and its two corollaries (`SpeedyOverlap.lean`, `OverlapSqrt.lean`) instantiate it at
 `ArlibCommunity.Foundations.MarkovChainTheory.speedyWalk`.  A `def speedyGaussian` in this namespace would make that
@@ -402,7 +402,7 @@ point of the speedy proposal. -/
 theorem flow_speedyMetropolisGaussian {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) (δ s : ℝ) {S T : Set (EuclideanSpace ℝ (Fin n))}
     (hS : MeasurableSet S) (hT : MeasurableSet T) :
-    flow (speedyMetropolisGaussian K δ s) (ellGaussianMeasure K δ s) S T
+    flow (ellGaussianMeasure K δ s) (speedyMetropolisGaussian K δ s) S T
       = (volume (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) δ))⁻¹ *
             (∫⁻ x in S ∩ K, ∫⁻ y in T ∩ K, gaussianWeight s x * metropolisDensity s δ x y)
         + ∫⁻ x in T ∩ (S ∩ K), ell K δ x * gaussianWeight s x *
@@ -427,8 +427,9 @@ stationary law carries the Gaussian tilt that makes consecutive Cousins–Vempal
 `K` is required. -/
 theorem isReversible_speedyMetropolisGaussian {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) (δ s : ℝ) :
-    IsReversible (speedyMetropolisGaussian K δ s) (ellGaussianMeasure K δ s) := by
+    Kernel.IsReversible (speedyMetropolisGaussian K δ s) (ellGaussianMeasure K δ s) := by
   intro S T hS hT
+  show flow _ _ S T = flow _ _ T S
   have h2 : T ∩ (S ∩ K) = S ∩ (T ∩ K) := by
     ext y
     simp only [Set.mem_inter_iff]
@@ -449,8 +450,8 @@ theorem isProbabilityMeasure_ellGaussianProb {K : Set (EuclideanSpace ℝ (Fin n
 /-- **The walk is reversible for its stationary probability measure.** -/
 theorem isReversible_speedyMetropolisGaussian_prob {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) (δ s : ℝ) :
-    IsReversible (speedyMetropolisGaussian K δ s) (ellGaussianProb K δ s) :=
-  (isReversible_speedyMetropolisGaussian hK δ s).smul _
+    Kernel.IsReversible (speedyMetropolisGaussian K δ s) (ellGaussianProb K δ s) :=
+  isReversible_smul (isReversible_speedyMetropolisGaussian hK δ s) _
 
 /-- **The `ℓ·γ`-weighted probability measure is invariant for the walk.** -/
 theorem invariant_speedyMetropolisGaussian {K : Set (EuclideanSpace ℝ (Fin n))}
@@ -633,8 +634,8 @@ theorem exists_speedyMetropolisGaussian_witness [NeZero n] {δ s : ℝ} (hδ : 0
       MeasurableSet K ∧
         IsProbabilityMeasure (ellGaussianProb K δ s) ∧
         IsMarkovKernel (speedyMetropolisGaussian K δ s) ∧
-        IsReversible (speedyMetropolisGaussian K δ s) (ellGaussianMeasure K δ s) ∧
-        IsReversible (speedyMetropolisGaussian K δ s) (ellGaussianProb K δ s) ∧
+        Kernel.IsReversible (speedyMetropolisGaussian K δ s) (ellGaussianMeasure K δ s) ∧
+        Kernel.IsReversible (speedyMetropolisGaussian K δ s) (ellGaussianProb K δ s) ∧
         Kernel.Invariant (speedyMetropolisGaussian K δ s) (ellGaussianProb K δ s) ∧
         speedyMetropolisGaussian K δ s 0 {(0 : EuclideanSpace ℝ (Fin n))}ᶜ
             = speedyMetropolisMove K δ s 0 ∧
@@ -661,11 +662,11 @@ theorem exists_speedyMetropolisGaussian_witness [NeZero n] {δ s : ℝ} (hδ : 0
 **Nothing below is a declaration.**  This section exists so that no reader mistakes the kernel
 above for a mixing result.
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex` (`StarPolar.lean`) is stated for
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyWalk_ge_of_convex` (`StarPolar.lean`) is stated for
 `ArlibCommunity.Foundations.MarkovChainTheory.speedyWalk` and **does not apply** to `speedyMetropolisGaussian`; the
 conductance of this kernel does **not** follow from it, and nothing in this file implies it.
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` (`SpeedyConductanceSharp.lean`) is a
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` (`SpeedyConductanceSharp.lean`) is a
 different matter: it is abstract in its kernel `P`, so it *would* accept this kernel.  Three
 things are missing before it could be applied here, and none of them is proved anywhere in this
 repository for this kernel:
@@ -679,7 +680,7 @@ repository for this kernel:
    floor over the overlap region — the estimate `e^{−(2Rδ+δ²)/(2s)}` that
    `MetropolisConductanceSharp.lean` derives for `metropolisGaussian`, re-derived against the
    speedy normaliser.  That is a genuine proof obligation, not bookkeeping.
-2. **The `hpi` bridge.**  `conductance_speedyGaussian_ge` takes its stationary law in the *real*
+2. **The `hpi` bridge.**  `globalConductance_speedyGaussian_ge` takes its stationary law in the *real*
    density form `pi A = ofReal (∫_A h) / ofReal (∫ h)`.  `ellGaussianProb` is built from an
    `ℝ≥0∞` density `ℓ·g`; identifying the two requires `h = (ell K δ ·).toReal · gaussianWeightReal`
    together with the integrability facts that make `ofReal` commute with the integral.
@@ -688,7 +689,7 @@ repository for this kernel:
    it carries `hellKpos`, `hellLip` and `hLσ` — strict positivity of `ℓ` on `K`, log-Lipschitzness
    of `ℓ` on `K` with an explicit constant `Lf`, and the compatibility `√3·(σ²Lf + R) ≤ 2σ√n`.
    Those three must be discharged for the body and parameters at hand before its conclusion can be
-   fed to `conductance_speedyGaussian_ge`'s `hiso` binder.
+   fed to `globalConductance_speedyGaussian_ge`'s `hiso` binder.
 
 So: this file closes the *kernel* gap.  It does not close the conductance gap, the mixing gap, or
 any runtime gap, and it must not be quoted as doing so. -/

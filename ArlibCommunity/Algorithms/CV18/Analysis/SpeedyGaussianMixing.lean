@@ -10,7 +10,7 @@ import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Anal
 /-!
 # Cousins–Vempala `thm:mixing` for the lazy speedy Metropolis–Gaussian walk
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyMetropolisGaussian_ge_uncond`
 (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/OverlapPerPair.lean`) is Cousins–Vempala's `thm:speedyconductance`
 ([CV18]) with **no** isoperimetric and **no** comparability
 hypothesis:
@@ -46,7 +46,7 @@ chain, and that word is load-bearing: without a spectral hypothesis the bound is
 swap kernel on `Bool`, reversible with `Φ = 1`, whose total variation never decays).  Laziness
 is exactly what buys the missing hypothesis: `ArlibCommunity.Foundations.MarkovChainTheory.hasNonnegSpectrum_lazy`
 proves `HasNonnegSpectrum (lazy P) π` from reversibility of `P` alone, and
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_lazy` prices it at a factor `2` in the conductance — hence the
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_lazy` prices it at a factor `2` in the conductance — hence the
 factor `4` in the step count.  Nothing in this repository proves a spectral property of the
 plain `speedyMetropolisGaussian` kernel, so no plain-chain variant is stated here.
 
@@ -56,18 +56,18 @@ plain `speedyMetropolisGaussian` kernel, so no plain-chain variant is stated her
 
 * `IsMarkovKernel (speedyMetropolisGaussian K δ σ²)` — instance
   `ArlibCommunity.Foundations.MarkovChainTheory.isMarkovKernel_speedyMetropolisGaussian`;
-* `IsReversible (speedyMetropolisGaussian K δ σ²) (ellGaussianProb K δ σ²)` —
+* `ProbabilityTheory.Kernel.IsReversible (speedyMetropolisGaussian K δ σ²) (ellGaussianProb K δ σ²)` —
   `ArlibCommunity.Foundations.MarkovChainTheory.isReversible_speedyMetropolisGaussian_prob`, which needs only `hK`;
 * `IsProbabilityMeasure (ellGaussianProb K δ σ²)` —
   `ArlibCommunity.Foundations.MarkovChainTheory.isProbabilityMeasure_ellGaussianProb` with its two guards from
   `ellGaussianMeasure_univ_ne_zero` and `ellGaussianMeasure_univ_le`;
-* `(SmallSets (ellGaussianProb K δ σ²) (1/2)).Nonempty` —
+* `(smallSets (ellGaussianProb K δ σ²) (1/2)).Nonempty` —
   `ArlibCommunity.Foundations.MarkovChainTheory.exists_smallSet_of_absolutelyContinuous` at
   `ellGaussianProb_absolutelyContinuous`;
 * `Bornology.IsBounded K` and `volume K ≠ ⊤` — derived from `hR`/`hKR` exactly as the
   conductance theorem derives them, so they cost no binder.
 
-**Added** beyond the binders of `conductance_speedyMetropolisGaussian_ge_uncond`: only the
+**Added** beyond the binders of `globalConductance_speedyMetropolisGaussian_ge_uncond`: only the
 warm start and the accuracy, namely `{mu0} [IsProbabilityMeasure mu0] {M eps}`, `hM : 1 ≤ M`,
 `hwarm : IsWarm (ofReal M) mu0 (ellGaussianProb K δ σ²)`, `heps0 : 0 < eps`,
 `heps1 : eps ≤ 1`, and `{t}` with the step-count hypothesis `ht`.  The warm start is
@@ -100,10 +100,10 @@ variable {n : ℕ}
 
 /-! ## 1. The mixing bound
 
-`ArlibCommunity.Algorithms.CV18.mixesWithin_lazy_of_conductance_sqrt` (`MixingSqrt.lean`) is
+`ArlibCommunity.Algorithms.CV18.mixesWithin_lazy_of_globalConductance_sqrt` (`MixingSqrt.lean`) is
 `thm:mixing` read as a step count at a conductance of exactly the shape
 `δ·log 2/(640·σ·√n)`, for `lazy P` with `P` reversible.  Its `hΦ` slot is, character for
-character, the conclusion of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond`; the two
+character, the conclusion of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyMetropolisGaussian_ge_uncond`; the two
 compose by `exact`. -/
 
 /-- **Cousins–Vempala `thm:mixing` for the lazy speedy Metropolis–Gaussian walk.**
@@ -116,10 +116,10 @@ variation `ε` of `ellGaussianProb K δ σ²` after
     4·(log M + 2·log(1/ε)) / (δ·log 2/(640·σ·√n))² + 1
 
 steps — the Lovász–Simonovits count `O(log(M/ε)/φ²)` at the conductance
-`φ = δ·log 2/(640·σ·√n)` that `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond`
+`φ = δ·log 2/(640·σ·√n)` that `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyMetropolisGaussian_ge_uncond`
 certifies, with the factor `4` that laziness costs.
 
-Its binders are those of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond` plus the
+Its binders are those of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyMetropolisGaussian_ge_uncond` plus the
 warm-start data and the accuracy; see the module docstring.  No isoperimetric, comparability
 or spectral hypothesis appears.
 
@@ -154,10 +154,10 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_uncond (hn : 21 ≤ n) {σ δ 
   obtain ⟨S0, hS0m, hS0pos, hS0half⟩ :=
     exists_smallSet_of_absolutelyContinuous (n := n) (by omega) (ellGaussianProb K δ (σ ^ 2))
       (ellGaussianProb_absolutelyContinuous K δ (σ ^ 2))
-  exact mixesWithin_lazy_of_conductance_sqrt (by omega) hσ hδ hδσ
+  exact mixesWithin_lazy_of_globalConductance_sqrt (by omega) hσ hδ hδσ
     (isReversible_speedyMetropolisGaussian_prob hK δ (σ ^ 2))
     ⟨S0, hS0m, hS0pos, hS0half⟩ hM hwarm heps0 heps1
-    (conductance_speedyMetropolisGaussian_ge_uncond hn hσ hδ hδσ hK hKc hK0 hR hKR hRσ) ht
+    (globalConductance_speedyMetropolisGaussian_ge_uncond hn hσ hδ hδσ hK hKc hK0 hR hKR hRσ) ht
 
 /-- **The same step count with the conductance substituted.**
 
@@ -195,7 +195,7 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_uncond_explicit (hn : 21 ≤ n
 
 /-! ## 2. Non-vacuity
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond_witness`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyMetropolisGaussian_ge_uncond_witness`
 (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/OverlapPerPair.lean`) discharges the conductance theorem's whole
 binder bundle at
 
@@ -217,7 +217,7 @@ data, with the `MixesWithin` conclusion carried as the last conjunct.**
     n = 21,  K = B̄(0,1) ⊆ ℝ²¹,  σ = 100,  δ = 1,  R = 1,
     mu0 = ellGaussianProb K δ σ²,  M = 1,  ε = 1/2,  t = 2·10¹².
 
-The geometric half is `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond_witness`'s:
+The geometric half is `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyMetropolisGaussian_ge_uncond_witness`'s:
 `1 ≤ 100/(8√21)` since `√21 ≤ 5`, and `1 ≤ 200√21` with enormous room.  The warm start is the
 stationary one — `IsWarm (ofReal 1) π π` is `ArlibCommunity.Foundations.Convex.IsWarm.refl` — which is legitimate exactly
 because `π = ellGaussianProb K 1 100²` really is a probability measure here

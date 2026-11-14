@@ -38,7 +38,7 @@ theorem exists_speedyKernel {n : ℕ} {K : Set (EuclideanSpace ℝ (Fin n))} (hK
 
 /-- **Conductance of the Metropolis-filtered Gaussian ball walk** on a bounded convex body, at
 step `δ ≤ σ/(8√n)`, given a floor `θ` on the local conductance. -/
-theorem metropolis_conductance_ge {n : ℕ} (hn : 2 ≤ n)
+theorem metropolis_globalConductance_ge {n : ℕ} (hn : 2 ≤ n)
     {σ δ R θ : ℝ} (hσ : 0 < σ) (hδ : 0 < δ) (hδσ : δ ≤ σ / (8 * Real.sqrt n)) (hR : 0 ≤ R)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (hKc : Convex ℝ K)
     (hKR : ∀ x ∈ K, ‖x‖ ≤ R) (hKtop : volume K ≠ ⊤) (hK0 : volume K ≠ 0)
@@ -48,16 +48,16 @@ theorem metropolis_conductance_ge {n : ℕ} (hn : 2 ≤ n)
     {P : Kernel (EuclideanSpace ℝ (Fin n)) (EuclideanSpace ℝ (Fin n))}
     (hP : ∀ x, P x = metropolisGaussianStep K δ (σ ^ 2) x) :
     ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n))
-      ≤ conductance P (uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
-            (gaussianWeight (σ ^ 2))) K) := by
+      ≤ globalConductance (uniformOn ((volume : Measure (EuclideanSpace ℝ (Fin n))).withDensity
+            (gaussianWeight (σ ^ 2))) K) P := by
   have hPeq : P = metropolisGaussian K δ (σ ^ 2) := Kernel.ext fun x => hP x
   subst hPeq
-  exact conductance_metropolisGaussian_sharp_sqrt_ge_of_convex hn hσ hδ hδσ hR hK hKc hKR hKtop
+  exact globalConductance_metropolisGaussian_sharp_sqrt_ge_of_convex hn hσ hδ hδσ hR hK hKc hKR hKtop
     hK0 hell hfloor hRσ
 
 /-- **Conductance of the speedy Metropolis–Gaussian walk** with respect to its `ℓ`-weighted
 Gaussian target, in dimension `n ≥ 21`. -/
-theorem speedy_conductance_ge {n : ℕ} (hn : 21 ≤ n) {σ δ R : ℝ}
+theorem speedy_globalConductance_ge {n : ℕ} (hn : 21 ≤ n) {σ δ R : ℝ}
     (hσ : 0 < σ) (hδ : 0 < δ) (hδσ : δ ≤ σ / (8 * Real.sqrt n))
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (hKc : Convex ℝ K)
     (hK0 : volume K ≠ 0) (hR : 0 ≤ R) (hKR : ∀ x ∈ K, ‖x‖ ≤ R)
@@ -65,19 +65,19 @@ theorem speedy_conductance_ge {n : ℕ} (hn : 21 ≤ n) {σ δ R : ℝ}
     {P : Kernel (EuclideanSpace ℝ (Fin n)) (EuclideanSpace ℝ (Fin n))}
     (hP : ∀ x, P x = speedyMetropolisGaussianStep K δ (σ ^ 2) x) :
     ENNReal.ofReal (δ * Real.log 2 / (640 * σ * Real.sqrt n))
-      ≤ conductance P (ellGaussianProb K δ (σ ^ 2)) := by
+      ≤ globalConductance (ellGaussianProb K δ (σ ^ 2)) P := by
   have hPeq : P = speedyMetropolisGaussian K δ (σ ^ 2) := Kernel.ext fun x => by
     rw [hP x, speedyMetropolisGaussian_eq hK]; rfl
   subst hPeq
-  exact conductance_speedyMetropolisGaussian_ge_uncond hn hσ hδ hδσ hK hKc hK0 hR hKR hRσ
+  exact globalConductance_speedyMetropolisGaussian_ge_uncond hn hσ hδ hδσ hK hKc hK0 hR hKR hRσ
 
 #foundationsModelClosure exists_metropolisKernel
 #print axioms exists_metropolisKernel
 #foundationsModelClosure exists_speedyKernel
 #print axioms exists_speedyKernel
-#foundationsModelClosure metropolis_conductance_ge
-#print axioms metropolis_conductance_ge
-#foundationsModelClosure speedy_conductance_ge
-#print axioms speedy_conductance_ge
+#foundationsModelClosure metropolis_globalConductance_ge
+#print axioms metropolis_globalConductance_ge
+#foundationsModelClosure speedy_globalConductance_ge
+#print axioms speedy_globalConductance_ge
 
 end ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance

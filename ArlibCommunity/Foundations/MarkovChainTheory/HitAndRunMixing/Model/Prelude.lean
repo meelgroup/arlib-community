@@ -90,8 +90,8 @@ open scoped ENNReal
 /-- **The unconditional hit-and-run mixing deadline**: `2⁶⁴ · n² · D² · log(8M/ε²)`.
 
 This is `4 · lsThreshold M phi ε` at the conductance `phi = 1/(2³¹·n·D)` that
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_uncond_pow` delivers: `lsThreshold M phi ε = log(8M/ε²)/phi²`
-and `1/phi² = 2⁶²·n²D²`, and the factor `4` is `conductance_lazy` (laziness halves the
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_uncond_pow` delivers: `lsThreshold M phi ε = log(8M/ε²)/phi²`
+and `1/phi² = 2⁶²·n²D²`, and the factor `4` is `globalConductance_lazy` (laziness halves the
 conductance and the deadline is quadratic in `1/phi`).  Identified with that product by
 `hrDeadlineUncond_eq`.
 

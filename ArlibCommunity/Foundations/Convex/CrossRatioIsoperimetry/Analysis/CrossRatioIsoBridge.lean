@@ -16,7 +16,7 @@ as an explicit scalar `A`:
     A * (∫ x in K, h x) ≤ (volume ((K \ T₁) \ T₂)).toReal,   given
     (volume T₁).toReal = A * (volume K).toReal,  0 ≤ A,  A ≤ 1/2.
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`
 (`ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/HitAndRunConductance.lean`) consumes it in **ℝ≥0∞**,
 against the **uniform probability measure** `ArlibCommunity.Foundations.Convex.uniformOn volume K`, with the small mass
 written as a `min`:
@@ -39,8 +39,8 @@ where the `min`-form is the weaker statement.
 * `ArlibCommunity.Foundations.Convex.hIso_measurable_of_crossRatioIso` — the `hIso` conclusion for **measurable** `h`.
 * `ArlibCommunity.Foundations.Convex.hIso_of_crossRatioIso` — **the `hIso` binder, verbatim, for arbitrary `h`**, measurable or
   not.  This is the deliverable: it can be `exact`-ed into the `hIso` slot of
-  `conductance_hitAndRun_ge`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso` — Theorem 4.2 with `hIso` replaced by the
+  `globalConductance_hitAndRun_ge`.
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_crossRatioIso` — Theorem 4.2 with `hIso` replaced by the
   Theorem 2.1 hypothesis, carrying `hLem41` verbatim.
 
 ## Gap 1 — the scalar `A` versus `min (π T₁) (π T₂)`
@@ -106,7 +106,7 @@ clause; `not_hIso_two_measurable`  (`LovaszVempalaIsoFalse.lean`) records that a
 one does not rescue the printed statement, so the clause was deliberately left out.  But
 `∫ x in K, h x` is Bochner and returns the junk value `0` for a non-integrable `h`, so the ℝ↔ℝ≥0∞
 bridge of Gap 3 is available only for measurable `h`.  A measurable-only lemma **cannot** be
-passed to `conductance_hitAndRun_ge` by `exact`, so this is not a caveat that may be left
+passed to `globalConductance_hitAndRun_ge` by `exact`, so this is not a caveat that may be left
 standing.
 
 It is removed by approximation from below.  Mathlib defines `∫⁻` as a supremum over simple
@@ -341,21 +341,21 @@ theorem hIso_measurable_of_crossRatioIso {K : Set (EuclideanSpace ℝ (Fin n))}
 /-! ## The bridge, for arbitrary `h`: the `hIso` binder itself
 
 `hIso` places no measurability clause on `h`, so `hIso_measurable_of_crossRatioIso` cannot be handed to
-`conductance_hitAndRun_ge` by `exact`.  The clause is removed by approximation from below:
+`globalConductance_hitAndRun_ge` by `exact`.  The clause is removed by approximation from below:
 Mathlib defines `∫⁻` as the supremum of the integrals of its simple minorants
 (`MeasureTheory.lintegral_eq_nnreal`), and each of `hIso`'s hypotheses on `h` — `0 ≤ h`,
 `h ≤ 1/3` on `K`, and the chord bound — is an *upper* bound on `h`, hence is inherited by every
 minorant.  So the measurable case applies to each minorant `x ↦ (φ x : ℝ)` and the general case
 is the supremum. -/
 
-/-- **The `hIso` binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`, proved from
+/-- **The `hIso` binder of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`, proved from
 Theorem 2.1's conclusion.**  Stated verbatim in the binder's own hypothesis order, so that it
 discharges the binder by `exact`.
 
 The only mathematical input is `hthm21`; `hKb`, `hKm`, `hK0`, `hKtop` are the structural facts
 about `K` that the source theorem and the `uniformOn` normalisation need, and all four are
-available at the `conductance_hitAndRun_ge` call site (see
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_crossRatioIso`).
+available at the `globalConductance_hitAndRun_ge` call site (see
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_crossRatioIso`).
 
 **This is not a proof that `hIso` is true.**  `not_hIso_two` (not in this repository; see `REFERENCES.md`) refutes `hIso` at `n = 2`,
 `K = [0,4]²` *without* the clause `∀ x ∈ K, h x ≤ 1/3`; the clause is present here, in both
@@ -431,7 +431,7 @@ file's claim is about what they say, so it checks that both are clean rather tha
 own files' word for it.
 
 `#print axioms` cannot see `∀`-binders in a type.  In words: `hIso_of_crossRatioIso` assumes `hthm21`
-and the four structural facts about `K`; `conductance_hitAndRun_ge_of_crossRatioIso` assumes `hthm21`
+and the four structural facts about `K`; `globalConductance_hitAndRun_ge_of_crossRatioIso` assumes `hthm21`
 and `hLem41`.  Neither claims that Theorem 2.1 is true — `not_hIso_two` shows the
 uncorrected form is false — only that the `hIso` encoding follows from the `hthm21` encoding. -/
 

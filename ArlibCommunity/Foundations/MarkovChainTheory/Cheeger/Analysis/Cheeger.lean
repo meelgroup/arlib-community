@@ -13,7 +13,7 @@ import Mathlib.MeasureTheory.Integral.MeanInequalities
 # The `L²` layer: real Dirichlet form, variance, and the spectral gap
 
 `ArlibCommunity.Foundations.MarkovChainTheory.Basic.MixingFromConductance` stops at
-`conductanceOn_eq_dirichletForm_div`, which reads `Φ(S) = E(1_S, 1_S) / π(S)` with `E` the
+`conductance_eq_dirichletForm_div`, which reads `Φ(S) = E(1_S, 1_S) / π(S)` with `E` the
 `ℝ≥0∞`-valued Dirichlet form.  The next object the Cheeger dictionary needs is a
 *variance*, and `ℝ≥0∞` is the wrong home for it: `Var f = E f² − (E f)²` truncates at `0`
 there.  This module therefore rebuilds the Dirichlet form over `ℝ`, pairs it with Mathlib's
@@ -40,17 +40,17 @@ Rayleigh quotient `E(f,f) / Var(f)`.
   the form is nonnegative, kills constants, and is invariant under adding one.
 * `dirichletFormReal_indicator` and **`dirichletFormReal_indicator_of_isReversible`** —
   the bridge to the `ℝ≥0∞` layer: at an indicator the real Dirichlet form is
-  `(flow S Sᶜ + flow Sᶜ S).toReal / 2`, and under detailed balance it is exactly
-  `(flow S Sᶜ).toReal`.  **This is the load-bearing lemma of the file**: it is what
-  connects `spectralGap` to `conductanceOn`.
+  `(flow Sᶜ S + flow S Sᶜ).toReal / 2`, and under detailed balance it is exactly
+  `(flow Sᶜ S).toReal`.  **This is the load-bearing lemma of the file**: it is what
+  connects `spectralGap` to `conductance`.
 * `varianceReal_indicator` — `Var(1_S) = π(S) − π(S)²`.
 * `spectralGap_nonneg`, `spectralGap_le_rayleighQuotient`, `spectralGap_le_two`.
-* **`spectralGap_le_two_mul_conductanceOn`** and
-  **`ofReal_spectralGap_le_two_mul_conductance`** — the *easy direction of Cheeger*,
+* **`spectralGap_le_two_mul_conductance`** and
+  **`ofReal_spectralGap_le_two_mul_globalConductance`** — the *easy direction of Cheeger*,
   `gap ≤ 2 Φ`.
 * `spectralGap_const`, `spectralGap_const_piHalf` — the non-vacuity witness: for the instantly mixing kernel the Dirichlet form *is* the variance,
   so the spectral gap is exactly `1`; on `Bool` with `piHalf` the conductance is `1/2`
-  (`conductance_const_piHalf`), so the easy direction reads `1 ≤ 2 · (1/2)` and is **tight**,
+  (`globalConductance_const_piHalf`), so the easy direction reads `1 ≤ 2 · (1/2)` and is **tight**,
   in particular not vacuous.
 
 ## The hard direction: the co-area formula, `L¹` isoperimetry, medians, Cauchy–Schwarz
@@ -66,7 +66,7 @@ the hard direction of Cheeger runs on.  None of them is a restatement of Cheeger
   `∫_0^∞ (flow(S_t, S_tᶜ) + flow(S_tᶜ, S_t)) dt = ∫ |g x − g y| d(pi ⊗ₘ P)` with
   `S_t = {x | t < g x}`.  Proved by `flow_add_flow_compl_eq_lintegral_compProd` plus a
   Tonelli exchange (`lintegral_lintegral_swap`) between the level variable and the pair.
-* **`two_mul_conductance_mul_lintegral_le_lintegral_abs_sub`** — the `L¹` isoperimetric
+* **`two_mul_globalConductance_mul_lintegral_le_lintegral_abs_sub`** — the `L¹` isoperimetric
   inequality `2 Φ ∫ g dpi ≤ ∫ |g x − g y| d(pi ⊗ₘ P)` for a reversible chain and a
   measurable `g ≥ 0` supported on a set of measure at most `1/2`.
 * **`exists_median`** — every real measurable `f` on a probability space has a level `m`
@@ -75,7 +75,7 @@ the hard direction of Cheeger runs on.  None of them is a restatement of Cheeger
   `ofReal (2 E(g,g)) = ∫⁻ (g x − g y)² d(pi ⊗ₘ P)`, by Fubini for `pi ⊗ₘ P`.  Its
   integrability side condition is discharged, for measurable `g ∈ L²(pi)` and invariant
   `pi`, by `integrable_sq_sub_compProd`.
-* **`sq_conductance_mul_lintegral_sq_le_lintegral_sub_sq`** — the `L²` isoperimetric
+* **`sq_globalConductance_mul_lintegral_sq_le_lintegral_sub_sq`** — the `L²` isoperimetric
   inequality `Φ² ∫⁻ g² dpi ≤ ∫⁻ (g x − g y)² d(pi ⊗ₘ P)`, obtained by applying the `L¹`
   inequality to `g²`, factoring `|a² − b²| = |a − b| (a + b)`, and Hölder with `p = q = 2`
   (`ENNReal.lintegral_mul_le_Lp_mul_Lq`).  The `ℝ≥0∞` cancellation is isolated in the
@@ -85,17 +85,17 @@ the hard direction of Cheeger runs on.  None of them is a restatement of Cheeger
   of `f` *when `pi` is invariant*, which is what lets the median argument (which needs a
   measurable `f`) be applied to an arbitrary member of `AdmissibleL2`.
 
-## Main result: `sq_conductance_div_two_le_spectralGap`
+## Main result: `sq_globalConductance_div_two_le_spectralGap`
 
-**`sq_conductance_div_two_le_spectralGap`** — the **hard direction of Cheeger**:
+**`sq_globalConductance_div_two_le_spectralGap`** — the **hard direction of Cheeger**:
 
-`(conductance P pi).toReal ^ 2 / 2 ≤ spectralGap P pi`
+`(globalConductance pi P).toReal ^ 2 / 2 ≤ spectralGap P pi`
 
 for a reversible Markov kernel on a probability space, under the single hypothesis
 `(rayleighSet P pi).Nonempty` (some `L²` function has nonzero variance).  That hypothesis is
 forced by the design note below — `sInf ∅ = 0` over `ℝ` — and is *not* a disguised form of
 the conclusion: it mentions neither the conductance nor any isoperimetric constant.
-`rayleighSet_const_piHalf_nonempty` and `sq_conductance_div_two_le_spectralGap_const_piHalf`
+`rayleighSet_const_piHalf_nonempty` and `sq_globalConductance_div_two_le_spectralGap_const_piHalf`
 exhibit a chain satisfying it, on which the inequality reads `1/8 ≤ 1`.
 
 **`cheeger`** packages both directions: `Φ²/2 ≤ gap ≤ 2 Φ`.
@@ -110,7 +110,7 @@ warns about, and what `../gaussian-cooling-vempala`'s `Isoperimetry` / `MixingFr
 
 The geometric decay bound `d_TV ≤ √M (1 − phi²/2)^t` is *not* derived: going from a spectral
 gap to a total-variation decay rate needs the `L²` → TV comparison (a warm-start / density
-bound), which this file does not develop.  `mixesWithin_of_conductance_decay`'s `hdecay`
+bound), which this file does not develop.  `mixesWithin_of_globalConductance_decay`'s `hdecay`
 hypothesis therefore still remains the caller's obligation.
 
 ## Design note: why `sInf` of an image and not `⨅ f ∈ s`
@@ -168,7 +168,7 @@ theorem dirichletFormReal_add_const (P : Kernel Ω Ω) (pi : Measure Ω) (f : Ω
 
 /-! ## The bridge to the `ℝ≥0∞` layer: the form at an indicator
 
-This is the load-bearing computation of the file.  `conductanceOn` is defined out of `flow`,
+This is the load-bearing computation of the file.  `conductance` is defined out of `flow`,
 which is an `ℝ≥0∞` lower integral; `spectralGap` is defined out of `dirichletFormReal`,
 which is a Bochner integral.  The two are connected here, at indicators, which is exactly
 where the easy direction of Cheeger evaluates the Rayleigh quotient. -/
@@ -221,7 +221,7 @@ theorem integrable_indicator_kernel_toReal (P : Kernel Ω Ω) [IsMarkovKernel P]
 Bochner integral into `ArlibCommunity.Foundations.MarkovChainTheory.flow`. -/
 theorem integral_indicator_kernel_toReal (P : Kernel Ω Ω) [IsMarkovKernel P] (pi : Measure Ω)
     {S T : Set Ω} (hS : MeasurableSet S) (hT : MeasurableSet T) :
-    ∫ x, Set.indicator S (fun x => (P x T).toReal) x ∂pi = (flow P pi S T).toReal := by
+    ∫ x, Set.indicator S (fun x => (P x T).toReal) x ∂pi = (flow pi P S T).toReal := by
   rw [integral_indicator hS, flow]
   exact integral_toReal (Kernel.measurable_coe P hT).aemeasurable
     (Filter.Eventually.of_forall fun x => measure_lt_top (P x) T)
@@ -231,7 +231,7 @@ symmetrised ergodic flow — the `toReal` of `dirichletForm_indicator`. -/
 theorem dirichletFormReal_indicator (P : Kernel Ω Ω) [IsMarkovKernel P] (pi : Measure Ω)
     [IsFiniteMeasure pi] {S : Set Ω} (hS : MeasurableSet S) :
     dirichletFormReal P pi (Set.indicator S (fun _ => (1 : ℝ)))
-      = ((flow P pi S Sᶜ).toReal + (flow P pi Sᶜ S).toReal) / 2 := by
+      = ((flow pi P S Sᶜ).toReal + (flow pi P Sᶜ S).toReal) / 2 := by
   rw [dirichletFormReal]
   congr 1
   rw [integral_congr_ae (Filter.Eventually.of_forall (integral_kernel_sub_indicator_sq P hS)),
@@ -243,16 +243,16 @@ theorem dirichletFormReal_indicator (P : Kernel Ω Ω) [IsMarkovKernel P] (pi : 
 /-- **The bridge (`item 1` of the brief).**  For a reversible chain the real Dirichlet form
 at an indicator is the escape flow:
 
-`E(1_S, 1_S) = (flow P pi S Sᶜ).toReal`.
+`E(1_S, 1_S) = (flow pi P S Sᶜ).toReal`.
 
 Together with `varianceReal_indicator` below this is what lets the Rayleigh quotient at an
-indicator be compared with `conductanceOn`, and hence what connects `spectralGap` to
-`conductance`.  It is the real-valued twin of `dirichletForm_indicator_of_isReversible`. -/
+indicator be compared with `conductance`, and hence what connects `spectralGap` to
+`globalConductance`.  It is the real-valued twin of `dirichletForm_indicator_of_isReversible`. -/
 theorem dirichletFormReal_indicator_of_isReversible {P : Kernel Ω Ω} [IsMarkovKernel P]
-    {pi : Measure Ω} [IsFiniteMeasure pi] (hrev : IsReversible P pi) {S : Set Ω}
+    {pi : Measure Ω} [IsFiniteMeasure pi] (hrev : Kernel.IsReversible P pi) {S : Set Ω}
     (hS : MeasurableSet S) :
-    dirichletFormReal P pi (Set.indicator S (fun _ => (1 : ℝ))) = (flow P pi S Sᶜ).toReal := by
-  rw [dirichletFormReal_indicator P pi hS, ← hrev S Sᶜ hS hS.compl]
+    dirichletFormReal P pi (Set.indicator S (fun _ => (1 : ℝ))) = (flow pi P S Sᶜ).toReal := by
+  rw [dirichletFormReal_indicator P pi hS, ← flow_comm_of_isReversible hrev hS hS.compl]
   ring
 
 /-! ## Variance
@@ -367,12 +367,12 @@ measurable `S` with `0 < pi S ≤ 1/2`,
 
 The proof is the indicator computation: `E(1_S,1_S) = Φ(S) · pi(S)` and
 `Var(1_S) = pi(S)(1 − pi(S)) ≥ pi(S)/2`. -/
-theorem spectralGap_le_two_mul_conductanceOn {P : Kernel Ω Ω} [IsMarkovKernel P]
-    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {S : Set Ω}
+theorem spectralGap_le_two_mul_conductance {P : Kernel Ω Ω} [IsMarkovKernel P]
+    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {S : Set Ω}
     (hS : MeasurableSet S) (hpos : 0 < pi S) (hhalf : pi S ≤ 1 / 2) :
-    spectralGap P pi ≤ 2 * (conductanceOn P pi S).toReal := by
+    spectralGap P pi ≤ 2 * (conductance pi P S).toReal := by
   set p : ℝ := (pi S).toReal with hp
-  set phi : ℝ := (conductanceOn P pi S).toReal with hphi
+  set phi : ℝ := (conductance pi P S).toReal with hphi
   have hpfin : pi S ≠ ⊤ := measure_ne_top pi S
   have hp0 : 0 < p := ENNReal.toReal_pos hpos.ne' hpfin
   have hphalf : p ≤ 1 / 2 := by
@@ -382,7 +382,7 @@ theorem spectralGap_le_two_mul_conductanceOn {P : Kernel Ω Ω} [IsMarkovKernel 
   -- the numerator
   have hnum : dirichletFormReal P pi (Set.indicator S (fun _ => (1 : ℝ))) = phi * p := by
     rw [dirichletFormReal_indicator_of_isReversible hrev hS,
-      ← flow_eq_conductanceOn_mul P pi hpos hpfin, ENNReal.toReal_mul]
+      ← flow_eq_conductance_mul pi P hpos hpfin, ENNReal.toReal_mul]
   -- the denominator
   have hden : varianceReal pi (Set.indicator S (fun _ => (1 : ℝ))) = p - p ^ 2 :=
     varianceReal_indicator hS
@@ -394,41 +394,41 @@ theorem spectralGap_le_two_mul_conductanceOn {P : Kernel Ω Ω} [IsMarkovKernel 
 
 /-- **The easy direction of Cheeger.**  `gap ≤ 2 Φ`, with both sides read in `ℝ≥0∞`.
 
-Stated as `ENNReal.ofReal (spectralGap P pi) ≤ 2 * conductance P pi` because `spectralGap`
-lives in `ℝ` and `conductance` in `ℝ≥0∞`; `spectralGap_le_two_mul_conductanceOn` is the
+Stated as `ENNReal.ofReal (spectralGap P pi) ≤ 2 * globalConductance pi` P because `spectralGap`
+lives in `ℝ` and `globalConductance` in `ℝ≥0∞`; `spectralGap_le_two_mul_conductance` is the
 per-set form with no coercion.  When no measurable set has measure in `(0, 1/2]` the right
-side is `⊤` (`conductance_eq_top_of_isEmpty`) and the statement is empty — which is the
+side is `⊤` (`globalConductance_eq_top_of_isEmpty`) and the statement is empty — which is the
 degenerate case the non-vacuity witness `spectralGap_const_piHalf` rules out. -/
-theorem ofReal_spectralGap_le_two_mul_conductance {P : Kernel Ω Ω} [IsMarkovKernel P]
-    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi) :
-    ENNReal.ofReal (spectralGap P pi) ≤ 2 * conductance P pi := by
-  have key : ENNReal.ofReal (spectralGap P pi) / 2 ≤ conductance P pi := by
-    refine le_conductance P pi fun S hS hpos hhalf => ?_
+theorem ofReal_spectralGap_le_two_mul_globalConductance {P : Kernel Ω Ω} [IsMarkovKernel P]
+    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) :
+    ENNReal.ofReal (spectralGap P pi) ≤ 2 * globalConductance pi P := by
+  have key : ENNReal.ofReal (spectralGap P pi) / 2 ≤ globalConductance pi P := by
+    refine le_globalConductance pi P fun S hS hpos hhalf => ?_
     refine ENNReal.div_le_of_le_mul ?_
-    have hle := spectralGap_le_two_mul_conductanceOn hrev hS hpos hhalf
-    have hfin : conductanceOn P pi S ≠ ⊤ :=
-      (conductanceOn_lt_top P pi hpos (measure_ne_top pi S)).ne
+    have hle := spectralGap_le_two_mul_conductance hrev hS hpos hhalf
+    have hfin : conductance pi P S ≠ ⊤ :=
+      (conductance_lt_top pi P hpos (measure_ne_top pi S)).ne
     calc ENNReal.ofReal (spectralGap P pi)
-        ≤ ENNReal.ofReal (2 * (conductanceOn P pi S).toReal) := ENNReal.ofReal_le_ofReal hle
-      _ = conductanceOn P pi S * 2 := by
+        ≤ ENNReal.ofReal (2 * (conductance pi P S).toReal) := ENNReal.ofReal_le_ofReal hle
+      _ = conductance pi P S * 2 := by
           rw [ENNReal.ofReal_mul (by norm_num), ENNReal.ofReal_toReal hfin]
           rw [mul_comm]
           norm_num
   calc ENNReal.ofReal (spectralGap P pi)
       = ENNReal.ofReal (spectralGap P pi) / 2 * 2 :=
         (ENNReal.div_mul_cancel (by norm_num) (by norm_num)).symm
-    _ ≤ conductance P pi * 2 := by gcongr
-    _ = 2 * conductance P pi := mul_comm _ _
+    _ ≤ globalConductance pi P * 2 := by gcongr
+    _ = 2 * globalConductance pi P := mul_comm _ _
 
 /-- **The spectral gap is at most `2`** — provided at least one measurable set has measure in
 `(0, 1/2]`, which is what makes the conductance infimum non-empty.  Immediate from the easy
-direction and `conductanceOn_le_one`. -/
+direction and `conductance_le_one`. -/
 theorem spectralGap_le_two {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω}
-    [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {S : Set Ω} (hS : MeasurableSet S)
+    [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {S : Set Ω} (hS : MeasurableSet S)
     (hpos : 0 < pi S) (hhalf : pi S ≤ 1 / 2) : spectralGap P pi ≤ 2 := by
-  refine (spectralGap_le_two_mul_conductanceOn hrev hS hpos hhalf).trans ?_
-  have h1 : (conductanceOn P pi S).toReal ≤ 1 :=
-    ENNReal.toReal_le_of_le_ofReal zero_le_one (by simpa using conductanceOn_le_one P pi S)
+  refine (spectralGap_le_two_mul_conductance hrev hS hpos hhalf).trans ?_
+  have h1 : (conductance pi P S).toReal ≤ 1 :=
+    ENNReal.toReal_le_of_le_ofReal zero_le_one (by simpa using conductance_le_one pi P S)
   linarith
 
 /-! ## A non-vacuity witness
@@ -438,7 +438,7 @@ bound `spectralGap ≤ 2 Φ` would then say nothing.  The instantly mixing kerne
 `Kernel.const Ω pi` settles this: for it the Dirichlet form *is* the variance, so the
 Rayleigh quotient is identically `1` and `spectralGap = 1` whenever a single admissible `f`
 exists.  On `Bool` with `piHalf` the conductance of that same kernel is exactly `1/2`
-(`conductance_const_piHalf`), so the easy direction reads `1 ≤ 2 · (1/2)` — an equality, so
+(`globalConductance_const_piHalf`), so the easy direction reads `1 ≤ 2 · (1/2)` — an equality, so
 the inequality is not merely non-vacuous but **tight**. -/
 
 /-- **For the instantly mixing kernel the Dirichlet form is the variance.**
@@ -512,15 +512,15 @@ theorem spectralGap_const_piHalf :
 
 /-- **The easy direction is tight, and not vacuous.**  For `Kernel.const Bool piHalf` the
 spectral gap is `1` (`spectralGap_const_piHalf`), the conductance is `1/2`
-(`conductance_const_piHalf`), and `ofReal_spectralGap_le_two_mul_conductance` reads
+(`globalConductance_const_piHalf`), and `ofReal_spectralGap_le_two_mul_globalConductance` reads
 `1 ≤ 2 · (1/2)` — with equality.
 
 This is the check the non-vacuity rule asks for: the inequality relates two quantities that are
 both computed, both finite, and both nonzero on a concrete chain. -/
-theorem spectralGap_eq_two_mul_conductance_const_piHalf :
+theorem spectralGap_eq_two_mul_globalConductance_const_piHalf :
     ENNReal.ofReal (spectralGap (Kernel.const Bool piHalf) piHalf)
-      = 2 * conductance (Kernel.const Bool piHalf) piHalf := by
-  rw [spectralGap_const_piHalf, conductance_const_piHalf, ENNReal.ofReal_one, mul_one_div,
+      = 2 * globalConductance piHalf (Kernel.const Bool piHalf) := by
+  rw [spectralGap_const_piHalf, globalConductance_const_piHalf, ENNReal.ofReal_one, mul_one_div,
     ENNReal.div_self (by norm_num) (by norm_num)]
 
 /-- The witness in the form the vacuity check wants: a reversible chain on which the
@@ -528,13 +528,13 @@ spectral gap, the conductance and the easy direction of Cheeger are all simultan
 non-degenerate. -/
 theorem exists_spectralGap_pos :
     ∃ (Om : Type) (_ : MeasurableSpace Om) (P : Kernel Om Om) (pi : Measure Om),
-      IsMarkovKernel P ∧ IsProbabilityMeasure pi ∧ IsReversible P pi ∧
-        0 < spectralGap P pi ∧ conductance P pi = 1 / 2 ∧
-        ENNReal.ofReal (spectralGap P pi) ≤ 2 * conductance P pi := by
+      IsMarkovKernel P ∧ IsProbabilityMeasure pi ∧ Kernel.IsReversible P pi ∧
+        0 < spectralGap P pi ∧ globalConductance pi P = 1 / 2 ∧
+        ENNReal.ofReal (spectralGap P pi) ≤ 2 * globalConductance pi P := by
   refine ⟨Bool, inferInstance, Kernel.const Bool piHalf, piHalf, inferInstance, inferInstance,
-    isReversible_const piHalf, ?_, conductance_const_piHalf, ?_⟩
+    isReversible_const piHalf, ?_, globalConductance_const_piHalf, ?_⟩
   · rw [spectralGap_const_piHalf]; norm_num
-  · exact spectralGap_eq_two_mul_conductance_const_piHalf.le
+  · exact spectralGap_eq_two_mul_globalConductance_const_piHalf.le
 
 /-! ## The hard direction — the road map
 
@@ -556,20 +556,20 @@ positive and negative parts `g, h ≥ 0`, each supported on a set of `pi`-measur
    `∫∫ |g(x) − g(y)| d(pi ⊗ₘ P) = ∫_0^∞ (flow(S_t, S_tᶜ) + flow(S_tᶜ, S_t)) dt
    ≥ 2 phi ∫_0^∞ pi(S_t) dt = 2 phi ∫ g dpi`, with `S_t = {x | t < g x}` —
    `lintegral_Ioi_flow_add_flow` (the identity) and
-   `two_mul_conductance_mul_lintegral_le_lintegral_abs_sub` (the inequality).  Applied to
+   `two_mul_globalConductance_mul_lintegral_le_lintegral_abs_sub` (the inequality).  Applied to
    `g²` in place of `g` this is the `2 phi ∫ g²` the argument wants.
 4. Cauchy–Schwarz: `∫∫ |g(x)² − g(y)²| ≤ (∫∫ (g x − g y)²)^{1/2} (∫∫ (g x + g y)²)^{1/2}
    ≤ (2 E(g,g))^{1/2} (4 ∫ g²)^{1/2}`, whence `E(g,g) ≥ (phi²/2) ∫ g²` —
-   `sq_conductance_mul_lintegral_sq_le_lintegral_sub_sq`, using Hölder with `p = q = 2`
+   `sq_globalConductance_mul_lintegral_sq_le_lintegral_sub_sq`, using Hölder with `p = q = 2`
    (`ENNReal.lintegral_mul_le_Lp_mul_Lq`) and the `ℝ≥0∞`/Bochner bridge
    `ofReal_two_mul_dirichletFormReal`.
-5. Assembling 1–4 over every admissible `f`: `sq_conductance_div_two_le_spectralGap`.
+5. Assembling 1–4 over every admissible `f`: `sq_globalConductance_div_two_le_spectralGap`.
 
 What is new relative to Mathlib v4.32, and reusable independently of Cheeger, is the
 co-area section (`lintegral_Ioi_abs_sub_indicator_lt`, `measurable_abs_sub_indicator_lt`,
 `lintegral_Ioi_flow_add_flow`), the `L¹` and `L²` isoperimetric inequalities
-(`two_mul_conductance_mul_lintegral_le_lintegral_abs_sub`,
-`sq_conductance_mul_lintegral_sq_le_lintegral_sub_sq`), and `exists_median`. -/
+(`two_mul_globalConductance_mul_lintegral_le_lintegral_abs_sub`,
+`sq_globalConductance_mul_lintegral_sq_le_lintegral_sub_sq`), and `exists_median`. -/
 
 /-- **`Var f ≤ ∫ (f − c)²` for every constant `c`.**  Immediate from Mathlib
 (`variance_sub_const` plus `variance_le_expectation_sq`), and the first step of the hard
@@ -621,7 +621,7 @@ bottom up:
    Tonelli exchange.
 3. `lintegral_Ioi_flow_add_flow` — the co-area identity itself.
 
-Nothing here mentions `spectralGap` or `conductance`; these are statements about a
+Nothing here mentions `spectralGap` or `globalConductance`; these are statements about a
 nonnegative measurable `g` and the flows across its level sets. -/
 
 /-- **The one-dimensional layer-cake identity, ordered case.**  For `0 ≤ a ≤ b` the half-line
@@ -709,13 +709,13 @@ theorem measurable_abs_sub_indicator_lt {g : Ω → ℝ} (hg : Measurable g) :
 
 /-- **The two-sided flow across a set is a `compProd` integral.**  For a measurable `S`,
 
-`flow S Sᶜ + flow Sᶜ S = ∫ |1_S(x) − 1_S(y)| d(pi ⊗ₘ P)(x, y)`,
+`flow Sᶜ S + flow S Sᶜ = ∫ |1_S(x) − 1_S(y)| d(pi ⊗ₘ P)(x, y)`,
 
 because `(x, y) ↦ |1_S x − 1_S y|` is the indicator of `(S × Sᶜ) ∪ (Sᶜ × S)`, and
 `Measure.compProd_apply_prod` reads the measure of a rectangle as a flow. -/
-theorem flow_add_flow_compl_eq_lintegral_compProd (P : Kernel Ω Ω) [IsMarkovKernel P]
-    (pi : Measure Ω) [IsProbabilityMeasure pi] {S : Set Ω} (hS : MeasurableSet S) :
-    flow P pi S Sᶜ + flow P pi Sᶜ S
+theorem flow_add_flow_compl_eq_lintegral_compProd (pi : Measure Ω) (P : Kernel Ω Ω) [IsMarkovKernel P]
+     [IsProbabilityMeasure pi] {S : Set Ω} (hS : MeasurableSet S) :
+    flow pi P S Sᶜ + flow pi P Sᶜ S
       = ∫⁻ p, ENNReal.ofReal |Set.indicator S (fun _ => (1 : ℝ)) p.1
           - Set.indicator S (fun _ => (1 : ℝ)) p.2| ∂(pi ⊗ₘ P) := by
   have hsplit : (fun p : Ω × Ω => ENNReal.ofReal |Set.indicator S (fun _ => (1 : ℝ)) p.1
@@ -735,7 +735,7 @@ theorem flow_add_flow_compl_eq_lintegral_compProd (P : Kernel Ω Ω) [IsMarkovKe
 the level set `S_t = {x | t < g x}` over all levels `t > 0` recovers the mean absolute
 increment of `g` under one step of the chain:
 
-`∫_0^∞ (flow S_t S_tᶜ + flow S_tᶜ S_t) dt = ∫ |g x − g y| d(pi ⊗ₘ P)(x, y)`.
+`∫_0^∞ (flow S_tᶜ S_t + flow S_t S_tᶜ) dt = ∫ |g x − g y| d(pi ⊗ₘ P)(x, y)`.
 
 This is the identity the hard direction of Cheeger turns on, and it is the piece Mathlib
 v4.32 does not have: the layer cake `lintegral_comp_eq_lintegral_meas_lt` handles a single
@@ -750,22 +750,22 @@ integral is `lintegral_Ioi_abs_sub_indicator_lt`, which is where `g ≥ 0` is us
 
 Note this is an *identity*, not an estimate: no reversibility, no conductance, nothing about
 the spectral gap. -/
-theorem lintegral_Ioi_flow_add_flow (P : Kernel Ω Ω) [IsMarkovKernel P] (pi : Measure Ω)
+theorem lintegral_Ioi_flow_add_flow (pi : Measure Ω) (P : Kernel Ω Ω) [IsMarkovKernel P] 
     [IsProbabilityMeasure pi] {g : Ω → ℝ} (hg : Measurable g) (hg0 : ∀ x, 0 ≤ g x) :
     ∫⁻ t in Set.Ioi (0 : ℝ),
-        (flow P pi {x | t < g x} {x | t < g x}ᶜ + flow P pi {x | t < g x}ᶜ {x | t < g x})
+        (flow pi P {x | t < g x} {x | t < g x}ᶜ + flow pi P {x | t < g x}ᶜ {x | t < g x})
       = ∫⁻ p, ENNReal.ofReal |g p.1 - g p.2| ∂(pi ⊗ₘ P) := by
   have hFmeas : Measurable (Function.uncurry fun (t : ℝ) (p : Ω × Ω) => ENNReal.ofReal
       |(if t < g p.1 then (1 : ℝ) else 0) - (if t < g p.2 then (1 : ℝ) else 0)|) :=
     measurable_abs_sub_indicator_lt hg
-  have hA : ∀ t : ℝ, flow P pi {x | t < g x} {x | t < g x}ᶜ
-        + flow P pi {x | t < g x}ᶜ {x | t < g x}
+  have hA : ∀ t : ℝ, flow pi P {x | t < g x} {x | t < g x}ᶜ
+        + flow pi P {x | t < g x}ᶜ {x | t < g x}
       = ∫⁻ p, ENNReal.ofReal
           |(if t < g p.1 then (1 : ℝ) else 0) - (if t < g p.2 then (1 : ℝ) else 0)|
           ∂(pi ⊗ₘ P) := by
     intro t
     have hS : MeasurableSet {x : Ω | t < g x} := measurableSet_lt measurable_const hg
-    rw [flow_add_flow_compl_eq_lintegral_compProd P pi hS]
+    rw [flow_add_flow_compl_eq_lintegral_compProd pi P hS]
     refine lintegral_congr fun p => ?_
     by_cases h1 : t < g p.1 <;> by_cases h2 : t < g p.2 <;>
       simp [Set.mem_setOf_eq, h1, h2]
@@ -774,19 +774,19 @@ theorem lintegral_Ioi_flow_add_flow (P : Kernel Ω Ω) [IsMarkovKernel P] (pi : 
   exact lintegral_congr fun p => lintegral_Ioi_abs_sub_indicator_lt (hg0 p.1) (hg0 p.2)
 
 /-- **The conductance bounds every small set's escape flow from below**:
-`Φ · pi(S) ≤ flow(S, Sᶜ)` whenever `pi S ≤ 1/2`.
+`Φ · pi(S) ≤ flow`(S, Sᶜ) whenever `pi S ≤ 1/2`.
 
-This is `conductance_le_conductanceOn` cleared of its denominator by
-`flow_eq_conductanceOn_mul`.  The `pi S = 0` case needs no positivity hypothesis because
+This is `globalConductance_le_conductance` cleared of its denominator by
+`flow_eq_conductance_mul`.  The `pi S = 0` case needs no positivity hypothesis because
 `Φ · 0 = 0` in `ℝ≥0∞` even for `Φ = ⊤`. -/
-theorem conductance_mul_measure_le_flow (P : Kernel Ω Ω) (pi : Measure Ω)
+theorem globalConductance_mul_measure_le_flow (pi : Measure Ω) (P : Kernel Ω Ω) 
     [IsProbabilityMeasure pi] {S : Set Ω} (hS : MeasurableSet S) (hhalf : pi S ≤ 1 / 2) :
-    conductance P pi * pi S ≤ flow P pi S Sᶜ := by
+    globalConductance pi P * pi S ≤ flow pi P S Sᶜ := by
   rcases eq_zero_or_pos (pi S) with h | h
   · simp [h]
-  · rw [← flow_eq_conductanceOn_mul P pi h (measure_ne_top pi S)]
+  · rw [← flow_eq_conductance_mul pi P h (measure_ne_top pi S)]
     gcongr
-    exact conductance_le_conductanceOn P pi hS h hhalf
+    exact globalConductance_le_conductance pi P hS h hhalf
 
 /-- **The `L¹` isoperimetric inequality for a reversible chain.**  For a measurable `g ≥ 0`
 whose support has `pi`-measure at most `1/2`,
@@ -794,8 +794,8 @@ whose support has `pi`-measure at most `1/2`,
 `2 Φ ∫ g dpi ≤ ∫ |g x − g y| d(pi ⊗ₘ P)(x, y)`.
 
 Every level set `S_t = {x | t < g x}` with `t > 0` sits inside `{g > 0}` and so is small
-enough for the conductance bound `Φ · pi(S_t) ≤ flow(S_t, S_tᶜ)`
-(`conductance_mul_measure_le_flow`); detailed balance makes the reverse flow equal to the
+enough for the conductance bound `Φ · pi(S_t) ≤ flow`(S_t, S_tᶜ)
+(`globalConductance_mul_measure_le_flow`); detailed balance makes the reverse flow equal to the
 forward one, doubling the constant.  Integrating over `t` and applying the layer cake
 `lintegral_eq_lintegral_meas_lt` on the left and the co-area formula
 `lintegral_Ioi_flow_add_flow` on the right gives the claim.
@@ -805,13 +805,13 @@ true (both sides `⊤`) when `g` is not integrable.
 
 This is *not* the Cheeger inequality: it bounds an `L¹` quantity, and the `L²` statement
 `Φ²/2 ≤ gap` needs it applied to `g²` together with Cauchy–Schwarz — see the closing note. -/
-theorem two_mul_conductance_mul_lintegral_le_lintegral_abs_sub {P : Kernel Ω Ω}
-    [IsMarkovKernel P] {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+theorem two_mul_globalConductance_mul_lintegral_le_lintegral_abs_sub {P : Kernel Ω Ω}
+    [IsMarkovKernel P] {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     {g : Ω → ℝ} (hg : Measurable g) (hg0 : ∀ x, 0 ≤ g x)
     (hsupp : pi {x | 0 < g x} ≤ 1 / 2) :
-    2 * conductance P pi * ∫⁻ x, ENNReal.ofReal (g x) ∂pi
+    2 * globalConductance pi P * ∫⁻ x, ENNReal.ofReal (g x) ∂pi
       ≤ ∫⁻ p, ENNReal.ofReal |g p.1 - g p.2| ∂(pi ⊗ₘ P) := by
-  rw [← lintegral_Ioi_flow_add_flow P pi hg hg0,
+  rw [← lintegral_Ioi_flow_add_flow pi P hg hg0,
     lintegral_eq_lintegral_meas_lt pi (Filter.Eventually.of_forall hg0) hg.aemeasurable]
   refine le_trans (lintegral_const_mul_le _ _) (lintegral_mono_ae ?_)
   filter_upwards [self_mem_ae_restrict measurableSet_Ioi] with t ht
@@ -821,16 +821,16 @@ theorem two_mul_conductance_mul_lintegral_le_lintegral_abs_sub {P : Kernel Ω Ω
     simp only [Set.mem_setOf_eq] at hx ⊢
     exact lt_trans ht hx
   have hhalf : pi {x : Ω | t < g x} ≤ 1 / 2 := le_trans (measure_mono hsub) hsupp
-  have hflow := conductance_mul_measure_le_flow P pi hS hhalf
-  rw [hrev {x : Ω | t < g x}ᶜ {x : Ω | t < g x} hS.compl hS]
-  calc 2 * conductance P pi * pi {x : Ω | t < g x}
-      = conductance P pi * pi {x : Ω | t < g x}
-        + conductance P pi * pi {x : Ω | t < g x} := by ring
+  have hflow := globalConductance_mul_measure_le_flow pi P hS hhalf
+  rw [flow_comm_of_isReversible hrev hS.compl hS]
+  calc 2 * globalConductance pi P * pi {x : Ω | t < g x}
+      = globalConductance pi P * pi {x : Ω | t < g x}
+        + globalConductance pi P * pi {x : Ω | t < g x} := by ring
     _ ≤ _ := add_le_add hflow hflow
 
 /-! ### A non-vacuity witness for the `L¹` isoperimetric inequality
 
-`two_mul_conductance_mul_lintegral_le_lintegral_abs_sub` is a `∀`-statement, so it would be
+`two_mul_globalConductance_mul_lintegral_le_lintegral_abs_sub` is a `∀`-statement, so it would be
 worthless if its hypotheses were unsatisfiable, or if both sides were `0` (or both `⊤`) on
 every chain that satisfies them.  On `Kernel.const Bool piHalf` with `g = 1_{true}` all the
 hypotheses hold and **both sides are exactly `1/2`**: the inequality is attained. -/
@@ -870,27 +870,27 @@ theorem lintegral_abs_sub_indicator_compProd_piHalf :
 /-- **The `L¹` isoperimetric inequality is attained, hence not vacuous**.
 On `Kernel.const Bool piHalf` with `g = 1_{true}` — a reversible chain, a nonnegative
 measurable `g`, and `pi {g > 0} = 1/2` — both sides of
-`two_mul_conductance_mul_lintegral_le_lintegral_abs_sub` equal `1/2`.
+`two_mul_globalConductance_mul_lintegral_le_lintegral_abs_sub` equal `1/2`.
 
 So the inequality relates two quantities that are simultaneously finite and nonzero on a
 concrete chain, and its constant `2 Φ` cannot be improved. -/
-theorem two_mul_conductance_mul_lintegral_eq_lintegral_abs_sub_piHalf :
-    2 * conductance (Kernel.const Bool piHalf) piHalf
+theorem two_mul_globalConductance_mul_lintegral_eq_lintegral_abs_sub_piHalf :
+    2 * globalConductance piHalf (Kernel.const Bool piHalf)
         * ∫⁻ x, ENNReal.ofReal (Set.indicator ({true} : Set Bool) (fun _ => (1 : ℝ)) x) ∂piHalf
       = ∫⁻ p, ENNReal.ofReal |Set.indicator ({true} : Set Bool) (fun _ => (1 : ℝ)) p.1
           - Set.indicator ({true} : Set Bool) (fun _ => (1 : ℝ)) p.2|
         ∂(piHalf ⊗ₘ Kernel.const Bool piHalf) := by
-  rw [conductance_const_piHalf, lintegral_ofReal_indicator_piHalf,
+  rw [globalConductance_const_piHalf, lintegral_ofReal_indicator_piHalf,
     lintegral_abs_sub_indicator_compProd_piHalf]
   rw [ENNReal.mul_div_cancel' (by norm_num) (by norm_num), one_mul]
 
-/-- The hypotheses of `two_mul_conductance_mul_lintegral_le_lintegral_abs_sub` are
+/-- The hypotheses of `two_mul_globalConductance_mul_lintegral_le_lintegral_abs_sub` are
 satisfiable, with both sides positive and finite. -/
 theorem exists_isoperimetric_witness :
     ∃ (Om : Type) (_ : MeasurableSpace Om) (P : Kernel Om Om) (pi : Measure Om) (g : Om → ℝ),
-      ∃ (_ : IsMarkovKernel P) (_ : IsProbabilityMeasure pi), IsReversible P pi ∧
+      ∃ (_ : IsMarkovKernel P) (_ : IsProbabilityMeasure pi), Kernel.IsReversible P pi ∧
         Measurable g ∧ (∀ x, 0 ≤ g x) ∧ pi {x | 0 < g x} ≤ 1 / 2 ∧
-        2 * conductance P pi * ∫⁻ x, ENNReal.ofReal (g x) ∂pi = 1 / 2 ∧
+        2 * globalConductance pi P * ∫⁻ x, ENNReal.ofReal (g x) ∂pi = 1 / 2 ∧
         ∫⁻ p, ENNReal.ofReal |g p.1 - g p.2| ∂(pi ⊗ₘ P) = 1 / 2 := by
   refine ⟨Bool, inferInstance, Kernel.const Bool piHalf, piHalf,
     Set.indicator ({true} : Set Bool) (fun _ => (1 : ℝ)), inferInstance, inferInstance,
@@ -901,7 +901,7 @@ theorem exists_isoperimetric_witness :
         = ({true} : Set Bool) := by
       ext x; cases x <;> simp
     rw [hset, piHalf_singleton]
-  · rw [conductance_const_piHalf, lintegral_ofReal_indicator_piHalf,
+  · rw [globalConductance_const_piHalf, lintegral_ofReal_indicator_piHalf,
       ENNReal.mul_div_cancel' (by norm_num) (by norm_num), one_mul]
 
 /-! ## Medians
@@ -1087,7 +1087,7 @@ theorem lintegral_compProd_fst (P : Kernel Ω Ω) [IsMarkovKernel P] (pi : Measu
   simp
 
 /-- **The second marginal of `pi ⊗ₘ P` is `pi`**, exactly when `pi` is invariant.  This is
-the only use of stationarity in the `L²` step; `IsReversible.invariant` supplies it for a
+the only use of stationarity in the `L²` step; `Kernel.IsReversible.invariant` supplies it for a
 reversible chain. -/
 theorem lintegral_compProd_snd_of_invariant {P : Kernel Ω Ω} [IsMarkovKernel P]
     {pi : Measure Ω} [IsProbabilityMeasure pi] (hinv : Kernel.Invariant P pi) {F : Ω → ℝ≥0∞}
@@ -1223,11 +1223,11 @@ needed, being what licenses cancelling that factor.
 This is still *not* the Cheeger inequality: it is a statement about one nonnegative `g`, not
 about the spectral gap, and the passage to the Bochner Dirichlet form is
 `ofReal_two_mul_dirichletFormReal`. -/
-theorem sq_conductance_mul_lintegral_sq_le_lintegral_sub_sq {P : Kernel Ω Ω} [IsMarkovKernel P]
-    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi) {g : Ω → ℝ}
+theorem sq_globalConductance_mul_lintegral_sq_le_lintegral_sub_sq {P : Kernel Ω Ω} [IsMarkovKernel P]
+    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi) {g : Ω → ℝ}
     (hg : Measurable g) (hg0 : ∀ x, 0 ≤ g x) (hsupp : pi {x | 0 < g x} ≤ 1 / 2)
     (hA : ∫⁻ x, ENNReal.ofReal (g x ^ 2) ∂pi ≠ ⊤) :
-    conductance P pi ^ 2 * ∫⁻ x, ENNReal.ofReal (g x ^ 2) ∂pi
+    globalConductance pi P ^ 2 * ∫⁻ x, ENNReal.ofReal (g x ^ 2) ∂pi
       ≤ ∫⁻ p, ENNReal.ofReal ((g p.1 - g p.2) ^ 2) ∂(pi ⊗ₘ P) := by
   -- the support of `g²` is the support of `g`
   have hset : {x : Ω | 0 < g x ^ 2} = {x : Ω | 0 < g x} := by
@@ -1240,7 +1240,7 @@ theorem sq_conductance_mul_lintegral_sq_le_lintegral_sub_sq {P : Kernel Ω Ω} [
       simp [this] at h
     · intro h; positivity
   -- the `L¹` inequality applied to `g²`
-  have hL1 := two_mul_conductance_mul_lintegral_le_lintegral_abs_sub hrev (hg.pow_const 2)
+  have hL1 := two_mul_globalConductance_mul_lintegral_le_lintegral_abs_sub hrev (hg.pow_const 2)
     (fun x => sq_nonneg _) (by rw [hset]; exact hsupp)
   -- factor `|a² − b²| = |a − b| (a + b)`
   have hfac : ∀ p : Ω × Ω, ENNReal.ofReal |g p.1 ^ 2 - g p.2 ^ 2|
@@ -1270,7 +1270,7 @@ theorem sq_conductance_mul_lintegral_sq_le_lintegral_sub_sq {P : Kernel Ω Ω} [
   simp only [hpow1, hpow2] at hCS
   -- assemble
   refine sq_mul_le_of_two_mul_le hA ?_ (lintegral_add_sq_le_four_mul hrev.invariant hg)
-  calc 2 * conductance P pi * ∫⁻ x, ENNReal.ofReal (g x ^ 2) ∂pi
+  calc 2 * globalConductance pi P * ∫⁻ x, ENNReal.ofReal (g x ^ 2) ∂pi
       ≤ ∫⁻ p, ENNReal.ofReal |g p.1 ^ 2 - g p.2 ^ 2| ∂(pi ⊗ₘ P) := hL1
     _ = ∫⁻ p, ENNReal.ofReal |g p.1 - g p.2| * ENNReal.ofReal (g p.1 + g p.2) ∂(pi ⊗ₘ P) :=
         lintegral_congr hfac
@@ -1364,26 +1364,26 @@ conductance and a measurable `g ≥ 0` in `L²(pi)` supported on a set of measur
 
 `Φ² ∫ g² dpi ≤ 2 E(g, g)`.
 
-This is `sq_conductance_mul_lintegral_sq_le_lintegral_sub_sq` transported through the `L²`
+This is `sq_globalConductance_mul_lintegral_sq_le_lintegral_sub_sq` transported through the `L²`
 bridge `ofReal_two_mul_dirichletFormReal`; the integrability side condition is discharged by
 `integrable_sq_sub_compProd`, so no new hypothesis appears.
 
 `Φ ≠ ⊤` is needed only to read `Φ` as a real number: `Φ = ⊤` happens exactly when no
-measurable set has measure in `(0, 1/2]` (`conductance_eq_top_of_isEmpty`), and then
+measurable set has measure in `(0, 1/2]` (`globalConductance_eq_top_of_isEmpty`), and then
 `Φ.toReal = 0` and the statement is trivially true anyway. -/
-theorem sq_conductance_mul_integral_sq_le_two_mul_dirichletFormReal {P : Kernel Ω Ω}
-    [IsMarkovKernel P] {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+theorem sq_globalConductance_mul_integral_sq_le_two_mul_dirichletFormReal {P : Kernel Ω Ω}
+    [IsMarkovKernel P] {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     {g : Ω → ℝ} (hg : Measurable g) (hg0 : ∀ x, 0 ≤ g x) (hmem : MemLp g 2 pi)
-    (hsupp : pi {x | 0 < g x} ≤ 1 / 2) (hfin : conductance P pi ≠ ⊤) :
-    (conductance P pi).toReal ^ 2 * ∫ x, g x ^ 2 ∂pi ≤ 2 * dirichletFormReal P pi g := by
-  have hkey := sq_conductance_mul_lintegral_sq_le_lintegral_sub_sq hrev hg hg0 hsupp
+    (hsupp : pi {x | 0 < g x} ≤ 1 / 2) (hfin : globalConductance pi P ≠ ⊤) :
+    (globalConductance pi P).toReal ^ 2 * ∫ x, g x ^ 2 ∂pi ≤ 2 * dirichletFormReal P pi g := by
+  have hkey := sq_globalConductance_mul_lintegral_sq_le_lintegral_sub_sq hrev hg hg0 hsupp
     (lintegral_sq_ne_top_of_memLp hmem)
   rw [← ofReal_two_mul_dirichletFormReal P pi
       (integrable_sq_sub_compProd hrev.invariant hg hmem),
     ← ofReal_integral_eq_lintegral_ofReal hmem.integrable_sq
       (Filter.Eventually.of_forall fun x => sq_nonneg _),
-    show conductance P pi ^ 2
-        = ENNReal.ofReal ((conductance P pi).toReal ^ 2) by
+    show globalConductance pi P ^ 2
+        = ENNReal.ofReal ((globalConductance pi P).toReal ^ 2) by
       rw [ENNReal.ofReal_pow ENNReal.toReal_nonneg, ENNReal.ofReal_toReal hfin],
     ← ENNReal.ofReal_mul (by positivity),
     ENNReal.ofReal_le_ofReal_iff (by linarith [dirichletFormReal_nonneg P pi g])] at hkey
@@ -1410,13 +1410,13 @@ add up to at most `E(f,f)` (`dirichletFormReal_posPart_add_negPart_le`, using th
 Dirichlet form ignores the shift).
 
 `Measurable f` — rather than just `AEStronglyMeasurable` — is needed for `exists_median`;
-`sq_conductance_div_two_le_rayleighQuotient` removes it by passing to a measurable
+`sq_globalConductance_div_two_le_rayleighQuotient` removes it by passing to a measurable
 representative. -/
-theorem sq_conductance_div_two_le_rayleighQuotient_of_measurable {P : Kernel Ω Ω}
-    [IsMarkovKernel P] {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
-    (hfin : conductance P pi ≠ ⊤) {f : Ω → ℝ} (hf : Measurable f) (hmem : MemLp f 2 pi)
+theorem sq_globalConductance_div_two_le_rayleighQuotient_of_measurable {P : Kernel Ω Ω}
+    [IsMarkovKernel P] {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
+    (hfin : globalConductance pi P ≠ ⊤) {f : Ω → ℝ} (hf : Measurable f) (hmem : MemLp f 2 pi)
     (hv : varianceReal pi f ≠ 0) :
-    (conductance P pi).toReal ^ 2 / 2 ≤ rayleighQuotient P pi f := by
+    (globalConductance pi P).toReal ^ 2 / 2 ≤ rayleighQuotient P pi f := by
   obtain ⟨m, hm1, hm2⟩ := exists_median (pi := pi) hf
   set u : Ω → ℝ := fun x => f x - m with hudef
   have hum : Measurable u := hf.sub measurable_const
@@ -1453,13 +1453,13 @@ theorem sq_conductance_div_two_le_rayleighQuotient_of_measurable {P : Kernel Ω 
       ≤ dirichletFormReal P pi f :=
     hue ▸ dirichletFormReal_posPart_add_negPart_le hrev.invariant hum humem
   -- the `L²` isoperimetric inequality on each half
-  have hgineq := sq_conductance_mul_integral_sq_le_two_mul_dirichletFormReal hrev hgm hg0
+  have hgineq := sq_globalConductance_mul_integral_sq_le_two_mul_dirichletFormReal hrev hgm hg0
     hgmem hgsupp hfin
-  have hhineq := sq_conductance_mul_integral_sq_le_two_mul_dirichletFormReal hrev hhm hh0
+  have hhineq := sq_globalConductance_mul_integral_sq_le_two_mul_dirichletFormReal hrev hhm hh0
     hhmem hhsupp hfin
   have hvpos : 0 < varianceReal pi f := (varianceReal_nonneg pi f).lt_of_ne (Ne.symm hv)
   rw [rayleighQuotient, div_le_div_iff₀ (by norm_num) hvpos]
-  nlinarith [mul_le_mul_of_nonneg_left hvar (sq_nonneg (conductance P pi).toReal)]
+  nlinarith [mul_le_mul_of_nonneg_left hvar (sq_nonneg (globalConductance pi P).toReal)]
 
 /-! ### From a measurable `f` to an arbitrary `f ∈ L²(pi)`
 
@@ -1507,13 +1507,13 @@ theorem rayleighQuotient_congr_ae {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Me
 
 `Φ²/2 ≤ E(f,f) / Var(f)`.
 
-`sq_conductance_div_two_le_rayleighQuotient_of_measurable` with the measurability removed by
+`sq_globalConductance_div_two_le_rayleighQuotient_of_measurable` with the measurability removed by
 `rayleighQuotient_congr_ae`. -/
-theorem sq_conductance_div_two_le_rayleighQuotient {P : Kernel Ω Ω} [IsMarkovKernel P]
-    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
-    (hfin : conductance P pi ≠ ⊤) {f : Ω → ℝ} (hmem : MemLp f 2 pi)
+theorem sq_globalConductance_div_two_le_rayleighQuotient {P : Kernel Ω Ω} [IsMarkovKernel P]
+    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
+    (hfin : globalConductance pi P ≠ ⊤) {f : Ω → ℝ} (hmem : MemLp f 2 pi)
     (hv : varianceReal pi f ≠ 0) :
-    (conductance P pi).toReal ^ 2 / 2 ≤ rayleighQuotient P pi f := by
+    (globalConductance pi P).toReal ^ 2 / 2 ≤ rayleighQuotient P pi f := by
   have hff : f =ᵐ[pi] hmem.aestronglyMeasurable.mk f := hmem.aestronglyMeasurable.ae_eq_mk
   have hf'm : Measurable (hmem.aestronglyMeasurable.mk f) :=
     hmem.aestronglyMeasurable.stronglyMeasurable_mk.measurable
@@ -1521,7 +1521,7 @@ theorem sq_conductance_div_two_le_rayleighQuotient {P : Kernel Ω Ω} [IsMarkovK
   have hv' : varianceReal pi (hmem.aestronglyMeasurable.mk f) ≠ 0 := by
     rwa [varianceReal, ← ProbabilityTheory.variance_congr hff]
   rw [rayleighQuotient_congr_ae hrev.invariant hff]
-  exact sq_conductance_div_two_le_rayleighQuotient_of_measurable hrev hfin hf'm hf'mem hv'
+  exact sq_globalConductance_div_two_le_rayleighQuotient_of_measurable hrev hfin hf'm hf'mem hv'
 
 /-! ## The hard direction of Cheeger -/
 
@@ -1541,24 +1541,24 @@ No hypothesis here mentions the spectral gap, the conductance, or an isoperimetr
 the ingredients are the co-area formula, the `L¹` isoperimetric inequality, a median, and
 Cauchy–Schwarz, each proved above.
 
-Together with `ofReal_spectralGap_le_two_mul_conductance` this is the two-sided Cheeger
+Together with `ofReal_spectralGap_le_two_mul_globalConductance` this is the two-sided Cheeger
 inequality `Φ²/2 ≤ gap ≤ 2 Φ`. -/
-theorem sq_conductance_div_two_le_spectralGap {P : Kernel Ω Ω} [IsMarkovKernel P]
-    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
+theorem sq_globalConductance_div_two_le_spectralGap {P : Kernel Ω Ω} [IsMarkovKernel P]
+    {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : Kernel.IsReversible P pi)
     (hne : (rayleighSet P pi).Nonempty) :
-    (conductance P pi).toReal ^ 2 / 2 ≤ spectralGap P pi := by
-  rcases eq_or_ne (conductance P pi) ⊤ with hc | hc
+    (globalConductance pi P).toReal ^ 2 / 2 ≤ spectralGap P pi := by
+  rcases eq_or_ne (globalConductance pi P) ⊤ with hc | hc
   · simpa [hc] using spectralGap_nonneg P pi
   exact le_spectralGap P pi hne fun f hf hv =>
-    sq_conductance_div_two_le_rayleighQuotient hrev hc hf hv
+    sq_globalConductance_div_two_le_rayleighQuotient hrev hc hf hv
 
 /-- **Cheeger's inequality, both directions.**  `Φ²/2 ≤ gap ≤ 2 Φ`. -/
 theorem cheeger {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω} [IsProbabilityMeasure pi]
-    (hrev : IsReversible P pi) (hne : (rayleighSet P pi).Nonempty) :
-    (conductance P pi).toReal ^ 2 / 2 ≤ spectralGap P pi ∧
-      ENNReal.ofReal (spectralGap P pi) ≤ 2 * conductance P pi :=
-  ⟨sq_conductance_div_two_le_spectralGap hrev hne,
-    ofReal_spectralGap_le_two_mul_conductance hrev⟩
+    (hrev : Kernel.IsReversible P pi) (hne : (rayleighSet P pi).Nonempty) :
+    (globalConductance pi P).toReal ^ 2 / 2 ≤ spectralGap P pi ∧
+      ENNReal.ofReal (spectralGap P pi) ≤ 2 * globalConductance pi P :=
+  ⟨sq_globalConductance_div_two_le_spectralGap hrev hne,
+    ofReal_spectralGap_le_two_mul_globalConductance hrev⟩
 
 /-! ### A non-vacuity witness for the hard direction
 
@@ -1579,14 +1579,14 @@ theorem rayleighSet_const_piHalf_nonempty :
 /-- **The hard direction is non-vacuous.**  On `Kernel.const Bool piHalf` the conductance is
 `1/2` and the spectral gap is `1`, so `Φ²/2 ≤ gap` reads `1/8 ≤ 1`: both sides are finite,
 the left one is nonzero, and the hypotheses are all satisfied. -/
-theorem sq_conductance_div_two_le_spectralGap_const_piHalf :
-    ((conductance (Kernel.const Bool piHalf) piHalf).toReal) ^ 2 / 2 = 1 / 8 ∧
+theorem sq_globalConductance_div_two_le_spectralGap_const_piHalf :
+    ((globalConductance piHalf (Kernel.const Bool piHalf)).toReal) ^ 2 / 2 = 1 / 8 ∧
       spectralGap (Kernel.const Bool piHalf) piHalf = 1 ∧
-      ((conductance (Kernel.const Bool piHalf) piHalf).toReal) ^ 2 / 2
+      ((globalConductance piHalf (Kernel.const Bool piHalf)).toReal) ^ 2 / 2
         ≤ spectralGap (Kernel.const Bool piHalf) piHalf := by
-  refine ⟨?_, spectralGap_const_piHalf, sq_conductance_div_two_le_spectralGap
+  refine ⟨?_, spectralGap_const_piHalf, sq_globalConductance_div_two_le_spectralGap
     (isReversible_const piHalf) rayleighSet_const_piHalf_nonempty⟩
-  rw [conductance_const_piHalf]
+  rw [globalConductance_const_piHalf]
   norm_num
 
 end ArlibCommunity.Foundations.MarkovChainTheory

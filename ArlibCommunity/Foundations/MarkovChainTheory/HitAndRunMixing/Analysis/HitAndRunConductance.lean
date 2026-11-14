@@ -17,11 +17,11 @@ import ArlibCommunity.Foundations.Convex.Basic.TV
 > **Theorem 4.2.** Let `K` be a convex body in `ℝⁿ` of diameter `D`, containing a unit
 > ball.  Then the conductance of hit-and-run in `K` is at least `1/(2²⁴·n·D)`.
 
-Formally, `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`:
+Formally, `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`:
 
     ENNReal.ofReal (1 / (2 ^ 27 * n * D)) ≤ conductance (hitAndRun K) (uniformOn volume K)
 
-with `conductance` the genuine infimum of `ArlibCommunity/Foundations/MarkovChainTheory/Basic/Conductance.lean`
+with `globalConductance` the genuine infimum of `ArlibCommunity/Foundations/MarkovChainTheory/Basic/Conductance.lean`
 and `hitAndRun` the kernel of `ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/HitAndRun.lean`.
 
 **`2²⁷`, not the paper's `2²⁴`, and the reason is a constant and nothing else.**  Lemma 3.3
@@ -32,7 +32,7 @@ factor `10` is a constant-factor loss in the exponential-envelope majorant that
 `KLS97Sharp.lean`'s route uses in place of the Gaussian — **not** an error in KLS 1997, whose
 `C = 1` is consistent with everything proved here.  The order in `n` and `D` is the paper's.
 
-This file assembles that theorem — `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` — around
+This file assembles that theorem — `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge` — around
 **two inline `∀`-hypotheses**, and proves everything else.  The two are *not* on the
 same footing, and the difference is the point of this file:
 
@@ -56,13 +56,13 @@ previously written here**, machine-checked at `n = 2` and `K = [0,4]²`, with
 `T₁ = [0,1/2]²`, `T₂ = [7/2,4]×[0,1/2]` and `h = 1000·1_{[0,4]×[4/3,4]}`: no cross chord
 rises above height `7/6`, so `h` vanishes on every one of them, yet
 `E_π(h)·min(π T₁, π T₂) = 125/12 > 1 ≥ π(K ∖ T₁ ∖ T₂)`.  `cexK_hitAndRun_hypotheses` (not in this repository; see `REFERENCES.md`)
-checks that this `K` satisfies *every other* hypothesis of `conductance_hitAndRun_ge`, so the
+checks that this `K` satisfies *every other* hypothesis of `globalConductance_hitAndRun_ge`, so the
 old binder made this theorem **vacuous at that instance**.
 
 The repair costs the argument nothing: the paper's own §4 application verifies `h ≤ 1/3`
 ("clearly"), and that step is `ArlibCommunity.Foundations.MarkovChainTheory.weight_le_third` here — in the stronger
 form `h ≤ 1/(24√n)`.  It is discharged at the use site inside
-`conductance_hitAndRun_ge_of_tv`, so no caller has to supply it.
+`globalConductance_hitAndRun_ge_of_tv`, so no caller has to supply it.
 `cexH_not_le_third` (not in this repository; see `REFERENCES.md`) confirms the new clause is exactly what kills the counterexample.
 `not_hIso_two_measurable` (not in this repository; see `REFERENCES.md`) further shows that adding `Measurable h` would **not** be a
 repair — the counterexample weight is measurable — which is why no measurability binder was
@@ -103,7 +103,7 @@ open, and both moved today:
 
 `hIso` is written out **inline, as a `∀`-hypothesis of the theorem that consumes it** — not a
 named `Prop`, not a `structure` field, not a `class`.  A reader of
-`conductance_hitAndRun_ge`'s type sees the inequality in full.  Compare
+`globalConductance_hitAndRun_ge`'s type sees the inequality in full.  Compare
 `../gaussian-cooling-vempala/lean/Isoperimetry.lean`, which "has" isoperimetry only through
 an `IsoInput`/`OneDimIso` predicate that assumes its own conclusion; that is exactly the
 mistake this file refuses to make — and the counterexample above is why writing the binder
@@ -128,8 +128,8 @@ hidden: `tvLe_hitAndRun_of_close` obtains `1 − 1/2880` rather than the paper's
 `|u−v| < (2/√n)·F(u)` rather than the paper's `max{F(u),F(v)}` — the latter follows by
 symmetry, since `TVLe` and `crossRatioDist` are symmetric.  **This is why the theorem below
 is stated twice**: once parametrically in the Lemma 4.1 loss
-(`conductance_hitAndRun_ge_of_tv`, giving `lam/(245760·n·D)` from `d_TV ≤ 1 − lam`), and once
-at the paper's `lam = 1/500` (`conductance_hitAndRun_ge`, giving `1/(2²⁷·n·D)`).  At
+(`globalConductance_hitAndRun_ge_of_tv`, giving `lam/(245760·n·D)` from `d_TV ≤ 1 − lam`), and once
+at the paper's `lam = 1/500` (`globalConductance_hitAndRun_ge`, giving `1/(2²⁷·n·D)`).  At
 `lam = 1/2880` the same theorem gives `1/(707788800·n·D)`, i.e. roughly `1/2³⁰·n·D`.
 
 ## 3. `hLem33` — discharged; no longer a hypothesis of this file
@@ -170,14 +170,14 @@ Everything else in §4:
   for `h(x) = s(x)/(48·D·√n)`, in both branches of the dichotomy (`d_K(u,v) ≥ 1/8`, or the
   separation bound above).
 * `ArlibCommunity.Foundations.MarkovChainTheory.one_le_diam_of_unitBall` — `diam K ≥ 1` for a body with inradius `1`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv` — **Theorem 4.2, parametric in the
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_tv` — **Theorem 4.2, parametric in the
   Lemma 4.1 loss**: `d_TV ≤ 1 − lam` gives `Φ ≥ lam/(245760·n·D)`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` — **Theorem 4.2**, at `lam = 1/500`:
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge` — **Theorem 4.2**, at `lam = 1/500`:
   `Φ ≥ 1/(2²⁷·n·D)`.
 
 ## Reused rather than rebuilt
 
-* `ArlibCommunity.Foundations.MarkovChainTheory.conductance` (`Conductance.lean`) — the genuine infimum.
+* `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance` (`Conductance.lean`) — the genuine infimum.
 * `ArlibCommunity.Foundations.MarkovChainTheory.hitAndRun`, `isReversible_hitAndRun` (`HitAndRun.lean`).
 * `ArlibCommunity.Foundations.MarkovChainTheory.stepRadius_concaveOn`, `theta_mul_stepRadius_le`, `lintegral_stepRadius_ge`
   (`StepLength.lean` — Lemmas 3.1 and 3.4).
@@ -223,7 +223,7 @@ a constant-factor loss in a majorant, not a discrepancy with KLS97 (see §3 abov
 
 ## Scope
 
-There is no mixing-time statement here.  `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance`
+There is no mixing-time statement here.  `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_globalConductance`
 (`L2Mixing.lean`) is what would consume this bound, and it additionally needs a
 nonnegative-spectrum hypothesis, which for hit-and-run is a separate question (the lazy
 version of `BallWalkConductance.lean` is the standard fix).  This file stops at the
@@ -599,7 +599,7 @@ hit-and-run on `K` is at least `lam/(245760·n·D)` when Lemma 4.1 holds with lo
   **unreachable**, because the side condition `chordLow K u v < 0` of the proved Lemma 4.1
   is false at every boundary point (`ArlibCommunity.Foundations.MarkovChainTheory.chordLow_eq_zero_of_notMem_interior`).
   On the interior the binder is discharged outright, at `1 − 1/8000` for `n ≥ 1100`, by
-  `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_interior`; `conductance_hitAndRun_ge_of_tv` below is this
+  `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_interior`; `globalConductance_hitAndRun_ge_of_tv` below is this
   theorem with the binder restored to `∀ u ∈ K` for backward compatibility.
 
 **The paper's Lemma 3.3 is no longer among them.**  It used to appear here as a third inline
@@ -628,7 +628,7 @@ binder is the corrected Theorem 2.1, whose one-dimensional and needle forms are 
 invocation of the Localization Lemma (`ArlibCommunity.Foundations.Convex.crossRatioIso_uniform_of_localization`).  What *can* be said
 otherwise is that no hypothesis is degenerate on its face — `hLem41` is discharged by the
 paper's Lemma 4.1, and the geometric side conditions hold for, say, the unit ball itself. -/
-theorem conductance_hitAndRun_ge_of_tv_interior (hn : 1 ≤ n)
+theorem globalConductance_hitAndRun_ge_of_tv_interior (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -648,7 +648,7 @@ theorem conductance_hitAndRun_ge_of_tv_interior (hn : 1 ≤ n)
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (lam / (245760 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hn' : n ≠ 0 := Nat.one_le_iff_ne_zero.mp hn
   haveI : NeZero n := ⟨hn'⟩
   have hnR : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
@@ -668,7 +668,7 @@ theorem conductance_hitAndRun_ge_of_tv_interior (hn : 1 ≤ n)
     isProbabilityMeasure_uniformOn volume hK0 hKtop
   set pi : Measure (EuclideanSpace ℝ (Fin n)) := uniformOn volume K with hpidef
   set P : Kernel (EuclideanSpace ℝ (Fin n)) (EuclideanSpace ℝ (Fin n)) := hitAndRun K with hPdef
-  have hrev : IsReversible P pi := isReversible_hitAndRun hKm
+  have hrev : Kernel.IsReversible P pi := isReversible_hitAndRun hKm
   have hIm : MeasurableSet (interior K) := isOpen_interior.measurableSet
   -- the frontier is null, so `interior K` carries all the mass
   have hintc : pi (interior K)ᶜ = 0 := by
@@ -734,7 +734,7 @@ theorem conductance_hitAndRun_ge_of_tv_interior (hn : 1 ≤ n)
     rw [hpiint, ← hconst, ENNReal.ofReal_mul (by positivity)]
     gcongr
   -- now the conductance
-  refine le_conductance P pi fun S hSm hSpos hShalf => ?_
+  refine le_globalConductance pi P fun S hSm hSpos hShalf => ?_
   have hpitop : pi S ≠ ⊤ := measure_ne_top _ _
   have hcompl : pi S + pi Sᶜ = 1 := by rw [measure_add_measure_compl hSm, measure_univ]
   have hSc : (1 : ℝ≥0∞) / 2 ≤ pi Sᶜ := by
@@ -847,12 +847,12 @@ theorem conductance_hitAndRun_ge_of_tv_interior (hn : 1 ≤ n)
     by_contra hc
     exact hxS2 ((hmem2 x).2 ⟨⟨hxK, hxS⟩, not_le.1 hc⟩)
   have hflow : eps * (pi ((S ∩ interior K) \ S1) + pi ((interior K \ S) \ S2))
-      ≤ 2 * (1 * flow P pi S Sᶜ) := by
-    have h := mul_measure_add_measure_le_mul_flow P pi hrev hSm (hS1m.union hIm.compl)
+      ≤ 2 * (1 * flow pi P S Sᶜ) := by
+    have h := mul_measure_add_measure_le_mul_flow pi P hrev hSm (hS1m.union hIm.compl)
       (hS2m.union hIm.compl) hA' hB'
     rwa [hSA, hSB] at h
   have hflow' : eps * (pi ((S ∩ interior K) \ S1) + pi ((interior K \ S) \ S2))
-      ≤ 2 * flow P pi S Sᶜ := by rwa [one_mul] at hflow
+      ≤ 2 * flow pi P S Sᶜ := by rwa [one_mul] at hflow
   have hpart : pi ((K \ S1) \ S2)
       ≤ pi ((S ∩ interior K) \ S1) + pi ((interior K \ S) \ S2) := by
     have hsub : (K \ S1) \ S2 ⊆ (((S ∩ interior K) \ S1) ∪ ((interior K \ S) \ S2))
@@ -919,7 +919,7 @@ theorem conductance_hitAndRun_ge_of_tv_interior (hn : 1 ≤ n)
     ring
   -- the three branches
   have hmain : 4 * (ENNReal.ofReal (lam / (245760 * (n : ℝ) * D)) * pi S)
-      ≤ 4 * flow P pi S Sᶜ := by
+      ≤ 4 * flow pi P S Sᶜ := by
     by_cases hc1 : pi S ≤ 2 * pi ((S ∩ interior K) \ S1)
     · calc 4 * (ENNReal.ofReal (lam / (245760 * (n : ℝ) * D)) * pi S)
           = (4 * ENNReal.ofReal (lam / (245760 * (n : ℝ) * D))) * pi S := by ring
@@ -929,8 +929,8 @@ theorem conductance_hitAndRun_ge_of_tv_interior (hn : 1 ≤ n)
         _ ≤ 2 * (eps * (pi ((S ∩ interior K) \ S1) + pi ((interior K \ S) \ S2))) := by
             gcongr
             exact le_self_add
-        _ ≤ 2 * (2 * flow P pi S Sᶜ) := by gcongr
-        _ = 4 * flow P pi S Sᶜ := by ring
+        _ ≤ 2 * (2 * flow pi P S Sᶜ) := by gcongr
+        _ = 4 * flow pi P S Sᶜ := by ring
     by_cases hc2 : pi Sᶜ ≤ 2 * pi ((interior K \ S) \ S2)
     · calc 4 * (ENNReal.ofReal (lam / (245760 * (n : ℝ) * D)) * pi S)
           = (4 * ENNReal.ofReal (lam / (245760 * (n : ℝ) * D))) * pi S := by ring
@@ -941,8 +941,8 @@ theorem conductance_hitAndRun_ge_of_tv_interior (hn : 1 ≤ n)
         _ ≤ 2 * (eps * (pi ((S ∩ interior K) \ S1) + pi ((interior K \ S) \ S2))) := by
             gcongr
             exact le_add_self
-        _ ≤ 2 * (2 * flow P pi S Sᶜ) := by gcongr
-        _ = 4 * flow P pi S Sᶜ := by ring
+        _ ≤ 2 * (2 * flow pi P S Sᶜ) := by gcongr
+        _ = 4 * flow pi P S Sᶜ := by ring
     rw [not_le] at hc1 hc2
     have h1 : pi S < 2 * pi S1 := by
       have hstep : pi S + pi S < pi S + 2 * pi S1 := by
@@ -977,15 +977,15 @@ theorem conductance_hitAndRun_ge_of_tv_interior (hn : 1 ≤ n)
           ring
       _ ≤ 2 * (eps * pi ((K \ S1) \ S2)) := by gcongr
       _ ≤ 2 * (eps * (pi ((S ∩ interior K) \ S1) + pi ((interior K \ S) \ S2))) := by gcongr
-      _ ≤ 2 * (2 * flow P pi S Sᶜ) := by gcongr
-      _ = 4 * flow P pi S Sᶜ := by ring
-  rw [conductanceOn_apply, ENNReal.le_div_iff_mul_le (Or.inl hSpos.ne') (Or.inl hpitop)]
+      _ ≤ 2 * (2 * flow pi P S Sᶜ) := by gcongr
+      _ = 4 * flow pi P S Sᶜ := by ring
+  rw [conductance_apply, ENNReal.le_div_iff_mul_le (Or.inl hSpos.ne') (Or.inl hpitop)]
   have h4ne : (4 : ℝ≥0∞) ≠ 0 := by norm_num
   have h4top : (4 : ℝ≥0∞) ≠ ⊤ := by norm_num
   exact (ENNReal.mul_le_mul_iff_right h4ne h4top).mp hmain
 
 /-- **Theorem 4.2 with `hLem41` demanded on all of `K`** — the shape this theorem had before
-`conductance_hitAndRun_ge_of_tv_interior` was split off, kept verbatim so that every existing
+`globalConductance_hitAndRun_ge_of_tv_interior` was split off, kept verbatim so that every existing
 consumer continues to typecheck.
 
 The proof is the whole content of the claim that the split is a *strengthening*: a caller
@@ -999,7 +999,7 @@ interior point, hence in `interior K`.  So `chordLow K u v = 0` there, for every
 every dimension.  On `interior K` the same side condition is
 `ArlibCommunity.Foundations.Convex.chordLow_neg_of_mem_interior`, and the discharged binder is
 `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_interior` (`HitAndRunLem41Discharge.lean`). -/
-theorem conductance_hitAndRun_ge_of_tv (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem globalConductance_hitAndRun_ge_of_tv (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -1018,15 +1018,15 @@ theorem conductance_hitAndRun_ge_of_tv (hn : 1 ≤ n) {K : Set (EuclideanSpace �
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (lam / (245760 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) :=
-  conductance_hitAndRun_ge_of_tv_interior hn hKc hKcl hKm hKb hball hD hlam0 hlam1
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) :=
+  globalConductance_hitAndRun_ge_of_tv_interior hn hKc hKcl hKm hKb hball hD hlam0 hlam1
     (fun u hu v hv => hLem41 u (interior_subset hu) v (interior_subset hv)) hIso
 
 /-- **Theorem 4.2 of Lovász–Vempala, at the paper's Lemma 4.1 constant.**
 
     Φ(hit-and-run on K)  ≥  1/(2²⁷·n·D).
 
-This is `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_tv_interior` at the paper's Lemma 4.1 loss
+This is `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_of_tv_interior` at the paper's Lemma 4.1 loss
 `lam = 1/500`, where the general bound reads `1/(500·245760·n·D) = 1/(122880000·n·D)`.
 
 **Why `2²⁷` and not the paper's `2²⁴`.**  The exact constant the proof delivers is
@@ -1042,13 +1042,13 @@ constant-factor loss in the exponential-envelope majorant used by `KLS97Sharp.le
 an error in KLS 1997, and not a change in the order of the bound, which remains the paper's
 `1/(n·D)` up to an absolute constant.
 
-Read the docstring of `conductance_hitAndRun_ge_of_tv_interior` for the classification of the
+Read the docstring of `globalConductance_hitAndRun_ge_of_tv_interior` for the classification of the
 hypotheses: `hIso` is the **open gap, in its corrected form** (the paper's Theorem 2.1, which
 is *false* as printed — `not_hIso_two` — and which needs the Localization Lemma on
 signed integrands, but **not** Borsuk–Ulam); `hLem41` is a placeholder for
 work in flight elsewhere in this repository; and the paper's Lemma 3.3 is **proved**, in
 `ArlibCommunity/Foundations/Convex/BoundaryLayer/Analysis/KLS97Sharp.lean`, and is no longer a hypothesis of either theorem. -/
-theorem conductance_hitAndRun_ge_interior (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem globalConductance_hitAndRun_ge_interior (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -1067,21 +1067,21 @@ theorem conductance_hitAndRun_ge_interior (hn : 1 ≤ n) {K : Set (EuclideanSpac
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / (2 ^ 27 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) := by
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) := by
   have hnR : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
   have hD1 : (1 : ℝ) ≤ D := le_trans (one_le_diam_of_unitBall hn hKb hball) hD
   refine le_trans (ENNReal.ofReal_le_ofReal ?_)
-    (conductance_hitAndRun_ge_of_tv_interior hn hKc hKcl hKm hKb hball hD (by norm_num)
+    (globalConductance_hitAndRun_ge_of_tv_interior hn hKc hKcl hKm hKb hball hD (by norm_num)
       (by norm_num) hLem41 hIso)
   rw [div_le_div_iff₀ (by positivity) (by positivity)]
   nlinarith
 
 /-- **Theorem 4.2 at `1/(2²⁷·n·D)` with `hLem41` demanded on all of `K`** — the shape this
-theorem had before `conductance_hitAndRun_ge_interior` was split off, kept verbatim so that
+theorem had before `globalConductance_hitAndRun_ge_interior` was split off, kept verbatim so that
 every existing consumer continues to typecheck, and derived from the interior form by
-`interior_subset`.  See `conductance_hitAndRun_ge_of_tv`'s docstring for why the `∀ u ∈ K`
+`interior_subset`.  See `globalConductance_hitAndRun_ge_of_tv`'s docstring for why the `∀ u ∈ K`
 form is the one that cannot be discharged. -/
-theorem conductance_hitAndRun_ge (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem globalConductance_hitAndRun_ge (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -1100,8 +1100,8 @@ theorem conductance_hitAndRun_ge (hn : 1 ≤ n) {K : Set (EuclideanSpace ℝ (Fi
           min (uniformOn volume K T₁) (uniformOn volume K T₂)
         ≤ uniformOn volume K ((K \ T₁) \ T₂)) :
     ENNReal.ofReal (1 / (2 ^ 27 * (n : ℝ) * D))
-      ≤ conductance (hitAndRun K) (uniformOn volume K) :=
-  conductance_hitAndRun_ge_interior hn hKc hKcl hKm hKb hball hD
+      ≤ globalConductance (uniformOn volume K) (hitAndRun K) :=
+  globalConductance_hitAndRun_ge_interior hn hKc hKcl hKm hKb hball hD
     (fun u hu v hv => hLem41 u (interior_subset hu) v (interior_subset hv)) hIso
 
 /-! ## Axiom profile -/
@@ -1113,10 +1113,10 @@ section AxiomCheck
 #print axioms stepRadius_le_of_chord
 #print axioms weight_le_of_chord
 #print axioms one_le_diam_of_unitBall
-#print axioms conductance_hitAndRun_ge_of_tv_interior
-#print axioms conductance_hitAndRun_ge_of_tv
-#print axioms conductance_hitAndRun_ge_interior
-#print axioms conductance_hitAndRun_ge
+#print axioms globalConductance_hitAndRun_ge_of_tv_interior
+#print axioms globalConductance_hitAndRun_ge_of_tv
+#print axioms globalConductance_hitAndRun_ge_interior
+#print axioms globalConductance_hitAndRun_ge
 
 end AxiomCheck
 

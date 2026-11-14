@@ -25,9 +25,9 @@ open scoped ENNReal
 /-- **Cheeger's inequality, both directions.** -/
 theorem cheeger_inequality {Ω : Type*} [MeasurableSpace Ω] {P : Kernel Ω Ω} [IsMarkovKernel P]
     {pi : Measure Ω} [IsProbabilityMeasure pi]
-    (hrev : IsReversible P pi) (hne : (rayleighSet P pi).Nonempty) :
-    (conductance P pi).toReal ^ 2 / 2 ≤ spectralGap P pi ∧
-      ENNReal.ofReal (spectralGap P pi) ≤ 2 * conductance P pi :=
+    (hrev : Kernel.IsReversible P pi) (hne : (rayleighSet P pi).Nonempty) :
+    (globalConductance pi P).toReal ^ 2 / 2 ≤ spectralGap P pi ∧
+      ENNReal.ofReal (spectralGap P pi) ≤ 2 * globalConductance pi P :=
   cheeger hrev hne
 
 #foundationsModelClosure cheeger_inequality

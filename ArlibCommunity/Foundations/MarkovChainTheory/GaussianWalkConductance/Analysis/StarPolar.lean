@@ -37,7 +37,7 @@ and removes the floor.
   `1 ≤ 20·(P_u(Tᶜ) + P_v(T))` on a convex `K`, at separation `δ/n`, **with the local
   conductance floor of `ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk` deleted**, and with the paper's
   `d_ℓ(u,v) < 1/3` unnecessary.
-* `conductance_speedyWalk_ge_of_convex` — `thm:speedyconductance` with `hoverlap` discharged
+* `globalConductance_speedyWalk_ge_of_convex` — `thm:speedyconductance` with `hoverlap` discharged
   on a bounded convex body: `Φ ≥ δ·ln 2/(640·σ·n)`.
 * `exists_overlap_speedyWalk_convex_witness` — non-vacuity at a **bounded** convex body
   (`K = B(0,1/2) ⊆ ℝ²`), where `20·ℓ ≡ 5 < 11`, i.e. exactly where
@@ -71,15 +71,15 @@ Nothing is `sorry`ed and no axiom is declared; every result below is
 `[propext, Classical.choice, Quot.sound]`.  Two hypotheses are carried as explicit binders:
 
 * **`hpos : ∀ x ∈ K, vol(K ∩ B(x,δ)) ≠ 0`** in `overlap_speedyWalk_convex` and
-  `conductance_speedyWalk_ge_of_convex`.  This is **not** a floor on `ℓ` in disguise:
+  `globalConductance_speedyWalk_ge_of_convex`.  This is **not** a floor on `ℓ` in disguise:
   `volume_ball_inter_ne_zero_of_convex` discharges it for *every* bounded convex set of
   positive volume, with no lower bound on `ℓ` whatever, and the witness discharges it at a
   body where `ℓ = 1/4`.  It cannot be dropped: for `K` a segment in `ℝ²` every point of `K` is
   a *stuck point* of the speedy walk, both one-step probabilities are `0`, and the conclusion
   `1 ≤ 20·(P_u(Tᶜ) + P_v(T))` is false.  The deleted floor `11 ≤ 20·ℓ` was silently excluding
   this degenerate case.
-* **`hiso`** in `conductance_speedyWalk_ge_of_convex` — `thm:iso`, unproved in this
-  repository, inherited verbatim from `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`.
+* **`hiso`** in `globalConductance_speedyWalk_ge_of_convex` — `thm:iso`, unproved in this
+  repository, inherited verbatim from `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`.
 
 ## The separation: `δ/n`, not `δ/√n` — an honest gap
 
@@ -139,7 +139,7 @@ form itself is **not** impugned — `ArlibCommunity.Foundations.MarkovChainTheor
 the lens *equals* that `min` on this body, at constant `1`.
 
 The cost of the gap is exactly one factor of `√n` in the conductance:
-`conductance_speedyWalk_ge_of_convex` gives `Ω(δ/(σn))` where the paper claims `Ω(δ/(σ√n))`.
+`globalConductance_speedyWalk_ge_of_convex` gives `Ω(δ/(σn))` where the paper claims `Ω(δ/(σ√n))`.
 The `√n`-sharp *lens* estimate for balls is already in
 `ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_le_volume_inter_ball_add_sqrt`; it is the passage from the ball
 to the **body** that is stuck at `δ/n`.
@@ -523,8 +523,8 @@ theorem lens_volume_ge_at_sep_div_dim {n : ℕ} (hn : 3 ≤ n) {K : Set (Euclide
 
 /-- **`cor:overlap` for the speedy walk on a convex body, with no floor on `ℓ`**, at
 separation `δ/n`.  In exactly the binder shape
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`'s `hoverlap` demands (with its `δ` taken to
-be `δ/√n`; see `conductance_speedyWalk_ge_of_convex`).  For `u ∈ T`, `v ∉ T` in a convex `K`
+`ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge`'s `hoverlap` demands (with its `δ` taken to
+be `δ/√n`; see `globalConductance_speedyWalk_ge_of_convex`).  For `u ∈ T`, `v ∉ T` in a convex `K`
 with `‖u − v‖ < δ/n`,
 
     1  ≤  20 · (P_u(Tᶜ) + P_v(T)).
@@ -611,7 +611,7 @@ theorem overlap_speedyWalk_convex {n : ℕ} (hn : 2 ≤ n) {K : Set (EuclideanSp
 
 /-- **`thm:speedyconductance` with `hoverlap` discharged, on a convex body — no floor on `ℓ`.**
 
-This is `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` applied at its parameter
+This is `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge` applied at its parameter
 `δ := δ/√n`, with `P := speedyWalk K δ` (that theorem takes the kernel as a parameter, so the
 walk's step size and the theorem's `δ` are independent).  Its overlap binder then asks for
 pairs at separation `(δ/√n)/√n = δ/n`, which is exactly what `overlap_speedyWalk_convex`
@@ -619,7 +619,7 @@ supplies.  The conclusion becomes
 
     Φ(speedyWalk K δ, π)  ≥  δ·ln 2 / (640·σ·n).
 
-**Compared with `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell`.**  That corollary
+**Compared with `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyGaussian_ge_of_ell`.**  That corollary
 gives `Ω(δ/(σ√n))` but assumes the local-conductance floor `11 ≤ 20·ℓ(x)` on all of `K`, which
 no bounded convex body satisfies.  This one applies to every bounded convex body of positive
 volume (`hpos` via `volume_ball_inter_ne_zero_of_convex`) and pays a factor `√n`: `Ω(δ/(σn))`.
@@ -627,7 +627,7 @@ The `√n` is exactly the separation gap of `lens_volume_ge_at_sep_div_dim`.
 
 **This is not a polynomial-time statement and may not be quoted as one**: `hiso` (`thm:iso`)
 is a hypothesis and is unproved in this repository. -/
-theorem conductance_speedyWalk_ge_of_convex {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ)
+theorem globalConductance_speedyWalk_ge_of_convex {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ)
     (hδ : 0 < δ) (hδσ : δ ≤ σ / 8)
     {h : EuclideanSpace ℝ (Fin n) → ℝ} (hh0 : ∀ x, 0 ≤ h x) (hmass : 0 < ∫ x, h x)
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (hKc : Convex ℝ K)
@@ -635,7 +635,7 @@ theorem conductance_speedyWalk_ge_of_convex {n : ℕ} (hn : 2 ≤ n) {σ δ : �
     (pi : Measure (EuclideanSpace ℝ (Fin n)))
     (hpi : ∀ A : Set (EuclideanSpace ℝ (Fin n)), MeasurableSet A →
       pi A = ENNReal.ofReal (∫ x in A, h x) / ENNReal.ofReal (∫ x, h x))
-    (hrev : IsReversible (speedyWalk K δ) pi) (hpiK : pi Kᶜ = 0)
+    (hrev : Kernel.IsReversible (speedyWalk K δ) pi) (hpiK : pi Kᶜ = 0)
     (hiso : ∀ S₁ S₂ S₃ : Set (EuclideanSpace ℝ (Fin n)),
       IsPartition3 Set.univ S₁ S₂ S₃ →
       MeasurableSet S₁ → MeasurableSet S₂ → MeasurableSet S₃ →
@@ -646,7 +646,7 @@ theorem conductance_speedyWalk_ge_of_convex {n : ℕ} (hn : 2 ≤ n) {σ δ : �
       δ / Real.sqrt n * Real.log 2 / Real.sqrt n / σ * ((∫ x in S₁, h x) * ∫ x in S₂, h x)
         ≤ (∫ x, h x) * ∫ x in S₃, h x) :
     ENNReal.ofReal (δ * Real.log 2 / (640 * σ * (n : ℝ)))
-      ≤ conductance (speedyWalk K δ) pi := by
+      ≤ globalConductance pi (speedyWalk K δ) := by
   have hn2 : (2 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
   have hnpos : (0 : ℝ) < (n : ℝ) := by linarith
   have hspos : 0 < Real.sqrt n := Real.sqrt_pos.2 hnpos
@@ -665,7 +665,7 @@ theorem conductance_speedyWalk_ge_of_convex {n : ℕ} (hn : 2 ≤ n) {σ δ : �
       = δ / Real.sqrt n * Real.log 2 / (640 * σ * Real.sqrt n) := by
     rw [h1, hs]
   rw [hconst]
-  exact conductance_speedyGaussian_ge hn hσ (by positivity)
+  exact globalConductance_speedyGaussian_ge hn hσ (by positivity)
     (by rw [div_le_div_iff₀ hspos (by positivity)]; nlinarith [hδσ, hspos])
     hh0 hmass hK (speedyWalk K δ) pi hpi hrev hpiK hov hiso
 
@@ -879,7 +879,7 @@ end ArlibCommunity.Foundations.MarkovChainTheory
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.ell_mul_volume_ball
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.lens_volume_ge_at_sep_div_dim
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_convex
-#print axioms ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_speedyWalk_ge_of_convex
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.exists_overlap_speedyWalk_convex_witness
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.volume_eq_lintegral_polar
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.homothety_image_subset_lens_halfspace
