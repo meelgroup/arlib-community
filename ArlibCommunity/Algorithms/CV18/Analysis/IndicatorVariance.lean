@@ -44,7 +44,7 @@ consumes, so that no result below carries a `ZLogconcaveHypothesis` binder:
   `(1-α²)^{-(n+1)} ≤ exp((n+1)α²/(1-α²))`,
 
 which is `phaseVarBudget n α`.  At `α = 1/n` this is `(n+1)/(n²-1) = 1/(n-1)`, matching the
-paper's own chain at `vol3_journal.tex:1376` (`e^{1/(n-1)} ≤ 1 + 2/n`), and it is in fact
+paper's own chain at [CV18] (`e^{1/(n-1)} ≤ 1 + 2/n`), and it is in fact
 slightly *sharper* than the `1 + 2/n` of `fixed_var_bound_indicator` (at `n = 3`:
 `e^{1/2} = 1.6487 < 5/3`).
 
@@ -54,7 +54,7 @@ Nothing here assumes `ZLogconcaveHypothesis`.  The standing hypotheses are only
 `Convex ℝ K`, `MeasurableSet K`, `0 < volume K`, `0 < σ` and `0 ≤ α < 1`; the volume
 hypothesis is exhibited as satisfiable by `ArlibCommunity.Algorithms.CV18.variance_le_exp_closedBall`.
 
-`LocalizationHypothesis` (`Variance.lean:1095`) is a *different* assumption, feeding the
+`LocalizationHypothesis` (`Variance.lean`) is a *different* assumption, feeding the
 *accelerated* bounds `variance_bound` / `lc_variance_bound`; it is untouched here and is not
 implied by anything in this file.
 -/
@@ -167,7 +167,7 @@ theorem inv_one_sub_sq_pow_le_exp_phaseVarBudget {α : ℝ} (hα0 : 0 ≤ α) (h
   ring
 
 /-- **The budget at the fixed cooling rate.**  `phaseVarBudget n (1/n) = 1/(n-1)` for
-`n ≥ 2` — the paper's `e^{1/(n-1)}` at `vol3_journal.tex:1376`. -/
+`n ≥ 2` — the paper's `e^{1/(n-1)}` at [CV18]. -/
 theorem phaseVarBudget_fixed_rate {n : ℕ} (hn : 2 ≤ n) :
     phaseVarBudget n (1 / (n : ℝ)) = 1 / ((n : ℝ) - 1) := by
   have hN : (2 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn

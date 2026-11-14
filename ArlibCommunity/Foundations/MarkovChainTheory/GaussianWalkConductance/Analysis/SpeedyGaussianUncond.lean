@@ -10,8 +10,8 @@ import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Anal
 # The speedy Metropolis–Gaussian conductance bound, unconditionally
 
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_perPair`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/OverlapPerPair.lean:361`) is Cousins–Vempala's
-`thm:speedyconductance` (`1409.6011/vol3_journal.tex:624`) with the comparability premise
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/OverlapPerPair.lean`) is Cousins–Vempala's
+`thm:speedyconductance` ([CV18]) with the comparability premise
 `hcomp` discharged — but it still carries
 
     hellLip : ∀ u ∈ K, ∀ v ∈ K, ℓ(u) ≤ ℓ(v)·exp(Lf·‖u − v‖)
@@ -65,7 +65,7 @@ variable {n : ℕ}
 Lipschitz hypothesis.**
 
 This is `ArlibCommunity.Foundations.MarkovChainTheory.hiso_speedyMetropolisGaussian`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianConductance.lean:230`) with `hLf`, `hKR`,
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianConductance.lean`) with `hLf`, `hKR`,
 `hellLip`, `hLσ` and the parameters `R`, `Lf` **deleted**.  The conclusion is verbatim.
 
 It is `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianIndicator_isoperimetry_measurable_logTwo` at
@@ -100,7 +100,7 @@ theorem hiso_speedyMetropolisGaussian_uncond (hn : 2 ≤ n) {σ δ : ℝ} (hσ :
 /-- **`thm:speedyconductance` with no isoperimetric and no comparability hypothesis.**
 
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_perPair`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/OverlapPerPair.lean:361`) with `hLf`, `hellLip` and `hLσ`
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/OverlapPerPair.lean`) with `hLf`, `hellLip` and `hLσ`
 **removed** — and with them the parameter `Lf`.  Every other binder, and the conclusion
 
     Φ  ≥  δ·log 2 / (640·σ·√n),
@@ -143,7 +143,7 @@ theorem conductance_speedyMetropolisGaussian_ge_uncond (hn : 21 ≤ n) {σ δ R 
       (acceptance_floor_of_cv hn2 hσ hδ hδσ hRσ))
     (hiso_speedyMetropolisGaussian_uncond hn2 hσ hδ hK hKc hKb hK0)
 
-/-- **Non-vacuity (`CLAUDE.md` §11): every binder of
+/-- **Non-vacuity: every binder of
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond` is satisfied simultaneously**, at
 
     n = 21,  K = B̄(0,1),  σ = 100,  δ = 1,  R = 1.

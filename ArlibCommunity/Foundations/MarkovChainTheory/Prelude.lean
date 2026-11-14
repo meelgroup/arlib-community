@@ -175,7 +175,7 @@ open scoped ENNReal
 variable {n : ℕ}
 
 /-- The **local conductance** at `x`,
-`ℓ(x) = vol(K ∩ (x + δBₙ)) / vol(x + δBₙ)` (`vol3_journal.tex:293`): the fraction of the
+`ℓ(x) = vol(K ∩ (x + δBₙ)) / vol(x + δBₙ)` ([CV18]): the fraction of the
 proposal ball that lies inside `K`, equivalently the probability that a single step of
 the ball walk from `x` actually moves (`ballWalk_apply_compl_singleton`).
 

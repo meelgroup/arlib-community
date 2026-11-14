@@ -11,7 +11,7 @@ import Mathlib.MeasureTheory.Function.AEEqOfLIntegral
 /-!
 # Pointwise closeness, and why mixing does not deliver it
 
-`AUDIT-KV97.md` §4b records the sharpest discrepancy found in the Kannan–Vempala
+the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean` records the sharpest discrepancy found in the Kannan–Vempala
 formalisation.  Both KV97's Theorem 2 and the consuming paper state the hypothesis on the
 continuous draw as *"`p` is drawn from a density whose **variational distance** to uniform
 on `P'` is at most `ε`"*, and both then use the conclusion as if `ε` were a **relative**
@@ -73,7 +73,7 @@ are the whole of the argument, and only the "there is a far chunk" geometry is l
 *second*, independent obstruction**, and it is the one Cousins–Vempala actually work
 around: `ℓ(x) → 0` as `x → ∂K` makes the walk hold at `x` with probability `→ 1`, which is
 why they pass to the **speedy walk** and restrict to `ArlibCommunity.Foundations.MarkovChainTheory.SpeedyPoints K δ
-= {x | 3/4 ≤ ℓ(x)}` (`vol3_journal.tex:829`).  Restricting to speedy points fixes the
+= {x | 3/4 ≤ ℓ(x)}` ([CV18]).  Restricting to speedy points fixes the
 holding probability; it does **not** fix locality, so it does not produce a minorisation
 either.
 
@@ -91,7 +91,7 @@ machinery and is not closed here.**  The routes that remain, none of which this 
 formalises, are (a) prove the pointwise bound for the *whole trajectory* by a local
 Harnack/smoothing estimate on the ball-walk density, which is what "one more step of a
 δ-ball average makes the density Hölder" would give; (b) change the reduction so that
-KV97's Theorem 2 consumes an additive error, which `AUDIT-KV97.md` §4b argues is impossible
+KV97's Theorem 2 consumes an additive error, which the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean` argues is impossible
 at the required scale `1/Vol(P')`; or (c) supply the pointwise draw by rejection against a
 proposal whose density is known exactly, paying an acceptance-probability factor.  Naming
 this precisely is the point of the file: the roadmap did not anticipate it.
@@ -113,8 +113,7 @@ this precisely is the point of the file: the roadmap did not anticipate it.
   `not_exists_pointwiseClose_of_tvLe` — **the counterexample**.
 * `pointwiseClose_iterate_of_uniformMinorisation`, `eventually_pointwiseClose_iterate` — the
   Doeblin route, with an explicit threshold.
-* `exists_uniformMinorisation_and_pointwiseClose` — the non-vacuity witness (`CLAUDE.md`
-  §11): `Kernel.const Ω pi` is minorised at rate `1` and reaches `PointwiseClose … 0` in one
+* `exists_uniformMinorisation_and_pointwiseClose` — the non-vacuity witness: `Kernel.const Ω pi` is minorised at rate `1` and reaches `PointwiseClose … 0` in one
   step, and is the same chain that witnesses `MixesWithin _ _ _ 1 0`.
 * `not_uniformMinorisation_of_unreachable` — the obstruction, abstractly.
 
@@ -377,7 +376,7 @@ theorem absolutelyContinuous_twoPoint {p q : ℝ≥0∞} (hq0 : q ≠ 0) (hq1 : 
 /-! ### The counterexample
 
 Two distinct failures, both at total variation distance at most `δ` for `δ` as small as one
-likes. They are genuinely different, and both matter for `AUDIT-KV97.md` §4b.
+likes. They are genuinely different, and both matter for the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`.
 
 **Failure 1 — no density at all.**  `twoPoint δ` puts mass `δ` on `true`; `twoPoint 0` puts
 none. So `twoPoint δ` is not absolutely continuous with respect to `twoPoint 0`, and
@@ -434,7 +433,7 @@ theorem not_pointwiseClose_twoPoint_sq {δ ε : ℝ≥0∞} (hδ0 : δ ≠ 0) (h
 For every `δ ≠ 0` there are two probability measures on `Bool` at total variation distance
 at most `δ` which are **not** pointwise `ε`-close for **any** `ε` — not even `ε = ⊤`.
 
-This is the formal content of `AUDIT-KV97.md` §4b: a mixing-time bound produces a `TVLe`,
+This is the formal content of the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`: a mixing-time bound produces a `TVLe`,
 and no amount of mixing, by itself, produces a `PointwiseClose`. -/
 theorem exists_tvLe_not_pointwiseClose_forall {δ : ℝ≥0∞} (hδ0 : δ ≠ 0) (hδ1 : δ ≤ 1) :
     ∃ μ ν : Measure Bool, IsProbabilityMeasure μ ∧ IsProbabilityMeasure ν ∧
@@ -666,7 +665,7 @@ theorem eventually_pointwiseClose_iterate {P : Kernel Ω Ω} {pi μ : Measure Ω
 
 /-! ## Non-vacuity: the instantly mixing kernel
 
-`CLAUDE.md` §11.  `Kernel.const Ω pi` — resample from `pi` at every step — satisfies
+The non-vacuity rule.  `Kernel.const Ω pi` — resample from `pi` at every step — satisfies
 `UniformMinorisation` at the best possible rate `c = 1`, and reaches `PointwiseClose … 0`
 in one step.  So neither `ArlibCommunity.Foundations.MarkovChainTheory.UniformMinorisation` nor
 `ArlibCommunity.Foundations.MarkovChainTheory.PointwiseClose` is a predicate nothing satisfies, and the hypothesis of

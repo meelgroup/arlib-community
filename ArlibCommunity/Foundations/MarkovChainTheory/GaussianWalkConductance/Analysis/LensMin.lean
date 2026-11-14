@@ -15,7 +15,7 @@ For a convex `K ∋ u, v` in `ℝⁿ` (`n ≥ 2`) and `‖u − v‖ ≤ δ/√n
 
 (`kls_lemma35_at_sep_sqrt_dim`), where `ℓ(x) = vol(K ∩ B(x,δ))/vol(B(x,δ))` is the local
 conductance of `ArlibCommunity/Foundations/MarkovChainTheory/BallWalkMixing/Analysis/BallWalk.lean`.  This is Lemma 3.5 of [KLS95] as
-cited by Cousins–Vempala at `1409.6011/vol3_journal.tex:592`, with the constant `1/40` in place
+cited by Cousins–Vempala at [CV18], with the constant `1/40` in place
 of the paper's `1/(e+1)`; no attempt is made to sharpen it.  Nothing is `sorry`ed and no
 hypothesis beyond the paper's is carried — see the axiom audit at the bottom.
 

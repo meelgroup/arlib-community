@@ -11,8 +11,8 @@ import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.ConcavePr
 /-!
 # `thm:iso` for a **concave** needle profile, with only the Localization Lemma left
 
-`ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/SharpIsoperimetry.lean:320`) proves
-Cousins–Vempala's Theorem 3.4 (`1409.6011/vol3_journal.tex:467`) at the sharp constant `d/σ`
+`ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/SharpIsoperimetry.lean`) proves
+Cousins–Vempala's Theorem 3.4 ([CV18]) at the sharp constant `d/σ`
 from **four** residual `∀`-binders: `hloc`, `hcombinatorial`, `h1d1`, `h1d2`.  Three of those
 four are now theorems of this repository.  This file restates the result so that **`hloc` is the
 only residual binder**, and — more importantly — restates `hloc` in the shape the localization
@@ -34,19 +34,19 @@ stack of this repository actually delivers.
 
 Three of the four external inputs are discharged, by theorems of this repository:
 
-1. **`hcombinatorial`** ← `ArlibCommunity.Foundations.Convex.oneDim_partition` (`ArlibCommunity/Foundations/Convex/Basic/LogisticIso.lean:549`).
+1. **`hcombinatorial`** ← `ArlibCommunity.Foundations.Convex.oneDim_partition` (`ArlibCommunity/Foundations/Convex/Basic/LogisticIso.lean`).
    The match is **verbatim**: same binders, same order, no extra hypothesis.
-2. **`h1d1`** ← `ArlibCommunity.Foundations.Convex.kls38_concave` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/KLS97Lemma38.lean:1241`).  Not
+2. **`h1d1`** ← `ArlibCommunity.Foundations.Convex.kls38_concave` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/KLS97Lemma38.lean`).  Not
    `ArlibCommunity.Foundations.Convex.kls38_affine`: see "the profile is concave" below.  The binder shape differs from
    `h1d1` as printed in `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` — the affine witness
    `∃ c₀ c₁, ∀ t, l t = c₀ + c₁ * t` is replaced by `ConcaveOn ℝ (Set.Icc α β) l` — and
    `kls38_concave` is applied directly at the needle rather than through a binder.
 3. **`h1d2`** ← `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor_unconditional`
-   (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/ConcaveProfileIso.lean:631`), **at a weaker constant**; see next.
+   (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/ConcaveProfileIso.lean`), **at a weaker constant**; see next.
 
 ## The constant: `1/(2√3)` in place of `ln 2` — quoted with the result
 
-Cousins–Vempala's `(1d-2)` (`vol3_journal.tex:501`) carries the coefficient
+Cousins–Vempala's `(1d-2)` ([CV18]) carries the coefficient
 `\iso = ln 2 ≈ 0.693`.  What this repository proves —
 `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor_unconditional`, via Brascamp–Lieb — is the same
 inequality at `1/(2√3) ≈ 0.2887`, which is **strictly weaker**.  The `(1d-2)` coefficient is
@@ -72,7 +72,7 @@ deliver an **affine** profile `(c₀ + c₁t)^{n−1}`.  This repository's local
 deliver that, and `ArlibCommunity.Foundations.Convex.exists_convex_slice_profile_not_affine`
 (`ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationLimit.lean`) **refutes** the concave-to-affine upgrade.  What
 `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_collinear`
-(`ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationClosed.lean:376`) produces is a nonnegative `W` with `W^{1/m}`
+(`ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationClosed.lean`) produces is a nonnegative `W` with `W^{1/m}`
 concave; writing `l := W^{1/m}` that is exactly a nonnegative **concave** `l` with profile
 `l^{n−1}`, which is the shape `hloc` carries here.
 
@@ -95,7 +95,7 @@ the `σ` in `c₂/σ` the same `σ` as in the conclusion's `d/σ`.
 
 Exactly one thing: **`hloc`, the Localization Lemma** of Lovász–Simonovits (KLS 1995,
 Corollary 2.4), applied to `g₁ = 1_{S₁}h − A·h` and `g₂ = (d/σ)A·1_{S₂}h − 1_{S₃}h`
-(`vol3_journal.tex:479–493`), in the concave-profile, arclength-parameterised form described
+([CV18]), in the concave-profile, arclength-parameterised form described
 above.  It is a plain `∀`-binder of
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_concave` — there is no `def … : Prop` packaging it, and
 no `axiom`.  Its status in this repository is the subject of
@@ -127,7 +127,7 @@ hard one.
 ## References
 
 Cousins and Vempala, *Gaussian Cooling and O\*(n³) Algorithms for Volume and Gaussian Volume*,
-§3 (`1409.6011/vol3_journal.tex:404–508`).
+§3 ([CV18]).
 
 Kannan, Lovász and Simonovits, *Random walks and an `O*(n⁵)` volume algorithm for convex
 bodies*, Random Structures & Algorithms **11** (1997), Lemma 3.8.
@@ -234,7 +234,7 @@ theorem gaussianRestricted_isoperimetry_concave_of_oneDim (hn : 0 < n) {σ d c�
             l t ^ (n - 1) * h (needleMap p e t))
           < d / σ * A * ∫ t in needleMap p e ⁻¹' S₂ ∩ Set.Icc α β,
               l t ^ (n - 1) * h (needleMap p e t))
-    -- **(1d-2)** `vol3_journal.tex:501`, at coefficient `c₂/σ`.
+    -- **(1d-2)** [CV18], at coefficient `c₂/σ`.
     (h1d2 : ∀ (F : ℝ → ℝ) (t₀ α β u v : ℝ), α ≤ u → u ≤ v → v ≤ β →
       (∀ t ∈ Set.Icc α β, 0 ≤ F t) → LogConcaveOn (Set.Icc α β) F →
       IntervalIntegrable (fun t => F t * Real.exp (-(t - t₀) ^ 2 / (2 * σ ^ 2))) volume α β →
@@ -386,7 +386,7 @@ section Main
 
 variable {n : ℕ}
 
-/-- **Cousins–Vempala, Theorem 3.4 (`thm:iso`, `vol3_journal.tex:467`), with the Localization
+/-- **Cousins–Vempala, Theorem 3.4 (`thm:iso`, [CV18]), with the Localization
 Lemma as its only residual hypothesis.**
 
 Let `π` be `N(0, σ²Iₙ)` restricted by a log-concave `f : ℝⁿ → ℝ₊`, i.e. `π` has density
@@ -418,7 +418,7 @@ what `ArlibCommunity.Foundations.Convex.exists_convex_slice_profile_not_affine` 
 **Discrepancy with the printed statement.**  The paper prints the density branch as
 `d_h(u,v) ≥ 4d√n`, with no `σ`; that is correct only at `σ = 1`.  See the docstring of
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` for the rescaling argument and for why the paper's own
-downstream use at `vol3_journal.tex:647` survives the correction. -/
+downstream use at [CV18] survives the correction. -/
 theorem gaussianRestricted_isoperimetry_concave (hn : 0 < n) {σ d : ℝ} (hσ : 0 < σ)
     {f h : EuclideanSpace ℝ (Fin n) → ℝ}
     (hf₀ : ∀ x, 0 ≤ f x) (hfc : IsLogConcave f)
@@ -430,7 +430,7 @@ theorem gaussianRestricted_isoperimetry_concave (hn : 0 < n) {σ d : ℝ} (hσ :
     (hsep : ∀ u ∈ S₁, ∀ v ∈ S₂,
       2 * Real.sqrt 3 * d ≤ ‖u - v‖ ∨ 4 * (d / σ) * Real.sqrt n ≤ densDist h u v)
     -- **(L)** The Localization Lemma of Lovász–Simonovits (KLS 1995, Corollary 2.4), applied to
-    -- `g₁ = 1_{S₁}h − A·h` and `g₂ = (d/σ)A·1_{S₂}h − 1_{S₃}h`; `vol3_journal.tex:479–493`.
+    -- `g₁ = 1_{S₁}h − A·h` and `g₂ = (d/σ)A·1_{S₂}h − 1_{S₃}h`; [CV18].
     -- Arclength-parameterised (`‖e‖ = 1`), with a **concave** profile `l`: that is the form
     -- `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_collinear` delivers.  This is the only
     -- hypothesis of this theorem that is not geometry or analysis of the data.

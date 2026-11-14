@@ -261,7 +261,7 @@ end Density
 /-! ### Non-vacuity witness: the unit interval
 
 Every guarded lemma above assumes `μ S ≠ 0` and `μ S ≠ ⊤`.  If no set satisfied both,
-all of them would be vacuously true and this file would be worthless (`CLAUDE.md` §11).
+all of them would be vacuously true and this file would be worthless.
 The unit interval `Set.Icc (0:ℝ) 1` under Lebesgue measure is such a set — its measure is
 exactly `1` — and the section below computes `uniformOn` on it explicitly, event
 probabilities and integral alike. -/

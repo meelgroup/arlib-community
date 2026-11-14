@@ -14,7 +14,7 @@ import Mathlib.Analysis.InnerProductSpace.PiL2
 # The ball walk on a convex body, as a Markov kernel
 
 Cousins-Vempala, *Gaussian cooling and `O*(n^3)` algorithms for volume and Gaussian
-volume*, section 4.1 (`../gaussian-cooling-vempala/vol3_journal.tex:514-746`), define the
+volume*, section 4.1 ([CV18]), define the
 **ball walk with `δ`-steps** on a convex body `K ⊆ ℝⁿ`: from the current point `x`, pick
 `y` uniformly at random from the ball `x + δBₙ`, move to `y` if `y ∈ K`, and otherwise
 stay at `x`.  This module builds that walk as a genuine `ProbabilityTheory.Kernel` on
@@ -24,12 +24,12 @@ reversible — hence invariant — for it.
 
 The Metropolis filter of the paper's Figure 2 is *not* applied here: this is the
 unweighted (uniform-target) ball walk, which is the `P^unif` of `lem:overlap`
-(`vol3_journal.tex:582`).
+([CV18]).
 
 ## Main definitions
 
 * `ArlibCommunity.Foundations.MarkovChainTheory.ell K δ x = vol(x + δBₙ ∩ K) / vol(δBₙ)` — the **local
-  conductance** at `x` (`vol3_journal.tex:293`), the probability that the proposed point
+  conductance** at `x` ([CV18]), the probability that the proposed point
   is accepted.
 * `ArlibCommunity.Foundations.MarkovChainTheory.ballWalk K δ` — **the ball walk kernel**.  On a measurable `K` it
   is `(vol(x + δBₙ))⁻¹ • volume.restrict (x + δBₙ ∩ K) + (1 - ℓ(x)) • dirac x`: the
@@ -39,9 +39,9 @@ unweighted (uniform-target) ball walk, which is the `P^unif` of `lem:overlap`
   below that says anything about its value carries `MeasurableSet K`.
 * `ArlibCommunity.Foundations.MarkovChainTheory.SpeedyPoints K δ = {x | 3/4 ≤ ℓ(x)}` — the points from which the
   walk moves with probability at least `3/4`; the speedy-walk analysis
-  (`vol3_journal.tex:829`) discards the rest.
+  ([CV18]) discards the rest.
 * `ArlibCommunity.Foundations.MarkovChainTheory.avgLocalConductance K δ` and `ArlibCommunity.Foundations.MarkovChainTheory.IsSmooth K δ s` —
-  the **average local conductance** `λ = (∫_K ℓ)/vol(K)` of `vol3_journal.tex:848`, and
+  the **average local conductance** `λ = (∫_K ℓ)/vol(K)` of [CV18], and
   the statement that `K` is `(δ, s)`-smooth, i.e. `λ ≥ 1 - s`.
 
 ## Main results
@@ -81,7 +81,7 @@ these guards at once on the unit ball.
 There is **no conductance bound and no mixing bound here, in any form** — not as a
 theorem, not as an assumed predicate, not as a definition whose name asserts one.  The
 Cousins-Vempala conductance bound `Φ = Ω(δ/(σ√n))` (`thm:speedyconductance`,
-`vol3_journal.tex:624`) rests on the isoperimetric inequality for log-concave densities,
+[CV18]) rests on the isoperimetric inequality for log-concave densities,
 which Mathlib does not have and which `ArlibCommunity/Foundations/Convex/Basic/Isoperimetry.lean` deliberately
 stops short of; see `CV-ROADMAP.md` section 3.  A predicate named after that bound would
 be inhabited only by degenerate witnesses, which is the trap `CV-ROADMAP.md` section 2a
@@ -259,7 +259,7 @@ theorem ballWalkAux_apply (K : Set (EuclideanSpace ℝ (Fin n))) (hK : Measurabl
       + (1 - ell K δ x) • Measure.dirac x := rfl
 
 open scoped Classical in
-/-- **The ball walk with `δ`-steps on `K`** (`vol3_journal.tex:249`): from `x`, pick `y`
+/-- **The ball walk with `δ`-steps on `K`** ([CV18]): from `x`, pick `y`
 uniformly in `x + δBₙ`; go to `y` if `y ∈ K`, else stay at `x`.
 
 Defined as `ballWalkAux` when `K` is measurable — which is the only case in which the
@@ -428,10 +428,10 @@ conductance, a mixing time, or any bound on the quantities it names. -/
 
 /-- The **points of high local conductance**, `{x | ℓ(x) ≥ 3/4}`.
 
-The speedy walk of `vol3_journal.tex:829` is the subsequence of *proper* steps of the
+The speedy walk of [CV18] is the subsequence of *proper* steps of the
 ball walk — those on which the proposed point lands in `K` — and its analysis is driven
 by the points where that happens often.  `3/4` is the threshold at which
-`vol3_journal.tex:551` (`lem:f-dist`) controls the ratio `ℓ(u)/ℓ(v)` for nearby `u, v`.
+[CV18] (`lem:f-dist`) controls the ratio `ℓ(u)/ℓ(v)` for nearby `u, v`.
 
 This is a plain definition: **nothing about the speedy walk's conductance or mixing is
 asserted anywhere in this file.** -/
@@ -449,7 +449,7 @@ theorem measurableSet_speedyPoints {K : Set (EuclideanSpace ℝ (Fin n))}
   measurableSet_le measurable_const (measurable_ell hK δ)
 
 /-- The **average local conductance** `λ = (∫_K ℓ(x) dx) / vol(K)`
-(`vol3_journal.tex:848`) — for the uniform density, the expected fraction of steps of the
+([CV18]) — for the uniform density, the expected fraction of steps of the
 ball walk that are proper.  It governs the number of *wasted* steps, which is the only
 role it plays in Cousins-Vempala; no bound on it is proved or assumed here. -/
 noncomputable def avgLocalConductance (K : Set (EuclideanSpace ℝ (Fin n))) (δ : ℝ) : ℝ≥0∞ :=
@@ -567,7 +567,7 @@ theorem volume_ball_le_lintegral_ell_unitBall {δ : ℝ} (hδ : 0 < δ) :
 at least `(1 - δ)ⁿ`.
 
 This is a genuinely non-trivial instance of `IsSmooth` — the bound is informative for
-`δ ≪ 1/n`, which is exactly the regime `vol3_journal.tex:904` works in — and it is what
+`δ ≪ 1/n`, which is exactly the regime [CV18] works in — and it is what
 stops `IsSmooth` from being a predicate whose only witnesses are degenerate. -/
 theorem isSmooth_unitBall [NeZero n] {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1) :
     IsSmooth (Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1) δ
@@ -582,7 +582,7 @@ theorem isSmooth_unitBall [NeZero n] {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1)
   rw [IsSmooth, ENNReal.sub_sub_cancel ENNReal.one_ne_top hle, ← hvol]
   exact volume_ball_le_lintegral_ell_unitBall hδ
 
-/-- **The non-vacuity witness (`CLAUDE.md` section 11), packaged.**  For every dimension
+/-- **The non-vacuity witness, packaged.**  For every dimension
 `n ≥ 1` and every step `0 < δ ≤ 1` there is a body `K` — the unit ball — such that
 
 * `K` is measurable, so `ballWalk K δ` is the real kernel and not the fallback;

@@ -21,12 +21,12 @@ This is the join of the two halves that precede it:
 
 Composing them gives exactly the hypothesis a slack-tolerant form of
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_of_openClosed_enlargement`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean:1114`) consumes, in Cousins–Vempala's own threshold
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean`) consumes, in Cousins–Vempala's own threshold
 shape `d/log 2` and `4(d/σ)√n`.
 
 ## Why this evades the known obstruction
 
-`ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement` (`IsoOpenClosed.lean:1205`) exhibits
+`ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement` (`IsoOpenClosed.lean`) exhibits
 data satisfying every hypothesis of `thm:iso` for which **no** disjoint open supersets of
 `S₁, S₂` exist at all — the two sets touch, and they touch *inside* `{h = 0}`, where the
 density branch of the disjunction is satisfied at distance `0`.
@@ -179,7 +179,7 @@ theorem exists_enlargement_of_measurable (hn : n ≠ 0) {σ d d' ε : ℝ}
     rw [hsplit]
     linarith
 
-/-! ## 3. Non-vacuity (`CLAUDE.md` §11) -/
+/-! ## 3. Non-vacuity -/
 
 /-- **The hypothesis bundle of `ArlibCommunity.Foundations.Convex.exists_enlargement_of_measurable` is satisfiable, with
 `S₁` and `S₂` both of positive `h`-mass.**

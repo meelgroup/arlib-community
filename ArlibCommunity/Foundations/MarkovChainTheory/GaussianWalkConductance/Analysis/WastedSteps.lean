@@ -9,7 +9,7 @@ import ArlibCommunity.Foundations.MarkovChainTheory.Basic.Warmness
 /-!
 # Wasted steps: the speedy-walk step count converted to a ball-walk step count
 
-This file formalises Cousins–Vempala's `lem:speedy-to-ball` (`1409.6011/vol3_journal.tex:915`,
+This file formalises Cousins–Vempala's `lem:speedy-to-ball` ([CV18],
 proof at `:919`–`:937`):
 
 > If the average local conductance is at least `λ`, `M(Q₀, Q) ≤ M`, and the speedy walk takes
@@ -91,7 +91,7 @@ by `1/ℓ` gives the ball walk's law `∝ f`" — is `ArlibCommunity.Foundations
 ## What is assumed and not proved
 
 * **`hlam : lam ≤ avgLocalConductance K δ` is a hypothesis, deliberately.**  It is CV's
-  `lem:lambda-bound` (`vol3_journal.tex:855`, `λ(f) ≥ 1 − 32·δ^{1/2}n^{1/4}/a^{1/2}` for an
+  `lem:lambda-bound` ([CV18], `λ(f) ≥ 1 − 32·δ^{1/2}n^{1/4}/a^{1/2}` for an
   `a`-rounded logconcave `f`), whose proof goes through Lovász–Vempala's smoothing lemma.
   **Nothing in this repository proves it** and nothing here attempts to.  Every theorem below
   carries it as an explicit binder.
@@ -121,7 +121,7 @@ Read this before quoting the capstone.
 
 ## Audit surface
 
-`CLAUDE.md` §11 asks for the audit surface to be findable in minutes.  Since this file is the
+The non-vacuity rule asks for the audit surface to be findable in minutes.  Since this file is the
 only file being added, it is recorded here rather than in `AUDIT.md`:
 
 * **Capstone**: `mul_sum_lintegral_exitTime_iterate_speedyWalk_le` (trajectory form) and
@@ -178,7 +178,7 @@ theorem lintegral_le_of_isWarm {M : ℝ≥0∞} {μ pi : Measure Om} (h : IsWarm
 respect to a stationary `pi`, then the law at time `i` overestimates every observable by at
 most `M`, for every `i`.
 
-This is CV's induction `Qᵢ(S) ≤ M·Q(S)` (`vol3_journal.tex:925`) in integral form; the
+This is CV's induction `Qᵢ(S) ≤ M·Q(S)` ([CV18]) in integral form; the
 induction itself is `isWarm_iterate`, and only the warmness parameter checked at time zero
 enters. -/
 theorem lintegral_iterate_le_of_isWarm {M : ℝ≥0∞} {μ pi : Measure Om} {P : Kernel Om Om}
@@ -206,7 +206,7 @@ end Generic
 
 /-! ## 2. The cost of one speedy step in stationarity is `1/λ`
 
-CV's display at `vol3_journal.tex:933`:
+CV's display at [CV18]:
 
     ∫_K (1/ℓ) dQ = ∫_K (1/λ) dQ̂ = 1/λ,
 
@@ -273,7 +273,7 @@ theorem mul_lintegral_inv_ell_ellProb_le_one_of_le_avg {K : Set (EuclideanSpace 
 Ingredient (i) — warmth along the chain — is §1; ingredient (ii) — the stationary cost `1/λ`
 — is §2.  CV's proof is their product, and so is this. -/
 
-/-- **Cousins–Vempala `lem:speedy-to-ball`** (`vol3_journal.tex:915`), core form:
+/-- **Cousins–Vempala `lem:speedy-to-ball`** ([CV18]), core form:
 
     λ · ∑_{i<t} ∫⁻ (ell K δ)⁻¹ d(iterate (speedyWalk K δ) Q₀ i)  ≤  t · M.
 
@@ -349,7 +349,7 @@ Assumes `MeasurableSet K` and `[NeZero n]`; both are inherited from
 identity is pointwise in `x`, so it integrates against anything.
 
 This is CV's "for any point `x`, the expected number of steps until a proper step is made is
-`1/ℓ(x)`" (`vol3_journal.tex:931`), in the form the cost sum consumes it. -/
+`1/ℓ(x)`" ([CV18]), in the form the cost sum consumes it. -/
 theorem lintegral_lintegral_exitTime_pathMeasure_ballWalk [NeZero n]
     {K : Set (EuclideanSpace ℝ (Fin n))} (hK : MeasurableSet K) (δ : ℝ)
     (μ : Measure (EuclideanSpace ℝ (Fin n))) :
@@ -393,7 +393,7 @@ theorem mul_sum_lintegral_exitTime_iterate_speedyWalk_le [NeZero n]
 
 /-! ## 5. Non-vacuity
 
-`CLAUDE.md` §11: a theorem whose hypotheses nothing satisfies certifies nothing.  The unit
+The non-vacuity rule: a theorem whose hypotheses nothing satisfies certifies nothing.  The unit
 ball with any `δ > 0`, started at stationarity, satisfies every binder above with `λ` non-zero
 and finite and `M = 1` — and attains the bound with equality, so the conclusion is not
 degenerate either. -/

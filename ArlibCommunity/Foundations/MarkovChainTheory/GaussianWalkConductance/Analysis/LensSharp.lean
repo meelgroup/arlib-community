@@ -15,7 +15,7 @@ For a convex `K ∋ u, v` in `ℝⁿ` (`n ≥ 2`) and `‖u − v‖ ≤ δ/√n
 
 (`kls_lemma35_at_sep_sqrt_dim_quarter`, and `volume_lens_ge_min_ball_inter_quarter` in the
 ball-slice form).  This is Lemma 3.5 of [KLS95] as cited by Cousins–Vempala at
-`1409.6011/vol3_journal.tex:592`, at the constant `1/4` in place of `1/40`
+[CV18], at the constant `1/4` in place of `1/40`
 (`ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim`, `LensMin.lean`) and `1/8`
 (`ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim_sharp`, `OverlapSqrt.lean`).  Nothing is
 `sorry`ed and no hypothesis beyond those two files' is carried — the hypotheses are exactly
@@ -25,7 +25,7 @@ only through `n‖u−v‖² ≤ δ²`.  See the axiom audit at the bottom.
 ## Why `1/4`: what the constant buys the Metropolis route
 
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge`
-(`MetropolisConductanceSharp.lean:431`) is the conductance bound the TTC volume price
+(`MetropolisConductanceSharp.lean`) is the conductance bound the TTC volume price
 consumes, not the speedy-walk one that `OverlapSqrt.lean` closes at `1/8`.  The threshold
 quoted for that route is a lens constant of `3e/40 ≈ 0.2039` — `3/40` from the overlap chain
 `20·κ·(2/3) ≥ 1`, times a worst-case acceptance factor `e` — which `1/8 = 0.125` misses by a
@@ -54,7 +54,7 @@ for `a·θ ≥ 2` while both factors are at most `1`.
 ## The two changes to `LensMin.lean`'s skeleton
 
 The geometry is `LensMin.lean`'s and is reused, not reproved: the three bounds are
-`ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_inter_ge_halfspace` (`StarPolar.lean:845`),
+`ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_inter_ge_halfspace` (`StarPolar.lean`),
 `ArlibCommunity.Foundations.MarkovChainTheory.min_volume_le_volume_midpoint_sum` and
 `ArlibCommunity.Foundations.MarkovChainTheory.homothety_image_subset_lens_of_dilate`.  Two things change.
 
@@ -132,7 +132,7 @@ unproved in this repository) are untouched.  Nothing here may be quoted as an `O
 ## References
 
 Kannan, Lovász and Simonovits (1995), Lemma 3.5.
-Cousins and Vempala, §4.1 (`1409.6011/vol3_journal.tex:509–700`).
+Cousins and Vempala, §4.1 ([CV18]).
 -/
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory

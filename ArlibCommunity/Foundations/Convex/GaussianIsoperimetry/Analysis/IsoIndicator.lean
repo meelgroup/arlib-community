@@ -9,11 +9,11 @@ import ArlibCommunity.Foundations.Convex.Basic.GaussianWeight
 /-!
 # `thm:iso` for the **indicator** density `1_K·e^{−‖x‖²/(2σ²)}`, with `S₁ S₂ S₃` merely measurable
 
-`ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean:854`)
+`ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean`)
 proves Cousins–Vempala's `thm:iso` with **no** localization binder, but only for `S₁, S₂` **open**,
 `S₃` **closed**, and `h` **continuous**.  The Metropolis-ball-walk consumer
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisOverlapSqrt.lean:278`) needs it at
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisOverlapSqrt.lean`) needs it at
 
     h = Set.indicator K (gaussianWeightReal (σ ^ 2)),   K a convex body,
 
@@ -30,7 +30,7 @@ gaps.
   branch of the separation hypothesis is no longer satisfiable at distance zero: for `u, v ∈ K`,
   `4(d/σ)√n ≤ d_h(u,v)` forces `‖u − v‖ ≥ 4σd√n/R`, hence `≥ 2√3·d` as soon as
   `√3·R ≤ 2σ√n`.  This is exactly the mechanism
-  `ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement` (`IsoOpenClosed.lean:1205`) exploits,
+  `ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement` (`IsoOpenClosed.lean`) exploits,
   neutralised: there the touching set lies in `{h = 0}`, which for the *indicator* density is
   `Kᶜ` — and `Kᶜ` is precisely what intersecting `S₁, S₂` with `K` removes.
 * `ArlibCommunity.Foundations.Convex.norm_sub_ge_of_mem_thickening`,
@@ -93,7 +93,7 @@ The consumer's `hiso` states its **metric** branch at threshold `δ·log 2/√n 
 with `d = δ·log 2/√n`.  Everything proved here — and everything provable in this repository —
 states it at `2√3·d`.  This is **not** a defect of this file: it is the known `(1d-2)` constant
 gap recorded at `AUDIT.md:192` and `CV-ROADMAP.md:240`.  `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor_unconditional`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/ConcaveProfileIso.lean:631`) discharges `(1d-2)` at `1/(2√3) ≈ 0.289`, not
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/ConcaveProfileIso.lean`) discharges `(1d-2)` at `1/(2√3) ≈ 0.289`, not
 Cousins–Vempala's `ln 2 ≈ 0.693`, so the separation threshold is larger by `2√3·ln 2 ≈ 2.401`.
 `ArlibCommunity.Foundations.Convex.metric_threshold_lt_openClosed_threshold` records the direction machine-checked:
 `d/log 2 < 2√3·d` for `d > 0`, so the consumer's hypothesis is **strictly weaker** than the one
@@ -217,7 +217,7 @@ theorem densDist_exp_div_le {c A B : ℝ} (hc : 0 < c) :
 /-- **(B), the crux.  Inside `K` the density branch of the separation hypothesis has metric
 content.**
 
-`ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement` (`IsoOpenClosed.lean:1205`) refutes the
+`ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement` (`IsoOpenClosed.lean`) refutes the
 uniform open-enlargement mechanism by exploiting the fact that `d_h(u,v) = 1` whenever exactly one
 of `h u, h v` vanishes — so the density branch is satisfied at **distance zero** on `{h = 0}`.
 For `h = 1_K·e^{−‖x‖²/(2σ²)}` the set `{h = 0}` is exactly `Kᶜ`, and on `K` itself `h` is the
@@ -819,7 +819,7 @@ theorem metric_threshold_lt_openClosed_threshold {d : ℝ} (hd : 0 < d) :
 /-- **`hiso` for the Metropolis-filtered Gaussian ball walk, in the consumer's own notation.**
 
 This is the binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisOverlapSqrt.lean:284`) at `d = δ·log 2/√n`, verbatim,
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisOverlapSqrt.lean`) at `d = δ·log 2/√n`, verbatim,
 with exactly **one** subterm changed: the metric branch reads `2√3·(δ·log 2/√n)` where the
 consumer writes `δ·log 2/√n / log 2`.  Everything else — the partition, the measurability
 hypotheses, the density branch `4(δ·log 2/√n/σ)√n ≤ d_h(u,v)`, and the conclusion

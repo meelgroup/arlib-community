@@ -9,14 +9,14 @@ import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.SharpIsop
 # `hloc` from the localization stack: the three shape gaps, closed
 
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_concave`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/SharpIsoperimetryConcave.lean:435`) proves Cousins–Vempala's `thm:iso` at the
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/SharpIsoperimetryConcave.lean`) proves Cousins–Vempala's `thm:iso` at the
 sharp constant `d/σ` from **one** residual `∀`-binder, `hloc`: the Localization Lemma of
 Lovász–Simonovits (KLS 1995, Corollary 2.4, equality form) applied to
-`g₁ = 1_{S₁}h − A·h` and `g₂ = (d/σ)A·1_{S₂}h − 1_{S₃}h` (`vol3_journal.tex:479–493`).
+`g₁ = 1_{S₁}h − A·h` and `g₂ = (d/σ)A·1_{S₂}h − 1_{S₃}h` ([CV18]).
 
 What the localization stack of this repository delivers
 (`ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_collinear`,
-`ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationClosed.lean:376`, and its siblings in
+`ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationClosed.lean`, and its siblings in
 `ArlibCommunity.Foundations.Convexity.LocalizationAffine`, `ArlibCommunity.Foundations.Convexity.NeedleSlab*`,
 `ArlibCommunity.Foundations.Convexity.NeedleSlabChain`) has a *different shape* from what `hloc` asks for.  This file
 closes the three differences, and nothing else.
@@ -82,7 +82,7 @@ no `structure`, and no `axiom`.  **Every clause is in the stack's pre-gap shape*
 
 | clause | status |
 |---|---|
-| `v ≠ 0` | **(F)** nondegeneracy — `LocalizationAssembly.lean:188` |
+| `v ≠ 0` | **(F)** nondegeneracy — `LocalizationAssembly.lean` |
 | `∀ t, 0 ≤ W t` | delivered by the stack |
 | `∀ t ∉ Icc 0 1, W t = 0` | **(S)**, a stack *API* gap — see below |
 | `ConcaveOn ℝ (Ioo 0 1) (W ^ (1/(n−1)))` | delivered by the stack |
@@ -97,7 +97,7 @@ Our `g₁ = 1_{S₁}h − A·h` is built from the **indicator of a merely measur
 (`ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_collinear`,
 `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact_chain`) ask their integrands to be
 *bounded continuous*.  That is residual **(C)**, lower semicontinuity,
-`LocalizationAssembly.lean:184`.  So this file is a **reduction, not an unconditional theorem**:
+`LocalizationAssembly.lean`.  So this file is a **reduction, not an unconditional theorem**:
 it removes the one-dimensional shape mismatch and leaves the analytic content of localization
 exactly where it was.
 
@@ -118,10 +118,10 @@ two binders neither of which is separately consumable.
 
 **(S) support, a stack API gap, not a mathematical gap.**  `W t = 0` for `t ∉ [0,1]` is *true* of
 the constructed profile and *provable* from `ArlibCommunity.Foundations.Convex.exists_subseq_tendsto_normalised_slice_profile'`
-(`ArlibCommunity/Foundations/Convex/Localization/Analysis/ConcaveSelection.lean:546`), whose conclusion exposes `W` as the pointwise limit
+(`ArlibCommunity/Foundations/Convex/Localization/Analysis/ConcaveSelection.lean`), whose conclusion exposes `W` as the pointwise limit
 of the normalised slice profiles, and those vanish off the slab
-(`ArlibCommunity/Foundations/Convex/Localization/Analysis/ConcaveSelection.lean:422`).  It is **discarded** by the existential of
-`ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos` (`ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationAffine.lean:273`) and
+(`ArlibCommunity/Foundations/Convex/Localization/Analysis/ConcaveSelection.lean`).  It is **discarded** by the existential of
+`ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos` (`ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationAffine.lean`) and
 of every theorem downstream of it.  Without it Gap 3 is unclosable: `∫ t : ℝ` is not `∫ t in [α,β]`
 for a profile with mass outside the slab.  The fix belongs in those files, not here.
 
@@ -163,7 +163,7 @@ than arranged by hand-tuning `d`.
 
 ## A second finding: `hloc`'s equality can be weakened to `≥`
 
-`ArlibCommunity.Foundations.Convex.needle_masses_contradiction` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/SharpIsoperimetry.lean:176`) is the arithmetic
+`ArlibCommunity.Foundations.Convex.needle_masses_contradiction` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/SharpIsoperimetry.lean`) is the arithmetic
 core that closes Cousins–Vempala's proof.  It consumes `I₁ = A·I` **only** through the step
 `c·(A·I)·I₂ = c·I₁·I₂`, and that step needs the equality in only one direction.
 `ArlibCommunity.Foundations.Convex.needle_masses_contradiction_ge` proves the contradiction from `A·I ≤ I₁` given `0 ≤ c` and
@@ -532,7 +532,7 @@ section RouteA
 /-- **`ArlibCommunity.Foundations.Convex.needle_masses_contradiction` with the equality `I₁ = A·I` weakened to the inequality
 `A·I ≤ I₁`.**
 
-`ArlibCommunity.Foundations.Convex.needle_masses_contradiction` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/SharpIsoperimetry.lean:176`) closes
+`ArlibCommunity.Foundations.Convex.needle_masses_contradiction` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/SharpIsoperimetry.lean`) closes
 Cousins–Vempala's proof from `I₁ = A·I`, `I₃ < c·A·I₂` and `c·(I₁·I₂) ≤ I·I₃` by the chain
 
   `I·I₃ < I·(c·A·I₂) = c·(A·I)·I₂ = c·(I₁·I₂) ≤ I·I₃`,

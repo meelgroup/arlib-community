@@ -11,11 +11,11 @@ import Mathlib.Analysis.Real.Pi.Bounds
 /-!
 # `(1d-2)` at `√(2/π) > ln 2`, and the consumer's `hiso` discharged
 
-Cousins–Vempala's inequality `(1d-2)` (`1409.6011/vol3_journal.tex:501`) is the one-dimensional
+Cousins–Vempala's inequality `(1d-2)` ([CV18]) is the one-dimensional
 ingredient their `thm:iso` reduces to.  They state it at the constant
-`\iso = ln 2 ≈ 0.6931` (`vol3_journal.tex:65`).  This repository proved it at
+`\iso = ln 2 ≈ 0.6931` ([CV18]).  This repository proved it at
 `1/(2√3) ≈ 0.2887` (`ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor_unconditional`,
-`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/ConcaveProfileIso.lean:631`), a factor `2.4` short — and that shortfall was the
+`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/ConcaveProfileIso.lean`), a factor `2.4` short — and that shortfall was the
 **only** thing between the repository and an unconditional `thm:iso` for the density the
 Metropolis-filtered Gaussian ball walk uses, because the separation threshold in `thm:iso` is
 `d / c` for the `(1d-2)` constant `c`, and the consumer writes `d / log 2`.
@@ -44,7 +44,7 @@ and runs the whole downstream stack at `ln 2`, closing the gap.
   `d / log 2`.
 * `ArlibCommunity.Foundations.Convex.hiso_metropolisGaussian_sharp_sqrt_logTwo` — the `hiso` binder of
   `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge`
-  (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisOverlapSqrt.lean:284–295`) **character for
+  (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisOverlapSqrt.lean`) **character for
   character**, proved.
 * `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge_of_convex` — **the payoff.**  That
   conductance bound with `hiso` discharged; the only added hypothesis is
@@ -70,12 +70,12 @@ cannot exceed its value at `x` on both sides of `x`.  On the side where it does 
 the half-line mass of the Gaussian.  Then `∫_α^u h · ∫_v^β h ≤ min·max ≤ σ√(π/2)·h(x)·∫_α^β h`
 for every `x ∈ [u,v]`, and integrating over `[u,v]` is `(1d-2)` at `1/(σ√(π/2)) = √(2/π)/σ`.
 
-## Why this beats the paper's own constant (`CLAUDE.md` §5)
+## Why this beats the paper's own constant
 
-Cousins–Vempala prove `(1d-2)` in two steps (`vol3_journal.tex:504–506`): Brascamp–Lieb gives
+Cousins–Vempala prove `(1d-2)` in two steps ([CV18]): Brascamp–Lieb gives
 "the variance of `h·l^{n−1}` is at most `1`", and then Lemma `lem:1d-iso` — Theorem 5.1 of
 Kannan–Lovász–Simonovits 1995, quoted at `ln 2`, whose derivation the paper carries only inside
-an `\iffalse` block (`vol3_journal.tex:444–465`) — is applied to the isotropic rescaling.
+an `\iffalse` block ([CV18]) — is applied to the isotropic rescaling.
 
 **That reduction discards the Gaussian.**  After it, the only thing remembered about the needle
 density is "log-concave, variance `≤ σ²`", and the extremal densities for *that* class are the
@@ -118,7 +118,7 @@ a hypothesis.  See the axiom audit at the end.
 ## References
 
 Cousins and Vempala, *Gaussian Cooling and O\*(n³) Algorithms for Volume and Gaussian Volume*,
-§3 (`1409.6011/vol3_journal.tex:404–508`).
+§3 ([CV18]).
 -/
 
 
@@ -502,14 +502,14 @@ For a nonnegative log-concave `F` on `[α,β]`, the Gaussian factor
 
   `√(2/π)/σ · (v − u) · (∫_α^u ω) · (∫_v^β ω) ≤ (∫_α^β ω) · (∫_u^v ω)`.
 
-This is inequality `(1d-2)` of Cousins–Vempala (`vol3_journal.tex:501`) with **exactly the
+This is inequality `(1d-2)` of Cousins–Vempala ([CV18]) with **exactly the
 hypotheses they quantify over**, at a constant **strictly larger** than their
-`\iso = ln 2 ≈ 0.6931` (`vol3_journal.tex:65`) — hence a strictly stronger statement than the
+`\iso = ln 2 ≈ 0.6931` ([CV18]) — hence a strictly stronger statement than the
 paper's, and a factor `2.76` stronger than
 `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor_unconditional`'s `1/(2√3) ≈ 0.2887`.
 
 **Why it beats the paper's own route.**  Cousins–Vempala prove `(1d-2)` by applying
-Brascamp–Lieb to get "variance ≤ σ²" (`vol3_journal.tex:504–506`) and then quoting KLS95's
+Brascamp–Lieb to get "variance ≤ σ²" ([CV18]) and then quoting KLS95's
 `lem:1d-iso` for a general *isotropic log-concave* density.  That reduction throws away the
 Gaussian: after it, the only thing remembered about `ω` is that it is log-concave with a
 variance bound.  The proof here keeps the Gaussian.  `ω` is log-concave **times** a Gaussian of
@@ -1026,13 +1026,13 @@ theorem gaussianIndicator_isoperimetry_measurable_logTwo (hn : 2 ≤ n) {σ d R 
 /-- **`hiso` for the Metropolis-filtered Gaussian ball walk, character for character.**
 
 This is the `hiso` binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisOverlapSqrt.lean:284–295`) **verbatim**: the partition,
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisOverlapSqrt.lean`) **verbatim**: the partition,
 the four measurability hypotheses, the metric branch
 `δ·log 2/√n / log 2 ≤ ‖u − v‖`, the density branch
 `4(δ·log 2/√n/σ)√n ≤ d_h(u,v)` and the conclusion
 `(δ·log 2/√n/σ)·π(S₁)π(S₂) ≤ π(1)·π(S₃)` at `h = 1_K·gaussianWeightReal σ²`.
 
-`ArlibCommunity.Foundations.Convex.hiso_metropolisGaussian_sharp_sqrt` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean:828`) states the
+`ArlibCommunity.Foundations.Convex.hiso_metropolisGaussian_sharp_sqrt` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`) states the
 same thing with the metric branch at `2√3·(δ·log 2/√n)` — a *strictly stronger* hypothesis
 (`ArlibCommunity.Foundations.Convex.metric_threshold_lt_openClosed_threshold`), which is why it could not be handed to the
 consumer.  That gap is closed here, and it is closed by the `(1d-2)` constant alone: everything
@@ -1061,7 +1061,7 @@ theorem hiso_metropolisGaussian_sharp_sqrt_logTwo (hn : 2 ≤ n) {σ δ R : ℝ}
 
 /-! ### The payoff: the sharp-`√n` conductance bound loses its `hiso` hypothesis -/
 
-/-! ### Non-vacuity (`CLAUDE.md` §11) -/
+/-! ### Non-vacuity -/
 
 /-- **Non-vacuity of `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor_sharp` and
 `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor_logTwo`.**

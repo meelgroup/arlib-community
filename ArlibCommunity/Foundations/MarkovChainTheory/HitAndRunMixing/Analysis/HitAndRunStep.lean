@@ -681,7 +681,7 @@ theorem hitAndRunProposal_univ_eq_one_of_mem_interior [NeZero n]
     rw [Real.volume_Icc]
     exact ENNReal.ofReal_ne_top
 
-/-- **The non-vacuity witness** (`CLAUDE.md` §11).  On the unit ball, seen from its centre,
+/-- **The non-vacuity witness**.  On the unit ball, seen from its centre,
 every hypothesis of Lemma 3.2 holds, the walk leaves its current point with probability one,
 and the step radius is *strictly positive* — so the conclusion `s_α(x) ≤ 32·F(x)` is a
 genuine lower bound on `F` and not the vacuous `0 ≤ 32·F`. -/

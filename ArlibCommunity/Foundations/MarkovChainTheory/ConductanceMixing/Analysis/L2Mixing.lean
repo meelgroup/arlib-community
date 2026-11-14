@@ -63,7 +63,7 @@ simultaneously, so none of the statements below is vacuous.
 ## References
 
 * Lovász–Simonovits, *Random walks in a convex body and an improved volume algorithm*,
-  RSA 1993, Theorem 4.1 (`vol3_journal.tex:523`).
+  RSA 1993, Theorem 4.1 ([CV18]).
 * Cousins–Vempala, *Gaussian cooling and `O*(n³)` algorithms for volume and Gaussian
   volume*, §4.1.
 -/
@@ -974,7 +974,7 @@ theorem tvLe_iterate_of_ofReal_le_conductance {P : Kernel Ω Ω} [IsMarkovKernel
   have h := ENNReal.toReal_mono hc hphi
   rwa [ENNReal.toReal_ofReal hphi0.le] at h
 
-/-! ## Non-vacuity (`CLAUDE.md` §11)
+/-! ## Non-vacuity
 
 `HasNonnegSpectrum` is a hypothesis of every theorem above, so it must be inhabited.  The
 instantly mixing kernel satisfies it: `⟪f, f⟫ = (∫ f dpi)² ≥ 0`. -/

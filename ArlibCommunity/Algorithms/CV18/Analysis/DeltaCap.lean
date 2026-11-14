@@ -14,8 +14,8 @@ like they disagree about a factor `√n`:
 
 | theorem | cap | bound |
 |---|---|---|
-| `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex` (`StarPolar.lean:626`) | `δ ≤ σ/8` | `δ·ln 2/(640·σ·n)` |
-| `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell_comparable` (`OverlapSqrt.lean:658`) | `δ ≤ σ/(8√n)` | `δ·ln 2/(640·σ·√n)` |
+| `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex` (`StarPolar.lean`) | `δ ≤ σ/8` | `δ·ln 2/(640·σ·n)` |
+| `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell_comparable` (`OverlapSqrt.lean`) | `δ ≤ σ/(8√n)` | `δ·ln 2/(640·σ·√n)` |
 
 Taking each at *its own* maximal `δ` gives the same number, `ln 2/(5120·n)`
 (`sup_bounds_agree_at_own_caps`), which makes the `√n` look illusory.  This file establishes
@@ -23,14 +23,14 @@ that the appearance is an artifact of that comparison, and that the `√n` is re
 
 ## 1. They are one theorem at two parameterizations
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` (`SpeedyConductanceSharp.lean:320`) takes the
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` (`SpeedyConductanceSharp.lean`) takes the
 kernel `P` as a **parameter independent of its own `δ`**.  So that `δ` is an *isoperimetric
 scale*, not a step size.
 
-* `StarPolar.lean:664–666` instantiates it at `δ_abs := δ/√n` with kernel `speedyWalk K δ`;
+* `StarPolar.lean` instantiates it at `δ_abs := δ/√n` with kernel `speedyWalk K δ`;
   the cap `δ_abs ≤ σ/(8√n)` becomes `δ ≤ σ/8` (`speedyGaussian_reparam_cap`) and the
   conclusion becomes `δ·ln 2/(640σn)` (`speedyGaussian_reparam_conclusion`).
-* `OverlapSqrt.lean:679` instantiates the *same* theorem at `δ_abs := δ` with the *same*
+* `OverlapSqrt.lean` instantiates the *same* theorem at `δ_abs := δ` with the *same*
   kernel `speedyWalk K δ`.
 
 Neither shrank any cap; both inherited `hδσ` from the abstract theorem.  What differs is the
@@ -45,7 +45,7 @@ For one and the same kernel `speedyWalk K δ`, the second bound is exactly `√n
 and that is set by the Metropolis acceptance floor, not by these caps.
 
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge`
-(`MetropolisConductanceSharp.lean:431`) carries
+(`MetropolisConductanceSharp.lean`) carries
 
     hfloor : 1 ≤ 20·exp(−(2Rδ + δ²)/(2σ²))·(1 − 1/n)ⁿ·θ.
 
@@ -68,7 +68,7 @@ is not the obstruction.**
 ## 3. A separate finding: `hδσ`'s `√n` is itself removable
 
 `hδσ` is consumed at exactly two places in `conductance_speedyGaussian_ge`
-(`SpeedyConductanceSharp.lean:367` and `:489`), both purely arithmetic, and in both the `√n`
+(`SpeedyConductanceSharp.lean` and `:489`), both purely arithmetic, and in both the `√n`
 cancels: the quantity bounded is `4(d/σ)√n = 4δ·ln 2/σ` at `d = δ·ln 2/√n`.  Its real content
 is the dimension-free `16·(ln 2)·δ ≤ σ` (`isoStep_quarter_iff`), and both side conditions
 follow from `δ ≤ σ/12` (`four_mul_isoStep_div_sigma_le_quarter_of_dimension_free`,
@@ -87,7 +87,7 @@ Two things, both hypotheses rather than caps.
 
 * **The `δ/√n` overlap lemma exists only for the unfiltered speedy walk.**
   `ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian_overlap_of_convex`
-  (`MetropolisConductanceSharp.lean:238`) concludes only for pairs at separation `δ/n`
+  (`MetropolisConductanceSharp.lean`) concludes only for pairs at separation `δ/n`
   (`:247`), which is why the sharp Metropolis theorem is stated at `δ_abs = δ/√n` and lands on
   `δ·ln 2/(640σn)`.  A Metropolis overlap lemma at separation `δ/√n` is the named missing
   piece; it is the analogue of `overlap_speedyWalk_sqrt_of_ell_comparable_global` for the
@@ -95,7 +95,7 @@ Two things, both hypotheses rather than caps.
 * **`hcomp` and `hiso` remain hypotheses.**  `ℓ`-comparability at separation `δ/√n` is
   Cousins–Vempala's own hypothesis but is *not* automatic on every convex body — see
   `ArlibCommunity.Foundations.MarkovChainTheory.exists_ell_not_comparable_at_sqrt_dim_counterexample`
-  (`OverlapSqrt.lean:805`).  `thm:iso` (`hiso`) is unproved throughout this repository.
+  (`OverlapSqrt.lean`).  `thm:iso` (`hiso`) is unproved throughout this repository.
 
 **Nothing in this file is a mixing-time or polynomial-time statement, and none of it may be
 quoted as one.**
@@ -259,12 +259,12 @@ theorem acceptance_factor_ge_of_step_le {n : ℕ} (hn : 2 ≤ n) {σ δ R : ℝ}
 
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` takes the kernel `P` as a *parameter*
 independent of its own `δ`, so `δ` there is an isoperimetric scale, not a step size.
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex` (`StarPolar.lean:626`) instantiates it
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex` (`StarPolar.lean`) instantiates it
 at `δ_abs := δ/√n` while keeping the kernel `speedyWalk K δ`
-(`StarPolar.lean:664–666`), and this identity is why its printed conclusion reads
+(`StarPolar.lean`), and this identity is why its printed conclusion reads
 `δ·ln 2/(640σn)`.  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell_comparable`
-(`OverlapSqrt.lean:658`) instantiates the *same* abstract theorem at `δ_abs := δ`
-(`OverlapSqrt.lean:679`). -/
+(`OverlapSqrt.lean`) instantiates the *same* abstract theorem at `δ_abs := δ`
+(`OverlapSqrt.lean`). -/
 theorem speedyGaussian_reparam_conclusion {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ) :
     δ / Real.sqrt n * Real.log 2 / (640 * σ * Real.sqrt n)
       = δ * Real.log 2 / (640 * σ * (n : ℝ)) := by
@@ -293,8 +293,8 @@ theorem speedyGaussian_reparam_cap {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} :
 
 /-- **At a fixed kernel step `δ`, the `δ/√n`-overlap route is `√n` better.**
 
-    (old)  Φ(speedyWalk K δ)  ≥  δ·ln 2/(640·σ·n)          `StarPolar.lean:626`
-    (new)  Φ(speedyWalk K δ)  ≥  δ·ln 2/(640·σ·√n)         `OverlapSqrt.lean:658`
+    (old)  Φ(speedyWalk K δ)  ≥  δ·ln 2/(640·σ·n)          `StarPolar.lean`
+    (new)  Φ(speedyWalk K δ)  ≥  δ·ln 2/(640·σ·√n)         `OverlapSqrt.lean`
 
 and the second is exactly `√n` times the first.  Same kernel, same step, same `σ`.  The gain
 is entirely the better overlap lemma: `overlap_speedyWalk_convex` supplies overlap only at
@@ -372,9 +372,9 @@ theorem sup_bounds_agree_at_own_caps {n : ℕ} (hn : 2 ≤ n) {σ : ℝ} (hσ : 
 `hδσ : δ ≤ σ/(8√n)` is consumed at exactly **two** places inside
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`:
 
-* `SpeedyConductanceSharp.lean:367` — via `isoStep_conductance_le_inv_160`, to know the
+* `SpeedyConductanceSharp.lean` — via `isoStep_conductance_le_inv_160`, to know the
   certified constant never exceeds the degenerate branch's `1/160`;
-* `SpeedyConductanceSharp.lean:489` — via `four_mul_isoStep_div_sigma_le_quarter`, to know
+* `SpeedyConductanceSharp.lean` — via `four_mul_isoStep_div_sigma_le_quarter`, to know
   `thm:iso`'s density branch sits under `cor:overlap`'s threshold `1/4`.
 
 Both are pure arithmetic, and in both the `√n` **cancels**: the quantity being bounded is
@@ -402,7 +402,7 @@ theorem isoStep_quarter_iff {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ} (hσ : 0 < σ
   · intro h; linarith
   · intro h; linarith
 
-/-- **`SpeedyConductanceSharp.lean:489`'s side condition, from a dimension-free cap.**
+/-- **`SpeedyConductanceSharp.lean`'s side condition, from a dimension-free cap.**
 Identical statement to `ArlibCommunity.Foundations.MarkovChainTheory.four_mul_isoStep_div_sigma_le_quarter`, with
 `δ ≤ σ/(8√n)` weakened to `δ ≤ σ/12`. -/
 theorem four_mul_isoStep_div_sigma_le_quarter_of_dimension_free {n : ℕ} (hn : 2 ≤ n)
@@ -413,7 +413,7 @@ theorem four_mul_isoStep_div_sigma_le_quarter_of_dimension_free {n : ℕ} (hn : 
   have hlog0 : 0 < Real.log 2 := Real.log_pos (by norm_num)
   nlinarith
 
-/-- **`SpeedyConductanceSharp.lean:367`'s side condition, from a dimension-free cap.**
+/-- **`SpeedyConductanceSharp.lean`'s side condition, from a dimension-free cap.**
 Identical statement to `ArlibCommunity.Foundations.MarkovChainTheory.isoStep_conductance_le_inv_160`, with
 `δ ≤ σ/(8√n)` weakened to `δ ≤ σ/12`. -/
 theorem isoStep_conductance_le_inv_160_of_dimension_free {n : ℕ} (hn : 2 ≤ n) {σ δ : ℝ}

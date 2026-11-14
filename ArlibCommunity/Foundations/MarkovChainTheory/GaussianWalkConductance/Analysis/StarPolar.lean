@@ -9,7 +9,7 @@ import ArlibCommunity.Foundations.MarkovChainTheory.HitAndRunMixing.Analysis.Hit
 /-!
 # Lemma 3.5 of [KLS95] by homothety, and `cor:overlap` with no local-conductance floor
 
-Cousins–Vempala's `lem:overlap` (`1409.6011/vol3_journal.tex:581`) rests on Lemma 3.5 of
+Cousins–Vempala's `lem:overlap` ([CV18]) rests on Lemma 3.5 of
 [KLS95] (cited at `:592`):
 
     vol(K ∩ B(u,δ) ∩ B(v,δ))  ≥  min{ℓ(u), ℓ(v)} · vol(δBₙ) / (e+1),
@@ -60,7 +60,7 @@ something "Mathlib does not support today"; that is **incorrect**, and the recor
 at `volume_eq_lintegral_polar`.  Mathlib has the measure-preserving polar homeomorphism
 (`MeasureTheory.Measure.measurePreserving_homeomorphUnitSphereProd`, `Measure.toSphere`,
 `Measure.volumeIoiPow`), and this repository has packaged it about an arbitrary centre since
-`HitAndRun.lean:479` (`ArlibCommunity.Foundations.MarkovChainTheory.lintegral_polar_at`).  Only the radial-function form
+`HitAndRun.lean` (`ArlibCommunity.Foundations.MarkovChainTheory.lintegral_polar_at`).  Only the radial-function form
 `vol = ∫_{Sⁿ⁻¹} ρ(θ)ⁿ/n dθ` is absent — and the sole consequence of it that Lemma 3.5 uses is
 the `n`-homogeneity `vol(λ·S) = λⁿ·vol(S)`, which Mathlib supplies for an *arbitrary* set as
 `MeasureTheory.Measure.addHaar_image_homothety`.
@@ -159,7 +159,7 @@ or may be quoted as asserting, a polynomial mixing time.
 ## References
 
 Cousins and Vempala, *Gaussian Cooling and `O*(n³)` Algorithms for Volume and Gaussian Volume*,
-§4.1 (`1409.6011/vol3_journal.tex:509–700`).
+§4.1 ([CV18]).
 Kannan, Lovász and Simonovits, *Isoperimetric problems for convex bodies and a localization
 lemma* (1995), Lemma 3.5.
 -/
@@ -469,7 +469,7 @@ theorem ell_mul_volume_ball {n : ℕ} (K : Set (EuclideanSpace ℝ (Fin n))) {δ
   exact ENNReal.div_mul_cancel (Metric.measure_ball_pos volume x hδ).ne' measure_ball_lt_top.ne
 
 /-- **Lemma 3.5 of [KLS95], in the shape Cousins–Vempala quote it** (`eq:kls-overlap`,
-`vol3_journal.tex:592`) — but at separation `δ/n`, not the paper's `δ/√n`:
+[CV18]) — but at separation `δ/n`, not the paper's `δ/√n`:
 
     vol(K ∩ B(u,δ) ∩ B(v,δ))  ≥  min{ℓ(u), ℓ(v)} · vol(δBₙ) / (e+1)
 
@@ -762,7 +762,7 @@ theorem exists_overlap_speedyWalk_convex_witness :
 
     vol(S)  =  ∫_{Sⁿ⁻¹} ∫_0^∞ r^{n−1} · 1_S(u + rθ) dr dσ(θ).
 
-This is `ArlibCommunity.Foundations.MarkovChainTheory.lintegral_polar_at` (`HitAndRun.lean:479`) at the indicator of `S`,
+This is `ArlibCommunity.Foundations.MarkovChainTheory.lintegral_polar_at` (`HitAndRun.lean`) at the indicator of `S`,
 and `lintegral_polar_at` is in turn Mathlib's
 `MeasureTheory.Measure.measurePreserving_homeomorphUnitSphereProd` plus Tonelli.
 

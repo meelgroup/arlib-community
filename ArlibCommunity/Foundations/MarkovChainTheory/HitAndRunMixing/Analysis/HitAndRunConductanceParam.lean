@@ -9,7 +9,7 @@ import ArlibCommunity.Foundations.MarkovChainTheory.HitAndRunMixing.Analysis.Hit
 # The hit-and-run conductance bound with the Lemma 4.1 overlap constant as a parameter
 
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`
-(`ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/HitAndRunConductance.lean:999`) states Theorem 4.2 of
+(`ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/HitAndRunConductance.lean`) states Theorem 4.2 of
 Lovász–Vempala with the paper's **Lemma 4.1 constant hardcoded**: its binder demands
 
     ArlibCommunity.Foundations.Convex.TVLe (hitAndRun K u) (hitAndRun K v) (ENNReal.ofReal (1 - 1 / 500))
@@ -140,7 +140,7 @@ theorem conductance_hitAndRun_ge_param (hn : 1 ≤ n) {K : Set (EuclideanSpace �
 parametric form at `c = 1/500`.**
 
 The statement is that of `conductance_hitAndRun_ge`
-(`HitAndRunConductance.lean:999`) verbatim, down to the binder names and the `2²⁷`.  The
+(`HitAndRunConductance.lean`) verbatim, down to the binder names and the `2²⁷`.  The
 proof does **not** invoke `conductance_hitAndRun_ge`; it goes through
 `conductance_hitAndRun_ge_param` and repeats the original wrapper's own final comparison
 `500 · 245760 = 122880000 ≤ 2²⁷ = 134217728`.  A successful build is therefore evidence that

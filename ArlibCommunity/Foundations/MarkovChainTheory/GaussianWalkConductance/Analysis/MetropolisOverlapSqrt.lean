@@ -11,14 +11,14 @@ import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Anal
 # The Metropolis-filtered Gaussian ball walk at separation `δ/√n`
 
 `ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian_overlap_of_convex`
-(`MetropolisConductanceSharp.lean:238`) proves `cor:overlap` for `metropolisGaussian` only for
+(`MetropolisConductanceSharp.lean`) proves `cor:overlap` for `metropolisGaussian` only for
 pairs with `‖u − v‖ < δ/n`, because its geometric input
-`ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_inter_ge_max` (`StarPolar.lean:239`) holds at that separation.
+`ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_inter_ge_max` (`StarPolar.lean`) holds at that separation.
 Its consumer `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_ge` (`:431`) therefore
 instantiates `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` — whose own overlap binder is
 at `δ_abs/√n` — at the *isoperimetric scale* `δ_abs := δ/√n`, and lands on
 `Φ ≥ δ·log 2/(640·σ·n)`.  The speedy walk, by contrast, has overlap at separation `δ/√n`
-(`ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_sqrt_of_ell_comparable_global`, `OverlapSqrt.lean:545`),
+(`ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_sqrt_of_ell_comparable_global`, `OverlapSqrt.lean`),
 so `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell_comparable` (`:658`) instantiates
 the same theorem at `δ_abs := δ` and lands on `Φ ≥ δ·log 2/(640·σ·√n)` — a factor `√n` better
 at the same kernel step.
@@ -41,7 +41,7 @@ of `metropolisGaussian_overlap_of_convex` other than the separation is carried u
 The one changed step is the lens input.  The `δ/n` proof uses
 `ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_inter_ge_max`, contraction constant `(1 − 1/n)ⁿ`, in the `max`
 form; the `δ/√n` proof uses `ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_ge_min_ball_inter_quarter`
-(`LensSharp.lean:409`), constant `1/4`, in the `min` form.  Everything else — the ratio
+(`LensSharp.lean`), constant `1/4`, in the `min` form.  Everything else — the ratio
 acceptance floor `a = e^{−(2Rδ+δ²)/(2s)}` of `ArlibCommunity.Foundations.MarkovChainTheory.metropolisAccept_ge`, the
 domination `ArlibCommunity.Foundations.MarkovChainTheory.mul_volume_le_metropolisGaussian`, the `T`/`Tᶜ` split — is
 reused verbatim.
@@ -78,22 +78,22 @@ disc — carries over to this file unchanged (`exists_conductance_metropolisGaus
 Three constants for the same geometry at separation `δ/√n` sit in this library, and the choice
 is not cosmetic — it decides whether the theorem has any instances at all.
 
-* `ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim` (`LensMin.lean:423`), constant `1/40`, is
+* `ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim` (`LensMin.lean`), constant `1/40`, is
   the obvious input and makes the theorem **vacuous**: the floor would read
   `1 ≤ 20·a·(1/40)·θ = a·θ/2`, while `a ≤ 1` (the exponent is nonpositive) and
   `θ ≤ ell K δ x ≤ 1` (`ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one`) at any point of a nonempty `K`, so
   `a·θ/2 ≤ 1/2 < 1`.  No nonempty body satisfies it.
-* `ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_ge_min_ball_inter_sharp` (`OverlapSqrt.lean:195`), constant
+* `ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_ge_min_ball_inter_sharp` (`OverlapSqrt.lean`), constant
   `1/8`, asks `θ ≥ 0.4/a`.  That is satisfiable but **tight**: a supporting hyperplane at a
   boundary point of a convex body forces `ell ≤ 1/2` there, so with `a = e^{−1/8} ≈ 0.88` at
   the Cousins–Vempala parameters the margin is `0.44` against a demand of `0.4`, about `10%`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_ge_min_ball_inter_quarter` (`LensSharp.lean:409`), constant
+* `ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_ge_min_ball_inter_quarter` (`LensSharp.lean`), constant
   `1/4` — **used here** — asks `θ ≥ 0.2/a`, roughly doubling that margin and matching the
   `δ/n` floor exactly at `n = 2`.
 
 So the `√n` is not bought at a materially worse hypothesis: it is essentially free.
 
-## Non-vacuity (`CLAUDE.md` §11)
+## Non-vacuity
 
 `exists_conductance_metropolisGaussian_sharp_sqrt_witness` discharges every hypothesis of
 `conductance_metropolisGaussian_sharp_sqrt_ge` except `hiso`, simultaneously, at `n = 2`,
@@ -149,7 +149,7 @@ given a floor `θ` on the local conductance satisfying `1 ≤ 20·a·(1/4)·θ`,
 `a = e^{−(2Rδ+δ²)/(2s)}` is the acceptance floor of `ArlibCommunity.Foundations.MarkovChainTheory.metropolisAccept_ge`.
 
 This is `ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian_overlap_of_convex`
-(`MetropolisConductanceSharp.lean:238`) with the separation improved from `δ/n` to `δ/√n`.
+(`MetropolisConductanceSharp.lean`) with the separation improved from `δ/n` to `δ/√n`.
 The single change is the lens input: `ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_inter_ge_max` at `δ/n`,
 constant `(1 − 1/n)ⁿ` in the `max` form, is replaced by
 `ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_ge_min_ball_inter_quarter` at `δ/√n`, constant `1/4` in the
@@ -313,7 +313,7 @@ theorem conductance_metropolisGaussian_sharp_sqrt_ge (hn : 2 ≤ n)
     (isReversible_metropolisGaussian hK δ (σ ^ 2)) (ArlibCommunity.Foundations.Convex.uniformOn_compl_eq_zero _ hK)
     (metropolisGaussian_overlap_sqrt_of_convex hn hK hKc hδ hs hR hKR hell hfloor h) hiso
 
-/-! ## 3. Non-vacuity (`CLAUDE.md` §11) -/
+/-! ## 3. Non-vacuity -/
 
 /-- **Non-vacuity: every hypothesis of `conductance_metropolisGaussian_sharp_sqrt_ge` except
 `hiso` is jointly satisfiable at a bounded convex body, the conclusion there is not the

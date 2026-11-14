@@ -11,14 +11,14 @@ import Mathlib.Analysis.Complex.ExponentialBounds
 # Cousins–Vempala's `thm:speedyconductance`, conditional on the sharp isoperimetric inequality
 
 Cousins–Vempala, *Gaussian Cooling and `O*(n³)` Algorithms for Volume and Gaussian Volume*,
-Theorem `thm:speedyconductance` (`1409.6011/vol3_journal.tex:624`, proof at `:628`):
+Theorem `thm:speedyconductance` ([CV18], proof at `:628`):
 
 > Let `K` be a convex body with `Bₙ ⊆ K ⊆ 4σ√n Bₙ`.  The conductance of the speedy walk
 > applied to `K` with Gaussian density `N(0,σ²I)` and `δ ≤ σ/(8√n)` steps is `Ω(δ/(σ√n))`.
 
 This file carries out that proof.  The result it lands,
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`, is **conditional**: its two inputs with
-content — the one-step overlap estimate `cor:overlap` (`vol3_journal.tex:612`) and the sharp
+content — the one-step overlap estimate `cor:overlap` ([CV18]) and the sharp
 isoperimetric inequality `thm:iso` (`:467`) — are both hypotheses, written out inline.  What
 is *proved* here is everything between them and the conductance: the three-way partition, the
 flow accounting, the degenerate branch, and the arithmetic of the step `d`.
@@ -34,7 +34,7 @@ and not before.
 
 Every conductance constant that is actually *proved* in this repository is exponentially small
 in `n` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisConductance.lean`;
-`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean:591–596`, "this is not a polynomial-time
+`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean`, "this is not a polynomial-time
 result").  The theorem below would change that picture, but only once `hiso` — and `hoverlap`
 — are discharged.  Until then it is a conditional reduction, not a rate improvement.  **No
 statement in this file asserts, or may be quoted as asserting, a polynomial mixing time.**
@@ -43,7 +43,7 @@ statement in this file asserts, or may be quoted as asserting, a polynomial mixi
 
 `conductance_speedyGaussian_ge` has exactly two hypotheses that are not bookkeeping.
 
-* **`hoverlap` — `cor:overlap`** (`vol3_journal.tex:612`).  For `u ∈ S ∩ K` and `v ∈ K \ S`
+* **`hoverlap` — `cor:overlap`** ([CV18]).  For `u ∈ S ∩ K` and `v ∈ K \ S`
   with `‖u − v‖ < δ/√n` and `d_h(u,v) < 1/4`, one step satisfies
   `P_u(Sᶜ) + P_v(S) ≥ 1/20`.  The paper derives it from `lem:overlap` (`:581`, itself KLS95
   Lemma 3.5) and `lem:filter`.  **This repository has no analogue.**
@@ -88,7 +88,7 @@ consistent with a sum exceeding `1/20`.  With the thresholds halved to `1/40` th
 both branches.
 
 **(ii) `φ(S) ≥ (1/40)·π(S₃)/π(S₁)` is `π(S₁)` where it should be `π(S)`.**  The paper's final
-chain (`vol3_journal.tex:660`) divides the flow by `π(S₁)`, but `φ(S) = Φ(S)/π(S)` and
+chain ([CV18]) divides the flow by `π(S₁)`, but `φ(S) = Φ(S)/π(S)` and
 `π(S₁) ≤ π(S)`, so the step increases the quantity being bounded below.  Restoring `π(S)`
 costs the factor `π(S)/π(S₁) ≤ 2`.
 
@@ -125,7 +125,7 @@ vacuous.
 ## References
 
 Cousins and Vempala, *Gaussian Cooling and `O*(n³)` Algorithms for Volume and Gaussian
-Volume*, §4.1 (`1409.6011/vol3_journal.tex:509–700`).
+Volume*, §4.1 ([CV18]).
 -/
 
 open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
@@ -251,7 +251,7 @@ theorem ofReal_div_mul_div_le {M a₁ a₂ a₃ c : ℝ} (hM : 0 < M) (ha₁ : 0
 Both are `hiso`-free.  The first is `mul_measure_add_measure_le_mul_flow`
 (`BallWalkConductance.lean`, stated for an arbitrary reversible Markov kernel on an arbitrary
 measurable space) specialised to the escape threshold `1/40`; the second is the paper's
-`φ(S) ≥ 1/80` branch (`vol3_journal.tex:650`), at the corrected threshold, hence `1/160`. -/
+`φ(S) ≥ 1/80` branch ([CV18]), at the corrected threshold, hence `1/160`. -/
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
@@ -262,7 +262,7 @@ least `1/40`, then
     π(S \ A) + π(Sᶜ \ B)  ≤  80 · Φ(S, Sᶜ).
 
 Division-free: the thresholds are written `1 ≤ 40·P_x(·)`.  This is
-`vol3_journal.tex:652–655`, where `A = S₁ ∪ Kᶜ` and `B = S₂ ∪ Kᶜ`. -/
+[CV18], where `A = S₁ ∪ Kᶜ` and `B = S₂ ∪ Kᶜ`. -/
 theorem measure_sdiff_add_measure_sdiff_le_flow (P : Kernel Ω Ω) [IsMarkovKernel P]
     (pi : Measure Ω) (hrev : IsReversible P pi) {S A B : Set Ω} (hS : MeasurableSet S)
     (hA : MeasurableSet A) (hB : MeasurableSet B)
@@ -273,7 +273,7 @@ theorem measure_sdiff_add_measure_sdiff_le_flow (P : Kernel Ω Ω) [IsMarkovKern
   calc pi (S \ A) + pi (Sᶜ \ B) ≤ 2 * (40 * flow P pi S Sᶜ) := h
     _ = 80 * flow P pi S Sᶜ := by ring
 
-/-- **The degenerate branch of `thm:speedyconductance`** (`vol3_journal.tex:650`): if `S` is
+/-- **The degenerate branch of `thm:speedyconductance`** ([CV18]): if `S` is
 not mostly covered by `S₁` — precisely, if `π(S) ≤ 2·(π(S \ A) + π(Sᶜ \ B))` — then the escape
 flow alone already bounds the conductance from below, with **no isoperimetric input**:
 
@@ -294,7 +294,7 @@ theorem measure_le_flow_of_le_two_mul (P : Kernel Ω Ω) [IsMarkovKernel P] (pi 
 
 /-! ## 4. The theorem -/
 
-/-- **Cousins–Vempala's `thm:speedyconductance`** (`vol3_journal.tex:624`), assembled.
+/-- **Cousins–Vempala's `thm:speedyconductance`** ([CV18]), assembled.
 
 Let `π` be the probability measure with density proportional to `h = ℓ·f` on `ℝⁿ`, let `P` be
 a Markov kernel reversible for `π` and supported on a measurable `K` (in the sense
@@ -304,11 +304,11 @@ a Markov kernel reversible for `π` and supported on a measurable `K` (in the se
 
 Two hypotheses carry content, both written out inline; neither is a `def` or a named `Prop`.
 
-* `hoverlap` — **`cor:overlap`** (`vol3_journal.tex:612`): a pair `u ∈ S ∩ K`, `v ∈ K \ S`
+* `hoverlap` — **`cor:overlap`** ([CV18]): a pair `u ∈ S ∩ K`, `v ∈ K \ S`
   with `‖u − v‖ < δ/√n` and `d_h(u,v) < 1/4` has `P_u(Sᶜ) + P_v(S) ≥ 1/20`, here written
   division-free as `1 ≤ 20·(P_u(Sᶜ) + P_v(S))`.  **Not proved in this repository**; see the
   module docstring.
-* `hiso` — **`thm:iso`** (`vol3_journal.tex:467`) at `d = δ·ln 2/√n`, in exactly the shape
+* `hiso` — **`thm:iso`** ([CV18]) at `d = δ·ln 2/√n`, in exactly the shape
   `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry` concludes, so that it composes with that theorem by
   `exact` once its four external inputs are discharged.  **Not proved in this repository.**
 
@@ -627,7 +627,7 @@ theorem speedyGaussian_params_satisfiable :
   · rw [hs, show (1 : ℝ) / 16 * Real.log 2 / (640 * 1 * 2) = Real.log 2 / 20480 by ring]
     linarith
 
-/-- **Non-vacuity witness (`CLAUDE.md` §11) for `conductance_speedyGaussian_ge`.**
+/-- **Non-vacuity witness for `conductance_speedyGaussian_ge`.**
 
 Every hypothesis of the theorem — including the two with content, `hoverlap` and `hiso` — is
 satisfiable *simultaneously*, at parameters where the conclusion is a **strictly positive**

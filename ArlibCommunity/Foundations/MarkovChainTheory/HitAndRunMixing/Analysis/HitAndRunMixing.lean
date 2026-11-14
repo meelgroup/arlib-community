@@ -111,7 +111,7 @@ misbehave (the ball walk) is forced to use:
   proved as `ArlibCommunity.Foundations.MarkovChainTheory.weight_le_third`, and it is discharged inside
   `conductance_hitAndRun_ge_of_tv`, not by any caller.
 
-*Non-vacuity* (`CLAUDE.md` §11).
+*Non-vacuity*.
 
 * `ArlibCommunity.Foundations.MarkovChainTheory.ls_const` — the instantly mixing kernel satisfies the `hLS` binder.
 * `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_const_piHalf` — every hypothesis of
@@ -156,7 +156,7 @@ reversible with respect to `piHalf` and its conductance is exactly `1`.  Started
 a nonnegative spectrum) that Lovász–Vempala's §5 does not state when it applies the
 corollary to the *non-lazy* hit-and-run kernel.  See `§ Errors in the paper` below.  The
 binder is nonetheless satisfiable: `ArlibCommunity.Foundations.MarkovChainTheory.ls_const` discharges it for the
-instantly-mixing kernel, which is the non-vacuity witness of `CLAUDE.md` §11.
+instantly-mixing kernel, which is the non-vacuity witness.
 
 **(A') `hLSs` — Corollary 1.5 of Lovász–Simonovits, `s`-conductance form.**  Used only by
 `tvLe_iterate_of_sConductance`.  It is **false on a measurable space with atoms** — a
@@ -185,7 +185,7 @@ which is Euclidean-metric-dependent; a uniform scaling plus a translation is a s
 so the `r`/`zin` chart is covered and a general linear chart is not. `hphi` is still threaded
 as a hypothesis in *this* file, which is untouched by the above.
 
-## The constant, honestly (`CLAUDE.md` §11)
+## The constant, honestly
 
 `lvThreshold` is `2⁵⁶·n²·(R²/r²)·ln(8M/ε²)`.  In the paper's shape — using
 `ln(8M/ε²) ≤ ln 8 + 2 ln(M/ε)` for `M ≥ 1`, `0 < ε ≤ 1` — that is at most
@@ -196,7 +196,7 @@ as a hypothesis in *this* file, which is untouched by the above.
 against the paper's `10¹⁰ · n² (R²/r²) ln(M/ε)`.  The gap is a factor of about `10⁷`, and
 **most of it is the paper's own**, not this repository's: see `§ Errors in the paper`.
 
-## Errors and gaps found in the paper (`CLAUDE.md` §5)
+## Errors and gaps found in the paper
 
 1. **`10¹⁰` in Theorem 1.1 does not follow from `2²⁴` in Theorem 4.2.**  *Genuine numerical
    error.*  Theorem 4.2 gives `Φ ≥ 1/(2²⁴ n D)` for inradius `1`; scaling by `r` and using
@@ -748,7 +748,7 @@ theorem conductanceS_deterministic_id_piHalf {s : ℝ≥0∞} (hs : s < 1 / 2) :
   rw [conductanceSOn, flow_deterministic_id_compl _ (measurableSet_singleton true),
     ENNReal.zero_div]
 
-/-- **Non-vacuity witness for `hLSs` (`CLAUDE.md` §11).**  The identity kernel on `Bool`
+/-- **Non-vacuity witness for `hLSs`.**  The identity kernel on `Bool`
 satisfies the Lovász–Simonovits `s`-conductance binder in full. -/
 theorem lsS_deterministic_id :
     ∀ (s H : ℝ≥0∞) (ph : ℝ), 0 < ph → ph ≤ 1 → 0 < s → s ≤ 1 / 2 →
@@ -784,7 +784,7 @@ theorem lsS_deterministic_id :
         _ = 1 / 2 := piHalf_compl_singleton b
         _ = s := heq.symm
 
-/-! ## A non-vacuity witness for the `hLS` binder (`CLAUDE.md` §11)
+/-! ## A non-vacuity witness for the `hLS` binder
 
 A theorem whose hypothesis nothing satisfies proves nothing.  The instantly mixing kernel
 `Kernel.const Ω pi` — resample from `pi` at every step — satisfies the Lovász–Simonovits
@@ -823,7 +823,7 @@ theorem ls_const (pi : Measure Ω) [IsProbabilityMeasure pi] :
 /-! ## Theorem 1.1 for hit-and-run
 
 The kernel is `ArlibCommunity.Foundations.MarkovChainTheory.hitAndRun K` and the target is `ArlibCommunity.Foundations.Convex.uniformOn volume K`,
-so the statement below is about the *real* objects, not a surrogate (`CLAUDE.md` §11). -/
+so the statement below is about the *real* objects, not a surrogate. -/
 
 /-- **The deadline of Theorem 1.1, at the constant this development actually obtains**:
 
@@ -992,7 +992,7 @@ theorem tvLe_iterate_hitAndRun_unitBall {n : ℕ} (hn : 1 ≤ n)
 
 /-! ### Axiom audit
 
-`CLAUDE.md` §4: `#print axioms` is the only authoritative definition of done.  Every
+The axiom rule: `#print axioms` is the only authoritative definition of done.  Every
 declaration below must report exactly `[propext, Classical.choice, Quot.sound]`.  Note that
 the two headline theorems carry their assumptions as `∀`-binders in their *types*, which
 `#print axioms` does not see and cannot see — that is why the module docstring lists them, and
@@ -1016,7 +1016,7 @@ section AxiomCheck
 #print axioms ofReal_inv_le_conductance_hitAndRun_of_unitBall
 #print axioms tvLe_iterate_hitAndRun_unitBall
 
-/-! ### A non-vacuity witness for the abstract Theorem 1.1 (`CLAUDE.md` §11)
+/-! ### A non-vacuity witness for the abstract Theorem 1.1
 
 `ls_const` shows the `hLS` binder alone is satisfiable.  The theorem below is stronger: it
 exhibits a single concrete chain, start, exceptional set and parameter choice satisfying

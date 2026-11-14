@@ -9,7 +9,7 @@ import ArlibCommunity.Foundations.Convex.Basic.UniformOn
 /-!
 # From Theorem 2.1's conclusion to the `hIso` binder: the encoding gap, closed
 
-`ArlibCommunity.Foundations.Convex.thm21_of_localization` (`ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/LovaszVempalaIso.lean:733`) proves
+`ArlibCommunity.Foundations.Convex.thm21_of_localization` (`ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/LovaszVempalaIso.lean`) proves
 Lovász–Vempala Theorem 2.1 in **ℝ**, against **Lebesgue measure**, with the small mass written
 as an explicit scalar `A`:
 
@@ -17,7 +17,7 @@ as an explicit scalar `A`:
     (volume T₁).toReal = A * (volume K).toReal,  0 ≤ A,  A ≤ 1/2.
 
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`
-(`ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/HitAndRunConductance.lean:999`) consumes it in **ℝ≥0∞**,
+(`ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/HitAndRunConductance.lean`) consumes it in **ℝ≥0∞**,
 against the **uniform probability measure** `ArlibCommunity.Foundations.Convex.uniformOn volume K`, with the small mass
 written as a `min`:
 
@@ -55,7 +55,7 @@ masses.  The repair is a WLOG, and the WLOG is legitimate only because every hyp
 * the conclusion's set — `(K \ T₁) \ T₂ = (K \ T₂) \ T₁` by `sdiff_sdiff_comm`;
 * `hchord` — **not** literally symmetric, since it reads `∀ u ∈ T₁, ∀ v ∈ T₂` and mentions
   `crossRatioDist K u v` in that order.  `ArlibCommunity.Foundations.Convex.chord_bound_comm` proves it is symmetric
-  anyway, from two facts: `ArlibCommunity.Foundations.Convex.crossRatioDist_comm` (`CrossRatio.lean:375`) and the affine
+  anyway, from two facts: `ArlibCommunity.Foundations.Convex.crossRatioDist_comm` (`CrossRatio.lean`) and the affine
   identity `lineMap v u (1−r) = lineMap u v r` (`AffineMap.lineMap_apply_one_sub`), so the
   chords through the pair are the same set of points traversed backwards.  Disjointness
   supplies the `u ≠ v` that `crossRatioDist_comm` requires, and the two `⊆ K` hypotheses — which
@@ -102,7 +102,7 @@ measure, and at the conductance call site they follow from the inball and the ci
 ## Gap 3′ — `h` need not be measurable, and the binder says so
 
 `hIso` quantifies over **every** `h : EuclideanSpace ℝ (Fin n) → ℝ`, with no measurability
-clause; `ArlibCommunity.Foundations.not_hIso_two_measurable` (`LovaszVempalaIsoFalse.lean:347`) records that adding
+clause; `ArlibCommunity.Foundations.not_hIso_two_measurable` (`LovaszVempalaIsoFalse.lean`) records that adding
 one does not rescue the printed statement, so the clause was deliberately left out.  But
 `∫ x in K, h x` is Bochner and returns the junk value `0` for a non-integrable `h`, so the ℝ↔ℝ≥0∞
 bridge of Gap 3 is available only for measurable `h`.  A measurable-only lemma **cannot** be
@@ -423,7 +423,7 @@ theorem hIso_of_thm21 {K : Set (EuclideanSpace ℝ (Fin n))}
     exact main φ hφ
 
 
-/-! ### Axiom audit (`CLAUDE.md` §4)
+/-! ### Axiom audit
 
 Every declaration of this file, plus the two upstream results it rests on, must report exactly
 `[propext, Classical.choice, Quot.sound]`.  The upstream two are listed deliberately: this

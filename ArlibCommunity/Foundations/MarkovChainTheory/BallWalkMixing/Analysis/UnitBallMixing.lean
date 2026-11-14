@@ -49,8 +49,7 @@ only in dimension one.
   total-variation mixing of the lazy ball walk to `ArlibCommunity.Foundations.Convex.uniformOn volume (Metric.ball 0 1)`,
   which by `ArlibCommunity.Foundations.MarkovChainTheory.isReversible_ballWalk` is *exactly* its stationary measure —
   there is no approximation in the target.
-* `ArlibCommunity.Foundations.MarkovChainTheory.exists_unconditional_mixing_unitBall` — a non-vacuity witness
-  (`CLAUDE.md` §11): an actual starting law and step count for which the conclusion holds,
+* `ArlibCommunity.Foundations.MarkovChainTheory.exists_unconditional_mixing_unitBall` — a non-vacuity witness: an actual starting law and step count for which the conclusion holds,
   so the theorem above is not a statement about an unsatisfiable warm start.
 
   **It is a degenerate witness, and an earlier revision of this docstring advertised it as
@@ -157,7 +156,7 @@ theorem mixesWithin_lazy_ballWalk_unitBall_uncond (n : ℕ) (hn : 1 ≤ n)
 theorem isWarm_one_self {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) :
     IsWarm 1 μ μ := fun S _ => by simp
 
-/-- **Non-vacuity** (`CLAUDE.md` §11).  `mixesWithin_lazy_ballWalk_unitBall_uncond` still
+/-- **Non-vacuity**.  `mixesWithin_lazy_ballWalk_unitBall_uncond` still
 carries `hwarm` and `ht`; a theorem whose remaining hypotheses were unsatisfiable would be
 worthless.  They are not: the stationary measure itself is a `1`-warm start, and the step
 count is a natural number, so the conclusion genuinely holds for a concrete instance.

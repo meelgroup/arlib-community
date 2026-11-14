@@ -78,7 +78,7 @@ This is the item `TrajTransfer.lean` names as missing.
       ∫⁻ ω, (jumpTime ω 1) d(pathMeasure (ballWalk K δ) (dirac x))  =  (ell K δ x)⁻¹.
 
   Cousins–Vempala's "for any point `x`, the expected number of steps until a proper step is
-  made is `1/ℓ(x)`" (`1409.6011/vol3_journal.tex:931`) with *the number of steps read off the
+  made is `1/ℓ(x)`" ([CV18]) with *the number of steps read off the
   trajectory*, not written as a tail sum of survival indicators.  Costs `MeasurableSet K`,
   `[NeZero n]` and `ell K δ x ≠ 0`; the last is not removable (at a stuck `x` the left side is
   `0` and the right side is `⊤`).
@@ -88,7 +88,7 @@ This is the item `TrajTransfer.lean` names as missing.
 * `ArlibCommunity.Foundations.MarkovChainTheory.lintegral_jumpTime_eq_sum_sojourn` — for any law `μ` on paths under
   which the path a.s. makes `t` proper steps,
   `E[T t] = ∑_{j<t} E[T (j+1) − T j]`.  This is the *shape* of Cousins–Vempala's
-  linearity-of-expectation step (`vol3_journal.tex:937`); see "What is not proved" for the two
+  linearity-of-expectation step ([CV18]); see "What is not proved" for the two
   reasons it is not yet that step.
 
 **Non-vacuity** (§7).
@@ -144,7 +144,7 @@ Read this before quoting anything above.
 
 ## Conventions and the semantic-`def` audit
 
-`CLAUDE.md` §11 asks for every `def` whose name promises a semantic identity to carry a
+The non-vacuity rule asks for every `def` whose name promises a semantic identity to carry a
 proving lemma.  This file introduces exactly three `def`s and no `structure`, `class` or named
 `Prop`:
 
@@ -683,7 +683,7 @@ This is `lintegral_exitTime_pathMeasure_ballWalk` (`TrajTransfer.lean`) with the
 expression replaced by the *first jump time of the path* — a single, honest functional of the
 trajectory rather than a sum of survival indicators.  It is the statement
 "from `x`, the expected number of ball-walk steps until a proper step is made is `1/ℓ(x)`"
-(`vol3_journal.tex:931`) with "number of steps until a proper step is made" *defined on the
+([CV18]) with "number of steps until a proper step is made" *defined on the
 path*.
 
 Assumes `MeasurableSet K`, `[NeZero n]` and `ell K δ x ≠ 0`.  The last hypothesis is not
@@ -729,7 +729,7 @@ end BallWalk
 
 Cousins–Vempala's last sentence — "if the speedy walk took `t` steps, then by linearity of
 expectation, the expected number of steps for the ball walk is at most `Mt/λ`"
-(`vol3_journal.tex:937`) — is the statement that the number of ball-walk steps needed to
+([CV18]) — is the statement that the number of ball-walk steps needed to
 realise `t` proper steps splits as a sum of `t` sojourn lengths and that expectation
 distributes over that sum.  The splitting is `jumpTime_eq_sum_sojourn`, pathwise; this section
 integrates it.  What is **not** here is the identification of the `j`-th summand with
@@ -782,7 +782,7 @@ end Expectation
 
 /-! ## 7. Non-vacuity
 
-`CLAUDE.md` §11: definitions and theorems that are never non-degenerately instantiated
+The non-vacuity rule: definitions and theorems that are never non-degenerately instantiated
 certify nothing.  Two witnesses: one for the pathwise layer (§§1–3, 6) and one for the ball
 walk (§5). -/
 

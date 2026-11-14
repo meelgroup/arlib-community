@@ -21,7 +21,7 @@ The headline result of this file is
 
 The clause `∀ x ∈ C, 0 < h x` is the point of the lemma, not a bonus.  The known obstruction to
 the "enlarge to disjoint opens" route — `ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean:1205`) — lives exactly on `{h = 0}`, where the density
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean`) — lives exactly on `{h = 0}`, where the density
 distance `densDist h` is degenerate.  Because `h ≥ 0`, the set `{h = 0}` carries **zero** mass for
 the measure `h · volume`, so restricting attention to `{h > 0}` deletes the obstruction at no cost
 in integral.  This file makes that "no cost" precise and simultaneously buys compactness.

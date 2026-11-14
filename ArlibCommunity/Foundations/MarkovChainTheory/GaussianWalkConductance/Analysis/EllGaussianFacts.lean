@@ -11,13 +11,13 @@ import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Anal
 # Side conditions for the `ℓ`-weighted Gaussian density, **without** an indicator of `K`
 
 This file collects, as **named standalone lemmas**, the analytic side conditions that
-`ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed_logTwo` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean:631`)
+`ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed_logTwo` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean`)
 demands of its density `h`, at
 
     f x = (ell K δ x).toReal,   h x = f x · e^{−‖x‖²/(2σ²)}
 
 — that is, at the density of `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_openClosed_logTwo`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean:474`), which carries **no `1_K`**.  Every statement is in
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`), which carries **no `1_K`**.  Every statement is in
 the `{h} (hh : ∀ x, h x = (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)))` style of that
 theorem, so each one discharges a capstone binder verbatim.
 
@@ -37,7 +37,7 @@ theorem, so each one discharges a capstone binder verbatim.
 
 None of the five facts existed anywhere in the tree as a standalone lemma for this
 (indicator-free) `h`.  They existed only as **inline `have`s** inside a single proof,
-`ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_openClosed_logTwo` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean:503`
+`ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_openClosed_logTwo` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`
 for `hh0`, `:491` for `hhc`, `:506` for `hhB`, `:516` for `hhi`, `:530` for `hmass`), where they
 are not accessible to any other file.  The proofs below are those `have`s, extracted and
 generalised (notably: `hmass` here takes `Bornology.IsBounded K` and `volume K ≠ 0` rather than
@@ -45,25 +45,25 @@ a pre-supplied `volume (ball x₀ δ ∩ K) ≠ 0`, and needs no `MeasurableSet 
 
 The nearest pre-existing relative of `ellGaussian_integrable` is
 `ArlibCommunity.Foundations.MarkovChainTheory.integrableOn_ell_mul_gaussianWeightReal`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianConductance.lean:118`), which is a strictly weaker
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianConductance.lean`), which is a strictly weaker
 `IntegrableOn … A` for sets `A` of **finite volume** (and needs `MeasurableSet K`); it does not
 give global `Integrable`, which is what the capstone asks for.  Likewise the nearest relative of
 `ellGaussian_integral_pos` is `ArlibCommunity.Foundations.MarkovChainTheory.integral_ellGaussianIndicator_pos`
-(`…/SpeedyGaussianConductance.lean:502`), which is about the **indicator** density
+(`…/SpeedyGaussianConductance.lean`), which is about the **indicator** density
 `1_K·ℓ·e^{−‖x‖²/(2σ²)}`, a strictly smaller integrand.
 
 Genuinely reused, not reproved:
 
-* `ArlibCommunity.Foundations.MarkovChainTheory.continuous_ell_toReal` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean:431`) — continuity of `ℓ`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one` (`ArlibCommunity/Foundations/MarkovChainTheory/BallWalkMixing/Analysis/BallWalk.lean:151`).
-* `ArlibCommunity.Foundations.Convex.integrable_gaussianWeightReal` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean:314`) — the
+* `ArlibCommunity.Foundations.MarkovChainTheory.continuous_ell_toReal` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`) — continuity of `ℓ`.
+* `ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one` (`ArlibCommunity/Foundations/MarkovChainTheory/BallWalkMixing/Analysis/BallWalk.lean`).
+* `ArlibCommunity.Foundations.Convex.integrable_gaussianWeightReal` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`) — the
   dominating Gaussian.  **`ArlibCommunity.Foundations.Convex.gaussianWeightReal s x` is by definition
-  `Real.exp (-‖x‖ ^ 2 / (2 * s))` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisGaussian.lean:151`),
+  `Real.exp (-‖x‖ ^ 2 / (2 * s))` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisGaussian.lean`),
   so at `s := σ ^ 2` it is *definitionally* the exponential written above** — no bridge lemma is
   needed, only `simp [gaussianWeightReal]` to unfold the `def`.
-* `ArlibCommunity.Foundations.Convex.integral_pos_of_continuous_of_pos` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean:380`).
+* `ArlibCommunity.Foundations.Convex.integral_pos_of_continuous_of_pos` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`).
 * `ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_ne_zero_of_convex`
-  (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/StarPolar.lean:426`) — a bounded convex body of positive
+  (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/StarPolar.lean`) — a bounded convex body of positive
   volume meets every proposal ball centred in it in positive volume.
 
 ## Scope
@@ -136,7 +136,7 @@ theorem ellGaussian_continuous (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin 
 Domination by the Gaussian itself: `ℓ ≤ 1` gives `h x ≤ e^{−‖x‖²/(2σ²)}` pointwise, and the
 latter is integrable by `ArlibCommunity.Foundations.Convex.integrable_gaussianWeightReal`.  That lemma is stated for
 `ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2)`, which **is** `Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))`
-by `def` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisGaussian.lean:151`), so the only step is to
+by `def` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisGaussian.lean`), so the only step is to
 unfold the definition — there is no bridge lemma to state. -/
 theorem ellGaussian_integrable (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
     (hδ : 0 ≤ δ) (hσ : 0 < σ) {h : EuclideanSpace ℝ (Fin n) → ℝ}
@@ -166,7 +166,7 @@ integrable function that is positive at a point has positive integral
 monotonicity and subadditivity of `volume` as an outer measure) nor
 `volume_ball_inter_ne_zero_of_convex` needs it.  This is where the indicator-free `h` is easier
 than the indicator one: `ArlibCommunity.Foundations.MarkovChainTheory.integral_ellGaussianIndicator_pos`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianConductance.lean:502`) must route through
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianConductance.lean`) must route through
 `lintegral`s of the restricted measure and does need `hK` and `volume K ≠ ⊤`. -/
 theorem ellGaussian_integral_pos (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
     (hδ : 0 < δ) (hσ : 0 < σ) (hKc : Convex ℝ K) (hKb : Bornology.IsBounded K)

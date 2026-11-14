@@ -16,7 +16,7 @@ three bricks of Lee's mollified route (*Optimization book*, §10.6, `thm:har_wei
 ## The refutation
 
 `ArlibCommunity.Foundations.Convex.hIso_of_thm21` and `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_thm21`
-(`ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/CrossRatioIsoBridge.lean:436`) carry a binder `hthm21` quantifying over
+(`ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/CrossRatioIsoBridge.lean`) carry a binder `hthm21` quantifying over
 **arbitrary** measurable `U₁, U₂` — with no clause placing them inside `K`.
 
 `ArlibCommunity.Foundations.Convex.not_thm21_book` refutes that binder, verbatim, at `n = 1`, `K = Metric.closedBall 0 1`.
@@ -209,7 +209,7 @@ end Outside
 /-! ### The refutation of the ambient statement `hthm21`
 
 `ArlibCommunity.Foundations.Convex.hIso_of_thm21` and `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_thm21`
-(`ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/CrossRatioIsoBridge.lean:436`) carry a binder `hthm21` that quantifies over
+(`ArlibCommunity/Foundations/Convex/CrossRatioIsoperimetry/Analysis/CrossRatioIsoBridge.lean`) carry a binder `hthm21` that quantifies over
 **arbitrary** measurable `U₁, U₂`, with no clause placing them inside `K`.  The theorem below
 refutes that binder at `n = 1`, `K = closedBall 0 1` — a body meeting every structural
 hypothesis of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_thm21` (convex, closed, bounded, measurable,

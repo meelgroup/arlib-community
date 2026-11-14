@@ -12,7 +12,7 @@ import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.OneDimSha
 # The local conductance `ell` is log-concave
 
 `ArlibCommunity.Foundations.MarkovChainTheory.ell K δ x = vol(B(x,δ) ∩ K) / vol(δBₙ)` is the local conductance of the
-ball walk (`ArlibCommunity/Foundations/MarkovChainTheory/BallWalkMixing/Analysis/BallWalk.lean:131`).  This file proves that, for a
+ball walk (`ArlibCommunity/Foundations/MarkovChainTheory/BallWalkMixing/Analysis/BallWalk.lean`).  This file proves that, for a
 **convex** `K`, its real-valued form `x ↦ (ell K δ x).toReal` is **log-concave** on all of
 `ℝⁿ` in the sense of `ArlibCommunity.Foundations.Convex.IsLogConcave` — and hence so is `1_K · ell`, the density of the
 speedy walk's stationary measure `ArlibCommunity.Foundations.MarkovChainTheory.ellMeasure`.
@@ -68,17 +68,17 @@ defining `ArlibCommunity.Foundations.Convex.LogConcaveOn`.
 
 The isoperimetric inequality here is an **instance** of an existing theorem, not a new one:
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed_logTwo`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean:631`) already quantifies over an arbitrary nonnegative
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean`) already quantifies over an arbitrary nonnegative
 log-concave `f`, and the results above merely discharge its `hf₀`, `hfc`, `hhc`, `hhB`, `hhi`
 and `hmass` binders at `f := ell K δ`.  Nothing here is a conductance bound, a mixing bound or
 a runtime statement, and none of it may be quoted as one.
 
 **What it does not unlock.**  The `hiso` binder of
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/StarPolar.lean:626`) is an isoperimetric inequality for the
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/StarPolar.lean`) is an isoperimetric inequality for the
 density `h` of the walk's stationary measure `pi`, and `hrev` forces `pi` to be a scalar
 multiple of `ArlibCommunity.Foundations.MarkovChainTheory.ellMeasure K δ`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyWalk.lean:379, 403` are the only reversibility results
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyWalk.lean, 403` are the only reversibility results
 for `speedyWalk`), whose density is `1_K · ell` — with **no Gaussian factor**.  Every
 unconditional `n`-dimensional isoperimetric inequality in this repository is for a density of
 the form `f · e^{−‖x‖²/(2σ²)}`, and `1_K · ell` is not of that form with `f` log-concave: the
@@ -88,7 +88,7 @@ only for `S₁, S₂` open and `S₃` closed — the measurable upgrade
 (`ArlibCommunity.Foundations.Convex.gaussianIndicator_isoperimetry_measurable_logTwo`) is specific to indicator densities,
 and the general reduction
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_of_openClosed_enlargement`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean:1114`) needs disjoint open enlargements that
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean`) needs disjoint open enlargements that
 `ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement` shows need not exist.  Log-concavity of
 `ell` is therefore necessary for the `ell`-weighted Gaussian route but not by itself sufficient
 for the speedy walk's binder.
@@ -279,7 +279,7 @@ theorem isLogConcave_ell_toReal {K : Set (EuclideanSpace ℝ (Fin n))}
 /-- **The density of `ArlibCommunity.Foundations.MarkovChainTheory.ellMeasure K δ` is log-concave.**
 
 `ellMeasure K δ = (volume.restrict K).withDensity (ell K δ)`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyWalk.lean:277`), so its density relative to Lebesgue
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyWalk.lean`), so its density relative to Lebesgue
 measure is `1_K · ell`.  It is log-concave as a product of two log-concave functions: the
 indicator of the convex set `K` (`ArlibCommunity.Foundations.Convex.isLogConcave_indicator`) and `ell`
 (`ArlibCommunity.Foundations.MarkovChainTheory.isLogConcave_ell_toReal`). -/
@@ -449,7 +449,7 @@ end Continuity
 /-! ### `thm:iso` for the `ell`-weighted Gaussian-restricted density
 
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed_logTwo`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean:631`) is stated for `h = f · e^{−‖x‖²/(2σ²)}` with `f` an
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean`) is stated for `h = f · e^{−‖x‖²/(2σ²)}` with `f` an
 **arbitrary** nonnegative log-concave function — its binders are
 `hf₀ : ∀ x, 0 ≤ f x` and `hfc : IsLogConcave f`, nothing about indicators.  So the results
 above instantiate it at `f := ell K δ`, with no new isoperimetry work. -/

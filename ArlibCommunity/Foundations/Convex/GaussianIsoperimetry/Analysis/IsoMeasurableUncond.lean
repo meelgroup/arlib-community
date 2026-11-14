@@ -9,16 +9,16 @@ import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IsoEnlarg
 /-!
 # Cousins–Vempala's `thm:iso` for **measurable** sets, with no Lipschitz hypothesis
 
-`1409.6011/vol3_journal.tex:467` states `thm:iso` for an *arbitrary* partition `S₁, S₂, S₃`
+[CV18] states `thm:iso` for an *arbitrary* partition `S₁, S₂, S₃`
 of `ℝⁿ`.  Its proof reduces to the one-dimensional inequalities `(1d-1)`, `(1d-2)` by the
-Localization Lemma, via the step at `vol3_journal.tex:499`:
+Localization Lemma, via the step at [CV18]:
 
 > "By a standard combinatorial argument, we can assume that `Zᵢ = {t : (1−t)a+tb ∈ Sᵢ}` are
 > intervals that partition `[a,b]`."
 
 That step is not proved in the paper.  This repository proved the theorem for `S₁, S₂` **open**
 and `S₃` **closed** — `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed_logTwo`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean:631`), where the reduction *is* available — and the
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean`), where the reduction *is* available — and the
 measurable case has been the open blocker since.
 
 **This file closes it.**  The composition is:
@@ -36,7 +36,7 @@ measurable case has been the open blocker since.
 
 **Nothing is asked of `h` beyond continuity.**  The previous route to the measurable case —
 `ArlibCommunity.Foundations.Convex.exists_disjoint_open_enlargement_gaussianIndicator`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean:405`) — discharges the *density* branch of the
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`) — discharges the *density* branch of the
 disjunction by converting it into the *metric* branch, which needs a global log-Lipschitz
 bound on `h`.  That is free for the indicator density `1_K·γ` and is the binder `hellLip` for
 the `ℓ`-weighted one, where `AUDIT.md` §0i argues it has no witness with non-constant `ℓ`.
@@ -46,7 +46,7 @@ is a perturbation bound for `densDist`, which uniform continuity on a compact se
 `R` or `n`.
 
 **The known obstruction is evaded, not contradicted.**
-`ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean:1205`)
+`ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean`)
 exhibits data satisfying every hypothesis of `thm:iso` for which no disjoint open supersets of
 `S₁, S₂` exist at all.  There the two sets touch, and they touch *inside* `{h = 0}`.  The route
 above never asks for supersets of `S₁, S₂`: it asks for supersets of compact subsets of
@@ -83,11 +83,11 @@ open MeasureTheory
 
 variable {n : ℕ}
 
-/-- **Cousins–Vempala's `thm:iso` (`1409.6011/vol3_journal.tex:467`) for measurable
+/-- **Cousins–Vempala's `thm:iso` ([CV18]) for measurable
 `S₁, S₂, S₃`, at the separation threshold `d/log 2`.**
 
 This is `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed_logTwo`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean:631`) with its three regularity binders
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean`) with its three regularity binders
 
     hS₁ : IsOpen S₁,  hS₂ : IsOpen S₂,  hS₃ : IsClosed S₃
 
@@ -120,7 +120,7 @@ theorem gaussianRestricted_isoperimetry_measurable_logTwo (hn : 2 ≤ n) {σ d B
 
 /-! ## The `ℓ`-weighted instantiation -/
 
-/-! ## Non-vacuity of the capstone (`CLAUDE.md` §11) -/
+/-! ## Non-vacuity of the capstone -/
 
 /-- **The hypothesis bundle of `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_measurable_logTwo` is
 satisfiable at data that the open/closed capstone cannot reach.**
@@ -138,7 +138,7 @@ The last two conjuncts are the point: `S₁` and `S₂` are **not open**
 reach of `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed_logTwo` — the theorem proved here
 is being applied where its predecessor cannot be.
 
-`ArlibCommunity.Foundations.Convex.exists_enlargements_witness` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoEnlargeSlack.lean:301`) certifies,
+`ArlibCommunity.Foundations.Convex.exists_enlargements_witness` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoEnlargeSlack.lean`) certifies,
 for this same slab data, that the left-hand side `d/σ·(∫_{S₁}h)(∫_{S₂}h)` is **strictly
 positive**, so the conclusion here is not the trivial `0 ≤ ·`. -/
 theorem gaussianRestricted_isoperimetry_measurable_logTwo_witness (hn : 2 ≤ n) :

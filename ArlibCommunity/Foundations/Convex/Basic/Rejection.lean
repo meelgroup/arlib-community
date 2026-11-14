@@ -222,8 +222,7 @@ theorem ratio_mem_relErr_of_eps [Nonempty ι] (w : ι → ℝ) {V ε : ℝ} (hV 
 
 The lemmas above take the weights bounded *above by exactly* `1/V`, which is the
 shape Kannan–Vempala's Theorem 2 has **if** its `ε` is read as an additive error.
-That reading does not survive contact with the corollary — see `AUDIT-KV97.md`
-§4b — and under the reading that does, the weights are pinned two-sidedly,
+That reading does not survive contact with the corollary — see the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean` — and under the reading that does, the weights are pinned two-sidedly,
 `(1−a)/V ≤ w i ≤ (1+b)/V`, with a genuine `(1+b)` on top.
 
 This section is that version. It is stated for arbitrary bounds `L ≤ w i ≤ U`,

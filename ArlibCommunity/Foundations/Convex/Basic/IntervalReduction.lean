@@ -9,7 +9,7 @@ import ArlibCommunity.Foundations.Convex.Basic.OneDimIsoperimetry
 # From interval triples to measurable partitions in one dimension
 
 Cousins–Vempala dispose of one step of the proof of `thm:iso` in a single sentence
-(`1409.6011/vol3_journal.tex:497`):
+([CV18]):
 
 > "By a standard combinatorial argument, we can assume that `Zᵢ = {t : (1−t)a+tb ∈ Sᵢ}` are
 > intervals that partition `[a,b]`."
@@ -106,7 +106,7 @@ conditional reduction between two forms of a one-dimensional inequality.
 ## References
 
 Cousins and Vempala, *Gaussian Cooling and O\*(n³) Algorithms for Volume and Gaussian Volume*,
-§3 (`1409.6011/vol3_journal.tex:404–508`; the sentence formalised here is line 497).
+§3 ([CV18]; the sentence formalised here is line 497).
 
 Lovász and Simonovits, *Random walks in a convex body and an improved volume algorithm*,
 Random Structures & Algorithms **4** (1993).
@@ -386,7 +386,7 @@ theorem setIntegral_one (S : Set ℝ) : (∫ _t in S, (1:ℝ)) = (volume S).toRe
 /-- **The acid test: the separation hypothesis excludes the recorded counterexample.**
 
 `ArlibCommunity.Foundations.Convexity.SharpIsoperimetry` records the configuration that refutes the literal
-reading of `vol3_journal.tex:497`: `D ≡ 1` on `[0,1]`, `Z₁ = [0,0.4] ∪ [0.6,1]`,
+reading of [CV18]: `D ≡ 1` on `[0,1]`, `Z₁ = [0,0.4] ∪ [0.6,1]`,
 `Z₂ = (0.45,0.5)` and `c = 4`.  It satisfies both post-localisation relations, yet no interval
 reduction exists in either orientation.
 

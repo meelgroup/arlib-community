@@ -106,9 +106,9 @@ An earlier revision of that docstring (at what were then lines 50–53; the text
 corrected in place) said the signed case of the transverse cut "is where Borsuk–Ulam re-enters",
 and that Borsuk–Ulam is absent from Mathlib, hence `hIso` is out of reach.  This is not true,
 and the file that supersedes it says so explicitly
-(`ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationAssembly.lean:42–44`: *"no Borsuk–Ulam is used: with the equality
+(`ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationAssembly.lean`: *"no Borsuk–Ulam is used: with the equality
 form, only one integrand ever needs bisecting"*).  Checked at the declaration, not the prose:
-`ArlibCommunity.Foundations.Convex.exists_flat_cut_zero_pos` (`LocalizationAssembly.lean:370`) takes **arbitrary signed**
+`ArlibCommunity.Foundations.Convex.exists_flat_cut_zero_pos` (`LocalizationAssembly.lean`) takes **arbitrary signed**
 `g₁ g₂ : E → ℝ` — its only hypotheses on them are `IntegrableOn`, `∫_C g₁ = 0`, `0 < ∫_C g₂` —
 and produces a cut with `∫ g₁ = 0` and `0 < ∫ g₂` on one side.  The equality form bisects `g₁`
 alone (a one-parameter intermediate value theorem, `ArlibCommunity.Foundations.Convex.exists_pencil_bisecting`), and `g₂`

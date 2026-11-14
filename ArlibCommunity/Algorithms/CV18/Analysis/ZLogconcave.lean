@@ -87,7 +87,7 @@ instances that are actually available.
 
 ## What this file does *not* do
 
-`LocalizationHypothesis` (`Variance.lean:1095`) is untouched: it quantifies over needles and
+`LocalizationHypothesis` (`Variance.lean`) is untouched: it quantifies over needles and
 concludes a statement about the body, i.e. it *is* the Localization Lemma of
 Lovász–Simonovits, which this route says nothing about.
 -/

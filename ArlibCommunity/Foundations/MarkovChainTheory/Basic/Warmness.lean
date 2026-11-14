@@ -25,7 +25,7 @@ here.
 2. **Warmness is preserved forever** (`isWarm_step`, `isWarm_iterate`).  If the start `μ`
    is `M`-warm with respect to the stationary `pi`, then so is `iterate P μ t` for *every*
    `t`.  This is the reason a mixing bound may quote a warmness parameter that the caller
-   only ever checks at time zero — Cousins–Vempala, §4.2 (`vol3_journal.tex:747–826`),
+   only ever checks at time zero — Cousins–Vempala, §4.2 ([CV18]),
    where `M(Q_i, Q_{i+1}) ≤ √e` is verified once per phase and then used at every step of
    the ball walk inside that phase.
 
@@ -38,7 +38,7 @@ here.
    value — `hMc : 1 ≤ Mcool` is a free binder — but do not quote `√e` for this repo's
    schedule.
 
-   ⚠ **CV's proof of that lemma has an arithmetic slip at `vol3_journal.tex:787`**, which
+   ⚠ **CV's proof of that lemma has an arithmetic slip at [CV18]**, which
    computes the partition-function ratio as `(1/(1 − 1/n))^{n/2} ≤ √e`.  That inequality is
    false for every `n ≥ 2` — the quantity decreases to `√e` from *above* (`2` at `n = 2`,
    `1.6529` at `n = 100`, against `√e = 1.64872`).  The hypothesis is
@@ -68,7 +68,7 @@ here.
   integral of a `[0,1]`-valued function, with no loss.  The layer-cake step.
 * `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate` — **data processing**: a kernel cannot increase total
   variation, at any number of steps.
-* `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_const` — the **non-vacuity witness** (`CLAUDE.md` §11):
+* `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_const` — the **non-vacuity witness**:
   the instantly mixing kernel `Kernel.const Ω pi` satisfies `MixesWithin _ pi μ 1 0`, i.e.
   it reaches `pi` exactly, in one step, from any start.  Since
   `ArlibCommunity.Foundations.MarkovChainTheory.conductance_const_piHalf` computes the conductance of that same
@@ -160,7 +160,7 @@ The definition `ArlibCommunity.Foundations.Convex.IsWarm M μ pi` says `μ S ≤
 content of this section is that the *same* `M` works at every time: a chain started from an
 `M`-warm law is `M`-warm forever.  Consequently a mixing bound whose hypothesis is
 "`μ` is `M`-warm" need only be checked at time zero, which is what makes the warm-start
-bookkeeping of Cousins–Vempala §4.2 (`vol3_journal.tex:747–826`) a finite amount of work:
+bookkeeping of Cousins–Vempala §4.2 ([CV18]) a finite amount of work:
 `M(Q_i, Q_{i+1}) ≤ √e` is established once per cooling phase and then holds throughout the
 ball walk of that phase.
 
@@ -368,7 +368,7 @@ theorem isWarm_of_mixesWithin {M : ℝ≥0∞} {P : Kernel Ω Ω} {pi μ₀ : Me
 
 /-! ## A non-vacuity witness
 
-`CLAUDE.md` §11: a predicate that nothing satisfies makes every theorem about it vacuous.
+The non-vacuity rule: a predicate that nothing satisfies makes every theorem about it vacuous.
 The instantly mixing kernel `Kernel.const Ω pi` — resample from `pi` at every step —
 satisfies `MixesWithin` with `t = 1` and `ε = 0`, the strongest possible instance.  It is
 the *same* kernel whose conductance `ArlibCommunity.Foundations.MarkovChainTheory.conductance_const_piHalf` computes

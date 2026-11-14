@@ -36,7 +36,7 @@ Contrast `e^{-R²/(2s)} = e^{-n/2}`.  That is the whole gain, and it is `metropo
 
 ## The obstruction this file does **not** remove: the local-conductance floor is forced
 
-`ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_convex` (`StarPolar.lean:518`) proves `cor:overlap`
+`ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_convex` (`StarPolar.lean`) proves `cor:overlap`
 for the **speedy** walk with *no* floor on the local conductance `ell`.  That argument does
 **not** transfer to `metropolisGaussian`, and the reason is structural, not technical:
 
@@ -68,7 +68,7 @@ a bounded convex body meeting it (there `ell ≡ 1/4` and `a = e^{-1/64}`).
 `volume_lens_inter_ge_max` — the convexity input — holds at `‖u − v‖ ≤ δ/n`.  Feeding that
 into `conductance_speedyGaussian_ge`, whose `hoverlap` binder is at `δ/√n`, forces the
 instantiation `δ_thm := δ/√n`, exactly as `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex`
-(`StarPolar.lean:598`) already does for the speedy walk.  The conclusion is therefore
+(`StarPolar.lean`) already does for the speedy walk.  The conclusion is therefore
 `Ω(δ·log 2/(σ·n))`, a `√n` worse than the paper's.  **This loss is inherited from the
 convexity lemma, not introduced here.**
 
@@ -155,7 +155,7 @@ theorem metropolisAccept_ge {s : ℝ} (hs : 0 < s) {R δ : ℝ} (hR : 0 ≤ R) (
 /-! ## 2. The one-step law dominates a scaled uniform law on any sub-ball region
 
 This is the analogue of the `hdom` step inside `ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_convex`
-(`StarPolar.lean:538`) — with the crucial difference that the normaliser is `vol(δBₙ)`, the
+(`StarPolar.lean`) — with the crucial difference that the normaliser is `vol(δBₙ)`, the
 volume of the **full** ball, and not `vol(B(x,δ) ∩ K)`.  That is precisely why a local
 conductance floor cannot be avoided downstream; see the module docstring. -/
 
@@ -210,7 +210,7 @@ theorem mul_volume_le_metropolisGaussian {s : ℝ} (hs : 0 < s) {R δ : ℝ} (hR
 
 /-! ## 3. `cor:overlap` for the Metropolis kernel, at separation `δ/n`
 
-The geometry is `ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_inter_ge_max` (`StarPolar.lean:239`), used
+The geometry is `ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_inter_ge_max` (`StarPolar.lean`), used
 exactly as in `ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_convex`.  What differs is the
 normalisation: the speedy walk divides by `vol(B(x,δ) ∩ K)`, which cancels the lens bound's
 `max` outright; the Metropolis kernel divides by `vol(δBₙ)`, so the `max` survives as a
@@ -486,7 +486,7 @@ theorem conductance_metropolisGaussian_sharp_ge (hn : 2 ≤ n)
     (isReversible_metropolisGaussian hK δ (σ ^ 2)) (ArlibCommunity.Foundations.Convex.uniformOn_compl_eq_zero _ hK)
     hov hiso
 
-/-! ## 6. Non-vacuity (`CLAUDE.md` §11) -/
+/-! ## 6. Non-vacuity -/
 
 /-- **Non-vacuity: every hypothesis of `conductance_metropolisGaussian_sharp_ge` except
 `hiso` is jointly satisfiable at a bounded convex body, the conclusion there is not the

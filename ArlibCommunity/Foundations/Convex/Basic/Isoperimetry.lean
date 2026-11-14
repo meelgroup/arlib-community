@@ -51,7 +51,7 @@ supports today.
 ## The target statement — PROSE, NOT LEAN
 
 The theorem this file is scaffolding for is Cousins–Vempala Theorem 3.4 (`thm:iso`,
-`vol3_journal.tex:467`):
+[CV18]):
 
 > Let `π` be the Gaussian distribution `N(0, σ²Iₙ)` with density `γ` restricted by a
 > log-concave `f : ℝⁿ → ℝ₊`, i.e. `π` has density proportional to `h(x) = f(x)γ(x)`. Let
@@ -80,7 +80,7 @@ proves nothing about the case with content; see `CV-ROADMAP.md` §2a.
 ## References
 
 Cousins and Vempala, *Gaussian Cooling and O\*(n³) Algorithms for Volume and Gaussian
-Volume*, §3 (`../gaussian-cooling-vempala/vol3_journal.tex:404–508`).
+Volume*, §3 ([CV18]).
 -/
 
 open ArlibCommunity.Foundations.Convex
@@ -169,7 +169,7 @@ end GaussianDensity
 
 /-! ### The `f`-distance between points
 
-`d_f(u,v) = |f(u) − f(v)| / max {f(u), f(v)}` (`vol3_journal.tex:399`). It measures how
+`d_f(u,v) = |f(u) − f(v)| / max {f(u), f(v)}` ([CV18]). It measures how
 much the density changes between two points, and appears in the second branch of the
 separation hypothesis of the target theorem. -/
 
@@ -351,7 +351,7 @@ constant, and this section is why: under the dilation `x ↦ r • x` the separa
 the scale `D` both pick up a factor `r`, while `π` — a ratio of volumes — is unchanged.
 Both sides of the inequality therefore scale identically, so proving it at one scale
 proves it at every scale. This is the step the paper performs in one sentence
-(`vol3_journal.tex:475`, "we prove the theorem for the case `σ = 1`, then note that by
+([CV18], "we prove the theorem for the case `σ = 1`, then note that by
 applying the scaling `x = y/σ` we get the general case"). -/
 
 section ScaleInvariance

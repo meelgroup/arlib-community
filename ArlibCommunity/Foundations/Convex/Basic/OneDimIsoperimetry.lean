@@ -11,7 +11,7 @@ import ArlibCommunity.Foundations.Convex.Basic.Isoperimetry
 
 This file proves the one-dimensional isoperimetric inequality that Cousins–Vempala's
 Theorem 3.4 (`thm:iso`) is reduced to by the Localization Lemma, namely inequality
-`(1d-2)` of `vol3_journal.tex:501`.
+`(1d-2)` of [CV18].
 
 ## Main results
 
@@ -43,7 +43,7 @@ Theorem 3.4 (`thm:iso`) is reduced to by the Localization Lemma, namely inequali
 ## Relation to the paper
 
 Cousins–Vempala write the coefficient of `(1d-2)` as the macro `\iso`, which
-`vol3_journal.tex:65` defines to be `\ln(2)`. Their route is
+[CV18] defines to be `\ln(2)`. Their route is
 Lemma `lem:1d-iso` (= Theorem 5.1 of Kannan–Lovász–Simonovits 1995) applied to the
 *isotropic* rescaling of the needle density, whose variance Brascamp–Lieb pins at `≤ 1`.
 Here the coefficient is `w z / ∫_a^b w` for a free sample point `z ∈ [a,b]`
@@ -57,7 +57,7 @@ argument, not a defect in the paper.
 ## References
 
 Cousins and Vempala, *Gaussian Cooling and O\*(n³) Algorithms for Volume and Gaussian
-Volume*, §3 (`1409.6011/vol3_journal.tex:404–508`).
+Volume*, §3 ([CV18]).
 
 Kannan, Lovász and Simonovits, *Isoperimetric problems for convex bodies and a
 localization lemma*, Discrete Comput. Geom. **13** (1995), Theorem 5.1.
@@ -336,7 +336,7 @@ section Main
 
 variable {a b : ℝ} {w : ℝ → ℝ}
 
-/-- **Cousins–Vempala inequality `(1d-2)`** (`vol3_journal.tex:501`).
+/-- **Cousins–Vempala inequality `(1d-2)`** ([CV18]).
 
 For a nonnegative log-concave weight `w` on `[a,b]`, any sample point `z ∈ [a,b]`, and
 `a ≤ u ≤ v ≤ b`,
@@ -470,7 +470,7 @@ end Main
 /-! ### The three-interval partition, in the vocabulary of `ArlibCommunity/Foundations/Convex/Basic/Isoperimetry.lean`
 
 The Localization Lemma delivers the three parts of the partition as *intervals*
-(`vol3_journal.tex:497`, "by a standard combinatorial argument, we can assume that
+([CV18], "by a standard combinatorial argument, we can assume that
 `Zᵢ = {t : (1−t)a + tb ∈ Sᵢ}` are intervals that partition `[a,b]`"). This section records
 that `[a,u]`, `[v,b]`, `(u,v)` really is an `ArlibCommunity.Foundations.Convex.IsPartition3` of `[a,b]` whose two outer
 parts are at `ArlibCommunity.Foundations.Convex.setDist` exactly `v − u`, so that `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry` can be
@@ -739,7 +739,7 @@ i.e. `π(S₃) ≥ (1/(2√3)) · d(S₁,S₂) · π(S₁) · π(S₂)` for the 
 `S₁ = [a,u]`, `S₃ = [u,v]`, `S₂ = [v,b]` of the probability measure `π = w/Z`.
 
 **The constant.** Cousins–Vempala state this with `\iso = ln 2 ≈ 0.6931`
-(`vol3_journal.tex:65`, `:439`). The constant proved here is
+([CV18], `:439`). The constant proved here is
 `1/(2√3) ≈ 0.2887`, a factor `2.4` smaller. Two steps are lossy relative to the
 KLS argument: Hensley's bound `ArlibCommunity.Foundations.Convex.cube_le_sq_mul_moment` is applied about an arbitrary
 `c` rather than the barycentre, and `ArlibCommunity.Foundations.Convex.cheeger_mul_le` bounds `F(x)(1−F(x))` by

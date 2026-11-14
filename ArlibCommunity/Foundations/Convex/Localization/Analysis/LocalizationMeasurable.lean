@@ -10,7 +10,7 @@ import ArlibCommunity.Foundations.Convex.Localization.Analysis.HlocFromLocalizat
 # The chain and the needle, composed — and why the integrands cannot be merely measurable
 
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_of_localization`
-(`ArlibCommunity/Foundations/Convex/Localization/Analysis/HlocFromLocalization.lean:882`) proves Cousins–Vempala's `thm:iso` from one
+(`ArlibCommunity/Foundations/Convex/Localization/Analysis/HlocFromLocalization.lean`) proves Cousins–Vempala's `thm:iso` from one
 residual binder `hLoc`, the Localization Lemma applied to
 
 `g₁ = 1_{S₁}h − A·h`   and   `g₂ = (d/σ)·A·1_{S₂}h − 1_{S₃}h`
@@ -25,7 +25,7 @@ genuine obstruction at the shape `hLoc` asks for.
 ## 1. (F), and the missing composition — `ArlibCommunity.Foundations.Convex.exists_needle_of_compact_convex`
 
 Two halves of the stack were never joined.  `ArlibCommunity.Foundations.Convex.exists_flat_cut_chain_collinear_compact_ge`
-(`LocalizationClosed.lean:219`) turns a compact convex body into a chain; the needle theorems of
+(`LocalizationClosed.lean`) turns a compact convex body into a chain; the needle theorems of
 `ArlibCommunity.Foundations.Convexity.NeedleSlabChain` / `ArlibCommunity.Foundations.Convexity.LocalizationTransport` turn a chain into a
 needle.  Nothing composed them, so the localisation stack had no single entry point taking a body
 to a needle.  `ArlibCommunity.Foundations.Convex.exists_needle_of_compact_convex` is that entry point.
@@ -34,9 +34,9 @@ Along the way `v ≠ 0` is recovered.  It is **not** derivable after the fact fr
 `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact_chain_euclidean_of_sep`: that theorem's
 conclusion is satisfied by a degenerate needle.  The clause is present one level down —
 `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_collinear_shrinkingSlab`
-(`NeedleSlabAffine.lean:227`) delivers `φ v = 1` — and is *discarded* by the `-` pattern in the
+(`NeedleSlabAffine.lean`) delivers `φ v = 1` — and is *discarded* by the `-` pattern in the
 proof of `ArlibCommunity.Foundations.Convex.exists_needleIntegral_eq_zero_and_pos_of_compact_chain`
-(`NeedleSlabChain.lean:288`).  So the composition below is a replay that keeps it, weakened to
+(`NeedleSlabChain.lean`).  So the composition below is a replay that keeps it, weakened to
 `v ≠ 0` (which is what survives the transport to `EuclideanSpace`, `φ` being unavailable there).
 
 `ArlibCommunity.Foundations.Convex.exists_needle_of_compact_convex_witness` is the non-vacuity check: the closed unit ball
@@ -59,7 +59,7 @@ contains the whole coordinate axis `t ↦ t • e_i` for `i ≠ j`:
 * `ArlibCommunity.Foundations.Convex.exists_transverse_oscillation_eq_one` — for that same `S` and **every** body of positive
   volume, however thin, some point of the body has transverse oscillation exactly `1`.  The
   moduli `δ k` of `ArlibCommunity.Foundations.Convex.exists_tendsto_transverse_modulus`
-  (`LocalizationTransverse.lean:112`) are therefore `≥ 1` at every stage of every chain of
+  (`LocalizationTransverse.lean`) are therefore `≥ 1` at every stage of every chain of
   positive-volume bodies, so they do not tend to `0`.  That lemma is the *unique* place the
   localisation limit passage consumes continuity — it is a uniform transverse-oscillation bound,
   not a dominated-convergence hypothesis — and it fails for indicators by a fixed constant.  This
@@ -534,7 +534,7 @@ theorem exists_null_measurableSet_needleIntegral_eq_one (hn : 2 ≤ n) :
 
 /-- **The transverse oscillation of an indicator is `1` on every body of positive volume.**
 
-`ArlibCommunity.Foundations.Convex.exists_tendsto_transverse_modulus` (`LocalizationTransverse.lean:112`) is the unique place
+`ArlibCommunity.Foundations.Convex.exists_tendsto_transverse_modulus` (`LocalizationTransverse.lean`) is the unique place
 where the localisation limit passage consumes continuity of the integrands, and it consumes it as
 a *uniform transverse-oscillation bound*: the moduli
 

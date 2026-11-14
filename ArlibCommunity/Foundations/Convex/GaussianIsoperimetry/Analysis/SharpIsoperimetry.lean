@@ -11,7 +11,7 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 # The sharp isoperimetric inequality for Gaussian-restricted log-concave measures
 
 This file assembles **Cousins–Vempala's Theorem 3.4** (`thm:iso`,
-`1409.6011/vol3_journal.tex:467`), the sharp isoperimetric inequality that every polynomial
+[CV18]), the sharp isoperimetric inequality that every polynomial
 bound in that paper rests on:
 
 > Let `π` be `N(0, σ²Iₙ)` restricted by a log-concave `f : ℝⁿ → ℝ₊`, i.e. `π` has density
@@ -19,7 +19,7 @@ bound in that paper rests on:
 > and `v ∈ S₂`, either `‖u − v‖ ≥ d/ln 2` or `d_h(u,v) ≥ 4d√n`.  Then
 > `π(S₃) ≥ (d/σ)·π(S₁)·π(S₂)`.
 
-(`ln 2` is the paper's `\iso` macro, `vol3_journal.tex:65`.)
+(`ln 2` is the paper's `\iso` macro, [CV18].)
 
 ## Main results
 
@@ -44,7 +44,7 @@ conclusion, and in particular nothing shaped like the `IsoInput`/`OneDimIso` pre
 `ArlibCommunity.Foundations.Convexity.Localization` (line 56) deliberately refuse to introduce.
 
 1. **`hloc` — the Localization Lemma** of Lovász–Simonovits (KLS 1995, Corollary 2.4), applied
-   to `g₁ = 1_{S₁}h − A·h` and `g₂ = (d/σ)A·1_{S₂}h − 1_{S₃}h`; `vol3_journal.tex:479–493`.
+   to `g₁ = 1_{S₁}h − A·h` and `g₂ = (d/σ)A·1_{S₂}h − 1_{S₃}h`; [CV18].
    Stated in *arclength* parameterisation `t ↦ p + t·e`, `‖e‖ = 1` (the paper writes
    `(1−t)a + tb`, `t ∈ [0,1]`; the two differ by an affine change of parameter, under which
    both displayed relations — being homogeneous of degree one in the needle measure — are
@@ -60,7 +60,7 @@ open there (that file's docstring, "Classification of every hypothesis"). A thir
    delivers `ℓ` *affine*.  Wiring the two together therefore needs `h1d1`/`h1d2` restated for a
    concave profile, not the affine upgrade.
 2. **`hcombinatorial` — "by a standard combinatorial argument, we can assume that the `Zᵢ` are
-   intervals that partition `[a,b]`"**, `vol3_journal.tex:497`.  The paper gives no proof, and
+   intervals that partition `[a,b]`"**, [CV18].  The paper gives no proof, and
    nobody in this repository is working on it.
 
    It is stated here not as "the `Zᵢ` may be taken to be intervals" but as *what that sentence
@@ -83,16 +83,16 @@ open there (that file's docstring, "Classification of every hypothesis"). A thir
 
    As stated, `hcombinatorial` is exactly the one-dimensional isoperimetric inequality of
    Lovász–Simonovits for a general measurable partition, deduced from its interval case.
-3. **`h1d1` — inequality (1d-1)**, `vol3_journal.tex:498`, cited there as Lemma 3.8 of
+3. **`h1d1` — inequality (1d-1)**, [CV18], cited there as Lemma 3.8 of
    Kannan–Lovász–Simonovits 1997.  **This repository does not contain it.**
    `ArlibCommunity.Foundations.Convex.lem33_sqrt` / `ArlibCommunity.Foundations.Convex.lintegral_volume_closedBall_sdiff_le_sqrt`
    (`ArlibCommunity/Foundations/Convex/BoundaryLayer/Analysis/KLS97Sharp.lean`) is *Corollary 4.6* of that paper — an `n`-dimensional
    statement `∫_K vol(B(x,t) \ K) dx ≤ …` about ball-walk step lengths — and is a different
    result from the four-integral one-dimensional inequality wanted here.  Nobody is currently
    proving `(1d-1)`.
-4. **`h1d2` — inequality (1d-2)**, `vol3_journal.tex:501`, with the paper's coefficient
+4. **`h1d2` — inequality (1d-2)**, [CV18], with the paper's coefficient
    `\iso = ln 2`, divided by `σ` because the needle's Gaussian factor has variance `σ²` rather
-   than `1` (Brascamp–Lieb, `vol3_journal.tex:506`).  Being proved concurrently in
+   than `1` (Brascamp–Lieb, [CV18]).  Being proved concurrently in
    `ArlibCommunity.Foundations.Convexity.OneDimIsoperimetry`.  That file's target `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry`
    currently reaches coefficient `sup w / ∫ w ≥ 1/(2√3)` rather than `ln 2 ≈ 0.693`; if it
    lands at the weaker constant, `h1d2` here should be reinstantiated with `1/(2√3)` in place
@@ -110,7 +110,7 @@ renormalising `h`).  Pushing the printed hypothesis through the rescaling yields
 which is the entire Gaussian-cooling regime.  The corrected disjunct is `d_h(u,v) ≥ 4(d/σ)√n`,
 and it is what is proved here.
 
-The paper's own downstream use survives the correction.  At `vol3_journal.tex:647` the theorem
+The paper's own downstream use survives the correction.  At [CV18] the theorem
 is applied with `d = min{δ·ln 2/√n, 1/(16√n)}` to data satisfying "`‖u−v‖ ≥ δ/√n` or
 `d_h ≥ 1/4`"; the corrected disjunct needs `4(d/σ)√n ≤ 1/4`, i.e. `d ≤ σ/(16√n)`, so the
 correct choice is `d = min{δ·ln 2/√n, σ/(16√n)}`.  Since that application also has
@@ -139,7 +139,7 @@ holds there vacuously.
 Nothing here says, or implies, that any algorithm runs in polynomial time.  The conductance
 constants in this repository are still exponentially small
 (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisConductance.lean`;
-`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean:591–596`, "this is not a polynomial-time
+`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean`, "this is not a polynomial-time
 result").  `thm:iso` is the input that would eventually change that picture — but only once
 **all four** hypotheses above are discharged, and today none of them is.  Until then this file
 is a conditional reduction, not a rate improvement.
@@ -147,7 +147,7 @@ is a conditional reduction, not a rate improvement.
 ## References
 
 Cousins and Vempala, *Gaussian Cooling and O\*(n³) Algorithms for Volume and Gaussian Volume*,
-§3 (`1409.6011/vol3_journal.tex:404–508`).
+§3 ([CV18]).
 
 Kannan, Lovász and Simonovits, *Isoperimetric problems for convex bodies and a localization
 lemma*, Discrete Comput. Geom. **13** (1995).
@@ -174,7 +174,7 @@ one-dimensional isoperimetric inequality supplies `c·I₁·I₂ ≤ I·I₃`.  
 contradictory: `I·I₃ < I·(c·A·I₂) = c·(A·I)·I₂ = c·I₁·I₂ ≤ I·I₃`.  No sign or nonnegativity
 hypothesis on `c`, `A` or the `Iᵢ` is needed — only `0 < I`.
 
-`vol3_journal.tex:479–495`. -/
+[CV18]. -/
 theorem needle_masses_contradiction {I I₁ I₂ I₃ A c : ℝ} (hIpos : 0 < I) (heq : I₁ = A * I)
     (hlt : I₃ < c * A * I₂) (hiso : c * (I₁ * I₂) ≤ I * I₃) : False := by
   have hstep : I * I₃ < I * (c * A * I₂) := mul_lt_mul_of_pos_left hlt hIpos
@@ -295,7 +295,7 @@ section Main
 
 variable {n : ℕ}
 
-/-- **Cousins–Vempala, Theorem 3.4 (`thm:iso`, `vol3_journal.tex:467`), assembled.**
+/-- **Cousins–Vempala, Theorem 3.4 (`thm:iso`, [CV18]), assembled.**
 
 Let `π` be `N(0, σ²Iₙ)` restricted by a log-concave `f : ℝⁿ → ℝ₊`, i.e. `π` has density
 proportional to `h(x) = f(x)·exp(−‖x‖²/2σ²)`.  Let `S₁, S₂, S₃` partition `ℝⁿ` so that for every
@@ -314,7 +314,7 @@ is `σ`-covariant but `d_h` is scale-*invariant*.  Feeding the printed hypothesi
 rescaling yields only `π(S₃) ≥ min{d, d/σ}·π(S₁)π(S₂)`, which is weaker than the printed
 conclusion whenever `σ < 1` — exactly the regime Gaussian cooling runs in.  The corrected
 disjunct `d_h(u,v) ≥ 4(d/σ)√n` is used here; see the module docstring for why the downstream
-conductance bound of `vol3_journal.tex:647` is unaffected.
+conductance bound of [CV18] is unaffected.
 
 **The four hypotheses that are not geometry.**  `hloc`, `hcombinatorial`, `h1d1` and `h1d2` are
 external inputs, each a plain binder documented at its declaration site; see the module
@@ -330,7 +330,7 @@ theorem gaussianRestricted_isoperimetry (hn : 0 < n) {σ d : ℝ} (hσ : 0 < σ)
     (hsep : ∀ u ∈ S₁, ∀ v ∈ S₂,
       d / Real.log 2 ≤ ‖u - v‖ ∨ 4 * (d / σ) * Real.sqrt n ≤ densDist h u v)
     -- **(L)** The Localization Lemma of Lovász–Simonovits (KLS 1995, Corollary 2.4), applied
-    -- to `g₁ = 1_{S₁}h − A·h` and `g₂ = (d/σ)A·1_{S₂}h − 1_{S₃}h`; `vol3_journal.tex:479–493`.
+    -- to `g₁ = 1_{S₁}h − A·h` and `g₂ = (d/σ)A·1_{S₂}h − 1_{S₃}h`; [CV18].
     -- The needle is arclength-parameterised (`‖e‖ = 1`); the paper's `(1−t)a + tb`, `t ∈ [0,1]`
     -- differs from it by an affine change of parameter, under which both displayed relations
     -- are invariant.  Partially assembled in `ArlibCommunity.Foundations.Convexity.LocalizationAssembly`; see the
@@ -350,7 +350,7 @@ theorem gaussianRestricted_isoperimetry (hn : 0 < n) {σ d : ℝ} (hσ : 0 < σ)
           < d / σ * A * ∫ t in needleMap p e ⁻¹' S₂ ∩ Set.Icc α β,
               (c₀ + c₁ * t) ^ (n - 1) * h (needleMap p e t))
     -- **(C)** "By a standard combinatorial argument, we can assume that the `Zᵢ` are intervals
-    -- that partition `[a,b]`" — `vol3_journal.tex:497`.  Its *content* is the passage from the
+    -- that partition `[a,b]`" — [CV18].  Its *content* is the passage from the
     -- interval case of the one-dimensional isoperimetric inequality (hypothesis `hint`, which
     -- `h1d1`/`h1d2` supply) to an arbitrary measurable three-way partition (`hcross`, which the
     -- separation hypothesis supplies).  Stated for an arbitrary nonnegative weight `D` and an
@@ -370,7 +370,7 @@ theorem gaussianRestricted_isoperimetry (hn : 0 < n) {σ d : ℝ} (hσ : 0 < σ)
           ≤ (∫ t in α..β, D t) * ∫ t in x..y, D t) →
       (∀ s ∈ Z₁, ∀ t ∈ Z₂, c ≤ κ (min s t) (max s t)) →
       c * ((∫ t in Z₁, D t) * ∫ t in Z₂, D t) ≤ (∫ t in α..β, D t) * ∫ t in Z₃, D t)
-    -- **(1d-1)** `vol3_journal.tex:498`, cited there as Lemma 3.8 of KLS 1997.
+    -- **(1d-1)** [CV18], cited there as Lemma 3.8 of KLS 1997.
     (h1d1 : ∀ (g l : ℝ → ℝ) (α β u v : ℝ), α ≤ u → u ≤ v → v ≤ β →
       (∀ t ∈ Set.Icc α β, 0 ≤ g t) → LogConcaveOn (Set.Icc α β) g →
       (∀ t ∈ Set.Icc α β, 0 ≤ l t) → (∃ c₀ c₁ : ℝ, ∀ t, l t = c₀ + c₁ * t) →
@@ -379,7 +379,7 @@ theorem gaussianRestricted_isoperimetry (hn : 0 < n) {σ d : ℝ} (hσ : 0 < σ)
             (∫ t in v..β, l t ^ (n - 1) * g t))
         ≤ 4 * Real.sqrt n * ((∫ t in α..β, l t ^ (n - 1) * g t) *
             (∫ t in u..v, l t ^ (n - 1) * g t)))
-    -- **(1d-2)** `vol3_journal.tex:501`, with the paper's coefficient `\iso = ln 2`, divided by
+    -- **(1d-2)** [CV18], with the paper's coefficient `\iso = ln 2`, divided by
     -- `σ` because the needle's Gaussian factor has variance `σ²` rather than `1`.
     (h1d2 : ∀ (F : ℝ → ℝ) (t₀ α β u v : ℝ), α ≤ u → u ≤ v → v ≤ β →
       (∀ t ∈ Set.Icc α β, 0 ≤ F t) → LogConcaveOn (Set.Icc α β) F →

@@ -13,7 +13,7 @@ import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Anal
     (1 − 1/n)ⁿ · max{vol(K ∩ B(u,δ)), vol(K ∩ B(v,δ))}  ≤  vol(K ∩ B(u,δ) ∩ B(v,δ))
 
 (`ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_inter_ge_max`) at separation `‖u − v‖ ≤ δ/n`, and its module
-docstring (`StarPolar.lean:98–111`) proposes to reach the paper's `δ/√n` by combining the
+docstring (`StarPolar.lean`) proposes to reach the paper's `δ/√n` by combining the
 direction-dependent contraction `ArlibCommunity.Foundations.MarkovChainTheory.volume_lens_inter_ge_halfspace` with a
 single missing inequality: for convex `K ∋ u,v`, with `H_u = {x | 0 ≤ ⟪x−u, v−u⟫}` and
 `H_v = {x | 0 ≤ ⟪x−v, u−v⟫}`,
@@ -53,7 +53,7 @@ bounded, of positive volume, and contains both `u` and `v`.  Three facts drive e
 At `t = 1/√n` the gain is `(1 + 1/(4√n))ⁿ ≈ e^{√n/4}`.  Both `B(u,1)` and `B(v,1)` slices are
 of positive finite volume, so the refutations are quantitative, not `0`-vs-`0`.
 
-This is the *same* configuration `StarPolar.lean:90–96` already identified as defeating the
+This is the *same* configuration `StarPolar.lean` already identified as defeating the
 `max` form at `δ/√n` — a thin body whose mass sits far from `v` on the `u` side — made
 explicit, formal, and quantitative.  What that docstring got wrong is only the hope that (★)
 would nevertheless survive: (★) implies the `max` form at `δ/√n` via

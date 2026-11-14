@@ -14,13 +14,13 @@ import ArlibCommunity.Foundations.MarkovChainTheory.HitAndRunMixing.Analysis.Sph
 constant in the **conductance** theorem (Theorem 4.2).  This file does the same for the
 **mixing** theorem (Theorem 1.1), which is where the constants actually failed to compose:
 
-* What is proved: `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_lemma41_uncond` (`SphereCap.lean:896`)
+* What is proved: `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_lemma41_uncond` (`SphereCap.lean`)
   is Lemma 4.1 with no unproved hypothesis, at overlap constant `1 − 1/8000`, for `n ≥ 1100`.
 * What the consumers demanded: `hLem41` binders hardcoded at `1 − 1/500`, a constant
   `HitAndRunOverlap.lean`'s module docstring shows the corrected proof cannot reach (two of
   the three bounds in the paper's proof are wrong in the same direction).
 * And the mixing theorem hardcoded not just the constant but the *conductance value*:
-  `tvLe_iterate_lazy_hitAndRun` (`ConductanceToTV.lean:372`) demands
+  `tvLe_iterate_lazy_hitAndRun` (`ConductanceToTV.lean`) demands
   `Φ ≥ r/(2²⁸·n·R)` and a deadline `4·lvThreshold n r R M ε`, both of which are what the
   `1/500` route delivers and neither of which the `1/8000` route can meet.
 
@@ -132,11 +132,11 @@ theorem lsThreshold_anti {M phi phi' eps : ℝ} (hM : 1 ≤ M) (heps0 : 0 < eps)
 /-- **`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_lazy_hitAndRun` with the conductance value a
 parameter.**
 
-The original (`ConductanceToTV.lean:372`) hardcodes `phi = r/(2²⁸·n·R)` — the value Theorem
+The original (`ConductanceToTV.lean`) hardcodes `phi = r/(2²⁸·n·R)` — the value Theorem
 4.2 delivers *at the paper's Lemma 4.1 constant* `1 − 1/500` — and states the deadline as
 `4 · lvThreshold n r R M eps = 4 · 2⁵⁶ · n²R²/r² · log(8M/ε²)`.  Nothing in the proof needs
 that particular number: the layer beneath (`tvLe_iterate_lazy_of_exceptional`,
-`ConductanceToTV.lean:318`) already carries a free `phi`.  Here it is exposed, with the
+`ConductanceToTV.lean`) already carries a free `phi`.  Here it is exposed, with the
 deadline in its native form `4 · lsThreshold M phi eps = 4 · log(8M/ε²)/phi²`.
 
 The factor `4` is `conductance_lazy`: laziness halves the conductance exactly, and the
@@ -172,7 +172,7 @@ theorem tvLe_iterate_lazy_hitAndRun_param {n : ℕ} (hn : 1 ≤ n)
 /-- **The original `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_lazy_hitAndRun`, recovered from the
 parametric form.**
 
-The statement is that of `ConductanceToTV.lean:372` verbatim, down to the binder names.  The
+The statement is that of `ConductanceToTV.lean` verbatim, down to the binder names.  The
 proof does **not** invoke the original; it goes through `tvLe_iterate_lazy_hitAndRun_param`
 at `phi = r/(2²⁸·n·R)` and re-runs the original's own two arithmetic steps (`0 < phi`,
 `phi ≤ 1` from `r ≤ R`, and `lsThreshold_eq_lvThreshold`).
@@ -219,7 +219,7 @@ theorem tvLe_iterate_lazy_hitAndRun_of_param_eq :
 
 /-! ## 3. The unit-inball version, at a free overlap constant
 
-`conductance_hitAndRun_ge_param` (`HitAndRunConductanceParam.lean:110`) gives
+`conductance_hitAndRun_ge_param` (`HitAndRunConductanceParam.lean`) gives
 `Φ ≥ c/(245760·n·D)` from Lemma 4.1 at `1 − c`.  A body inside a ball of radius `R` has
 `D ≤ 2R`, so this reads
 
@@ -230,7 +230,7 @@ and the deadline of §1 at that `phi` is `4·491520²·n²R²/c² · log(8M/ε²
 
 /-- **The conductance bound in `R`-form, at a free overlap constant.**  This is
 `ArlibCommunity.Foundations.MarkovChainTheory.ofReal_inv_le_conductance_hitAndRun_of_unitBall`
-(`HitAndRunMixing.lean:905`) with `1/500` freed to `c`, and with the exact denominator
+(`HitAndRunMixing.lean`) with `1/500` freed to `c`, and with the exact denominator
 `491520 = 2·245760` in place of the original's rounding to `2²⁸`.
 
 At `c = 1/500` it says `Φ ≥ 1/(245760000·n·R)`, which is *stronger* than the original's
@@ -272,7 +272,7 @@ theorem ofReal_le_conductance_hitAndRun_of_unitBall_param {n : ℕ} (hn : 1 ≤ 
 /-- **`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_lazy_hitAndRun_unitBall` with the Lemma 4.1 overlap
 constant a parameter.**
 
-The original (`ConductanceToTV.lean:414`) hardcodes `hLem41` at `1 − 1/500`, a constant
+The original (`ConductanceToTV.lean`) hardcodes `hLem41` at `1 − 1/500`, a constant
 `HitAndRunOverlap.lean` shows the corrected proof of Lemma 4.1 does not reach.  Here the
 constant is free: `hLem41` is consumed at `1 − c` for any `c ∈ (0,1]`, `hIso` is carried
 verbatim, and the deadline is the honest function of `c`,
@@ -331,7 +331,7 @@ theorem tvLe_iterate_lazy_hitAndRun_unitBall_param {n : ℕ} (hn : 1 ≤ n)
 /-- **The original `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_lazy_hitAndRun_unitBall`, recovered from
 the parametric form at `c = 1/500`.**
 
-The statement is that of `ConductanceToTV.lean:414` verbatim; the certificate that no binder
+The statement is that of `ConductanceToTV.lean` verbatim; the certificate that no binder
 drifted is `tvLe_iterate_lazy_hitAndRun_unitBall_of_param_eq` below.
 
 The proof is `le_trans` on the deadline, as the brief allows: at `c = 1/500` the parametric
@@ -390,7 +390,7 @@ theorem tvLe_iterate_lazy_hitAndRun_unitBall_of_param_eq :
 
 /-! ## 4. Towards the `hLem41` binder: the proved Lemma 4.1 in the consumer's `max` shape
 
-`tvLe_hitAndRun_lemma41_uncond` (`SphereCap.lean:896`) asks for
+`tvLe_hitAndRun_lemma41_uncond` (`SphereCap.lean`) asks for
 `‖u − v‖ < 2/√n · F(u)` — the median step of the **first** point.  The `hLem41` binder asks
 for `dist u v < 2/√n · max(F(u), F(v))`.  The gap is closed by symmetry, at no cost: in the
 branch where the max is `F(v)`, apply the lemma with the roles exchanged and flip the

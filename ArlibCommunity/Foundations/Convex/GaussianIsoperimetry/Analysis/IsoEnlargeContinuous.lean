@@ -9,12 +9,12 @@ import ArlibCommunity.Foundations.Convex.Basic.Isoperimetry
 # Disjoint open enlargements for a *continuous* density, with no Lipschitz constant
 
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_of_openClosed_enlargement`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean:1114`) reduces the measurable case of Cousins–Vempala's
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean`) reduces the measurable case of Cousins–Vempala's
 `thm:iso` to the open/closed case, **given** disjoint open `U₁ ⊇ S₁`, `U₂ ⊇ S₂` on which the
 separation hypothesis still holds.  Everything turns on producing that enlargement.
 
 The route taken so far — `ArlibCommunity.Foundations.Convex.exists_disjoint_open_enlargement_gaussianIndicator`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean:405`) — produces it by pushing **every** pair into the
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`) — produces it by pushing **every** pair into the
 *metric* branch of the disjunction, which needs a global log-Lipschitz bound
 `d_h(u,v) ≤ L·‖u − v‖`.  For the indicator density `1_K·γ` that is free (`1_K` is constant on
 `K`, `γ` has `L = R/σ²`).  For the `ℓ`-weighted density it is the binder `hellLip`, which
@@ -36,7 +36,7 @@ Two facts make it work, and both are already in the tree for the density that ma
   stated for exactly that `h`, with no indicator — so the open/closed side needs no change.
 * `{h = 0}` carries no `h`-mass, and that is precisely where the known obstruction lives: in
   `ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement`
-  (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean:1205`) the touching is on the sphere, *inside* `{h = 0}`.
+  (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean`) the touching is on the sphere, *inside* `{h = 0}`.
   Restricting to compact subsets of `{h > 0}` deletes it, at no cost in mass.
 
 ## What is proved here
@@ -194,7 +194,7 @@ either `c₁ ≤ ‖u − v‖` or `c₂ ≤ d_h(u,v)`.  Then for **any** strict
 disjunction at `(c₁', c₂')`.
 
 This is the replacement for `ArlibCommunity.Foundations.Convex.exists_disjoint_open_enlargement_gaussianIndicator`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean:405`).  That one converts the density branch into the
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`).  That one converts the density branch into the
 metric branch and therefore needs a global log-Lipschitz constant for `h`; this one leaves
 each pair in its own branch, so it needs nothing but continuity.
 
@@ -212,7 +212,7 @@ A global Lipschitz constant would have to be compared against `σ`, `R` and `n` 
 positive numbers already in hand.
 
 `ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean:1205`) is not contradicted: there the two sets touch
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean`) is not contradicted: there the two sets touch
 *inside* `{h = 0}`, and the hypotheses `hC₁h`, `hC₂h` exclude exactly that.  In the consumer,
 `C₁, C₂` come from inner regularity applied inside `{h > 0}`, which costs no mass because
 `h` vanishes on the discarded part. -/
@@ -327,7 +327,7 @@ theorem exists_disjoint_open_enlargement_of_continuous {n : ℕ}
     rw [h3η] at hkey
     linarith
 
-/-! ## 5. Non-vacuity (`CLAUDE.md` §11) -/
+/-! ## 5. Non-vacuity -/
 
 open Metric in
 /-- **The hypothesis bundle of `ArlibCommunity.Foundations.Convex.exists_disjoint_open_enlargement_of_continuous` is

@@ -13,11 +13,11 @@ import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Anal
 Two mixing chains already exist in this repository and neither is stationary for the density
 Cousins–Vempala's volume phases actually sample:
 
-* `ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian` (`MetropolisGaussian.lean:444`) is reversible for
+* `ArlibCommunity.Foundations.MarkovChainTheory.metropolisGaussian` (`MetropolisGaussian.lean`) is reversible for
   `1_K·γ` — the Gaussian-restricted density, but *unfiltered by the local conductance*, so its
   conductance argument needs a pointwise floor on `ℓ` that
   `Arlib/MarkovChains/Continuous/EllFloor.lean` shows is unsatisfiable on the cube.
-* `ArlibCommunity.Foundations.MarkovChainTheory.speedyWalk` (`SpeedyWalk.lean:186`) is reversible for `1_K·ℓ` — the
+* `ArlibCommunity.Foundations.MarkovChainTheory.speedyWalk` (`SpeedyWalk.lean`) is reversible for `1_K·ℓ` — the
   *speedy* device that removes the `ℓ`-floor, but the target is Lebesgue-flat, not
   Gaussian-tilted.
 
@@ -50,9 +50,9 @@ visibly symmetric in `(x, y)`.  **The algebra is exactly as `IsoWeighted.lean` p
 
 ## Why the name is not `speedyGaussian`
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` (`SpeedyConductanceSharp.lean:320`) already
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` (`SpeedyConductanceSharp.lean`) already
 exists and is **not** a theorem about the kernel built here: it is abstract in its kernel `P`,
-and its two corollaries (`SpeedyOverlap.lean:742`, `OverlapSqrt.lean:669`) instantiate it at
+and its two corollaries (`SpeedyOverlap.lean`, `OverlapSqrt.lean`) instantiate it at
 `ArlibCommunity.Foundations.MarkovChainTheory.speedyWalk`.  A `def speedyGaussian` in this namespace would make that
 theorem read as a conductance bound for this kernel, which it is not.  Hence
 `speedyMetropolisGaussian` — speedy proposal, Metropolis–Gaussian filter.
@@ -612,7 +612,7 @@ theorem speedyMetropolisMove_unitBall_lt_one [NeZero n] {δ s : ℝ} (hs : 0 < s
     ENNReal.div_lt_iff (Or.inl hV0) (Or.inl hVtop), one_mul]
   exact hstrict
 
-/-- **The non-vacuity witness (`CLAUDE.md` §11), packaged.**  For every dimension `n ≥ 1`, every
+/-- **The non-vacuity witness, packaged.**  For every dimension `n ≥ 1`, every
 step `0 < δ ≤ 1/2` and every temperature `s > 0` there is a body `K` — the unit ball — such that
 
 * `K` is measurable, so every theorem above applies to it;
@@ -661,11 +661,11 @@ theorem exists_speedyMetropolisGaussian_witness [NeZero n] {δ s : ℝ} (hδ : 0
 **Nothing below is a declaration.**  This section exists so that no reader mistakes the kernel
 above for a mixing result.
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex` (`StarPolar.lean:626`) is stated for
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex` (`StarPolar.lean`) is stated for
 `ArlibCommunity.Foundations.MarkovChainTheory.speedyWalk` and **does not apply** to `speedyMetropolisGaussian`; the
 conductance of this kernel does **not** follow from it, and nothing in this file implies it.
 
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` (`SpeedyConductanceSharp.lean:320`) is a
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge` (`SpeedyConductanceSharp.lean`) is a
 different matter: it is abstract in its kernel `P`, so it *would* accept this kernel.  Three
 things are missing before it could be applied here, and none of them is proved anywhere in this
 repository for this kernel:
@@ -695,7 +695,7 @@ any runtime gap, and it must not be quoted as doing so. -/
 
 end ArlibCommunity.Foundations.MarkovChainTheory
 
-/-! ## Axiom audit (`CLAUDE.md` §4) -/
+/-! ## Axiom audit -/
 
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.speedyMetropolisMove_apply
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.lintegral_metropolisDensity_le

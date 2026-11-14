@@ -63,8 +63,7 @@ remaining obstruction is recorded as (P1) in `Arlib/Convexity/PositionalCut.lean
   polytope `ArlibCommunity.Foundations.Convex.Polytope.inflate A b κ`, the downstream consumer's object.
 * `ArlibCommunity.Foundations.MarkovChainTheory.exists_unconditional_mixing_convex`,
   `ArlibCommunity.Foundations.MarkovChainTheory.exists_unconditional_mixing_convex_unitBall`,
-  `ArlibCommunity.Foundations.MarkovChainTheory.exists_unconditional_mixing_polytope` — the non-vacuity witnesses
-  (`CLAUDE.md` §11), the last two with a concrete body (the unit ball; the cube `[-1,1]ⁿ`)
+  `ArlibCommunity.Foundations.MarkovChainTheory.exists_unconditional_mixing_polytope` — the non-vacuity witnesses, the last two with a concrete body (the unit ball; the cube `[-1,1]ⁿ`)
   so that the geometric hypothesis bundle is demonstrably satisfiable.
 -/
 
@@ -255,7 +254,7 @@ theorem mixesWithin_lazy_ballWalk_convex (hn : 1 ≤ n)
     (kappa := (1 / 2 : ℝ) ^ n / D) (by positivity) ?_ hM hwarm heps ht
   exact ArlibCommunity.Foundations.Convex.uniformOn_iso_of_convex hconv hK hK0 hKtop hD
 
-/-- **Non-vacuity, general form** (`CLAUDE.md` §11).
+/-- **Non-vacuity, general form**.
 
 `mixesWithin_lazy_ballWalk_convex` still carries `hwarm` and `ht`; a theorem whose
 remaining hypotheses were unsatisfiable would be worthless.  They are not: the stationary
@@ -320,7 +319,7 @@ theorem mixesWithin_lazy_ballWalk_unitBall_convexRoute (hn : 1 ≤ n)
   rw [show ((1:ℝ) / (1 + 2)) = 1 / 3 by norm_num]
   exact ht
 
-/-- **Non-vacuity with a concrete body** (`CLAUDE.md` §11).
+/-- **Non-vacuity with a concrete body**.
 
 Assumed: `1 ≤ n`, `0 < δ ≤ 1`, `eps > 0`.  Nothing else — the body is the fixed set
 `Metric.ball 0 1` and every hypothesis of `mixesWithin_lazy_ballWalk_convex` is discharged
@@ -402,7 +401,7 @@ theorem mixesWithin_lazy_ballWalk_polytope {ι : Type*} (hn : 1 ≤ n)
     (volume_ne_top_of_diam_bound (hball (Metric.mem_ball_self hγ)) hD)
     hD hγ hball hδ hδγ hM hwarm heps ht
 
-/-- **Non-vacuity of the polytope form** (`CLAUDE.md` §11): the cube `[-1,1]ⁿ`.
+/-- **Non-vacuity of the polytope form**: the cube `[-1,1]ⁿ`.
 
 `mixesWithin_lazy_ballWalk_polytope` assumes the polytope is bounded and contains a ball;
 neither follows from the shape of `A`, `b`, `κ`, so a witness is required or the corollary

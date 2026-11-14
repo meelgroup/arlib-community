@@ -573,7 +573,7 @@ theorem ellMeasure_unitBall_half {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1 / 2)
         (Metric.ball_subset_ball (by linarith) hx)),
     setLIntegral_one]
 
-/-- **The non-vacuity witness (`CLAUDE.md` section 11).**  For every dimension `n` and every
+/-- **The non-vacuity witness.**  For every dimension `n` and every
 step `0 < δ ≤ 1/2` there are a body `K` — the unit ball — and a test set `A` — the concentric
 half-ball — such that
 

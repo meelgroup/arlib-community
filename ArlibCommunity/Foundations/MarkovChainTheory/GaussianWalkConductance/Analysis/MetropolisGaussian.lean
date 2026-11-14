@@ -16,7 +16,7 @@ import ArlibCommunity.Foundations.Convex.Basic.GaussianWeight
 # The Metropolis-filtered ball walk for the Gaussian-restricted density
 
 Cousins-Vempala, *Gaussian cooling and `O*(n^3)` algorithms for volume and Gaussian
-volume*, Figure 2 (`../gaussian-cooling-vempala/vol3_journal.tex:266`), run their volume
+volume*, Figure 2 ([CV18]), run their volume
 algorithm on a chain whose stationary law is **not** uniform on the body but the
 *Gaussian-restricted* density `∝ 1_K(x)·e^{-‖x‖²/(2s)}`.  The chain is the ball walk with
 a Metropolis filter: from `x`,
@@ -30,10 +30,10 @@ This module builds that chain as a genuine `ProbabilityTheory.Kernel` on
 needs before it can start: the kernel is Markov, and the Gaussian-restricted measure on
 `K` is reversible — hence invariant — for it.
 
-`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean:80` recorded this kernel as the single
+`ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean` recorded this kernel as the single
 missing object between the isoperimetric input proved there and the §4 conductance
 statement at the generality Cousins-Vempala need; `ArlibCommunity.Foundations.MarkovChainTheory.ballWalk`
-(`BallWalk.lean:24`) deliberately omits the filter and is stationary for the *uniform*
+(`BallWalk.lean`) deliberately omits the filter and is stationary for the *uniform*
 measure only.  This file supplies the object; it does **not** supply a conductance bound
 (see "Scope" below).
 
@@ -84,8 +84,7 @@ measure only.  This file supplies the object; it does **not** supply a conductan
   needed.  The proof is `flow_metropolisGaussian` — which splits the flow into a moving
   part and a stay-put part — followed by Tonelli
   (`lintegral_gaussianWeight_mul_metropolisDensity_comm`).
-* `ArlibCommunity.Foundations.MarkovChainTheory.exists_metropolisGaussian_witness` — the non-vacuity witness
-  (`CLAUDE.md` §11) on the unit ball: the target really is a probability measure, the walk
+* `ArlibCommunity.Foundations.MarkovChainTheory.exists_metropolisGaussian_witness` — the non-vacuity witness on the unit ball: the target really is a probability measure, the walk
   really moves (`metropolisMove_unitBall_pos`, quantitatively
   `exp_le_metropolisMove_unitBall`), and the filter really rejects
   (`metropolisAccept_zero_lt_one`), so this is not the unfiltered ball walk in disguise.
@@ -325,7 +324,7 @@ theorem measurable_metropolisMove (K : Set (EuclideanSpace ℝ (Fin n))) (δ s :
 
 /-- **The Metropolis-filtered ball walk for the Gaussian-restricted density**
 (Cousins-Vempala, *Gaussian cooling and `O*(n³)` algorithms for volume and Gaussian
-volume*, Figure 2, `../gaussian-cooling-vempala/vol3_journal.tex:266`).  From `x`:
+volume*, Figure 2, [CV18]).  From `x`:
 
 * propose `y` uniformly in the ball `x + δBₙ`;
 * accept with probability `1_K(y) · min(1, g(y)/g(x))`, where `g(x) = e^{-‖x‖²/(2s)}`;
@@ -625,7 +624,7 @@ theorem metropolisMove_unitBall_pos {s δ : ℝ} (hs : 0 < s) (hδ : 0 < δ) (h�
   lt_of_lt_of_le (ENNReal.ofReal_pos.2 (Real.exp_pos _))
     (exp_le_metropolisMove_unitBall hs hδ hδ1)
 
-/-- **The non-vacuity witness (`CLAUDE.md` §11), packaged.**  For every dimension `n ≥ 1`,
+/-- **The non-vacuity witness, packaged.**  For every dimension `n ≥ 1`,
 every step `0 < δ ≤ 1` and every temperature `s > 0` there is a body `K` — the unit ball —
 such that
 

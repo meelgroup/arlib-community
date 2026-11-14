@@ -65,7 +65,7 @@ variable {n : ℕ}
 
 /-- **The sampler's density is pointwise almost uniform on `S`.**
 
-The continuous analogue of `eq:almostuniform` (`sections/related.tex:21`): `f` is
+The continuous analogue of `eq:almostuniform`: `f` is
 a density on `S` whose value at every point is within a `(1±ε)` factor of the
 uniform density `1/V`. See the module docstring for why this, and not a
 total-variation bound, is the right hypothesis. -/

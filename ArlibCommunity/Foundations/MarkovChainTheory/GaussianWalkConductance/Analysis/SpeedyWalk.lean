@@ -8,7 +8,7 @@ import ArlibCommunity.Foundations.MarkovChainTheory.BallWalkMixing.Analysis.Ball
 /-!
 # The speedy walk on a convex body
 
-Cousins-Vempala (`../gaussian-cooling-vempala/vol3_journal.tex:829`) analyse not the ball walk
+Cousins-Vempala ([CV18]) analyse not the ball walk
 itself but the **speedy walk**: the subsequence of *proper* steps of the ball walk, i.e.
 "from `x`, resample uniformly from `x + delta*B` until the sample lands in `K`".
 Equivalently, the one-step distribution from `x` is the uniform measure on
@@ -82,7 +82,7 @@ Two inputs make this work and both are recorded honestly:
    into the multiplicative `volume_inter_ball_le_of_convex` (a loss of `n t/delta` *of
    `B(u,delta) ∩ K`*).  Without convexity the speedy walk gains nothing: the additive
    estimate leaves `ell(u)` on the left exactly as before.  This is the elementary stand-in
-   for Lemma 3.5 of [KLS95] that `vol3_journal.tex:592` invokes; it costs the same one
+   for Lemma 3.5 of [KLS95] that [CV18] invokes; it costs the same one
    factor of `√n` already recorded as caveat 1 of `BallWalkConductance.lean`.
 2. **The target measure is `ellProb K delta`, not the uniform measure on `K`.**  See the
    next section — this is the price, and it is not negotiable.
@@ -224,7 +224,7 @@ theorem speedyWalkAux_apply (K : Set (EuclideanSpace ℝ (Fin n))) (hK : Measura
         + (StuckPoints K δ).indicator (fun _ => (1 : ℝ≥0∞)) x • Measure.dirac x := rfl
 
 open scoped Classical in
-/-- **The speedy walk with `δ`-steps on `K`** (`vol3_journal.tex:829`): from `x`, resample
+/-- **The speedy walk with `δ`-steps on `K`** ([CV18]): from `x`, resample
 uniformly from `x + δBₙ` until the sample lands in `K`, and move there.
 
 Defined as `speedyWalkAux` when `K` is measurable and as the identity kernel otherwise, so
@@ -439,7 +439,7 @@ contraction towards `m` stays in `K` (convexity again) while moving at most `(1-
 closer to each centre.  Haar scaling turns the factor `λ` into `λⁿ` and Bernoulli turns
 `λⁿ` into `1 - n t/δ`.
 
-This is the elementary stand-in for Lemma 3.5 of [KLS95] (`vol3_journal.tex:592`), which
+This is the elementary stand-in for Lemma 3.5 of [KLS95] ([CV18]), which
 keeps a constant fraction at separation `δ/√n`; the contraction keeps a constant fraction
 only at separation `δ/n`, which is the one factor of `√n` recorded as caveat 1 of
 `BallWalkConductance.lean`. -/
@@ -935,7 +935,7 @@ theorem isProbabilityMeasure_ellProb_of_volume {K : Set (EuclideanSpace ℝ (Fin
 
 /-! ## 9. The conductance bound, with no local-conductance hypothesis
 
-The proof is the three-way partition of `conductance_ballWalk_ge` (`vol3_journal.tex:657`),
+The proof is the three-way partition of `conductance_ballWalk_ge` ([CV18]),
 with two changes.  First, the separation input is `lt_dist_of_speedyWalk_lt`, whose threshold
 is the absolute constant `1/4` rather than `θ/4`, so **`hell` is gone**.  Second, the
 stationary measure is `ellProb K δ`, so the isoperimetric hypothesis is stated for *that*
@@ -971,7 +971,7 @@ Hypotheses that carry content, all inline:
 The remaining hypotheses are non-degeneracy guards: `1 ≤ n`, `K` measurable with
 `0 < vol(K) < ∞`, and `0 < δ`.
 
-Against the paper (`vol3_journal.tex:746`, `Φ ≥ δ/(250σ√n)`): the shape `min(const, κd/const)`
+Against the paper ([CV18], `Φ ≥ δ/(250σ√n)`): the shape `min(const, κd/const)`
 is the same and the separation `d = δ/(2n)` replaces the paper's `δ/√n`, the one factor of
 `√n` that the elementary contraction estimate costs against [KLS95, Lemma 3.5]. -/
 theorem conductance_speedyWalk_ge (hn : 1 ≤ n)

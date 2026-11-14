@@ -21,15 +21,15 @@ i.e. **the probability measure proportional to `F·γ` on `[α,β]` has variance
 choice: `c ↦ ∫(t−c)²Fγ` is minimised there.
 
 This is the `α = 2` case of the Brascamp–Lieb inequality quoted by Cousins and Vempala
-(`1409.6011/vol3_journal.tex:407`), in exactly the form their proof of `thm:iso` uses at
-`vol3_journal.tex:506`.  It is the hypothesis `hvar` of
-`ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/ConcaveProfileIso.lean:407`),
+([CV18]), in exactly the form their proof of `thm:iso` uses at
+[CV18].  It is the hypothesis `hvar` of
+`ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/ConcaveProfileIso.lean`),
 and discharging it turns that theorem into `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry`'s `h1d2`
 binder verbatim, at the constant `1/(2√3)`.
 
 ## Why this is not `ArlibCommunity.Foundations.brascampLieb`
 
-`ArlibCommunity.Foundations.brascampLieb` (`ArlibCommunity/Algorithms/CV18/Analysis/CoolingVariance.lean:693`) is the
+`ArlibCommunity.Foundations.brascampLieb` (`ArlibCommunity/Algorithms/CV18/Analysis/CoolingVariance.lean`) is the
 *needle-specific* inequality `J₂J₀ − J₁² ≤ (σ²/x)J₀²` for the one-parameter exponential
 family `s(x,·)`, with **no log-concave factor**.  It does not apply to a general `F`, which
 is why this file exists.  Its proof technique (integration by parts) is also not the one
@@ -88,13 +88,13 @@ log-concave function) rather than about a monotone rearrangement.
 ## Two remarks on the printed statement
 
 **The constant.**  Cousins–Vempala state Brascamp–Lieb for the *standard* Gaussian
-(`vol3_journal.tex:407`), and apply it at `vol3_journal.tex:506` to a needle whose Gaussian
+([CV18]), and apply it at [CV18] to a needle whose Gaussian
 factor has variance `σ²`, reaching "variance at most `1`" only after their global rescaling
 `x = y/σ`.  The intrinsic statement at general `σ` is the one proved here, with `σ²` on the
 right; that is also the form `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor` consumes, and it
 matches `ArlibCommunity.Foundations.Convexity.SharpIsoperimetry`'s `d/σ`.  No discrepancy.
 
-**The range `α ≥ 1`.**  Only `α = 2` is used at `vol3_journal.tex:506`, and only `α = 2` is
+**The range `α ≥ 1`.**  Only `α = 2` is used at [CV18], and only `α = 2` is
 proved here.  Note that `α ∈ [1,2)` does **not** follow from `α = 2`: Jensen gives
 `E|Y|^α ≤ (E|Y|²)^{α/2} ≤ σ^α`, whereas the printed claim is the strictly smaller
 `E_γ|x₁|^α = σ^α·E|N(0,1)|^α` (about `0.798·σ` at `α = 1`).  So the printed theorem is
@@ -119,7 +119,7 @@ Brascamp and Lieb, *On extensions of the Brunn–Minkowski and Prékopa–Leindl
 J. Funct. Anal. **22** (1976).
 
 Cousins and Vempala, *Gaussian Cooling and O\*(n³) Algorithms for Volume and Gaussian
-Volume*, §3 (`1409.6011/vol3_journal.tex:404–508`).
+Volume*, §3 ([CV18]).
 -/
 
 open ArlibCommunity.Foundations.Convex
@@ -701,10 +701,10 @@ of the measure with density `F·γ` — with
 
 i.e. the probability measure proportional to `F·γ` on `[α,β]` has variance at most `σ²`.
 
-This is the `α = 2` case of Brascamp–Lieb (`1409.6011/vol3_journal.tex:407`) in the form
-Cousins–Vempala use at `vol3_journal.tex:506`, and it is exactly the hypothesis `hvar` of
+This is the `α = 2` case of Brascamp–Lieb ([CV18]) in the form
+Cousins–Vempala use at [CV18], and it is exactly the hypothesis `hvar` of
 `ArlibCommunity.Foundations.Convex.oneDim_isoperimetry_gaussianFactor`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/ConcaveProfileIso.lean:407`).
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/ConcaveProfileIso.lean`).
 
 **No differentiability of `F` is used, or available.**  The textbook proof writes the
 density as `e^{−V}` with `V'' ≥ 1/σ²` and integrates by parts; a log-concave `F` need not

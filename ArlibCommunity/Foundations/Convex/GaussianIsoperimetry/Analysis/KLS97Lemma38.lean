@@ -14,7 +14,7 @@ import ArlibCommunity.Foundations.Convex.Localization.Analysis.NeedleProfile
 
 This file proves the *first* of the two one-dimensional inequalities that the Localization
 Lemma reduces Cousins–Vempala's Theorem 3.4 (`thm:iso`) to, namely `(1d-1)` of
-`1409.6011/vol3_journal.tex:498`:
+[CV18]:
 
   `∫_a^b h·ℓ^{n−1} · ∫_u^v h·ℓ^{n−1} ≥ (d_h(u,v)/(4√n)) · ∫_a^u h·ℓ^{n−1} · ∫_v^b h·ℓ^{n−1}`
 
@@ -95,7 +95,7 @@ Two remarks nonetheless.
 ## References
 
 Cousins and Vempala, *Gaussian Cooling and O\*(n³) Algorithms for Volume and Gaussian
-Volume*, §3 (`1409.6011/vol3_journal.tex:467–508`).
+Volume*, §3 ([CV18]).
 
 Kannan, Lovász and Simonovits, *Random walks and an `O*(n⁵)` volume algorithm for convex
 bodies*, Random Structures Algorithms **11** (1997), Lemma 3.8.
@@ -1231,7 +1231,7 @@ end Case2Right
 section Main
 
 set_option maxHeartbeats 1000000 in
-/-- **Cousins–Vempala's inequality `(1d-1)`** (`1409.6011/vol3_journal.tex:498`), for a
+/-- **Cousins–Vempala's inequality `(1d-1)`** ([CV18]), for a
 **concave** profile.
 
 For `ℓ ≥ 0` concave and `g ≥ 0` log-concave on `[a,b]`, `n ≥ 1` and `a ≤ u ≤ v ≤ b`,

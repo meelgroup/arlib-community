@@ -11,7 +11,7 @@ import Mathlib.Analysis.Normed.Affine.AddTorsor
 /-!
 # Overlap, separation, and a conductance bound for the ball walk
 
-Cousins-Vempala section 4.1 (`../gaussian-cooling-vempala/vol3_journal.tex:514-746`) bound the
+Cousins-Vempala section 4.1 ([CV18]) bound the
 conductance of the ball walk in three moves: a *one-step overlap* estimate, the
 *separation* it forces, and an assembly against the isoperimetric inequality.  This file
 carries out all three over the uniform ball walk built in
@@ -58,7 +58,7 @@ carries out all three over the uniform ball walk built in
 * `theorem2_of_lazy_ballWalk` — the same, composed with
   `ArlibCommunity.Foundations.MarkovChains.Continuous.PointwiseRoute.theorem2_of_mixesWithin`: from an isoperimetric inequality for `K`
   to Kannan–Vempala Theorem 2's two-sided window on the rounding probability.
-* `mixesWithin_lazy_ballWalk_unitBall` — the joint-satisfiability check (`CLAUDE.md` §11):
+* `mixesWithin_lazy_ballWalk_unitBall` — the joint-satisfiability check:
   every hypothesis except `hiso` discharged concretely on the unit ball.
 
 ## Assumed, and where
@@ -113,7 +113,7 @@ variable {n : ℕ}
 at distance `t/2` from each centre, so the triangle inequality does the rest.
 
 This is the elementary substitute for the cap estimate of Kannan-Lovász-Simonovits
-(Lemma 3.5 of [KLS95], cited at `vol3_journal.tex:592`); see the module docstring of
+(Lemma 3.5 of [KLS95], cited at [CV18]); see the module docstring of
 `overlap` below for what the substitution costs. -/
 theorem midpoint_ball_subset_inter_ball (u v : EuclideanSpace ℝ (Fin n)) (δ : ℝ) :
     Metric.ball (midpoint ℝ u v) (δ - dist u v / 2)
@@ -212,7 +212,7 @@ theorem volume_ball_le_volume_inter_ball_add (hn : 1 ≤ n)
 
 /-! ## 2. One-step overlap (unconditional)
 
-The `lem:overlap` of `vol3_journal.tex:582`, in the form the uniform ball walk needs.
+The `lem:overlap` of [CV18], in the form the uniform ball walk needs.
 No convexity of `K` is used, and no isoperimetric input. -/
 
 /-- **The one-step overlap bound.**  For any two points `u, v` and any measurable event `T`,
@@ -231,7 +231,7 @@ measure on `C = B(u,δ) ∩ B(v,δ)` intersected with `K`, the two events `T` an
 `C ∩ K` into two pieces, and `C ∩ K` misses `B(u,δ) ∩ K` by at most `vol(B(u,δ)) - vol(C)`.
 
 **What this costs against Cousins-Vempala.**  The paper uses Lemma 3.5 of [KLS95]
-(`vol3_journal.tex:592`), whose cap estimate keeps a constant fraction of the ball at
+([CV18]), whose cap estimate keeps a constant fraction of the ball at
 separation `‖u-v‖ ≤ δ/√n`; the elementary midpoint bound used here only keeps a constant
 fraction at separation `‖u-v‖ ≲ δ/n`.  Everything downstream therefore carries `δ/n`
 where the paper carries `δ/√n`, a loss of one factor of `√n` in the final conductance.
@@ -315,7 +315,7 @@ theorem ell_le_ballWalk_add_ballWalk_compl (hn : 1 ≤ n)
 probability less than `θ/4`, and the step from `v` enters `Tᶜ` with probability less than
 `θ/4`.  Then `‖u - v‖ > θ·δ/n`.
 
-This is the dichotomy at `vol3_journal.tex:657` ("for any `u ∈ S₁, v ∈ S₂`, either
+This is the dichotomy at [CV18] ("for any `u ∈ S₁, v ∈ S₂`, either
 `‖u-v‖ ≥ δ/√n` or `d_h(u,v) ≥ 1/4`"), in the form the *uniform* ball walk gives it: there
 is no `d_h` alternative here because the lower bound on `ℓ(u)` is carried directly, and
 `δ/√n` becomes `θ·δ/n` for the reason recorded in `ell_le_ballWalk_add_ballWalk_compl`.
@@ -385,7 +385,7 @@ at least `e/c`.  Then
 
     e·(π(S \ A) + π(Sᶜ \ B))  ≤  2·c·flow(S, Sᶜ).
 
-This is the display at `vol3_journal.tex:660`, with `S \ A` and `Sᶜ \ B` the two halves of
+This is the display at [CV18], with `S \ A` and `Sᶜ \ B` the two halves of
 the paper's `S₃`.  Reversibility is what lets the second integral — a flow *into* `S` — be
 charged to the escape flow *out of* `S`.
 
@@ -463,7 +463,7 @@ The remaining hypotheses are the standing non-degeneracy guards: `1 ≤ n`, `K` 
 with `0 < vol(K) < ∞` (so `ArlibCommunity.Foundations.Convex.uniformOn volume K` is a probability measure), `0 < δ`,
 and `0 < θ`.
 
-Against the paper (`vol3_journal.tex:746`, `Φ ≥ δ/(250·σ·√n)`): the shape
+Against the paper ([CV18], `Φ ≥ δ/(250·σ·√n)`): the shape
 `min(constant, κ·d/constant)` is the same, and `θ/16` plays the role of the paper's `1/80`.
 The one quantitative gap is `d = θδ/n` in place of `δ/√n`, and it comes entirely from the
 elementary ball-intersection estimate — see `ell_le_ballWalk_add_ballWalk_compl`. -/
@@ -1360,7 +1360,7 @@ theorem mixesWithin_lazy_ballWalk (hn : 1 ≤ n)
     rwa [ENNReal.toReal_ofReal hphi0.le] at h
   exact mixesWithin_of_conductance hrev hpsd hne hM hwarm hphi0 hphi1 heps hphireal ht
 
-/-! ## 10. Joint satisfiability of the hypothesis bundle (`CLAUDE.md` §11)
+/-! ## 10. Joint satisfiability of the hypothesis bundle
 
 A chain of four individually true theorems can compose to something vacuous.  What follows
 is the check, and it is deliberately split so that the one hypothesis this library cannot

@@ -83,11 +83,11 @@ section Ratio
 
 variable {n : ℕ} {f : EuclSpace n → ℝ}
 
-/-- `g(x, s) = f(x) e^{-‖x‖²/(2s)}` (`vol3_journal.tex:1067`). -/
+/-- `g(x, s) = f(x) e^{-‖x‖²/(2s)}` ([CV18]). -/
 noncomputable def gW (f : EuclSpace n → ℝ) (s : ℝ) (x : EuclSpace n) : ℝ :=
   f x * exp (-(‖x‖ ^ 2) / (2 * s))
 
-/-- `G(s) = ∫_{ℝⁿ} g(x,s) dx` (`vol3_journal.tex:1071`). -/
+/-- `G(s) = ∫_{ℝⁿ} g(x,s) dx` ([CV18]). -/
 noncomputable def G (f : EuclSpace n → ℝ) (s : ℝ) : ℝ := ∫ x, gW f s x
 
 lemma gW_nonneg (hf : ∀ x, 0 ≤ f x) (s : ℝ) (x : EuclSpace n) : 0 ≤ gW f s x :=
@@ -96,7 +96,7 @@ lemma gW_nonneg (hf : ∀ x, 0 ≤ f x) (s : ℝ) (x : EuclSpace n) : 0 ≤ gW f
 /-- **The key pointwise identity.** `g(x,b)²/g(x,a) = g(x, ab/(2a-b))`: squaring the
 numerator and dividing by the base density again produces a Gaussian weight, with the
 variance parameter transformed by the harmonic relation `1/c = 2/b - 1/a`.
-This is the computation at `vol3_journal.tex:1085`. -/
+This is the computation at [CV18]. -/
 theorem gW_sq_div {a b : ℝ} (ha : a ≠ 0) (hb : b ≠ 0) (hab : 2 * a - b ≠ 0)
     (x : EuclSpace n) :
     (gW f b x) ^ 2 / gW f a x = gW f (a * b / (2 * a - b)) x := by
@@ -119,7 +119,7 @@ theorem gW_sq_div {a b : ℝ} (ha : a ≠ 0) (hb : b ≠ 0) (hab : 2 * a - b ≠
             * (f x * exp (-(‖x‖ ^ 2) / (2 * a))) := by rw [exp_add]; ring
 
 /-- The cooling substitution `a = σ²/(1+α)`, `b = σ²` sends `c = ab/(2a-b)` to
-`σ²/(1-α)` (`vol3_journal.tex:1094`). -/
+`σ²/(1-α)` ([CV18]). -/
 theorem cool_param {σ α : ℝ} (hσ : σ ≠ 0) (hα1 : 1 + α ≠ 0) (hα2 : 1 - α ≠ 0) :
     (σ ^ 2 / (1 + α)) * σ ^ 2 / (2 * (σ ^ 2 / (1 + α)) - σ ^ 2) = σ ^ 2 / (1 - α) := by
   have hσ2 : σ ^ 2 ≠ 0 := pow_ne_zero 2 hσ
@@ -141,7 +141,7 @@ lemma cool_denom_ne {σ α : ℝ} (hσ : σ ≠ 0) (hα1 : 1 + α ≠ 0) (hα2 :
 
 `X` has density `g(·,a)/G(a)`, and `Y = g(X,b)/g(X,a)`. -/
 
-/-- `E(Y) = G(b)/G(a)` (`vol3_journal.tex:1078`). -/
+/-- `E(Y) = G(b)/G(a)` ([CV18]). -/
 theorem expect_ratio {a b : ℝ} :
     ∫ x, (gW f b x / gW f a x) * (gW f a x / G f a) = G f b / G f a := by
   have hpt : ∀ x, (gW f b x / gW f a x) * (gW f a x / G f a) = gW f b x / G f a := by
@@ -157,7 +157,7 @@ theorem expect_ratio {a b : ℝ} :
   rw [integral_div]
   rfl
 
-/-- `E(Y²) = G(c)/G(a)` with `c = ab/(2a-b)` (`vol3_journal.tex:1086`). -/
+/-- `E(Y²) = G(c)/G(a)` with `c = ab/(2a-b)` ([CV18]). -/
 theorem expect_ratio_sq {a b : ℝ} (ha : a ≠ 0) (hb : b ≠ 0) (hab : 2 * a - b ≠ 0) :
     ∫ x, (gW f b x / gW f a x) ^ 2 * (gW f a x / G f a)
       = G f (a * b / (2 * a - b)) / G f a := by
@@ -176,7 +176,7 @@ theorem expect_ratio_sq {a b : ℝ} (ha : a ≠ 0) (hb : b ≠ 0) (hab : 2 * a -
   rw [integral_div]
   rfl
 
-/-- **The variance ratio of the estimator** (`vol3_journal.tex:1096`): with
+/-- **The variance ratio of the estimator** ([CV18]): with
 `a = σ²/(1+α)` and `b = σ²`,
 
   `E(Y²)/E(Y)² = G(σ²/(1+α)) · G(σ²/(1-α)) / G(σ²)²`. -/
@@ -220,7 +220,7 @@ lemma integrable_pow_of_bounded [IsFiniteMeasure μ] {M : ℝ}
   rw [Real.norm_eq_abs, abs_pow]
   exact pow_le_pow_left₀ (abs_nonneg t) (ht.trans (le_abs_self M)) k
 
-/-- **Paper Lemma 5.5 (`vol3_journal.tex:1170`)**, in the weighted, unnormalized form the
+/-- **Paper Lemma 5.5 ([CV18])**, in the weighted, unnormalized form the
 rest of the development uses. Writing `mₖ = ∫ tᵏ w(t) dν` for a nonnegative weight `w`,
 
   `m₄ m₀ - m₂² ≤ 4M² (m₂ m₀ - m₁²)`
@@ -314,7 +314,7 @@ end Moments
 
 /-! ## §5.1.3 The exponential needle
 
-The paper writes (`vol3_journal.tex:1228`) `s(x,t) = e^{γ t} · e^{-t² x/(2σ²)}` and studies
+The paper writes ([CV18]) `s(x,t) = e^{γ t} · e^{-t² x/(2σ²)}` and studies
 the moment integrals `∫_ℓ^u tᵏ s(x,t) dt` as functions of the parameter `x`. This section
 sets those up (`nWeight`, `J`) and proves the fact everything else rests on:
 differentiating under the integral sign in `x` lowers to the moment two degrees higher,
@@ -328,7 +328,7 @@ section Needle
 open intervalIntegral
 
 /-- The exponential-needle weight `s(x,t) = e^{γt} e^{-t²x/(2σ²)}`
-(`vol3_journal.tex:1228`). -/
+([CV18]). -/
 noncomputable def nWeight (γ σ : ℝ) (x t : ℝ) : ℝ :=
   exp (γ * t) * exp (-(t ^ 2 * x) / (2 * σ ^ 2))
 
@@ -373,7 +373,7 @@ lemma hasDerivAt_pow_mul_nWeight (hσ : σ ≠ 0) (k : ℕ) (t x : ℝ) :
 
 /-- **Differentiation under the integral sign.** In the parameter `x`, the `k`-th needle
 moment differentiates to `-(1/(2σ²))` times the `(k+2)`-nd. This is the computation the
-paper performs at `vol3_journal.tex:1248` and again inside `v'`. -/
+paper performs at [CV18] and again inside `v'`. -/
 theorem hasDerivAt_J (hσ : σ ≠ 0) (k : ℕ) (x₀ : ℝ) :
     HasDerivAt (J γ σ ℓ u k) (-(1 / (2 * σ ^ 2)) * J γ σ ℓ u (k + 2) x₀) x₀ := by
   have hσ2 : (0 : ℝ) < 2 * σ ^ 2 := by positivity
@@ -427,7 +427,7 @@ theorem hasDerivAt_J (hσ : σ ≠ 0) (k : ℕ) (x₀ : ℝ) :
 
 /-! ### The needle variance bound — Brascamp–Lieb in one dimension, proved
 
-Paper Theorem 4.1 (`vol3_journal.tex:1407`) cites Brascamp–Lieb [BL76] for the fact that
+Paper Theorem 4.1 ([CV18]) cites Brascamp–Lieb [BL76] for the fact that
 the needle distribution at parameter `x` — the Gaussian of variance `σ²/x`, tilted by
 `e^{γt}` and restricted to `[ℓ,u]` — has variance at most `σ²/x`. In this one-dimensional
 setting the general theorem is not needed: the tilt only shifts the mean and the
@@ -573,7 +573,7 @@ lemma J_var_ibp (hσ : σ ≠ 0) (_hlu : ℓ ≤ u) (x : ℝ) :
   linear_combination hftc
 
 /-- **Brascamp–Lieb for the exponential needle, proved rather than cited**
-(paper Theorem 4.1, `vol3_journal.tex:1407`):
+(paper Theorem 4.1, [CV18]):
 
   `J₂J₀ − J₁² ≤ (σ²/x)·J₀²`,
 
@@ -656,7 +656,7 @@ theorem J_sq_var_le (hlu : ℓ ≤ u) (hR : ∀ t ∈ Ioc ℓ u, |t| ≤ R) (x :
   rw [hw0, hw1, ← J_eq_setIntegral hlu 2, ← J_eq_setIntegral hlu 4] at key
   exact key
 
-/-- The paper's `v(x)` (`vol3_journal.tex:1193`): the second moment of the needle
+/-- The paper's `v(x)` ([CV18]): the second moment of the needle
 distribution at parameter `x`. -/
 noncomputable def v (γ σ ℓ u : ℝ) (x : ℝ) : ℝ := J γ σ ℓ u 2 x / J γ σ ℓ u 0 x
 
@@ -680,7 +680,7 @@ theorem hasDerivAt_v (hσ : σ ≠ 0) (hlu : ℓ < u) (x : ℝ) :
   field_simp
   ring
 
-/-- The Brascamp–Lieb input (paper Theorem 4.1, `vol3_journal.tex:1407`, from [BL76]),
+/-- The Brascamp–Lieb input (paper Theorem 4.1, [CV18], from [BL76]),
 specialized to the needle: the distribution with density `∝ s(x, ·)` on `[ℓ,u]` — a
 Gaussian of variance `σ²/x` restricted to an interval — has variance at most `σ²/x`.
 
@@ -699,7 +699,7 @@ the development. -/
 theorem brascampLieb (hσ : σ ≠ 0) (hlu : ℓ ≤ u) : BrascampLieb γ σ ℓ u :=
   fun _ hx => J_var_le hσ hlu hx
 
-/-- **Paper Lemma 5.6 (`vol3_journal.tex:1190`).** `v'(x) ≥ -2R²/x` for `x > 0`, when the
+/-- **Paper Lemma 5.6 ([CV18]).** `v'(x) ≥ -2R²/x` for `x > 0`, when the
 needle lives in `[-R, R]`. -/
 theorem v_deriv_ge (hσ : 0 < σ) (hlu : ℓ < u) (hR : ∀ t ∈ Ioc ℓ u, |t| ≤ R)
     {x : ℝ} (hx : 0 < x) :
@@ -817,7 +817,7 @@ theorem v_diff_le (hσ : 0 < σ) (hlu : ℓ < u) (hR : ∀ t ∈ Ioc ℓ u, |t| 
   simp only at hle
   linarith
 
-/-- The paper's `h(α)` (`vol3_journal.tex:1233`). -/
+/-- The paper's `h(α)` ([CV18]). -/
 noncomputable def hFun (γ σ ℓ u : ℝ) (α : ℝ) : ℝ :=
   J γ σ ℓ u 0 (1 + α) * J γ σ ℓ u 0 (1 - α) / (J γ σ ℓ u 0 1) ^ 2
 
@@ -831,7 +831,7 @@ lemma hFun_zero (hlu : ℓ < u) : hFun γ σ ℓ u 0 = 1 := by
   rw [← pow_two]
   exact div_self (pow_ne_zero 2 h)
 
-/-- The paper's computation of `h'(α)` (`vol3_journal.tex:1258`), in the form
+/-- The paper's computation of `h'(α)` ([CV18]), in the form
 `h'(α) = (1/(2σ²)) h(α) (v(1-α) - v(1+α))`. -/
 theorem hasDerivAt_hFun (hσ : σ ≠ 0) (hlu : ℓ < u) (α : ℝ) :
     HasDerivAt (hFun γ σ ℓ u)
@@ -864,7 +864,7 @@ theorem hasDerivAt_hFun (hσ : σ ≠ 0) (hlu : ℓ < u) (α : ℝ) :
   field_simp
   ring
 
-/-- **Paper Claim 5.9 (`vol3_journal.tex:1238`).** `h'(α) ≤ 4R²α h(α)/σ²` for `α ≤ 1/2`. -/
+/-- **Paper Claim 5.9 ([CV18]).** `h'(α) ≤ 4R²α h(α)/σ²` for `α ≤ 1/2`. -/
 theorem hFun_deriv_le (hσ : 0 < σ) (hlu : ℓ < u) (hR : ∀ t ∈ Ioc ℓ u, |t| ≤ R)
     {α : ℝ} (hα0 : 0 ≤ α) (hα : α ≤ 1 / 2) :
     deriv (hFun γ σ ℓ u) α ≤ 4 * R ^ 2 * α * hFun γ σ ℓ u α / σ ^ 2 := by
@@ -877,7 +877,7 @@ theorem hFun_deriv_le (hσ : 0 < σ) (hlu : ℓ < u) (hR : ∀ t ∈ Ioc ℓ u, 
         mul_le_mul_of_nonneg_left hv hc.le
     _ = 4 * R ^ 2 * α * hFun γ σ ℓ u α / σ ^ 2 := by field_simp; ring
 
-/-- **Paper Lemma 5.7 (`vol3_journal.tex:1218`).** For `0 ≤ α ≤ 1/2`,
+/-- **Paper Lemma 5.7 ([CV18]).** For `0 ≤ α ≤ 1/2`,
 
   `h(α) ≤ exp(2R²α²/σ²)`.
 
@@ -934,8 +934,8 @@ end ExpBound
 
 /-! ## §5.1.6 The localization reduction
 
-Paper Lemma 5.4 (`lem:exp-needle-simplify`, `vol3_journal.tex:1134`) and the headline
-Lemma 3.2 (`lem:variance-bound`, `vol3_journal.tex:360`).
+Paper Lemma 5.4 (`lem:exp-needle-simplify`, [CV18]) and the headline
+Lemma 3.2 (`lem:variance-bound`, [CV18]).
 
 The `n`-dimensional inequality `G(σ²/(1+α)) G(σ²/(1-α)) ≤ c · G(σ²)²` is reduced by the
 Localization Lemma to the same inequality along one-dimensional *exponential needles*. The
@@ -950,7 +950,7 @@ reduction has a concrete geometric content, which is what this section proves:
 What remains is exactly Lemma 5.7 (`hFun_le_exp`), so every needle obeys the bound
 `exp(2R²α²/σ²)` (`needle_variance_bound`).
 
-The Localization Lemma itself (paper Theorem 5.3, `vol3_journal.tex:1106`, from [KLS95])
+The Localization Lemma itself (paper Theorem 5.3, [CV18], from [KLS95])
 is **not** formalized: it is carried as the explicit hypothesis `LocalizationHypothesis`,
 stated in the exact form the reduction consumes. -/
 
@@ -962,7 +962,7 @@ variable {n : ℕ} {f : EuclSpace n → ℝ}
 
 /-- The Gaussian needle integral: the integral of `x ↦ e^{-‖x‖²/(2s)}` along the segment
 `{p + t·w : t ∈ [ℓ,u]}`, against the needle's exponential weight `e^{γt}`
-(`vol3_journal.tex:1101`). -/
+([CV18]). -/
 noncomputable def needleInt (γ : ℝ) (p w : EuclSpace n) (ℓ u s : ℝ) : ℝ :=
   ∫ t in ℓ..u, exp (γ * t) * exp (-(‖p + t • w‖ ^ 2) / (2 * s))
 
@@ -976,7 +976,7 @@ lemma norm_add_smul_sq {p w : EuclSpace n} (hpw : inner ℝ p w = 0) (hw : ‖w�
 
 /-- Every nondegenerate segment can be written as `t ↦ p + t·w` with `p ⟂ w` and
 `‖w‖ = 1`; the paper's "`z` is the closest distance from the origin to the extension of
-`I`" (`vol3_journal.tex:1155`). -/
+`I`" ([CV18]). -/
 theorem exists_normalized_needle (a b : EuclSpace n) (hab : a ≠ b) :
     ∃ (p w : EuclSpace n) (c : ℝ), inner ℝ p w = 0 ∧ ‖w‖ = 1 ∧
       ∀ τ : ℝ, a + τ • (b - a) = p + (c + τ * ‖b - a‖) • w := by
@@ -998,7 +998,7 @@ theorem exists_normalized_needle (a b : EuclSpace n) (hab : a ≠ b) :
       _ = a - (inner ℝ a w) • w + ((inner ℝ a w) + τ * ‖b - a‖) • w := by module
 
 /-- **The offset factors out.** `∫ e^{γt} e^{-‖p+t·w‖²/(2s)} dt = e^{-‖p‖²/(2s)} ∫ e^{γt}
-e^{-t²/(2s)} dt` (`vol3_journal.tex:1157`). -/
+e^{-t²/(2s)} dt` ([CV18]). -/
 theorem needleInt_factor {γ : ℝ} {p w : EuclSpace n} (hpw : inner ℝ p w = 0)
     (hw : ‖w‖ = 1) (ℓ u s : ℝ) (hs : s ≠ 0) :
     needleInt γ p w ℓ u s
@@ -1026,7 +1026,7 @@ lemma integral_eq_J {γ σ x : ℝ} (hσ : σ ≠ 0) (hx : x ≠ 0) (ℓ u : ℝ
   congr 2
   field_simp
 
-/-- **Paper Lemma 5.4 (`vol3_journal.tex:1134`), the computation.** For a needle in
+/-- **Paper Lemma 5.4 ([CV18]), the computation.** For a needle in
 normalized position, the ratio the localization argument must bound equals the purely
 one-dimensional `hFun` — the offset `z = ‖p‖` cancels because `(1+α) + (1-α) = 2`. -/
 theorem needle_ratio_eq {γ σ α : ℝ} {p w : EuclSpace n} (hpw : inner ℝ p w = 0)
@@ -1087,7 +1087,7 @@ theorem needle_variance_bound {γ σ α R : ℝ} {p w : EuclSpace n} (hpw : inne
   linarith
 
 /-- **The Localization Lemma, as an assumption** (paper Theorem 5.3,
-`vol3_journal.tex:1106`, from [KLS95]).
+[CV18], from [KLS95]).
 
 **This predicate is never proved in this file.** It is stated only so that the theorems
 that need it (`variance_bound`, `lc_variance_bound`) can carry it as an explicit,
@@ -1097,7 +1097,7 @@ must supply a proof of it.
 Content: if the four-function inequality holds along every exponential needle that meets
 the support of `f`, it holds for `f` itself. Needles are quantified in the normalized
 position `t ↦ p + t·w` supplied by `exists_normalized_needle`, and restricted to `[-R, R]`
-because `f` vanishes outside `R·Bₙ` (`vol3_journal.tex:1155`). -/
+because `f` vanishes outside `R·Bₙ` ([CV18]). -/
 def LocalizationHypothesis (f : EuclSpace n → ℝ) (σ α c R : ℝ) : Prop :=
   (∀ (γ : ℝ) (p w : EuclSpace n) (ℓ u : ℝ), inner ℝ p w = 0 → ‖w‖ = 1 → ℓ < u →
       (∀ t ∈ Ioc ℓ u, |t| ≤ R) →
@@ -1105,7 +1105,7 @@ def LocalizationHypothesis (f : EuclSpace n → ℝ) (σ α c R : ℝ) : Prop :=
         ≤ c * (needleInt γ p w ℓ u (σ ^ 2)) ^ 2) →
     G f (σ ^ 2 / (1 + α)) * G f (σ ^ 2 / (1 - α)) ≤ c * (G f (σ ^ 2)) ^ 2
 
-/-- **Paper Lemma 3.2 (`vol3_journal.tex:360`) / Lemma 5.8 (`vol3_journal.tex:1304`).**
+/-- **Paper Lemma 3.2 ([CV18]) / Lemma 5.8 ([CV18]).**
 For a logconcave `f` supported in `R·Bₙ` and `α ≤ 1/2`,
 
   `G(σ²/(1+α)) · G(σ²/(1-α)) ≤ exp(2R²α²/σ²) · G(σ²)²`,
@@ -1123,10 +1123,10 @@ end Localization
 
 /-! ## §5.1.7 The headline variance bounds
 
-* `lc_variance_bound` — paper Lemma 5.8 (`vol3_journal.tex:1304`): for a logconcave `f`
+* `lc_variance_bound` — paper Lemma 5.8 ([CV18]): for a logconcave `f`
   supported in `R·Bₙ`, the ratio estimator has `E(Y²)/E(Y)² ≤ exp(2R²α²/σ²)` for
   `α ≤ 1/2` (given the Localization Lemma as an explicit hypothesis).
-* `fast_var_bound` — paper Claim 5.11 (`vol3_journal.tex:1447`): at the *accelerated*
+* `fast_var_bound` — paper Claim 5.11 ([CV18]): at the *accelerated*
   cooling rate `α = σ²/(2C²n)` of a body inside `C√n·Bₙ` (so `R = C√n`), the bound is
   `≤ 1 + σ²/(C²n)`, which is what makes `O(C²n/σ²)` phases per doubling of `σ²`
   affordable and yields the `O*(n³)` complexity.
@@ -1150,7 +1150,7 @@ theorem exp_le_one_add_two_mul {α : ℝ} (hα0 : 0 ≤ α) (hα : α ≤ 1 / 2)
     nlinarith
   linarith
 
-/-- **Paper Lemma 5.8 (`vol3_journal.tex:1304`).** For a logconcave `f` supported in
+/-- **Paper Lemma 5.8 ([CV18]).** For a logconcave `f` supported in
 `R·Bₙ`, with `X` drawn from the density `∝ g(·, σ²/(1+α))` and
 `Y = g(X, σ²)/g(X, σ²/(1+α))`,
 
@@ -1174,7 +1174,7 @@ theorem lc_variance_bound {σ α R : ℝ} (hσ : 0 < σ) (hα0 : 0 ≤ α) (hα 
   rw [div_le_iff₀ (by positivity : (0:ℝ) < (G f (σ ^ 2)) ^ 2)]
   exact variance_bound hσ hα0 hα hloc
 
-/-- **Paper Claim 5.11 (`vol3_journal.tex:1447`).** At the accelerated cooling rate
+/-- **Paper Claim 5.11 ([CV18]).** At the accelerated cooling rate
 `α = σ²/(2C²n)` for a body inside `C√n·Bₙ` (so the needle radius is `R = C√n`), the
 variance bound `exp(2R²α²/σ²)` is at most `1 + σ²/(C²n) = 1 + 2α`.
 
@@ -1222,7 +1222,7 @@ section FixedRate
 variable {n : ℕ} {f : EuclSpace n → ℝ}
 
 /-- `(1 - 1/n²)^{-(n+1)} ≤ 1 + 2/n` for `n ≥ 3` — the paper's chain at
-`vol3_journal.tex:1376`, with the `n = 3` case computed rather than estimated. -/
+[CV18], with the `n = 3` case computed rather than estimated. -/
 theorem inv_one_sub_inv_sq_pow_le {n : ℕ} (hn : 3 ≤ n) :
     ((1 : ℝ) - (1 / (n : ℝ)) ^ 2)⁻¹ ^ (n + 1) ≤ 1 + 2 / (n : ℝ) := by
   rcases eq_or_lt_of_le hn with h3 | h4
@@ -1286,11 +1286,11 @@ theorem inv_one_sub_inv_sq_pow_le {n : ℕ} (hn : 3 ≤ n) :
       _ = ((n : ℝ) - 1) / ((n : ℝ) - 2) := hfrac
       _ ≤ 1 + 2 / (n : ℝ) := hlast
 
-/-- The paper's `z(a) = a^{n+1} ∫_K e^{-a‖x‖²/2} dx` (`vol3_journal.tex:1365`), written
+/-- The paper's `z(a) = a^{n+1} ∫_K e^{-a‖x‖²/2} dx` ([CV18]), written
 against `G`: `∫_K e^{-a‖x‖²/2} dx = G f a⁻¹`. -/
 noncomputable def zFun (f : EuclSpace n → ℝ) (a : ℝ) : ℝ := a ^ (n + 1) * G f a⁻¹
 
-/-- **Paper Lemma 5.9 (`vol3_journal.tex:1342`, from [LV2]), as an assumption:** `aⁿ ∫_K
+/-- **Paper Lemma 5.9 ([CV18], from [LV2]), as an assumption:** `aⁿ ∫_K
 f(ax) dx` is a logconcave function of `a`, hence so is `z`. Stated in the midpoint form the
 proof of Lemma 5.10 consumes, which is all that logconcavity is used for.
 
@@ -1321,7 +1321,7 @@ and the general statement is false regardless. -/
 def ZLogconcaveHypothesis (f : EuclSpace n → ℝ) : Prop :=
   ∀ a b : ℝ, 0 < a → 0 < b → zFun f a * zFun f b ≤ (zFun f ((a + b) / 2)) ^ 2
 
-/-- **The transport step (`vol3_journal.tex:1367`).** Logconcavity of `z` at the midpoint
+/-- **The transport step ([CV18]).** Logconcavity of `z` at the midpoint
 of `(1±α)/σ²` gives
 
   `G(σ²/(1-α)) · G(σ²/(1+α)) ≤ (1-α²)^{-(n+1)} · G(σ²)²`. -/
@@ -1366,7 +1366,7 @@ theorem G_mul_G_le_of_zLogconcave (hz : ZLogconcaveHypothesis f) {σ α : ℝ} (
   rw [inv_pow, inv_mul_eq_div, le_div_iff₀ hcoef, mul_comm]
   exact hstep
 
-/-- **Paper Lemma 5.10 (`vol3_journal.tex:1353`).** Under the fixed cooling rate
+/-- **Paper Lemma 5.10 ([CV18]).** Under the fixed cooling rate
 `σᵢ₊₁² = σᵢ²(1 + 1/n)` — i.e. `α = 1/n` — and for `n ≥ 3`,
 
   `G(σ²/(1+α)) · G(σ²/(1-α)) ≤ (1 + 2/n) · G(σ²)²`.

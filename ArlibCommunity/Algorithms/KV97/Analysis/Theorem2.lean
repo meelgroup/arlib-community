@@ -20,11 +20,10 @@ import ArlibCommunity.Algorithms.KV97.Analysis.Inflate
 
 ## The hypothesis is POINTWISE, not total-variation — and this is a correction
 
-Both Kannan–Vempala and the restatement it is used through
-(`sections/proof-appendix.tex:153`, `claim:linf`) say the sampler's density is
+Both Kannan–Vempala and the restatement it is used through (`claim:linf`) say the sampler's density is
 within **total variation** `ε` of uniform on `P'`. That reading does not survive
 contact with the corollary, and this development does not use it. In detail
-(`AUDIT-KV97.md` §4b):
+(the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`):
 
 * A TV hypothesis buys an **additive** error: the integrand `prodTent x ·` lies in
   `[0,1]`, so `|∫f dν − ∫f dunif| ≤ TV(ν, unif)` and no better. That is exactly
@@ -95,7 +94,7 @@ theorem lower (h : PointwiseAlmostUniform f S V ε) {p} (hp : p ∈ S) :
 theorem upper (h : PointwiseAlmostUniform f S V ε) {p} (hp : p ∈ S) :
     f p ≤ (1 + ε) / V := (h p hp).2
 
-/-- **Non-vacuity** (`CLAUDE.md` §11): the exactly-uniform density satisfies it for
+/-- **Non-vacuity**: the exactly-uniform density satisfies it for
 every `ε ≥ 0`, so the hypothesis is not empty. -/
 theorem uniform (S : Set (EuclideanSpace ℝ (Fin n))) {V ε : ℝ} (hV : 0 < V)
     (hε : 0 ≤ ε) : PointwiseAlmostUniform (fun _ => 1 / V) S V ε := by
@@ -174,7 +173,7 @@ a `(1+ε)`. Both are corrections, not conveniences.
 
 `E` is discharged by the tail bound of `ArlibCommunity/Algorithms/KV97/Analysis/Escape.lean`
 transported to the continuous tent density; at `κ = kappaOf c r` that gives
-`E = exp(−c²/2)` (**not** `exp(−c²)` — `AUDIT-KV97.md` §4a). -/
+`E = exp(−c²/2)` (**not** `exp(−c²)` — the escape-term discussion in `Algorithms/KV97/Analysis/Theorem2.lean`). -/
 theorem theorem2 {A : ι → EuclideanSpace ℝ (Fin n)} {b : ι → ℝ} {c r : ℝ}
     {f : EuclideanSpace ℝ (Fin n) → ℝ} {V ε E : ℝ} {x : EuclideanSpace ℝ (Fin n)}
     (hV : 0 < V) (hε0 : -1 ≤ ε) (hε1 : ε ≤ 1)
@@ -202,7 +201,7 @@ factor of uniform,
 `(1−ε)(1 − e^{−c²/2})/V  ≤  Pr[rnd p = x]  ≤  (1+ε)/V`,   `V = Vol(P')`.
 
 The escape term is `exp(−c²/2)` — **not** the paper's `2e^{−c²}`. The paper's
-inflation `κ = c + √(2 log r)` supports only the former; see `AUDIT-KV97.md` §4a
+inflation `κ = c + √(2 log r)` supports only the former; see the escape-term discussion in `Algorithms/KV97/Analysis/Theorem2.lean`
 and `ArlibCommunity.Algorithms.KV97.mul_exp_kappaOf_le`. Reaching `e^{−c²}` needs the larger
 inflation `√2·c + √(2 log r)`, available as
 `ArlibCommunity.Algorithms.KV97.mul_exp_kappaOf_sqrt_two_le`.

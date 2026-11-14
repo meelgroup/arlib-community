@@ -11,7 +11,7 @@ import ArlibCommunity.Foundations.Convex.CrossRatioIsoperimetry.Analysis.Weighte
 # The weighted cross-ratio isoperimetry for a **lower semicontinuous** weight
 
 `ArlibCommunity.Foundations.Convex.hIso_lowerSemicontinuous` is the `hIso` binder of
-`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` (`HitAndRunConductance.lean:1007-1020`) with one
+`ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` (`HitAndRunConductance.lean`) with one
 clause added — `LowerSemicontinuous h` — and nothing else changed.
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge_of_transfer_of_localization` is Theorem 4.2 with that binder
 **discharged**: `hIso` — the paper's Theorem 2.1 — no longer appears, and the residual binders are
@@ -50,7 +50,7 @@ Lemma for **lower semicontinuous** integrands
 reducing to the continuous case: the integrands are limits of monotone increasing sequences of
 continuous functions, and both a strict inequality `∫ g > 0` and the conclusion survive the
 passage.  That reduction is already formalised in this repository —
-`ArlibCommunity.Foundations.Convex.exists_continuous_le_setIntegral_pos` (`LocalizationLSC.lean:284`), built on the Lipschitz
+`ArlibCommunity.Foundations.Convex.exists_continuous_le_setIntegral_pos` (`LocalizationLSC.lean`), built on the Lipschitz
 inf-convolution minorants — and this file uses it directly: the second integrand is lower
 semicontinuous, a continuous minorant with positive `K`-integral is extracted, `hloc` is called on
 the *minorant*, and the needle conclusion is inherited by the original because the profile `D` is
@@ -152,7 +152,7 @@ trimming, and the gap between `A'` and `A` — are budgeted against `e₀` as `�
   `conv({q} ∪ B(u,σ)) ⊆ K` pins the exit point of any nearby line to within `O(ρ·ℓ/σ)` — but it
   is a self-contained convex-geometry development, not a corollary of anything present.
 * **`hloc` is not discharged.**  `ArlibCommunity.Foundations.Convex.exists_needle_of_compact_convex`
-  (`LocalizationMeasurable.lean:226`) proves the Localization Lemma for continuous integrands
+  (`LocalizationMeasurable.lean`) proves the Localization Lemma for continuous integrands
   from a compact convex body, but its conclusion **drops the clause that the needle lies in the
   body**, which `ArlibCommunity.Foundations.Convex.needle_iso_of_chord_weight` requires.  The clause is recoverable — the
   needle is the axis of `⋂ k, D k ⊆ K`, and `ArlibCommunity.Foundations.Convex.exists_mem_iInter_height` produces a point of
@@ -272,7 +272,7 @@ theorem measure_add_add_sdiff_sdiff {K T₁ T₂ : Set (EuclideanSpace ℝ (Fin 
 
 /-- **`1_S · f` is lower semicontinuous for `S` open and `f` continuous *on `S`*.**
 
-`ArlibCommunity.Foundations.Convex.lowerSemicontinuous_indicator_of_isOpen` (`LocalizationLSC.lean:481`) asks for `f`
+`ArlibCommunity.Foundations.Convex.lowerSemicontinuous_indicator_of_isOpen` (`LocalizationLSC.lean`) asks for `f`
 continuous on the whole space; the weight this file has to feed to the localisation is concave on
 a body, hence continuous only on its interior, so the hypothesis has to be the relative one.  The
 proof is the same: `S ∩ f ⁻¹' (y, ∞)` is open for `S` open and `f` continuous on `S`. -/
@@ -1005,7 +1005,7 @@ variable {n : ℕ}
 /-- **The `hIso` binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge`, with the weight
 restricted to be continuous.**
 
-Every clause of that binder (`HitAndRunConductance.lean:1007-1020`) is here verbatim — the two
+Every clause of that binder (`HitAndRunConductance.lean`) is here verbatim — the two
 subset clauses `T₁ ⊆ K`, `T₂ ⊆ K` included, without which the statement is *false*
 (`ArlibCommunity.Foundations.Convex.not_thm21_book`) — with the single clause `Continuous h` inserted after the two set
 arguments.
@@ -1192,7 +1192,7 @@ end HIso
 /-! ### The binder check
 
 Two theorems certify, mechanically, that the conclusion of `ArlibCommunity.Foundations.Convex.hIso_continuous` is the `hIso`
-binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` (`HitAndRunConductance.lean:1007-1020`)
+binder of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_hitAndRun_ge` (`HitAndRunConductance.lean`)
 with the single clause `Continuous h` inserted, and nothing else changed — in particular with
 `T₁ ⊆ K` and `T₂ ⊆ K` still present, without which the statement is false
 (`ArlibCommunity.Foundations.Convex.not_thm21_book`).

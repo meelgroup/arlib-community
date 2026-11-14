@@ -10,7 +10,7 @@ import Mathlib.Analysis.Complex.ExponentialBounds
 /-!
 # `thm:iso` for a **weighted** density `1_K·f·e^{−‖x‖²/(2σ²)}`, `S₁ S₂ S₃` merely measurable
 
-`ArlibCommunity.Foundations.Convex.gaussianIndicator_isoperimetry_measurable_logTwo` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean:676`)
+`ArlibCommunity.Foundations.Convex.gaussianIndicator_isoperimetry_measurable_logTwo` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean`)
 removes both topological restrictions of the open/closed capstone — `S₁, S₂` open, `S₃` closed,
 `h` continuous — but only at the **indicator** density `1_K·e^{−‖x‖²/(2σ²)}`.  Its method,
 however, is not obviously indicator-specific: it does the partition step **first**, replacing
@@ -40,7 +40,7 @@ one gets `d_h(u,v) = 1 − e^{−M·t}`, which reaches the fixed threshold `4(d/
 `t = Θ(1/M) → 0`.  So for fixed `d, σ, R, n` the density branch can be satisfied by pairs
 arbitrarily close together, the cores `S₁ ∩ K`, `S₂ ∩ K` may touch, and the disjoint open
 enlargement the reduction runs on does not exist — which is exactly the obstruction
-`ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement` (`IsoOpenClosed.lean:1205`) exhibits,
+`ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement` (`IsoOpenClosed.lean`) exhibits,
 merely relocated from `{h = 0}` to the interior of `K`.
 
 This is a statement about **this method**, not about the truth of the conclusion: the open/closed
@@ -88,19 +88,19 @@ So the bundle that works adds one quantitative binder and one compatibility bind
 
 `Arlib/MarkovChains/Continuous/EllFloor.lean` records that nothing in this repository is
 reversible for that density: `metropolisGaussian` is reversible for `1_K·γ`
-(`MetropolisGaussian.lean:586`) and `speedyWalk` for `1_K·ℓ`
-(`SpeedyWalk.lean:379, 403`).  Reading the two definitions and the two reversibility proofs, the
+(`MetropolisGaussian.lean`) and `speedyWalk` for `1_K·ℓ`
+(`SpeedyWalk.lean, 403`).  Reading the two definitions and the two reversibility proofs, the
 missing kernel is the obvious hybrid, and the `ℓ` cancels for a structural reason.
 
-*The two existing move densities.*  `speedyWalk K δ` (`SpeedyWalk.lean:186`) moves with density
+*The two existing move densities.*  `speedyWalk K δ` (`SpeedyWalk.lean`) moves with density
 `q_s(x,y) = (vol(B(x,δ)∩K))⁻¹·1_{B(x,δ)∩K}(y)`, i.e. `(ℓ(x)·vol(δBₙ))⁻¹·1_{B(x,δ)∩K}(y)`, plus a
 holding atom on the `StuckPoints`; detailed balance for `ellMeasure = 1_K·ℓ·dx` is the pointwise
 identity `ℓ(x)·q_s(x,y) = vol(δBₙ)⁻¹·1_{B(x,δ)}(y)·1_K(y)` (`ell_mul_speedyWalk`), whose
 right-hand side is symmetric on `K × K`.  `metropolisGaussian K δ s`
-(`MetropolisGaussian.lean:444`) moves with density
+(`MetropolisGaussian.lean`) moves with density
 `q_m(x,y) = vol(δBₙ)⁻¹·1_K(y)·1_{B(x,δ)}(y)·min(1, g(y)/g(x))`, and detailed balance for `1_K·g`
 is `g(x)·q_m(x,y) = vol(δBₙ)⁻¹·1_K(y)·1_{B(x,δ)}(y)·min(g x, g y)`
-(`gaussianWeight_mul_metropolisDensity_comm`, `MetropolisGaussian.lean:365`).
+(`gaussianWeight_mul_metropolisDensity_comm`, `MetropolisGaussian.lean`).
 
 *The hybrid.*  A "speedy Metropolis–Gaussian" kernel would propose `y` uniformly from
 `B(x,δ) ∩ K` — the **speedy** proposal, not the plain ball — and then apply the Gaussian
@@ -131,7 +131,7 @@ Order of 300–500 lines.  **This file does not build it** — it would need a `
 scope here.
 
 *And it would not by itself close the speedy route.*  `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyWalk_ge_of_convex`
-(`StarPolar.lean:626`) is stated for `speedyWalk`, not for a hybrid, so a new kernel needs its own
+(`StarPolar.lean`) is stated for `speedyWalk`, not for a hybrid, so a new kernel needs its own
 conductance argument; the isoperimetric inequality proved here is one input to such an argument,
 not the argument.
 
@@ -454,7 +454,7 @@ variable {n : ℕ}
 measurable.**
 
 This is `ArlibCommunity.Foundations.Convex.gaussianIndicator_isoperimetry_measurable_logTwo`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean:676`) with the indicator density `1_K·e^{−‖x‖²/(2σ²)}`
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean`) with the indicator density `1_K·e^{−‖x‖²/(2σ²)}`
 replaced by `1_K·f·e^{−‖x‖²/(2σ²)}` for a log-concave cofactor `f`.  It is the same statement,
 at the same sharp constant `d/σ`, with the same metric threshold `d / log 2`, over the same
 merely-measurable partition.

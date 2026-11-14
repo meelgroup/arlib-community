@@ -86,7 +86,7 @@ Every one of `α`, `θ`, `κ` is exponentially small in `n` for the Cousins-Vemp
 `2·vol K/vol B(0,1/2)`, which is exponential in `n`.  **So the conductance here is
 exponentially small in `n` and the mixing time exponentially large; nothing below is a
 polynomial-time statement and none of it may be quoted as one.**  The obstruction is
-inherited, not introduced: `ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean:591-596` records
+inherited, not introduced: `ArlibCommunity/Foundations/Convex/ConvexIsoperimetry/Analysis/BoundedDensityIsoperimetry.lean` records
 that its isoperimetric constant is not polynomial, and
 `ArlibCommunity/Foundations/MarkovChainTheory/BallWalkMixing/Analysis/BallWalkConductance.lean` records the further `√n` loss in
 the ball-intersection geometry.  The sharp isoperimetric constant needs localization, which
@@ -1031,7 +1031,7 @@ theorem exists_conductance_metropolisGaussian_pos (hn : 1 ≤ n)
               ENNReal.ofReal_mul hkap0.le]
             norm_num
 
-/-- **Non-vacuity (`CLAUDE.md` §11): the whole hypothesis bundle is jointly satisfiable, and
+/-- **Non-vacuity: the whole hypothesis bundle is jointly satisfiable, and
 the chain really mixes.**
 
 For every convex measurable `K` containing the unit ball with finite volume, every

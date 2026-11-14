@@ -44,7 +44,7 @@ are ever needed.
   number in `[0,1]` once `0 < pi S < ∞`; it is neither trivially `0` nor `⊤`.
 * `conductanceOn_smul`, `conductanceWithin_smul` — invariance under rescaling
   the measure.
-* `conductance_const_piHalf` — the **non-vacuity witness** (`CLAUDE.md` §11):
+* `conductance_const_piHalf` — the **non-vacuity witness**:
   a concrete kernel and measure whose conductance is provably `1/2`.
 
 ## Degenerate values: a warning
@@ -311,7 +311,7 @@ theorem conductanceWithin_smul (P : Kernel Ω Ω) (pi : Measure Ω) {c : ℝ≥0
 
 /-! ## A non-vacuity witness
 
-`CLAUDE.md` §11: a hypothesis of the shape `φ ≤ conductance P pi` is worthless
+The non-vacuity rule: a hypothesis of the shape `φ ≤ conductance P pi` is worthless
 if `conductance` is identically `0`, and `conductance ≤ 1` is worthless if the
 infimum is always over the empty family.  The instantly mixing kernel
 `Kernel.const Ω pi` — resample from `pi` at every step — settles both: its
@@ -373,7 +373,7 @@ measurable and has mass exactly `1/2`.  This is what stops
 theorem singleton_mem_smallSets (b : Bool) : ({b} : Set Bool) ∈ SmallSets piHalf (1 / 2) :=
   ⟨measurableSet_singleton b, by rw [piHalf_singleton]; norm_num, (piHalf_singleton b).le⟩
 
-/-- **Non-vacuity witness (`CLAUDE.md` §11).**  On the two-point space with the
+/-- **Non-vacuity witness.**  On the two-point space with the
 uniform measure, the instantly mixing kernel has conductance *exactly* `1/2`.
 
 So `conductance` is a genuinely attained quantity in `(0, 1)`: it is not

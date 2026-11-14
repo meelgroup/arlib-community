@@ -235,7 +235,7 @@ open.
 
   ⚠ **Strictness gap for anyone wiring `hsep` to slab separation.**
   `ArlibCommunity.Foundations.Convex.forall_lt_of_sign_separated` derives `hsep`, but needs the `g₁` side **strict**
-  (`a < L x → g₁ x < 0`).  `ArlibCommunity.Foundations.Convex.le_diam_of_sign_separated` (`NeedleLimit.lean:234`) is
+  (`a < L x → g₁ x < 0`).  `ArlibCommunity.Foundations.Convex.le_diam_of_sign_separated` (`NeedleLimit.lean`) is
   stated with `≤ 0`, and the non-strict form does **not** suffice: `g₁` may vanish above the
   level, where nothing bounds `g₂`.  That is why `hsep` is stated directly.
 

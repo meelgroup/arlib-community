@@ -18,7 +18,7 @@ Theorem 4.2 unconditional:
 for `n ≥ 1100` and a convex, closed, measurable, bounded `K ⊆ ℝⁿ` with a unit inball and
 `diam K ≤ D`.  This file pushes that through the mixing theorem.
 
-`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_lazy_hitAndRun_param` (`HitAndRunUncond.lean:145`) is Theorem
+`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_lazy_hitAndRun_param` (`HitAndRunUncond.lean`) is Theorem
 1.1 with the conductance value a free parameter `phi` and deadline `4·lsThreshold M phi ε`.
 Instantiating it at `phi = 1/(2³¹·n·D)` and feeding `conductance_hitAndRun_ge_uncond_pow` for
 `hphi` gives

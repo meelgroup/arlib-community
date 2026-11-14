@@ -108,7 +108,7 @@ If the sampler's law `μ` is within total variation `ε` of the uniform law on `
 with `E` the escape mass — **exactly the shape `ArlibCommunity.Algorithms.KV97.theorem2` produces from its
 pointwise hypothesis**, with `θ` in place of the pointwise `ε`.
 
-This is what `AUDIT-KV97.md` §4b claims is impossible "at the required scale `1/Vol(P')`".
+This is what the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean` claims is impossible "at the required scale `1/Vol(P')`".
 It is not impossible; it is a change of unit.  The cost is that the tolerance handed to the
 mixing bound is `θ/V` rather than `θ`, i.e. `log V` extra steps
 (`conductanceMixingTime_inv_volume_le`). -/
@@ -232,7 +232,7 @@ theorem theorem2_of_lazy_ballWalk (hn : 1 ≤ n)
       (by positivity) ht)
     hesc
 
-/-! ## Non-vacuity (`CLAUDE.md` §11)
+/-! ## Non-vacuity
 
 `theorem2_of_tvLe` is a conditional statement with seven hypotheses; if they could not hold
 together it would be worthless.  They can, at the extreme value `ε = 0`: take the body to be

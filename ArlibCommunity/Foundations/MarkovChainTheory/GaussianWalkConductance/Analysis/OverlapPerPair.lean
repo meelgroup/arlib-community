@@ -8,10 +8,10 @@ import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Anal
 /-!
 # `lem:f-dist`, and the elimination of the global `ℓ`-comparability premise
 
-`ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_sqrt_of_ell_comparable_global` (`OverlapSqrt.lean:556`)
+`ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_sqrt_of_ell_comparable_global` (`OverlapSqrt.lean`)
 and everything downstream of it — up to
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge`
-(`SpeedyGaussianConductance.lean:523`) — carry `ℓ`-comparability as a **global** premise:
+(`SpeedyGaussianConductance.lean`) — carry `ℓ`-comparability as a **global** premise:
 
     hcomp : ∀ x ∈ K, ∀ y ∈ K, ‖x − y‖ < δ/√n → ℓ(x) ≤ (3/2)·ℓ(y).
 
@@ -22,7 +22,7 @@ theorem carrying `hcomp` was blocked.
 But comparability is only ever used at the pairs those theorems already quantify over —
 `u, v ∈ K` with `‖u − v‖ < δ/√n` **and** `d_h(u,v) < 1/4` for the target density `h = 1_K·ℓ·γ`
 — and at those pairs it is a *theorem*: Cousins–Vempala's `lem:f-dist`
-(`1409.6011/vol3_journal.tex:553`).  This file proves `lem:f-dist` and uses it to **discharge
+([CV18]).  This file proves `lem:f-dist` and uses it to **discharge
 `hcomp` outright**.  It is not moved inside a quantifier; it is gone.
 
 ## Main results
@@ -55,7 +55,7 @@ lemma here is passed verbatim to its consumer, so drift is a type error.
 `hellLip`/`hLσ` are **not** touched, and the result is still conditional on them.  They are a
 different defect from `hcomp` — see the docstring of
 `conductance_speedyMetropolisGaussian_ge_perPair`: Cousins–Vempala's `thm:iso`
-(`vol3_journal.tex:467`) needs no Lipschitz control of `ℓ` at all, but the repository's
+([CV18]) needs no Lipschitz control of `ℓ` at all, but the repository's
 isoperimetry route (`ArlibCommunity.Foundations.Convex.norm_sub_ge_of_densDist_weighted`) does, so removing them means
 reproving isoperimetry by localization.
 
@@ -79,7 +79,7 @@ variable {n : ℕ}
 /-- **The Gaussian ratio bracket of `lem:f-dist`, with the paper's "for `n` large enough"
 replaced by an explicit dimension threshold.**
 
-Cousins–Vempala (`1409.6011/vol3_journal.tex:566`) assert `0.9 ≤ f(v)/f(u) ≤ 1.1` at
+Cousins–Vempala ([CV18]) assert `0.9 ≤ f(v)/f(u) ≤ 1.1` at
 separation `δ/√n` "for `n` large enough" and never say how large.  Here is the arithmetic.
 For `‖u‖, ‖v‖ ≤ R` and `‖u − v‖ ≤ δ/√n`,
 
@@ -150,7 +150,7 @@ theorem gaussianWeightReal_le_of_cv (hn : 21 ≤ n) {σ δ R : ℝ} (hσ : 0 < �
 /-! ## 2. `lem:f-dist`, as pure real arithmetic -/
 
 /-- **The arithmetic core of Cousins–Vempala's `lem:f-dist`**
-(`1409.6011/vol3_journal.tex:553`), with the two densities abstracted to positive reals.
+([CV18]), with the two densities abstracted to positive reals.
 
 `A, B` stand for `ℓ(u), ℓ(v)` and `a, b` for `f(u), f(v)`; `hab`/`hba` are the Gaussian
 bracket of §1, and `hd` is the paper's `d_h(u,v) < 1/4` at `h = ℓ·f`, spelled with the
@@ -203,7 +203,7 @@ theorem ell_le_of_toReal_le {K : Set (EuclideanSpace ℝ (Fin n))} {δ : ℝ}
         ENNReal.ofReal_mul (by norm_num)
     _ = ENNReal.ofReal (3 / 2) * ell K δ v := by rw [ENNReal.ofReal_toReal hvtop]
 
-/-- **Cousins–Vempala's `lem:f-dist` (`1409.6011/vol3_journal.tex:553`), proved** — and with
+/-- **Cousins–Vempala's `lem:f-dist` ([CV18]), proved** — and with
 it, the death of the global `ℓ`-comparability premise.
 
 > Let `K ⊆ 4σ√n Bₙ` be a convex body and `u, v ∈ K` with `‖u − v‖ ≤ δ/√n`.  If
@@ -259,7 +259,7 @@ theorem ell_comparable_of_densDist (hn : 21 ≤ n) {σ δ R : ℝ} (hσ : 0 < σ
 /-- **`ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_sqrt_of_ell_comparable_global` with `hcomp`
 discharged, not moved.**
 
-Diff against the source statement (`OverlapSqrt.lean:556`), clause by clause:
+Diff against the source statement (`OverlapSqrt.lean`), clause by clause:
 
 * `hn : 2 ≤ n` becomes `hn : 21 ≤ n` — the threshold of `gaussianWeightReal_le_of_cv`;
 * `hcomp`, the global `ℓ`-comparability premise that
@@ -335,7 +335,7 @@ theorem hoverlap_speedyMetropolisGaussian_perPair (hn : 21 ≤ n)
 /-! ## 5. The conductance bound, with `hcomp` gone -/
 
 /-- **`ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge` with `hcomp` removed**
-(`SpeedyGaussianConductance.lean:523`):
+(`SpeedyGaussianConductance.lean`):
 
     Φ(speedyMetropolisGaussian K δ σ²)  ≥  δ·ln 2 / (640·σ·√n)
 
@@ -353,11 +353,11 @@ bound, not a spectral-gap bound and not a runtime claim, and may not be quoted a
 
 * `hellLip`/`hLσ` — log-Lipschitzness of `ℓ` on `K` at an explicit constant `Lf`, and its
   compatibility with `σ` and `R`.  These are **not** `hcomp`'s defect and do not dissolve the
-  same way.  Cousins–Vempala's `thm:iso` (`vol3_journal.tex:467`) uses **no** Lipschitz
+  same way.  Cousins–Vempala's `thm:iso` ([CV18]) uses **no** Lipschitz
   control of `ℓ` anywhere: its density branch `d_h(u,v) ≥ 4d√n` is consumed inside the
   one-dimensional localization, by inequality `(1d-1)`.  The hypothesis enters this
   repository only through `ArlibCommunity.Foundations.Convex.norm_sub_ge_of_densDist_weighted`
-  (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean:237`), which converts that density branch into a
+  (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`), which converts that density branch into a
   *metric* separation `‖u − v‖ ≥ 2√3·d` so that `ArlibCommunity.Foundations.Convex.exists_disjoint_open_enlargement_weighted`
   can build disjoint enlargements.  It is therefore an artefact of the repository's proof
   route, not of the mathematics — but it is load-bearing for that route, so removing it means
@@ -493,7 +493,7 @@ theorem ell_comparable_of_densDist_witness :
 
 end ArlibCommunity.Foundations.MarkovChainTheory
 
-/-! ## Axiom audit (`CLAUDE.md` §4) -/
+/-! ## Axiom audit -/
 
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.gaussianWeightReal_le_of_cv
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.le_three_halves_of_densDist_mul_lt

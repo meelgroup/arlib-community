@@ -19,7 +19,7 @@ one step of the speedy walk satisfies
 
 (`overlap_speedyWalk_sqrt_of_ell_comparable`).  This is `lem:overlap`/`cor:overlap` of
 Cousins–Vempala, *Gaussian Cooling and `O*(n³)` Algorithms for Volume and Gaussian Volume*
-(`1409.6011/vol3_journal.tex:581` and `:612`), at the paper's own separation and with the
+([CV18] and `:612`), at the paper's own separation and with the
 paper's own hypotheses.  Nothing is `sorry`ed; see the axiom audit at the bottom.
 
 This is the last step between `ArlibCommunity.Foundations.MarkovChainTheory.kls_lemma35_at_sep_sqrt_dim`
@@ -76,7 +76,7 @@ the midpoint factor at `0.5223`, so the harmonic combination caps at `0.2555`.
 ## The `δ/√n` counterexample is excluded — the whole content of the hypothesis
 
 `ArlibCommunity.Foundations.MarkovChainTheory.exists_overlap_speedyWalk_sqrt_dim_counterexample`
-(`LensHalfspace.lean:636`) proves that the conclusion of
+(`LensHalfspace.lean`) proves that the conclusion of
 `ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_convex` is **false** at separation `δ/√n`.  Nothing
 here contradicts it, because its witness violates comparability, by a wide margin and
 verifiably: `exists_ell_not_comparable_at_sqrt_dim_counterexample` re-derives that witness
@@ -97,7 +97,7 @@ exclude it.  See "what is assumed" below.
 
 ## Comparability versus the local-conductance floor
 
-`ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk` (`SpeedyOverlap.lean:640`) also reaches `δ/√n`, but
+`ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk` (`SpeedyOverlap.lean`) also reaches `δ/√n`, but
 under the local-conductance **floor** `11 ≤ 20·ℓ(x)` for all `x ∈ K`.  That floor fails at
 every boundary point of every bounded convex body, where `ℓ → 1/2 < 11/20`, so that theorem
 is empty for convex bodies; its own witness is `K = ℝ²`.  Comparability is a different kind
@@ -114,7 +114,7 @@ and comparability.  No floor on `ℓ`, no bound on the diameter of `K`, no `n`-d
 `n ≥ 2`.  `u ∈ T`, `v ∉ T` and `densDist h u v < 1/4` are carried only to match the consumer's
 binder and are **not used**, so the result is stronger than `cor:overlap` in those respects.
 
-**Not proved here: `lem:f-dist` (`vol3_journal.tex:548`).**  Cousins–Vempala do not assume
+**Not proved here: `lem:f-dist` ([CV18]).**  Cousins–Vempala do not assume
 `d_ℓ(u,v) < 1/3` in `cor:overlap`; they *derive* it from that corollary's own hypothesis
 `d_h(u,v) < 1/4` for the specific density `h = f·ℓ`, using `0.9 ≤ f(v)/f(u) ≤ 1.1` at
 separation `δ/√n` with `δ ≤ σ/(8√n)` — a Gaussian-ratio estimate the paper states only "for
@@ -144,7 +144,7 @@ here.  Nothing below asserts, or may be quoted as asserting, a polynomial mixing
 
 ## References
 
-Cousins and Vempala, §4.1 (`1409.6011/vol3_journal.tex:509–700`).
+Cousins and Vempala, §4.1 ([CV18]).
 Kannan, Lovász and Simonovits (1995), Lemma 3.5 — proved at `δ/√n` in
 `ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/LensMin.lean`, sharpened here.
 -/
@@ -407,7 +407,7 @@ theorem volume_ball_inter_le_of_ell_le {K : Set (EuclideanSpace ℝ (Fin n))} {�
 is literally a two-sided comparison of the numerators.
 
 The conclusion is written `max ≤ (3/2)·min`, which is the division-free form of Cousins–
-Vempala's `d_ℓ(u,v) < 1/3` (`1409.6011/vol3_journal.tex:581`): `d_ℓ = |ℓu − ℓv|/max < 1/3`
+Vempala's `d_ℓ(u,v) < 1/3` ([CV18]): `d_ℓ = |ℓu − ℓv|/max < 1/3`
 says `max − min < max/3`, i.e. `max < (3/2)·min`. -/
 theorem max_volume_ball_inter_le_of_ell_comparable {K : Set (EuclideanSpace ℝ (Fin n))}
     {δ : ℝ} (hδ : 0 < δ) {u v : EuclideanSpace ℝ (Fin n)}
@@ -427,7 +427,7 @@ theorem max_volume_ball_inter_le_of_ell_comparable {K : Set (EuclideanSpace ℝ 
 /-- **The core of `cor:overlap` at separation `δ/√n`**, with the constant `12`, no
 membership hypotheses on `T`, and comparability stated on the ball-slice volumes.
 
-This is Cousins–Vempala's `lem:overlap` (`1409.6011/vol3_journal.tex:581–600`) verbatim,
+This is Cousins–Vempala's `lem:overlap` ([CV18]) verbatim,
 with their `1/(e+1)` replaced by the `1/8` of `volume_lens_ge_min_ball_inter_sharp`:
 
 * both one-step laws dominate the uniform law on the lens `C = B(u,δ) ∩ B(v,δ)`, each
@@ -512,7 +512,7 @@ theorem one_le_twelve_mul_speedyWalk_add_of_comparable (hn : 2 ≤ n)
     _ ≤ 12 * (speedyWalk K δ u Tᶜ + speedyWalk K δ v T) := by gcongr
 
 /-- **Cousins–Vempala's `cor:overlap` at separation `δ/√n`**
-(`1409.6011/vol3_journal.tex:612`), with the local-conductance comparability hypothesis
+([CV18]), with the local-conductance comparability hypothesis
 `d_ℓ(u,v) < 1/3` that the paper carries and
 `ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_convex` deletes, restored — in the binder shape of
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`'s `hoverlap`, extended by the two
@@ -592,7 +592,7 @@ theorem ell_ne_zero_of_volume_ball_inter_ne_zero {K : Set (EuclideanSpace ℝ (F
 `ArlibCommunity.Foundations.Convex.densDist` vocabulary applied to `x ↦ (ell K δ x).toReal`.
 
 This is what makes the hypothesis of `overlap_speedyWalk_sqrt_of_ell_comparable` *literally*
-Cousins–Vempala's `lem:overlap` hypothesis (`1409.6011/vol3_journal.tex:581`), rather than a
+Cousins–Vempala's `lem:overlap` hypothesis ([CV18]), rather than a
 convenient reformulation: `d_ℓ = |ℓu − ℓv|/max < 1/3` says `max − min < max/3`, i.e.
 `max < (3/2)·min`, i.e. both one-sided comparisons.
 
@@ -626,7 +626,7 @@ theorem ell_le_of_densDist_ell_lt {K : Set (EuclideanSpace ℝ (Fin n))} {δ : �
     _ = ENNReal.ofReal (3 / 2) * ell K δ v := by rw [ENNReal.ofReal_toReal hvtop]
 
 /-- **`cor:overlap` at separation `δ/√n`, with the hypothesis in the paper's own spelling**
-`d_ℓ(u,v) < 1/3` (`1409.6011/vol3_journal.tex:581`), and in the binder shape
+`d_ℓ(u,v) < 1/3` ([CV18]), and in the binder shape
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`'s `hoverlap` demands.
 
 Read against the paper: `lem:overlap` assumes `d_ℓ(u,v) < 1/3` for the pair at hand, and
@@ -696,7 +696,7 @@ theorem conductance_speedyGaussian_ge_of_ell_comparable (hn : 2 ≤ n) {σ δ : 
 
 /-! ## 7. Non-vacuity, on a bounded convex body -/
 
-/-- **Non-vacuity witness (`CLAUDE.md` §11).**  Every hypothesis of
+/-- **Non-vacuity witness.**  Every hypothesis of
 `overlap_speedyWalk_sqrt_of_ell_comparable` holds *simultaneously* at `n = 2`,
 `K = B(0,1) ⊆ ℝ²`, `δ = 3`, `u = 0`, `v = (1/2, 0)`, `T = B(0,1/4)`, `h ≡ 1`, and the
 conclusion `1 ≤ 12·(P_u(Tᶜ) + P_v(T))` holds there.

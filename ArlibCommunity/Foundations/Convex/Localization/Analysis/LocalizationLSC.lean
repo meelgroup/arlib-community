@@ -33,7 +33,7 @@ from indicator functions, which is what every downstream consumer applies locali
   the task;
 * `g₂ = c · 1_U · f − 1_F · f` for `U` **open**, `F` **closed**, `c ≥ 0` — the shape of
   `g₂ = (d/σ)·A·1_{S₂}h − 1_{S₃}h` in Cousins–Vempala's proof of `thm:iso`
-  (`vol3_journal.tex:479–493`), and of the corresponding integrand in Lovász–Vempala's
+  ([CV18]), and of the corresponding integrand in Lovász–Vempala's
   Theorem 4.2.
 
 Neither integrand is continuous, so both are outside what the bounded-continuous form accepts.
@@ -547,7 +547,7 @@ theorem const_mul_indicator {S : Set E} (f : E → ℝ) (c : ℝ) :
 /-- **The Cousins–Vempala integrand `c·1_U·f − 1_F·f` is lower semicontinuous** when `U` is open,
 `F` is closed, `f` is continuous nonnegative and `c ≥ 0`.
 
-This is exactly the shape of `g₂ = (d/σ)·A·1_{S₂}h − 1_{S₃}h` at `vol3_journal.tex:479–493`,
+This is exactly the shape of `g₂ = (d/σ)·A·1_{S₂}h − 1_{S₃}h` at [CV18],
 with `S₂` open and `S₃` closed. -/
 theorem lowerSemicontinuous_smul_indicator_sub_indicator {U F : Set E} (hU : IsOpen U)
     (hF : IsClosed F) {f : E → ℝ} (hf : Continuous f) (hf0 : ∀ x, 0 ≤ f x) {c : ℝ} (hc : 0 ≤ c) :
@@ -597,7 +597,7 @@ theorem exists_needle_indicator_sub_smul {K : Set E} (hKfin : μ K ≠ ⊤)
 /-- **The Cousins–Vempala shape.**
 
 `g₂ = c·1_U·f − 1_F·f` with `U` open, `F` closed, `f` continuous nonnegative and `c ≥ 0` — the
-shape of `g₂ = (d/σ)·A·1_{S₂}h − 1_{S₃}h` at `vol3_journal.tex:479–493`. -/
+shape of `g₂ = (d/σ)·A·1_{S₂}h − 1_{S₃}h` at [CV18]. -/
 theorem exists_needle_smul_indicator_sub_indicator {K : Set E} (hKfin : μ K ≠ ⊤)
     {P : (ℝ → E) → (ℝ → ℝ) → Prop} {g₁ : E → ℝ} {M : ℝ}
     (hg₁ : Continuous g₁) (hM₁ : ∀ x, |g₁ x| ≤ M)

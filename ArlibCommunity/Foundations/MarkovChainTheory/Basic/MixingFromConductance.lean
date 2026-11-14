@@ -11,7 +11,7 @@ import ArlibCommunity.Foundations.MarkovChainTheory.Basic.Warmness
 
 A sampler that runs a Markov chain has to be told **how many steps to take**.  What the
 theory of conductance supplies is not a step count but a *rate*: Lovász–Simonovits, quoted
-as Theorem 4.1 by Cousins–Vempala (`vol3_journal.tex:523`), state that for a lazy chain of
+as Theorem 4.1 by Cousins–Vempala ([CV18]), state that for a lazy chain of
 conductance `phi` started from an `M`-warm distribution,
 
 `d_TV(Q_t, Q) ≤ √M · (1 − phi²/2)^t`.
@@ -49,7 +49,7 @@ actually turns a conductance into a number a sampler can use.
 * `mixesWithin_of_invariant` — started at stationarity the chain is already mixed, at every
   time and with error `0`.
 
-*Non-vacuity (`CLAUDE.md` §11).*
+*Non-vacuity.*
 
 * `exists_conductance_pos_and_mixesWithin` — `Kernel.const Bool piHalf` has conductance
   exactly `1/2` (`conductance_const_piHalf`) and, by `mixesWithin_const` of `Warmness`,
@@ -80,9 +80,9 @@ lemmas `step_const_eq` and `mixesWithin_const`.
 **The Cheeger inequality `spectralGap ≥ phi²/2`, and with it the decay bound
 `d_TV(Q_t, Q) ≤ √M (1 − phi²/2)^t`, are not proved in this file.**  They are also *not*
 assumed: there is no `def` or `structure` field in this module that names either statement
-and stands in for its proof, which is the failure mode `CLAUDE.md` §11 and
-`AUDIT-KV97.md` §0 warn about, and which
-`../gaussian-cooling-vempala/lean/GaussianCooling/Conductance.lean:439`
+and stands in for its proof, which is the failure mode the non-vacuity rule and
+the discussion in `Algorithms/KV97/Analysis/Theorem2.lean` §0 warn about, and which
+`../gaussian-cooling-vempala/lean/GaussianCooling/Conductance.lean`
 (`MixingFromConductance`) exhibits.  The decay bound enters the one theorem that needs it,
 `mixesWithin_of_conductance_decay`, as an explicit hypothesis on the caller, so that
 substituting a real proof later is a matter of supplying that argument.
@@ -99,7 +99,7 @@ hard direction `gap ≥ phi²/2`, and the passage from a spectral gap to `L²` �
 * Lovász–Simonovits, *Random walks in a convex body and an improved volume algorithm*,
   RSA 1993.
 * Cousins–Vempala, *Gaussian cooling and `O*(n³)` algorithms for volume and Gaussian
-  volume*, §4.1 (`vol3_journal.tex:514–746`).
+  volume*, §4.1 ([CV18]).
 -/
 
 open ArlibCommunity.Foundations.Convex
@@ -226,7 +226,7 @@ conductance `1/2`.  The statement below strengthens it to *every* starting proba
 measure, and additionally records invariance of the target, which is what the mixing
 theorems above quantify over. -/
 
-/-- **Non-vacuity witness (`CLAUDE.md` §11).** -/
+/-- **Non-vacuity witness.** -/
 theorem exists_conductance_pos_and_mixesWithin :
     ∃ (Om : Type) (_ : MeasurableSpace Om) (P : Kernel Om Om) (pi : Measure Om),
       IsMarkovKernel P ∧ IsProbabilityMeasure pi ∧ Kernel.Invariant P pi ∧

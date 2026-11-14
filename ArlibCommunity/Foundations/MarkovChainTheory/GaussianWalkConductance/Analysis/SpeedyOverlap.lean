@@ -15,7 +15,7 @@ import Mathlib.MeasureTheory.Order.Group.Lattice
 # Cousins–Vempala's `cor:overlap`, at separation `δ/√n`
 
 Cousins–Vempala, *Gaussian Cooling and `O*(n³)` Algorithms for Volume and Gaussian Volume*,
-`cor:overlap` (`1409.6011/vol3_journal.tex:612`), derived there from `lem:overlap` (`:581`)
+`cor:overlap` ([CV18]), derived there from `lem:overlap` (`:581`)
 and, underneath, Lemma 3.5 of [KLS95] (`:592`):
 
 > For a partition `S, S̄` of a convex body `K` and `u ∈ S`, `v ∈ S̄` with `‖u - v‖ < δ/√n`
@@ -43,7 +43,7 @@ mass concentrates in a band of width `δ/√n` about any equator.  The sharp bou
 obtained from `Γ(x+1/2) ≤ √x·Γ(x)` (`gamma_add_half_le_sqrt_mul`), i.e. from log-convexity
 of `Γ`, applied to Mathlib's `EuclideanSpace.volume_ball`.  At `‖u-v‖ = δ/√n` the loss is
 `√((n+1)/(2πn)) ≤ √(3/(4π)) < 1/2` for `n ≥ 2` (`lens_defect_le_half`) — a constant, which
-is exactly the KLS-style statement at `vol3_journal.tex:592`.
+is exactly the KLS-style statement at [CV18].
 
 ## What is proved, and what is assumed
 
@@ -86,7 +86,7 @@ quoted as asserting, a polynomial mixing time.
 
 ## References
 
-Cousins and Vempala, §4.1 (`1409.6011/vol3_journal.tex:509–700`).
+Cousins and Vempala, §4.1 ([CV18]).
 Kannan, Lovász and Simonovits, *Isoperimetric problems for convex bodies and a localization
 lemma* (1995), Lemma 3.5 — cited by the paper, **not** formalised here.
 -/
@@ -282,7 +282,7 @@ radius `δ > 0`,
     vol(B(u,δ))  ≤  vol(B(u,δ) ∩ B(v,δ))  +  (t/δ)·√((n+3)/(2π)) · vol(B(u,δ)).
 
 The two balls lose, relatively, at most `(t/δ)·√((n+3)/(2π)) ≈ t√(n)/(δ√(2π))` by
-intersecting.  This is the estimate at `vol3_journal.tex:592` in KLS form: at separation
+intersecting.  This is the estimate at [CV18] in KLS form: at separation
 `t = δ/√n` a *constant* fraction of the ball survives.
 
 Contrast `ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_le_volume_inter_ball_add`
@@ -618,7 +618,7 @@ theorem lens_defect_le_half {n : ℕ} (hn : 2 ≤ n) {δ t : ℝ} (hδ : 0 < δ)
     _ ≤ 1 / 2 := hhalf
 
 /-- **`cor:overlap` for the speedy walk, at separation `δ/√n`**
-(`1409.6011/vol3_journal.tex:612`), in exactly the shape
+([CV18]), in exactly the shape
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`'s `hoverlap` binder demands, so that
 
     exact overlap_speedyWalk hn hK hδ hell h

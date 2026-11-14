@@ -33,7 +33,7 @@ the development consumes.
 * `ArlibCommunity.Algorithms.KV97.inv_pow_le_toReal_volume_ratio` — **Lemma 1's shape**: the
   acceptance probability of the rejection step is bounded below,
   `vol P / vol P' ≥ (1 + κ/γ)^{-n}`. This is the inequality
-  `sections/proof-appendix.tex:183` uses to say the rejection step is cheap.
+  the consuming paper's appendix uses to say the rejection step is cheap.
 
 ## Implementation notes
 
@@ -50,7 +50,7 @@ lemma here interprets it as a facet count. KV97's `r` is the *maximum number of
 facets meeting any unit cube around a lattice point* — a local quantity — while
 the consuming paper's `cor:linf` uses the *total* facet count. The total
 upper-bounds the local one, so substituting it only weakens the bound, but the
-two are not the same number; see `AUDIT-KV97.md` §4d. Nothing in this file
+two are not the same number; see the discussion in `Algorithms/KV97/Analysis/Theorem2.lean` §4d. Nothing in this file
 asserts they are equal.
 -/
 
@@ -183,7 +183,7 @@ theorem toReal_volume_inflated_le (hγ : 0 < γ) (hc : 0 ≤ c)
 
 `Vol(P) / Vol(P') ≥ (1 + κ/γ)^{-n}` whenever `P` contains a ball of radius
 `γ > 0` and has finite volume. This is the form the acceptance-probability
-argument of `sections/proof-appendix.tex:183` uses: a draw from `P'` lands in `P`
+argument of the consuming paper's appendix uses: a draw from `P'` lands in `P`
 with probability at least `(1 + κ/γ)^{-n}`, which is bounded below by a constant
 as soon as `κ/γ = O(1/n)`.
 

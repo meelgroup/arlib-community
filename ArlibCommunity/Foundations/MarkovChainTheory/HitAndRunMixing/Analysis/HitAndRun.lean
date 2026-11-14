@@ -82,8 +82,7 @@ the chord" reading against `ArlibCommunity.Foundations.Convex.uniformOn`); equat
   **detailed balance for the uniform measure on `K`**, and therefore its invariance.  No
   convexity and no boundedness of `K` is needed: given equation (5), reversibility is one
   application of Tonelli plus `hitAndRunDensity_comm`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.exists_hitAndRun_witness` — the non-vacuity witness (`CLAUDE.md`
-  §11): on the unit ball the uniform measure is a genuine probability measure, the walk
+* `ArlibCommunity.Foundations.MarkovChainTheory.exists_hitAndRun_witness` — the non-vacuity witness: on the unit ball the uniform measure is a genuine probability measure, the walk
   leaves its current point with probability one, and its kernel *is* the density of
   equation (5) with no stay-put mass at all.
 

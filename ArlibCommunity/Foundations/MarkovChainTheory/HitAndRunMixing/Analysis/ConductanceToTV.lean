@@ -16,10 +16,10 @@ anywhere in this repository".
 **That statement is out of date.**  It is proved, in two files that
 `HitAndRunMixing.lean` does not import:
 
-* `ArlibCommunity/Foundations/MarkovChainTheory/Cheeger/Analysis/Cheeger.lean:1584` — `sq_conductance_div_two_le_spectralGap`,
+* `ArlibCommunity/Foundations/MarkovChainTheory/Cheeger/Analysis/Cheeger.lean` — `sq_conductance_div_two_le_spectralGap`,
   the hard direction of Cheeger, `Φ²/2 ≤ gap`, for a reversible Markov kernel on a
   probability space with a non-empty admissible family.
-* `ArlibCommunity/Foundations/MarkovChainTheory/ConductanceMixing/Analysis/L2Mixing.lean:976` —
+* `ArlibCommunity/Foundations/MarkovChainTheory/ConductanceMixing/Analysis/L2Mixing.lean` —
   `tvLe_iterate_of_ofReal_le_conductance`, which is *literally the body of the `hLS`
   binder*, for a reversible kernel with `HasNonnegSpectrum` and a non-empty admissible
   family.
@@ -39,7 +39,7 @@ of `HitAndRunMixing.hLS`:
    and to any other kernel with the same stationary measure for free.
 3. `ls_of_hasNonnegSpectrum` — **the `hLS` binder, verbatim, proved.**
 4. `ls_lazy` — the same for `lazy P`, where the spectral hypothesis is not an assumption at
-   all: `hasNonnegSpectrum_lazy` (`BallWalkConductance.lean:975`) supplies it from
+   all: `hasNonnegSpectrum_lazy` (`BallWalkConductance.lean`) supplies it from
    reversibility of `P` alone.
 
 ## Main results
@@ -75,7 +75,7 @@ of `HitAndRunMixing.hLS`:
 (`§ What is assumed`, item **(A)**) records the swap kernel `P x = dirac (!x)` on `Bool`,
 which is `piHalf`-reversible with conductance `1`,
 `2`-warm from `dirac true`, and has `d_TV = 1/2` for every `t` against a bound `√2·2^{-t}`.
-The hypothesis that rules it out is `HasNonnegSpectrum P pi` (`L2Mixing.lean:439`),
+The hypothesis that rules it out is `HasNonnegSpectrum P pi` (`L2Mixing.lean`),
 `0 ≤ ∫ f · (T f) dpi` — a property of the kernel that names neither a conductance nor a
 mixing rate.  Laziness is what buys it in practice: `hasNonnegSpectrum_lazy` proves it for
 `lazy P` from reversibility of `P` alone, and `conductance_lazy` says the price is exactly a
@@ -222,7 +222,7 @@ The statement below is copied **verbatim** from the `hLS` hypothesis of
 (the `hLS` hypothesis of `tvLe_iterate_of_exceptional_of_ls`), so that it discharges that
 binder by `exact`.  The proof is
 one application of `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_of_ofReal_le_conductance`
-(`L2Mixing.lean:976`), whose own ingredients are Cheeger's inequality
+(`L2Mixing.lean`), whose own ingredients are Cheeger's inequality
 (`Cheeger.sq_conductance_div_two_le_spectralGap`), the `L²` contraction
 (`L2Mixing.varianceReal_markovIter_le`) and the `χ²`→TV comparison
 (`L2Mixing.tvLe_withDensity`).
@@ -259,7 +259,7 @@ theorem ls_of_hasNonnegSpectrum {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Meas
   exact tvLe_iterate_of_ofReal_le_conductance hrev hpsd hne hW hwarm hph0 hc hcond t
 
 /-- **The `hLS` binder for a lazy chain**, with *no* spectral hypothesis: laziness supplies
-it (`ArlibCommunity.Foundations.MarkovChainTheory.hasNonnegSpectrum_lazy`, `BallWalkConductance.lean:975`).
+it (`ArlibCommunity.Foundations.MarkovChainTheory.hasNonnegSpectrum_lazy`, `BallWalkConductance.lean`).
 
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_lazy` says the price is exactly a factor `2` in the
 conductance — hence a factor `4` in the mixing deadline (`lsThreshold_half`). -/
@@ -335,7 +335,7 @@ theorem tvLe_iterate_lazy_of_exceptional {P : Kernel Ω Ω} [IsMarkovKernel P]
   exact hm
 
 /-- **The `MixesWithin` form**, with the kernel-free non-degeneracy hypothesis.  Same content
-as `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance` (`L2Mixing.lean:963`); only `hne` is
+as `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance` (`L2Mixing.lean`); only `hne` is
 traded for `hsmall`. -/
 theorem mixesWithin_of_conductance_of_smallSets {P : Kernel Ω Ω} [IsMarkovKernel P]
     {pi : Measure Ω} [IsProbabilityMeasure pi] (hrev : IsReversible P pi)
@@ -455,7 +455,7 @@ theorem tvLe_iterate_lazy_hitAndRun_unitBall {n : ℕ} (hn : 1 ≤ n)
     hdom ?_ hm
   simpa using hphi
 
-/-! ## Non-vacuity (`CLAUDE.md` §11)
+/-! ## Non-vacuity
 
 Every theorem above quantifies over a hypothesis bundle, so each bundle needs a witness.
 `ls_of_hasNonnegSpectrum`'s bundle is `(hrev, hpsd, hsmall)`; `ls_lazy`'s is `(hrev, hsmall)`.
@@ -519,7 +519,7 @@ theorem tvLe_iterate_const_piHalf_of_isReversible :
     push_cast
     linarith
 
-/-! ### Axiom audit (`CLAUDE.md` §4)
+/-! ### Axiom audit
 
 Every declaration of this file, plus the two upstream results it rests on — the hard
 direction of Cheeger and the `L²` mixing bound — must report exactly

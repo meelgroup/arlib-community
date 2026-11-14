@@ -23,7 +23,7 @@ evaluates all three and formalises the one that works.
 
 ## Verdict
 
-**Route 3 wins, and `AUDIT-KV97.md` §4b's dismissal of it is wrong.**  §4b is right that a
+**Route 3 wins, and the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`'s dismissal of it is wrong.**  §4b is right that a
 TV hypothesis buys only an *additive* error; it is wrong that this makes the theorem
 useless.  The whole argument is one line of algebra, `ArlibCommunity.Foundations.MarkovChainTheory.PointwiseRoute.window_of_tvLe`:
 
@@ -146,7 +146,7 @@ agent — but every lemma it needs is in this file.
   `pointwiseAlmostUniform_of_rejection` — route 2, in full.
 * `uniformOn_ball_ball`, `uniformOn_ball_ball_one`, `uniformOn_ball_ball_euclidean` —
   route 2's price, exactly `(r/R)^n`.
-* `exists_theorem2_of_tvLe_witness` — the non-vacuity witness (`CLAUDE.md` §11) for
+* `exists_theorem2_of_tvLe_witness` — the non-vacuity witness for
   `theorem2_of_tvLe_inv_volume`'s hypothesis bundle.
 
 ## What this does NOT close, stated plainly
@@ -186,7 +186,7 @@ open scoped ENNReal BigOperators
 /-! ## Route 3, the crux: an additive error is a relative error at scale `V`
 
 `ArlibCommunity.Foundations.Convex.TVLe.integral_le` is the honest additive transfer: for `0 ≤ g ≤ 1`,
-`|∫ g dμ − ∫ g dν| ≤ ε`.  `AUDIT-KV97.md` §4b reads that as fatal because the quantity being
+`|∫ g dμ − ∫ g dν| ≤ ε`.  the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean` reads that as fatal because the quantity being
 bounded is of size `1/V` with `V` enormous.  It is fatal only if `ε` is held fixed.  The
 lemma below is the whole of the answer: the *relative* error is `ε·V`, so the tolerance one
 must ask the sampler for is `θ/V`, and nothing else changes. -/
@@ -196,8 +196,7 @@ observable with `0 ≤ g ≤ 1`, and suppose its `ν`-average lies in the window
 `[(1−a)/V, (1+b)/V]`.  Then its `μ`-average lies in `[(1−(a+θ))/V, (1+(b+θ))/V]` for any
 `θ ≥ ε·V`.
 
-**An additive error `ε` is a relative error `ε·V`.**  This is the sentence `AUDIT-KV97.md`
-§4b is missing.  The additive transfer is not weaker than the relative one; it is the same
+**An additive error `ε` is a relative error `ε·V`.**  This is the sentence the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean` is missing.  The additive transfer is not weaker than the relative one; it is the same
 statement with the error measured in a different unit, and converting the unit costs a
 factor of `V` in the *tolerance*, hence only `log V` in the *mixing time*
 (`conductanceMixingTime_inv_volume_le`). -/
@@ -232,13 +231,13 @@ theorem window_of_tvLe_inv_volume {Ω : Type*} [MeasurableSpace Ω] {μ ν : Mea
 
 /-! ## Route 3, applied: the `cor:linf` ratio window
 
-`AUDIT-KV97.md` §4b's second bullet is the one that looks decisive: "summing an additive
+the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`'s second bullet is the one that looks decisive: "summing an additive
 `ε` over the `N` lattice points contributes `N·ε`, which does not cancel and does not
 vanish."  It is answered by substituting `ε = θ/V`.  The `N` weights are then pinned in a
 `(1 ± θ)/V` window, `ArlibCommunity.Foundations.Convex.Rejection.ratio_bounds_of_window` applies verbatim, and `V` — the
 enormous quantity — cancels out of the ratio entirely. -/
 
-/-- **The refutation of `AUDIT-KV97.md` §4b, bullet 2.**  From a *total-variation*
+/-- **The refutation of the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`, bullet 2.**  From a *total-variation*
 hypothesis at tolerance `ε` with `ε·V ≤ θ`, the normalised weights `∫ gᵢ dμ / ∑ⱼ ∫ gⱼ dμ`
 lie in the relative window
 
@@ -264,7 +263,7 @@ theorem ratio_bounds_of_tvLe {Ω : Type*} [MeasurableSpace Ω] {ι : Type*} [Fin
 
 /-! ## The price of the tolerance `θ / V`: `log V` extra steps
 
-This is the quantitative half of the refutation of `AUDIT-KV97.md` §4b.  §4b writes off the
+This is the quantitative half of the refutation of the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`.  §4b writes off the
 additive reading because `ε ≪ 1/Vol(P')` is required and "no sampler delivers" it.  But
 mixing time is *logarithmic* in the tolerance: `ArlibCommunity.Foundations.MarkovChainTheory.conductanceMixingTime_le`
 gives `O(φ⁻² log(M/ε))` steps, so replacing `ε` by `θ/V` costs an **additive**
@@ -287,7 +286,7 @@ theorem log_one_div_div {V θ : ℝ} (hV : 0 < V) (hθ : 0 < θ) :
   `(log M + 2·log V + 2·log(1/θ)) / φ² + 1`
 
 steps.  The dependence on the volume is `log V`, **not** `V`: this is why demanding a
-tolerance at scale `1/Vol(P')` is affordable, and it is the fact `AUDIT-KV97.md` §4b
+tolerance at scale `1/Vol(P')` is affordable, and it is the fact the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean`
 overlooks. -/
 theorem conductanceMixingTime_inv_volume_le {M phi V θ : ℝ} (hM : 1 ≤ M) (hphi0 : 0 < phi)
     (hV : 0 < V) (hθ : 0 < θ) (hle : θ / V ≤ Real.sqrt M) :
@@ -505,7 +504,7 @@ theorem uniformOn_ball_ball_euclidean {n : ℕ} {r R : ℝ} (hr : 0 < r) (hrR : 
     finrank_euclideanSpace_fin]
 
 
-/-! ## Axiom check (`CLAUDE.md` §4) -/
+/-! ## Axiom check -/
 
 #print axioms window_of_tvLe
 #print axioms window_of_tvLe_inv_volume

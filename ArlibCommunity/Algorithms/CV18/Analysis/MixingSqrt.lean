@@ -12,7 +12,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.DeltaCap
 The conductance route for the Metropolis-filtered Gaussian kernel was sharpened by a factor
 `√n`: at step `δ` the certified bound went from `Φ ≥ δ·ln 2/(640·σ·n)` to
 `Φ ≥ δ·ln 2/(640·σ·√n)`, and `ArlibCommunity.Algorithms.CV18.metropolis_hfloor_forces_step_cap`
-(`DeltaCap.lean:143`) shows the acceptance floor forces the operative step to `δ = Θ(σ/√n)`.
+(`DeltaCap.lean`) shows the acceptance floor forces the operative step to `δ = Θ(σ/√n)`.
 Evaluated there the two bounds are `ln 2/(5120·n)` and `ln 2/(5120·n^{3/2})`
 (`ArlibCommunity.Algorithms.CV18.speedy_new_bound_at_operative_step`,
 `ArlibCommunity.Algorithms.CV18.speedy_old_bound_at_operative_step`).
@@ -27,7 +27,7 @@ Nothing in this file proves a conductance bound, and no file that proves one is 
 Every theorem below takes `ENNReal.ofReal (…) ≤ conductance P pi` as a binder, in exactly
 the shape `ArlibCommunity.Foundations.MarkovChainTheory.conductance_metropolisGaussian_sharp_sqrt_ge` and
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge_of_ell_comparable` state it.  That is the
-`CLAUDE.md` §1 split: the consequence is proved over *any* kernel with the stated
+The generic-versus-specific split: the consequence is proved over *any* kernel with the stated
 conductance, and the composition with a particular kernel is a separate step.
 
 ## What is proved
@@ -38,7 +38,7 @@ operative step, the crux identity; `stepCount_new_eq`, `stepCount_old_eq` — th
 `C/Φ_old² = n·(C/Φ_new²)`, for every numerator `C`.
 
 *The mixing theorems (§2–§4).*  `mixesWithin_of_conductance_of_stepCount` is the workhorse:
-`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_of_smallSets` (`ConductanceToTV.lean:336`)
+`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_of_smallSets` (`ConductanceToTV.lean`)
 with its abstract `conductanceMixingTime` deadline replaced by the explicit real bound
 `(log M + 2·log(1/ε))/Φ² + 1` of `ArlibCommunity.Foundations.MarkovChainTheory.conductanceMixingTime_le`.
 `mixesWithin_of_conductance_sqrt` reads it at `Φ = δ·ln 2/(640·σ·√n)`, and
@@ -66,15 +66,15 @@ of the headline theorem at once, on `Bool`, and derives its conclusion *through*
 ## Plain chain versus lazy chain, and the one hypothesis that is not discharged
 
 The `-of-stepCount` route consumes `ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_of_smallSets`,
-whose ingredients are the hard direction of Cheeger (`Cheeger.lean:1584`) and the `L²`
-contraction (`L2Mixing.lean:976`).  Those need `HasNonnegSpectrum P pi`, and it is **not**
-removable: `ConductanceToTV.lean:229–243` records the swap kernel on `Bool`, reversible with
+whose ingredients are the hard direction of Cheeger (`Cheeger.lean`) and the `L²`
+contraction (`L2Mixing.lean`).  Those need `HasNonnegSpectrum P pi`, and it is **not**
+removable: `ConductanceToTV.lean` records the swap kernel on `Bool`, reversible with
 `Φ = 1`, for which the decay bound is false.  So:
 
 * the **plain-chain** theorems (`mixesWithin_at_operative_step` and friends) carry `hpsd :
   HasNonnegSpectrum P pi` as an explicit binder.  Nothing in this repository proves it for
   `metropolisGaussian`; it would take a Metropolis-specific spectral fact, the analogue of
-  the hit-and-run gap recorded at `ConductanceToTV.lean:97–104`;
+  the hit-and-run gap recorded at `ConductanceToTV.lean`;
 * the **lazy-chain** theorems (`mixesWithin_lazy_at_operative_step` and friends) assume no
   spectral property at all — `ArlibCommunity.Foundations.MarkovChainTheory.hasNonnegSpectrum_lazy` supplies it from
   reversibility of `P` — at exactly four times the deadline, the factor `4` being
@@ -208,7 +208,7 @@ variable {Ω : Type*} [MeasurableSpace Ω]
 /-- **The workhorse: a conductance bound, an explicit step count.**
 
 Every theorem below is this one at a particular `phi`.  It is
-`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_of_smallSets` (`ConductanceToTV.lean:336`)
+`ArlibCommunity.Foundations.MarkovChainTheory.mixesWithin_of_conductance_of_smallSets` (`ConductanceToTV.lean`)
 with its `conductanceMixingTime` deadline replaced by the explicit real bound of
 `ArlibCommunity.Foundations.MarkovChainTheory.conductanceMixingTime_le`, and with the conductance hypothesis in the
 `ℝ≥0∞` form a conductance theorem states it in. -/
@@ -316,7 +316,7 @@ theorem mixesWithin_lazy_of_conductance_sqrt {n : ℕ} (hn : 2 ≤ n) {σ δ : �
 
 /-! ## 4. At the operative step `δ = σ/(8√n)`
 
-`ArlibCommunity.Algorithms.CV18.metropolis_hfloor_forces_step_cap` (`DeltaCap.lean:143`) shows the
+`ArlibCommunity.Algorithms.CV18.metropolis_hfloor_forces_step_cap` (`DeltaCap.lean`) shows the
 Metropolis acceptance floor forces `δ = Θ(σ/√n)`.  Evaluated there the two conductance
 bounds are
 
@@ -502,7 +502,7 @@ theorem dim_mul_conductanceMixingTime_new_sub_one_le_old {n : ℕ} (hn : 2 ≤ n
         (stepCount_old_eq_dim_mul_new hn _).symm
     _ ≤ _ := hold
 
-/-! ## 6. Non-vacuity (`CLAUDE.md` §11)
+/-! ## 6. Non-vacuity
 
 `mixesWithin_at_operative_step` quantifies over a bundle — reversibility, non-negative
 spectrum, a small set, an `M`-warm start, and a conductance bound at the operative step.  A
@@ -549,7 +549,7 @@ theorem mixesWithin_at_operative_step_const_piHalf (t : ℕ)
     rw [h2, div_le_iff₀ (by norm_num : (0 : ℝ) < 10240)]
     linarith
 
-/-! ### Axiom audit (`CLAUDE.md` §4) -/
+/-! ### Axiom audit -/
 
 section AxiomCheck
 

@@ -9,10 +9,10 @@ import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.OneDimSha
 # `thm:iso` from *approximate* open enlargements
 
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_of_openClosed_enlargement`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean:1114`) reduces the measurable case of Cousins–Vempala's
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean`) reduces the measurable case of Cousins–Vempala's
 `thm:iso` to the open/closed case, but it demands **exact** open supersets `S₁ ⊆ U₁`, `S₂ ⊆ U₂`
 holding the separation at the *same* `d` — and
-`ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean:1205`)
+`ArlibCommunity.Foundations.Convex.exists_separated_no_disjoint_open_enlargement` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoOpenClosed.lean`)
 shows such supersets need not exist.
 
 This file supplies the reduction that consumes the enlargements one can actually build: open sets

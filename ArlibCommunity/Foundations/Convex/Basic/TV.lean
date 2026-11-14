@@ -75,7 +75,7 @@ The **kernel** data-processing inequality is not here either, but it is *not* mi
 the library — this paragraph used to say it was, and that was wrong long enough to mislead a
 reader. It is proved twice, downstream:
 
-* `ArlibCommunity.Foundations.tvLe_step` / `ArlibCommunity.Foundations.tvLe_iterate` (`ArlibCommunity/Foundations/MarkovChainTheory/Basic/Warmness.lean:293`,
+* `ArlibCommunity.Foundations.tvLe_step` / `ArlibCommunity.Foundations.tvLe_iterate` (`ArlibCommunity/Foundations/MarkovChainTheory/Basic/Warmness.lean`,
   `:302`), resting on `ArlibCommunity.Foundations.lintegral_le_of_tvLe` (`:241`), which runs the layer cake
   directly in `ℝ≥0∞`. **This is the strong form**: no `IsProbabilityMeasure`, no `ε ≠ ⊤`.
   Prefer it.

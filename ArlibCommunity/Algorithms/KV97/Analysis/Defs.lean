@@ -30,8 +30,7 @@ subtracted in the lower bound.
 The scanned original prints the loss as `1 − 2e^{−c}`. Its own proof applies
 Azuma to the martingale `Zⱼ = ∑_{k≤j} A_{ik}Yₖ` with increments bounded by
 `|A_{ij}|`, which yields `e^{−c²/2}` per facet — the printed `c` is missing a
-square. The consuming paper's restatement (`sections/proof-appendix.tex:153`,
-`claim:linf`) silently corrects it to `2e^{−c²}` and folds the facet count into
+square. The consuming paper's restatement (`claim:linf`) silently corrects it to `2e^{−c²}` and folds the facet count into
 `κ` rather than carrying a factor `r` out front.
 
 **Neither printed rendering is what comes out.** `ArlibCommunity.Algorithms.KV97.mul_exp_kappaOf_le`
@@ -50,7 +49,7 @@ the escape event is one-sided per facet, and the union bound already accounts fo
 multiplicity.
 
 `ArlibCommunity.Algorithms.KV97.lossOf` is therefore defined as `e^{−c²/2} + ε`, matching what is
-proved rather than what is printed. See `AUDIT-KV97.md` §4a.
+proved rather than what is printed. See the escape-term discussion in `Algorithms/KV97/Analysis/Theorem2.lean`.
 
 ## The corollary's choice of `c`
 
@@ -61,7 +60,7 @@ density deviates from uniform by at most `ε/4` it gives a total loss of `ε/2`
 `1/(1−θ) ≤ 1 + 2θ` step of `ArlibCommunity.Foundations.Convex.Rejection.ratio_bounds_of_window`.
 
 Note "deviates by `ε/4`" means **pointwise**, not in total variation —
-`AUDIT-KV97.md` §4b explains why the total-variation reading does not work.
+the pointwise-versus-total-variation discussion in `Algorithms/KV97/Analysis/Theorem2.lean` explains why the total-variation reading does not work.
 -/
 
 

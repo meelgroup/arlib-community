@@ -11,11 +11,11 @@ import ArlibCommunity.Foundations.Convex.Basic.GaussianWeight
 # `thm:iso` with **no** localization binder, for `S₁, S₂` open and `S₃` closed
 
 `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_of_localization`
-(`ArlibCommunity/Foundations/Convex/Localization/Analysis/HlocFromLocalization.lean:882`) proves Cousins–Vempala's `thm:iso` from a single
+(`ArlibCommunity/Foundations/Convex/Localization/Analysis/HlocFromLocalization.lean`) proves Cousins–Vempala's `thm:iso` from a single
 residual binder `hLoc`, the Localization Lemma applied to `g₁ = 1_{S₁}h − A·h` and
 `g₂ = (d/σ)A·1_{S₂}h − 1_{S₃}h` for **merely measurable** `S₁, S₂, S₃`.  That binder cannot be
 discharged by any almost-everywhere argument: `ArlibCommunity.Foundations.Convex.exists_null_measurableSet_needleIntegral_eq_one`
-(`ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationMeasurable.lean:442`) exhibits a *null* measurable `S` with an
+(`ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationMeasurable.lean`) exhibits a *null* measurable `S` with an
 admissible profile whose needle mass is `1`, so `L¹` density, Lusin, Vitali–Carathéodory and every
 in-measure regularisation are dead, and `ArlibCommunity.Foundations.Convex.exists_transverse_oscillation_eq_one` kills the
 "weaken `Continuous` to `Measurable`" route.
@@ -607,7 +607,7 @@ Same theorem, same proof, with the localization binder changed in exactly two pl
 * its first conclusion is `A·I ≤ I₁` instead of the equality `I₁ = A·I`.
 
 Both weakenings are free at the point of use.  `ArlibCommunity.Foundations.Convex.needle_masses_contradiction_ge'`
-(`ArlibCommunity/Foundations/Convex/Localization/Analysis/HlocFromLocalization.lean:558`) closes the contradiction from `A·I ≤ I₁`, given
+(`ArlibCommunity/Foundations/Convex/Localization/Analysis/HlocFromLocalization.lean`) closes the contradiction from `A·I ≤ I₁`, given
 `0 ≤ I₂` and `0 ≤ I₃` — both immediate, the needle density being nonnegative — so the equality was
 never needed.  And the antecedent may be strengthened to a strict inequality because the constant
 `A` is chosen *by this proof*: it is applied at `A = A₀ − ρ` with `A₀ = ∫_{S₁}h / ∫h`, where `ρ`
@@ -644,7 +644,7 @@ theorem gaussianRestricted_isoperimetry_concave_gt_of_oneDim (hn : 0 < n) {σ d 
             l t ^ (n - 1) * h (needleMap p e t))
           < d / σ * A * ∫ t in needleMap p e ⁻¹' S₂ ∩ Set.Icc α β,
               l t ^ (n - 1) * h (needleMap p e t))
-    -- **(1d-2)** `vol3_journal.tex:501`, at coefficient `c₂/σ`.
+    -- **(1d-2)** [CV18], at coefficient `c₂/σ`.
     (h1d2 : ∀ (F : ℝ → ℝ) (t₀ α β u v : ℝ), α ≤ u → u ≤ v → v ≤ β →
       (∀ t ∈ Set.Icc α β, 0 ≤ F t) → LogConcaveOn (Set.Icc α β) F →
       IntervalIntegrable (fun t => F t * Real.exp (-(t - t₀) ^ 2 / (2 * σ ^ 2))) volume α β →
@@ -833,7 +833,7 @@ variable {n : ℕ}
 `S₃` closed and `h` continuous and bounded.**
 
 Same statement as `ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_concave`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/SharpIsoperimetryConcave.lean:435`) — same conclusion at the same sharp constant
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/SharpIsoperimetryConcave.lean`) — same conclusion at the same sharp constant
 `d/σ`, same separation hypothesis at the same threshold `2√3·d` — **with the `hloc` binder
 removed**.  In exchange it asks that
 

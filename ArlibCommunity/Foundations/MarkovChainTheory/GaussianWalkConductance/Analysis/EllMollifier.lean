@@ -9,7 +9,7 @@ import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Anal
 /-!
 # The mollified `ℓ`-weighted Gaussian density `e^{−j·dist(x,K̄)}·ℓ·e^{−‖x‖²/(2σ²)}`
 
-`ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_openClosed_logTwo` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean:474`)
+`ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_openClosed_logTwo` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`)
 is `thm:iso` for the **continuous** density `ℓ·γ`, `γ(x) = e^{−‖x‖²/(2σ²)}`, carrying **no**
 indicator of `K`.  Bridging it to the **indicator** density `1_K·ℓ·γ` — the density of the
 `ℓ`-weighted Gaussian restricted to the body — is a mollification argument: interpose the family
@@ -29,8 +29,7 @@ limits in the indicator density's own language.
            = Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal
                * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)),
 
-so each lemma discharges a consumer binder verbatim and no name stands in for a proof
-(CLAUDE.md §11).
+so each lemma discharges a consumer binder verbatim and no name stands in for a proof.
 
 ## Main results
 
@@ -56,38 +55,38 @@ so each lemma discharges a consumer binder verbatim and no name stands in for a 
 ## What was reused, not reproved
 
 * `ArlibCommunity.Foundations.Convex.tendsto_setIntegral_expNegInfDist_mul_weighted`
-  (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean:396`) — **the dominated-convergence engine.**  It is already
+  (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`) — **the dominated-convergence engine.**  It is already
   stated for a general nonnegative continuous `f` with `f·γ` integrable, so
   `tendsto_setIntegral_hMoll` is its instantiation at `f := fun x => (ell K δ x).toReal` plus
   three mechanical rewritings (`neg_mul`; the `gaussianWeightReal` unfold; `setIntegral_indicator`
   to turn `∫_A 1_{K̄}·F` into `∫_{A ∩ K̄} F`).  The indicator-only
-  `ArlibCommunity.Foundations.Convex.tendsto_setIntegral_expNegInfDist_mul_gaussian` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean:329`)
+  `ArlibCommunity.Foundations.Convex.tendsto_setIntegral_expNegInfDist_mul_gaussian` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`)
   is the same statement at `f ≡ 1`; the weighted version supersedes it here.
-* `ArlibCommunity.Foundations.Convex.isLogConcave_exp_neg_infDist` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean:152`) and
-  `ArlibCommunity.Foundations.MarkovChainTheory.isLogConcave_ell_toReal` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean:262`), combined by
-  `ArlibCommunity.Foundations.Convex.IsLogConcave.mul` (`ArlibCommunity/Foundations/Convex/Basic/LogConcave.lean:152`) — which **does** exist, so no
+* `ArlibCommunity.Foundations.Convex.isLogConcave_exp_neg_infDist` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`) and
+  `ArlibCommunity.Foundations.MarkovChainTheory.isLogConcave_ell_toReal` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`), combined by
+  `ArlibCommunity.Foundations.Convex.IsLogConcave.mul` (`ArlibCommunity/Foundations/Convex/Basic/LogConcave.lean`) — which **does** exist, so no
   new product-of-log-concaves lemma was needed.  The term-mode pattern is copied from
-  `ArlibCommunity.Foundations.MarkovChainTheory.isLogConcave_indicator_mul_ell_toReal` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean:283`).
-* `ArlibCommunity.Foundations.Convex.setIntegral_indicator_closure_eq` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean:372`) — the
+  `ArlibCommunity.Foundations.MarkovChainTheory.isLogConcave_indicator_mul_ell_toReal` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`).
+* `ArlibCommunity.Foundations.Convex.setIntegral_indicator_closure_eq` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`) — the
   frontier of a convex set is Lebesgue-null (`Convex.addHaar_frontier`).  **Null-ness of the
   boundary is not reproved here**; `setIntegral_closure_eq_setIntegral` is that lemma sandwiched
   between two applications of `MeasureTheory.setIntegral_indicator`.
-* `ArlibCommunity.Foundations.MarkovChainTheory.continuous_ell_toReal` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean:431`),
-  `ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one` (`ArlibCommunity/Foundations/MarkovChainTheory/BallWalkMixing/Analysis/BallWalk.lean:151`),
-  `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integrable` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllGaussianFacts.lean:136`),
-  `ArlibCommunity.Foundations.Convex.integrable_gaussianWeightReal` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean:314`),
-  `ArlibCommunity.Foundations.Convex.integral_pos_of_continuous_of_pos` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean:380`),
+* `ArlibCommunity.Foundations.MarkovChainTheory.continuous_ell_toReal` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`),
+  `ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one` (`ArlibCommunity/Foundations/MarkovChainTheory/BallWalkMixing/Analysis/BallWalk.lean`),
+  `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integrable` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllGaussianFacts.lean`),
+  `ArlibCommunity.Foundations.Convex.integrable_gaussianWeightReal` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`),
+  `ArlibCommunity.Foundations.Convex.integral_pos_of_continuous_of_pos` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`),
   `ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_ne_zero_of_convex`
-  (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/StarPolar.lean:426`).
+  (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/StarPolar.lean`).
 * `ArlibCommunity.Foundations.Convex.gaussianWeightReal s x` is **by `def`**
-  `Real.exp (-‖x‖ ^ 2 / (2 * s))` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisGaussian.lean:150`),
+  `Real.exp (-‖x‖ ^ 2 / (2 * s))` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisGaussian.lean`),
   so at `s := σ ^ 2` it is definitionally the exponential written above; no bridge lemma exists
   or is needed, only `simp [gaussianWeightReal]`.
 
 ## One deviation from the obvious route
 
 `hMoll_integral_pos` is **not** derived from `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integral_pos`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllGaussianFacts.lean:166`) by monotonicity: the domination
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllGaussianFacts.lean`) by monotonicity: the domination
 `g j ≤ ℓ·γ` runs the wrong way for a lower bound, and `ellGaussian_integral_pos` is an integral
 over all of `ℝⁿ`, not over `K`.  Instead its proof is mirrored: `g j` is continuous, nonnegative
 and integrable, and at any `x₀ ∈ K` one has `dist(x₀, K̄) = 0`, hence
@@ -300,7 +299,7 @@ theorem hMoll_integral_pos (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))}
 
 Nothing about convex boundaries is proved here.  Both sides are turned into integrals of an
 indicator over `A` by `MeasureTheory.setIntegral_indicator`, and the resulting identity is
-exactly `ArlibCommunity.Foundations.Convex.setIntegral_indicator_closure_eq` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean:372`), which
+exactly `ArlibCommunity.Foundations.Convex.setIntegral_indicator_closure_eq` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`), which
 is where `Convex.addHaar_frontier` — `volume (frontier K) = 0` — is used. -/
 theorem setIntegral_closure_eq_setIntegral {K : Set (EuclideanSpace ℝ (Fin n))}
     (hK : MeasurableSet K) (hKc : Convex ℝ K) {δ σ : ℝ}
@@ -332,7 +331,7 @@ theorem setIntegral_eq_setIntegral_indicator {K : Set (EuclideanSpace ℝ (Fin n
 
 /-- **The deliverable: `∫_A g j → ∫_{A ∩ K̄} ℓ·γ` for every set `A`.**
 
-`ArlibCommunity.Foundations.Convex.tendsto_setIntegral_expNegInfDist_mul_weighted` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean:396`)
+`ArlibCommunity.Foundations.Convex.tendsto_setIntegral_expNegInfDist_mul_weighted` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`)
 is already the dominated-convergence statement for a general nonnegative continuous cofactor `f`
 with `f·γ` integrable, so this is its instantiation at `f := fun x => (ell K δ x).toReal`:
 `hf0` is `ENNReal.toReal_nonneg`, `hfc` is `ArlibCommunity.Foundations.MarkovChainTheory.continuous_ell_toReal`, and `hfi` is

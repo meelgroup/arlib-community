@@ -74,7 +74,7 @@ Lovász–Vempala prove Theorem 2.1 by a single invocation of the Localization L
 (Kannan–Lovász–Simonovits 1995, Corollary 2.4) on a *signed* pair of integrands.  Earlier
 versions of this docstring said the signed case "is where Borsuk–Ulam re-enters" and that
 Borsuk–Ulam is absent from Mathlib; **that is stale**.  `ArlibCommunity.Foundations.Convex.exists_flat_cut_zero_pos`
-(`ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationAssembly.lean:370`) takes **arbitrary signed** integrands
+(`ArlibCommunity/Foundations/Convex/Localization/Analysis/LocalizationAssembly.lean`) takes **arbitrary signed** integrands
 `g₁ g₂ : E → ℝ` — its only hypotheses on them are `IntegrableOn`, `∫_C g₁ = 0` and
 `0 < ∫_C g₂` — and delivers a cut with `∫ g₁ = 0` and `0 < ∫ g₂` on one side.  With the
 equality-refined form only **one** integrand is ever bisected, by a one-parameter

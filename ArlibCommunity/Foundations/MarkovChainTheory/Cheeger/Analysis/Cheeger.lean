@@ -48,8 +48,7 @@ Rayleigh quotient `E(f,f) / Var(f)`.
 * **`spectralGap_le_two_mul_conductanceOn`** and
   **`ofReal_spectralGap_le_two_mul_conductance`** — the *easy direction of Cheeger*,
   `gap ≤ 2 Φ`.
-* `spectralGap_const`, `spectralGap_const_piHalf` — the non-vacuity witness
-  (`CLAUDE.md` §11): for the instantly mixing kernel the Dirichlet form *is* the variance,
+* `spectralGap_const`, `spectralGap_const_piHalf` — the non-vacuity witness: for the instantly mixing kernel the Dirichlet form *is* the variance,
   so the spectral gap is exactly `1`; on `Bool` with `piHalf` the conductance is `1/2`
   (`conductance_const_piHalf`), so the easy direction reads `1 ≤ 2 · (1/2)` and is **tight**,
   in particular not vacuous.
@@ -103,7 +102,7 @@ exhibit a chain satisfying it, on which the inequality reads `1/8 ≤ 1`.
 
 There is no `def`, `structure` field or predicate anywhere in this file that names the
 Cheeger inequality (or isoperimetry) and stands in for its proof.  That failure mode — a
-predicate whose name asserts the theorem — is what `CLAUDE.md` §11 and `CV-ROADMAP.md` §2a
+predicate whose name asserts the theorem — is what the non-vacuity rule and `CV-ROADMAP.md` §2a
 warn about, and what `../gaussian-cooling-vempala`'s `Isoperimetry` / `MixingFromConductance` /
 `SpeedyConductance` / `BallWalkMixing` exhibit.
 
@@ -432,7 +431,7 @@ theorem spectralGap_le_two {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure �
     ENNReal.toReal_le_of_le_ofReal zero_le_one (by simpa using conductanceOn_le_one P pi S)
   linarith
 
-/-! ## A non-vacuity witness (`CLAUDE.md` §11)
+/-! ## A non-vacuity witness
 
 `spectralGap` is an infimum over a family that could be empty, and `sInf ∅ = 0` in `ℝ`; a
 bound `spectralGap ≤ 2 Φ` would then say nothing.  The instantly mixing kernel
@@ -501,7 +500,7 @@ theorem varianceReal_indicator_piHalf :
   rw [varianceReal_indicator (measurableSet_singleton true), piHalf_singleton]
   norm_num
 
-/-- **Non-vacuity witness (`CLAUDE.md` §11).**  On the two-point space with the uniform
+/-- **Non-vacuity witness.**  On the two-point space with the uniform
 measure the instantly mixing kernel has spectral gap exactly `1`.  So `spectralGap` is a
 genuinely attained positive quantity, not the junk value `sInf ∅ = 0`. -/
 theorem spectralGap_const_piHalf :
@@ -516,7 +515,7 @@ spectral gap is `1` (`spectralGap_const_piHalf`), the conductance is `1/2`
 (`conductance_const_piHalf`), and `ofReal_spectralGap_le_two_mul_conductance` reads
 `1 ≤ 2 · (1/2)` — with equality.
 
-This is the check `CLAUDE.md` §11 asks for: the inequality relates two quantities that are
+This is the check the non-vacuity rule asks for: the inequality relates two quantities that are
 both computed, both finite, and both nonzero on a concrete chain. -/
 theorem spectralGap_eq_two_mul_conductance_const_piHalf :
     ENNReal.ofReal (spectralGap (Kernel.const Bool piHalf) piHalf)
@@ -829,7 +828,7 @@ theorem two_mul_conductance_mul_lintegral_le_lintegral_abs_sub {P : Kernel Ω Ω
         + conductance P pi * pi {x : Ω | t < g x} := by ring
     _ ≤ _ := add_le_add hflow hflow
 
-/-! ### A non-vacuity witness for the `L¹` isoperimetric inequality (`CLAUDE.md` §11)
+/-! ### A non-vacuity witness for the `L¹` isoperimetric inequality
 
 `two_mul_conductance_mul_lintegral_le_lintegral_abs_sub` is a `∀`-statement, so it would be
 worthless if its hypotheses were unsatisfiable, or if both sides were `0` (or both `⊤`) on
@@ -868,7 +867,7 @@ theorem lintegral_abs_sub_indicator_compProd_piHalf :
   norm_num
   rw [ENNReal.inv_two_add_inv_two, mul_one]
 
-/-- **The `L¹` isoperimetric inequality is attained, hence not vacuous** (`CLAUDE.md` §11).
+/-- **The `L¹` isoperimetric inequality is attained, hence not vacuous**.
 On `Kernel.const Bool piHalf` with `g = 1_{true}` — a reversible chain, a nonnegative
 measurable `g`, and `pi {g > 0} = 1/2` — both sides of
 `two_mul_conductance_mul_lintegral_le_lintegral_abs_sub` equal `1/2`.
@@ -1561,7 +1560,7 @@ theorem cheeger {P : Kernel Ω Ω} [IsMarkovKernel P] {pi : Measure Ω} [IsProba
   ⟨sq_conductance_div_two_le_spectralGap hrev hne,
     ofReal_spectralGap_le_two_mul_conductance hrev⟩
 
-/-! ### A non-vacuity witness for the hard direction (`CLAUDE.md` §11)
+/-! ### A non-vacuity witness for the hard direction
 
 The hard direction is quantified over chains satisfying `hne`; the two-point chain shows the
 hypothesis is satisfiable with both sides finite and nonzero, so the statement is not

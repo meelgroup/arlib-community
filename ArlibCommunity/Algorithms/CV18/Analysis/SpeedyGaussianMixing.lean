@@ -11,15 +11,15 @@ import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Anal
 # Cousins–Vempala `thm:mixing` for the lazy speedy Metropolis–Gaussian walk
 
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianUncond.lean:112`) is Cousins–Vempala's `thm:speedyconductance`
-(`1409.6011/vol3_journal.tex:624`) with **no** isoperimetric and **no** comparability
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianUncond.lean`) is Cousins–Vempala's `thm:speedyconductance`
+([CV18]) with **no** isoperimetric and **no** comparability
 hypothesis:
 
     Φ(speedyMetropolisGaussian K δ σ²)  ≥  δ·log 2 / (640·σ·√n)
 
 with respect to `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussianProb K δ σ²`.  Its module docstring says, in
 capitals, that it is *not* a mixing time.  **This file supplies the missing step**: the
-Lovász–Simonovits bound `thm:mixing` (`vol3_journal.tex:523`),
+Lovász–Simonovits bound `thm:mixing` ([CV18]),
 
     d_tv(Q_t, Q)  ≤  √M · (1 − φ²/2)^t   for an `M`-warm `Q₀` and a **lazy** chain,
 
@@ -42,7 +42,7 @@ Every declaration is a `theorem`; there is no `def`, `structure`, `class` or `ax
 
 `thm:mixing` is stated by Lovász–Simonovits (and quoted by Cousins–Vempala) for a **lazy**
 chain, and that word is load-bearing: without a spectral hypothesis the bound is false, and
-`ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/ConductanceToTV.lean:229–243` records the counterexample (the
+`ArlibCommunity/Foundations/MarkovChainTheory/HitAndRunMixing/Analysis/ConductanceToTV.lean` records the counterexample (the
 swap kernel on `Bool`, reversible with `Φ = 1`, whose total variation never decays).  Laziness
 is exactly what buys the missing hypothesis: `ArlibCommunity.Foundations.MarkovChainTheory.hasNonnegSpectrum_lazy`
 proves `HasNonnegSpectrum (lazy P) π` from reversibility of `P` alone, and
@@ -100,7 +100,7 @@ variable {n : ℕ}
 
 /-! ## 1. The mixing bound
 
-`ArlibCommunity.Algorithms.CV18.mixesWithin_lazy_of_conductance_sqrt` (`MixingSqrt.lean:294`) is
+`ArlibCommunity.Algorithms.CV18.mixesWithin_lazy_of_conductance_sqrt` (`MixingSqrt.lean`) is
 `thm:mixing` read as a step count at a conductance of exactly the shape
 `δ·log 2/(640·σ·√n)`, for `lazy P` with `P` reversible.  Its `hΦ` slot is, character for
 character, the conclusion of `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond`; the two
@@ -193,10 +193,10 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_uncond_explicit (hn : 21 ≤ n
   rw [heq]
   exact ht
 
-/-! ## 2. Non-vacuity (`CLAUDE.md` §11)
+/-! ## 2. Non-vacuity
 
 `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyMetropolisGaussian_ge_uncond_witness`
-(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianUncond.lean:161`) discharges the conductance theorem's whole
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianUncond.lean`) discharges the conductance theorem's whole
 binder bundle at
 
     n = 21,  K = B̄(0,1),  σ = 100,  δ = 1,  R = 1.
@@ -321,7 +321,7 @@ theorem mixesWithin_lazy_speedyMetropolisGaussian_uncond_witness :
     2000000000000, le_rfl, by norm_num, by norm_num, hδσ, hKm, hKc, hK0, by norm_num, hKR,
     hRσ, hprob, le_rfl, hwarm, by norm_num, by norm_num, by norm_num, hdead', hdead, hmix⟩
 
-/-! ### Axiom audit (`CLAUDE.md` §4) -/
+/-! ### Axiom audit -/
 
 section AxiomCheck
 

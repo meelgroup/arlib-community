@@ -18,7 +18,7 @@ with the Gaussian Metropolis filter `min(1, g(y)/g(x))` — and proves it revers
 `1_K·ℓ·e^{−‖x‖²/(2s)}`.  Its §7 states, in prose and without declarations, the three things that
 stand between that kernel and a conductance bound.  **This file discharges all three**, against
 the abstract theorem `ArlibCommunity.Foundations.MarkovChainTheory.conductance_speedyGaussian_ge`
-(`SpeedyConductanceSharp.lean:320`), and composes them.
+(`SpeedyConductanceSharp.lean`), and composes them.
 
 ## Main results, in the order of `SpeedyGaussian.lean` §7
 
@@ -27,15 +27,15 @@ the abstract theorem `ArlibCommunity.Foundations.MarkovChainTheory.conductance_s
   `ellGaussianProb` is built from an `ℝ≥0∞` density.  They agree at
   `h = 1_K·(ℓ.toReal)·gaussianWeightReal s`, both factors being bounded by `1` and hence
   Bochner-integrable on a `K` of finite volume.  The template is
-  `ArlibCommunity.Foundations.MarkovChainTheory.uniformOn_gaussianWeight_eq_div` (`MetropolisConductanceSharp.lean:353`),
+  `ArlibCommunity.Foundations.MarkovChainTheory.uniformOn_gaussianWeight_eq_div` (`MetropolisConductanceSharp.lean`),
   which does the same job for the unweighted `1_K·γ`.
 * **Obligation 3, `ArlibCommunity.Foundations.MarkovChainTheory.hiso_speedyMetropolisGaussian`.**  A single `exact` into
-  `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_measurable_logTwo` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean:851`) at
+  `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_measurable_logTwo` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`) at
   `d := δ·ln 2/√n`.  Of its three external hypotheses only `hellKpos` is discharged
   (`ell_toReal_pos_of_convex`); `hellLip` and `hLσ` are **carried**, see below.
 * **Obligation 1, `ArlibCommunity.Foundations.MarkovChainTheory.hoverlap_speedyMetropolisGaussian`.**  The substantive
   work.  The repository's speedy overlap estimates
-  (`ArlibCommunity.Foundations.MarkovChainTheory.one_le_twelve_mul_speedyWalk_add_of_comparable`, `OverlapSqrt.lean:439`)
+  (`ArlibCommunity.Foundations.MarkovChainTheory.one_le_twelve_mul_speedyWalk_add_of_comparable`, `OverlapSqrt.lean`)
   are about the *uniform* law on `B(x,δ) ∩ K`; the filter thins that law by `min(1, g(y)/g(x))`,
   so every domination step loses an acceptance factor.
   `ArlibCommunity.Foundations.MarkovChainTheory.mul_volume_le_speedyMetropolisGaussian` re-runs the domination against the
@@ -69,7 +69,7 @@ adds are these:
 bound, no spectral-gap bound and no runtime statement in any form.  Two hypotheses carry real
 content and neither is proved here or anywhere in this repository:
 
-* `hcomp`, Cousins–Vempala's `d_ℓ(u,v) < 1/3` (`1409.6011/vol3_journal.tex:581`) as a *global*
+* `hcomp`, Cousins–Vempala's `d_ℓ(u,v) < 1/3` ([CV18]) as a *global*
   premise on `K` — `hoverlap`'s binder admits no per-pair premise.  This is the same premise
   `ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_sqrt_of_ell_comparable_global` carries for the
   unfiltered walk, and `ArlibCommunity.Foundations.MarkovChainTheory.exists_ell_not_comparable_at_sqrt_dim_counterexample`
@@ -223,13 +223,13 @@ that no one spends effort trying to discharge `hellLip` before reading it.  `hL�
 every `n ≥ 1`.
 
 `hellLip` is an artefact of this repository's route, not of the mathematics: Cousins–Vempala's
-`thm:iso` (`1409.6011/vol3_journal.tex:467`) uses no Lipschitz control of `ℓ` anywhere.  It
+`thm:iso` ([CV18]) uses no Lipschitz control of `ℓ` anywhere.  It
 enters at exactly one place, `ArlibCommunity.Foundations.Convex.norm_sub_ge_of_densDist_weighted`
-(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean:237`), which turns the density branch into a *metric*
+(`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`), which turns the density branch into a *metric*
 separation so that disjoint open enlargements can lift the isoperimetric inequality from
 open/closed sets to measurable ones. The `ℓ`-weighted inequality itself is already proved
 with no Lipschitz hypothesis, for `S₁, S₂` open and `S₃` closed:
-`ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_openClosed_logTwo` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean:474`).
+`ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_openClosed_logTwo` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`).
 **UPDATE (same day): that upgrade is done, and this theorem is superseded.**
 `ArlibCommunity.Foundations.MarkovChainTheory.hiso_speedyMetropolisGaussian_uncond` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianUncond.lean`)
 is this binder with `hellLip`, `hLσ`, `hKR` and the parameters `R`, `Lf` all removed, and
@@ -451,7 +451,7 @@ theorem acceptance_floor_of_cv (hn : 2 ≤ n) {σ δ R : ℝ} (hσ : 0 < σ) (h�
 Comparability of the local conductances is a **global** hypothesis on `K`, as it must be:
 `hoverlap`'s binder admits no extra per-pair premise, and this is the same shape
 `ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_sqrt_of_ell_comparable_global` uses for the unfiltered
-speedy walk.  It is Cousins–Vempala's `d_ℓ(u,v) < 1/3` (`vol3_journal.tex:581`) written
+speedy walk.  It is Cousins–Vempala's `d_ℓ(u,v) < 1/3` ([CV18]) written
 division-free; `ArlibCommunity.Foundations.MarkovChainTheory.ell_le_of_densDist_ell_lt` proves the two are the same
 hypothesis.  It is stated one-sidedly and applied in both directions via `norm_sub_rev`.
 
@@ -536,7 +536,7 @@ respectively; `hmass` is `integral_ellGaussianIndicator_pos`.
 **Two hypotheses remain, and this statement is conditional on them.  It is not a mixing-time
 bound, not a spectral-gap bound and not a runtime claim, and may not be quoted as one.**
 
-* `hcomp` — Cousins–Vempala's `d_ℓ(u,v) < 1/3` (`vol3_journal.tex:581`), as a *global* premise on
+* `hcomp` — Cousins–Vempala's `d_ℓ(u,v) < 1/3` ([CV18]), as a *global* premise on
   `K` because `hoverlap`'s binder has no room for a per-pair one.  It is the same premise
   `ArlibCommunity.Foundations.MarkovChainTheory.overlap_speedyWalk_sqrt_of_ell_comparable_global` carries for the
   unfiltered speedy walk, and `ArlibCommunity.Foundations.MarkovChainTheory.exists_ell_not_comparable_at_sqrt_dim_counterexample`
@@ -582,7 +582,7 @@ theorem conductance_speedyMetropolisGaussian_ge (hn : 2 ≤ n) {σ δ R Lf : ℝ
 
 end ArlibCommunity.Foundations.MarkovChainTheory
 
-/-! ## Axiom audit (`CLAUDE.md` §4) -/
+/-! ## Axiom audit -/
 
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.ell_mul_gaussianWeight_eq_ofReal
 #print axioms ArlibCommunity.Foundations.MarkovChainTheory.integrableOn_ell_mul_gaussianWeightReal
