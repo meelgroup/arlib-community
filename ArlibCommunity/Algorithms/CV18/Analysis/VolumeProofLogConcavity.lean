@@ -2,7 +2,7 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import ArlibCommunity.Algorithms.CV18.Analysis.PrekopaLeindler
+import ArlibCommunity.Foundations.Convex.PrekopaLeindler.Analysis.PrekopaLeindlerN
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofWarmStart
 
 open MeasureTheory
@@ -28,11 +28,12 @@ theorem prekopaLeindler_euclidean {n : ℕ}
     (∫⁻ x, f x) ^ t * (∫⁻ y, g y) ^ (1 - t) ≤ ∫⁻ z, h z := by
   have he : MeasurableEmbedding (@WithLp.toLp 2 (Fin n → ℝ)) :=
     (MeasurableEquiv.toLp 2 (Fin n → ℝ)).measurableEmbedding
-  have hPL := AsymptoticStatistics.prekopaLeindler
+  have hPL := ArlibCommunity.Foundations.Convex.prekopa_leindler_lintegral_pi n t ht ht1
+    (f ∘ WithLp.toLp 2) (g ∘ WithLp.toLp 2) (h ∘ WithLp.toLp 2)
     (hf.comp (PiLp.volume_preserving_toLp (Fin n)).measurable)
     (hg.comp (PiLp.volume_preserving_toLp (Fin n)).measurable)
     (hh.comp (PiLp.volume_preserving_toLp (Fin n)).measurable)
-    ht ht1 (fun x y => by
+    (fun x y => by
       simpa [map_add, map_smul] using
         hle (WithLp.toLp 2 x) (WithLp.toLp 2 y))
   simpa only [Function.comp_apply,
