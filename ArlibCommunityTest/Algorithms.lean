@@ -99,9 +99,44 @@ example (q : VolumeParams) (I : VolumeInput q.n)
         (accurateOutcome q I) :=
   figureOne_base_accuracy_of_truncation_and_mixing q I oracle htrunc hmixing
 
-/-- The headline: the concrete program `cv18Program`, defined under `Model/`,
-meets the Theorem 1.1 accuracy and membership-query guarantee. -/
+/-- The headline: the concrete program `Program.estimator`, defined under `Model/`,
+run on the random tape, meets the Theorem 1.1 accuracy and membership-query
+guarantee. -/
+example (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
+    (hrounded : WellRounded q I) :
+    1 - q.p ≤ outcomeProbability (estimate q I oracle) (accurateOutcome q I) ∧
+      ∀ t, Model.Operations.queryCount (Arlib.Computation.Charged.cost
+        (execution q oracle.query t)) ≤ Nat.ceil (queryRate q) :=
+  cv18TheoremOneOne q I oracle hrounded
+
+/-- The program tree the accuracy proof was developed against. -/
 example : VolumeGuarantee cv18Program queryRate :=
-  cv18TheoremOneOne
+  cv18Program_volumeGuarantee
 
 end ArlibCommunityTest.CV18
+
+/-! A planted breach: a "program" that reads the oracle's membership answers by building
+its own oracle, and one that reads a computation's value for free.  `#programSeal`'s
+scanner must reject both. -/
+
+namespace ArlibCommunityTest.CV18.Breach
+
+open ArlibCommunity.Algorithms.CV18 ArlibCommunity.Algorithms.CV18.Model.Operations
+
+noncomputable def ownOracle (n : ℕ) (member : AmbientSpace n → Bool) (t : Tape n) :
+    Oracle n :=
+  Oracle.ofTape member t
+
+noncomputable def freeValue (n : ℕ) (x : AmbientSpace n) (o : Oracle n) : Bool :=
+  (ask x o).val.1
+
+end ArlibCommunityTest.CV18.Breach
+
+/--
+error: Seal breach in ArlibCommunityTest.CV18.Breach: [(ArlibCommunityTest.CV18.Breach.ownOracle,
+  ArlibCommunity.Algorithms.CV18.Model.Operations.Oracle.ofTape),
+ (ArlibCommunityTest.CV18.Breach.freeValue,
+  Arlib.Computation.Charged.val)].  A program that reads the oracle, a computation's value or its tally without a charged operation can learn what it does not pay for.
+-/
+#guard_msgs in
+#programSealFixture ArlibCommunityTest.CV18.Breach

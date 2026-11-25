@@ -3,14 +3,14 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Arlib.Computation.Std
-import ArlibCommunity.Algorithms.CV18.Model.Pseudocode
+import ArlibCommunity.Algorithms.CV18.Analysis.OracleProgram
 import ArlibCommunity.Foundations.Convex.Basic.GaussianWeight
 
 /-!
 # The certified program in its analysis form
 
 The proof of Theorem 1.1 was developed against these definitions: the same
-algorithm as `cv18Program` in `Model/Pseudocode.lean`, written directly with
+algorithm as `cv18Program` in `Analysis/OracleProgram.lean`, written directly with
 the program constructors and with the sampling subroutines passed through a
 `VolumeCoolingPrimitives` record.  `Analysis/PseudocodeBridge.lean` proves that
 `cv18Program` is equal to `amplifyOracleProgram
