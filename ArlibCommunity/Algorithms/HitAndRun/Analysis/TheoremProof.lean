@@ -3,7 +3,7 @@ Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import ArlibCommunity.Algorithms.HitAndRun.Model.ProblemSetting
-import ArlibCommunity.Algorithms.HitAndRun.Model.Pseudocode
+import ArlibCommunity.Algorithms.HitAndRun.Analysis.Kernel
 
 /-!
 # Proof of the unconditional hit-and-run mixing theorem
@@ -25,7 +25,8 @@ theorem hitAndRun_mixes {n : ℕ} (hn : 21 ≤ n) (p : Problem n)
     {m : ℕ} (hm : deadline n p.diameter M eps ≤ (m : ℝ)) :
     ArlibCommunity.Foundations.Convex.TVLe (run p.body sigma m) (target p.body) (ENNReal.ofReal eps) := by
   rcases hWarm with ⟨hSm, hS, hdom⟩
-  simpa [run, lazyStep, step, target] using
+  rw [target_eq_uniformOn]
+  simpa [run, lazyStep, step] using
     ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_lazy_hitAndRun_uncond hn
       p.convex_body p.closed_body p.measurable_body p.bounded_body
       p.unitBall_subset p.diam_le hM heps0 heps1 hSm hS hdom

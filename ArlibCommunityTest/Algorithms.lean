@@ -60,7 +60,36 @@ example {n : ℕ} (hn : 21 ≤ n) (p : Problem n)
     ArlibCommunity.Foundations.Convex.TVLe (run p.body sigma m) (target p.body) (ENNReal.ofReal eps) :=
   hitAndRun_mixes hn p hM heps0 heps1 hWarm hm
 
+/-- The headline: the sampler `Program.sampler`, defined under `Model/`, on any convex body
+given by a membership oracle, is accurate, and makes a bounded number of queries. -/
+example {n : ℕ} (hn : 21 ≤ n) (p : Problem n) (oracle : MembershipOracle p)
+    {sigma : Measure (State n)} [IsProbabilityMeasure sigma]
+    {M eps : ℝ} (hM : 1 ≤ M) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
+    {S : Set (State n)} (hWarm : WarmStart p.body sigma M (eps / 2) S)
+    {m : ℕ} (hm : deadline n p.diameter M (eps / 2) ≤ (m : ℝ)) :
+    TVLe (walkLaw (walkParams n p.diameter M eps m) oracle sigma) (target p.body)
+      (ENNReal.ofReal eps) :=
+  hitAndRun_correct hn p oracle hM heps0 heps1 hWarm hm
+
 end ArlibCommunityTest.HitAndRun
+
+/-! A planted breach for the hit-and-run seal: a "program" that builds its own oracle. -/
+
+namespace ArlibCommunityTest.HitAndRun.Breach
+
+open ArlibCommunity.Algorithms.HitAndRun ArlibCommunity.Algorithms.HitAndRun.Model.Operations
+
+noncomputable def ownOracle (n : ℕ) (member : State n → Bool) (t : Tape n) : Oracle n :=
+  Oracle.ofTape member t
+
+end ArlibCommunityTest.HitAndRun.Breach
+
+/--
+error: Seal breach in ArlibCommunityTest.HitAndRun.Breach: [(ArlibCommunityTest.HitAndRun.Breach.ownOracle,
+  ArlibCommunity.Algorithms.HitAndRun.Model.Operations.Oracle.ofTape)].  A program that reads the oracle, a dictionary, a computation's value or its tally without a charged operation can learn what it does not pay for.
+-/
+#guard_msgs in
+#programSealFixtureHitAndRun ArlibCommunityTest.HitAndRun.Breach
 
 namespace ArlibCommunityTest.KV97
 
