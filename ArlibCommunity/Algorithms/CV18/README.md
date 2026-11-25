@@ -58,7 +58,7 @@ The starting variance is `ε/(64n)` rather than `1/(4n)`, and a failed run repor
     the body's membership answers and a random tape, readable only through the
     charged operations `ask`, `drawBall`, `drawGaussian`, `drawUnit`;
   - `Program.lean`: the algorithm `Program.estimator`, a charged
-    `Arlib.Computation` computation of the oracle.  `#programSeal` fails the build
+    `Arlib.Computation` computation of the oracle.  `#programSeal` (`Meta/CostSeal.lean`) fails the build
     if any declaration of the program reaches the oracle's private fields, a
     computation's value or tally, or a hand-charged operation;
   - `Run.lean`: the tape law (independent rounds of a unit-ball point, a standard

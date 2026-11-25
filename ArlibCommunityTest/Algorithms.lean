@@ -136,7 +136,7 @@ end ArlibCommunityTest.CV18.Breach
 error: Seal breach in ArlibCommunityTest.CV18.Breach: [(ArlibCommunityTest.CV18.Breach.ownOracle,
   ArlibCommunity.Algorithms.CV18.Model.Operations.Oracle.ofTape),
  (ArlibCommunityTest.CV18.Breach.freeValue,
-  Arlib.Computation.Charged.val)].  A program that reads the oracle, a computation's value or its tally without a charged operation can learn what it does not pay for.
+  Arlib.Computation.Charged.val)].  A program that reads the oracle, a dictionary, a computation's value or its tally without a charged operation can learn what it does not pay for.
 -/
 #guard_msgs in
 #programSealFixture ArlibCommunityTest.CV18.Breach

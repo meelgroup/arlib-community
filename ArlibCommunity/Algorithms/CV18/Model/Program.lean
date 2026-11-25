@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Arlib.Probability.Median
 import ArlibCommunity.Algorithms.CV18.Model.Operations
-import ArlibCommunity.Algorithms.CV18.Meta.ProgramSeal
+import ArlibCommunity.Algorithms.CV18.Meta.CostSeal
 import ArlibCommunity.Algorithms.CV18.Meta.ModelClosure
 
 /-!
