@@ -2,56 +2,79 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
+import ArlibCommunity.Algorithms.HitAndRun.Model.Prelude
 import ArlibCommunity.Algorithms.HitAndRun.Model.ProblemSetting
-import ArlibCommunity.Algorithms.HitAndRun.Model.Pseudocode
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.PseudocodeProof
-import ArlibCommunity.Algorithms.HitAndRun.Analysis.TheoremProof
+import ArlibCommunity.Algorithms.HitAndRun.Model.Operations
+import ArlibCommunity.Algorithms.HitAndRun.Model.Program
+import ArlibCommunity.Algorithms.HitAndRun.Model.Run
+import ArlibCommunity.Algorithms.HitAndRun.Meta.ModelClosure
+import ArlibCommunity.Algorithms.HitAndRun.Analysis.QueryCount
+import ArlibCommunity.Algorithms.HitAndRun.Analysis.Accuracy
 
 /-!
-# Hit-and-run: headline results
+# Hit-and-run mixes fast, with a membership oracle
 
-`hitAndRun_mixes` is the fully discharged mixing theorem for the lazy walk
-`run`.  `finiteFacetStep_eq_step` is the implementation bridge for polytopes:
-the facet-scan walk used with polytope membership queries is the same kernel.
-Other facts about the kernel (the direction/chord formula and stationarity) are
-in `Analysis/PseudocodeProof.lean`.
+> [Lov99] For a convex body `K` with `B ⊆ K` and diameter at most `D`, the lazy
+> hit-and-run walk from an `M`-warm start is within total variation `ε` of the uniform
+> distribution on `K` after `O(n² D² log(M/ε))` steps.
 
-The paper [Lov99] prints a substantially smaller coefficient.  Its proof of
-Lemma 8 uses incompatible cap-volume and chord-length constants, so this file
-does not assert that unsupported numeral.  The proved replacement keeps the
-same `n² D² log(M/ε²)` dependence with explicit coefficient `2^64`.
+Stated about the **explicit** sampler: `walkLaw w oracle σ` is `Program.sampler w`
+(`Model/Program.lean`) run on the random tape of `Model/Run.lean`, from a start drawn from
+`σ`, on a convex body accessed only through a membership oracle.  The program never
+mentions the body; it reads it only through the charged operations of
+`Model/Operations.lean`.
+
+Two claims:
+
+* `hitAndRun_correct` — **accuracy**: with the parameters `walkParams n D M ε m`, after
+  `m ≥ deadline n D M (ε/2)` steps from a warm start, the output law is within total
+  variation `ε` of uniform on the body.  The walk's own mixing gives `ε/2`
+  (`hitAndRun_mixes` at `ε/2`); the warm start's exceptional set and the capped chord
+  sampling (**Deviation**, `Model/Program.lean`) give at most `ε/4` each.
+* `hitAndRun_queries` — **query bound**, sure: on every tape and whatever answers
+  membership, at most `steps · (2 · bisectionSteps + rejectionTries)` membership calls.
+
+**Hypotheses** are the paper's, at `ε/2`: `n ≥ 21`, the body convex, closed, bounded,
+containing a unit ball and of diameter at most `D`, `M ≥ 1`, `0 < ε ≤ 1`, and a start that
+is `M`-warm outside a set of mass at most `ε/4`.
 -/
+
+set_option autoImplicit false
 
 namespace ArlibCommunity.Algorithms.HitAndRun
 
-open MeasureTheory ProbabilityTheory Set
-open scoped ENNReal
+open MeasureTheory
+open Arlib.Computation
+open ArlibCommunity.Algorithms.HitAndRun.Model.Operations
 
-/-- Implementation bridge for polytopes given by facets.
+/-- **Accuracy**: after `m ≥ deadline n D M (ε/2)` steps from an `M`-warm start, the
+sampler's output law is within total variation `ε` of the uniform law on the body. -/
+theorem hitAndRun_correct {n : ℕ} (hn : 21 ≤ n) (p : Problem n) (oracle : MembershipOracle p)
+    {σ : Measure (State n)} [IsProbabilityMeasure σ]
+    {M ε : ℝ} (hM : 1 ≤ M) (hε0 : 0 < ε) (hε1 : ε ≤ 1)
+    {S : Set (State n)} (hWarm : WarmStart p.body σ M (ε / 2) S)
+    {m : ℕ} (hm : deadline n p.diameter M (ε / 2) ≤ (m : ℝ)) :
+    TVLe (walkLaw (walkParams n p.diameter M ε m) oracle σ) (target p.body)
+      (ENNReal.ofReal ε) :=
+  hitAndRun_correct_proof hn p oracle hM hε0 hε1 hWarm hm
 
-On `{x | ∀ i, ⟪A i, x⟫ ≤ b i}`, the walk can compute each chord by scanning the
-facets (the same facet scan that answers a polytope membership query), and this
-computes exactly the kernel `step` that `hitAndRun_mixes` is about.  Clients
-that run `finiteFacetStep` and charge one facet scan per step use this to
-transfer the mixing bound to the walk they execute. -/
-theorem finiteFacetStep_eq_step {n : ℕ} {ι : Type*} [Fintype ι]
-    (A : ι → State n) (b : ι → ℝ)
-    (hK : Bornology.IsBounded (ArlibCommunity.Foundations.Convex.Polytope.body A b)) [NeZero n] :
-    finiteFacetStep A b = step (ArlibCommunity.Foundations.Convex.Polytope.body A b) :=
-  PseudocodeProof.finiteFacetStep_eq_step A b hK
-
-/-- The unconditional corrected hit-and-run mixing theorem.
-
-For `n ≥ 21`, after at least `deadline n D M eps` lazy steps on a rounded
-convex body of diameter at most `D`, an `(M,S)`-warm probability law is within
-`eps` total variation of uniform measure.  There are no assumed overlap,
-isoperimetry, conductance, or mixing lemmas among the binders. -/
-theorem hitAndRun_mixes {n : ℕ} (hn : 21 ≤ n) (p : Problem n)
-    {sigma : Measure (State n)} [IsProbabilityMeasure sigma]
-    {M eps : ℝ} (hM : 1 ≤ M) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
-    {S : Set (State n)} (hWarm : WarmStart p.body sigma M eps S)
-    {m : ℕ} (hm : deadline n p.diameter M eps ≤ (m : ℝ)) :
-    TVLe (run p.body sigma m) (target p.body) (ENNReal.ofReal eps) :=
-  TheoremProof.hitAndRun_mixes hn p hM heps0 heps1 hWarm hm
+/-- **Query bound**: on every tape, and whatever answers membership, the sampler makes at
+most `steps · (2 · bisectionSteps + rejectionTries)` membership calls. -/
+theorem hitAndRun_queries {n : ℕ} (w : WalkParams) (member : State n → Bool)
+    (x₀ : State n) (t : Tape n) :
+    queryCount (Charged.cost (execution w member x₀ t)) ≤
+      w.steps * (2 * w.bisectionSteps + w.rejectionTries) :=
+  execution_queryCount_le w member x₀ t
 
 end ArlibCommunity.Algorithms.HitAndRun
+
+#modelClosureOfType ArlibCommunity.Algorithms.HitAndRun.hitAndRun_correct
+#modelClosureOfType ArlibCommunity.Algorithms.HitAndRun.hitAndRun_queries
+#print axioms ArlibCommunity.Algorithms.HitAndRun.hitAndRun_correct
+#print axioms ArlibCommunity.Algorithms.HitAndRun.hitAndRun_queries
+#surplusIn ArlibCommunity.Algorithms.HitAndRun.Model from
+  ArlibCommunity.Algorithms.HitAndRun.hitAndRun_correct
+  ArlibCommunity.Algorithms.HitAndRun.hitAndRun_queries
+  ArlibCommunity.Algorithms.HitAndRun.Model.Operations.ask_ofTape
+  ArlibCommunity.Algorithms.HitAndRun.Model.Operations.drawGaussian_ofTape
+  ArlibCommunity.Algorithms.HitAndRun.Model.Operations.drawUnit_ofTape

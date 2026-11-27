@@ -11,20 +11,19 @@ import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 import Mathlib.MeasureTheory.Measure.GiryMonad
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.Probability.ProbabilityMassFunction.Constructions
+import Mathlib.Probability.Distributions.Gaussian.Multivariate
 
 /-!
 # CV18 model: definitions
 
-Every definition the statement of Theorem 1.1 (`Model/Theorem.lean`) and the
-pseudocode (`Model/Pseudocode.lean`) rely on, in reading order:
+Every definition the statement of Theorem 1.1 (`Model/Theorem.lean`), the
+operations (`Model/Operations.lean`), the program (`Model/Program.lean`) and its
+run (`Model/Run.lean`) rely on, in reading order:
 
 1. **Problem.** The parameters, the convex body with its unit-ball promise,
    the membership oracle, the target (Lebesgue volume), and what counts as
    an accurate estimate.
-2. **Oracle programs.** The language the algorithm is written in: a program
-   may query the oracle, draw random numbers or points, and return a value.
-   It never sees the body except through queries.  `do` notation is available
-   through the `Monad` instance, and `runEstimate` gives a program's output law.
+2. **Outcome probability.** How the theorem reads a probability off a law.
 3. **Cooling schedule.** The variances Figure 1 visits.
 4. **Sampling laws.** The distributions the program draws from.
 5. **Acceptance probabilities and estimator weights.**
@@ -34,7 +33,7 @@ pseudocode (`Model/Pseudocode.lean`) rely on, in reading order:
    budgets used by the program.
 
 The only proofs in this file are the side conditions needed for the
-definitions to type-check (each random draw is a probability measure).
+definitions to type-check (each random law is a probability measure).
 -/
 
 open MeasureTheory
@@ -101,85 +100,7 @@ the true volume. -/
 def accurateOutcome (q : VolumeParams) (I : VolumeInput q.n) : Set ℝ :=
   {estimate | RelativeApprox q.eps (euclideanVolume I) estimate}
 
-/-! ## 2. Oracle programs -/
-
-/-- A membership-oracle program in dimension `n` returning a `Result`.
-
-A program is a tree of steps: `query x next` asks the oracle whether `x` is in
-the body and continues with `next answer`; the `random*` steps draw a value
-from a probability law and continue with it; `pure r` returns `r`.  The body is
-never an argument, so a program learns about it only through `query` steps.
-This is what makes the theorem a statement about a membership-oracle
-algorithm, and what lets `Pseudocode.lean` count queries from the program
-itself.
-
-The algorithm is written with `do` notation (see the `Monad` instance below and
-the primitives `isMember`, `drawPoint`, `drawReal`); the constructors are only
-needed to define the semantics and the cost model. -/
-inductive MembershipOracleProgram (n : ℕ) (Result : Type) where
-  | pure (result : Result)
-  | query (point : AmbientSpace n) (next : Bool → MembershipOracleProgram n Result)
-  | randomNat (law : PMF ℕ) (next : ℕ → MembershipOracleProgram n Result)
-  | randomPoint (law : Measure (AmbientSpace n))
-      (lawProbability : IsProbabilityMeasure law)
-      (next : AmbientSpace n → MembershipOracleProgram n Result)
-  | randomReal (law : Measure ℝ) (lawProbability : IsProbabilityMeasure law)
-      (next : ℝ → MembershipOracleProgram n Result)
-
-/-- A uniform randomized membership-oracle algorithm for ordinary volume. -/
-abbrev VolumeAlgorithm := (q : VolumeParams) → MembershipOracleProgram q.n ℝ
-
-/-- Sequential composition of membership-oracle programs. -/
-def MembershipOracleProgram.bind {n : ℕ} {A B : Type}
-    (program : MembershipOracleProgram n A)
-    (next : A → MembershipOracleProgram n B) : MembershipOracleProgram n B :=
-  match program with
-  | .pure result => next result
-  | .query point branch => .query point (fun answer => (branch answer).bind next)
-  | .randomNat law branch => .randomNat law (fun seed => (branch seed).bind next)
-  | .randomPoint law hprob branch =>
-      .randomPoint law hprob (fun point => (branch point).bind next)
-  | .randomReal law hprob branch =>
-      .randomReal law hprob (fun value => (branch value).bind next)
-
-/-- **The output law of a program** when every query is answered by `oracle`:
-a `query` step follows the oracle's answer, and a random step averages the rest
-of the program over its law.  (Query cost is not part of this law; it is read
-off the program itself by `queryCost` in `Pseudocode.lean`.) -/
-noncomputable def MembershipOracleProgram.runEstimate {n : ℕ} {Result : Type}
-    [MeasurableSpace Result] (oracle : AmbientSpace n → Bool) :
-    MembershipOracleProgram n Result → Measure Result
-  | .pure result => Measure.dirac result
-  | .query point next => runEstimate oracle (next (oracle point))
-  | .randomNat law next => law.toMeasure.bind fun seed => runEstimate oracle (next seed)
-  | .randomPoint law _ next => law.bind fun point => runEstimate oracle (next point)
-  | .randomReal law _ next => law.bind fun value => runEstimate oracle (next value)
-
-/-- `do` notation for oracle programs: `let x ← p; rest` runs `p`, then `rest`. -/
-noncomputable instance (n : ℕ) : Monad (MembershipOracleProgram n) where
-  pure := .pure
-  bind := MembershipOracleProgram.bind
-
-/-- Ask the membership oracle whether `x` is in the body.  This is the only way
-a program can learn anything about the body. -/
-def isMember {n : ℕ} (x : AmbientSpace n) : MembershipOracleProgram n Bool :=
-  .query x .pure
-
-/-- Draw a point of `ℝⁿ` from the probability law `law`. -/
-def drawPoint {n : ℕ} (law : Measure (AmbientSpace n)) [h : IsProbabilityMeasure law] :
-    MembershipOracleProgram n (AmbientSpace n) :=
-  .randomPoint law h .pure
-
-/-- Draw a real number from the probability law `law`. -/
-def drawReal {n : ℕ} (law : Measure ℝ) [h : IsProbabilityMeasure law] :
-    MembershipOracleProgram n ℝ :=
-  .randomReal law h .pure
-
-/-- The output law of a volume algorithm on body `I`, when every query is
-answered by `oracle`.  The algorithm is fixed before `I` and `oracle`. -/
-noncomputable def volumeAlgorithmLaw (A : VolumeAlgorithm) (q : VolumeParams)
-    (I : VolumeInput q.n) (oracle : MembershipOracle I) : Measure ℝ :=
-  (A q).runEstimate oracle.query
+/-! ## 2. Outcome probability -/
 
 /-- The probability a law assigns to a set of outcomes (outer measure, so no
 measurability side condition is needed). -/
@@ -289,59 +210,14 @@ instance uniformUnit_isProbabilityMeasure :
   unfold uniformUnit
   infer_instance
 
-/-- The unnormalised Gaussian density `exp(-‖x‖²/(2s))` at variance `s`. -/
-noncomputable def gaussianDensity {n : ℕ} (s : ℝ) (x : AmbientSpace n) : ℝ :=
-  Real.exp (- (1 / (2 * s)) * ‖x‖ ^ 2)
+/-- The standard Gaussian law on `ℝⁿ`: `n` independent standard Gaussian coordinates. -/
+noncomputable def standardGaussian (n : ℕ) : Measure (AmbientSpace n) :=
+  ProbabilityTheory.stdGaussian (AmbientSpace n)
 
-theorem integral_gaussianDensity {n : ℕ} {s : ℝ} (hs : 0 < s) :
-    ∫ x : AmbientSpace n, gaussianDensity s x =
-      Real.rpow (2 * Real.pi * s) ((n : ℝ) / 2) := by
-  have h := GaussianFourier.integral_rexp_neg_mul_sq_norm
-    (V := AmbientSpace n) (b := (1 / (2 * s) : ℝ)) (by positivity)
-  rw [show (Real.pi / (1 / (2 * s))) = 2 * Real.pi * s by field_simp] at h
-  simpa [gaussianDensity, finrank_euclideanSpace_fin] using h
-
-theorem integrable_gaussianDensity {n : ℕ} {s : ℝ} (hs : 0 < s) :
-    Integrable (gaussianDensity (n := n) s) := by
-  apply Integrable.of_integral_ne_zero
-  rw [integral_gaussianDensity hs]
-  exact (Real.rpow_pos_of_pos (by positivity) _).ne'
-
-lemma initialVariance_pos (q : VolumeParams) : 0 < initialVariance q := by
-  unfold initialVariance
-  have hn : (0 : ℝ) < q.n := by exact_mod_cast (lt_of_lt_of_le (by norm_num) q.dim_ok)
-  exact div_pos q.heps.1 (by positivity)
-
-theorem initialGaussianIntegral_pos (q : VolumeParams) :
-    0 < initialGaussianIntegral q := by
-  unfold initialGaussianIntegral
-  exact Real.rpow_pos_of_pos
-    (mul_pos (mul_pos (by norm_num) Real.pi_pos) (initialVariance_pos q)) _
-
-/-- The centered Gaussian with covariance `initialVariance q * I`, defined
-directly by its normalized Lebesgue density.  This keeps the executable law
-identical to the density used by the initial-tail proof and avoids any bridge
-through Mathlib's standard-Gaussian volume API. -/
-noncomputable def initialGaussianLaw (q : VolumeParams) :
-    Measure (AmbientSpace q.n) :=
-  volume.withDensity fun x => ENNReal.ofReal
-    (gaussianDensity (initialVariance q) x / initialGaussianIntegral q)
-
-instance initialGaussianLaw_isProbabilityMeasure (q : VolumeParams) :
-    IsProbabilityMeasure (initialGaussianLaw q) := by
-  constructor
-  unfold initialGaussianLaw
-  rw [withDensity_apply _ MeasurableSet.univ]
-  simp only [Measure.restrict_univ]
-  have hZ := initialGaussianIntegral_pos q
-  rw [← ofReal_integral_eq_lintegral_ofReal
-    ((integrable_gaussianDensity (initialVariance_pos q)).div_const _)]
-  · rw [integral_div, integral_gaussianDensity (initialVariance_pos q)]
-    change ENNReal.ofReal (initialGaussianIntegral q / initialGaussianIntegral q) = 1
-    rw [div_self hZ.ne']
-    simp
-  · exact Filter.Eventually.of_forall fun x =>
-      div_nonneg (Real.exp_pos _).le hZ.le
+instance standardGaussian_isProbabilityMeasure (n : ℕ) :
+    IsProbabilityMeasure (standardGaussian n) := by
+  unfold standardGaussian
+  infer_instance
 
 /-! ## 5. Acceptance probabilities and estimator weights -/
 

@@ -7,7 +7,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.ModelSupport
 /-!
 # The pseudocode is the analysed program
 
-`cv18Program` (`Model/Pseudocode.lean`) is written in `do` notation for
+`cv18Program` (`Analysis/OracleProgram.lean`) is written in `do` notation for
 readability.  The proof of Theorem 1.1 was developed against the same
 algorithm written with the program constructors
 (`Analysis/ScheduledProgram.lean`).  This file proves the two are equal

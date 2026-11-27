@@ -1,8 +1,7 @@
-import ArlibCommunity.Algorithms.HitAndRun.Model.Theorem
+import ArlibCommunity.Algorithms.HitAndRun.Analysis.KernelTheorem
 import ArlibCommunity.Algorithms.HitAndRun.Analysis.PseudocodeProof
 import ArlibCommunity.Algorithms.HitAndRun.Meta.ModelClosure
 
-#modelClosureOfType ArlibCommunity.Algorithms.HitAndRun.hitAndRun_mixes
 #print axioms ArlibCommunity.Algorithms.HitAndRun.PseudocodeProof.proposal_apply
 #print axioms ArlibCommunity.Algorithms.HitAndRun.PseudocodeProof.target_invariant
 #print axioms ArlibCommunity.Algorithms.HitAndRun.finiteFacetStep_eq_step

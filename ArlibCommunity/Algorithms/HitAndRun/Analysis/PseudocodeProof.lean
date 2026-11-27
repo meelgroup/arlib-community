@@ -2,7 +2,7 @@
 Copyright (c) 2026. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import ArlibCommunity.Algorithms.HitAndRun.Model.Pseudocode
+import ArlibCommunity.Algorithms.HitAndRun.Analysis.Kernel
 
 /-!
 # Proofs that the pseudocode denotes hit-and-run
@@ -34,7 +34,8 @@ theorem step_isMarkovKernel {n : ℕ} (K : Body n) :
 
 theorem target_invariant {n : ℕ} [NeZero n] {K : Body n} (hK : MeasurableSet K) :
     Kernel.Invariant (step K) (target K) := by
-  simpa [step, target] using ArlibCommunity.Foundations.MarkovChainTheory.invariant_hitAndRun hK
+  rw [target_eq_uniformOn]
+  simpa [step] using ArlibCommunity.Foundations.MarkovChainTheory.invariant_hitAndRun hK
 
 theorem finiteFacetStep_eq_step {n : ℕ} {ι : Type*} [Fintype ι]
     (A : ι → State n) (b : ι → ℝ)

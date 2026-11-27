@@ -105,6 +105,7 @@ import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledCheapAbo
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledTheoremAssembly
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofFinalScheduledPhasewiseCapstone
 import ArlibCommunity.Algorithms.CV18.Model.Theorem
+import ArlibCommunity.Algorithms.CV18.Meta.Audit
 import ArlibCommunity.Algorithms.CV18.Analysis.VolumeProofScheduledLogEnvelope
 
 /-!
@@ -120,9 +121,12 @@ equation-(6) moments, Lemma 7.17(c) dependence recurrence, terminal phase,
 mapped-product accuracy bound, query cap, and amplification are assembled in
 the premise-free theorem `volumeTheorem_finalScheduled`, the end-to-end
 formalization of CV18 Theorem 1.1 for the executable scheduled implementation.
-The audit-facing statement is `cv18TheoremOneOne` in `Model/Theorem.lean`,
-about the concrete program `cv18Program` defined in `Model/Pseudocode.lean`;
-its type is machine-checked to unfold only to declarations under `Model/`.
+The audit-facing statement is `cv18TheoremOneOne` in `Model/Theorem.lean`, about
+the concrete program `Program.estimator` of `Model/Program.lean`, charged through
+`Arlib.Computation` with one `query` per membership call (`Model/Operations.lean`) and
+run on the random tape of `Model/Run.lean`; `#programSeal` checks that the program
+learns nothing without a charged operation, and the theorem's type is machine-checked
+to unfold only to declarations under `Model/`.
 The older `volumeTheorem_of_postInitialMixing` remains available as a compact
 legacy interface.
 
