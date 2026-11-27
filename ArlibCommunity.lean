@@ -26,14 +26,18 @@ counting or sampling problem is the using project's obligation, and stays in the
 using project.
 
 Importing `ArlibCommunity` pulls in everything. Import an area
-(`import ArlibCommunity.Algorithms`) for one subject, or a single module for one
-piece. Every declaration lives in the namespace matching its module path.
+(`import ArlibCommunity.Foundations` or `import ArlibCommunity.Algorithms`)
+for one subject, or a single module for one piece. Every declaration lives in the namespace matching its module path.
 
 ## Areas
 
-* `ArlibCommunity.Algorithms` — analyses of specific algorithms. Currently the
-  Tootsie Pop Algorithm: the Poisson law of its contraction counter, almost-sure
-  termination, and the two-phase run-count schedule.
+* `ArlibCommunity.Foundations` — subject-organised results the algorithm
+  analyses build on that arlib does not (yet) contain: Markov chains on a
+  general measurable space, convex geometry, total variation between measures.
+  Laid out like arlib so that a module can move upstream unchanged.
+* `ArlibCommunity.Algorithms` — TPA, Hit-and-Run, CV18 Gaussian cooling,
+  and KV97 lattice-point sampling.
 -/
 
+import ArlibCommunity.Foundations
 import ArlibCommunity.Algorithms
