@@ -45,3 +45,127 @@ example {A Ahat eps : ℝ} (heps : 0 < eps) (h : |Ahat - A| ≤ Real.log (1 + ep
   relative_error_of_log_error heps h
 
 end ArlibCommunityTest.Algorithms
+
+namespace ArlibCommunityTest.HitAndRun
+
+open MeasureTheory
+open ArlibCommunity.Algorithms.HitAndRun
+
+/-- Downstream smoke test for the fully discharged headline theorem. -/
+example {n : ℕ} (hn : 2 ≤ n) (p : Problem n)
+    {sigma : Measure (State n)} [IsProbabilityMeasure sigma]
+    {M eps : ℝ} (hM : 1 ≤ M) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
+    {S : Set (State n)} (hWarm : WarmStart p.body sigma M eps S)
+    {m : ℕ} (hm : deadline n p.diameter M eps ≤ (m : ℝ)) :
+    ArlibCommunity.Foundations.Convex.TVLe (run p.body sigma m) (target p.body) (ENNReal.ofReal eps) :=
+  hitAndRun_mixes hn p hM heps0 heps1 hWarm hm
+
+/-- The headline: the sampler `Program.sampler`, defined under `Model/`, on any convex body
+given by a membership oracle, is accurate, and makes a bounded number of queries. -/
+example {n : ℕ} (hn : 2 ≤ n) (p : Problem n) (oracle : MembershipOracle p)
+    {sigma : Measure (State n)} [IsProbabilityMeasure sigma]
+    {M eps : ℝ} (hM : 1 ≤ M) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
+    {S : Set (State n)} (hWarm : WarmStart p.body sigma M (eps / 2) S)
+    {m : ℕ} (hm : deadline n p.diameter M (eps / 2) ≤ (m : ℝ)) :
+    TVLe (walkLaw (walkParams n p.diameter M eps m) oracle sigma) (target p.body)
+      (ENNReal.ofReal eps) :=
+  hitAndRun_correct hn p oracle hM heps0 heps1 hWarm hm
+
+end ArlibCommunityTest.HitAndRun
+
+/-! A planted breach for the hit-and-run seal: a "program" that builds its own oracle. -/
+
+namespace ArlibCommunityTest.HitAndRun.Breach
+
+open ArlibCommunity.Algorithms.HitAndRun ArlibCommunity.Algorithms.HitAndRun.Model.Operations
+
+noncomputable def ownOracle (n : ℕ) (member : State n → Bool) (t : Tape n) : Oracle n :=
+  Oracle.ofTape member t
+
+end ArlibCommunityTest.HitAndRun.Breach
+
+/--
+error: Seal breach in ArlibCommunityTest.HitAndRun.Breach: [(ArlibCommunityTest.HitAndRun.Breach.ownOracle,
+  ArlibCommunity.Algorithms.HitAndRun.Model.Operations.Oracle.ofTape)].  A program that reads the oracle, a dictionary, a computation's value or its tally without a charged operation can learn what it does not pay for.
+-/
+#guard_msgs in
+#programSealFixtureHitAndRun ArlibCommunityTest.HitAndRun.Breach
+
+namespace ArlibCommunityTest.KV97
+
+open MeasureTheory
+open ArlibCommunity.Algorithms.KV97
+
+/-- Kannan–Vempala, Theorem 2: given a sampler whose density is within `1 ± ε` of
+uniform at every point of the inflated polytope, every lattice point of the
+polytope is returned with probability within a stated factor of `1 / V`. -/
+example {n : ℕ} {ι : Type*} [Fintype ι] (p : Problem n ι)
+    {sampler : Measure (State n)} {V ε : ℝ} (hV : 0 < V) (hε0 : 0 ≤ ε) (hε1 : ε ≤ 1)
+    (hs : AlmostUniformSampler sampler p.inflatedBody V ε)
+    {x : LatticePoint n} (hx : toState x ∈ p.body) :
+    (1 - ε) * (1 - Real.exp (-p.c ^ 2 / 2)) / V ≤ (output sampler {x}).toReal ∧
+      (output sampler {x}).toReal ≤ (1 + ε) / V :=
+  latticePoint_probability p hV hε0 hε1 hs hx
+
+end ArlibCommunityTest.KV97
+
+namespace ArlibCommunityTest.CV18
+
+open ArlibCommunity.Algorithms.CV18
+
+/-- The older compact interface: one base run is accurate given a radial
+truncation bound and a mixing bound as hypotheses. Theorem 1.1 below discharges
+both. -/
+example (q : VolumeParams) (I : VolumeInput q.n)
+    (oracle : MembershipOracle I)
+    (htrunc : FigureOneRadialTruncationBound q I)
+    (hmixing : FigureOnePostInitialMixingBound q I oracle) :
+    3 / 4 ≤
+      outcomeProbability
+        (volumeAlgorithmLaw
+          (fun q => baseVolumeCooling figureOnePrimitives
+            explicitVolumeCoolingSchedule q) q I oracle)
+        (accurateOutcome q I) :=
+  figureOne_base_accuracy_of_truncation_and_mixing q I oracle htrunc hmixing
+
+/-- The headline: the concrete program `Program.estimator`, defined under `Model/`,
+run on the random tape, meets the Theorem 1.1 accuracy and membership-query
+guarantee. -/
+example (q : VolumeParams) (I : VolumeInput q.n) (oracle : MembershipOracle I)
+    (hrounded : WellRounded q I) :
+    1 - q.p ≤ outcomeProbability (estimate q I oracle) (accurateOutcome q I) ∧
+      ∀ t, Model.Operations.queryCount (Arlib.Computation.Charged.cost
+        (execution q oracle.query t)) ≤ Nat.ceil (queryRate q) :=
+  cv18TheoremOneOne q I oracle hrounded
+
+/-- The program tree the accuracy proof was developed against. -/
+example : VolumeGuarantee cv18Program queryRate :=
+  cv18Program_volumeGuarantee
+
+end ArlibCommunityTest.CV18
+
+/-! A planted breach: a "program" that reads the oracle's membership answers by building
+its own oracle, and one that reads a computation's value for free.  `#programSeal`'s
+scanner must reject both. -/
+
+namespace ArlibCommunityTest.CV18.Breach
+
+open ArlibCommunity.Algorithms.CV18 ArlibCommunity.Algorithms.CV18.Model.Operations
+
+noncomputable def ownOracle (n : ℕ) (member : AmbientSpace n → Bool) (t : Tape n) :
+    Oracle n :=
+  Oracle.ofTape member t
+
+noncomputable def freeValue (n : ℕ) (x : AmbientSpace n) (o : Oracle n) : Bool :=
+  (ask x o).val.1
+
+end ArlibCommunityTest.CV18.Breach
+
+/--
+error: Seal breach in ArlibCommunityTest.CV18.Breach: [(ArlibCommunityTest.CV18.Breach.ownOracle,
+  ArlibCommunity.Algorithms.CV18.Model.Operations.Oracle.ofTape),
+ (ArlibCommunityTest.CV18.Breach.freeValue,
+  Arlib.Computation.Charged.val)].  A program that reads the oracle, a dictionary, a computation's value or its tally without a charged operation can learn what it does not pay for.
+-/
+#guard_msgs in
+#programSealFixture ArlibCommunityTest.CV18.Breach

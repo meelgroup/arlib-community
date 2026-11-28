@@ -1,0 +1,662 @@
+/-
+Copyright (c) 2026 Uddalok Sarkar. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Uddalok Sarkar
+-/
+import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IsoWeighted
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.StarPolar
+import ArlibCommunity.Foundations.MarkovChainTheory.GaussianWalkConductance.Analysis.EllLogConcave
+import ArlibCommunity.Foundations.Convex.GaussianIsoperimetry.Analysis.IsoIndicator
+
+section
+/-!
+# Side conditions for the `ℓ`-weighted Gaussian density, **without** an indicator of `K`
+
+This file collects, as **named standalone lemmas**, the analytic side conditions that
+`ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed_logTwo` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/OneDimSharp.lean`)
+demands of its density `h`, at
+
+    f x = (ell K δ x).toReal,   h x = f x · e^{−‖x‖²/(2σ²)}
+
+— that is, at the density of `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_openClosed_logTwo`
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`), which carries **no `1_K`**.  Every statement is in
+the `{h} (hh : ∀ x, h x = (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)))` style of that
+theorem, so each one discharges a capstone binder verbatim.
+
+## Main results
+
+* `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_nonneg` — `∀ x, 0 ≤ h x`  (the capstone's `h0`; no hypotheses at all).
+* `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_le_one` — `∀ x, h x ≤ 1`  (the capstone's `hhB` at `B = 1`; no hypotheses,
+  not even `0 < σ`: at `σ = 0` the exponent is `x/0 = 0` and `e⁰ = 1 ≤ 1`).
+* `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_continuous` — `Continuous h`  (the capstone's `hhc`).
+* `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integrable` — `Integrable h`  (the capstone's `hhi`).
+* `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integral_pos` — `0 < ∫ x, h x`  (the capstone's `hmass`), for a **bounded
+  convex** `K` of positive volume, with **no measurability hypothesis on `K`**.
+* `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integral_pos_witness` — non-vacuity: the full hypothesis bundle of
+  `ellGaussian_integral_pos` discharged at `n = 2`, `K = B(0,1)`, `δ = 1`, `σ = 1`.
+
+## What was reused, and what did **not** already exist
+
+None of the five facts existed anywhere in the tree as a standalone lemma for this
+(indicator-free) `h`.  They existed only as **inline `have`s** inside a single proof,
+`ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_openClosed_logTwo` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`
+for `hh0`, `:491` for `hhc`, `:506` for `hhB`, `:516` for `hhi`, `:530` for `hmass`), where they
+are not accessible to any other file.  The proofs below are those `have`s, extracted and
+generalised (notably: `hmass` here takes `Bornology.IsBounded K` and `volume K ≠ 0` rather than
+a pre-supplied `volume (ball x₀ δ ∩ K) ≠ 0`, and needs no `MeasurableSet K`).
+
+The nearest pre-existing relative of `ellGaussian_integrable` is
+`ArlibCommunity.Foundations.MarkovChainTheory.integrableOn_ell_mul_gaussianWeightReal`
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianConductance.lean`), which is a strictly weaker
+`IntegrableOn … A` for sets `A` of **finite volume** (and needs `MeasurableSet K`); it does not
+give global `Integrable`, which is what the capstone asks for.  Likewise the nearest relative of
+`ellGaussian_integral_pos` is `ArlibCommunity.Foundations.MarkovChainTheory.integral_ellGaussianIndicator_pos`
+(`…/SpeedyGaussianConductance.lean`), which is about the **indicator** density
+`1_K·ℓ·e^{−‖x‖²/(2σ²)}`, a strictly smaller integrand.
+
+Genuinely reused, not reproved:
+
+* `ArlibCommunity.Foundations.MarkovChainTheory.continuous_ell_toReal` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`) — continuity of `ℓ`.
+* `ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one` (`ArlibCommunity/Foundations/MarkovChainTheory/BallWalkMixing/Analysis/BallWalk.lean`).
+* `ArlibCommunity.Foundations.Convex.integrable_gaussianWeightReal` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`) — the
+  dominating Gaussian.  **`ArlibCommunity.Foundations.Convex.gaussianWeightReal s x` is by definition
+  `Real.exp (-‖x‖ ^ 2 / (2 * s))` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisGaussian.lean`),
+  so at `s := σ ^ 2` it is *definitionally* the exponential written above** — no bridge lemma is
+  needed, only `simp [gaussianWeightReal]` to unfold the `def`.
+* `ArlibCommunity.Foundations.Convex.integral_pos_of_continuous_of_pos` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`).
+* `ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_ne_zero_of_convex`
+  (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/StarPolar.lean`) — a bounded convex body of positive
+  volume meets every proposal ball centred in it in positive volume.
+
+## Scope
+
+Nothing here is an isoperimetric, conductance or mixing statement; these are analytic side
+conditions only.  There is no `def`, `structure`, `class` or `axiom` in this file; every
+declaration is a `theorem`.
+-/
+
+open MeasureTheory Metric
+open scoped ENNReal
+
+open ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
+
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
+
+namespace ArlibCommunity.Foundations.MarkovChainTheory
+
+
+
+variable {n : ℕ}
+
+/-- **Nonnegativity of the `ℓ`-weighted Gaussian density.**  `ℓ` is an `ℝ≥0∞`-valued quantity
+read off through `toReal`, and the Gaussian factor is an exponential; no hypotheses needed.
+This discharges the `h0`/`hf₀`-shaped side condition of
+`ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed_logTwo`. -/
+theorem ellGaussian_nonneg {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
+    {h : EuclideanSpace ℝ (Fin n) → ℝ}
+    (hh : ∀ x, h x = (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))) :
+    ∀ x, 0 ≤ h x := by
+  intro x
+  rw [hh]
+  exact mul_nonneg ENNReal.toReal_nonneg (Real.exp_pos _).le
+
+/-- **The `ℓ`-weighted Gaussian density is bounded by `1`.**  This is the capstone's `hhB` at
+`B = 1`: `ℓ ≤ 1` (`ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one`) and `e^{−‖x‖²/(2σ²)} ≤ 1`.
+
+No hypothesis on `σ` is needed: the exponent `−‖x‖²/(2σ²)` is nonpositive for every real `σ`,
+including `σ = 0`, where Lean's `x / 0 = 0` convention makes it `0` and the factor `1`. -/
+theorem ellGaussian_le_one {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
+    {h : EuclideanSpace ℝ (Fin n) → ℝ}
+    (hh : ∀ x, h x = (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))) :
+    ∀ x, h x ≤ 1 := by
+  intro x
+  have hell1 : (ell K δ x).toReal ≤ 1 := by
+    have := ENNReal.toReal_mono ENNReal.one_ne_top (ell_le_one K δ x)
+    simpa using this
+  have hgle : Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)) ≤ 1 := by
+    rw [Real.exp_le_one_iff, neg_div]
+    exact neg_nonpos.2 (div_nonneg (sq_nonneg _) (by positivity))
+  rw [hh]
+  calc (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))
+      ≤ 1 * 1 := mul_le_mul hell1 hgle (Real.exp_pos _).le zero_le_one
+    _ = 1 := one_mul 1
+
+/-- **The `ℓ`-weighted Gaussian density is continuous**, the capstone's `hhc`.  A product of
+`ArlibCommunity.Foundations.MarkovChainTheory.continuous_ell_toReal` (which is where all the work is: the annulus estimate) and the
+manifestly continuous Gaussian factor.  No measurability or convexity of `K` is used. -/
+theorem ellGaussian_continuous (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
+    (hδ : 0 ≤ δ) {h : EuclideanSpace ℝ (Fin n) → ℝ}
+    (hh : ∀ x, h x = (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))) :
+    Continuous h := by
+  have hrw : h = fun x : EuclideanSpace ℝ (Fin n) =>
+      (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)) := funext hh
+  rw [hrw]
+  exact (continuous_ell_toReal hn hδ).mul (by fun_prop)
+
+/-- **The `ℓ`-weighted Gaussian density is integrable**, the capstone's `hhi`.
+
+Domination by the Gaussian itself: `ℓ ≤ 1` gives `h x ≤ e^{−‖x‖²/(2σ²)}` pointwise, and the
+latter is integrable by `ArlibCommunity.Foundations.Convex.integrable_gaussianWeightReal`.  That lemma is stated for
+`ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2)`, which **is** `Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))`
+by `def` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisGaussian.lean`), so the only step is to
+unfold the definition — there is no bridge lemma to state. -/
+theorem ellGaussian_integrable (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
+    (hδ : 0 ≤ δ) (hσ : 0 < σ) {h : EuclideanSpace ℝ (Fin n) → ℝ}
+    (hh : ∀ x, h x = (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))) :
+    Integrable h := by
+  have hgi : Integrable fun x : EuclideanSpace ℝ (Fin n) =>
+      Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)) := by
+    have := integrable_gaussianWeightReal (n := n) hσ
+    simpa [gaussianWeightReal] using this
+  refine hgi.mono' (ellGaussian_continuous hn hδ hh).aestronglyMeasurable
+    (Filter.Eventually.of_forall fun x => ?_)
+  have hell1 : (ell K δ x).toReal ≤ 1 := by
+    have := ENNReal.toReal_mono ENNReal.one_ne_top (ell_le_one K δ x)
+    simpa using this
+  rw [Real.norm_eq_abs, abs_of_nonneg (ellGaussian_nonneg hh x), hh]
+  exact mul_le_of_le_one_left (Real.exp_pos _).le hell1
+
+/-- **The `ℓ`-weighted Gaussian density has positive total mass**, the capstone's `hmass`.
+
+For a **bounded convex** `K` of positive volume: pick any `x₀ ∈ K` (nonempty because a null set
+would have volume `0`); `ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_ne_zero_of_convex` gives
+`vol(B(x₀,δ) ∩ K) ≠ 0`, hence `ℓ(x₀) > 0` and `h x₀ > 0`; and a continuous, nonnegative,
+integrable function that is positive at a point has positive integral
+(`ArlibCommunity.Foundations.Convex.integral_pos_of_continuous_of_pos`).
+
+**No `MeasurableSet K`** is required: neither `ArlibCommunity.Foundations.MarkovChainTheory.continuous_ell_toReal` (which uses only
+monotonicity and subadditivity of `volume` as an outer measure) nor
+`volume_ball_inter_ne_zero_of_convex` needs it.  This is where the indicator-free `h` is easier
+than the indicator one: `ArlibCommunity.Foundations.MarkovChainTheory.integral_ellGaussianIndicator_pos`
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/SpeedyGaussianConductance.lean`) must route through
+`lintegral`s of the restricted measure and does need `hK` and `volume K ≠ ⊤`. -/
+theorem ellGaussian_integral_pos (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
+    (hδ : 0 < δ) (hσ : 0 < σ) (hKc : Convex ℝ K) (hKb : Bornology.IsBounded K)
+    (hK0 : volume K ≠ 0) {h : EuclideanSpace ℝ (Fin n) → ℝ}
+    (hh : ∀ x, h x = (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))) :
+    0 < ∫ x, h x := by
+  obtain ⟨x₀, hx₀⟩ : K.Nonempty := by
+    rw [Set.nonempty_iff_ne_empty]
+    intro hc
+    exact hK0 (by rw [hc]; exact measure_empty)
+  have hpos : volume (ball x₀ δ ∩ K) ≠ 0 :=
+    volume_ball_inter_ne_zero_of_convex hKc hKb hK0 hx₀ hδ
+  have hellpos : 0 < (ell K δ x₀).toReal := by
+    refine ENNReal.toReal_pos ?_ (ne_top_of_le_ne_top ENNReal.one_ne_top (ell_le_one K δ x₀))
+    rw [ell_apply]
+    exact fun hz => hpos (by
+      rcases (ENNReal.div_eq_zero_iff).1 hz with hnum | hden
+      · exact hnum
+      · exact absurd hden measure_ball_lt_top.ne)
+  refine integral_pos_of_continuous_of_pos (ellGaussian_continuous hn hδ.le hh)
+    (ellGaussian_nonneg hh) (ellGaussian_integrable hn hδ.le hσ hh) (x₀ := x₀) ?_
+  rw [hh]
+  exact mul_pos hellpos (Real.exp_pos _)
+
+/-- **Non-vacuity for `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integral_pos`.**  Every hypothesis of that theorem —
+`n ≠ 0`, `0 < δ`, `0 < σ`, `Convex ℝ K`, `Bornology.IsBounded K`, `volume K ≠ 0` and the
+defining equation for `h` — is discharged simultaneously at the concrete instance
+
+  `n = 2`,  `K = B(0,1)`,  `δ = 1`,  `σ = 1`,
+
+and the conclusion `0 < ∫ h` holds there.  So the hypothesis bundle is satisfiable and the
+theorem is not vacuous.  (`volume K ≠ 0` is Mathlib's `measure_ball_pos`; the defining equation
+is `rfl`.) -/
+theorem ellGaussian_integral_pos_witness :
+    ∃ (K : Set (EuclideanSpace ℝ (Fin 2))) (δ σ : ℝ) (h : EuclideanSpace ℝ (Fin 2) → ℝ),
+      (2 : ℕ) ≠ 0 ∧ 0 < δ ∧ 0 < σ ∧ Convex ℝ K ∧ Bornology.IsBounded K ∧ volume K ≠ 0 ∧
+        (∀ x, h x = (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))) ∧
+        0 < ∫ x, h x := by
+  refine ⟨ball (0 : EuclideanSpace ℝ (Fin 2)) 1, 1, 1,
+    fun x => (ell (ball (0 : EuclideanSpace ℝ (Fin 2)) 1) 1 x).toReal
+      * Real.exp (-‖x‖ ^ 2 / (2 * (1 : ℝ) ^ 2)),
+    two_ne_zero, one_pos, one_pos, convex_ball _ _, isBounded_ball,
+    (measure_ball_pos volume 0 one_pos).ne', fun _ => rfl, ?_⟩
+  exact ellGaussian_integral_pos (n := 2) two_ne_zero one_pos one_pos (convex_ball _ _)
+    isBounded_ball (measure_ball_pos volume 0 one_pos).ne' (fun _ => rfl)
+
+end ArlibCommunity.Foundations.MarkovChainTheory
+
+/-! ### Axiom audit -/
+
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_nonneg
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_le_one
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_continuous
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integrable
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integral_pos
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integral_pos_witness
+
+end
+
+section
+/-!
+# The mollified `ℓ`-weighted Gaussian density `e^{−j·dist(x,K̄)}·ℓ·e^{−‖x‖²/(2σ²)}`
+
+`ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_openClosed_logTwo` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`)
+is `thm:iso` for the **continuous** density `ℓ·γ`, `γ(x) = e^{−‖x‖²/(2σ²)}`, carrying **no**
+indicator of `K`.  Bridging it to the **indicator** density `1_K·ℓ·γ` — the density of the
+`ℓ`-weighted Gaussian restricted to the body — is a mollification argument: interpose the family
+
+    g j x  =  e^{−j·dist(x, K̄)} · (ell K δ x).toReal · e^{−‖x‖²/(2σ²)},
+
+which is continuous for every `j`, has a **log-concave** cofactor (so it discharges the
+open/closed capstone's `hfc` binder), and decreases pointwise to `1_{K̄}·ℓ·γ`. This file supplies
+the analytic side conditions for `g j`, the two limits, and the two rewritings that land those
+limits in the indicator density's own language.
+
+**No `def` is introduced.**  Following `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_isoperimetry_openClosed_logTwo` and
+`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllGaussianFacts.lean`, every statement takes the family as an opaque
+`g : ℕ → EuclideanSpace ℝ (Fin n) → ℝ` together with the explicit defining equation
+
+    hg : ∀ (j : ℕ) (x : _), g j x
+           = Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal
+               * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)),
+
+so each lemma discharges a consumer binder verbatim and no name stands in for a proof.
+
+## Main results
+
+* `ArlibCommunity.Foundations.MarkovChainTheory.exp_neg_natMul_infDist_le_one`, `ArlibCommunity.Foundations.MarkovChainTheory.ell_toReal_le_one` — the two pointwise `≤ 1`
+  facts every bound below rests on.
+* `ArlibCommunity.Foundations.MarkovChainTheory.isLogConcave_expNegInfDist_mul_ell` — `e^{−j·dist(x,K̄)}·ℓ` is **log-concave**, the
+  cofactor binder of the open/closed capstone.
+* `ArlibCommunity.Foundations.MarkovChainTheory.hMoll_nonneg`, `ArlibCommunity.Foundations.MarkovChainTheory.hMoll_le_one`, `ArlibCommunity.Foundations.MarkovChainTheory.hMoll_continuous`,
+  `ArlibCommunity.Foundations.MarkovChainTheory.hMoll_integrable`, `ArlibCommunity.Foundations.MarkovChainTheory.hMoll_integral_pos` — the mollified analogues of the five
+  side conditions of `ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllGaussianFacts.lean` (`h0`, `hhB` at `B = 1`, `hhc`,
+  `hhi`, `hmass`).
+* `ArlibCommunity.Foundations.MarkovChainTheory.tendsto_setIntegral_hMoll` — **the deliverable.**  For **every** set `A`,
+  measurable or not, `∫_A g j → ∫_{A ∩ K̄} ℓ·γ`.
+* `ArlibCommunity.Foundations.MarkovChainTheory.tendsto_integral_hMoll` — the same at `A = Set.univ`.
+* `ArlibCommunity.Foundations.MarkovChainTheory.setIntegral_closure_eq_setIntegral` — `∫_{A ∩ K̄} ℓ·γ = ∫_{A ∩ K} ℓ·γ` for convex `K`,
+  the frontier being Lebesgue-null.
+* `ArlibCommunity.Foundations.MarkovChainTheory.setIntegral_eq_setIntegral_indicator` — `∫_A 1_K·(ℓ·γ) = ∫_{A ∩ K} ℓ·γ`, so the limit
+  above is a statement about the indicator density.
+* `ArlibCommunity.Foundations.MarkovChainTheory.tendsto_setIntegral_hMoll_witness` — non-vacuity: the whole hypothesis bundle of
+  `tendsto_setIntegral_hMoll`, plus its conclusion, at `n = 2`, `K = B(0,1)`, `δ = σ = 1`,
+  `A = closedBall 0 (1/2)`.
+
+## What was reused, not reproved
+
+* `ArlibCommunity.Foundations.Convex.tendsto_setIntegral_expNegInfDist_mul_weighted`
+  (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`) — **the dominated-convergence engine.**  It is already
+  stated for a general nonnegative continuous `f` with `f·γ` integrable, so
+  `tendsto_setIntegral_hMoll` is its instantiation at `f := fun x => (ell K δ x).toReal` plus
+  three mechanical rewritings (`neg_mul`; the `gaussianWeightReal` unfold; `setIntegral_indicator`
+  to turn `∫_A 1_{K̄}·F` into `∫_{A ∩ K̄} F`).  The indicator-only
+  `ArlibCommunity.Foundations.Convex.tendsto_setIntegral_expNegInfDist_mul_gaussian` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`)
+  is the same statement at `f ≡ 1`; the weighted version supersedes it here.
+* `ArlibCommunity.Foundations.Convex.isLogConcave_exp_neg_infDist` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`) and
+  `ArlibCommunity.Foundations.MarkovChainTheory.isLogConcave_ell_toReal` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`), combined by
+  `ArlibCommunity.Foundations.Convex.IsLogConcave.mul` (`ArlibCommunity/Foundations/Convex/Basic/LogConcave.lean`) — which **does** exist, so no
+  new product-of-log-concaves lemma was needed.  The term-mode pattern is copied from
+  `ArlibCommunity.Foundations.MarkovChainTheory.isLogConcave_indicator_mul_ell_toReal` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`).
+* `ArlibCommunity.Foundations.Convex.setIntegral_indicator_closure_eq` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`) — the
+  frontier of a convex set is Lebesgue-null (`Convex.addHaar_frontier`).  **Null-ness of the
+  boundary is not reproved here**; `setIntegral_closure_eq_setIntegral` is that lemma sandwiched
+  between two applications of `MeasureTheory.setIntegral_indicator`.
+* `ArlibCommunity.Foundations.MarkovChainTheory.continuous_ell_toReal` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllLogConcave.lean`),
+  `ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one` (`ArlibCommunity/Foundations/MarkovChainTheory/BallWalkMixing/Analysis/BallWalk.lean`),
+  `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integrable` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllGaussianFacts.lean`),
+  `ArlibCommunity.Foundations.Convex.integrable_gaussianWeightReal` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`),
+  `ArlibCommunity.Foundations.Convex.integral_pos_of_continuous_of_pos` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`),
+  `ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_ne_zero_of_convex`
+  (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/StarPolar.lean`).
+* `ArlibCommunity.Foundations.Convex.gaussianWeightReal s x` is **by `def`**
+  `Real.exp (-‖x‖ ^ 2 / (2 * s))` (`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/MetropolisGaussian.lean`),
+  so at `s := σ ^ 2` it is definitionally the exponential written above; no bridge lemma exists
+  or is needed, only `simp [gaussianWeightReal]`.
+
+## One deviation from the obvious route
+
+`hMoll_integral_pos` is **not** derived from `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integral_pos`
+(`ArlibCommunity/Foundations/MarkovChainTheory/GaussianWalkConductance/Analysis/EllGaussianFacts.lean`) by monotonicity: the domination
+`g j ≤ ℓ·γ` runs the wrong way for a lower bound, and `ellGaussian_integral_pos` is an integral
+over all of `ℝⁿ`, not over `K`.  Instead its proof is mirrored: `g j` is continuous, nonnegative
+and integrable, and at any `x₀ ∈ K` one has `dist(x₀, K̄) = 0`, hence
+`g j x₀ = ℓ(x₀)·γ(x₀) > 0`; `ArlibCommunity.Foundations.Convex.integral_pos_of_continuous_of_pos` finishes.  This costs
+`Convex ℝ K`, `Bornology.IsBounded K`, `volume K ≠ 0` (exactly `ellGaussian_integral_pos`'s
+bundle) and **no** `MeasurableSet K`.
+
+## What is assumed
+
+**Nothing.**  There is no `def`, `structure`, `class` or `axiom` in this file; every declaration
+is a `theorem`, and none of them takes `thm:iso`, a localization binder, or any part of either as
+a hypothesis.  Nothing here is an isoperimetric, conductance or mixing statement: these are the
+analytic side conditions and the two limits of a mollification, and nothing more.
+
+The hypotheses actually needed, per lemma, are exactly those in the signatures below; notably
+`tendsto_setIntegral_hMoll` needs only `n ≠ 0`, `0 ≤ δ`, `0 < σ` and `K.Nonempty` — no
+measurability or convexity of `K`, and no measurability of `A`.
+-/
+
+open MeasureTheory Metric Filter
+open scoped ENNReal _root_.Topology
+
+open ArlibCommunity.Foundations.MarkovChainTheory ArlibCommunity.Foundations.Convex
+
+open ArlibCommunity.Foundations.Convex ArlibCommunity.Foundations.MarkovChainTheory
+
+namespace ArlibCommunity.Foundations.MarkovChainTheory
+
+
+
+variable {n : ℕ}
+
+/-! ### Two pointwise `≤ 1` facts -/
+
+/-- `e^{−j·dist(x,C)} ≤ 1` for a natural number `j`: the exponent is nonpositive because both
+`(j : ℝ)` and `Metric.infDist x C` are nonnegative. -/
+theorem exp_neg_natMul_infDist_le_one {E : Type*} [PseudoMetricSpace E] (j : ℕ) (x : E)
+    (C : Set E) : Real.exp (-(j : ℝ) * Metric.infDist x C) ≤ 1 := by
+  rw [Real.exp_le_one_iff]
+  have h : (0 : ℝ) ≤ (j : ℝ) * Metric.infDist x C :=
+    mul_nonneg (Nat.cast_nonneg j) Metric.infDist_nonneg
+  linarith
+
+/-- `(ell K δ x).toReal ≤ 1`, the real-valued form of `ArlibCommunity.Foundations.MarkovChainTheory.ell_le_one`. -/
+theorem ell_toReal_le_one (K : Set (EuclideanSpace ℝ (Fin n))) (δ : ℝ)
+    (x : EuclideanSpace ℝ (Fin n)) : (ell K δ x).toReal ≤ 1 := by
+  have := ENNReal.toReal_mono ENNReal.one_ne_top (ell_le_one K δ x)
+  simpa using this
+
+/-! ### Log-concavity of the mollified cofactor -/
+
+/-- **The mollified cofactor `e^{−j·dist(x,K̄)}·ℓ` is log-concave.**
+
+A product of two log-concave functions (`ArlibCommunity.Foundations.Convex.IsLogConcave.mul`):
+`ArlibCommunity.Foundations.Convex.isLogConcave_exp_neg_infDist` at the **closure** of `K` — which is convex
+(`Convex.closure`), compact (bounded and closed) and nonempty — and
+`ArlibCommunity.Foundations.MarkovChainTheory.isLogConcave_ell_toReal`.
+
+This is what the open/closed capstone
+`ArlibCommunity.Foundations.Convex.gaussianRestricted_isoperimetry_openClosed_logTwo` asks of the cofactor `f` of a density
+`f·e^{−‖x‖²/(2σ²)}`; the point of mollifying at `closure K` rather than at `K` is precisely that
+`ArlibCommunity.Foundations.Convex.isLogConcave_exp_neg_infDist` needs a **compact** set. -/
+theorem isLogConcave_expNegInfDist_mul_ell {K : Set (EuclideanSpace ℝ (Fin n))}
+    (hK : MeasurableSet K) (hKc : Convex ℝ K) (hKb : Bornology.IsBounded K) (hKne : K.Nonempty)
+    (δ : ℝ) (j : ℕ) :
+    IsLogConcave (fun x : EuclideanSpace ℝ (Fin n) =>
+      Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal) := by
+  have hCconv : Convex ℝ (closure K) := hKc.closure
+  have hCcomp : IsCompact (closure K) :=
+    Metric.isCompact_of_isClosed_isBounded isClosed_closure hKb.closure
+  have hCne : (closure K).Nonempty := hKne.closure
+  have hexp : IsLogConcave (fun x : EuclideanSpace ℝ (Fin n) =>
+      Real.exp (-(j : ℝ) * Metric.infDist x (closure K))) := by
+    have h := isLogConcave_exp_neg_infDist hCconv hCcomp hCne (c := (j : ℝ)) (Nat.cast_nonneg j)
+    simpa only [neg_mul] using h
+  exact ArlibCommunity.Foundations.Convex.IsLogConcave.mul hexp (isLogConcave_ell_toReal hK hKc δ)
+    (fun _ => (Real.exp_pos _).le) (fun _ => ENNReal.toReal_nonneg)
+
+/-! ### The four analytic side conditions, mirroring `EllGaussianFacts.lean` -/
+
+/-- **Nonnegativity of the mollified density**, the capstone's `h0`.  No hypotheses: all three
+factors are nonnegative outright. -/
+theorem hMoll_nonneg {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
+    {g : ℕ → EuclideanSpace ℝ (Fin n) → ℝ}
+    (hg : ∀ (j : ℕ) (x : EuclideanSpace ℝ (Fin n)), g j x =
+      Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal
+        * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))) :
+    ∀ (j : ℕ) (x : EuclideanSpace ℝ (Fin n)), 0 ≤ g j x := by
+  intro j x
+  rw [hg]
+  exact mul_nonneg (mul_nonneg (Real.exp_pos _).le ENNReal.toReal_nonneg) (Real.exp_pos _).le
+
+/-- **The mollified density is bounded by `1`**, the capstone's `hhB` at `B = 1`.
+
+Each of the three factors is at most `1`.  As in `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_le_one` no hypothesis on `σ`
+is needed: at `σ = 0` Lean's `x / 0 = 0` convention makes the Gaussian factor `e⁰ = 1`. -/
+theorem hMoll_le_one {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
+    {g : ℕ → EuclideanSpace ℝ (Fin n) → ℝ}
+    (hg : ∀ (j : ℕ) (x : EuclideanSpace ℝ (Fin n)), g j x =
+      Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal
+        * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))) :
+    ∀ (j : ℕ) (x : EuclideanSpace ℝ (Fin n)), g j x ≤ 1 := by
+  intro j x
+  have hexp1 : Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) ≤ 1 :=
+    exp_neg_natMul_infDist_le_one j x (closure K)
+  have hell1 : (ell K δ x).toReal ≤ 1 := ell_toReal_le_one K δ x
+  have hgle : Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)) ≤ 1 := by
+    rw [Real.exp_le_one_iff, neg_div]
+    exact neg_nonpos.2 (div_nonneg (sq_nonneg _) (by positivity))
+  rw [hg]
+  calc Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal
+        * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))
+      ≤ 1 * 1 * 1 :=
+        mul_le_mul (mul_le_mul hexp1 hell1 ENNReal.toReal_nonneg zero_le_one) hgle
+          (Real.exp_pos _).le (by norm_num)
+    _ = 1 := by norm_num
+
+/-- **The mollified density is continuous**, the capstone's `hhc`.
+
+A product of `x ↦ e^{−j·dist(x,K̄)}` (continuous because `Metric.infDist · C` is), of
+`ArlibCommunity.Foundations.MarkovChainTheory.continuous_ell_toReal` — where all the work is — and of the Gaussian factor. -/
+theorem hMoll_continuous (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
+    (hδ : 0 ≤ δ) {g : ℕ → EuclideanSpace ℝ (Fin n) → ℝ}
+    (hg : ∀ (j : ℕ) (x : EuclideanSpace ℝ (Fin n)), g j x =
+      Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal
+        * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))) :
+    ∀ j : ℕ, Continuous (g j) := by
+  intro j
+  have hrw : g j = fun x : EuclideanSpace ℝ (Fin n) =>
+      Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal
+        * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)) := funext (hg j)
+  rw [hrw]
+  have hcInf : Continuous fun x : EuclideanSpace ℝ (Fin n) =>
+      Metric.infDist x (closure K) := Metric.continuous_infDist_pt _
+  have hexpc : Continuous fun x : EuclideanSpace ℝ (Fin n) =>
+      Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) :=
+    Real.continuous_exp.comp (continuous_const.mul hcInf)
+  exact (hexpc.mul (continuous_ell_toReal hn hδ)).mul (by fun_prop)
+
+/-- **The mollified density is integrable**, the capstone's `hhi`.
+
+Domination by the Gaussian: `e^{−j·dist(x,K̄)} ≤ 1` and `ℓ ≤ 1`, so
+`g j x ≤ e^{−‖x‖²/(2σ²)}` pointwise, and the latter is integrable by
+`ArlibCommunity.Foundations.Convex.integrable_gaussianWeightReal` (whose statement is about
+`ArlibCommunity.Foundations.Convex.gaussianWeightReal (σ ^ 2)`, which **is** that exponential by `def`). -/
+theorem hMoll_integrable (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
+    (hδ : 0 ≤ δ) (hσ : 0 < σ) {g : ℕ → EuclideanSpace ℝ (Fin n) → ℝ}
+    (hg : ∀ (j : ℕ) (x : EuclideanSpace ℝ (Fin n)), g j x =
+      Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal
+        * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))) :
+    ∀ j : ℕ, Integrable (g j) := by
+  intro j
+  have hgi : Integrable fun x : EuclideanSpace ℝ (Fin n) =>
+      Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)) := by
+    have := integrable_gaussianWeightReal (n := n) hσ
+    simpa [gaussianWeightReal] using this
+  refine hgi.mono' (hMoll_continuous hn hδ hg j).aestronglyMeasurable
+    (Filter.Eventually.of_forall fun x => ?_)
+  rw [Real.norm_eq_abs, abs_of_nonneg (hMoll_nonneg hg j x), hg]
+  have hprod : Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal ≤ 1 := by
+    have h1 := exp_neg_natMul_infDist_le_one j x (closure K)
+    have h2 := ell_toReal_le_one K δ x
+    have h3 : (0 : ℝ) ≤ Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) :=
+      (Real.exp_pos _).le
+    nlinarith [ENNReal.toReal_nonneg (a := ell K δ x)]
+  exact mul_le_of_le_one_left (Real.exp_pos _).le hprod
+
+/-- **The mollified density has positive total mass**, the capstone's `hmass`.
+
+Not by monotonicity from `ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integral_pos`: the domination `g j ≤ ℓ·γ` runs the
+wrong way.  Instead, `g j` is continuous, nonnegative and integrable, and at any `x₀ ∈ K` — which
+exists because a null set has volume `0` — one has `x₀ ∈ closure K`, so `dist(x₀, K̄) = 0` and
+`g j x₀ = ℓ(x₀)·e^{−‖x₀‖²/(2σ²)}`, which is strictly positive because
+`ArlibCommunity.Foundations.MarkovChainTheory.volume_ball_inter_ne_zero_of_convex` gives `vol(B(x₀,δ) ∩ K) ≠ 0`.
+`ArlibCommunity.Foundations.Convex.integral_pos_of_continuous_of_pos` finishes.
+
+**No `MeasurableSet K`** is required; the hypothesis bundle is exactly that of
+`ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integral_pos`. -/
+theorem hMoll_integral_pos (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
+    (hδ : 0 < δ) (hσ : 0 < σ) (hKc : Convex ℝ K) (hKb : Bornology.IsBounded K)
+    (hK0 : volume K ≠ 0) {g : ℕ → EuclideanSpace ℝ (Fin n) → ℝ}
+    (hg : ∀ (j : ℕ) (x : EuclideanSpace ℝ (Fin n)), g j x =
+      Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal
+        * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))) :
+    ∀ j : ℕ, 0 < ∫ x, g j x := by
+  intro j
+  obtain ⟨x₀, hx₀⟩ : K.Nonempty := by
+    rw [Set.nonempty_iff_ne_empty]
+    intro hc
+    exact hK0 (by rw [hc]; exact measure_empty)
+  have hpos : volume (ball x₀ δ ∩ K) ≠ 0 :=
+    volume_ball_inter_ne_zero_of_convex hKc hKb hK0 hx₀ hδ
+  have hellpos : 0 < (ell K δ x₀).toReal := by
+    refine ENNReal.toReal_pos ?_ (ne_top_of_le_ne_top ENNReal.one_ne_top (ell_le_one K δ x₀))
+    rw [ell_apply]
+    exact fun hz => hpos (by
+      rcases (ENNReal.div_eq_zero_iff).1 hz with hnum | hden
+      · exact hnum
+      · exact absurd hden measure_ball_lt_top.ne)
+  refine integral_pos_of_continuous_of_pos (hMoll_continuous hn hδ.le hg j)
+    (hMoll_nonneg hg j) (hMoll_integrable hn hδ.le hσ hg j) (x₀ := x₀) ?_
+  have hz : Metric.infDist x₀ (closure K) = 0 :=
+    Metric.infDist_zero_of_mem (subset_closure hx₀)
+  rw [hg, hz, mul_zero, Real.exp_zero, one_mul]
+  exact mul_pos hellpos (Real.exp_pos _)
+
+/-! ### The two rewritings into the indicator density's language -/
+
+/-- **`∫_{A ∩ K̄} ℓ·γ = ∫_{A ∩ K} ℓ·γ`**, for a convex `K`.
+
+Nothing about convex boundaries is proved here.  Both sides are turned into integrals of an
+indicator over `A` by `MeasureTheory.setIntegral_indicator`, and the resulting identity is
+exactly `ArlibCommunity.Foundations.Convex.setIntegral_indicator_closure_eq` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoIndicator.lean`), which
+is where `Convex.addHaar_frontier` — `volume (frontier K) = 0` — is used. -/
+theorem setIntegral_closure_eq_setIntegral {K : Set (EuclideanSpace ℝ (Fin n))}
+    (hK : MeasurableSet K) (hKc : Convex ℝ K) {δ σ : ℝ}
+    (A : Set (EuclideanSpace ℝ (Fin n))) :
+    (∫ x in A ∩ closure K, (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)))
+      = ∫ x in A ∩ K, (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)) := by
+  have h1 : (∫ x in A ∩ closure K, (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)))
+      = ∫ x in A, Set.indicator (closure K)
+          (fun y => (ell K δ y).toReal * Real.exp (-‖y‖ ^ 2 / (2 * σ ^ 2))) x :=
+    (setIntegral_indicator isClosed_closure.measurableSet).symm
+  have h2 : (∫ x in A ∩ K, (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)))
+      = ∫ x in A, Set.indicator K
+          (fun y => (ell K δ y).toReal * Real.exp (-‖y‖ ^ 2 / (2 * σ ^ 2))) x :=
+    (setIntegral_indicator hK).symm
+  rw [h1, h2]
+  exact setIntegral_indicator_closure_eq hKc _ A
+
+/-- **`∫_A 1_K·(ℓ·γ) = ∫_{A ∩ K} ℓ·γ`**, so that the limits below are statements about the
+indicator density `1_K·ℓ·e^{−‖x‖²/(2σ²)}` itself.  This is `MeasureTheory.setIntegral_indicator`
+at the `ℓ`-weighted Gaussian, recorded under a name the consumer can quote. -/
+theorem setIntegral_eq_setIntegral_indicator {K : Set (EuclideanSpace ℝ (Fin n))}
+    (hK : MeasurableSet K) {δ σ : ℝ} (A : Set (EuclideanSpace ℝ (Fin n))) :
+    (∫ x in A, Set.indicator K
+        (fun y => (ell K δ y).toReal * Real.exp (-‖y‖ ^ 2 / (2 * σ ^ 2))) x)
+      = ∫ x in A ∩ K, (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)) :=
+  setIntegral_indicator hK
+
+/-! ### The two limits -/
+
+/-- **The deliverable: `∫_A g j → ∫_{A ∩ K̄} ℓ·γ` for every set `A`.**
+
+`ArlibCommunity.Foundations.Convex.tendsto_setIntegral_expNegInfDist_mul_weighted` (`ArlibCommunity/Foundations/Convex/GaussianIsoperimetry/Analysis/IsoWeighted.lean`)
+is already the dominated-convergence statement for a general nonnegative continuous cofactor `f`
+with `f·γ` integrable, so this is its instantiation at `f := fun x => (ell K δ x).toReal`:
+`hf0` is `ENNReal.toReal_nonneg`, `hfc` is `ArlibCommunity.Foundations.MarkovChainTheory.continuous_ell_toReal`, and `hfi` is
+`ArlibCommunity.Foundations.MarkovChainTheory.ellGaussian_integrable`.  The only glue is `neg_mul`, the `gaussianWeightReal` unfold, and
+`MeasureTheory.setIntegral_indicator` turning `∫_A 1_{K̄}·(ℓ·γ)` into `∫_{A ∩ K̄} ℓ·γ`.
+
+`A` is **arbitrary** — not assumed measurable — and `K` is assumed neither measurable nor convex;
+only `K.Nonempty` is used, to know that `dist(x, K̄) > 0` off `K̄`. -/
+theorem tendsto_setIntegral_hMoll (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
+    (hδ : 0 ≤ δ) (hσ : 0 < σ) (hKne : K.Nonempty)
+    {g : ℕ → EuclideanSpace ℝ (Fin n) → ℝ}
+    (hg : ∀ (j : ℕ) (x : EuclideanSpace ℝ (Fin n)), g j x =
+      Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal
+        * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)))
+    (A : Set (EuclideanSpace ℝ (Fin n))) :
+    Tendsto (fun j : ℕ => ∫ x in A, g j x) atTop
+      (𝓝 (∫ x in A ∩ closure K, (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)))) := by
+  have hfi : Integrable fun x : EuclideanSpace ℝ (Fin n) =>
+      (ell K δ x).toReal * gaussianWeightReal (σ ^ 2) x := by
+    have := ellGaussian_integrable (n := n) (K := K) (δ := δ) (σ := σ) hn hδ hσ (fun _ => rfl)
+    simpa [gaussianWeightReal] using this
+  have hlim := tendsto_setIntegral_expNegInfDist_mul_weighted (σ := σ)
+    (f := fun x : EuclideanSpace ℝ (Fin n) => (ell K δ x).toReal)
+    (fun _ => ENNReal.toReal_nonneg) (continuous_ell_toReal hn hδ) hfi
+    (C := closure K) isClosed_closure hKne.closure A
+  have htarget : (∫ x in A, Set.indicator (closure K)
+        (fun y => (ell K δ y).toReal * gaussianWeightReal (σ ^ 2) y) x)
+      = ∫ x in A ∩ closure K, (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)) := by
+    rw [setIntegral_indicator isClosed_closure.measurableSet]
+    simp [gaussianWeightReal]
+  rw [htarget] at hlim
+  have heq : ∀ (j : ℕ) (x : EuclideanSpace ℝ (Fin n)),
+      Real.exp (-((j : ℝ) * Metric.infDist x (closure K))) * (ell K δ x).toReal
+        * gaussianWeightReal (σ ^ 2) x = g j x := by
+    intro j x
+    rw [hg, gaussianWeightReal, neg_mul]
+  simpa only [heq] using hlim
+
+/-- **The deliverable at `A = Set.univ`:** `∫ g j → ∫_{K̄} ℓ·γ`.  This is the capstone's `hmass`
+factor in the limit; `ArlibCommunity.Foundations.MarkovChainTheory.tendsto_setIntegral_hMoll` at `Set.univ`, with
+`Set.univ ∩ closure K = closure K` and `MeasureTheory.setIntegral_univ`. -/
+theorem tendsto_integral_hMoll (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))} {δ σ : ℝ}
+    (hδ : 0 ≤ δ) (hσ : 0 < σ) (hKne : K.Nonempty)
+    {g : ℕ → EuclideanSpace ℝ (Fin n) → ℝ}
+    (hg : ∀ (j : ℕ) (x : EuclideanSpace ℝ (Fin n)), g j x =
+      Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal
+        * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))) :
+    Tendsto (fun j : ℕ => ∫ x, g j x) atTop
+      (𝓝 (∫ x in closure K, (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)))) := by
+  have h := tendsto_setIntegral_hMoll hn hδ hσ hKne hg Set.univ
+  simpa only [Set.univ_inter, MeasureTheory.setIntegral_univ] using h
+
+/-! ### Non-vacuity -/
+
+/-- **Non-vacuity for `ArlibCommunity.Foundations.MarkovChainTheory.tendsto_setIntegral_hMoll`.**
+
+Its whole hypothesis bundle — `n ≠ 0`, `0 ≤ δ`, `0 < σ`, `K.Nonempty` and the defining equation
+for `g` — is discharged simultaneously at the concrete data
+
+  `n = 2`,  `K = B(0,1)`,  `δ = 1`,  `σ = 1`,  `A = B̄(0, 1/2)`,
+
+and the conclusion holds there.  So the binder bundle is satisfiable and the theorem is not
+vacuous.  (`K.Nonempty` is `Metric.nonempty_ball`; the defining equation is `rfl`.) -/
+theorem tendsto_setIntegral_hMoll_witness :
+    ∃ (K : Set (EuclideanSpace ℝ (Fin 2))) (δ σ : ℝ)
+      (g : ℕ → EuclideanSpace ℝ (Fin 2) → ℝ) (A : Set (EuclideanSpace ℝ (Fin 2))),
+      (2 : ℕ) ≠ 0 ∧ 0 ≤ δ ∧ 0 < σ ∧ K.Nonempty ∧
+      (∀ (j : ℕ) (x : EuclideanSpace ℝ (Fin 2)), g j x =
+        Real.exp (-(j : ℝ) * Metric.infDist x (closure K)) * (ell K δ x).toReal
+          * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2))) ∧
+      Tendsto (fun j : ℕ => ∫ x in A, g j x) atTop
+        (𝓝 (∫ x in A ∩ closure K,
+          (ell K δ x).toReal * Real.exp (-‖x‖ ^ 2 / (2 * σ ^ 2)))) := by
+  refine ⟨ball (0 : EuclideanSpace ℝ (Fin 2)) 1, 1, 1,
+    fun j x => Real.exp (-(j : ℝ)
+        * Metric.infDist x (closure (ball (0 : EuclideanSpace ℝ (Fin 2)) 1)))
+      * (ell (ball (0 : EuclideanSpace ℝ (Fin 2)) 1) 1 x).toReal
+      * Real.exp (-‖x‖ ^ 2 / (2 * (1 : ℝ) ^ 2)),
+    closedBall (0 : EuclideanSpace ℝ (Fin 2)) (1 / 2),
+    two_ne_zero, zero_le_one, one_pos, Metric.nonempty_ball.2 one_pos, fun _ _ => rfl, ?_⟩
+  exact tendsto_setIntegral_hMoll (n := 2) two_ne_zero zero_le_one one_pos
+    (Metric.nonempty_ball.2 one_pos) (fun _ _ => rfl) _
+
+end ArlibCommunity.Foundations.MarkovChainTheory
+
+/-! ### Axiom audit
+
+Every declaration above must depend on exactly `[propext, Classical.choice, Quot.sound]`,
+Mathlib's three standard foundational axioms — and nothing else. -/
+
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.exp_neg_natMul_infDist_le_one
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.ell_toReal_le_one
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.isLogConcave_expNegInfDist_mul_ell
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.hMoll_nonneg
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.hMoll_le_one
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.hMoll_continuous
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.hMoll_integrable
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.hMoll_integral_pos
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.setIntegral_closure_eq_setIntegral
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.setIntegral_eq_setIntegral_indicator
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.tendsto_setIntegral_hMoll
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.tendsto_integral_hMoll
+#print axioms ArlibCommunity.Foundations.MarkovChainTheory.tendsto_setIntegral_hMoll_witness
+
+end
