@@ -52,7 +52,7 @@ open MeasureTheory
 open ArlibCommunity.Algorithms.HitAndRun
 
 /-- Downstream smoke test for the fully discharged headline theorem. -/
-example {n : ℕ} (hn : 21 ≤ n) (p : Problem n)
+example {n : ℕ} (hn : 2 ≤ n) (p : Problem n)
     {sigma : Measure (State n)} [IsProbabilityMeasure sigma]
     {M eps : ℝ} (hM : 1 ≤ M) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     {S : Set (State n)} (hWarm : WarmStart p.body sigma M eps S)
@@ -62,7 +62,7 @@ example {n : ℕ} (hn : 21 ≤ n) (p : Problem n)
 
 /-- The headline: the sampler `Program.sampler`, defined under `Model/`, on any convex body
 given by a membership oracle, is accurate, and makes a bounded number of queries. -/
-example {n : ℕ} (hn : 21 ≤ n) (p : Problem n) (oracle : MembershipOracle p)
+example {n : ℕ} (hn : 2 ≤ n) (p : Problem n) (oracle : MembershipOracle p)
     {sigma : Measure (State n)} [IsProbabilityMeasure sigma]
     {M eps : ℝ} (hM : 1 ≤ M) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     {S : Set (State n)} (hWarm : WarmStart p.body sigma M (eps / 2) S)

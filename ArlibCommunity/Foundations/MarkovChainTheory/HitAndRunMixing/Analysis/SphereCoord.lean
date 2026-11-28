@@ -383,6 +383,20 @@ theorem finrank_mul_lintegral_inner_sq {w : E} (hw : ‖w‖ = 1) :
           ENNReal.ofReal_one]
     _ = (volume : Measure E).toSphere Set.univ := lintegral_one
 
+/-- Markov's inequality at four times the mean of the squared sphere coordinate. -/
+theorem four_mul_toSphere_cap_le {w : E} (hw : ‖w‖ = 1) :
+    4 * (volume : Measure E).toSphere
+      {θ : sphere (0 : E) 1 | (4 : ℝ≥0∞) ≤
+        ENNReal.ofReal ((finrank ℝ E : ℝ) * ⟪(θ : E), w⟫ ^ 2)}
+      ≤ (volume : Measure E).toSphere Set.univ := by
+  have hf : Measurable (fun θ : sphere (0 : E) 1 =>
+      ENNReal.ofReal ((finrank ℝ E : ℝ) * ⟪(θ : E), w⟫ ^ 2)) :=
+    (measurable_const.mul ((measurable_inner_sphere w).pow_const 2)).ennreal_ofReal
+  refine (mul_meas_ge_le_lintegral hf 4).trans_eq ?_
+  simp_rw [ENNReal.ofReal_mul (by positivity : 0 ≤ (finrank ℝ E : ℝ)), ENNReal.ofReal_natCast]
+  rw [lintegral_const_mul _ ((measurable_inner_sphere w).pow_const 2).ennreal_ofReal]
+  exact finrank_mul_lintegral_inner_sq hw
+
 /-- **The pigeonhole lower bound on the spherical cap.**
 
 Some coordinate of a unit vector always has square at least `1/n`, so the closed cap
@@ -619,6 +633,86 @@ theorem hitAndRun_almostOrthogonal_le {K : Set (EuclideanSpace ℝ (Fin n))}
     simp only [mem_ofPred_eq]
     have habs : 0 < |t| := abs_pos.2 ht
     nlinarith [hmem, habs]
+
+/-- The widened cone event, reduced to its directions on the sphere. -/
+theorem hitAndRun_wideCap_le_unifSphere {K : Set (EuclideanSpace ℝ (Fin n))}
+    (hK : MeasurableSet K) (u v : EuclideanSpace ℝ (Fin n)) :
+    hitAndRun K u {x : EuclideanSpace ℝ (Fin n) |
+        2 * (‖x - u‖ * ‖u - v‖) < Real.sqrt n * |⟪x - u, u - v⟫|}
+      ≤ unifSphere n {θ : sphere (0 : EuclideanSpace ℝ (Fin n)) 1 |
+          2 * ‖u - v‖ < Real.sqrt n * |⟪(θ : EuclideanSpace ℝ (Fin n)), u - v⟫|} := by
+  have hA : Continuous fun x : EuclideanSpace ℝ (Fin n) => 2 * (‖x - u‖ * ‖u - v‖) := by
+    fun_prop
+  have hB : Continuous fun x : EuclideanSpace ℝ (Fin n) =>
+      Real.sqrt n * |⟪x - u, u - v⟫| := by
+    exact continuous_const.mul ((continuous_id.sub continuous_const).inner continuous_const).abs
+  have hC : Continuous fun θ : sphere (0 : EuclideanSpace ℝ (Fin n)) 1 =>
+      Real.sqrt n * |⟪(θ : EuclideanSpace ℝ (Fin n)), u - v⟫| := by
+    exact continuous_const.mul (continuous_subtype_val.inner continuous_const).abs
+  refine hitAndRun_le_unifSphere_of_cone hK u (measurableSet_lt hA.measurable hB.measurable) ?_
+    (measurableSet_lt measurable_const hC.measurable) ?_
+  · simp
+  · intro θ t ht hmem
+    simp only [mem_ofPred_eq, add_sub_cancel_left, norm_smul, Real.norm_eq_abs,
+      mem_sphere_zero_iff_norm.1 θ.2, mul_one, real_inner_smul_left, abs_mul] at hmem
+    simp only [mem_ofPred_eq]
+    have h : |t| * (2 * ‖u - v‖) < |t| * (Real.sqrt n * |⟪(θ : EuclideanSpace ℝ (Fin n)), u - v⟫|) := by
+      convert hmem using 1 <;> ring
+    exact lt_of_mul_lt_mul_left h (abs_nonneg _)
+
+/-- The spherical cap at twice the root-mean-square coordinate has probability at most `1/4`. -/
+theorem unifSphere_wideCap_le_quarter (hn : n ≠ 0) (w : EuclideanSpace ℝ (Fin n)) :
+    unifSphere n {θ : sphere (0 : EuclideanSpace ℝ (Fin n)) 1 |
+        2 * ‖w‖ < Real.sqrt n * |⟪(θ : EuclideanSpace ℝ (Fin n)), w⟫|}
+      ≤ ENNReal.ofReal (1 / 4) := by
+  have : NeZero n := ⟨hn⟩
+  rcases eq_or_ne w 0 with rfl | hw
+  · simp
+  set w₀ := ‖w‖⁻¹ • w with hw₀
+  have hunit : ‖w₀‖ = 1 := norm_smul_inv_norm hw
+  have hfr : finrank ℝ (EuclideanSpace ℝ (Fin n)) = n := finrank_euclideanSpace_fin
+  set A : Set (sphere (0 : EuclideanSpace ℝ (Fin n)) 1) :=
+    {θ | 2 * ‖w‖ < Real.sqrt n * |⟪(θ : EuclideanSpace ℝ (Fin n)), w⟫|}
+  set B : Set (sphere (0 : EuclideanSpace ℝ (Fin n)) 1) :=
+    {θ | (4 : ℝ≥0∞) ≤ ENNReal.ofReal ((n : ℝ) * ⟪(θ : EuclideanSpace ℝ (Fin n)), w₀⟫ ^ 2)}
+  have hAB : A ⊆ B := by
+    intro θ hθ
+    change 2 * ‖w‖ < Real.sqrt n * |⟪(θ : EuclideanSpace ℝ (Fin n)), w⟫| at hθ
+    have hnorm : 0 < ‖w‖ := norm_pos_iff.2 hw
+    have heq : ⟪(θ : EuclideanSpace ℝ (Fin n)), w⟫ =
+        ‖w‖ * ⟪(θ : EuclideanSpace ℝ (Fin n)), w₀⟫ := by
+      rw [hw₀, real_inner_smul_right, ← mul_assoc, mul_inv_cancel₀ hnorm.ne', one_mul]
+    rw [heq, abs_mul, abs_of_pos hnorm] at hθ
+    have h' : 2 < Real.sqrt n * |⟪(θ : EuclideanSpace ℝ (Fin n)), w₀⟫| := by
+      apply lt_of_mul_lt_mul_left _ hnorm.le
+      convert hθ using 1 <;> ring
+    have hs : (Real.sqrt n * |⟪(θ : EuclideanSpace ℝ (Fin n)), w₀⟫|) ^ 2 =
+        (n : ℝ) * ⟪(θ : EuclideanSpace ℝ (Fin n)), w₀⟫ ^ 2 := by
+      rw [mul_pow, Real.sq_sqrt (by positivity), sq_abs]
+    change (4 : ℝ≥0∞) ≤ ENNReal.ofReal _
+    rw [← ENNReal.ofReal_ofNat]
+    exact ENNReal.ofReal_le_ofReal (by nlinarith)
+  have hkey := four_mul_toSphere_cap_le hunit
+  rw [hfr] at hkey
+  have hkey' : (4 : ℝ≥0∞) *
+      (volume : Measure (EuclideanSpace ℝ (Fin n))).toSphere B ≤ sphereArea n := hkey
+  have hmul : (4 : ℝ≥0∞) * unifSphere n B ≤ 1 := by
+    rw [unifSphere, Measure.smul_apply, smul_eq_mul, mul_left_comm]
+    calc (sphereArea n)⁻¹ * (4 * (volume : Measure (EuclideanSpace ℝ (Fin n))).toSphere B)
+        ≤ (sphereArea n)⁻¹ * sphereArea n := by gcongr
+      _ = 1 := ENNReal.inv_mul_cancel sphereArea_ne_zero (sphereArea_ne_top n)
+  refine (measure_mono hAB).trans ?_
+  rw [ENNReal.ofReal_div_of_pos (by norm_num : (0 : ℝ) < 4), ENNReal.ofReal_one, ENNReal.ofReal_ofNat,
+    ENNReal.le_div_iff_mul_le (by simp) (by simp), mul_comm]
+  exact hmul
+
+/-- The bad angular event of a hit-and-run step has probability at most `1/4` at the widened cutoff. -/
+theorem hitAndRun_wideCap_le_quarter (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))}
+    (hK : MeasurableSet K) (u v : EuclideanSpace ℝ (Fin n)) :
+    hitAndRun K u {x : EuclideanSpace ℝ (Fin n) |
+        2 * (‖x - u‖ * ‖u - v‖) < Real.sqrt n * |⟪x - u, u - v⟫|}
+      ≤ ENNReal.ofReal (1 / 4) :=
+  (hitAndRun_wideCap_le_unifSphere hK u v).trans (unifSphere_wideCap_le_quarter hn (u - v))
 
 /-! ### The dimension-dependent cap bound `q₂ = 1 - 1/n` -/
 

@@ -34,7 +34,7 @@ Two claims:
 * `hitAndRun_queries` — **query bound**, sure: on every tape and whatever answers
   membership, at most `steps · (2 · bisectionSteps + rejectionTries)` membership calls.
 
-**Hypotheses** are the paper's, at `ε/2`: `n ≥ 21`, the body convex, closed, bounded,
+**Hypotheses** at `ε/2`: `n ≥ 2`, the body convex, closed, bounded,
 containing a unit ball and of diameter at most `D`, `M ≥ 1`, `0 < ε ≤ 1`, and a start that
 is `M`-warm outside a set of mass at most `ε/4`.
 -/
@@ -49,7 +49,7 @@ open ArlibCommunity.Algorithms.HitAndRun.Model.Operations
 
 /-- **Accuracy**: after `m ≥ deadline n D M (ε/2)` steps from an `M`-warm start, the
 sampler's output law is within total variation `ε` of the uniform law on the body. -/
-theorem hitAndRun_correct {n : ℕ} (hn : 21 ≤ n) (p : Problem n) (oracle : MembershipOracle p)
+theorem hitAndRun_correct {n : ℕ} (hn : 2 ≤ n) (p : Problem n) (oracle : MembershipOracle p)
     {σ : Measure (State n)} [IsProbabilityMeasure σ]
     {M ε : ℝ} (hM : 1 ≤ M) (hε0 : 0 < ε) (hε1 : ε ≤ 1)
     {S : Set (State n)} (hWarm : WarmStart p.body σ M (ε / 2) S)

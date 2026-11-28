@@ -382,8 +382,8 @@ section
 constant in the **conductance** theorem (Theorem 4.2).  This file does the same for the
 **mixing** theorem (Theorem 1.1), which is where the constants actually failed to compose:
 
-* What is proved: `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_uncond` (`SphereCap.lean`)
-  is Lemma 4.1 with no unproved hypothesis, at overlap constant `1 − 1/8000`, for `n ≥ 1100`.
+* What is proved: `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_wideCap` (`HitAndRunOverlap.lean`)
+  is Lemma 4.1 with no unproved hypothesis, at overlap constant `1 − 1/8000`, for `n ≥ 2`.
 * What the consumers demanded: `hLem41` binders hardcoded at `1 − 1/500`, a constant
   `HitAndRunOverlap.lean`'s module docstring shows the corrected proof cannot reach (two of
   the three bounds in the paper's proof are wrong in the same direction).
@@ -427,12 +427,11 @@ rounding `8000·491520 = 3932160000` up to `2³²`, it is `4·2⁶⁴·n²R²·l
    (`not_hIso_two` (not in this repository; see `REFERENCES.md`)).  It is a binder in `globalConductance_hitAndRun_ge`, is carried
    verbatim through `globalConductance_hitAndRun_ge_param`, and is carried verbatim through every
    theorem here.  It is being attacked separately as `htrans` + `hloc`.
-2. **`n ≥ 1100`** — the threshold of `tvLe_hitAndRun_of_close_uncond`, an artifact of the
-   union bound in the spherical-cap estimate (`SphereCap.lean`), not of the statement, which
-   is true from `n = 5` on.  It appears in no *mixing* theorem of this file, because
-   `hLem41` is still a binder; only the §4 bridge lemma carries it.
+2. **`n ≥ 2`** — needed for the localization proof. The widened angular cap gives the
+   same overlap for every positive dimension. The mixing theorems that take `hIso` and
+   `hLem41` as arguments can still be stated for `n ≥ 1`.
 3. **`hLem41` itself, and why it is still a binder.**  Besides the binder's own hypotheses,
-   `tvLe_hitAndRun_of_close_uncond` needs `u ≠ v`, the two `hmove`s
+   `tvLe_hitAndRun_of_close_wideCap` needs `u ≠ v`, the two `hmove`s
    (`hitAndRunProposal K u Set.univ = 1`), and `ha`/`hb` (`chordLow K u v < 0`,
    `1 < chordHigh K u v`).  Two of these are cheap: the `max`-versus-`F(u)` mismatch is
    closed by §4 below, and `u = v` by `ArlibCommunity.Foundations.Convex.TVLe.refl` and `ArlibCommunity.Foundations.Convex.TVLe.mono`.
@@ -443,7 +442,7 @@ rounding `8000·491520 = 3932160000` up to `2³²`, it is `4·2⁶⁴·n²R²·l
    segment between that point of `K` and the interior point `v`, hence `u ∈ interior K` —
    contradiction.  So `chordLow K u v = 0` and `ha` fails, for every such pair, in every
    dimension, smooth boundary or not.  Since the `hLem41` binder quantifies over *all*
-   `u, v ∈ K`, no route through `tvLe_hitAndRun_of_close_uncond` can discharge it, and a
+   `u, v ∈ K`, no route through `tvLe_hitAndRun_of_close_wideCap` can discharge it, and a
    theorem carrying `∀ u ∈ K, ∀ v ∈ K, u ≠ v → chordLow K u v < 0` would be vacuous.  None
    is stated here.
 
@@ -651,7 +650,7 @@ quadratic in `1/c`.  At `c = 1/500` this is *shorter* than the original's
 `4·lvThreshold n 1 R M ε`, which is what makes the recovery below go through.
 
 `hLem41` is a binder, not a discharged fact — see the module docstring for exactly what
-blocks discharging it from `tvLe_hitAndRun_of_close_uncond`. -/
+blocks discharging it from `tvLe_hitAndRun_of_close_wideCap`. -/
 theorem tvLe_iterate_lazy_hitAndRun_unitBall_param {n : ℕ} (hn : 1 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
@@ -758,7 +757,7 @@ theorem tvLe_iterate_lazy_hitAndRun_unitBall_of_param_eq :
 
 /-! ## 4. Towards the `hLem41` binder: the proved Lemma 4.1 in the consumer's `max` shape
 
-`tvLe_hitAndRun_of_close_uncond` (`SphereCap.lean`) asks for
+`tvLe_hitAndRun_of_close_wideCap` (`HitAndRunOverlap.lean`) asks for
 `‖u − v‖ < 2/√n · F(u)` — the median step of the **first** point.  The `hLem41` binder asks
 for `dist u v < 2/√n · max(F(u), F(v))`.  The gap is closed by symmetry, at no cost: in the
 branch where the max is `F(v)`, apply the lemma with the roles exchanged and flip the
@@ -769,7 +768,7 @@ conclusion with `ArlibCommunity.Foundations.Convex.TVLe.symm`.  The chord hypoth
 
 /-- **Lemma 4.1 at `1 − 1/8000`, in the `max` shape the `hLem41` binder uses.**
 
-Every hypothesis of `tvLe_hitAndRun_of_close_uncond` is retained: `huv`, the two `hmove`s and
+Every hypothesis of `tvLe_hitAndRun_of_close_wideCap` is retained: `huv`, the two `hmove`s and
 the two chord conditions `ha`, `hb`.  Only the step-length hypothesis is relaxed, from
 `F(u)` to `max(F(u), F(v))`.
 
@@ -778,7 +777,7 @@ interior, `hmoveu`/`hmovev` hold by `ArlibCommunity.Foundations.MarkovChainTheor
 and `ha`/`hb` hold because the chord through `u` and `v` extends strictly beyond both.  What
 they exclude is boundary points, where `ha` is *always* false — which is exactly why this
 lemma does not close the `hLem41` binder; see the module docstring, `What remains`, item 3. -/
-theorem tvLe_hitAndRun_of_close_uncond_max {n : ℕ} (hn : 21 ≤ n)
+theorem tvLe_hitAndRun_of_close_uncond_max {n : ℕ} (hn : 2 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K) {u v : EuclideanSpace ℝ (Fin n)}
@@ -792,10 +791,10 @@ theorem tvLe_hitAndRun_of_close_uncond_max {n : ℕ} (hn : 21 ≤ n)
   rw [dist_eq_norm] at hF
   rcases max_cases (medianStep K u) (medianStep K v) with ⟨heq, _⟩ | ⟨heq, _⟩
   · rw [heq] at hF
-    exact tvLe_hitAndRun_of_close_uncond hn hKc hKcl hKm hKb hu hv huv hmoveu hmovev ha hb
+    exact tvLe_hitAndRun_of_close_wideCap (by omega) hKc hKcl hKm hKb hu hv huv hmoveu hmovev ha hb
       hdK hF
   · rw [heq, norm_sub_rev u v] at hF
-    refine (tvLe_hitAndRun_of_close_uncond hn hKc hKcl hKm hKb hv hu huv.symm hmovev hmoveu
+    refine (tvLe_hitAndRun_of_close_wideCap (by omega) hKc hKcl hKm hKb hv hu huv.symm hmovev hmoveu
       ?_ ?_ ?_ hF).symm
     · rw [chordLow_swap hKb huv hu]; linarith
     · rw [chordHigh_swap hKb huv hu]; linarith
@@ -804,7 +803,7 @@ theorem tvLe_hitAndRun_of_close_uncond_max {n : ℕ} (hn : 21 ≤ n)
 /-! ## 5. The instantiation at the proved overlap constant `1 − 1/8000` -/
 
 /-- **Theorem 1.1 for the lazy hit-and-run walk on a body with a unit inball, at the overlap
-constant `1 − 1/8000` that `tvLe_hitAndRun_of_close_uncond` proves.**
+constant `1 − 1/8000` that `tvLe_hitAndRun_of_close_wideCap` proves.**
 
     Φ  ≥  1/(3932160000·n·R)  ≥  1/(2³²·n·R),   deadline  4 · 2⁶⁴ · n²R² · log(8M/ε²).
 
@@ -888,8 +887,8 @@ section
 /-!
 # Lemma 4.1 discharged, and Theorem 4.2 with `hLem41` gone
 
-`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_uncond` (`SphereCap.lean`) proves Lovász–Vempala's
-Lemma 4.1 with no unproved hypothesis, at overlap constant `1 − 1/8000`, for `n ≥ 1100`.  It
+`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_wideCap` (`HitAndRunOverlap.lean`) proves Lovász–Vempala's
+Lemma 4.1 with no unproved hypothesis, at overlap constant `1 − 1/8000`, for `n ≥ 2`.  It
 was nevertheless unusable as a discharge of the `hLem41` binder of Theorem 4.2, because it
 carries three side conditions that the binder does not:
 
@@ -902,7 +901,7 @@ carries three side conditions that the binder does not:
 open segment between a point of `K` and an interior `K`, hence in `interior K`. So
 `chordLow K u v = 0` for every such pair, in every body, in every dimension — proved below as
 `ArlibCommunity.Foundations.MarkovChainTheory.chordLow_eq_zero_of_notMem_interior`.  As long as the `hLem41` binder is
-stated over all of `K`, no route through `tvLe_hitAndRun_of_close_uncond` can close it, and a
+stated over all of `K`, no route through `tvLe_hitAndRun_of_close_wideCap` can close it, and a
 theorem asserting `∀ u ∈ K, ∀ v ∈ K, u ≠ v → chordLow K u v < 0` would be vacuous.
 
 The resolution is that Theorem 4.2's proof never needed the binder over all of `K`: it cuts
@@ -925,7 +924,7 @@ side conditions are available:
 
 | name | content |
 |---|---|
-| `tvLe_hitAndRun_of_close_interior` | **Lemma 4.1 as the interior binder, proved**: `∀ u ∈ interior K, ∀ v ∈ interior K, …` at `1 − 1/8000`, `n ≥ 1100`, no unproved hypothesis |
+| `tvLe_hitAndRun_of_close_interior` | **Lemma 4.1 as the interior binder, proved**: `∀ u ∈ interior K, ∀ v ∈ interior K, …` at `1 − 1/8000`, `n ≥ 2`, no unproved hypothesis |
 | `globalConductance_hitAndRun_ge_uncond_overlap` | Theorem 4.2 with `hLem41` **gone**: `Φ ≥ (1/8000)/(245760·n·D)`, only the isoperimetry binder left |
 | `globalConductance_hitAndRun_ge_uncond_overlap_pow` | the same, rounded to `Φ ≥ 1/(2³¹·n·D)` |
 | `chordLow_eq_zero_of_notMem_interior` | the boundary obstruction, proved: `chordLow K u v = 0` for `u ∈ K \ interior K`, `v ∈ interior K` |
@@ -960,7 +959,7 @@ variable {n : ℕ}
 /-- **Lovász–Vempala's Lemma 4.1, in exactly the shape the (interior-ised) `hLem41` binder of
 Theorem 4.2 asks for, proved.**
 
-For `n ≥ 1100` and a convex, closed, measurable, bounded `K`: any two points of `interior K`
+For `n ≥ 2` and a convex, closed, measurable, bounded `K`: any two points of `interior K`
 at cross-ratio distance `< 1/8` whose separation is `< (2/√n)·max(F u, F v)` have one-step
 hit-and-run laws within total variation `1 − 1/8000`.
 
@@ -972,8 +971,8 @@ binder supplies is discharged here, and each of them is exactly what needs the i
 and is handled separately, by reflexivity.
 
 This is a *statement about all interior pairs*, not a binder: it has no hypothesis that the
-caller must supply beyond the geometry of `K` and `1100 ≤ n`. -/
-theorem tvLe_hitAndRun_of_close_interior (hn : 21 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+caller must supply beyond the geometry of `K` and `2 ≤ n`. -/
+theorem tvLe_hitAndRun_of_close_interior (hn : 2 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K) :
     ∀ u ∈ interior K, ∀ v ∈ interior K, crossRatioDist K u v < 1 / 8 →
@@ -1008,7 +1007,7 @@ Not routed through `ArlibCommunity.Foundations.MarkovChainTheory.globalConductan
 its `hLem41` over all of `K`, which is the form the boundary refutes
 (`chordLow_eq_zero_of_notMem_interior` below).  The conclusion is the one `_param` would give
 at `c = 1/8000`. -/
-theorem globalConductance_hitAndRun_ge_uncond_overlap (hn : 21 ≤ n)
+theorem globalConductance_hitAndRun_ge_uncond_overlap (hn : 2 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -1034,7 +1033,7 @@ theorem globalConductance_hitAndRun_ge_uncond_overlap (hn : 21 ≤ n)
 `8000 · 245760 = 1966080000 ≤ 2³¹ = 2147483648`.  Purely for legibility, in the style of
 `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge`'s `2²⁷`; the exact form
 `globalConductance_hitAndRun_ge_uncond_overlap` is strictly stronger. -/
-theorem globalConductance_hitAndRun_ge_uncond_overlap_pow (hn : 21 ≤ n)
+theorem globalConductance_hitAndRun_ge_uncond_overlap_pow (hn : 2 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -1069,7 +1068,7 @@ For `K` convex, closed and bounded, `u ∈ K \ interior K` and `v ∈ interior K
     chordLow K u v = 0,
 
 so the hypothesis `ha : chordLow K u v < 0` of
-`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_uncond` fails at every such pair.  This is why the
+`ArlibCommunity.Foundations.MarkovChainTheory.tvLe_hitAndRun_of_close_wideCap` fails at every such pair.  This is why the
 `∀ u ∈ K, ∀ v ∈ K` form of the `hLem41` binder cannot be discharged through that route, and
 why `tvLe_hitAndRun_of_close_interior` is stated on `interior K`.
 
@@ -1126,7 +1125,7 @@ section
     Φ(hit-and-run on K)  ≥  (1/8000) / (245760 · n · D)   ≥   1 / (2³¹ · n · D)
 
 for every convex, closed, measurable, bounded `K ⊆ ℝⁿ` containing a unit ball, with
-`diam K ≤ D` and `n ≥ 1100`.
+`diam K ≤ D` and `n ≥ 2`.
 
 **Every binder is gone.**  The statement of `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_uncond` below carries
 only hypotheses about `n` and about the geometry of `K` — no `hIso`, no `hLem41`, no `htrans`, no
@@ -1196,7 +1195,7 @@ variable {n : ℕ}
 
     Φ(hit-and-run on K)  ≥  (1/8000) / (245760 · n · D).
 
-For `n ≥ 1100` and a convex, closed, measurable, bounded body `K ⊆ ℝⁿ` containing a unit ball
+For `n ≥ 2` and a convex, closed, measurable, bounded body `K ⊆ ℝⁿ` containing a unit ball
 `closedBall z 1` and of diameter at most `D`, the conductance of the hit-and-run walk on `K` with
 respect to the uniform measure on `K` is at least `(1/8000)/(245760·n·D)`.
 
@@ -1213,7 +1212,7 @@ geometry of `K`; the four binders that Theorem 4.2 used to carry — `hIso` (the
 
 `volume K ≠ 0` and `volume K ≠ ⊤`, which `ArlibCommunity.Foundations.Convex.hIso_lowerSemicontinuous` asks for, are derived
 from `hball` and `hKb` rather than assumed. -/
-theorem globalConductance_hitAndRun_ge_uncond (hn : 21 ≤ n)
+theorem globalConductance_hitAndRun_ge_uncond (hn : 2 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -1238,7 +1237,7 @@ theorem globalConductance_hitAndRun_ge_uncond (hn : 21 ≤ n)
 `8000 · 245760 = 1966080000 ≤ 2³¹ = 2147483648`.  Purely for legibility; the exact form
 `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_uncond` is strictly stronger.  Like it, this statement has no
 mathematical hypothesis. -/
-theorem globalConductance_hitAndRun_ge_uncond_pow (hn : 21 ≤ n)
+theorem globalConductance_hitAndRun_ge_uncond_pow (hn : 2 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -1276,7 +1275,7 @@ Theorem 4.2 unconditional:
 
     Φ(hit-and-run on K)  ≥  (1/8000)/(245760·n·D)  ≥  1/(2³¹·n·D)
 
-for `n ≥ 1100` and a convex, closed, measurable, bounded `K ⊆ ℝⁿ` with a unit inball and
+for `n ≥ 2` and a convex, closed, measurable, bounded `K ⊆ ℝⁿ` with a unit inball and
 `diam K ≤ D`.  This file pushes that through the mixing theorem.
 
 `ArlibCommunity.Foundations.MarkovChainTheory.tvLe_iterate_lazy_hitAndRun_param` (`HitAndRunUncond.lean`) is Theorem
@@ -1313,7 +1312,7 @@ The **warm-start data** `M`, `S`, `hM`, `hS`, `hdom` stays.  It is Lovász–Vem
 own `(M, S)` clause — "the density `dσ/dπ_K` is bounded by `M` except on a set `S` with
 `σ(S) ≤ ε/2`" — not a lemma this repository failed to prove; a mixing theorem without *some*
 hypothesis on the start distribution is false (a point mass never mixes in a bounded number of
-steps under a fixed bound).  Beyond that only `0 < ε ≤ 1`, `1100 ≤ n` and the geometry of `K`
+steps under a fixed bound).  Beyond that only `0 < ε ≤ 1`, `2 ≤ n` and the geometry of `K`
 remain, exactly as in Theorem 4.2.
 
 `hM : 1 ≤ M` is not a restriction: `M = 1` with `S = ∅` is the stationary start, and the witness
@@ -1360,7 +1359,7 @@ theorem hrDeadlineUncond_eq {n : ℕ} {D M eps : ℝ} (hn : (n : ℝ) ≠ 0) (hD
 /-- **Theorem 1.1 of Lovász–Vempala for the lazy hit-and-run walk, with no conductance,
 isoperimetry or overlap hypothesis.**
 
-For `n ≥ 1100` and a convex, closed, measurable, bounded `K ⊆ ℝⁿ` containing a unit ball, of
+For `n ≥ 2` and a convex, closed, measurable, bounded `K ⊆ ℝⁿ` containing a unit ball, of
 diameter at most `D`, the lazy hit-and-run walk started at any `(M, S)`-warm `σ` is within `ε`
 in total variation of the uniform measure on `K` after
 
@@ -1377,7 +1376,7 @@ no mixing theorem can drop.  See the module docstring.
 `volume K ≠ 0` and `volume K ≠ ⊤`, which the parametric form asks for, are derived here from
 `hball` and `hKb` rather than assumed, exactly as in
 `ArlibCommunity.Foundations.MarkovChainTheory.globalConductance_hitAndRun_ge_uncond`. -/
-theorem tvLe_iterate_lazy_hitAndRun_uncond {n : ℕ} (hn : 21 ≤ n)
+theorem tvLe_iterate_lazy_hitAndRun_uncond {n : ℕ} (hn : 2 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
@@ -1429,7 +1428,7 @@ conductance denominator to a power of two costs the same factor `16` on both rou
 No hypothesis on `R` is needed: `0 ≤ R` follows from `hball` and `hout` (the body is
 nonempty), and `1 ≤ 2R` from `one_le_diam_of_unitBall` inside §2.  Like §2, this statement has
 no conductance, isoperimetry or overlap binder. -/
-theorem tvLe_iterate_lazy_hitAndRun_uncond_ball {n : ℕ} (hn : 21 ≤ n)
+theorem tvLe_iterate_lazy_hitAndRun_uncond_ball {n : ℕ} (hn : 2 ≤ n)
     {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     {z zout : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -1468,12 +1467,12 @@ smallest legal warm-start datum — and `ε = 1/2` keeps the conclusion a real b
 `TVLe` holds between any two probability measures for trivial reasons).
 
 The step count `2⁶⁴ · 150040000` is past the deadline because
-`hrDeadlineUncond 1100 2 1 (1/2) = 2⁶⁴ · 1100² · 2² · log 32` and `log 32 ≤ 31`. -/
+`hrDeadlineUncond 3 2 1 (1/2) = 2⁶⁴ · 3² · 2² · log 32` and `log 32 ≤ 31`. -/
 
 /-- **A concrete instance discharging every hypothesis of
 `tvLe_iterate_lazy_hitAndRun_uncond` simultaneously.**
 
-`K = closedBall 0 1 ⊆ ℝ¹¹⁰⁰`, `n = 1100`, `D = 2`, `σ = uniformOn volume K`, `M = 1`,
+`K = closedBall 0 1 ⊆ ℝ³`, `n = 3`, `D = 2`, `σ = uniformOn volume K`, `M = 1`,
 `S = ∅`, `ε = 1/2`, `m = 2⁶⁴·150040000`.
 
 The geometry is immediate (`convex_closedBall`, `Metric.isClosed_closedBall`,
@@ -1484,25 +1483,25 @@ The geometry is immediate (`convex_closedBall`, `Metric.isClosed_closedBall`,
 Without this the theorem above could be vacuous. -/
 theorem tvLe_iterate_lazy_hitAndRun_uncond_witness :
     ArlibCommunity.Foundations.Convex.TVLe
-      (iterate (lazy (hitAndRun (Metric.closedBall (0 : EuclideanSpace ℝ (Fin 1100)) 1)))
-        (uniformOn volume (Metric.closedBall (0 : EuclideanSpace ℝ (Fin 1100)) 1))
+      (iterate (lazy (hitAndRun (Metric.closedBall (0 : EuclideanSpace ℝ (Fin 3)) 1)))
+        (uniformOn volume (Metric.closedBall (0 : EuclideanSpace ℝ (Fin 3)) 1))
         (2 ^ 64 * 150040000))
-      (uniformOn volume (Metric.closedBall (0 : EuclideanSpace ℝ (Fin 1100)) 1))
+      (uniformOn volume (Metric.closedBall (0 : EuclideanSpace ℝ (Fin 3)) 1))
       (ENNReal.ofReal (1 / 2)) := by
-  set K : Set (EuclideanSpace ℝ (Fin 1100)) := Metric.closedBall 0 1 with hK
+  set K : Set (EuclideanSpace ℝ (Fin 3)) := Metric.closedBall 0 1 with hK
   have hK0 : volume K ≠ 0 := (Metric.measure_closedBall_pos volume 0 one_pos).ne'
   have hKtop : volume K ≠ ⊤ := measure_closedBall_lt_top.ne
   have : IsProbabilityMeasure (uniformOn volume K) :=
     ArlibCommunity.Foundations.Convex.isProbabilityMeasure_uniformOn volume hK0 hKtop
   have hD : Metric.diam K ≤ 2 := by
-    simpa using Metric.diam_closedBall (x := (0 : EuclideanSpace ℝ (Fin 1100)))
+    simpa using Metric.diam_closedBall (x := (0 : EuclideanSpace ℝ (Fin 3)))
       (zero_le_one' ℝ)
   have hlog : Real.log (8 * 1 / ((1 : ℝ) / 2) ^ 2) ≤ 31 := by
     have h32 : (8 : ℝ) * 1 / ((1 : ℝ) / 2) ^ 2 = 32 := by norm_num
     have := Real.log_le_sub_one_of_pos (x := (32 : ℝ)) (by norm_num)
     rw [h32]
     linarith
-  refine tvLe_iterate_lazy_hitAndRun_uncond (n := 1100) (by norm_num) (convex_closedBall 0 1)
+  refine tvLe_iterate_lazy_hitAndRun_uncond (n := 3) (by norm_num) (convex_closedBall 0 1)
     Metric.isClosed_closedBall measurableSet_closedBall Metric.isBounded_closedBall
     (z := 0) subset_rfl hD (M := 1) (eps := 1 / 2) le_rfl (by norm_num) (by norm_num)
     (S := ∅) MeasurableSet.empty (by simp)

@@ -9,7 +9,7 @@ import ArlibCommunity.Foundations.Meta.ModelClosure
 /-!
 # Hit-and-run mixes (Lovász–Vempala)
 
-On a convex body containing a unit ball and of diameter at most `D`, in dimension `n ≥ 21`, hit-and-run has conductance at least `1/(2³¹ n D)` (Lovász–Vempala, Theorem 4.2), and its lazy version mixes from a warm start within an explicit number of steps (Theorem 1.1).  The walk is any Markov kernel whose step at every point is `hitAndRunStep`; such a kernel exists (`exists_kernel`).
+On a convex body containing a unit ball and of diameter at most `D`, in dimension `n ≥ 2`, hit-and-run has conductance at least `1/(2³¹ n D)` (Lovász–Vempala, Theorem 4.2), and its lazy version mixes from a warm start within an explicit number of steps (Theorem 1.1).  The walk is any Markov kernel whose step at every point is `hitAndRunStep`; such a kernel exists (`exists_kernel`).
 
 The statements below mention only definitions from this theorem's `Model/` directory and the
 area preludes; `#foundationsModelClosure` checks this.  Proofs are in `Analysis/`.
@@ -29,7 +29,7 @@ theorem exists_kernel {n : ℕ} {K : Set (EuclideanSpace ℝ (Fin n))} (hKm : Me
   ⟨hitAndRun K, fun x => by rw [hitAndRun_eq hKm]; rfl⟩
 
 /-- **Lovász–Vempala Theorem 4.2**: the conductance of hit-and-run. -/
-theorem globalConductance_ge {n : ℕ} (hn : 21 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem globalConductance_ge {n : ℕ} (hn : 2 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)
@@ -44,7 +44,7 @@ theorem globalConductance_ge {n : ℕ} (hn : 21 ≤ n) {K : Set (EuclideanSpace 
 /-- **Lovász–Vempala Theorem 1.1**: the lazy hit-and-run walk, started from a law that is
 `M`-warm outside an exceptional set of mass at most `ε/2`, is within total variation `ε` of
 uniform after `hrDeadlineUncond n D M ε` steps. -/
-theorem lazy_mixes {n : ℕ} (hn : 21 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
+theorem lazy_mixes {n : ℕ} (hn : 2 ≤ n) {K : Set (EuclideanSpace ℝ (Fin n))}
     (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
     (hKb : Bornology.IsBounded K)
     {z : EuclideanSpace ℝ (Fin n)} (hball : Metric.closedBall z 1 ⊆ K)

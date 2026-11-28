@@ -99,7 +99,7 @@ theorem walkParams_caps {D M ε : ℝ} (hD : 0 < D) (hM : 1 ≤ M) (hε0 : 0 < �
     exact hr
 
 /-- **Accuracy of the sampler.** -/
-theorem hitAndRun_correct_proof (hn : 21 ≤ n) (p : Problem n) (oracle : MembershipOracle p)
+theorem hitAndRun_correct_proof (hn : 2 ≤ n) (p : Problem n) (oracle : MembershipOracle p)
     {σ : Measure (State n)} [IsProbabilityMeasure σ]
     {M ε : ℝ} (hM : 1 ≤ M) (hε0 : 0 < ε) (hε1 : ε ≤ 1)
     {S : Set (State n)} (hWarm : WarmStart p.body σ M (ε / 2) S)

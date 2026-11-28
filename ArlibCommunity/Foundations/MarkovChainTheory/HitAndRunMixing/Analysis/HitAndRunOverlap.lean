@@ -175,13 +175,13 @@ can prove a cap bound gets whatever constant that bound supports.
 dimension-free instance `q₂ = 1/2`, concluding `1 − 1/2880`.  With `q = 1/8 + 1/2 + 1/2 =
 9/8 > 1` the budget is exhausted and `1 − c(1 − q) > 1`: the conclusion `1 − 1/2880` is no
 longer derivable, and keeping the corollary would have meant keeping a statement whose
-hypotheses cannot deliver it.  **The figure `1 − 1/2880` is lost**, and with it every
-dimension-free constant this file can currently offer: there is no dimension-free `q₂ < 3/8`,
+hypotheses cannot deliver it.  **The figure `1 − 1/2880` is lost**, and the original angular cutoff cannot give
+a dimension-free constant: there is no dimension-free `q₂ < 3/8`,
 since `q₂(2) = 1/2` and `q₂(3) = 0.4226…`.  What replaces it is
 `tvLe_hitAndRun_of_close_of_le_three_eighths`, still parametric in `q₂` but rounded to
-`1 − (3/8 − q₂)/120`, and `tvLe_hitAndRun_of_close_unconditional`, the only statement here
-with **no** unproved hypothesis at all — which, as the table shows, is non-trivial only at
-`n = 1`.
+`1 − (3/8 − q₂)/120`, and `tvLe_hitAndRun_of_close_unconditional`, which is informative only at `n = 1`.
+The widened angular cutoff in `tvLe_hitAndRun_of_close_wideCap` gives overlap at least
+`1/8000` in every positive dimension.
 -/
 
 open MeasureTheory ProbabilityTheory Metric
@@ -199,17 +199,13 @@ variable {n : ℕ}
 
 /-! ## The Euclidean estimate (10) -/
 
-/-- **The paper's (10).**  If the step `x − u` is long compared with `u − v` (the paper's
-(7), here `√n·|u − v| ≤ 2|x − u|`) and is almost orthogonal to `u − v` (the paper's (8),
-here `√n·|⟨x − u, u − v⟩| ≤ |x − u|·|u − v|`), then `|x − v| ≤ (1 + 4/n)|x − u|`.
-
-The two hypotheses give `|u − v|² ≤ (4/n)|x − u|²` and `2⟨x − u, u − v⟩ ≤ (4/n)|x − u|²`,
-whence `|x − v|² ≤ (1 + 8/n)|x − u|² ≤ (1 + 4/n)²|x − u|²`. -/
-theorem norm_sub_le_of_almost_orthogonal (hn : n ≠ 0)
+/-- With angular cutoff `c / √n`, the distance ratio is at most `1 + (2 + 2*c)/n`. -/
+theorem norm_sub_le_of_angle_cutoff (hn : n ≠ 0)
     (u v x : EuclideanSpace ℝ (Fin n))
+    {c : ℝ} (hc : 0 ≤ c)
     (h7 : Real.sqrt n * ‖u - v‖ ≤ 2 * ‖x - u‖)
-    (h8 : Real.sqrt n * |⟪x - u, u - v⟫| ≤ ‖x - u‖ * ‖u - v‖) :
-    ‖x - v‖ ≤ (1 + 4 / (n : ℝ)) * ‖x - u‖ := by
+    (h8 : Real.sqrt n * |⟪x - u, u - v⟫| ≤ c * (‖x - u‖ * ‖u - v‖)) :
+    ‖x - v‖ ≤ (1 + (2 + 2 * c) / (n : ℝ)) * ‖x - u‖ := by
   have hnR : (0 : ℝ) < (n : ℝ) := by positivity
   have hs : Real.sqrt n * Real.sqrt n = (n : ℝ) := Real.mul_self_sqrt hnR.le
   have hspos : 0 < Real.sqrt n := Real.sqrt_pos.2 hnR
@@ -220,17 +216,17 @@ theorem norm_sub_le_of_almost_orthogonal (hn : n ≠ 0)
   have hsq : ‖x - v‖ ^ 2
       = ‖x - u‖ ^ 2 + 2 * ⟪x - u, u - v⟫ + ‖u - v‖ ^ 2 := by
     rw [hdecomp, norm_add_sq_real]
-  -- `2⟨x−u,u−v⟩ ≤ (4/n)|x−u|²`
+  -- The cross term costs `4*c/n`.
   have hinner : ⟪x - u, u - v⟫ ≤ |⟪x - u, u - v⟫| := le_abs_self _
   have habs : Real.sqrt n * (Real.sqrt n * |⟪x - u, u - v⟫|)
-      ≤ 2 * ‖x - u‖ * ‖x - u‖ := by
+      ≤ (2 * c) * ‖x - u‖ * ‖x - u‖ := by
     calc Real.sqrt n * (Real.sqrt n * |⟪x - u, u - v⟫|)
-        ≤ Real.sqrt n * (‖x - u‖ * ‖u - v‖) := by
+        ≤ Real.sqrt n * (c * (‖x - u‖ * ‖u - v‖)) := by
           exact mul_le_mul_of_nonneg_left h8 hspos.le
-      _ = ‖x - u‖ * (Real.sqrt n * ‖u - v‖) := by ring
-      _ ≤ ‖x - u‖ * (2 * ‖x - u‖) := mul_le_mul_of_nonneg_left h7 hxu
-      _ = 2 * ‖x - u‖ * ‖x - u‖ := by ring
-  have hcross : (n : ℝ) * |⟪x - u, u - v⟫| ≤ 2 * ‖x - u‖ * ‖x - u‖ := by
+      _ = (c * ‖x - u‖) * (Real.sqrt n * ‖u - v‖) := by ring
+      _ ≤ (c * ‖x - u‖) * (2 * ‖x - u‖) := mul_le_mul_of_nonneg_left h7 (mul_nonneg hc hxu)
+      _ = (2 * c) * ‖x - u‖ * ‖x - u‖ := by ring
+  have hcross : (n : ℝ) * |⟪x - u, u - v⟫| ≤ (2 * c) * ‖x - u‖ * ‖x - u‖ := by
     calc (n : ℝ) * |⟪x - u, u - v⟫|
         = Real.sqrt n * (Real.sqrt n * |⟪x - u, u - v⟫|) := by rw [← mul_assoc, hs]
       _ ≤ _ := habs
@@ -246,21 +242,38 @@ theorem norm_sub_le_of_almost_orthogonal (hn : n ≠ 0)
     have hexp2 : (2 * ‖x - u‖) * (2 * ‖x - u‖) = 4 * ‖x - u‖ ^ 2 := by ring
     linarith [hkey, hexp, hexp2]
   -- put the pieces together
-  have hkey : ‖x - v‖ ^ 2 ≤ ((1 + 4 / (n : ℝ)) * ‖x - u‖) ^ 2 := by
-    set d : ℝ := 4 / (n : ℝ) with hd
+  have hkey : ‖x - v‖ ^ 2 ≤ ((1 + (2 + 2 * c) / (n : ℝ)) * ‖x - u‖) ^ 2 := by
+    set d : ℝ := (2 + 2 * c) / (n : ℝ) with hd
     set X : ℝ := ‖x - u‖ ^ 2 with hX
-    have h1 : 2 * ⟪x - u, u - v⟫ ≤ d * X := by
-      rw [hd, hX, div_mul_eq_mul_div, le_div_iff₀ hnR]
+    have h1 : 2 * ⟪x - u, u - v⟫ ≤ (4 * c) / (n : ℝ) * X := by
+      rw [hX, div_mul_eq_mul_div, le_div_iff₀ hnR]
       nlinarith [hcross, mul_le_mul_of_nonneg_left hinner hnR.le]
-    have h2 : ‖u - v‖ ^ 2 ≤ d * X := by
-      rw [hd, hX, div_mul_eq_mul_div, le_div_iff₀ hnR]
+    have h2 : ‖u - v‖ ^ 2 ≤ 4 / (n : ℝ) * X := by
+      rw [hX, div_mul_eq_mul_div, le_div_iff₀ hnR]
       nlinarith [hnormsq]
     have hexp : ((1 + d) * ‖x - u‖) ^ 2 = X + 2 * (d * X) + d ^ 2 * X := by
       simp only [hX]; ring
     have hpos : 0 ≤ d ^ 2 * X := by rw [hX]; positivity
+    have hadd : (4 * c) / (n : ℝ) * X + 4 / (n : ℝ) * X = 2 * (d * X) := by
+      rw [hd]
+      ring
     rw [hsq, hexp]
     linarith
-  nlinarith [hkey, hxv, mul_nonneg (by positivity : (0:ℝ) ≤ 1 + 4 / (n : ℝ)) hxu]
+  nlinarith [hkey, hxv, mul_nonneg (by positivity : (0:ℝ) ≤ 1 + (2 + 2 * c) / (n : ℝ)) hxu]
+
+/-- **The paper's (10).**  If the step `x − u` is long compared with `u − v` (the paper's
+(7), here `√n·|u − v| ≤ 2|x − u|`) and is almost orthogonal to `u − v` (the paper's (8),
+here `√n·|⟨x − u, u − v⟩| ≤ |x − u|·|u − v|`), then `|x − v| ≤ (1 + 4/n)|x − u|`.
+
+The two hypotheses give `|u − v|² ≤ (4/n)|x − u|²` and `2⟨x − u, u − v⟩ ≤ (4/n)|x − u|²`,
+whence `|x − v|² ≤ (1 + 8/n)|x − u|² ≤ (1 + 4/n)²|x − u|²`. -/
+theorem norm_sub_le_of_almost_orthogonal (hn : n ≠ 0)
+    (u v x : EuclideanSpace ℝ (Fin n))
+    (h7 : Real.sqrt n * ‖u - v‖ ≤ 2 * ‖x - u‖)
+    (h8 : Real.sqrt n * |⟪x - u, u - v⟫| ≤ ‖x - u‖ * ‖u - v‖) :
+    ‖x - v‖ ≤ (1 + 4 / (n : ℝ)) * ‖x - u‖ := by
+  simpa only [one_mul, mul_one, show (2 : ℝ) + 2 = 4 by norm_num] using
+    norm_sub_le_of_angle_cutoff hn u v x (c := 1) (by norm_num) h7 (by simpa using h8)
 
 /-! ## `(1 + 4/n)ⁿ ≤ e⁴` -/
 
@@ -545,6 +558,124 @@ theorem tvLe_hitAndRun_of_overlap [NeZero n] {K : Set (EuclideanSpace ℝ (Fin n
 
 /-! ## Lemma 4.1 -/
 
+/-- One-step overlap with angular cutoff `c / √n` and cap mass at most `q₂`. -/
+theorem tvLe_hitAndRun_of_close_with_cutoff (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin n))}
+    (hKc : Convex ℝ K) (hKcl : IsClosed K) (hKm : MeasurableSet K)
+    (hKb : Bornology.IsBounded K) {u v : EuclideanSpace ℝ (Fin n)}
+    (hu : u ∈ K) (hv : v ∈ K) (huv : u ≠ v)
+    (hmoveu : hitAndRunProposal K u Set.univ = 1)
+    (hmovev : hitAndRunProposal K v Set.univ = 1)
+    (ha : chordLow K u v < 0) (hb : 1 < chordHigh K u v)
+    (hdK : crossRatioDist K u v < 1 / 8)
+    (hFu : ‖u - v‖ < 2 / Real.sqrt n * medianStep K u)
+    {c : ℝ} (hc : 0 ≤ c) {q₂ : ℝ} (hq₂0 : 0 ≤ q₂)
+    (hcap : hitAndRun K u
+        {x : EuclideanSpace ℝ (Fin n) |
+          c * (‖x - u‖ * ‖u - v‖) < Real.sqrt n * |⟪x - u, u - v⟫|}
+      ≤ ENNReal.ofReal q₂) :
+    TVLe (hitAndRun K u) (hitAndRun K v)
+      (ENNReal.ofReal
+        (1 - 1 / (2 * (1 + (2 + 2 * c) / (n : ℝ)) ^ n) * (1 - (1 / 8 + q₂ + 1 / 2)))) := by
+  have : NeZero n := ⟨hn⟩
+  have hnR : (0 : ℝ) < (n : ℝ) := by positivity
+  have hspos : 0 < Real.sqrt n := Real.sqrt_pos.2 hnR
+  set N : ℝ := 1 + (2 + 2 * c) / (n : ℝ) with hN
+  have hNpos : 0 < N := by rw [hN]; positivity
+  have hcpos : (0 : ℝ) < 2 * N ^ n := by positivity
+  -- the three bad pieces; `A₃` is the *two-sided* chord condition
+  set A₁ : Set (EuclideanSpace ℝ (Fin n)) := Metric.ball u (medianStep K u) with hA₁
+  set A₂ : Set (EuclideanSpace ℝ (Fin n)) :=
+    {x | c * (‖x - u‖ * ‖u - v‖) < Real.sqrt n * |⟪x - u, u - v⟫|} with hA₂
+  set A₃ : Set (EuclideanSpace ℝ (Fin n)) :=
+    {x : EuclideanSpace ℝ (Fin n) | chordLow K u x < -3}
+      ∪ {x : EuclideanSpace ℝ (Fin n) | 3 < chordHigh K u x} with hA₃def
+  set Bad : Set (EuclideanSpace ℝ (Fin n)) := A₁ ∪ A₂ ∪ A₃ with hBad
+  have hA₁m : MeasurableSet A₁ := measurableSet_ball
+  have hA₂m : MeasurableSet A₂ := by
+    have h1 : Continuous fun x : EuclideanSpace ℝ (Fin n) => c * (‖x - u‖ * ‖u - v‖) := by fun_prop
+    have h2 : Continuous fun x : EuclideanSpace ℝ (Fin n) =>
+        Real.sqrt n * |⟪x - u, u - v⟫| := by
+      exact continuous_const.mul ((continuous_id.sub continuous_const).inner
+        continuous_const).abs
+    exact measurableSet_lt h1.measurable h2.measurable
+  have hA₃m : MeasurableSet A₃ :=
+    (measurableSet_chordLow_lt hKm hKc hKb hu).union
+      (measurableSet_chordHigh_gt hKm hKc hKb hu)
+  have hBadm : MeasurableSet Bad := (hA₁m.union hA₂m).union hA₃m
+  -- the mass of `Bad`: `1/8 + q₂ + 1/2`
+  have hA3 : hitAndRun K u A₃ ≤ ENNReal.ofReal (1 / 2) :=
+    hitAndRun_chord_bad_le hKm hKc hKb hu
+  have hq : hitAndRun K u Bad ≤ ENNReal.ofReal (1 / 8 + q₂ + 1 / 2) := by
+    refine (measure_union_le _ _).trans ?_
+    refine ((add_le_add ((measure_union_le _ _).trans
+      (add_le_add (hitAndRun_ball_medianStep_le K u) hcap)) hA3)).trans ?_
+    rw [ENNReal.ofReal_add (by linarith : (0:ℝ) ≤ 1/8 + q₂) (by norm_num : (0:ℝ) ≤ 1/2),
+      ENNReal.ofReal_add (by norm_num : (0:ℝ) ≤ 1/8) hq₂0]
+    have : (1 : ℝ≥0∞) / 8 = ENNReal.ofReal (1 / 8) := by
+      rw [ENNReal.ofReal_div_of_pos (by norm_num), ENNReal.ofReal_one, ENNReal.ofReal_ofNat]
+    rw [this]
+  -- the density comparison off `Bad`
+  have hdens : ∀ x ∈ K, x ∉ Bad →
+      ENNReal.ofReal (1 / (2 * N ^ n)) * hitAndRunDensity K u x
+        ≤ hitAndRunDensity K v x := by
+    intro x hxK hxBad
+    have h1 : x ∉ A₁ := fun h => hxBad (Or.inl (Or.inl h))
+    have h2 : x ∉ A₂ := fun h => hxBad (Or.inl (Or.inr h))
+    have h3 : x ∉ A₃ := fun h => hxBad (Or.inr h)
+    have hFle : medianStep K u ≤ ‖x - u‖ := by
+      by_contra hcon
+      refine h1 ?_
+      rw [hA₁, Metric.mem_ball, dist_eq_norm]
+      exact lt_of_not_ge hcon
+    have h8 : Real.sqrt n * |⟪x - u, u - v⟫| ≤ c * (‖x - u‖ * ‖u - v‖) := by
+      rw [hA₂, Set.mem_ofPred_eq, not_lt] at h2
+      exact h2
+    -- the two chord conditions, from `x ∉ A₃`
+    obtain ⟨hlow, hhigh⟩ : (-3 : ℝ) ≤ chordLow K u x ∧ chordHigh K u x ≤ 3 := by
+      rw [hA₃def, Set.mem_union, not_or, Set.mem_ofPred_eq, Set.mem_ofPred_eq,
+        not_lt, not_lt] at h3
+      exact h3
+    -- the paper's (7)
+    have h7 : Real.sqrt n * ‖u - v‖ ≤ 2 * ‖x - u‖ := by
+      have : ‖u - v‖ < 2 / Real.sqrt n * ‖x - u‖ :=
+        lt_of_lt_of_le hFu (by
+          apply mul_le_mul_of_nonneg_left hFle
+          positivity)
+      have hmul := (mul_lt_mul_of_pos_left this hspos)
+      rw [show Real.sqrt n * (2 / Real.sqrt n * ‖x - u‖) = 2 * ‖x - u‖ by
+        field_simp] at hmul
+      exact hmul.le
+    have hFpos : 0 < medianStep K u := by
+      rcases le_or_gt (medianStep K u) 0 with hle | hgt
+      · exfalso
+        have h2s : (0 : ℝ) < 2 / Real.sqrt n := by positivity
+        have hnp : 2 / Real.sqrt n * medianStep K u ≤ 0 := by nlinarith [h2s, hle]
+        have := norm_nonneg (u - v)
+        linarith [hFu]
+      · exact hgt
+    have hxu : x ≠ u := by
+      intro h
+      rw [h] at hFle
+      simp only [sub_self, norm_zero] at hFle
+      linarith
+    have hnorm : ‖x - v‖ ≤ N * ‖x - u‖ :=
+      norm_sub_le_of_angle_cutoff hn u v x hc h7 h8
+    -- the chord comparison, proved rather than assumed
+    have hch := chordLength_mul_norm_le hKc hKcl hKb hu hv hxK huv ha hb hdK hlow hhigh
+    have := hitAndRunDensity_ge_of_chordLength_le_two (K := K) hn hxu hNpos hnorm hch
+    rwa [show ENNReal.ofReal (1 / (2 * N ^ n)) = (ENNReal.ofReal (2 * N ^ n))⁻¹ by
+      rw [one_div, ENNReal.ofReal_inv_of_pos hcpos]]
+  refine tvLe_hitAndRun_of_overlap hKm hmoveu hmovev hBadm ?_ ?_ ?_ hq hdens
+  · positivity
+  · have hone : (1 : ℝ) ≤ N ^ n := by
+      refine one_le_pow₀ ?_
+      rw [hN]
+      have : (0 : ℝ) ≤ (2 + 2 * c) / (n : ℝ) := by positivity
+      linarith
+    rw [div_le_one hcpos]
+    linarith
+  · linarith
+
 /-- **Lemma 4.1 of Lovász–Vempala = Lemma 8 of Lovász (1999).**
 
 If `d_K(u,v) < 1/8` and `|u − v| < (2/√n)·F(u)`, then `d_TV(P_u, P_v)` is bounded away
@@ -601,105 +732,9 @@ theorem tvLe_hitAndRun_of_close (hn : n ≠ 0) {K : Set (EuclideanSpace ℝ (Fin
     TVLe (hitAndRun K u) (hitAndRun K v)
       (ENNReal.ofReal
         (1 - 1 / (2 * (1 + 4 / (n : ℝ)) ^ n) * (1 - (1 / 8 + q₂ + 1 / 2)))) := by
-  have : NeZero n := ⟨hn⟩
-  have hnR : (0 : ℝ) < (n : ℝ) := by positivity
-  have hspos : 0 < Real.sqrt n := Real.sqrt_pos.2 hnR
-  set N : ℝ := 1 + 4 / (n : ℝ) with hN
-  have hNpos : 0 < N := by rw [hN]; positivity
-  have hcpos : (0 : ℝ) < 2 * N ^ n := by positivity
-  -- the three bad pieces; `A₃` is the *two-sided* chord condition
-  set A₁ : Set (EuclideanSpace ℝ (Fin n)) := Metric.ball u (medianStep K u) with hA₁
-  set A₂ : Set (EuclideanSpace ℝ (Fin n)) :=
-    {x | ‖x - u‖ * ‖u - v‖ < Real.sqrt n * |⟪x - u, u - v⟫|} with hA₂
-  set A₃ : Set (EuclideanSpace ℝ (Fin n)) :=
-    {x : EuclideanSpace ℝ (Fin n) | chordLow K u x < -3}
-      ∪ {x : EuclideanSpace ℝ (Fin n) | 3 < chordHigh K u x} with hA₃def
-  set Bad : Set (EuclideanSpace ℝ (Fin n)) := A₁ ∪ A₂ ∪ A₃ with hBad
-  have hA₁m : MeasurableSet A₁ := measurableSet_ball
-  have hA₂m : MeasurableSet A₂ := by
-    have h1 : Continuous fun x : EuclideanSpace ℝ (Fin n) => ‖x - u‖ * ‖u - v‖ := by fun_prop
-    have h2 : Continuous fun x : EuclideanSpace ℝ (Fin n) =>
-        Real.sqrt n * |⟪x - u, u - v⟫| := by
-      exact continuous_const.mul ((continuous_id.sub continuous_const).inner
-        continuous_const).abs
-    exact measurableSet_lt h1.measurable h2.measurable
-  have hA₃m : MeasurableSet A₃ :=
-    (measurableSet_chordLow_lt hKm hKc hKb hu).union
-      (measurableSet_chordHigh_gt hKm hKc hKb hu)
-  have hBadm : MeasurableSet Bad := (hA₁m.union hA₂m).union hA₃m
-  -- the mass of `Bad`: `1/8 + q₂ + 1/2`
-  have hA3 : hitAndRun K u A₃ ≤ ENNReal.ofReal (1 / 2) :=
-    hitAndRun_chord_bad_le hKm hKc hKb hu
-  have hq : hitAndRun K u Bad ≤ ENNReal.ofReal (1 / 8 + q₂ + 1 / 2) := by
-    refine (measure_union_le _ _).trans ?_
-    refine ((add_le_add ((measure_union_le _ _).trans
-      (add_le_add (hitAndRun_ball_medianStep_le K u) hcap)) hA3)).trans ?_
-    rw [ENNReal.ofReal_add (by linarith : (0:ℝ) ≤ 1/8 + q₂) (by norm_num : (0:ℝ) ≤ 1/2),
-      ENNReal.ofReal_add (by norm_num : (0:ℝ) ≤ 1/8) hq₂0]
-    have : (1 : ℝ≥0∞) / 8 = ENNReal.ofReal (1 / 8) := by
-      rw [ENNReal.ofReal_div_of_pos (by norm_num), ENNReal.ofReal_one, ENNReal.ofReal_ofNat]
-    rw [this]
-  -- the density comparison off `Bad`
-  have hdens : ∀ x ∈ K, x ∉ Bad →
-      ENNReal.ofReal (1 / (2 * N ^ n)) * hitAndRunDensity K u x
-        ≤ hitAndRunDensity K v x := by
-    intro x hxK hxBad
-    have h1 : x ∉ A₁ := fun h => hxBad (Or.inl (Or.inl h))
-    have h2 : x ∉ A₂ := fun h => hxBad (Or.inl (Or.inr h))
-    have h3 : x ∉ A₃ := fun h => hxBad (Or.inr h)
-    have hFle : medianStep K u ≤ ‖x - u‖ := by
-      by_contra hcon
-      refine h1 ?_
-      rw [hA₁, Metric.mem_ball, dist_eq_norm]
-      exact lt_of_not_ge hcon
-    have h8 : Real.sqrt n * |⟪x - u, u - v⟫| ≤ ‖x - u‖ * ‖u - v‖ := by
-      rw [hA₂, Set.mem_ofPred_eq, not_lt] at h2
-      exact h2
-    -- the two chord conditions, from `x ∉ A₃`
-    obtain ⟨hlow, hhigh⟩ : (-3 : ℝ) ≤ chordLow K u x ∧ chordHigh K u x ≤ 3 := by
-      rw [hA₃def, Set.mem_union, not_or, Set.mem_ofPred_eq, Set.mem_ofPred_eq,
-        not_lt, not_lt] at h3
-      exact h3
-    -- the paper's (7)
-    have h7 : Real.sqrt n * ‖u - v‖ ≤ 2 * ‖x - u‖ := by
-      have : ‖u - v‖ < 2 / Real.sqrt n * ‖x - u‖ :=
-        lt_of_lt_of_le hFu (by
-          apply mul_le_mul_of_nonneg_left hFle
-          positivity)
-      have hmul := (mul_lt_mul_of_pos_left this hspos)
-      rw [show Real.sqrt n * (2 / Real.sqrt n * ‖x - u‖) = 2 * ‖x - u‖ by
-        field_simp] at hmul
-      exact hmul.le
-    have hFpos : 0 < medianStep K u := by
-      rcases le_or_gt (medianStep K u) 0 with hle | hgt
-      · exfalso
-        have h2s : (0 : ℝ) < 2 / Real.sqrt n := by positivity
-        have hnp : 2 / Real.sqrt n * medianStep K u ≤ 0 := by nlinarith [h2s, hle]
-        have := norm_nonneg (u - v)
-        linarith [hFu]
-      · exact hgt
-    have hxu : x ≠ u := by
-      intro h
-      rw [h] at hFle
-      simp only [sub_self, norm_zero] at hFle
-      linarith
-    have hnorm : ‖x - v‖ ≤ N * ‖x - u‖ :=
-      norm_sub_le_of_almost_orthogonal hn u v x h7 h8
-    -- the chord comparison, proved rather than assumed
-    have hch := chordLength_mul_norm_le hKc hKcl hKb hu hv hxK huv ha hb hdK hlow hhigh
-    have := hitAndRunDensity_ge_of_chordLength_le_two (K := K) hn hxu hNpos hnorm hch
-    rwa [show ENNReal.ofReal (1 / (2 * N ^ n)) = (ENNReal.ofReal (2 * N ^ n))⁻¹ by
-      rw [one_div, ENNReal.ofReal_inv_of_pos hcpos]]
-  refine tvLe_hitAndRun_of_overlap hKm hmoveu hmovev hBadm ?_ ?_ ?_ hq hdens
-  · positivity
-  · have hone : (1 : ℝ) ≤ N ^ n := by
-      refine one_le_pow₀ ?_
-      rw [hN]
-      have : (0 : ℝ) ≤ 4 / (n : ℝ) := by positivity
-      linarith
-    rw [div_le_one hcpos]
-    linarith
-  · linarith
+  simpa only [mul_one, show (2 : ℝ) + 2 = 4 by norm_num] using
+    tvLe_hitAndRun_of_close_with_cutoff hn hKc hKcl hKm hKb hu hv huv hmoveu hmovev
+    ha hb hdK hFu (c := 1) (by norm_num) hq₂0 (by simpa using hcap)
 
 /-- **Lemma 4.1 at the paper's rounding `2(1 + 4/n)ⁿ ≤ 120`.**
 
@@ -739,7 +774,44 @@ theorem tvLe_hitAndRun_of_close_of_le_three_eighths (hn : n ≠ 0)
   have h := one_div_le_inv_two_mul_pow n
   nlinarith [mul_nonneg (sub_nonneg.2 h) (by linarith : (0:ℝ) ≤ 3 / 8 - q₂)]
 
-/-- **Lemma 4.1 with no unproved hypothesis whatsoever.**
+/-- Nearby interior points have overlap at least `1/8000` in every positive dimension.
+The wider angular cutoff reduces the excluded mass to `1/4`. The density factor loses at
+most `2 * exp 6 < 1000`, so the remaining `1/8` of the mass still pays for the same overlap. -/
+theorem tvLe_hitAndRun_of_close_wideCap (hn : n ≠ 0)
+    {K : Set (EuclideanSpace ℝ (Fin n))} (hKc : Convex ℝ K) (hKcl : IsClosed K)
+    (hKm : MeasurableSet K) (hKb : Bornology.IsBounded K)
+    {u v : EuclideanSpace ℝ (Fin n)} (hu : u ∈ K) (hv : v ∈ K) (huv : u ≠ v)
+    (hmoveu : hitAndRunProposal K u Set.univ = 1)
+    (hmovev : hitAndRunProposal K v Set.univ = 1)
+    (ha : chordLow K u v < 0) (hb : 1 < chordHigh K u v)
+    (hdK : crossRatioDist K u v < 1 / 8)
+    (hFu : ‖u - v‖ < 2 / Real.sqrt n * medianStep K u) :
+    TVLe (hitAndRun K u) (hitAndRun K v) (ENNReal.ofReal (1 - 1 / 8000)) := by
+  have h := tvLe_hitAndRun_of_close_with_cutoff hn hKc hKcl hKm hKb hu hv huv hmoveu hmovev
+    ha hb hdK hFu (c := 2) (by norm_num) (q₂ := 1 / 4) (by norm_num)
+    (hitAndRun_wideCap_le_quarter hn hKm u v)
+  refine h.mono (ENNReal.ofReal_le_ofReal ?_)
+  have hnR : (0 : ℝ) < n := by positivity
+  have hpow : (1 + 6 / (n : ℝ)) ^ n ≤ Real.exp 6 := by
+    calc (1 + 6 / (n : ℝ)) ^ n ≤ Real.exp (6 / (n : ℝ)) ^ n :=
+           pow_le_pow_left₀ (by positivity : 0 ≤ 1 + 6 / (n : ℝ))
+             (by simpa only [add_comm] using Real.add_one_le_exp (6 / (n : ℝ))) n
+      _ = Real.exp ((n : ℝ) * (6 / (n : ℝ))) := (Real.exp_nat_mul _ _).symm
+      _ = Real.exp 6 := by rw [mul_div_cancel₀ _ hnR.ne']
+  have hExp : Real.exp 6 ≤ (2.72 : ℝ) ^ 6 := by
+    rw [show (6 : ℝ) = (6 : ℕ) * (1 : ℝ) by norm_num, Real.exp_nat_mul]
+    exact pow_le_pow_left₀ (Real.exp_pos _).le (by linarith [Real.exp_one_lt_d9]) _
+  have hden : (2 : ℝ) * (1 + 6 / (n : ℝ)) ^ n ≤ 1000 := by
+    have h' := hpow.trans hExp
+    norm_num at h' ⊢
+    linarith
+  have hinv : (1 : ℝ) / 1000 ≤ 1 / (2 * (1 + 6 / (n : ℝ)) ^ n) :=
+    one_div_le_one_div_of_le (by positivity) hden
+  rw [show (2 : ℝ) + 2 * 2 = 6 by norm_num,
+    show (1 : ℝ) - (1 / 8 + 1 / 4 + 1 / 2) = 1 / 8 by norm_num]
+  linarith [mul_le_mul_of_nonneg_right hinv (by norm_num : (0 : ℝ) ≤ 1 / 8)]
+
+/-- **Lemma 4.1 for the original angular cutoff (informative only at `n = 1`).**
 
 `ArlibCommunity.Foundations.MarkovChainTheory.hitAndRun_almostOrthogonal_le_one_sub_inv` discharges `hcap` at
 `q₂ = 1 − 1/n`, so this corollary carries only geometric side conditions.  It is the *entire*

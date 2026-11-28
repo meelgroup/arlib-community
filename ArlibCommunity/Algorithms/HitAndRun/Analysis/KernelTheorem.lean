@@ -45,11 +45,11 @@ theorem finiteFacetStep_eq_step {n : ℕ} {ι : Type*} [Fintype ι]
 
 /-- The unconditional corrected hit-and-run mixing theorem.
 
-For `n ≥ 21`, after at least `deadline n D M eps` lazy steps on a rounded
+For `n ≥ 2`, after at least `deadline n D M eps` lazy steps on a rounded
 convex body of diameter at most `D`, an `(M,S)`-warm probability law is within
 `eps` total variation of uniform measure.  There are no assumed overlap,
 isoperimetry, conductance, or mixing lemmas among the binders. -/
-theorem hitAndRun_mixes {n : ℕ} (hn : 21 ≤ n) (p : Problem n)
+theorem hitAndRun_mixes {n : ℕ} (hn : 2 ≤ n) (p : Problem n)
     {sigma : Measure (State n)} [IsProbabilityMeasure sigma]
     {M eps : ℝ} (hM : 1 ≤ M) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     {S : Set (State n)} (hWarm : WarmStart p.body sigma M eps S)

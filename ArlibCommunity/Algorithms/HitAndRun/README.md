@@ -19,7 +19,7 @@ direction `g/‖g‖` from a standard Gaussian vector, brackets the chord by bis
 picks a point of the chord by rejection, with both loops capped.
 
 - `hitAndRun_correct`: let `K` be closed, convex and bounded, contain a unit ball and have
-  diameter at most `D`, and let `n ≥ 21`.  From a start that is `M`-warm outside a set of
+  diameter at most `D`, and let `n ≥ 2`.  From a start that is `M`-warm outside a set of
   mass at most `ε/4`, after `m ≥ deadline n D M (ε/2)` steps, with the caps of
   `walkParams n D M ε m`, the output law is within total variation `ε` of uniform on `K`.
 - `hitAndRun_queries`: on every tape and whatever answers membership, at most

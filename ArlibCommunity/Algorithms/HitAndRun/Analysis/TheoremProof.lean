@@ -18,7 +18,7 @@ namespace ArlibCommunity.Algorithms.HitAndRun.TheoremProof
 open MeasureTheory
 open scoped ENNReal
 
-theorem hitAndRun_mixes {n : ℕ} (hn : 21 ≤ n) (p : Problem n)
+theorem hitAndRun_mixes {n : ℕ} (hn : 2 ≤ n) (p : Problem n)
     {sigma : Measure (State n)} [IsProbabilityMeasure sigma]
     {M eps : ℝ} (hM : 1 ≤ M) (heps0 : 0 < eps) (heps1 : eps ≤ 1)
     {S : Set (State n)} (hWarm : WarmStart p.body sigma M eps S)
